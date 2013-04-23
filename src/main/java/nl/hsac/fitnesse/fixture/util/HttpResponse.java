@@ -20,7 +20,7 @@ public class HttpResponse {
      */
     public void validResponse() {
         if (statusCode == HttpStatus.SC_NOT_IMPLEMENTED) {
-            throw new RuntimeException("The Post method is not implemented by this URI");
+            throw new RuntimeException("The method is not implemented by this URI");
         }
         if (statusCode == HttpStatus.SC_NOT_FOUND) {
             throw new RuntimeException("No content available for this URI");
