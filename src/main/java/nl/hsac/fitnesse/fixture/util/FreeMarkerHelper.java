@@ -1,10 +1,10 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import java.io.IOException;
-import java.io.StringWriter;
-
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+
+import java.io.IOException;
+import java.io.StringWriter;
 
 /**
  * Helper to facilitate our FreeMarker usage
@@ -17,7 +17,7 @@ public class FreeMarkerHelper {
     public Template getTemplate(Configuration conf, String name) {
         Template result = null;
         try {
-            result = conf.getTemplate(name);
+            result = conf.getTemplate(name, "UTF-8");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
