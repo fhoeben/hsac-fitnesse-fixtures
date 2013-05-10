@@ -16,7 +16,7 @@ import nl.hsac.fitnesse.fixture.util.RandomUtil;
 import nl.hsac.fitnesse.fixture.util.TimeoutHelper;
 import nl.hsac.fitnesse.fixture.util.XMLFormatter;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import util.StringUtil;
 
 import java.io.File;
@@ -258,7 +258,7 @@ public class Environment {
                 result = "";
             } else {
                 String formattedResponse = xmlFormatter.format(xmlString);
-                result = "<pre>" + StringEscapeUtils.escapeHtml(formattedResponse) + "</pre>";
+                result = "<pre>" + StringEscapeUtils.escapeHtml4(formattedResponse) + "</pre>";
             }
         }
         return result;

@@ -3,7 +3,7 @@ package nl.hsac.fitnesse.fixture.leanapps;
 import fit.ColumnFixture;
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Checks report triggers in Report XML documents.
