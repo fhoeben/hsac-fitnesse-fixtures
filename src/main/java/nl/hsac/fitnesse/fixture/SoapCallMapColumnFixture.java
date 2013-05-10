@@ -32,8 +32,9 @@ public abstract class SoapCallMapColumnFixture<Response extends XmlHttpResponse>
             super.executeCheckCall();
         } catch (RuntimeException e) {
             // ignore, no checkResponse will be available
-            XmlHttpResponse checkResponse = getRawCheckResponse();
+            XmlHttpResponse checkResponse = new XmlHttpResponse();
             checkResponse.setResponse("Unable to perform check. Error: " + e.getMessage());
+            setRawCheckResponse(checkResponse);
         }
     }
 
