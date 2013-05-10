@@ -143,7 +143,16 @@ public abstract class ServiceAndCheckMapColumnFixture<Response, CheckResponse> e
         if (tryCount < maxTries && isRetryDesirable(checkResponse)) {
             // not changed yet, try again
             executeCheckWithRetry();
+        } else {
+            checkExecutionCompleted();
         }
+    }
+
+    /**
+     * Will be invoked when check call is completed (either done or
+     * maxRetries reached).
+     */
+    protected void checkExecutionCompleted() {
     }
 
     /**
