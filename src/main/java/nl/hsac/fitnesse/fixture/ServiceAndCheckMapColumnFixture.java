@@ -135,7 +135,6 @@ public abstract class ServiceAndCheckMapColumnFixture<Response, CheckResponse> e
      * the call returned no mismatches or {@link #tryCount} == {@link #maxTries}).
      * Before each call to {@link #executeCheckCall()} {@link #executeCheckCall()}
      * will be called.
-     * @return last result from {@link #executeCheckCall()}
      */
     protected void executeCheckWithRetry() {
         tryCount++;
