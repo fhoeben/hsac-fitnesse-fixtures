@@ -17,12 +17,14 @@ import java.io.IOException;
  * Helper to make Http calls and get response.
  */
 public class HttpClient {
-    private final ContentType type = ContentType.create(ContentType.TEXT_XML.getMimeType(), Consts.UTF_8);
-    private final static org.apache.http.client.HttpClient httpClient;
+    final static ContentType TYPE = ContentType.create(ContentType.TEXT_XML.getMimeType(), Consts.UTF_8);
+    private final static org.apache.http.client.HttpClient HTTP_CLIENT;
 
     static {
         SystemDefaultHttpClient backend = new SystemDefaultHttpClient();
-        httpClient = new DecompressingHttpClient(backend);
+        HTTP_CLIENT = new DecompressingHttpClient(backend);
+        HTTP_CLIENT.getParams().setParameter("http.useragent", HttpClient.class.getName());
+
     }
 
     /**
@@ -32,9 +34,18 @@ public class HttpClient {
      */
     public void post(String url, HttpResponse response) {
         HttpPost methodPost = new HttpPost(url);
-        HttpEntity ent = new StringEntity(response.getRequest(), type);
+        HttpEntity ent = new StringEntity(response.getRequest(), TYPE);
         methodPost.setEntity(ent);
         getResponse(url, response, methodPost);
+    }
+
+    /**
+     * @param url URL of service
+     * @param response response to be filled.
+     */
+    public void get(String url, XmlHttpResponse response) {
+        HttpGet method = new HttpGet(url);
+        getResponse(url, response, method);
     }
 
     /**
@@ -47,8 +58,6 @@ public class HttpClient {
     }
 
     private void getResponse(String url, HttpResponse response, HttpRequestBase method) {
-        httpClient.getParams().setParameter("http.useragent", getClass().getName());
-
         try {
             org.apache.http.HttpResponse resp = getHttpResponse(url, method);
             int returnCode = resp.getStatusLine().getStatusCode();
@@ -58,11 +67,11 @@ public class HttpClient {
         } catch (Exception e) {
             throw new RuntimeException("Unable to get response from: " + url, e);
         } finally {
-            method.releaseConnection();
+            method.reset();
         }
     }
 
     protected org.apache.http.HttpResponse getHttpResponse(String url, HttpRequestBase method) throws IOException {
-        return httpClient.execute(method);
+        return HTTP_CLIENT.execute(method);
     }
 }

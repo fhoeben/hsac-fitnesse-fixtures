@@ -17,6 +17,7 @@ public class XmlHttpResponse extends HttpResponse {
     public void validResponse() {
         super.validResponse();
 
+        String response = getResponse();
         if (response != null && response.contains("<faultcode>soapenv:Server</faultcode>")) {
             Environment.handleErrorResponse("SOAP fault received: ", response);
         }
@@ -31,7 +32,7 @@ public class XmlHttpResponse extends HttpResponse {
     public String getXPath(String xPathExpr, Object... params) {
         validResponse();
 
-        return getRawXPath(response, xPathExpr, params);
+        return getRawXPath(getResponse(), xPathExpr, params);
     }
 
     protected String getRawXPath(String soapResponse, String xPathExpr, Object... params) {
@@ -111,13 +112,21 @@ public class XmlHttpResponse extends HttpResponse {
      *        of the mismatches otherwise.
      */
     public XPathCheckResult checkXPaths(Map<String, Object> values, Map<String, String> expressionsToCheck) {
-        XPathCheckResult result = new XPathCheckResult();
-        if (response == null) {
+        XPathCheckResult result;
+        String content = getResponse();
+        if (content == null) {
+            result = new XPathCheckResult();
             result.setMismatchDetail("NOK: no response available.");
-            return result;
+        } else {
+            validResponse();
+            result = checkRawXPaths(content, expressionsToCheck, values);
         }
-        validResponse();
 
+        return result;
+    }
+
+    protected XPathCheckResult checkRawXPaths(String content, Map<String, String> expressionsToCheck, Map<String, Object> values) {
+        XPathCheckResult result = new XPathCheckResult();
         for (Entry<String, String> exprEntry : expressionsToCheck.entrySet()) {
             String xpath = exprEntry.getKey();
             String keyName = exprEntry.getValue();
@@ -129,7 +138,7 @@ public class XmlHttpResponse extends HttpResponse {
                 value = values.get(keyName);
             }
             valueStr = String.valueOf(value);
-            String xpathValue = String.valueOf(getRawXPath(response, xpath)).trim();
+            String xpathValue = String.valueOf(getRawXPath(content, xpath)).trim();
             if (!valueStr.equals(xpathValue) && !equalsDates(valueStr, xpathValue)
                     && !equalsAmounts(valueStr, xpathValue)
                     && !("".equals(valueStr) && "null".equals(xpathValue))) {

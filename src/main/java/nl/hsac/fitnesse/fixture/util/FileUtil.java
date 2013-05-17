@@ -28,23 +28,34 @@ public final class FileUtil {
      */
     public static String loadFile(String filename) {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        String result = null;
         InputStream is = classLoader.getResourceAsStream(filename);
         if (is == null) {
             throw new IllegalArgumentException("Unable to locate: " + filename);
         }
+        return streamToString(is, filename);
+    }
+
+    /**
+     * Copies UTF-8 input stream's content to a string (closes the stream).
+     * @param is input stream (UTF-8) to read.
+     * @param name description for stream in error messages.
+     * @return content of stream
+     * @throws RuntimeException if content could not be read.
+     */
+    public static String streamToString(InputStream is, String name) {
+        String result = null;
         try {
             try {
                 result = new java.util.Scanner(is, FILE_ENCODING).useDelimiter("\\A").next();
             } catch (java.util.NoSuchElementException e) {
-                throw new IllegalStateException("Unable to read: " + filename + ". Error: " + e.getMessage(), e);
+                throw new IllegalStateException("Unable to read: " + name + ". Error: " + e.getMessage(), e);
             }
         } finally {
             try {
                 is.close();
             } catch (IOException e) {
                 // what the hell?!
-                throw new RuntimeException("Unable to close: " + filename, e);
+                throw new RuntimeException("Unable to close: " + name, e);
             }
         }
         return result;
