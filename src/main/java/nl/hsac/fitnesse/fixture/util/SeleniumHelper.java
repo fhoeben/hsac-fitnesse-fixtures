@@ -53,7 +53,7 @@ public class SeleniumHelper {
 
     public WebElement getElement(String place) {
         WebElement element = null;
-        setImplicitlyWait(100);
+        setImplicitlyWait(10);
         String xpathPlace = place.replace("\"", "&quot;")
                                  .replace("'", "&apos;").trim();
         if (element == null) {
