@@ -9,16 +9,16 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BrowserTest {
+public class BrowserTest extends SlimFixture {
     private static final Pattern PATTERN = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>", Pattern.CASE_INSENSITIVE);
 
     private List<List<String>> commands = new ArrayList<List<String>>();
-    private SeleniumHelper seleniumHelper = new SeleniumHelper();
+    private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
 
     public boolean open(String htmlLink) {
         String url = urlFromLink(htmlLink);
         commands.add(Arrays.asList("open", url));
-        SeleniumHelper.getWebDriver().navigate().to(url);
+        seleniumHelper.navigate().to(url);
         return true;
     }
 
