@@ -14,11 +14,11 @@
 #|show  |commands                |
 
 
-|scenario|feel lucky |query|
-|open    |http://google.com|
-|enter   |@query     |for|q|
-|click   |Google Search    |
-|show    |commands         |
+|scenario|feel lucky  |query  |
+|open    |http://google.com/en|
+|enter   |@query      |for |q |
+|click   |Google Search       |
+|show    |commands            |
 
 |script          |
 |feel lucky|fried|
