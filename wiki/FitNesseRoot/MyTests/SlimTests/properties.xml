@@ -1,13 +1,14 @@
 <?xml version="1.0"?>
 <properties>
-	<AddChild/>
 	<Edit/>
 	<Files/>
+	<Help/>
 	<Properties/>
-	<Prune/>
 	<RecentChanges/>
+	<Refactor/>
 	<Search/>
-	<Static/>
+	<Suite/>
+	<Suites/>
 	<Versions/>
 	<WhereUsed/>
 </properties>

@@ -1,0 +1,26 @@
+!contents -R2 -g -p -f -h
+
+!***> Symbol samples
+
+Som extra Wiki symbols that can be used:
+
+|random BSN                                                      |{{{!-!randomBSN -! }}}                                     |!randomBSN                                       |
+|random positive integer                                         |{{{!-!randomInt           -! }}}                           |!randomInt                                       |
+|random integer (between where upper is non-inclusive)           |{{{!-!randomInt (10,20)            -!  }}}                 |!randomInt (10,20)                               |
+|random string (random (but at most 100) length)                 |{{{!-!randomString        -! }}}                           |!randomString                                    |
+|random string (fixed length)                                    |{{{!-!randomString (20) -! }}}                             |!randomString (20)                               |
+|random string (fixed length, choice of characters)              |{{{!-!randomString (10) (abcdefghijklmnopqrstuvwxyz -)-!}}}|!randomString (10) (abcdefghijklmnopqrstuvwxyz -)|
+|random string (fixed length, choice of characters, fixed prefix)|{{{!-!randomString (10) (xyz) (aap)    -! }}}              |!randomString (10) (xyz) (aap)                   |
+
+*!
+
+
+!***> Code location
+
+The official location for build server compiled fixture classes:
+
+!path ../fixtures
+When developing and changing the fixtures, we will work based on the pom.xml:
+
+!pomFile ../pom.xml@compile
+*!
