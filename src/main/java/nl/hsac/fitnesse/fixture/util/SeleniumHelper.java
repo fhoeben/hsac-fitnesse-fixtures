@@ -8,6 +8,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Helper to work with Selenium.
@@ -33,14 +34,14 @@ public class SeleniumHelper {
 			 * Vervang dit eventueel door een browser naar keuze.
 			 */
             WEB_DRIVER = new FirefoxDriver();
+            setImplicitWait(IMPLICIT_WAIT);
         }
 
-        setImplicitWait(IMPLICIT_WAIT);
         return WEB_DRIVER;
     }
 
     private static void setImplicitWait(int implicitWait) {
-//        WEB_DRIVER.manage().timeouts().implicitlyWait(implicitWait, TimeUnit.MILLISECONDS);
+        WEB_DRIVER.manage().timeouts().implicitlyWait(implicitWait, TimeUnit.MILLISECONDS);
     }
 
     public static void close() {
@@ -52,7 +53,7 @@ public class SeleniumHelper {
 
     public WebElement getElement(String place) {
         WebElement element = null;
-        setImplicitlyWait(5);
+        setImplicitlyWait(100);
         String xpathPlace = place.replace("\"", "&quot;")
                                  .replace("'", "&apos;").trim();
         if (element == null) {
