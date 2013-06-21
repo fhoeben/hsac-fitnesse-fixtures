@@ -1,1 +1,9 @@
 /.idea
+wiki/FitNesseRoot/FitNesse
+*.zip
+wiki/FitNesseRoot/PageHeader
+wiki/FitNesseRoot/RecentChanges
+wiki/FitNesseRoot/PageFooter
+wiki/FitNesseRoot/updateList
+wiki/FitNesseRoot/properties
+wiki/FitNesseRoot/updateDoNotCopyOverList
