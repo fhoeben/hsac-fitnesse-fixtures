@@ -81,13 +81,17 @@ public class SeleniumHelper {
     }
 
     public WebElement findElement(By by) {
+        return findElement(false, by);
+    }
+
+    public WebElement findElement(boolean atMostOne, By by) {
         WebElement element = null;
         List<WebElement> elements = getWebDriver().findElements(by);
         if (elements.size() == 1) {
             element = elements.get(0);
         } else if (elements.size() > 1) {
             elements = elementsWithId(elements);
-            if (elements.size() == 1) {
+            if (elements.size() == 1 || !atMostOne) {
                 element = elements.get(0);
             } else {
                 throw new RuntimeException("Multiple elements with id found for: " + by
