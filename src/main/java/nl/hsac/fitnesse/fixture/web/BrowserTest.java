@@ -27,9 +27,14 @@ public class BrowserTest {
     }
 
     public boolean enterFor(String value, String place) {
+        boolean result = false;
         commands.add(Arrays.asList("enter", place, value));
-        getElement(place).sendKeys(value);
-        return true;
+        WebElement element = getElement(place);
+        if (element != null) {
+            element.sendKeys(value);
+            result = true;
+        }
+        return result;
     }
 
     public boolean selectAs(String value, String place) {
@@ -42,9 +47,14 @@ public class BrowserTest {
     }
 
     public boolean click(String place) {
+        boolean result = false;
         commands.add(Arrays.asList("click", place));
-        getElement(place).click();
-        return true;
+        WebElement element = getElement(place);
+        if (element != null) {
+            element.click();
+            result = true;
+        }
+        return result;
     }
 
     public boolean valueOfIs(String place, String expectedValue) {
@@ -65,9 +75,15 @@ public class BrowserTest {
         return "Bob.";
     }
 
-    public void clear(String place) {
+    public boolean clear(String place) {
+        boolean result = false;
         commands.add(Arrays.asList("clear", place));
-        getElement(place).clear();
+        WebElement element = getElement(place);
+        if (element != null) {
+            element.clear();
+            result = true;
+        }
+        return result;
     }
 
     private WebElement getElement(String place) {
