@@ -13,6 +13,7 @@ import nl.hsac.fitnesse.fixture.util.NamespaceContextImpl;
 import nl.hsac.fitnesse.fixture.util.ProgramHelper;
 import nl.hsac.fitnesse.fixture.util.ProgramResponse;
 import nl.hsac.fitnesse.fixture.util.RandomUtil;
+import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
 import nl.hsac.fitnesse.fixture.util.TimeoutHelper;
 import nl.hsac.fitnesse.fixture.util.XMLFormatter;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
@@ -41,6 +42,7 @@ public class Environment {
     private TimeoutHelper timeoutHelper = new TimeoutHelper();
     private ProgramHelper programHelper;
     private DatesHelper datesHelper = new DatesHelper();
+    private SeleniumHelper seleniumHelper;
 
     private Environment() {
         Configuration cfg = new Configuration();
@@ -65,6 +67,8 @@ public class Environment {
         programHelper = new ProgramHelper();
         programHelper.setTimeoutHelper(timeoutHelper);
         configDatesHelper();
+
+        seleniumHelper = new SeleniumHelper();
     }
 
     /**
@@ -322,5 +326,12 @@ public class Environment {
      */
     public DatesHelper getDatesHelper() {
         return datesHelper;
+    }
+
+    /**
+     * @return seleniumHelper to use.
+     */
+    public SeleniumHelper getSeleniumHelper() {
+        return seleniumHelper;
     }
 }

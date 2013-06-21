@@ -17,45 +17,53 @@ public class SeleniumHelper {
 
     private static WebDriver WEB_DRIVER = null;
     private static boolean SHUTDOWN_HOOK_ENABLED = false;
-    /** Timeout in milliseconds to wait for element to appear */
-    public static int IMPLICIT_WAIT = 15000;
 
-    public static WebDriver getWebDriver() {
+    private static WebDriver getWebDriver() {
         if(WEB_DRIVER == null) {
             if(!SHUTDOWN_HOOK_ENABLED) {
                 Runtime.getRuntime().addShutdownHook(new Thread() {
                     public void run() {
-                        close();
+                        closeInstance();
                     }
                 });
                 SHUTDOWN_HOOK_ENABLED = true;
             }
-			/*
-			 * Vervang dit eventueel door een browser naar keuze.
-			 */
             WEB_DRIVER = new FirefoxDriver();
-            setImplicitWait(IMPLICIT_WAIT);
         }
 
         return WEB_DRIVER;
     }
 
-    private static void setImplicitWait(int implicitWait) {
-        WEB_DRIVER.manage().timeouts().implicitlyWait(implicitWait, TimeUnit.MILLISECONDS);
-    }
-
-    public static void close() {
+    private static void closeInstance() {
         if(WEB_DRIVER != null) {
             WEB_DRIVER.quit();
             WEB_DRIVER = null;
         }
     }
 
+    /**
+     * Shuts down selenium web driver.
+     */
+    public void close() {
+        closeInstance();
+    }
+
+    /**
+     * @return Selenium's navigation.
+     */
+    public WebDriver.Navigation navigate() {
+        return getWebDriver().navigate();
+    }
+
+    /**
+     * Finds element, by searching in multiple locations.
+     * @param place identifier for element.
+     * @return first element found, null if none could be found.
+     */
     public WebElement getElement(String place) {
         WebElement element = null;
-        setImplicitlyWait(10);
         String xpathPlace = place.replace("\"", "&quot;")
-                                 .replace("'", "&apos;").trim();
+                                 .replace("'", "&apos;");
         if (element == null) {
             WebElement label = findElement(By.xpath("//label[text()='" + xpathPlace + "']"));
             if (label != null) {
@@ -72,18 +80,33 @@ public class SeleniumHelper {
         if (element == null) {
             element = findElement(By.id(place));
         }
-        setImplicitlyWait(IMPLICIT_WAIT);
         return element;
     }
 
+    /**
+     * Sets how long to wait before deciding an element does not exists.
+     * @param implicitWait time in milliseconds to wait.
+     */
     public void setImplicitlyWait(int implicitWait) {
-        setImplicitWait(implicitWait);
+        getWebDriver().manage().timeouts().implicitlyWait(implicitWait, TimeUnit.MILLISECONDS);
     }
 
+    /**
+     * Finds first element matching the By supplied.
+     * @param by criteria.
+     * @return element if found, null if none could be found.
+     */
     public WebElement findElement(By by) {
         return findElement(false, by);
     }
 
+    /**
+     * Finds element matching the By supplied.
+     * @param atMostOne true indicates multiple matching elements should trigger an exception
+     * @param by criteria.
+     * @return element if found, null if none could be found.
+     * @throws RuntimeException if atMostOne is true and multiple elements match by.
+     */
     public WebElement findElement(boolean atMostOne, By by) {
         WebElement element = null;
         List<WebElement> elements = getWebDriver().findElements(by);
