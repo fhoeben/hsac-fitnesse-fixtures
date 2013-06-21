@@ -17,7 +17,6 @@
 			<groupId>org.fitnesse</groupId>
 			<artifactId>fitnesse</artifactId>
 			<version>20121220</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -100,6 +99,29 @@
 					<includeScope>compile</includeScope>
 					<excludeArtifactIds>fitnesse</excludeArtifactIds>
 					<outputDirectory>${project.build.directory}/classes</outputDirectory>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<executable>java</executable>
+					<workingDirectory>wiki</workingDirectory>
+					<arguments>
+						<argument>-classpath</argument>
+						<classpath/>
+						<argument>fitnesseMain.FitNesseMain</argument>
+						<argument>-p</argument>
+						<argument>9090</argument>
+					</arguments>
 				</configuration>
 			</plugin>
 		</plugins>
