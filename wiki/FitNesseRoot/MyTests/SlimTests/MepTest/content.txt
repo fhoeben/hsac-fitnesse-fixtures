@@ -1,0 +1,22 @@
+|scenario|log in                                            |
+|open    |http://localhost:8080/mep/login.html              |
+|enter   |admin     |for             |User:                 |
+|enter   |Secret5$  |for             |Password:             |
+|click   |Login                                             |
+|check   |page title|Model Europees Parliament 2013 Overview|
+
+|script|browser test                                |
+|log in                                             |
+|click |Begeleiders                                 |
+|click |Add new                                     |
+|enter |1         |as              |Kenmerk (text): |
+|enter |Fried     |as              |Voornaam (text):|
+|select|Man       |as              |Geslacht:       |
+|select|OLV       |as              |School:         |
+|click |Save Changes                                |
+|check |page title|Begeleider: null, Fried          |
+|click |Edit                                        |
+|check |value for |Voornaam (text):|Fried           |
+|check |value for |Geslacht:       |Man             |
+|click |Cancel                                      |
+|click |Delete                                      |

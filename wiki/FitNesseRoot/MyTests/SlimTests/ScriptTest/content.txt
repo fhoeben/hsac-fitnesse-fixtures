@@ -4,21 +4,10 @@
 |click |btnG             |
 |clear |q                |
 
-#|ensure|value for|result1|is|Bob|
-#|check |value for|result1|Bob.  |
-#|ensure|value of |result1|is|Bob|
-#|check |value of |result1|Bob.  |
-#|enter |Bob      |as     |q     |
-#|select|Male     |for    |Gender|
-#|select|Female   |as     |Gender|
-#|show  |commands                |
-
-
 |scenario|feel lucky  |query  |
 |open    |http://google.com/en|
 |enter   |@query      |for |q |
 |click   |Google Search       |
-|show    |commands            |
 
 |script          |
 |feel lucky|fried|
