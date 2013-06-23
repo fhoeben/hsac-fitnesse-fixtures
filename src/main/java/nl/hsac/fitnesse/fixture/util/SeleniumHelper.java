@@ -156,7 +156,7 @@ public class SeleniumHelper {
      * @return element if found, null if none could be found.
      * @throws RuntimeException if atMostOne is true and multiple elements match by.
      */
-    public WebElement findElement(SearchContext context, boolean atMostOne, By by) {
+    private WebElement findElement(SearchContext context, boolean atMostOne, By by) {
         WebElement element = null;
         List<WebElement> elements = context.findElements(by);
         if (elements.size() == 1) {
