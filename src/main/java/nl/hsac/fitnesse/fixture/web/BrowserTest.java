@@ -57,7 +57,7 @@ public class BrowserTest extends SlimFixture {
             if (isSelect(element)) {
                 String id = element.getAttribute("id");
                 By optionWithText = seleniumHelper.byXpath("//select[@id='%s']//option[text()='%s']", id, optionValue);
-                WebElement option = seleniumHelper.findElement(element, true, optionWithText);
+                WebElement option = seleniumHelper.findElement(true, optionWithText);
                 if (option != null) {
                     option.click();
                     result = true;
@@ -88,7 +88,7 @@ public class BrowserTest extends SlimFixture {
             if (isSelect(element)) {
                 String id = element.getAttribute("id");
                 By selectedOption = seleniumHelper.byXpath("//select[@id='%s']//option[@selected]", id);
-                WebElement option = seleniumHelper.findElement(element, true, selectedOption);
+                WebElement option = seleniumHelper.findElement(true, selectedOption);
                 if (option != null) {
                     result = option.getText();
                 }
