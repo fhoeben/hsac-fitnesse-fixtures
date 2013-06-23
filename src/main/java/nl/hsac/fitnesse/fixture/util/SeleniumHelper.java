@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.util;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -49,6 +50,13 @@ public class SeleniumHelper {
     }
 
     /**
+     * @return current page title.
+     */
+    public String getPageTitle() {
+        return getWebDriver().getTitle();
+    }
+
+    /**
      * @return Selenium's navigation.
      */
     public WebDriver.Navigation navigate() {
@@ -62,17 +70,17 @@ public class SeleniumHelper {
      */
     public WebElement getElement(String place) {
         WebElement element = null;
-        String xpathPlace = place.replace("\"", "&quot;")
-                                 .replace("'", "&apos;");
         if (element == null) {
-            WebElement label = findElement(By.xpath("//label[text()='" + xpathPlace + "']"));
-            if (label != null) {
-                String forAttr = label.getAttribute("for");
-                element = findElement(By.id(forAttr));
-            }
+            element = getElementByLabel(place);
         }
         if (element == null) {
-            element = findElement(By.xpath("//*[@aria-label='" + xpathPlace + "']"));
+            element = findElement(byXpath("//input[@value='%s']", place));
+        }
+        if (element == null) {
+            element = findElement(byXpath("//*[@aria-label='%s']", place));
+        }
+        if (element == null) {
+            element = findElement(By.linkText(place));
         }
         if (element == null) {
             element = findElement(By.name(place));
@@ -81,6 +89,36 @@ public class SeleniumHelper {
             element = findElement(By.id(place));
         }
         return element;
+    }
+
+    private WebElement getElementByLabel(String labelText) {
+        WebElement element = null;
+        WebElement label = findElement(byXpath("//label[text()='%s']", labelText));
+        if (label != null) {
+            String forAttr = label.getAttribute("for");
+            element = findElement(By.id(forAttr));
+        }
+        return element;
+    }
+
+    /**
+     * Creates By based on xPath, supporting placeholder replacement.
+     * @param pattern basic XPATH, possibly with placeholders.
+     * @param parameters values for placeholders.
+     * @return ByXPath.
+     */
+    public By byXpath(String pattern, String... parameters) {
+        Object[] escapedParams = new Object[parameters.length];
+        for (int i = 0; i < parameters.length; i++) {
+            escapedParams[i] = xpathEscape(parameters[i]);
+        }
+        String xpath = String.format(pattern, escapedParams);
+        return By.xpath(xpath);
+    }
+
+    private String xpathEscape(String value) {
+        return value.replace("\"", "&quot;")
+                    .replace("'", "&apos;");
     }
 
     /**
@@ -108,8 +146,19 @@ public class SeleniumHelper {
      * @throws RuntimeException if atMostOne is true and multiple elements match by.
      */
     public WebElement findElement(boolean atMostOne, By by) {
+        return findElement(getWebDriver(), atMostOne, by);
+    }
+    /**
+     * Finds element matching the By supplied.
+     * @param context context to find element in.
+     * @param atMostOne true indicates multiple matching elements should trigger an exception
+     * @param by criteria.
+     * @return element if found, null if none could be found.
+     * @throws RuntimeException if atMostOne is true and multiple elements match by.
+     */
+    public WebElement findElement(SearchContext context, boolean atMostOne, By by) {
         WebElement element = null;
-        List<WebElement> elements = getWebDriver().findElements(by);
+        List<WebElement> elements = context.findElements(by);
         if (elements.size() == 1) {
             element = elements.get(0);
         } else if (elements.size() > 1) {
