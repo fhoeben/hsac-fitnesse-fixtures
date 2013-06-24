@@ -6,7 +6,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,30 +16,26 @@ import java.util.concurrent.TimeUnit;
  * Helper to work with Selenium.
  */
 public class SeleniumHelper {
+    private WebDriver webDriver;
+    private boolean shutdownHookEnabled = false;
 
-    private static WebDriver WEB_DRIVER = null;
-    private static boolean SHUTDOWN_HOOK_ENABLED = false;
-
-    private static WebDriver getWebDriver() {
-        if(WEB_DRIVER == null) {
-            if(!SHUTDOWN_HOOK_ENABLED) {
-                Runtime.getRuntime().addShutdownHook(new Thread() {
-                    public void run() {
-                        closeInstance();
-                    }
-                });
-                SHUTDOWN_HOOK_ENABLED = true;
-            }
-            WEB_DRIVER = new FirefoxDriver();
+    /**
+     * Sets up webDriver to be used.
+     * @param aWebDriver web driver to use.
+     */
+    public void setWebDriver(WebDriver aWebDriver) {
+        if (webDriver != null && !webDriver.equals(aWebDriver)) {
+            webDriver.quit();
         }
+        webDriver = aWebDriver;
 
-        return WEB_DRIVER;
-    }
-
-    private static void closeInstance() {
-        if(WEB_DRIVER != null) {
-            WEB_DRIVER.quit();
-            WEB_DRIVER = null;
+        if (!shutdownHookEnabled) {
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                public void run() {
+                    close();
+                }
+            });
+            shutdownHookEnabled = true;
         }
     }
 
@@ -48,7 +43,7 @@ public class SeleniumHelper {
      * Shuts down selenium web driver.
      */
     public void close() {
-        closeInstance();
+        setWebDriver(null);
     }
 
     /**
@@ -211,7 +206,7 @@ public class SeleniumHelper {
      * @return selenium web driver.
      */
     public WebDriver driver() {
-        return getWebDriver();
+        return webDriver;
     }
 
     /**
