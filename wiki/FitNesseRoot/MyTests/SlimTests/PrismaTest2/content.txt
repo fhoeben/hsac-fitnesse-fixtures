@@ -32,7 +32,7 @@
 |click     |Uitloggen                                                                                                                                                                                                                   |
 
 
-|prisma werkgever maken a b c d e f g h i j                                                                                                                                           |
-|naam           |rekeningnummer|oprichtingsdatum|kvk    |postcode|huisnummer|straatnaam |telAlg    |contactGeslacht|contactVoorLtrs|contactAchterNm|contactEmail          |contactTel1|
-|Fitnesse Test 2|123456789     |02-02-2001      |1245678|1213VB  |68        |Laapersveld|0000000000|de heer        |S              |Fitnesse 1     |!-werkgever@landg.nl-!|0000000000 |
-|Fitnesse Test 3|123456789     |03-03-2002      |1245678|1213VB  |68        |Laapersveld|0000000000|mevrouw        |V              |Fitnesse 2     |!-werkgever@landg.nl-!|0000000000 |
+|prisma werkgever maken a b c d e f g h i j                                                                                                                                       |
+|naam           |rekeningnummer|oprichtingsdatum|kvk    |postcode|huisnummer|straatnaam |telAlg    |contactGeslacht|contactVoorLtrs|contactAchterNm|contactEmail      |contactTel1|
+|Fitnesse Test 2|123456789     |02-02-2001      |1245678|1213VB  |68        |Laapersveld|0000000000|de heer        |S              |Fitnesse 1     |werkgever@landg.nl|0000000000 |
+|Fitnesse Test 3|123456789     |03-03-2002      |1245678|1213VB  |68        |Laapersveld|0000000000|mevrouw        |V              |Fitnesse 2     |werkgever@landg.nl|0000000000 |

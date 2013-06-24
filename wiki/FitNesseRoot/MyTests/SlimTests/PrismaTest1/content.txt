@@ -25,7 +25,7 @@
 |select    |de heer                    |for                |Geslacht              |
 |enter     |S                          |for                |Voorletters           |
 |enter     |Fitnesse                   |for                |Achternaam            |
-|enter     |!-werkgever@landg.nl-!     |for                |E-mailadres           |
+|enter     |werkgever@landg.nl         |for                |E-mailadres           |
 |enter     |0000000000                 |for                |Telefoonnummer 1      |
 |click     |Opslaan                    |and wait for page  |Overzicht werkgevers  |
 
