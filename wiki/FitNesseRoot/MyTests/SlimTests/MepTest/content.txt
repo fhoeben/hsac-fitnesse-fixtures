@@ -1,6 +1,8 @@
 |scenario|log in                                            |
 |open    |http://localhost:8080/mep/login.html              |
+|clear   |User                                              |
 |enter   |admin     |for             |User:                 |
+|clear   |Password                                          |
 |enter   |Secret5$  |for             |Password:             |
 |click   |Login                                             |
 |check   |page title|Model Europees Parliament 2013 Overview|
