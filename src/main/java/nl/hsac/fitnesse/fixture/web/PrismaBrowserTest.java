@@ -11,8 +11,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  */
 public class PrismaBrowserTest extends BrowserTest {
     static final int MAX_WAIT_SECONDS = 30;
-    public PrismaBrowserTest() {
-        System.setProperty("webdriver.ie.driver", "C:\\dev\\IEDriverServer_Win32_2.33.0\\IEDriverServer.exe");
+    public PrismaBrowserTest(String webDriverLocation) {
+        System.setProperty("webdriver.ie.driver", webDriverLocation);
     }
 
     @Override
