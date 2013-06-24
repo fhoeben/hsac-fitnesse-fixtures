@@ -89,6 +89,9 @@ public class SeleniumHelper {
             element = getElementByPartialLabel(place);
         }
         if (element == null) {
+            element = findElement(byXpath("//input[contains(@value, '%s')]", place));
+        }
+        if (element == null) {
             element = findElement(By.partialLinkText(place));
         }
         return element;
