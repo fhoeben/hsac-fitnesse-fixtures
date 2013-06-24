@@ -54,14 +54,14 @@ public class SeleniumHelper {
      * @return current page title.
      */
     public String getPageTitle() {
-        return getWebDriver().getTitle();
+        return driver().getTitle();
     }
 
     /**
      * @return Selenium's navigation.
      */
     public WebDriver.Navigation navigate() {
-        return getWebDriver().navigate();
+        return driver().navigate();
     }
 
     /**
@@ -146,7 +146,7 @@ public class SeleniumHelper {
      */
     public void executeJavascript(String statementPattern, Object... parameters) {
         String script = String.format(statementPattern, parameters);
-        JavascriptExecutor jse = (JavascriptExecutor) getWebDriver();
+        JavascriptExecutor jse = (JavascriptExecutor) driver();
         jse.executeScript(script);
     }
 
@@ -175,7 +175,7 @@ public class SeleniumHelper {
      * @param implicitWait time in milliseconds to wait.
      */
     public void setImplicitlyWait(int implicitWait) {
-        getWebDriver().manage().timeouts().implicitlyWait(implicitWait, TimeUnit.MILLISECONDS);
+        driver().manage().timeouts().implicitlyWait(implicitWait, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -195,8 +195,17 @@ public class SeleniumHelper {
      * @throws RuntimeException if atMostOne is true and multiple elements match by.
      */
     public WebElement findElement(boolean atMostOne, By by) {
-        return findElement(getWebDriver(), atMostOne, by);
+        return findElement(driver(), atMostOne, by);
     }
+
+    /**
+     * Allows direct access to WebDriver. If possible please use methods of this class to facilitate testing.
+     * @return selenium web driver.
+     */
+    public WebDriver driver() {
+        return getWebDriver();
+    }
+
     /**
      * Finds element matching the By supplied.
      * @param context context to find element in.
