@@ -11,7 +11,7 @@
 |click |Add ne                               |
 |enter |1         |as              |Kenmerk  |
 |enter |Fried     |as              |Voornaam |
-|select|Man       |as              |Geslacht:|
+|select|M         |as              |Geslacht:|
 |select|OLV       |as              |School:  |
 |click |Vegetarisch:                         |
 |click |Save Changes                         |
