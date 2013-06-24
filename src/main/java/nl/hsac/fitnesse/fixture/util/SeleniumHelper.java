@@ -77,9 +77,6 @@ public class SeleniumHelper {
             element = findElement(byXpath("//input[@value='%s']", place));
         }
         if (element == null) {
-            element = findElement(byXpath("//*[@aria-label='%s']", place));
-        }
-        if (element == null) {
             element = findElement(By.linkText(place));
         }
         if (element == null) {
@@ -88,15 +85,32 @@ public class SeleniumHelper {
         if (element == null) {
             element = findElement(By.id(place));
         }
+        if (element == null) {
+            element = getElementByPartialLabel(place);
+        }
+        if (element == null) {
+            element = findElement(By.partialLinkText(place));
+        }
         return element;
     }
 
     private WebElement getElementByLabel(String labelText) {
+        return getElementByLabel(labelText, "//label[text()='%s']", "//*[@aria-label='%s']");
+    }
+
+    private WebElement getElementByPartialLabel(String labelText) {
+        return getElementByLabel(labelText, "//label[contains(text(), '%s')]", "//*[contains(@aria-label, '%s')]");
+    }
+
+    private WebElement getElementByLabel(String labelText, String firstXPath, String secondXPath) {
         WebElement element = null;
-        WebElement label = findElement(byXpath("//label[text()='%s']", labelText));
+        WebElement label = findElement(byXpath(firstXPath, labelText));
         if (label != null) {
             String forAttr = label.getAttribute("for");
             element = findElement(By.id(forAttr));
+        }
+        if (element == null) {
+            element = findElement(byXpath(secondXPath, labelText));
         }
         return element;
     }
