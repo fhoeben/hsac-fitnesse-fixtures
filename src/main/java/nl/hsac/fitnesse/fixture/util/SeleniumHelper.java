@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.SearchContext;
@@ -166,8 +167,7 @@ public class SeleniumHelper {
     }
 
     private String xpathEscape(String value) {
-        return value.replace("\"", "&quot;")
-                    .replace("'", "&apos;");
+        return StringEscapeUtils.escapeXml(value);
     }
 
     /**
