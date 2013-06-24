@@ -5,8 +5,9 @@
 |click   |Inloggen      |and wait for page|Home          |
 |check   |page title    |Home                            |
 
+!define DRIVER_LOCATION {C:\dev\hsac\hsac-fitnesse\webdrivers\IEDriverServer.exe}
 
-|script    |prisma browser test                                                   |
+|script    |prisma browser test        |${DRIVER_LOCATION}                        |
 |log in                                                                           |
 |click     |Ga naar overzicht          |and wait for page  |Overzicht werkgevers  |
 |click     |Maak nieuwe werkgever aan  |and wait for page  |Nieuwe werkgever      |
