@@ -9,3 +9,6 @@
 |script      |selenium driver setup                                                                                 |
 |set property|webdriver.chrome.driver|value|/Users/fried/dev/hsac/hsac-fitnesse-fixtures/webdrivers/osx/chromedriver|
 |startDriver |org.openqa.selenium.chrome.ChromeDriver                                                               |
+|set property|webdriver.ie.driver    |value|                                                                        |
+|note        |startDriver            |org.openqa.selenium.ie.InternetExplorerDriver                                 |
+|note        |startDriver            |org.openqa.selenium.firefox.FirefoxDriver                                     |
