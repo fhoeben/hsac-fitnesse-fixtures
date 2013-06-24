@@ -30,7 +30,7 @@ public class PrismaBrowserTest extends BrowserTest {
     public boolean clickAndWaitForPage(String place, final String pageTitleStart) {
         boolean result = click(place);
         if (result) {
-            result = new WebDriverWait(getSeleniumHelper().driver(), MAX_WAIT_SECONDS)
+            result = waitDriver()
                         .until(new ExpectedCondition<Boolean>() {
                             @Override
                             public Boolean apply(WebDriver f) {
@@ -71,19 +71,23 @@ public class PrismaBrowserTest extends BrowserTest {
             String currentText = element.getText();
             result = value.equalsIgnoreCase(currentText);
             if (!result) {
-            result = new WebDriverWait(getSeleniumHelper().driver(), MAX_WAIT_SECONDS)
-                        .until(new ExpectedCondition<Boolean>() {
-                            @Override
-                            public Boolean apply(WebDriver f) {
-                                WebElement elem = f.findElement(By.id(id));
-                                String text = elem.getText();
-                                return value.equalsIgnoreCase(text);
-                            }
-                        }).booleanValue();
+                result = waitDriver()
+                            .until(new ExpectedCondition<Boolean>() {
+                                @Override
+                                public Boolean apply(WebDriver f) {
+                                    WebElement elem = f.findElement(By.id(id));
+                                    String text = elem.getText();
+                                    return value.equalsIgnoreCase(text);
+                                }
+                            }).booleanValue();
 
             }
         }
         return result;
+    }
+
+    private WebDriverWait waitDriver() {
+        return new WebDriverWait(getSeleniumHelper().driver(), MAX_WAIT_SECONDS);
     }
 
 }
