@@ -50,15 +50,25 @@ public class PrismaBrowserTest extends BrowserTest {
                 String id = element.getAttribute("id");
 
                 String dayId = id + "_d";
-                result = enterFor(values[0], dayId);
+                result = enterForId(values[0], dayId);
                 String monthId = id + "_m";
-                result = enterFor(values[1], monthId);
+                result = enterForId(values[1], monthId);
                 String yearId = id + "_y";
-                result = enterFor(values[2], yearId);
+                result = enterForId(values[2], yearId);
 
                 String hiddenId = id + "_h";
                 result = enterForHidden(value.replace("-", "."), hiddenId);
             }
+        }
+        return result;
+    }
+
+    private boolean enterForId(String value, String id) {
+        boolean result = false;
+        WebElement element = getSeleniumHelper().findElement(true, By.id(id));
+        if (element != null) {
+            element.sendKeys(value);
+            result = true;
         }
         return result;
     }
