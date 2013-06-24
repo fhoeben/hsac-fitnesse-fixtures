@@ -6,12 +6,12 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import org.openqa.selenium.ie.InternetExplorerDriver;
 
 /**
  * Helper to work with Selenium.
@@ -31,7 +31,7 @@ public class SeleniumHelper {
                 });
                 SHUTDOWN_HOOK_ENABLED = true;
             }
-            WEB_DRIVER = new InternetExplorerDriver();
+            WEB_DRIVER = new FirefoxDriver();
         }
 
         return WEB_DRIVER;
