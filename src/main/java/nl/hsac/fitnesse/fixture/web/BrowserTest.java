@@ -50,6 +50,10 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
+    public boolean enterForHidden(String value, String idOrName) {
+        return seleniumHelper.setHiddenInputValue(idOrName, value);
+    }
+
     private boolean clickSelectOption(String selectPlace, String optionValue) {
         boolean result = false;
         WebElement element = getElement(selectPlace);

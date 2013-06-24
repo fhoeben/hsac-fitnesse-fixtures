@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.util;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -116,6 +117,37 @@ public class SeleniumHelper {
             element = findElement(byXpath(secondXPath, labelText));
         }
         return element;
+    }
+
+    /**
+     * Sets value of hidden input field.
+     * @param idOrName id or name of input field to set.
+     * @param value value to set.
+     * @return whether input field was found.
+     */
+    public boolean setHiddenInputValue(String idOrName, String value) {
+        WebElement element = findElement(By.id(idOrName));
+        if (element != null) {
+            executeJavascript("document.getElementById('%s').value='%s'", idOrName, value);
+        }
+        if (element == null) {
+            element = findElement(By.name(idOrName));
+            if (element != null) {
+                executeJavascript("document.getElementsByName('%s')[0].value='%s'", idOrName, value);
+            }
+        }
+        return element != null;
+    }
+
+    /**
+     * Executes Javascript in browser.
+     * @param statementPattern javascript to run, possibly with placeholders to be replaced.
+     * @param parameters placeholder values that should be replaced before executing the script.
+     */
+    public void executeJavascript(String statementPattern, Object... parameters) {
+        String script = String.format(statementPattern, parameters);
+        JavascriptExecutor jse = (JavascriptExecutor) getWebDriver();
+        jse.executeScript(script);
     }
 
     /**
