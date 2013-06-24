@@ -6,8 +6,11 @@ import org.openqa.selenium.WebElement;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class BrowserTest extends SlimFixture {
+    static final int MAX_WAIT_SECONDS = 30;
     private static final Pattern PATTERN = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>", Pattern.CASE_INSENSITIVE);
 
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
@@ -34,7 +37,8 @@ public class BrowserTest extends SlimFixture {
         boolean result = false;
         WebElement element = getElement(place);
         if (element != null) {
-            element.sendKeys(value);
+            String keys = cleanupValue(value);
+            element.sendKeys(keys);
             result = true;
         }
         return result;
@@ -132,6 +136,30 @@ public class BrowserTest extends SlimFixture {
 
     protected WebElement getElement(String place) {
         return seleniumHelper.getElement(place);
+    }
+
+    protected Boolean waitFor(ExpectedCondition<Boolean> condition) {
+        return waitDriver().until(condition).booleanValue();
+    }
+
+    private WebDriverWait waitDriver() {
+        return new WebDriverWait(getSeleniumHelper().driver(), MAX_WAIT_SECONDS);
+    }
+
+    /**
+     * Removes result of wiki formatting (for e.g. email addresses) if needed.
+     * @param rawValue value as received from Fitnesse.
+     * @return rawValue if it was just text, cleaned version if it was not.
+     */
+    protected String cleanupValue(String rawValue) {
+        String result = null;
+        Matcher matcher = PATTERN.matcher(rawValue);
+        if (matcher.matches()) {
+            result = matcher.group(2);
+        } else {
+            result = rawValue;
+        }
+        return result;
     }
 
     private String urlFromLink(String htmlLink) {
