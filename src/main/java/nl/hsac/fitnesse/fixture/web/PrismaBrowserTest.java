@@ -30,13 +30,13 @@ public class PrismaBrowserTest extends BrowserTest {
     public boolean clickAndWaitForPage(String place, final String pageTitleStart) {
         boolean result = click(place);
         if (result) {
-            result = waitDriver()
-                        .until(new ExpectedCondition<Boolean>() {
+            result = waitFor(
+                        new ExpectedCondition<Boolean>() {
                             @Override
-                            public Boolean apply(WebDriver f) {
-                                return f.getTitle().startsWith(pageTitleStart);
+                            public Boolean apply(WebDriver wd) {
+                                return wd.getTitle().startsWith(pageTitleStart);
                             }
-                        }).booleanValue();
+                         });
         }
         return result;
     }
@@ -71,19 +71,23 @@ public class PrismaBrowserTest extends BrowserTest {
             String currentText = element.getText();
             result = value.equalsIgnoreCase(currentText);
             if (!result) {
-                result = waitDriver()
-                            .until(new ExpectedCondition<Boolean>() {
+                result = waitFor(
+                            new ExpectedCondition<Boolean>() {
                                 @Override
-                                public Boolean apply(WebDriver f) {
-                                    WebElement elem = f.findElement(By.id(id));
+                                public Boolean apply(WebDriver wd) {
+                                    WebElement elem = wd.findElement(By.id(id));
                                     String text = elem.getText();
                                     return value.equalsIgnoreCase(text);
                                 }
-                            }).booleanValue();
+                            });
 
             }
         }
         return result;
+    }
+
+    private Boolean waitFor(ExpectedCondition<Boolean> condition) {
+        return waitDriver().until(condition).booleanValue();
     }
 
     private WebDriverWait waitDriver() {
