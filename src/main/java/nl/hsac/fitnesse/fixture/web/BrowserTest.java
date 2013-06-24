@@ -12,6 +12,10 @@ public class BrowserTest extends SlimFixture {
 
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
 
+    protected SeleniumHelper getSeleniumHelper() {
+        return seleniumHelper;
+    }
+
     public boolean open(String htmlLink) {
         String url = urlFromLink(htmlLink);
         seleniumHelper.navigate().to(url);
@@ -126,7 +130,7 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
-    private WebElement getElement(String place) {
+    protected WebElement getElement(String place) {
         return seleniumHelper.getElement(place);
     }
 
