@@ -1,7 +1,11 @@
-!*****> Fixture code locaties
+!***> Fixture code locaties
 
 |Import                      |
 |nl.hsac.fitnesse.fixture    |
 |nl.hsac.fitnesse.fixture.web|
 
-**********!
+*!
+
+|script      |selenium driver setup                                                                                 |
+|set property|webdriver.chrome.driver|value|/Users/fried/dev/hsac/hsac-fitnesse-fixtures/webdrivers/osx/chromedriver|
+|startDriver |org.openqa.selenium.chrome.ChromeDriver                                                               |
