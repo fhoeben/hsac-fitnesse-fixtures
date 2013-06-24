@@ -4,13 +4,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Script fixture for testing prisma web application.
  */
 public class PrismaBrowserTest extends BrowserTest {
-    static final int MAX_WAIT_SECONDS = 30;
     public PrismaBrowserTest(String webDriverLocation) {
         System.setProperty("webdriver.ie.driver", webDriverLocation);
     }
@@ -95,13 +93,4 @@ public class PrismaBrowserTest extends BrowserTest {
         }
         return result;
     }
-
-    private Boolean waitFor(ExpectedCondition<Boolean> condition) {
-        return waitDriver().until(condition).booleanValue();
-    }
-
-    private WebDriverWait waitDriver() {
-        return new WebDriverWait(getSeleniumHelper().driver(), MAX_WAIT_SECONDS);
-    }
-
 }
