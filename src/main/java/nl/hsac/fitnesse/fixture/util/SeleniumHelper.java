@@ -73,7 +73,7 @@ public class SeleniumHelper {
     public WebElement getElement(String place) {
         WebElement element = null;
         if (element == null) {
-            element = getElementByLabel(place);
+            element = getElementByLabelOccurrence(place, 1);
         }
         if (element == null) {
             element = findElement(byXpath("//input[@value='%s']", place));
@@ -88,7 +88,7 @@ public class SeleniumHelper {
             element = findElement(By.id(place));
         }
         if (element == null) {
-            element = getElementByPartialLabel(place);
+            element = getElementByPartialLabelOccurrence(place, 1);
         }
         if (element == null) {
             element = findElement(byXpath("//input[contains(@value, '%s')]", place));
@@ -99,12 +99,20 @@ public class SeleniumHelper {
         return element;
     }
 
-    private WebElement getElementByLabel(String labelText) {
-        return getElementByLabel(labelText, "//label[text()='%s']", "//*[@aria-label='%s']");
+    public WebElement getElementByLabelOccurrence(String labelText, int index) {
+        return getElementByLabel(labelText,
+                                    indexedXPath("//label[text()='%s']", index),
+                                    indexedXPath("//*[@aria-label='%s']", index));
     }
 
-    private WebElement getElementByPartialLabel(String labelText) {
-        return getElementByLabel(labelText, "//label[contains(text(), '%s')]", "//*[contains(@aria-label, '%s')]");
+    public WebElement getElementByPartialLabelOccurrence(String labelText, int index) {
+        return getElementByLabel(labelText,
+                                    indexedXPath("//label[contains(text(), '%s')]", index),
+                                    indexedXPath("//*[contains(@aria-label, '%s')]", index));
+    }
+
+    private String indexedXPath(String xpathBase, int index) {
+        return String.format("(%s)[%s]", xpathBase, index);
     }
 
     private WebElement getElementByLabel(String labelText, String firstXPath, String secondXPath) {
