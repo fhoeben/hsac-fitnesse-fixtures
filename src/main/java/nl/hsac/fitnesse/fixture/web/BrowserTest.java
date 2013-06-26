@@ -28,19 +28,47 @@ public class BrowserTest extends SlimFixture {
         return getSeleniumHelper().getPageTitle();
     }
 
+    /**
+     * Replaces content at place by value.
+     * @param value value to set.
+     * @param place element to set value on.
+     * @return true, if element was found.
+     */
     public boolean enterAs(String value, String place) {
-        return enterFor(value, place);
+        boolean result = false;
+        WebElement element = getElement(place);
+        if (element != null) {
+            element.clear();
+            sendValue(element, value);
+            result = true;
+        }
+        return result;
     }
 
+    /**
+     * Adds content to place.
+     * @param value value to add.
+     * @param place element to add value to.
+     * @return true, if element was found.
+     */
     public boolean enterFor(String value, String place) {
         boolean result = false;
         WebElement element = getElement(place);
         if (element != null) {
-            String keys = cleanupValue(value);
-            element.sendKeys(keys);
+            sendValue(element, value);
             result = true;
         }
         return result;
+    }
+
+    /**
+     * Sends Fitnesse cell content to element.
+     * @param element element to call sendKeys() on.
+     * @param value cell content.
+     */
+    protected void sendValue(WebElement element, String value) {
+        String keys = cleanupValue(value);
+        element.sendKeys(keys);
     }
 
     public boolean selectAs(String value, String place) {
