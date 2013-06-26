@@ -18,8 +18,12 @@ public class BrowserTest extends SlimFixture {
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
     private int secondsBeforeTimeout = 10;
 
-    public boolean open(String htmlLink) {
-        String url = urlFromLink(htmlLink);
+    public boolean open(String address) {
+        String url = urlFromLink(address);
+        if (url == null) {
+            // not a html link, use raw value
+            url = address;
+        }
         getSeleniumHelper().navigate().to(url);
         return true;
     }
