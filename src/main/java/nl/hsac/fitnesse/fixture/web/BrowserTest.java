@@ -2,12 +2,13 @@ package nl.hsac.fitnesse.fixture.web;
 
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class BrowserTest extends SlimFixture {
     static final int MAX_WAIT_SECONDS = 30;
@@ -94,6 +95,19 @@ public class BrowserTest extends SlimFixture {
         if (element != null) {
             element.click();
             result = true;
+        }
+        return result;
+    }
+
+    public boolean clickAndWaitForPage(String place, final String pageName) {
+        boolean result = click(place);
+        if (result) {
+            result = waitFor(new ExpectedCondition<Boolean>() {
+                @Override
+                public Boolean apply(WebDriver webDriver) {
+                    return pageTitle().equals(pageName);
+                }
+            });
         }
         return result;
     }
