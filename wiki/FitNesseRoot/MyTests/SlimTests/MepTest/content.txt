@@ -1,9 +1,7 @@
 |scenario|log in                                                              |
 |open    |http://localhost:8080/mep/login.html                                |
-|clear   |User                                                                |
-|enter   |admin     |for              |User:                                  |
-|clear   |Password                                                            |
-|enter   |Secret5$  |for              |Password:                              |
+|enter   |admin     |as               |User:                                  |
+|enter   |Secret5$  |as               |Password:                              |
 |click   |Login     |and wait for page|Model Europees Parliament 2013 Overview|
 |check   |page title|Model Europees Parliament 2013 Overview                  |
 
@@ -11,7 +9,7 @@
 |log in                                                      |
 |click |Deelnemers                                           |
 |click |Add ne                                               |
-|enter |1           |as               |Kenmerk               |
+|enter |1           |for              |Kenmerk               |
 |enter |Fried       |as               |Voornaam              |
 |select|M           |as               |Geslacht:             |
 |select|OLV         |as               |School:               |
