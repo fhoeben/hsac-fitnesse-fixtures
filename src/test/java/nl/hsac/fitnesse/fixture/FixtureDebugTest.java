@@ -12,7 +12,7 @@ public class FixtureDebugTest {
 
     @Test
     public void testWithFitnesse() throws Exception {
-        String suite = "MyTests.SlimTests.PrismaTest1";
+        String suite = "MyTests.SlimTests.MepTest";
         // allow suite to execute to be overriden via system property
         String propSuite = System.getProperty("fitnesseSuiteToRun");
         if (!StringUtils.isEmpty(propSuite)) {
