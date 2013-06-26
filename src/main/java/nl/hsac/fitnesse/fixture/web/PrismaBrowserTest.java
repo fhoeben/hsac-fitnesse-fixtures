@@ -25,6 +25,24 @@ public class PrismaBrowserTest extends BrowserTest {
         return pageTitle;
     }
 
+    @Override
+    protected WebElement getElement(String place) {
+        // optimized versions, which is aware we usually want to find based
+        // on the start of a label or link.
+        // first try to find by partial
+        WebElement element = getSeleniumHelper()
+                                .getElementByStartLabelOccurrence(place, 1);
+        if (element == null) {
+            // check using partial link
+            element = getSeleniumHelper().findElement(By.partialLinkText(place));
+            if (element == null) {
+                // only then use normal path
+                element = super.getElement(place);
+            }
+        }
+        return element;
+    }
+
     public boolean enterDateFor(String value, String place) {
         boolean result = false;
         String[] values = value.split("-");
