@@ -104,16 +104,40 @@ public class SeleniumHelper {
         return element;
     }
 
+    /**
+     * Finds element based on the exact (aria-)label text.
+     * @param labelText text for label.
+     * @param index occurrence of label (first is 1).
+     * @return element found if any, null otherwise.
+     */
     public WebElement getElementByLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText,
                                     indexedXPath("//label[text()='%s']", index),
                                     indexedXPath("//*[@aria-label='%s']", index));
     }
 
+    /**
+     * Finds element based on the start of the (aria-)label text.
+     * @param labelText text for label.
+     * @param index occurrence of label (first is 1).
+     * @return element found if any, null otherwise.
+     */
+    public WebElement getElementByStartLabelOccurrence(String labelText, int index) {
+        return getElementByLabel(labelText,
+                                    indexedXPath("//label[starts-with(text(), '%s')]", index),
+                                    indexedXPath("//*[starts-with(@aria-label, '%s')]", index));
+    }
+
+    /**
+     * Finds element based on part of the (aria-)label text.
+     * @param labelText text for label.
+     * @param index occurrence of label (first is 1).
+     * @return element found if any, null otherwise.
+     */
     public WebElement getElementByPartialLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText,
-                                    indexedXPath("//label[contains(text(), '%s')]", index),
-                                    indexedXPath("//*[contains(@aria-label, '%s')]", index));
+                indexedXPath("//label[contains(text(), '%s')]", index),
+                indexedXPath("//*[contains(@aria-label, '%s')]", index));
     }
 
     private String indexedXPath(String xpathBase, int index) {
