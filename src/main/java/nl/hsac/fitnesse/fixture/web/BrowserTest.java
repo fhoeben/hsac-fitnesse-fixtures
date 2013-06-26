@@ -5,16 +5,18 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BrowserTest extends SlimFixture {
-    static final int MAX_WAIT_SECONDS = 30;
     private static final Pattern PATTERN = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>", Pattern.CASE_INSENSITIVE);
 
-    private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
+    private final SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
+    private int secondsBeforeTimeout = 10;
 
     protected SeleniumHelper getSeleniumHelper() {
         return seleniumHelper;
@@ -22,12 +24,12 @@ public class BrowserTest extends SlimFixture {
 
     public boolean open(String htmlLink) {
         String url = urlFromLink(htmlLink);
-        seleniumHelper.navigate().to(url);
+        getSeleniumHelper().navigate().to(url);
         return true;
     }
 
     public String pageTitle() {
-        return seleniumHelper.getPageTitle();
+        return getSeleniumHelper().getPageTitle();
     }
 
     public boolean enterAs(String value, String place) {
@@ -60,7 +62,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     public boolean enterForHidden(String value, String idOrName) {
-        return seleniumHelper.setHiddenInputValue(idOrName, value);
+        return getSeleniumHelper().setHiddenInputValue(idOrName, value);
     }
 
     private boolean clickSelectOption(String selectPlace, String optionValue) {
@@ -80,8 +82,8 @@ public class BrowserTest extends SlimFixture {
 
     private boolean clickOption(String selectId, String optionXPath, String optionValue) {
         boolean result = false;
-        By optionWithText = seleniumHelper.byXpath(optionXPath, selectId, optionValue);
-        WebElement option = seleniumHelper.findElement(true, optionWithText);
+        By optionWithText = getSeleniumHelper().byXpath(optionXPath, selectId, optionValue);
+        WebElement option = getSeleniumHelper().findElement(true, optionWithText);
         if (option != null) {
             option.click();
             result = true;
@@ -102,7 +104,7 @@ public class BrowserTest extends SlimFixture {
     public boolean clickAndWaitForPage(String place, final String pageName) {
         boolean result = click(place);
         if (result) {
-            result = waitFor(new ExpectedCondition<Boolean>() {
+            result = waitUntil(new ExpectedCondition<Boolean>() {
                 @Override
                 public Boolean apply(WebDriver webDriver) {
                     return pageTitle().equals(pageName);
@@ -122,8 +124,8 @@ public class BrowserTest extends SlimFixture {
         if (element != null) {
             if (isSelect(element)) {
                 String id = element.getAttribute("id");
-                By selectedOption = seleniumHelper.byXpath("//select[@id='%s']//option[@selected]", id);
-                WebElement option = seleniumHelper.findElement(true, selectedOption);
+                By selectedOption = getSeleniumHelper().byXpath("//select[@id='%s']//option[@selected]", id);
+                WebElement option = getSeleniumHelper().findElement(true, selectedOption);
                 if (option != null) {
                     result = option.getText();
                 }
@@ -149,15 +151,38 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected WebElement getElement(String place) {
-        return seleniumHelper.getElement(place);
+        return getSeleniumHelper().getElement(place);
     }
 
-    protected Boolean waitFor(ExpectedCondition<Boolean> condition) {
-        return waitDriver().until(condition).booleanValue();
+    /**
+     * @param timeout number of seconds before waitUntil() throws TimeOutException.
+     */
+    public void secondsBeforeTimeout(int timeout) {
+        secondsBeforeTimeout = timeout;
+    }
+
+    /**
+     * @return number of seconds waitUntil() will wait at most.
+     */
+    public int secondsBeforeTimeout() {
+        return secondsBeforeTimeout;
+    }
+
+    /**
+     * Implementations should wait until the condition evaluates to a value that is neither null nor
+     * false. Because of this contract, the return type must not be Void.
+     * @param <T> the return type of the method, which must not be Void
+     * @param condition condition to evaluate to determine whether waiting can be stopped.
+     * @throws org.openqa.selenium.TimeoutException if condition was not met before secondsBeforeTimeout.
+     * @return result of condition.
+     */
+    protected <T> T waitUntil(ExpectedCondition<T> condition) {
+        FluentWait<WebDriver> wait = waitDriver().withTimeout(secondsBeforeTimeout(), TimeUnit.SECONDS);
+        return wait.until(condition);
     }
 
     private WebDriverWait waitDriver() {
-        return new WebDriverWait(getSeleniumHelper().driver(), MAX_WAIT_SECONDS);
+        return getSeleniumHelper().waitDriver();
     }
 
     /**

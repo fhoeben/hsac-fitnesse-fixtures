@@ -6,6 +6,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,7 +17,10 @@ import java.util.concurrent.TimeUnit;
  * Helper to work with Selenium.
  */
 public class SeleniumHelper {
+    /** Default time in seconds the wait web driver waits unit throwing TimeOutException. */
+    public static final int DEFAULT_TIMEOUT_SECONDS = 10;
     private WebDriver webDriver;
+    private WebDriverWait webDriverWait;
     private boolean shutdownHookEnabled = false;
 
     /**
@@ -28,6 +32,12 @@ public class SeleniumHelper {
             webDriver.quit();
         }
         webDriver = aWebDriver;
+
+        if (webDriver == null) {
+            webDriverWait = null;
+        } else {
+            webDriverWait = new WebDriverWait(webDriver, DEFAULT_TIMEOUT_SECONDS);
+        }
 
         if (!shutdownHookEnabled) {
             Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -207,6 +217,14 @@ public class SeleniumHelper {
      */
     public WebDriver driver() {
         return webDriver;
+    }
+
+    /**
+     * Allows clients to wait until a certain condition is true.
+     * @return wait using the driver in this helper.
+     */
+    public WebDriverWait waitDriver() {
+        return webDriverWait;
     }
 
     /**
