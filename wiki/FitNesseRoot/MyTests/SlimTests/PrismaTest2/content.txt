@@ -1,9 +1,9 @@
-|scenario|log in                                         |
-|open    |https://acc.prismapensioen.nl/Login.aspx       |
-|enter   |!-HoMing-!    |for              |Gebruikersnaam|
-|enter   |!-VkC=_mjn3--!|for              |Wachtwoord    |
-|click   |Inloggen      |and wait for page|Home          |
-|check   |page title    |Home                            |
+!|scenario|log in                                     |
+|open     |https://acc.prismapensioen.nl/Login.aspx   |
+|enter    |HoMing    |for              |Gebruikersnaam|
+|enter    |VkC=_mjn3-|for              |Wachtwoord    |
+|click    |Inloggen  |and wait for page|Home          |
+|check    |page title|Home                            |
 
 |script|prisma browser test|
 
