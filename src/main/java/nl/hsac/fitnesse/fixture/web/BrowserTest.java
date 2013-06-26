@@ -15,12 +15,8 @@ import java.util.regex.Pattern;
 public class BrowserTest extends SlimFixture {
     private static final Pattern PATTERN = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>", Pattern.CASE_INSENSITIVE);
 
-    private final SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
+    private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
     private int secondsBeforeTimeout = 10;
-
-    protected SeleniumHelper getSeleniumHelper() {
-        return seleniumHelper;
-    }
 
     public boolean open(String htmlLink) {
         String url = urlFromLink(htmlLink);
@@ -208,5 +204,20 @@ public class BrowserTest extends SlimFixture {
             result = matcher.group(1);
         }
         return result;
+    }
+
+    /**
+     * @return helper to use.
+     */
+    protected final SeleniumHelper getSeleniumHelper() {
+        return seleniumHelper;
+    }
+
+    /**
+     * Sets SeleniumHelper to use, for testing purposes.
+     * @param helper helper to use.
+     */
+    void setSeleniumHelper(SeleniumHelper helper) {
+        seleniumHelper = helper;
     }
 }
