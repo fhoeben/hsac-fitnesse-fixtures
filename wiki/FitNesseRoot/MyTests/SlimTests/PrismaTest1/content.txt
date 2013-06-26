@@ -1,0 +1,30 @@
+|scenario|log in                                     |
+|open     |https://acc.prismapensioen.nl/Login.aspx   |
+|enter    |!-HoMing-!    |as               |Gebruikersnaam|
+|enter    |!-VkC=_mjn3--!|as               |Wachtwoord    |
+|click    |Inloggen  |and wait for page|Home          |
+|check    |page title|Home                            |
+
+|script    |prisma browser test                                                   |
+|log in                                                                           |
+|click     |Ga naar overzicht          |and wait for page  |Overzicht werkgevers  |
+|click     |Maak nieuwe werkgever aan  |and wait for page  |Nieuwe werkgever      |
+|enter     |Fitnesse Test              |for                |Naam werkgever        |
+|enter     |123456789                  |for                |Rekeningnummer        |
+|enter date|01-01-2000                 |for                |Oprichtingsdatum      |
+|enter     |1245678                    |for                |!-KvK Nummer-!        |
+|enter     |1213VB                     |for                |Postcode              |
+|enter     |68                         |for                |Huisnummer            |
+|note      |We must click outside 'Huisnummer' to trigger postcode -> adres lookup|
+|select    |de heer                    |for                |Geslacht              |
+|note      |Wait for postcode -> adres lookup to complete                         |
+|wait for  |Straatnaam                 |to be              |Laapersveld           |
+|enter     |0000000000                 |for                |Telefoonnr. algemeen  |
+|select    |de heer                    |for                |Geslacht              |
+|enter     |S                          |for                |Voorletters           |
+|enter     |Fitnesse                   |for                |Achternaam            |
+|enter     |werkgever@landg.nl         |for                |E-mailadres           |
+|enter     |0000000000                 |for                |Telefoonnummer 1      |
+|click     |Opslaan                    |and wait for page  |Overzicht werkgevers  |
+
+

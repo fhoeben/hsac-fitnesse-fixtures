@@ -1,0 +1,37 @@
+|scenario|log in                                         |
+|open    |https://acc.prismapensioen.nl/Login.aspx       |
+|enter   |!-HoMing-!    |for              |Gebruikersnaam|
+|enter   |!-VkC=_mjn3--!|for              |Wachtwoord    |
+|click   |Inloggen      |and wait for page|Home          |
+|check   |page title    |Home                            |
+
+|script|prisma browser test|
+
+|scenario  |prisma _ werkgever _ maken _ a _ b _ c _ d _ e _ f _ g _ h _ i _ j _|naam,rekeningnummer,oprichtingsdatum,kvk,postcode,huisnummer,straatnaam,telAlg,contactGeslacht,contactVoorLtrs,contactAchterNm,contactEmail,contactTel1|
+|log in                                                                                                                                                                                                                                 |
+|click     |Ga naar overzicht                                                   |and wait for page                                                         |Overzicht werkgevers                                                        |
+|click     |Maak nieuwe werkgever aan                                           |and wait for page                                                         |Nieuwe werkgever                                                            |
+|enter     |@{naam}                                                             |for                                                                       |Naam werkgever                                                              |
+|enter     |@{rekeningnummer}                                                   |for                                                                       |Rekeningnummer                                                              |
+|enter date|@{oprichtingsdatum}                                                 |for                                                                       |Oprichtingsdatum                                                            |
+|enter     |@{kvk}                                                              |for                                                                       |!-KvK Nummer-!                                                              |
+|enter     |@{postcode}                                                         |for                                                                       |Postcode                                                                    |
+|enter     |@{huisnummer}                                                       |for                                                                       |Huisnummer                                                                  |
+|note      |We must click outside 'Huisnummer' to trigger postcode -> adres lookup                                                                                                                                                      |
+|select    |@{contactGeslacht}                                                  |for                                                                       |Geslacht                                                                    |
+|note      |Wait for postcode -> adres lookup to complete                                                                                                                                                                               |
+|wait for  |Straatnaam                                                          |to be                                                                     |@{straatnaam}                                                               |
+|enter     |@{telAlg}                                                           |for                                                                       |Telefoonnr. algemeen                                                        |
+|select    |@{contactGeslacht}                                                  |for                                                                       |Geslacht                                                                    |
+|enter     |@{contactVoorLtrs}                                                  |for                                                                       |Voorletters                                                                 |
+|enter     |@{contactAchterNm}                                                  |for                                                                       |Achternaam                                                                  |
+|enter     |@{contactEmail}                                                     |for                                                                       |E-mailadres                                                                 |
+|enter     |@{contactTel1}                                                      |for                                                                       |Telefoonnummer 1                                                            |
+|click     |Opslaan                                                             |and wait for page                                                         |Overzicht werkgevers                                                        |
+|click     |Uitloggen                                                                                                                                                                                                                   |
+
+
+|prisma werkgever maken a b c d e f g h i j                                                                                                                                       |
+|naam           |rekeningnummer|oprichtingsdatum|kvk    |postcode|huisnummer|straatnaam |telAlg    |contactGeslacht|contactVoorLtrs|contactAchterNm|contactEmail      |contactTel1|
+|Fitnesse Test 2|123456789     |02-02-2001      |1245678|1213VB  |68        |Laapersveld|0000000000|de heer        |S              |Fitnesse 1     |werkgever@landg.nl|0000000000 |
+|Fitnesse Test 3|123456789     |03-03-2002      |1245678|1213VB  |68        |Laapersveld|0000000000|mevrouw        |V              |Fitnesse 2     |werkgever@landg.nl|0000000000 |
