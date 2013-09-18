@@ -83,6 +83,8 @@ public class OurColumnFixture extends ColumnFixture {
 
     @Override
     public void check(Parse cell, TypeAdapter a) {
+        // this method can be removed if a release including fix for
+        // https://github.com/unclebob/fitnesse/issues/320 is used
         try {
             executeIfNeeded();
         }
@@ -91,6 +93,7 @@ public class OurColumnFixture extends ColumnFixture {
         }
 
         // Fitnesse's version does not deal very well with actual null when expected value is RegEx
+        // https://github.com/unclebob/fitnesse/issues/320
         String expected = cell.text();
         if (!"".equals(expected)
                 && isNullValueForRegEx(a))  {
