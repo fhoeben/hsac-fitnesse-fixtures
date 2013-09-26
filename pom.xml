@@ -10,6 +10,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
+		<standalone.classpath>wiki/fixtures</standalone.classpath>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -17,6 +19,7 @@
 			<artifactId>fitnesse</artifactId>
 			<version>20130530</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
@@ -47,6 +50,7 @@
 	</dependencies>
 
 	<build>
+		<outputDirectory>${standalone.classpath}</outputDirectory>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -118,21 +122,6 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.5.1</version>
-				<!-- On build server use dependency:unpack to copy all classes from dependencies to target/classes.
-					 target/classes will then be copied to /xxx-fixtures on build server so that all fixtures and
-					 dependencies are available to Fitnesse without need to have Maven to run tests.
-				-->
-				<configuration>
-					<includes>**/*</includes>
-					<excludes>META-INF,META-INF/**</excludes>
-					<includeScope>compile</includeScope>
-					<excludeArtifactIds>fitnesse</excludeArtifactIds>
-					<outputDirectory>${project.build.directory}/classes</outputDirectory>
-				</configuration>
-			</plugin>
-			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>1.2.1</version>
@@ -147,12 +136,24 @@
 					<executable>java</executable>
 					<workingDirectory>wiki</workingDirectory>
 					<arguments>
-						<argument>-classpath</argument>
-						<classpath/>
-						<argument>fitnesseMain.FitNesseMain</argument>
-						<argument>-p</argument>
-						<argument>9090</argument>
+						<argument>-jar</argument>
+						<argument>fitnesse-standalone.jar</argument>
 					</arguments>
+				</configuration>
+			</plugin>
+			<plugin>
+				<!-- Use dependency:unpack to copy all classes from dependencies to ${standalone.classpath},
+					 where classes from this project end up also, so that all fixtures and
+					 dependencies are available to Fitnesse without need to have Maven to run tests.
+				-->
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration>
+					<includes>**/*</includes>
+					<excludes>META-INF,META-INF/**</excludes>
+					<includeScope>compile</includeScope>
+					<excludeArtifactIds>fitnesse</excludeArtifactIds>
+					<outputDirectory>${standalone.classpath}</outputDirectory>
 				</configuration>
 			</plugin>
 		</plugins>
