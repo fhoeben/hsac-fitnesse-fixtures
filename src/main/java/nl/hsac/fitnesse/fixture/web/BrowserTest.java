@@ -98,10 +98,19 @@ public class BrowserTest extends SlimFixture {
         WebElement element = getElement(selectPlace);
         if (element != null) {
             if (isSelect(element)) {
-                String id = element.getAttribute("id");
-                result = clickOption(id, "//select[@id='%s']//option[text()='%s']", optionValue);
-                if (!result) {
-                    result = clickOption(id, "//select[@id='%s']//option[contains(text(), '%s')]", optionValue);
+                String attrToUse = "id";
+                String attrValue = element.getAttribute(attrToUse);
+                if (attrValue == null || attrValue.isEmpty()) {
+                    attrToUse = "name";
+                    attrValue = element.getAttribute(attrToUse);
+                }
+
+                if (attrValue != null && !attrValue.isEmpty()) {
+                    String xpathToOptions = "//select[@" + attrToUse + "='%s']//option";
+                    result = clickOption(attrValue, xpathToOptions + "[text()='%s']", optionValue);
+                    if (!result) {
+                        result = clickOption(attrValue, xpathToOptions + "[contains(text(), '%s')]", optionValue);
+                    }
                 }
             }
         }
