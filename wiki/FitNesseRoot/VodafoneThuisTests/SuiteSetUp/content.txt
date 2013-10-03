@@ -1,0 +1,18 @@
+!***> Fixture code locaties
+
+|Import                      |
+|nl.hsac.fitnesse.fixture    |
+|nl.hsac.fitnesse.fixture.web|
+
+*!
+
+!|script     |selenium driver setup                                                             |
+|set property|webdriver.chrome.driver|value  |C:\dev\hsac-fitnesse\webdrivers\chromedriver      |
+|note        |startDriver            |org.openqa.selenium.chrome.ChromeDriver                   |
+|set property|webdriver.ie.driver    |value  |C:\dev\hsac-fitnesse\webdrivers\IEDriverServer.exe|
+|startDriver |org.openqa.selenium.ie.InternetExplorerDriver                                     |
+|note        |startDriver            |org.openqa.selenium.safari.SafariDriver                   |
+|note        |startDriver            |org.openqa.selenium.firefox.FirefoxDriver                 |
+|note        |connect to driver for  |firefox|at      |http://localhost:9999/test               |
+|note        |connect to driver for  |firefox|on      |ANY |at|http://localhost:9999/test       |
+|note        |connect to driver for  |firefox|version |2   |on|ANY|at|http://localhost:9999/test|
