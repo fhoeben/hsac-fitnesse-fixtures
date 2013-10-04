@@ -5,4 +5,4 @@ echo.
 echo You can stop Fitnesse by pressing Ctrl+C, or by closing this window.
 echo.
 cd wiki
-java -jar fitnesse-standalone.jar
+"C:\Program Files (x86)\Java\jre7\bin\java" -jar fitnesse-standalone.jar
