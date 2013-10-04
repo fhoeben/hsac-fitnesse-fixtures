@@ -7,10 +7,10 @@
 *!
 
 !|script     |selenium driver setup                                                             |
-|set property|webdriver.chrome.driver|value  |C:\dev\hsac-fitnesse\webdrivers\chromedriver      |
-|note        |startDriver            |org.openqa.selenium.chrome.ChromeDriver                   |
+|set property|webdriver.chrome.driver|value  |C:\dev\hsac-fitnesse\webdrivers\chromedriver.exe  |
+|startDriver |org.openqa.selenium.chrome.ChromeDriver                                           |
 |set property|webdriver.ie.driver    |value  |C:\dev\hsac-fitnesse\webdrivers\IEDriverServer.exe|
-|startDriver |org.openqa.selenium.ie.InternetExplorerDriver                                     |
+|note        |startDriver            |org.openqa.selenium.ie.InternetExplorerDriver             |
 |note        |startDriver            |org.openqa.selenium.safari.SafariDriver                   |
 |note        |startDriver            |org.openqa.selenium.firefox.FirefoxDriver                 |
 |note        |connect to driver for  |firefox|at      |http://localhost:9999/test               |
