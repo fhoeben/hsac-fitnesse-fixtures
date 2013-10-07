@@ -20,25 +20,25 @@ De regels met de gekke '@{}' waarden beschrijven verwijzingen naar de variabelen
 
 |script|browser test|
 
-|scenario|sign up _                                      |postcode, huisnr, aanhef, email                |
-|open    |https://orderportalvf-test.glasoperator.nl/                                                    |
-|enter   |@{postcode}                                    |as              |Postcode                      |
-|enter   |@{huisnr}                                      |as              |Huisnummer                    |
+|scenario|sign up _                                      |postcode, huisnr, aanhef, email           |
+|open    |https://orderportalvf-test.glasoperator.nl/                                               |
+|enter   |@{postcode}                                    |as              |Postcode                 |
+|enter   |@{huisnr}                                      |as              |Huisnummer               |
 |click   |Check adres                                    |and wait for tag|h1|with text|Stap 1 van 5|
-|click   |Verder                                                                                         |
-|select  |@{aanhef}                                      |for             |Aanhef                        |
-|enter   |Tester                                         |as              |Achternaam                    |
-|enter   |F. H.                                          |as              |Voorletter(s)                 |
-|enter   |@{email}                                       |as              |E-mail                        |
-|enter   |0624528616                                     |as              |Telefoonnummer mobiel         |
-|enter   |27-9-1975                                      |as              |Geboortedatum                 |
-|enter   |Tester                                         |as              |Naam rekeninghouder           |
-|enter   |151                                            |as              |IBAN of rekeningnummer        |
-|click   |Verder                                                                                         |
-|enter   |!randomString (10) (abcdefghijklmnopqrstuvwxyz)|as              |@vodafone.nl                  |
-|select  |Zo snel mogelijk                               |as              |Gewenste aansluitdatum        |
-|click   |Verder                                                                                         |
-|click   |Bestel                                                                                         |
+|click   |Verder                                         |and wait for tag|h1|with text|Stap 2 van 5|
+|select  |@{aanhef}                                      |for             |Aanhef                   |
+|enter   |Tester                                         |as              |Achternaam               |
+|enter   |F. H.                                          |as              |Voorletter(s)            |
+|enter   |@{email}                                       |as              |E-mail                   |
+|enter   |0624528616                                     |as              |Telefoonnummer mobiel    |
+|enter   |27-9-1975                                      |as              |Geboortedatum            |
+|enter   |Tester                                         |as              |Naam rekeninghouder      |
+|enter   |151                                            |as              |IBAN of rekeningnummer   |
+|click   |Verder                                         |and wait for tag|h1|with text|Stap 3 van 5|
+|enter   |!randomString (10) (abcdefghijklmnopqrstuvwxyz)|as              |@vodafone.nl             |
+|select  |Zo snel mogelijk                               |as              |Gewenste aansluitdatum   |
+|click   |Verder                                         |and wait for tag|h1|with text|Stap 4 van 5|
+|click   |Bestel                                         |and wait for tag|h1|with text|Stap 5 van 5|
 
 
 *!
