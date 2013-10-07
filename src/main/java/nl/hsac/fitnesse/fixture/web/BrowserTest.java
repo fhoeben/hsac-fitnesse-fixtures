@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -166,21 +167,27 @@ public class BrowserTest extends SlimFixture {
                 @Override
                 public Boolean apply(WebDriver webDriver) {
                     boolean ok = false;
-                    WebElement element = getSeleniumHelper().findElement(By.tagName(tagName));
-                    if (element != null) {
-                        try {
-                            String actual = element.getText();
-                            if (expectedText == null) {
-                                ok = actual == null;
-                            } else {
-                                if (actual == null) {
-                                    actual = element.getAttribute("value");
+                    List<WebElement> elements = webDriver.findElements(By.tagName(tagName));
+                    if (elements != null) {
+                        for (WebElement element : elements) {
+                            try {
+                                String actual = element.getText();
+                                if (expectedText == null) {
+                                    ok = actual == null;
+                                } else {
+                                    if (actual == null) {
+                                        actual = element.getAttribute("value");
+                                    }
+                                    ok = expectedText.equals(actual);
                                 }
-                                ok = expectedText.equals(actual);
+                            } catch (StaleElementReferenceException e) {
+                                // element detached from DOM
+                                ok = false;
                             }
-                        } catch (StaleElementReferenceException e) {
-                            // element detached from DOM
-                            ok = false;
+                            if (ok) {
+                                // no need to continue to check other elements
+                                break;
+                            }
                         }
                     }
                     return ok;
