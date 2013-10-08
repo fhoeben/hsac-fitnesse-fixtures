@@ -2,12 +2,14 @@ package nl.hsac.fitnesse.fixture.web;
 
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -144,7 +146,73 @@ public class BrowserTest extends SlimFixture {
             result = waitUntil(new ExpectedCondition<Boolean>() {
                 @Override
                 public Boolean apply(WebDriver webDriver) {
-                    return pageTitle().equals(pageName);
+                    boolean ok = false;
+                    try {
+                        ok = pageTitle().equals(pageName);
+                    } catch (StaleElementReferenceException e) {
+                        // element detached from DOM
+                        ok = false;
+                    }
+                    return ok;
+                }
+            });
+        }
+        return result;
+    }
+
+    public boolean clickAndWaitForTagWithText(String place, final String tagName, final String expectedText) {
+        boolean result = click(place);
+        if (result) {
+            result = waitUntil(new ExpectedCondition<Boolean>() {
+                @Override
+                public Boolean apply(WebDriver webDriver) {
+                    boolean ok = false;
+                    List<WebElement> elements = webDriver.findElements(By.tagName(tagName));
+                    if (elements != null) {
+                        for (WebElement element : elements) {
+                            try {
+                                String actual = element.getText();
+                                if (expectedText == null) {
+                                    ok = actual == null;
+                                } else {
+                                    if (actual == null) {
+                                        actual = element.getAttribute("value");
+                                    }
+                                    ok = expectedText.equals(actual);
+                                }
+                            } catch (StaleElementReferenceException e) {
+                                // element detached from DOM
+                                ok = false;
+                            }
+                            if (ok) {
+                                // no need to continue to check other elements
+                                break;
+                            }
+                        }
+                    }
+                    return ok;
+                }
+            });
+        }
+        return result;
+    }
+
+    public boolean clickAndWaitForTagWithValue(String place, final String tagName, final String expectedValue) {
+        boolean result = click(place);
+        if (result) {
+            result = waitUntil(new ExpectedCondition<Boolean>() {
+                @Override
+                public Boolean apply(WebDriver webDriver) {
+                    boolean ok = false;
+                    WebElement element = getSeleniumHelper().findElement(By.tagName(tagName));
+                    if (element != null) {
+                        if (expectedValue == null) {
+                            ok = element.getText() == null;
+                        } else {
+                            ok = expectedValue.equals(element.getText());
+                        }
+                    }
+                    return ok;
                 }
             });
         }
