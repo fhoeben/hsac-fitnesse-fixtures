@@ -163,59 +163,43 @@ public class BrowserTest extends SlimFixture {
     public boolean clickAndWaitForTagWithText(String place, final String tagName, final String expectedText) {
         boolean result = click(place);
         if (result) {
-            result = waitUntil(new ExpectedCondition<Boolean>() {
-                @Override
-                public Boolean apply(WebDriver webDriver) {
-                    boolean ok = false;
-                    List<WebElement> elements = webDriver.findElements(By.tagName(tagName));
-                    if (elements != null) {
-                        for (WebElement element : elements) {
-                            try {
-                                String actual = element.getText();
-                                if (expectedText == null) {
-                                    ok = actual == null;
-                                } else {
-                                    if (actual == null) {
-                                        actual = element.getAttribute("value");
-                                    }
-                                    ok = expectedText.equals(actual);
-                                }
-                            } catch (StaleElementReferenceException e) {
-                                // element detached from DOM
-                                ok = false;
-                            }
-                            if (ok) {
-                                // no need to continue to check other elements
-                                break;
-                            }
-                        }
-                    }
-                    return ok;
-                }
-            });
+            result = waitForTagWithText(tagName, expectedText);
         }
         return result;
     }
 
-    public boolean clickAndWaitForTagWithValue(String place, final String tagName, final String expectedValue) {
-        boolean result = click(place);
-        if (result) {
-            result = waitUntil(new ExpectedCondition<Boolean>() {
-                @Override
-                public Boolean apply(WebDriver webDriver) {
-                    boolean ok = false;
-                    WebElement element = getSeleniumHelper().findElement(By.tagName(tagName));
-                    if (element != null) {
-                        if (expectedValue == null) {
-                            ok = element.getText() == null;
-                        } else {
-                            ok = expectedValue.equals(element.getText());
+    public boolean waitForTagWithText(final String tagName, final String expectedText) {
+        boolean result;
+        result = waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                boolean ok = false;
+                List<WebElement> elements = webDriver.findElements(By.tagName(tagName));
+                if (elements != null) {
+                    for (WebElement element : elements) {
+                        try {
+                            String actual = element.getText();
+                            if (expectedText == null) {
+                                ok = actual == null;
+                            } else {
+                                if (actual == null) {
+                                    actual = element.getAttribute("value");
+                                }
+                                ok = expectedText.equals(actual);
+                            }
+                        } catch (StaleElementReferenceException e) {
+                            // element detached from DOM
+                            ok = false;
+                        }
+                        if (ok) {
+                            // no need to continue to check other elements
+                            break;
                         }
                     }
-                    return ok;
                 }
-            });
-        }
+                return ok;
+            }
+        });
         return result;
     }
 
