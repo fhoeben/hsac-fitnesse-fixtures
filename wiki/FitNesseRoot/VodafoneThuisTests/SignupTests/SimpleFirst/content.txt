@@ -6,6 +6,7 @@
 |click |Verder                                         |and wait for tag|h1|with text|Persoonlijke gegevens|
 |select|Mevrouw                                        |for             |Aanhef                            |
 |enter |Tester                                         |as              |Achternaam                        |
+|check |value of                                       |Achternaam      |Tester                            |
 |enter |F. H.                                          |as              |Voorletter(s)                     |
 |enter |test@glasoperator.nl                           |as              |E-mail                            |
 |enter |0624528616                                     |as              |Telefoonnummer mobiel             |
