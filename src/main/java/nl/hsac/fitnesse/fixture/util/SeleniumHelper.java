@@ -84,6 +84,9 @@ public class SeleniumHelper {
             element = findElement(byXpath("//input[@value='%s']", place));
         }
         if (element == null) {
+            element = findElement(byXpath("//button[text()='%s']", place));
+        }
+        if (element == null) {
             element = findElement(By.linkText(place));
         }
         if (element == null) {
