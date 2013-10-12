@@ -37,7 +37,7 @@ public class VodafoneBrowserTest extends BrowserTest {
     public String errorOn(String label) {
         String result = null;
         By errorXPath = getSeleniumHelper()
-                            .byXpath("//div[starts-with(@class, 'control-group')]/label[text() = '%s']/following-sibling::div/p[@class='help-block']",
+                            .byXpath("//label[text() = '%s']/following-sibling::div/p[@class='help-block']",
                                     label);
         WebElement element = getSeleniumHelper().findElement(errorXPath);
         if (element != null) {
