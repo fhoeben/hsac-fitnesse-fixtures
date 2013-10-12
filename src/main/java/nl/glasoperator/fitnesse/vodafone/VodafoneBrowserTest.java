@@ -1,5 +1,6 @@
-package nl.hsac.fitnesse.fixture.web;
+package nl.glasoperator.fitnesse.vodafone;
 
+import nl.hsac.fitnesse.fixture.web.BrowserTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;

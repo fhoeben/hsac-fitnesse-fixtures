@@ -1,8 +1,9 @@
 !***> Fixture code locaties
 
-|Import                      |
-|nl.hsac.fitnesse.fixture    |
-|nl.hsac.fitnesse.fixture.web|
+|Import                           |
+|nl.hsac.fitnesse.fixture         |
+|nl.hsac.fitnesse.fixture.web     |
+|nl.glasoperator.fitnesse.vodafone|
 
 *!
 
