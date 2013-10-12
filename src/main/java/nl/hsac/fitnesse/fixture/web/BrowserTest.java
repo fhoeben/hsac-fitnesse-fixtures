@@ -4,6 +4,7 @@ import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
@@ -131,10 +132,38 @@ public class BrowserTest extends SlimFixture {
     }
 
     public boolean click(String place) {
+        // if other element hides the element (in Chrome) an exception is thrown
+        // we retry clicking the element a few times before giving up.
         boolean result = false;
+        boolean retry = true;
+        for (int i = 0;
+             !result && retry && i < secondsBeforeTimeout();
+             i++) {
+            try {
+                result = clickImpl(place);
+            } catch (WebDriverException e) {
+                String msg = e.getMessage();
+                if (!msg.contains("Other element would receive the click")) {
+                    retry = false;
+                } else {
+                    waitSeconds(1);
+                }
+            }
+        }
+        return result;
+    }
+
+    protected boolean clickImpl(String place) {
         WebElement element = getElement(place);
+        return clickElement(element);
+    }
+
+    protected boolean clickElement(WebElement element) {
+        boolean result = false;
         if (element != null) {
-            element.click();
+            if (element.isDisplayed() && element.isEnabled()) {
+                element.click();
+            }
             result = true;
         }
         return result;
@@ -235,6 +264,17 @@ public class BrowserTest extends SlimFixture {
         if (element != null) {
             element.clear();
             result = true;
+        }
+        return result;
+    }
+
+    public boolean waitSeconds(int i) {
+        boolean result;
+        try {
+            Thread.sleep(1 * 1000);
+            result = true;
+        } catch (InterruptedException e) {
+            result = false;
         }
         return result;
     }
