@@ -51,24 +51,6 @@ public class VodafoneBrowserTest extends BrowserTest {
         return result;
     }
 
-    public boolean clickR(String place) {
-        boolean result = false;
-        By byButtonText = getSeleniumHelper().byXpath("//label[contains(text(), '%s')]", place);
-        List<WebElement> elements = getSeleniumHelper().driver().findElements(byButtonText);
-        if (elements != null) {
-            for (WebElement element : elements) {
-                String id = element.getAttribute("id");
-                String name = element.getAttribute("name");
-                if (element.isDisplayed() && element.isEnabled()) {
-                    element.click();
-                    result = true;
-                    break;
-                }
-            }
-        }
-        return result;
-    }
-
     public boolean waitSeconds(int i) {
         boolean result;
         try {
