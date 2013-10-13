@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="nl" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="nl" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="nl" class="no-js lt-ie9"> <![endif]-->
+<!--[if IE 9]>         <html lang="nl" class="no-js lt-ie10"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="nl" class="no-js">
+	<!--<![endif]-->
+	<head>
+		<meta charset="utf-8" />
+		<title>Vodafone mobiele abonnementen - Mobiele telefoons - Sim Only - Vodafone.nl</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+		<meta name="description" content="Vodafone abonnementen en informatie over mobiel bellen en internet, abonnementen verlengen en aanbiedingen." />
+		<meta name="author" content="" />
+		<meta name="pageCategory" content="homepage" />
+		<meta name="targetAudience" content="consumer" />
+
+		<link href="assets/css/stylesheets.css" rel="stylesheet" type="text/css" />
+		<link rel="icon" type="image/png" href="/_assets/favicon/favicon-16.png" sizes="16x16">
+		<link rel="icon" type="image/png" href="/_assets/favicon/favicon-32.png" sizes="32x32">
+		<link rel="icon" type="image/png" href="/_assets/favicon/favicon-48.png" sizes="48x48">
+		<link rel="apple-touch-icon-precomposed" href="/_assets/favicon/favicon-57.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/_assets/favicon/favicon-72.png" />
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/_assets/favicon/favicon-114.png" />
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/_assets/favicon/favicon-144.png" />
+		<meta name="msapplication-TileColor" content="#e60000">
+		<meta name="msapplication-TileImage" content="/_assets/favicon/favicon-144.png">
+		<!--[if IE]>
+		  <link rel="shortcut icon" href="/_assets/favicon/favicon.ico"/>
+		<![endif]-->
+		<!--[if lt IE 9]>
+		  <link href="assets/css/ie.css" rel="stylesheet" type="text/css" />
+		<![endif]-->
+
+
+		<!-- Le styles -->
+		<link href="assets/css/thuis.css" rel="stylesheet">
+		<link href="assets/css/checkout.css" rel="stylesheet">
+
+
+		<!--[if lt IE 10]>
+			  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+			<![endif]-->
+		<!-- Le javascript -->
+		<script src="assets/js/libs/modernizr/modernizr-min.js">
+		</script>
+	</head>
+	<body>
+		<div class="page">
+
+			<div class="main">
+				<div class="wrapper">
+					<div class="rhombus">
+						<div class="logo">
+							<a href="#"><img width="60" height="60" alt="Vodafone Home" src="assets/images/vf_logo.png"></a>
+						</div>
+					</div>
+					<div class="row-fluid">
+						<div class="span12">
+							<div class="h1_wrapper">
+								<h1 class="bigger">Vodafone Thuis bestellen</h1>
+							</div>
+							<!--					<ul class="breadcrumb">
+													<li>
+													  Je bent hier:
+													</li>
+													<li>
+														<a href="#">Home</a><span class="divider">/</span>
+													</li>
+													<li>
+														<a href="#">Shop</a><span class="divider">/</span>
+													</li>
+													<li>
+														<a href="#">Vodafone Thuis</a><span class="divider">/</span>
+													</li>
+													<li>
+														<a href="#">Pakketkeuze</a><span class="divider">/</span>
+													</li>
+													<li class="active">
+														Bestellen
+													</li>
+												</ul> -->
+							<div class="progressbar_wrapper">
+								<ul class="progressbar">
+									<li class="step1 active"><span class="step"></span><span class="item">Persoonlijke gegevens</span></li>
+									<li class="step2 todo"><div><span class="step"></span><span class="item">Aanvullende gegevens</span></div></li>
+									<li class="step3 todo"><div><span class="step"></span><span class="item">Bevestiging</span></div></li>
+									<li class="step4 todo"><div><span class="step"></span><span class="item">Bedankt!</span></div></li>
+								</ul>
+							</div>
+							<div class="row-fluid collapse850">
+								<div class="span9">
+									<div class="padding-content">
+										<div class="steps_wrapper">
+											<div class="form_steps">
+												<form id="checkout-form" class="form-horizontal" method="get" action="#">
+													<fieldset class="step step1">
+
+														<h2>Mogen wij je gegevens?</h2>
+														<hr>
+														<div class="alert alert-formerror">
+															Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens.
+														</div>
+
+														<div class="control-group deliver_fulladdress">
+															<label class="control-label">
+																Het adres waar we je aansluiting gaan plaatsen:
+															</label>
+															<div class="controls">
+																<p class="result-block pull-left label">
+																	Rijksstraatweg 493<br>
+																	2025 DD<br>
+																	Haarlem<br>
+																</p>
+																<a href="#" class="pull-right label" id="toggle_deliver_fulladdress">Ik heb een ander adres</a>
+															</div>
+														</div>
+
+														<div id="deliver_fulladdress">
+
+															<div class="control-group error">
+																<label class="control-label required" for="deliver_streetname">Straatnaam</label>
+																<div class="controls">
+																	<div class="inputs">
+																		<div class="span12">
+																			<input id="deliver_streetname" name="deliver_streetname" type="text" maxlength="64">
+																		</div>
+																	</div>
+																	<p class="help-block">Test
+																	</p>
+																</div>
+															</div>
+
+															<div class="control-group">
+																<label class="control-label required" for="deliver_housenumber">Huisnummer</label>
+																<div class="controls">
+																	<div class="inputs">
+																		<div class="span8">
+																			<input id="deliver_housenumber" name="deliver_housenumber" type="text" class="postcode_check inline" maxlength="16">
+																		</div>
+																		<div class="span4">
+																			<input id="deliver_housenumberext" name="deliver_housenumberext" placeholder="Extensie" type="text" class="postcode_check  inline	" maxlength="8">
+																		</div>
+																	</div>
+																	<p class="help-block">
+																	</p>
+																</div>
+															</div>
+
+															<div class="control-group">
+																<label class="control-label required" for="deliver_postalcode">Postcode</label>
+																<div class="controls">
+																	<div class="inputs">
+																		<div class="span12">
+																			<input id="deliver_postalcode" name="deliver_postalcode" type="text" class="postcode_check" maxlength="7">
+																		</div>
+																	</div>
+																	<p class="help-block">
+																	</p>
+																</div>
+															</div>
+
+															<div class="control-group">
+																<label class="control-label required" for="deliver_city">Plaatsnaam</label>
+																<div class="controls">
+																	<div class="inputs">
+																		<div class="span12">
+																			<input id="deliver_city" name="deliver_city" type="text" maxlength="64">
+																		</div>
+																	</div>
+																	<p class="help-block">
+																	</p>
+																</div>
+															</div>
+														</div>
+
+														<hr>
+
+														<h4>Persoonlijke gegevens</h4>
+														<p class="information">
+															Velden met een <span class="required">sterretje</span> zijn verplichte velden.
+														</p>
+														<div class="control-group">
+															<div class="controls">
+																<label class="radio inline" for="title_deheer">
+																	<input name="title" value="De heer" type="radio" id="title_deheer">
+																	De heer </label> <label class="radio inline" for="title_mevrouw">
+																<input name="title" value="Mevrouw" type="radio" id="title_mevrouw">
+																Mevrouw </label>
+																<p class="help-block">
+																</p>
+															</div>
+														</div>
+
+
+														<div class="control-group">
+															<label class="control-label required" for="firstname">Voornaam</label>
+															<div class="controls">
+																<div class="inputs">
+																	<div class="span12">
+																		<input id="firstname" name="firstname" type="text" maxlength="64">
+																	</div>
+																</div>
+																<p class="help-block">
+																</p>
+															</div>
+														</div>
+
+
+														<div class="control-group">
+															<label class="control-label" for="middlename">Tussenvoegsels</label>
+															<div class="controls">
+																<div class="inputs">
+																	<div class="span12">
+																		<input id="middlename" name="middlename" type="text" maxlength="64">
+																	</div>
+																</div>
+																<p class="help-block">
+																</p>
+															</div>
+														</div>
+
+
+														<div class="control-group">
+															<label class="control-label required" for="lastname">Achternaam</label>
+															<div class="controls">
+																<div class="inputs">
+																	<div class="span12">
+																		<input id="lastname" name="lastname" type="text" maxlength="64">
+																	</div>
+																</div>
+																<p class="help-block">
+																</p>
+															</div>
+														</div>
+
+
+														<div class="control-group">
+															<label class="control-label required" for="email">E-mailadres</label>
+															<div class="controls">
+																<div class="inputs">
+																	<div class="span12">
+																		<input id="email" name="email" type="email" maxlength="64">
+																	</div>
+																</div>
+																<p class="help-block">
+																</p>
+															</div>
+														</div>
+
+
+														<div class="control-group">
+															<label class="control-label required" for="birthdate">Geboortedatum</label>
+															<div class="controls">
+																<div class="inputs">
+																	<div class="span12">
+																		<input id="birthdate" name="birthdate" type="text" placeholder="dd-mm-jjjj" maxlength="10">
+																	</div>
+																</div>
+																<p class="help-block">
+																</p>
+															</div>
+														</div>
+
+
+														<div class="control-group">
+															<label class="control-label" for="mobile">Telefoonnummer mobiel</label>
+															<div class="controls">
+																<div class="inputs">
+																	<div class="span12">
+																		<div class="input-prepend">
+																			<span class="add-on">06</span>
+																			<input id="mobile" name="mobile" type="text" class="span6 phone" maxlength="8">
+																		</div>
+																	</div>
+																</div>
+																<p class="help-block">
+																</p>
+															</div>
+														</div>
+
+
+														<div class="control-group">
+															<label class="control-label" for="phonenumber">Tweede telefoonnummer</label>
+															<div class="controls">
+																<div class="inputs">
+																	<div class="span12">
+																		<input id="phonenumber" name="phonenumber" type="text" class="span6 phone" maxlength="11">
+																	</div>
+																</div>
+																<p class="help-block">
+																</p>
+															</div>
+															<p class="footnote_message">
+																Vul minstens één telefoonnummer in. Dan kunnen we contact met je opnemen mocht het nodig zijn.
+															</p>
+														</div>
+
+														<hr>
+
+														<h4>Kies je nieuwe e-mailadres</h4>
+
+														<div class="control-group">
+															<p>
+																Wij geven je je eigen e-mailadres bij Vodafone Thuis. Hiermee kun je straks ook inloggen bij My Vodafone Thuis.
+															</p>
+															<!--<label class="control-label required" for="thuisemail">Thuis e-mailadres</label>-->
+															<div class="controls left">
+																<div class="inputs">
+																	<div class="span12">
+																		<div class="input-append">
+																			<input id="thuisemail" name="thuisemail" type="text" class="span11" maxlength="32">
+																			<span class="add-on">@vodafonethuis.nl</span>
+																		</div>
+																	</div>
+																</div>
+																<p class="help-block">
+																</p>
+																<div id="alternatives">
+																	<p>
+																		Kies een ander e-mailadres of één van onderstaande suggesties:
+																	</p>
+																	<ul></ul>
+																</div>
+															</div>
+														</div>
+
+														<hr>
+
+														<h4>Bankgegevens</h4>
+
+
+														<div class="control-group">
+															<p>
+																Nadat we glasvezel bij jou hebben geinstalleerd, schrijven wij de eenmalige en maandelijkse kosten automatisch af. Daarvoor hebben we wel je rekeningnummer nodig.
+															</p>
+
+															<label class="control-label required" for="accountnumber">IBAN/Bankrekeningnummer</label>
+															<div class="controls">
+																<div class="inputs">
+																	<div class="span12">
+																		<input id="accountnumber" name="accountnumber" type="text" maxlength="64">
+																	</div>
+																</div>
+																<p class="help-block">
+																</p>
+															</div>
+														</div>
+
+														<div class="control-group">
+															<label class="control-label required" for="billingname">Naam rekeninghouder</label>
+															<div class="controls">
+																<div class="inputs">
+																	<div class="span12">
+																		<input id="billingname" name="billingname" type="text" maxlength="64">
+																	</div>
+																</div>
+																<p class="help-block">
+																</p>
+															</div>
+														</div>
+
+														<hr>
+
+														<div class="control-group wide">
+															<div class="controls left">
+																<button name="next" class="btn btn-primary btn-large btn-next">Volgende stap</button>
+															</div>
+														</div>
+													</fieldset>
+													<fieldset class="step step2">
+
+
+
+														<div class="alert alert-formerror">
+															Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens.
+														</div>
+
+														<h4>Nummerbehoud</h4>
+
+														<div class="control-group">
+															<p class="required">
+																Wil je een vast telefoonnummer overzetten naar Vodafone Thuis?
+															</p>
+															<div class="left controls">
+																<div class="inputs">
+																	<label class="radio inline" for="numberporting_yes">
+																		<input name="numberporting" value="Ja" type="radio" id="numberporting_yes">
+																		Ja </label> <label class="radio inline" for="numberporting_no">
+																	<input name="numberporting" value="Nee" type="radio" id="numberporting_no">
+																	Nee </label>
+																</div>
+																<p class="help-block">
+																</p>
+															</div>
+														</div>
+
+														<div class="control-group">
+															<label class="control-label required" for="numberporting_phonenumber">Welk nummer wil je overzetten?</label>
+															<div class="controls">
+																<div class="inputs">
+																	<div class="span6">
+																		<input id="numberporting_phonenumber" name="numberporting_phonenumber" type="text" class="phone" maxlength="11">
+																	</div>
+																</div>
+																<p class="help-block">
+																</p>
+															</div>
+														</div>
+
+														<div class="control-group deliver_fulladdress">
+															<div class="controls left">
+																<label class="checkbox">
+																	<input name="numberporting_change_address" value="yes" type="checkbox" id="numberporting_change_address">
+																	Ik gebruik dit nummer momenteel op een ander adres dan <span class="result-block"></span>
+																</label>
+															</div>
+														</div>
+
+														<div class="alert alert-forminfo numberporting_no">
+															Je krijgt van ons een nieuw vast nummer. We zullen dit nummer aan je doorgeven wanneer we je lijn gaan aansluiten.
+														</div>
+
+
+														<div id="numberporting_address">
+
+															<div class="control-group">
+																<label class="control-label required" for="numberporting_postalcode">Postcode</label>
+																<div class="controls">
+																	<div class="inputs">
+																		<div class="span12">
+																			<input id="numberporting_postalcode" name="numberporting_postalcode" type="text" class="postcode_check" maxlength="7">
+																		</div>
+																	</div>
+																	<p class="help-block">
+																	</p>
+																</div>
+															</div>
+
+															<div class="control-group">
+																<label class="control-label required" for="numberporting_housenumber">Huisnummer</label>
+																<div class="controls">
+																	<div class="inputs">
+																		<div class="span8">
+																			<input id="numberporting_housenumber" name="numberporting_housenumber" type="text" class="postcode_check" maxlength="16">
+																		</div>
+																		<div class="span4">
+																			<input id="numberporting_housenumberext" name="numberporting_housenumberext" placeholder="Extensie" type="text" class="postcode_check" maxlength="8">
+																		</div>
+																	</div>
+																	<p class="help-block">
+																	</p>
+																</div>
+															</div>
+
+															<div class="control-group hidden">
+																<label class="control-label required" for="numberporting_streetname">Straatnaam</label>
+																<div class="controls">
+																	<div class="inputs">
+																		<div class="span12">
+																			<input id="numberporting_streetname" name="numberporting_streetname" type="text" maxlength="64">
+																		</div>
+																	</div>
+																	<p class="help-block">
+																	</p>
+																</div>
+															</div>
+
+															<div class="control-group hidden">
+																<label class="control-label required" for="numberporting_city">Plaatsnaam</label>
+																<div class="controls">
+																	<div class="inputs">
+																		<div class="span12">
+																			<input id="numberporting_city" name="numberporting_city" type="text" maxlength="64">
+																		</div>
+																	</div>
+																	<p class="help-block">
+																	</p>
+																</div>
+															</div>
+
+															<div class="control-group numberporting_fulladdress">
+																<div class="controls">
+																	<p class="result-block">
+																	</p>
+																</div>
+															</div>
+
+														</div>
+
+														<hr>
+
+														<h4>Jouw voorkeuren voor je vaste nummer</h4>
+
+														<div class="control-group">
+															<div class="controls left">
+																<label class="checkbox">
+																	<input name="phonenumber-config" value="public" type="checkbox">Mijn vaste nummer mag in online en papieren telefoonngidsen worden opgenomen
+
+																</label>
+																<label class="checkbox">
+																	<input name="phonenumber-config" value="services" type="checkbox">Mijn vaste nummer mag worden doorgegeven aan nummerinformatiediensten
+																</label>
+																<label class="checkbox">
+																	<input name="phonenumber-config" value="callerid" type="checkbox">Ik wil mijn vaste nummer afschermen wanneer ik met iemand bel
+																</label>
+																<label class="checkbox">
+																	<input name="phonenumber-config" value="secret" type="checkbox">Ik wil mijn vaste nummer afschermen op de rekening of factuur van de mensen die mij bellen
+																</label>
+															</div>
+														</div>
+
+														<hr>
+
+														<h4>Gewenste aansluitdatum voor Vodafone Thuis</h4>
+														<div class="control-group">
+															<div class="left controls">
+																<label class="radio" for="connect_asap">
+																	<input name="connect" value="asap" type="radio" id="connect_asap">
+																	Zo snel mogelijk (Schatting is rond <span class="default connect_date"></span>)</label>
+																<div class="connect control-group connect_date">
+																	<div class="controls">
+																		<label class="radio inline" for="radio_connect_date">
+																			<input name="connect" checked="checked" value="date" type="radio" id="radio_connect_date" >
+
+																			Gewenste aansluitdatum:</label>
+
+																		<span class="input date" id="connect_date_wrapper">
+																			<input id="connect_date" name="connect_date" type="text" class="span9" readonly="readonly" size="16">
+																		</span>
+
+																		<!--<input id="connect_date" name="connect_date" placeholder="dd-mm-jjj" type="text" class="span9" maxlength="10">-->
+
+																		<p class="help-block">
+																		</p>
+																	</div>
+																</div>
+																<p class="help-block">
+																</p>
+															</div>
+														</div>
+
+														<hr>
+
+														<div class="control-group wide">
+															<div class="controls left">
+																<button name="previous" class="btn btn-secondary btn-large btn-previous">Vorige stap</button> <button name="next" class="btn btn-primary btn-large btn-next">Volgende stap</button>
+															</div>
+														</div>
+													</fieldset>
+													<fieldset class="step step3 results">
+
+
+														<h2 class="margin-bottom">Controleer en verstuur je bestelling</h2>
+														<p>
+															Klaar voor Vodafone Thuis? Controleer nog één keer je gegevens, en dan hoef je alleen nog maar op 'Bestelling bevestigen' te klikken!
+
+														</p>
+
+														<hr>
+
+														<h4>Persoonlijke gegevens</h4>
+
+														<div class="row-fluid collapse600">
+															<div class="span6">
+																<div class="control-group fullname">
+																	<label class="control-label">Naam:</label>
+																	<div class="controls">
+																		<p class="result-block">
+																		</p>
+																	</div>
+																</div>
+																<div class="control-group deliver_fulladdress">
+																	<label class="control-label">Leveradres:</label>
+																	<div class="controls">
+																		<p class="result-block">
+																		</p>
+																	</div>
+																</div>
+																<div class="control-group birthdate">
+																	<label class="control-label">Geboortedatum:</label>
+																	<div class="controls">
+																		<p class="result-block">
+																		</p>
+																	</div>
+																</div>
+																<div class="control-group accountnumber">
+																	<label class="control-label">Rekeningnummer:</label>
+																	<div class="controls">
+																		<p class="result-block">
+																		</p>
+																	</div>
+																</div>
+																<div class="control-group billingname">
+																	<label class="control-label">Rekeninghouder:</label>
+																	<div class="controls">
+																		<p class="result-block">
+																		</p>
+																	</div>
+																</div>
+															</div>
+
+															<div class="span6">
+																<div class="control-group email">
+																	<label class="control-label">E-mailadres:</label>
+																	<div class="controls">
+																		<p class="result-block">
+																		</p>
+																	</div>
+																</div>
+																<div class="control-group mobile">
+																	<label class="control-label">Mobiel nummer:</label>
+																	<div class="controls"> <p>06
+																		<span class="result-block"></span>
+																	</p>
+																	</div>
+																</div>
+																<div class="control-group phonenumber">
+																	<label class="control-label">Tweede nummer:</label>
+																	<div class="controls">
+																		<p class="result-block">
+																		</p>
+																	</div>
+																</div>
+
+																<div class="control-group thuisemail">
+																	<label class="control-label">E-mailadres Thuis:</label>
+																	<div class="controls"><p>
+																		<span class="result-block"> </span>@vodafonethuis.nl
+																	</p>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<p class="footnote_message">
+															De maandelijkse en eenmalige kosten worden via een automatische incasso afgeschreven van je rekening.
+														</p>
+
+														<hr>
+
+														<h4>Nummerbehoud</h4>
+
+
+														<div class="row-fluid collapse600">
+
+
+
+															<div class="numberporting_no">
+																<p>
+																	Je kiest niet voor nummerbehoud. Dit betekent dat je van ons een nieuw nummer krijgt. Welk nummer dat is vertellen we in een brief die je ontvangt na je bestelling.
+																</p>
+															</div>
+
+															<div class="numberporting_yes">
+																<div class="control-group numberporting_phonenumber">
+																	<label class="control-label">Behoud van bestaande nummer:</label>
+																	<div class="controls">
+																		<p class="result-block">
+																		</p>
+																	</div>
+																</div>
+															</div>
+
+															<div class="control-group numberporting_fulladdress">
+																<label class="control-label numberporting_fulladdress">Het huidige adres bij dit nummer:</label>
+																<div class="controls">
+																	<p class="result-block">
+																	</p>
+																</div>
+															</div>
+
+															<div class="control-group phonenumber-config">
+																<label class="control-label">Dit nummer wordt: </label>
+																<div class="controls">
+																	<ul class="result-block">
+																		<li class="public">
+																			<span class="yesno">NIET</span> doorgegeven voor vermelding in telefoongidsen
+																		</li>
+																		<li class="services">
+																			<span class="yesno">NIET</span> doorgegeven aan nummerinformatiediensten
+																		</li>
+																		<li class="callerid">
+																			<span class="yesno">WEL</span> afgeschermd wanneer je iemand anders belt
+																		</li>
+																		<li class="secret">
+																			<span class="yesno">WEL</span> afgeschermd op andermans telefoonrekeningen
+																		</li>
+																	</ul>
+																</div>
+															</div>
+
+														</div>
+
+														<hr>
+
+														<h4>Aansluiting en contractperiode</h4>
+
+														<div class="control-group connect_date">
+															<label class="control-label">Gewenste aansluitdatum:</label>
+															<div class="controls">
+																<p class="result-block">
+																</p>
+															</div>
+														</div>
+
+														<div class="control-group">
+															<label class="control-label">Contractperiode:</label>
+															<div class="controls">
+																<p class="result-block">
+																	12 maanden (gaat in vanaf het moment dat je bent aangesloten)
+																</p>
+															</div>
+														</div>
+														<p class="footnote_message">
+															Voor internet geldt een contractperiode van 12 maanden. TV, telefonie en de overige opties kunnen maandelijks worden opgezegd.
+														</p>
+
+														<hr>
+
+														<h4>Akkoord</h4>
+
+														<div class="control-group">
+															<div class="controls left">
+																<input name="use_for_offer" value="yes" type="checkbox" id="use_for_commerce">
+																<label class="checkbox">
+																	Ik wil graag aantrekkelijke aanbiedingen van Vodafone op basis van mijn gebruiksgegevens.
+																	<!--<span class="xplane">toelichting</span> -->
+																</label>
+															</div>
+														</div>
+
+
+														<div class="control-group">
+															<div class="controls left">
+
+																<input name="use_for_research" value="yes" type="checkbox" id="use_for_research">
+																<label class="checkbox">
+																	Vodafone mag mijn gebruiksgegevens gebruiken voor marktonderzoek.
+																	<!--<span class="xplane">toelichting</span> -->
+																</label>
+															</div>
+														</div>
+
+														<hr>
+
+														<div class="accordion" id="accordion">
+															<div class="accordion-group">
+																<div class="accordion-heading">
+																	<a class="accordion-toggle collapsed" data-toggle="collapse" href="#internetsnelheid">
+																		De werkelijke internetsnelheid kan in de praktijk afwijken van jouw bestelde snelheid.
+																	</a>
+																</div>
+																<div id="internetsnelheid" class="accordion-body collapse">
+																	<div class="accordion-inner">
+																		De werkelijke snelheid is afhankelijk van meerdere factoren - bijvoorbeeld waar je woont, welke bekabeling je in huis hebt en je modeminstellingen. Lees hier onze tips om je internetsnelheid te verbeteren. Heb je niet het gewenste resultaat of wil je een klacht indienen? Neem dan contact op met onze klantenservice. Klik hier voor de gedragscode over werkelijke internetsnelheden.
+																	</div>
+																</div>
+															</div>
+															<div class="accordion-group">
+																<div class="accordion-heading">
+																	<a class="accordion-toggle collapsed" data-toggle="collapse" href="#annuleren">
+																		Je kunt de bestelling binnen 7 werkdagen vrijblijvend en kosteloos annuleren.
+																	</a>
+																</div>
+																<div id="annuleren" class="accordion-body collapse">
+																	<div class="accordion-inner">
+																		Mocht je binnen 7 dagen alsnog besluiten om je bestelling te annuleren, dan is dat kosteloos mogelijk, zonder verdere verplichtingen. Wij hebben dan wel een schriftelijke bevestiging van je nodig.
+																	</div>
+																</div>
+															</div>
+														</div>
+
+														<div class="alert alert-forminfo">
+															Wanneer je op 'Bestellen bevestigen' klikt verklaar je je akkoord met onze <a href="#">Algemene voorwaarden en de Actievoorwaarden</a> en machtig je Vodafone om de kosten via automatische incasso af te schrijven.
+														</div>
+
+														<hr>
+
+														<div class="control-group wide">
+															<div class="controls left">
+																<button name="previous" class="btn btn-secondary btn-large btn-previous">Vorige stap</button> <button name="next" class="btn btn-primary btn-large btn-next">Bestelling bevestigen</button>
+															</div>
+														</div>
+													</fieldset>
+													<fieldset class="step step4">
+
+														<h2 class="margin-bottom">Bedankt voor je bestelling!</h2>
+														<p>
+															We hebben een e-mail met alle gegevens naar frank.rosenhart@chunk.nl gestuurd. Hierin kun je alles nog eens op je gemak teruglezen en controleren. Voor vragen zitten we altijd klaar.
+														</p>
+														<p>
+															Het contractnummer van je bestelling is 65996.
+														</p>
+														<hr class="margin">
+
+														<h2 class="margin-bottom">Wat gebeurt er nu?</h2>
+														<p>
+															Zodra een minimum aantal huishoudens zich in jouw gemeente heeft ingeschreven, gaan we het glasvezelnetwerk aanleggen. We houden je regelmatig op de hoogte over de voortgang.
+														</p>
+														<p>
+															[Als aansluitdatum nog niet bekend is] Wanneer Vodafone de aansluitdatum heeft doorgegeven, moet je zelf je contract bij je huidige aanbieder moeten opzeggen. Je kunt hiervoor een voorbeeldbrief vinden onder 'Support' op Vodafone Thui
+														</p>
+														<hr>
+
+														<h4>Gebruik onze overstapservice</h4>
+														<div class="row-fluid collapse850">
+															<p class="span7">
+																We kunnen je helpen bij het overstappen van je huidige leverancier naar Vodafone Thuis. Dat bespaart veel uitzoekwerk. En natuurlijk zorgen we ervoor dat je geen dag zonder aansluiting zit.
+															</p>
+															<div class="span5">
+																<button name="overstapservice" class="btn btn-primary  pull-right">Naar de overstapservice</button>
+															</div>
+														</div>
+														<hr class="margin">
+														<h4>Maak nu je My Vodafone Thuis account aan</h4>
+														<div class="row-fluid collapse850">
+															<p class="span7">
+																Via My Vodafone Thuis kun je je bestelling op de voet volgen en 24 uur per dag je accountgegevens en voorkeuren instellen of wijzigen.
+															</p>
+															<div class="span5">
+																<button name="myvodafone" class="btn btn-primary e pull-right">Naar My Vodafone Thuis</button>
+															</div>
+														</div>
+
+
+
+														<p class="alert alert-forminfo">
+															Let op! Wanneer je niet zelf je eigen wachtwoord instelt, dan sturen we je een brief met een door ons gegenereerd wachtwoord. Dit wachtwoord kan je vervolgens gebruiken om in te loggen.
+														</p>
+														<hr>
+													</fieldset>
+													<div class="form_mask"></div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="span3">
+									<div class="shoppingcart">
+										<table id="overview_costs">
+											<caption>Maandelijkse kosten</caption>
+											<tbody class="total_permonth">
+												<tr>
+													<th>Eerste 2 maanden</th><td><span>€ 14,95</span></td>
+												</tr>
+											</tbody>
+											<tbody>
+												<tr class="spacer">
+													<td colspan="2"></td>
+												</tr>
+												<tr>
+													<th>Na 2 maanden</th><td><span>€ 24,90</span></td>
+												</tr>
+												<tr>
+													<th>Na 3 maanden</th><td><span>€ 30,90</span></td>
+												</tr>
+												<tr>
+													<th>Na 6 maanden</th><td><span>€ 45,90</span></td>
+												</tr>
+												<tr class="spacer">
+													<td colspan="2"></td>
+												</tr>
+											</tbody>
+											<tbody class="total">
+												<tr>
+													<th>Eenmalig betaal je</th><td><span>€ 54,95</span></td>
+												</tr>
+											</tbody>
+											<tbody class="discount">
+												<tr>
+													<th><a id="discount">Jouw korting</a></th><td><span>€ 34,95</span></td>
+												</tr>
+
+												<tr class="discountcontent" style="display:none">
+													<th>korting</th><td><span>€ 34,95</span></td>
+												</tr>
+											</tbody>
+										</table>
+										<table id="overview_order">
+											<caption>Bestelling</caption>
+											<tbody class="basic_products">
+												<tr>
+													<th><b>Internet Power</b> Na 3 maanden €30,50</th><td><span>€ 24,90</span> p.mnd.</td>
+												</tr>
+												<tr>
+													<th><b>Televisie Full</b> Na 3 maanden €30,50</th><td><span>€ 24,90</span> p.mnd.</td>
+												</tr>
+												<tr>
+													<th><b>Telefoon Basis</b> Na 3 maanden €30,50</th><td><span>€ 24,90</span> p.mnd.</td>
+												</tr>
+												<tr>
+													<th><b>Tweede telefoonlijn</b> Na 3 maanden €30,50</th><td><span>€ 24,90</span> p.mnd.</td>
+												</tr>
+											</tbody>
+											<tbody class="extra_channels">
+												<tr class="spacer">
+													<td colspan="2"></td>
+												</tr>
+												<tr>
+													<th><b>Fox sports Eredivisie</b></th><td><span>€ 24,90</span> p.mnd.</td>
+												</tr>
+												<tr>
+													<th><b>Extra zenders</b></th><td><span>€ 24,90</span> p.mnd.</td>
+												</tr>
+												<tr>
+													<th><b>HBO</b>Na 2 maanden €30,50</th><td><span>€ 24,90</span> p.mnd.</td>
+												</tr>
+												<tr>
+													<th><b>Sport1</b>Na 2 maanden €30,50</th><td><span>€ 24,90</span> p.mnd.</td>
+												</tr>
+												<tr class="spacer">
+													<td colspan="2"></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+
+
+
+
+
+									<div class="hulp-nodig">
+										<h2>Hulp nodig?</h2>
+										<span class="hulp"><span class="tel">0900-9290</span> <span class="ppm">(€0,10 p/min)</span></span>
+										<table>
+											<tr>
+												<td>Maandag - vrijdag</td>
+												<td class="time">09:00 - 21:00 </td>
+											</tr>
+											<tr>
+												<td>Zaterdag</td>
+												<td class="time">10:00 - 17:00 </td>
+											</tr>
+										</table>
+										<a href="#" class="belmijterug">Bel mij terug</a>
+									</div>
+
+									<div class="reasons">
+										<h2>Daarom Vodafone</h2>
+										<ul>
+											<li>
+												De kwaliteit van Vodafone nu ook thuis
+											</li>
+											<li>
+												Groot aanbod extra opties om aan je pakket toe te voegen
+											</li>
+											<li>
+												Betrouwbaar en klaar voor de toekomst met glasvezel
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- END main-->
+			<!-- common scripts required for this page -->
+			<script src="/_assets/js/environment/env.js" type="text/javascript"></script>
+			<script src="/_assets/js/common-min.js" type="text/javascript"></script>
+			<!--[if lt IE 9]>
+			  <script src="/_vendors/respond-js-1.1.0/respond.min.js" type="text/javascript"></script>
+			<![endif]-->
+			<!-- add page specific script for this page here -->
+
+			<script src="assets/js/libs/jquery/jquery.inputmask.bundle.min.js">
+			</script>
+			<script src="assets/js/libs/jquery/jquery.validate.js">
+			</script>
+			<script src="assets/js/libs/jquery/additional-validations.js">
+			</script>
+			<script src="assets/js/libs/jquery/bootstrap-datepicker.js">
+			</script>
+			<script src="assets/js/libs/jquery/bootstrap-datepicker.nl.js">
+			</script>
+			<script src="assets/js/libs/misc/utils.js">
+			</script>
+			<script src="assets/js/pages/checkout.js">
+			</script>
+
+		</div>
+	</body>
+</html>
