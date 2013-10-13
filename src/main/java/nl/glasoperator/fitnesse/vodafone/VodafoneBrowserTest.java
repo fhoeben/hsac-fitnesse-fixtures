@@ -63,7 +63,7 @@ public class VodafoneBrowserTest extends BrowserTest {
     }
 
     public String errorsOnOthersThan(String label) {
-        String result = "";
+        String result = null;
         By otherErrorXPath = getSeleniumHelper()
                 .byXpath("//label[text() != '%s']/following-sibling::div/p[@class='help-block' and normalize-space(text()) != '']",
                         label);
@@ -82,7 +82,7 @@ public class VodafoneBrowserTest extends BrowserTest {
     }
 
     public String errorStyleOnOthersThan(String label) {
-        String result = "";
+        String result = null;
         By otherErrorXPath = getSeleniumHelper()
                 .byXpath("//div[contains(@class, 'error') and label[text() != '%s']]/label",
                         label);
