@@ -7,13 +7,12 @@
 
 *!
 
-!|script     |selenium driver setup                                                             |
-|set property|webdriver.chrome.driver|value  |C:\dev\hsac-fitnesse\webdrivers\chromedriver.exe  |
+!define FITNESSE_DIR {C:\SvnGlasoperator\fitnesse\source\trunk\wiki}
+
+|script     |selenium driver setup                                                             |
+|set property|webdriver.chrome.driver|value  |${FITNESSE_DIR}\webdrivers\chromedriver.exe  |
 |startDriver |org.openqa.selenium.chrome.ChromeDriver                                           |
-|set property|webdriver.ie.driver    |value  |C:\dev\hsac-fitnesse\webdrivers\IEDriverServer.exe|
+|set property|webdriver.ie.driver    |value  |${FITNESSE_DIR}\webdrivers\IEDriverServer.exe|
 |note        |startDriver            |org.openqa.selenium.ie.InternetExplorerDriver             |
 |note        |startDriver            |org.openqa.selenium.safari.SafariDriver                   |
 |note        |startDriver            |org.openqa.selenium.firefox.FirefoxDriver                 |
-|note        |connect to driver for  |firefox|at      |http://localhost:9999/test               |
-|note        |connect to driver for  |firefox|on      |ANY |at|http://localhost:9999/test       |
-|note        |connect to driver for  |firefox|version |2   |on|ANY|at|http://localhost:9999/test|
