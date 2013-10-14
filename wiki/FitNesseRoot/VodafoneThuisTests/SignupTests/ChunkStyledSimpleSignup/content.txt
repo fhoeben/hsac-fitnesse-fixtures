@@ -1,7 +1,6 @@
 |script      |vodafone browser test                                                                                             |
-|open        |localhost:53486/Checkout                                                                                          |
+|open        |http://localhost:53486/Checkout                                                                                          |
 |click       |Mevrouw                                                                                                           |
-|wait for tag|h2                                             |with text       |Mogen wij je gegevens?                           |
 |enter       |Tester                                         |as              |Achternaam                                       |
 |check       |value of                                       |Achternaam      |Tester                                           |
 |enter       |F. H.                                          |as              |Voornaam                                         |
