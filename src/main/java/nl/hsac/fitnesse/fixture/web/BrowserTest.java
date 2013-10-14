@@ -163,8 +163,8 @@ public class BrowserTest extends SlimFixture {
         if (element != null) {
             if (element.isDisplayed() && element.isEnabled()) {
                 element.click();
+                result = true;
             }
-            result = true;
         }
         return result;
     }
