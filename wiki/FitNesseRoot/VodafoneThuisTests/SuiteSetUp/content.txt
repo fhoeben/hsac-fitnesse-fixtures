@@ -9,10 +9,10 @@
 
 !define FITNESSE_DIR {C:\SvnGlasoperator\fitnesse\source\trunk\wiki}
 
-|script     |selenium driver setup                                                             |
-|set property|webdriver.chrome.driver|value  |${FITNESSE_DIR}\webdrivers\chromedriver.exe  |
-|startDriver |org.openqa.selenium.chrome.ChromeDriver                                           |
-|set property|webdriver.ie.driver    |value  |${FITNESSE_DIR}\webdrivers\IEDriverServer.exe|
-|note        |startDriver            |org.openqa.selenium.ie.InternetExplorerDriver             |
-|note        |startDriver            |org.openqa.selenium.safari.SafariDriver                   |
-|note        |startDriver            |org.openqa.selenium.firefox.FirefoxDriver                 |
+|script      |selenium driver setup                                                      |
+|set property|webdriver.chrome.driver|value|${FITNESSE_DIR}\webdrivers\chromedriver.exe  |
+|startDriver |org.openqa.selenium.chrome.ChromeDriver                                    |
+|set property|webdriver.ie.driver    |value|${FITNESSE_DIR}\webdrivers\IEDriverServer.exe|
+|note        |startDriver            |org.openqa.selenium.ie.InternetExplorerDriver      |
+|note        |startDriver            |org.openqa.selenium.safari.SafariDriver            |
+|note        |startDriver            |org.openqa.selenium.firefox.FirefoxDriver          |

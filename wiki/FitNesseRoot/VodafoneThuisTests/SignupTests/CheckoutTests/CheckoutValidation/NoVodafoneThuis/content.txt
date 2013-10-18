@@ -1,0 +1,18 @@
+Forget to fill one required field and see we get an error there and no where else.
+
+|script|vodafone browser test                                                                                             |
+|go to checkout                                                                                                           |
+|click |Mevrouw                                                                                                           |
+|enter |F. H.                     |as                                          |Voornaam                                  |
+|enter |Hoeben                    |as                                          |Achternaam                                |
+|enter |test@glasoperator.nl      |as                                          |E-mailadres                               |
+|enter |24528616                  |as                                          |Telefoonnummer mobiel                     |
+|enter |27091975                  |as                                          |Geboortedatum                             |
+|enter |Tester                    |as                                          |Naam rekeninghouder                       |
+|enter |151                       |as                                          |IBAN/Bankrekeningnummer                   |
+|click |Volgende stap                                                                                                     |
+|check |global error              |Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens.|
+|ensure|error style on            |Nieuw Vodafone Thuis e-mailadres                                                       |
+|check |error on                  |Nieuw Vodafone Thuis e-mailadres            |Vul je gewenste e-mailadres in.           |
+|check |errors on others than     |Nieuw Vodafone Thuis e-mailadres            |null                                      |
+|check |error style on others than|Nieuw Vodafone Thuis e-mailadres            |null                                      |

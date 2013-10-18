@@ -23,8 +23,7 @@ public class VodafoneBrowserTest extends BrowserTest {
 
     private boolean clickFirstButton(String place) {
         boolean result = false;
-        By byButtonText = getSeleniumHelper().byXpath("//button[text() = '%s']", place);
-        List<WebElement> elements = getSeleniumHelper().driver().findElements(byButtonText);
+        List<WebElement> elements = findAllByXPath("//button[text() = '%s']", place);
         if (elements != null) {
             for (WebElement element : elements) {
                 if (clickElement(element)) {
@@ -36,38 +35,88 @@ public class VodafoneBrowserTest extends BrowserTest {
         return result;
     }
 
+    public String globalError() {
+        String result = null;
+        List<WebElement> elements = findAllByXPath("//div[contains(@class, 'alert-formerror')]");
+        if (elements != null) {
+            for (WebElement element : elements) {
+                if (element.isDisplayed()) {
+                    result = element.getText();
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
     public String errorOn(String label) {
         String result = null;
-        By errorXPath = getSeleniumHelper()
-                            .byXpath("//label[text() = '%s']/following-sibling::div/p[@class='help-block']",
-                                    label);
-        WebElement element = getSeleniumHelper().findElement(errorXPath);
+        WebElement element = findErrorMessageElement(label);
         if (element != null) {
             result = element.getText();
         }
         return result;
     }
 
+    private WebElement findErrorMessageElement(String label) {
+        WebElement element = findByXPath("//label[text() = '%s']/following-sibling::div/p[@class='help-block']",
+                label);
+        if (element == null) {
+            element = findByXPath("//label[text() = '%s']/following-sibling::p[@class='help-block']",
+                    label);
+            if (element == null) {
+                element = findByXPath("//input[@value = '%s']/../following-sibling::p[@class='help-block']",
+                                label);
+                if (element == null) {
+                    element = findByXPath("//input[@aria-label = '%s']/../../../following-sibling::p[@class='help-block']",
+                                    label);
+                    if (element == null) {
+                        element = findByXPath("//input[@value = '%s']/../../following-sibling::p[@class='help-block']",
+                                        label);
+                    }
+                }
+            }
+        }
+        return element;
+    }
+
     public boolean errorStyleOn(String label) {
         boolean result = false;
-        By controlGroupXPath = getSeleniumHelper().byXpath("//div[label[text() = '%s']]", label);
-        WebElement element = getSeleniumHelper().findElement(controlGroupXPath);
+        WebElement element = findControlGroup(label);
         if (element != null) {
-            String classAttr = element.getAttribute("class");
-            if (classAttr != null) {
-                String[] classes = classAttr.split(" ");
-                result = Arrays.asList(classes).contains("error");
+            result = hasErrorClass(element);
+        }
+        return result;
+    }
+
+    private WebElement findControlGroup(String label) {
+        WebElement element = findByXPath("//div[label[text() = '%s']]", label);
+        By controlGroupXPath;
+        if (element == null) {
+            element = findByXPath("//input[@value = '%s']/ancestor::div[contains(@class, 'control-group')]", label);
+            if (element == null) {
+                element = findByXPath("//input[@aria-label = '%s']/ancestor::div[contains(@class, 'control-group')]",
+                                label);
             }
+        }
+        return element;
+    }
+
+    private boolean hasErrorClass(WebElement element) {
+        boolean result = false;
+        String classAttr = element.getAttribute("class");
+        if (classAttr != null) {
+            String[] classes = classAttr.split(" ");
+            result = Arrays.asList(classes).contains("error");
         }
         return result;
     }
 
     public String errorsOnOthersThan(String label) {
         String result = null;
-        By otherErrorXPath = getSeleniumHelper()
-                .byXpath("//label[text() != '%s']/following-sibling::div/p[@class='help-block' and normalize-space(text()) != '']",
-                        label);
-        List<WebElement> elements = getSeleniumHelper().driver().findElements(otherErrorXPath);
+        List<WebElement> elements = findAllByXPath(
+                                        "//label[text() != '%s']/following-sibling::div/p[@class='help-block' and normalize-space(text()) != '']",
+                                        label);
         if (elements != null) {
             List<String> errors = new ArrayList<String>(elements.size());
             for (WebElement element : elements) {
@@ -83,10 +132,9 @@ public class VodafoneBrowserTest extends BrowserTest {
 
     public String errorStyleOnOthersThan(String label) {
         String result = null;
-        By otherErrorXPath = getSeleniumHelper()
-                .byXpath("//div[contains(@class, 'error') and label[text() != '%s']]/label",
-                        label);
-        List<WebElement> elements = getSeleniumHelper().driver().findElements(otherErrorXPath);
+        List<WebElement> elements = findAllByXPath(
+                                        "//div[contains(@class, 'error') and label[text() != '%s']]/label",
+                                        label);
         if (elements != null) {
             List<String> labels = new ArrayList<String>(elements.size());
             for (WebElement element : elements) {
@@ -98,5 +146,15 @@ public class VodafoneBrowserTest extends BrowserTest {
             }
         }
         return result;
+    }
+
+    private WebElement findByXPath(String xpathPattern, String... params) {
+        By by = getSeleniumHelper().byXpath(xpathPattern, params);
+        return getSeleniumHelper().findElement(by);
+    }
+
+    private List<WebElement> findAllByXPath(String xpathPattern, String... params) {
+        By by = getSeleniumHelper().byXpath(xpathPattern, params);
+        return getSeleniumHelper().driver().findElements(by);
     }
 }
