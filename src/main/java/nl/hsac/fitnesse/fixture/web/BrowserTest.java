@@ -249,6 +249,9 @@ public class BrowserTest extends SlimFixture {
                 }
             } else {
                 result = element.getAttribute("value");
+                if (result == null) {
+                    result = element.getText();
+                }
             }
         }
         return result;
