@@ -1,0 +1,20 @@
+Forget to fill one required field and see we get an error there and no where else.
+
+|script|vodafone browser test                                                                                                                  |
+|go to checkout                                                                                                                                |
+|click |Mevrouw                                                                                                                                |
+|enter |F. H.                                          |as     |Voornaam                                                                       |
+|enter |F. H.                                          |as     |Achternaam                                                                     |
+|enter |test@glasoperator.nl                           |as     |E-mailadres                                                                    |
+|enter |24528616                                       |as     |Telefoonnummer mobiel                                                          |
+|enter |27091975                                       |as     |Geboortedatum                                                                  |
+|enter |!randomString (10) (abcdefghijklmnopqrstuvwxyz)|as     |Nieuw Vodafone Thuis e-mailadres                                               |
+|enter |Tester                                         |as     |Naam rekeninghouder                                                            |
+|enter |151                                            |as     |IBAN/Bankrekeningnummer                                                        |
+|click |Volgende stap                                                                                                                          |
+|click |Volgende stap                                                                                                                          |
+|check |global error                                   |Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens.|
+|ensure|error style on                                 |Ja                                                                                     |
+|check |error on                                       |Ja     |Geef aan of je je vaste telefoonnummer wilt overzetten naar Vodafone Thuis.    |
+|check |errors on others than                          |Ja     |null                                                                           |
+|check |error style on others than                     |Ja     |null                                                                           |

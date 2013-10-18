@@ -1,0 +1,18 @@
+Forget to fill one required field and see we get an error there and no where else.
+
+|script|vodafone browser test                                                                                                                  |
+|go to checkout                                                                                                                                |
+|click |Mevrouw                                                                                                                                |
+|enter |F. H.                                          |as                               |Voornaam                                             |
+|enter |Hoeben                                         |as                               |Achternaam                                           |
+|enter |24528616                                       |as                               |Telefoonnummer mobiel                                |
+|enter |27091975                                       |as                               |Geboortedatum                                        |
+|enter |!randomString (10) (abcdefghijklmnopqrstuvwxyz)|as                               |Nieuw Vodafone Thuis e-mailadres                     |
+|enter |Tester                                         |as                               |Naam rekeninghouder                                  |
+|enter |151                                            |as                               |IBAN/Bankrekeningnummer                              |
+|click |Volgende stap                                                                                                                          |
+|check |global error                                   |Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens.|
+|ensure|error style on                                 |E-mailadres                                                                            |
+|check |error on                                       |E-mailadres                      |Vul je e-mailadres in.                               |
+|check |errors on others than                          |E-mailadres                      |null                                                 |
+|check |error style on others than                     |E-mailadres                      |null                                                 |

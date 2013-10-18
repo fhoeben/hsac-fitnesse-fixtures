@@ -1,0 +1,2 @@
+|scenario|go to checkout                 |
+|open    |http://localhost:53486/checkout|
