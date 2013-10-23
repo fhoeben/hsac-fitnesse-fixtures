@@ -11,8 +11,8 @@ Forget to fill one required field and see we get an error there and no where els
 |enter |!randomString (10) (abcdefghijklmnopqrstuvwxyz)|as                            |Nieuw Vodafone Thuis e-mailadres                                          |
 |enter |Tester                                         |as                            |Naam rekeninghouder                                                       |
 |enter |151                                            |as                            |IBAN/Bankrekeningnummer                                                   |
-|click |Volgende stap                                                                                                                                            |
-|click |numberporting_yes                                                                                                                                                      |
+|click |Volgende stap                                  |and wait for tag              |h4                 |with text                |Nummerbehoud                |
+|click |Ja                                                                                                                                                       |
 |clear |Welk nummer wil je overzetten?                 |                                                                                                         |
 |click |Volgende stap                                                                                                                                            |
 |check |global error                                   |Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens.                  |
