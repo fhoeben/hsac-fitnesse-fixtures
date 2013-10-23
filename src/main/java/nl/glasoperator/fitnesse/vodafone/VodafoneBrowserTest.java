@@ -62,18 +62,14 @@ public class VodafoneBrowserTest extends BrowserTest {
         WebElement element = findByXPath("//label[text() = '%s']/following-sibling::div/p[@class='help-block']",
                 label);
         if (element == null) {
-            element = findByXPath("//label[text() = '%s']/following-sibling::p[@class='help-block']",
+            element = findByXPath("//label[normalize-space(text()) = '%s']/following-sibling::p[@class='help-block']",
                     label);
             if (element == null) {
-                element = findByXPath("//input[@value = '%s']/../following-sibling::p[@class='help-block']",
+                element = findByXPath("//input[@aria-label = '%s']/../../../following-sibling::p[@class='help-block']",
                                 label);
                 if (element == null) {
-                    element = findByXPath("//input[@aria-label = '%s']/../../../following-sibling::p[@class='help-block']",
+                    element = findByXPath("//label[normalize-space(text()) = '%s']/../following-sibling::p[@class='help-block']",
                                     label);
-                    if (element == null) {
-                        element = findByXPath("//input[@value = '%s']/../../following-sibling::p[@class='help-block']",
-                                        label);
-                    }
                 }
             }
         }
@@ -90,14 +86,10 @@ public class VodafoneBrowserTest extends BrowserTest {
     }
 
     private WebElement findControlGroup(String label) {
-        WebElement element = findByXPath("//div[label[text() = '%s']]", label);
-        By controlGroupXPath;
+        WebElement element = findByXPath("//label[normalize-space(text()) = '%s']/ancestor::div[contains(@class, 'control-group')]", label);
         if (element == null) {
-            element = findByXPath("//input[@value = '%s']/ancestor::div[contains(@class, 'control-group')]", label);
-            if (element == null) {
-                element = findByXPath("//input[@aria-label = '%s']/ancestor::div[contains(@class, 'control-group')]",
-                                label);
-            }
+            element = findByXPath("//input[@aria-label = '%s']/ancestor::div[contains(@class, 'control-group')]",
+                            label);
         }
         return element;
     }
@@ -115,7 +107,7 @@ public class VodafoneBrowserTest extends BrowserTest {
     public String errorsOnOthersThan(String label) {
         String result = null;
         List<WebElement> elements = findAllByXPath(
-                                        "//label[text() != '%s']/following-sibling::div/p[@class='help-block' and normalize-space(text()) != '']",
+                                        "//label[normalize-space(text()) != '%s']/following-sibling::div/p[@class='help-block' and normalize-space(text()) != '']",
                                         label);
         if (elements != null) {
             List<String> errors = new ArrayList<String>(elements.size());
@@ -133,7 +125,7 @@ public class VodafoneBrowserTest extends BrowserTest {
     public String errorStyleOnOthersThan(String label) {
         String result = null;
         List<WebElement> elements = findAllByXPath(
-                                        "//div[contains(@class, 'error') and label[text() != '%s']]/label",
+                                        "//div[contains(@class, 'error') and label[normalize-space(text()) != '%s']]/label",
                                         label);
         if (elements != null) {
             List<String> labels = new ArrayList<String>(elements.size());
