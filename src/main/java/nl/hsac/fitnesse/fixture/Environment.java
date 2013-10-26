@@ -196,10 +196,21 @@ public class Environment {
      * @param result result to populate with response.
      */
     public void callService(String url, String templateName, Object model, XmlHttpResponse result) {
+        doHttpPost(url, templateName, model, result);
+        setNamespaceContext(result);
+    }
+
+    /**
+     * Performs POST to supplied url of result of applying template with model.
+     * @param url url to post to.
+     * @param templateName name of template to use.
+     * @param model model for template.
+     * @param result result to populate with response.
+     */
+    public void doHttpPost(String url, String templateName, Object model, HttpResponse result) {
         String request = processTemplate(templateName, model);
         result.setRequest(request);
         httpClient.post(url, result);
-        setNamespaceContext(result);
     }
 
     /**

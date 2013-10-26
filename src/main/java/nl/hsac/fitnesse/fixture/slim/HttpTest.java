@@ -1,8 +1,7 @@
 package nl.hsac.fitnesse.fixture.slim;
 
 import freemarker.template.Template;
-import nl.hsac.fitnesse.fixture.util.XMLFormatter;
-import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
+import nl.hsac.fitnesse.fixture.util.HttpResponse;
 import nl.hsac.fitnesse.fixture.web.SlimFixture;
 
 import java.io.UnsupportedEncodingException;
@@ -13,14 +12,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Fixture to send SOAP calls, and check XPaths against responses, using Slim scripts.
+ * Fixture to make HTTP requests using Slim scripts and/or scenarios.
  */
-public class XmlHttpClient extends SlimFixture {
+public class HttpTest extends SlimFixture {
     private static final Pattern PATTERN = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>(.*)", Pattern.CASE_INSENSITIVE);
-    private final XMLFormatter xmlFormatter = new XMLFormatter();
     private final Map<String, String> currentValues = new LinkedHashMap<String, String>();
+    private HttpResponse response = createResponse();
     private String template;
-    private XmlHttpResponse response = new XmlHttpResponse();
 
     /**
      * Sets template to use.
@@ -71,10 +69,10 @@ public class XmlHttpClient extends SlimFixture {
      */
     public boolean postTo(String serviceUrl) {
         boolean result = false;
-        response = new XmlHttpResponse();
+        response = createResponse();
         if (template != null) {
-            getEnvironment().callService(getUrl(serviceUrl), template, currentValues, response);
-            result = responseIsValid();
+            getEnvironment().doHttpPost(getUrl(serviceUrl), template, currentValues, response);
+            result = postProcessResponse();
         }
         return result;
     }
@@ -86,8 +84,8 @@ public class XmlHttpClient extends SlimFixture {
      */
     public boolean getFrom(String serviceUrl) {
         String url = createUrlWithParams(serviceUrl);
-        response = getEnvironment().doHttpGetXml(url);
-        return responseIsValid();
+        response = getEnvironment().doHttpGet(url);
+        return postProcessResponse();
     }
 
     String createUrlWithParams(String serviceUrl) {
@@ -120,6 +118,14 @@ public class XmlHttpClient extends SlimFixture {
     }
 
     /**
+     * Performs any post processing directly after retrieving response.
+     * @return true if all is well, false otherwise.
+     */
+    protected boolean postProcessResponse() {
+        return responseIsValid();
+    }
+
+    /**
      * @return true if response does not indicate an error.
      */
     public boolean responseIsValid() {
@@ -137,14 +143,14 @@ public class XmlHttpClient extends SlimFixture {
      * @return request sent last time postTo() was called.
      */
     public String request() {
-        return xmlFormatter.format(response.getRequest());
+        return response.getRequest();
     }
 
     /**
      * @return response received last time postTo() was called.
      */
     public String response() {
-        return xmlFormatter.format(response.getResponse());
+        return response.getResponse();
     }
 
     /**
@@ -154,42 +160,6 @@ public class XmlHttpClient extends SlimFixture {
         return response.getStatusCode();
     }
 
-    /**
-     * Gets XPath value, without ensuring response was valid.
-     * @param xPathExpr expression to evaluate.
-     * @return result of expression evaluation against last response received.
-     */
-    public String rawXPath(String xPathExpr) {
-        return response.getRawXPath(xPathExpr);
-    }
-
-    /**
-     * @param xPathExpr expression to evaluate.
-     * @return result of expression evaluation against last response received.
-     * @throws RuntimeException if no valid response was available or XPath could not be evaluated.
-     */
-    public String xPath(String xPathExpr) {
-        return response.getXPath(xPathExpr);
-    }
-
-    /**
-     * @param xPathExpr expression to evaluate.
-     * @return result of expression evaluation against last response received.
-     * @throws RuntimeException if no valid response was available or XPath could not be evaluated.
-     */
-    public Double xPathDouble(String xPathExpr) {
-        return response.getXPathDouble(xPathExpr);
-    }
-
-    /**
-     * @param xPathExpr expression to evaluate.
-     * @return result of expression evaluation against last response received.
-     * @throws RuntimeException if no valid response was available or XPath could not be evaluated.
-     */
-    public Double xPathInt(String xPathExpr) {
-        return response.getXPathDouble(xPathExpr);
-    }
-
     String getUrl(String htmlLink) {
         String result = htmlLink;
         Matcher matcher = PATTERN.matcher(htmlLink);
@@ -197,5 +167,13 @@ public class XmlHttpClient extends SlimFixture {
             result = matcher.group(1) + matcher.group(3);
         }
         return result;
+    }
+
+    protected HttpResponse getResponse() {
+        return response;
+    }
+
+    protected HttpResponse createResponse() {
+        return new HttpResponse();
     }
 }
