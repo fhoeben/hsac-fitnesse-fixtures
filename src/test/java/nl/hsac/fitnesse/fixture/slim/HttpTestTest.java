@@ -5,10 +5,10 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Tests XmlHttpClient.
+ * Tests HttpTest.
  */
-public class XmlHttpClientTest {
-    private final XmlHttpClient client = new XmlHttpClient();
+public class HttpTestTest {
+    private final HttpTest client = new XmlHttpTest();
 
     @Test
     public void testUrlCleanUp() {
