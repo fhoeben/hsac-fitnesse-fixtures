@@ -32,6 +32,16 @@ public class XmlHttpResponse extends HttpResponse {
     public String getXPath(String xPathExpr, Object... params) {
         validResponse();
 
+        return getRawXPath(xPathExpr, params);
+    }
+
+    /**
+     * Gets XPath value without checking whether response is valid.
+     * @param xPathExpr expression to apply to response.
+     * @param params values to put inside expression before evaluation
+     * @return result of xpath expression.
+     */
+    public String getRawXPath(String xPathExpr, Object... params) {
         return getRawXPath(getResponse(), xPathExpr, params);
     }
 
