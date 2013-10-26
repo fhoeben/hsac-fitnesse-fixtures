@@ -1,6 +1,6 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import nl.hsac.fitnesse.fixture.SoapCallMapColumnFixture;
+import nl.hsac.fitnesse.fixture.fit.SoapCallMapColumnFixture;
 import org.apache.http.HttpStatus;
 import org.junit.Rule;
 import org.junit.Test;

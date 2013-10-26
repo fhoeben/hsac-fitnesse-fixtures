@@ -1,6 +1,6 @@
 package nl.glasoperator.fitnesse.vodafone;
 
-import nl.hsac.fitnesse.fixture.web.BrowserTest;
+import nl.hsac.fitnesse.fixture.slim.web.BrowserTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 

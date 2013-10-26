@@ -1,7 +1,7 @@
 package nl.hsac.fitnesse.fixture.leanapps;
 
 import nl.hsac.fitnesse.fixture.Environment;
-import nl.hsac.fitnesse.fixture.SoapCallMapColumnFixture;
+import nl.hsac.fitnesse.fixture.fit.SoapCallMapColumnFixture;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 
 /**

@@ -1,8 +1,9 @@
-package nl.hsac.fitnesse.fixture;
+package nl.hsac.fitnesse.fixture.fit;
 
 
 import fit.Binding;
 import fit.Parse;
+import nl.hsac.fitnesse.fixture.Environment;
 
 /**
  * Fixture that define a Map<String,Object> to be used in other fixtures.
