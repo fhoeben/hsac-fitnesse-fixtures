@@ -5,7 +5,7 @@ Forget to fill one required field and see we get an error there and no where els
 |click |Mevrouw                                                                                                           |
 |enter |F. H.                     |as                                          |Voornaam                                  |
 |enter |Hoeben                    |as                                          |Achternaam                                |
-|enter |test@glasoperator.nl      |as                                          |E-mailadres                               |
+|enter |${CONTACT_EMAIL}      |as                                          |E-mailadres                               |
 |enter |24528616                  |as                                          |Telefoonnummer mobiel                     |
 |enter |27091975                  |as                                          |Geboortedatum                             |
 |enter |Tester                    |as                                          |Naam rekeninghouder                       |

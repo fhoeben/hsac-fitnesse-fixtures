@@ -35,7 +35,7 @@ De regels met de gekke '@{}' waarden beschrijven verwijzingen naar de variabelen
 |enter   |Tester                                         |as              |Naam rekeninghouder      |
 |enter   |151                                            |as              |IBAN of rekeningnummer   |
 |click   |Verder                                         |and wait for tag|h1|with text|Stap 3 van 5|
-|enter   |!randomString (10) (abcdefghijklmnopqrstuvwxyz)|as              |@vodafone.nl             |
+|enter   |${RANDOM_VF_USER}|as              |@vodafone.nl             |
 |select  |Zo snel mogelijk                               |as              |Gewenste aansluitdatum   |
 |click   |Verder                                         |and wait for tag|h1|with text|Stap 4 van 5|
 |click   |Bestel                                         |and wait for tag|h1|with text|Stap 5 van 5|
@@ -54,6 +54,6 @@ De regels met de gekke '@{}' waarden beschrijven verwijzingen naar de variabelen
 
 |sign up                                         |
 |postcode|huisnr|aanhef |email                   |
-|1234bb  |999   |De heer|test@glasoperator.nl    |
+|1234bb  |999   |De heer|${CONTACT_EMAIL}    |
 
  

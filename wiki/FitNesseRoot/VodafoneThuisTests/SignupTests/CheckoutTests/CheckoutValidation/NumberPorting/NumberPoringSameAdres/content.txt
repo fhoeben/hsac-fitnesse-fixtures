@@ -1,0 +1,21 @@
+Forget to fill one required field and see we get an error there and no where else.
+
+|script|vodafone browser test                                                                            |
+|go to checkout                                                                                          |
+|click |Mevrouw                                                                                          |
+|enter |F. H.                                          |as              |Voornaam                        |
+|enter |Hoeben                                         |as              |Achternaam                      |
+|enter |${CONTACT_EMAIL}                           |as              |E-mailadres                     |
+|enter |24528616                                       |as              |Telefoonnummer mobiel           |
+|enter |0334806412                                     |as              |Tweede telefoonnummer           |
+|enter |27091975                                       |as              |Geboortedatum                   |
+|enter |${RANDOM_VF_USER}|as              |Nieuw Vodafone Thuis e-mailadres|
+|enter |Tester                                         |as              |Naam rekeninghouder             |
+|enter |151                                            |as              |IBAN/Bankrekeningnummer         |
+|click |Volgende stap                                  |and wait for tag|h4   |with text  |Nummerbehoud  |
+|click |Ja                                                                                               |
+|click |Ik gebruik dit nummer momenteel op een ander adres dan                                           |
+|enter |3731EP                                         |as              |Postcode                        |
+|enter |67                                             |as              |Huisnummer                      |
+|click |Volgende stap                                                                                    |
+
