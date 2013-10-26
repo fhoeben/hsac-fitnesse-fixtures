@@ -1,7 +1,8 @@
-package nl.hsac.fitnesse.fixture;
+package nl.hsac.fitnesse.fixture.fit;
 
 import fit.Fixture;
 import fitnesse.fixtures.TableFixture;
+import nl.hsac.fitnesse.fixture.Environment;
 
 /**
  * Fixture to set Fitnesse Symbols so that other fixtures can use them.
