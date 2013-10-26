@@ -1,4 +1,4 @@
-package nl.hsac.fitnesse.fixture.web;
+package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;

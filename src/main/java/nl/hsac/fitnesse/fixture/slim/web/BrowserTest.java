@@ -1,5 +1,6 @@
-package nl.hsac.fitnesse.fixture.web;
+package nl.hsac.fitnesse.fixture.slim.web;
 
+import nl.hsac.fitnesse.fixture.slim.SlimFixture;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -12,21 +13,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class BrowserTest extends SlimFixture {
-    private static final Pattern PATTERN = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>", Pattern.CASE_INSENSITIVE);
-
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
     private int secondsBeforeTimeout = 10;
 
     public boolean open(String address) {
-        String url = urlFromLink(address);
-        if (url == null) {
-            // not a html link, use raw value
-            url = address;
-        }
+        String url = getUrl(address);
         getSeleniumHelper().navigate().to(url);
         return true;
     }
@@ -271,17 +264,6 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
-    public boolean waitSeconds(int i) {
-        boolean result;
-        try {
-            Thread.sleep(1 * 1000);
-            result = true;
-        } catch (InterruptedException e) {
-            result = false;
-        }
-        return result;
-    }
-
     protected WebElement getElement(String place) {
         return getSeleniumHelper().getElement(place);
     }
@@ -315,31 +297,6 @@ public class BrowserTest extends SlimFixture {
 
     private WebDriverWait waitDriver() {
         return getSeleniumHelper().waitDriver();
-    }
-
-    /**
-     * Removes result of wiki formatting (for e.g. email addresses) if needed.
-     * @param rawValue value as received from Fitnesse.
-     * @return rawValue if it was just text, cleaned version if it was not.
-     */
-    protected String cleanupValue(String rawValue) {
-        String result = null;
-        Matcher matcher = PATTERN.matcher(rawValue);
-        if (matcher.matches()) {
-            result = matcher.group(2);
-        } else {
-            result = rawValue;
-        }
-        return result;
-    }
-
-    private String urlFromLink(String htmlLink) {
-        String result = null;
-        Matcher matcher = PATTERN.matcher(htmlLink);
-        if (matcher.matches()) {
-            result = matcher.group(1);
-        }
-        return result;
     }
 
     /**
