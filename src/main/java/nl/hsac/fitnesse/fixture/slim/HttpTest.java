@@ -2,20 +2,16 @@ package nl.hsac.fitnesse.fixture.slim;
 
 import freemarker.template.Template;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
-import nl.hsac.fitnesse.fixture.web.SlimFixture;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Fixture to make HTTP requests using Slim scripts and/or scenarios.
  */
 public class HttpTest extends SlimFixture {
-    private static final Pattern PATTERN = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>(.*)", Pattern.CASE_INSENSITIVE);
     private final Map<String, String> currentValues = new LinkedHashMap<String, String>();
     private HttpResponse response = createResponse();
     private String template;
@@ -158,15 +154,6 @@ public class HttpTest extends SlimFixture {
      */
     public int responseStatus() {
         return response.getStatusCode();
-    }
-
-    String getUrl(String htmlLink) {
-        String result = htmlLink;
-        Matcher matcher = PATTERN.matcher(htmlLink);
-        if (matcher.matches()) {
-            result = matcher.group(1) + matcher.group(3);
-        }
-        return result;
     }
 
     protected HttpResponse getResponse() {
