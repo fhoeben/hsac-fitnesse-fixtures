@@ -11,6 +11,15 @@ public class XmlHttpTest extends HttpTest {
     private final XMLFormatter xmlFormatter = new XMLFormatter();
 
     /**
+     * Register a prefix to use in XPath expressions.
+     * @param prefix prefix to be used in xPath expressions.
+     * @param namespace XML namespace the prefix should point to.
+     */
+    public void registerPrefixForNamespace(String prefix, String namespace) {
+        getEnvironment().registerNamespace(prefix, namespace);
+    }
+
+    /**
      * @return request sent last time postTo() was called.
      */
     @Override
