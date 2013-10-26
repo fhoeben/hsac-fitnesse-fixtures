@@ -2,7 +2,7 @@
 
 |Import                      |
 |nl.hsac.fitnesse.fixture    |
-|nl.hsac.fitnesse.fixture.web|
+|nl.hsac.fitnesse.fixture.slim.web|
 
 *!
 

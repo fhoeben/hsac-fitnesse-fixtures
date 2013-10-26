@@ -1,6 +1,6 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import nl.hsac.fitnesse.fixture.SoapCallMapColumnFixture;
+import nl.hsac.fitnesse.fixture.fit.SoapCallMapColumnFixture;
 
 import java.util.ArrayList;
 import java.util.List;
