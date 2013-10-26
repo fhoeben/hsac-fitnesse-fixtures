@@ -1,0 +1,123 @@
+Email adres with 1 character
+
+|script|vodafone browser test                                                                                                                 |
+|go to checkout                                                                                                                               |
+|click |Mevrouw                                                                                                                               |
+|enter |F. H.                                         |as                                         |Voornaam                                   |
+|enter |Hoeben                                        |as                                         |Achternaam                                 |
+|enter |email@test.nl                                 |as                                         |E-mailadres                                |
+|enter |24528616                                      |as                                         |Telefoonnummer mobiel                      |
+|enter |27091975                                      |as                                         |Geboortedatum                              |
+|enter |!randomString (1) (abcdefghijklmnopqrstuvwxyz)|as                                         |Nieuw Vodafone Thuis e-mailadres           |
+|enter |Tester                                        |as                                         |Naam rekeninghouder                        |
+|enter |151                                           |as                                         |IBAN/Bankrekeningnummer                    |
+|click |Volgende stap                                                                                                                         |
+|check |global error                                  |Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens.|
+|ensure|error style on                                |Nieuw Vodafone Thuis e-mailadres                                                       |
+|check |error on                                      |Nieuw Vodafone Thuis e-mailadres           |Gebruik ten minste 2 tekens.               |
+|check |errors on others than                         |Nieuw Vodafone Thuis e-mailadres           |null                                       |
+|check |error style on others than                    |Nieuw Vodafone Thuis e-mailadres           |null                                       |
+
+Email adres with 11 characters
+
+|script|vodafone browser test                                                                                            |
+|go to checkout                                                                                                          |
+|click |Mevrouw                                                                                                          |
+|enter |F. H.                                          |as                              |Voornaam                        |
+|enter |Hoeben                                         |as                              |Achternaam                      |
+|enter |email@test.nl                                  |as                              |E-mailadres                     |
+|enter |24528616                                       |as                              |Telefoonnummer mobiel           |
+|enter |27091975                                       |as                              |Geboortedatum                   |
+|enter |!randomString (11) (abcdefghijklmnopqrstuvwxyz)|as                              |Nieuw Vodafone Thuis e-mailadres|
+|enter |Tester                                         |as                              |Naam rekeninghouder             |
+|enter |151                                            |as                              |IBAN/Bankrekeningnummer         |
+|click |Volgende stap                                                                                                    |
+|check |global error                                   |null                                                             |
+|check |error on                                       |Nieuw Vodafone Thuis e-mailadres|                                |
+|check |errors on others than                          |Nieuw Vodafone Thuis e-mailadres|null                            |
+|check |error style on others than                     |Nieuw Vodafone Thuis e-mailadres|null                            |
+
+
+Email adres with 31 characters
+
+|script|vodafone browser test                                                                                            |
+|go to checkout                                                                                                          |
+|click |Mevrouw                                                                                                          |
+|enter |F. H.                                          |as                              |Voornaam                        |
+|enter |Hoeben                                         |as                              |Achternaam                      |
+|enter |email@test.nl                                  |as                              |E-mailadres                     |
+|enter |24528616                                       |as                              |Telefoonnummer mobiel           |
+|enter |27091975                                       |as                              |Geboortedatum                   |
+|enter |!randomString (31) (abcdefghijklmnopqrstuvwxyz)|as                              |Nieuw Vodafone Thuis e-mailadres|
+|enter |Tester                                         |as                              |Naam rekeninghouder             |
+|enter |151                                            |as                              |IBAN/Bankrekeningnummer         |
+|click |Volgende stap                                                                                                    |
+|check |global error                                   |null                                                             |
+|check |error on                                       |Nieuw Vodafone Thuis e-mailadres|                                |
+|check |errors on others than                          |Nieuw Vodafone Thuis e-mailadres|null                            |
+|check |error style on others than                     |Nieuw Vodafone Thuis e-mailadres|null                            |
+
+
+
+
+Email adres with special character at the beginning, which isn't allowed
+
+|script|vodafone browser test                                                                                                  |
+|go to checkout                                                                                                                |
+|click |Mevrouw                                                                                                                |
+|enter |F. H.                     |as                              |Voornaam                                                   |
+|enter |Hoeben                    |as                              |Achternaam                                                 |
+|enter |email@test.nl             |as                              |E-mailadres                                                |
+|enter |24528616                  |as                              |Telefoonnummer mobiel                                      |
+|enter |27091975                  |as                              |Geboortedatum                                              |
+|enter |(test                     |as                              |Nieuw Vodafone Thuis e-mailadres                           |
+|enter |Tester                    |as                              |Naam rekeninghouder                                        |
+|enter |151                       |as                              |IBAN/Bankrekeningnummer                                    |
+|click |Volgende stap                                                                                                          |
+|check |global error              |Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens.     |
+|ensure|error style on            |Nieuw Vodafone Thuis e-mailadres                                                            |
+|check |error on                  |Nieuw Vodafone Thuis e-mailadres|Gebruik alleen a t/m z, of 0 t/m 9 als 1e en laatste teken.|
+|check |errors on others than     |Nieuw Vodafone Thuis e-mailadres|null                                                       |
+|check |error style on others than|Nieuw Vodafone Thuis e-mailadres|null                                                       |
+
+
+
+Email adres with special character at the end, which isn't allowed
+
+|script|vodafone browser test                                                                                                  |
+|go to checkout                                                                                                                |
+|click |Mevrouw                                                                                                                |
+|enter |F. H.                     |as                              |Voornaam                                                   |
+|enter |Hoeben                    |as                              |Achternaam                                                 |
+|enter |email@test.nl             |as                              |E-mailadres                                                |
+|enter |24528616                  |as                              |Telefoonnummer mobiel                                      |
+|enter |27091975                  |as                              |Geboortedatum                                              |
+|enter |test)                     |as                              |Nieuw Vodafone Thuis e-mailadres                           |
+|enter |Tester                    |as                              |Naam rekeninghouder                                        |
+|enter |151                       |as                              |IBAN/Bankrekeningnummer                                    |
+|click |Volgende stap                                                                                                          |
+|check |global error              |Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens.     |
+|ensure|error style on            |Nieuw Vodafone Thuis e-mailadres                                                            |
+|check |error on                  |Nieuw Vodafone Thuis e-mailadres|Gebruik alleen a t/m z, of 0 t/m 9 als 1e en laatste teken.|
+|check |errors on others than     |Nieuw Vodafone Thuis e-mailadres|null                                                       |
+|check |error style on others than|Nieuw Vodafone Thuis e-mailadres|null                                                       |
+
+Email adres with special character in word
+
+|script|vodafone browser test                                                                                             |
+|go to checkout                                                                                                           |
+|click |Mevrouw                                                                                                           |
+|enter |F. H.                     |as                                     |Voornaam                                       |
+|enter |Hoeben                    |as                                     |Achternaam                                     |
+|enter |email@test.nl             |as                                     |E-mailadres                                    |
+|enter |24528616                  |as                                     |Telefoonnummer mobiel                          |
+|enter |27091975                  |as                                     |Geboortedatum                                  |
+|enter |t@st                      |as                                     |Nieuw Vodafone Thuis e-mailadres               |
+|enter |Tester                    |as                                     |Naam rekeninghouder                            |
+|enter |151                       |as                                     |IBAN/Bankrekeningnummer                        |
+|click |Volgende stap                                                                                                     |
+|check |global error              |Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens.|
+|ensure|error style on            |Nieuw Vodafone Thuis e-mailadres                                                       |
+|check |error on                  |Nieuw Vodafone Thuis e-mailadres       |Gebruik alleen a t/m z, 0 t/m 9 en . - _       |
+|check |errors on others than     |Nieuw Vodafone Thuis e-mailadres       |null                                           |
+|check |error style on others than|Nieuw Vodafone Thuis e-mailadres       |null                                           |

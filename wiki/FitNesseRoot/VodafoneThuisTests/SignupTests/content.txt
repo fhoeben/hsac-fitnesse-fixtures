@@ -1,1 +1,5 @@
 !contents -R2 -g -p -f -h
+
+!define RANDOM_VF_USER {!randomString (29) (abcdefghijklmnopqrstuvwxyz1234567890-_) (test-)a}
+!define CONTACT_EMAIL {test-auto@glasoperator.nl}
+!define VF_PORTAL_URL {!-https://orderportalvf-test.glasoperator.nl-!}

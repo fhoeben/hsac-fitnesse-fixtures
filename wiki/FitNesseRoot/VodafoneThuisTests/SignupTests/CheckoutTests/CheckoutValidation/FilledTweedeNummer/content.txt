@@ -1,20 +1,20 @@
 Tests if you actually can fill in 1 number. Must return errors on "global error, error style on, error on"
 
-|script|vodafone browser test                                                                                                                  |
-|go to checkout                                                                                                                                |
-|click |Mevrouw                                                                                                                                |
-|enter |F. H.                                          |as                                  |Voornaam                                          |
-|enter |Hoeben                                         |as                                  |Achternaam                                        |
-|enter |test@glasoperator.nl                           |as                                  |E-mailadres                                       |
-|enter |27091975                                       |as                                  |Geboortedatum                                     |
-|enter |0765149761                                     |as                                  |Tweede telefoonnummer                             |
-|enter |!randomString (10) (abcdefghijklmnopqrstuvwxyz)|as                                  |Nieuw Vodafone Thuis e-mailadres                  |
-|enter |Tester                                         |as                                  |Naam rekeninghouder                               |
-|enter |151                                            |as                                  |IBAN/Bankrekeningnummer                           |
-|click |Volgende stap                                                                                                                          |
-|check |global error                                   |Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens.|
-|ensure|error style on                                 |Telfoonnummer mobiel                                                                   |
-|check |error on                                       |Telfoonnummer mobiel                |Vul tenminste 1 telefoonnummer in.                |
-|ensure|error style on                                 |Tweede telfoonnummer                                                                   |
-|check |error on                                       |Tweede telfoonnummer                |Vul tenminste 1 telefoonnummer in.                |
+|script|vodafone browser test                                                     |
+|go to checkout                                                                   |
+|click |Mevrouw                                                                   |
+|enter |F. H.               |as                  |Voornaam                        |
+|enter |Hoeben              |as                  |Achternaam                      |
+|enter |${CONTACT_EMAIL}|as                  |E-mailadres                     |
+|enter |27091975            |as                  |Geboortedatum                   |
+|enter |0765149761          |as                  |Tweede telefoonnummer           |
+|enter |${RANDOM_VF_USER}   |as                  |Nieuw Vodafone Thuis e-mailadres|
+|enter |Tester              |as                  |Naam rekeninghouder             |
+|enter |151                 |as                  |IBAN/Bankrekeningnummer         |
+|click |Volgende stap                                                             |
+|check |global error        |null                                                 |
+|check |error style on      |Telfoonnummer mobiel|false                           |
+|check |error on            |Telfoonnummer mobiel|null                            |
+|check |error style on      |Tweede telfoonnummer|false                           |
+|check |error on            |Tweede telfoonnummer|null                            |
 
