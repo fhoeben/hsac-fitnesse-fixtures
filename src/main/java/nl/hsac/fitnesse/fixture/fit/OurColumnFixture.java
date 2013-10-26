@@ -1,4 +1,4 @@
-package nl.hsac.fitnesse.fixture;
+package nl.hsac.fitnesse.fixture.fit;
 
 import fit.ColumnFixture;
 import fit.Parse;

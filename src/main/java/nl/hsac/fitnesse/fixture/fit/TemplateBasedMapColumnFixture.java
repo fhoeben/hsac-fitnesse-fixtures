@@ -1,4 +1,4 @@
-package nl.hsac.fitnesse.fixture;
+package nl.hsac.fitnesse.fixture.fit;
 
 /**
  * Base class for fixtures that call a service and then another based on Freemarker templates.

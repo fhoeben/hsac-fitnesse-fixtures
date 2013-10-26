@@ -1,4 +1,6 @@
-package nl.hsac.fitnesse.fixture;
+package nl.hsac.fitnesse.fixture.fit;
+
+import nl.hsac.fitnesse.fixture.Environment;
 
 import java.util.Map;
 
