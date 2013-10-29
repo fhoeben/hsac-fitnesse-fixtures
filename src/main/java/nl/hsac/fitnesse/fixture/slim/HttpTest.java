@@ -12,7 +12,7 @@ import java.util.Map;
  * Fixture to make HTTP requests using Slim scripts and/or scenarios.
  */
 public class HttpTest extends SlimFixture {
-    private final Map<String, String> currentValues = new LinkedHashMap<String, String>();
+    private final Map<String, Object> currentValues = new LinkedHashMap<String, Object>();
     private HttpResponse response = createResponse();
     private String template;
 
@@ -91,7 +91,7 @@ public class HttpTest extends SlimFixture {
             isFirst = false;
         }
 
-        for (Map.Entry<String, String> entry : currentValues.entrySet()) {
+        for (Map.Entry<String, Object> entry : currentValues.entrySet()) {
             if (isFirst) {
                 isFirst = false;
                 if (!baseUrl.endsWith("?")) {
@@ -100,7 +100,10 @@ public class HttpTest extends SlimFixture {
             } else {
                 baseUrl += "&";
             }
-            baseUrl += urlEncode(entry.getKey()) + "=" + urlEncode(entry.getValue());
+            baseUrl += urlEncode(entry.getKey());
+            if (entry.getValue() != null) {
+                baseUrl += "=" + urlEncode(entry.getValue().toString());
+            }
         }
         return baseUrl;
     }
@@ -154,6 +157,13 @@ public class HttpTest extends SlimFixture {
      */
     public int responseStatus() {
         return response.getStatusCode();
+    }
+
+    /**
+     * @return current values stored.
+     */
+    protected Map<String, Object> getCurrentValues() {
+        return currentValues;
     }
 
     protected HttpResponse getResponse() {
