@@ -84,7 +84,7 @@ public class SeleniumHelper {
             element = findElement(byXpath("//input[@value='%s']", place));
         }
         if (element == null) {
-            element = findElement(byXpath("//button[text()='%s']", place));
+            element = findElement(byXpath("//button[normalize-space(text())='%s']", place));
         }
         if (element == null) {
             element = findElement(By.linkText(place));
@@ -115,7 +115,7 @@ public class SeleniumHelper {
      */
     public WebElement getElementByLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText,
-                                    indexedXPath("//label[text()='%s']", index),
+                                    indexedXPath("//label[normalize-space(text())='%s']", index),
                                     indexedXPath("//*[@aria-label='%s']", index));
     }
 
@@ -127,7 +127,7 @@ public class SeleniumHelper {
      */
     public WebElement getElementByStartLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText,
-                                    indexedXPath("//label[starts-with(text(), '%s')]", index),
+                                    indexedXPath("//label[starts-with(normalize-space(text()), '%s')]", index),
                                     indexedXPath("//*[starts-with(@aria-label, '%s')]", index));
     }
 
@@ -139,7 +139,7 @@ public class SeleniumHelper {
      */
     public WebElement getElementByPartialLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText,
-                indexedXPath("//label[contains(text(), '%s')]", index),
+                indexedXPath("//label[contains(normalize-space(text()), '%s')]", index),
                 indexedXPath("//*[contains(@aria-label, '%s')]", index));
     }
 
