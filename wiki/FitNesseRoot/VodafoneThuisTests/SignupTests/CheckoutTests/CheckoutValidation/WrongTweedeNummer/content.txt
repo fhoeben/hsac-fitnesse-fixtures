@@ -1,20 +1,20 @@
 Filled in the wrong tweede telefoonnummer
 
-|script|vodafone browser test                                                                                                                  |
-|go to checkout                                                                                                                                |
-|click |Mevrouw                                                                                                                                |
-|enter |F. H.                                          |as                                   |Voornaam                                         |
-|enter |Hoeben                                         |as                                   |Achternaam                                       |
-|enter |${CONTACT_EMAIL}                           |as                                   |E-mailadres                                      |
-|enter |14                                             |as                                   |Tweede Telefoonnummer                            |
-|enter |27091975                                       |as                                   |Geboortedatum                                    |
-|enter |${RANDOM_VF_USER}|as                                   |Nieuw Vodafone Thuis e-mailadres                 |
-|enter |Tester                                         |as                                   |Naam rekeninghouder                              |
-|enter |151                                            |as                                   |IBAN/Bankrekeningnummer                          |
-|click |Volgende stap                                                                                                                          |
-|check |global error                                   |Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens.|
-|ensure|error style on                                 |Tweede Telefoonnummer                                                                  |
-|check |error on                                       |Tweede Telefoonnummer                |Vul een geldig telefoonnnummer in                |
-|check |errors on others than                          |Tweede Telefoonnummer                |null                                             |
-|check |error style on others than                     |Tweede Telefoonnummer                |null                                             |
+|script|vodafone browser test                                                                                             |
+|go to checkout                                                                                                           |
+|click |Mevrouw                                                                                                           |
+|enter |F. H.                     |as                                   |Voornaam                                         |
+|enter |Hoeben                    |as                                   |Achternaam                                       |
+|enter |${CONTACT_EMAIL}          |as                                   |E-mailadres                                      |
+|enter |27091975                  |as                                   |Geboortedatum                                    |
+|enter |14                        |as                                   |Tweede telefoonnummer                            |
+|enter |${RANDOM_VF_USER}         |as                                   |Nieuw Vodafone Thuis e-mailadres                 |
+|enter |Tester                    |as                                   |Naam rekeninghouder                              |
+|enter |151                       |as                                   |IBAN/Bankrekeningnummer                          |
+|click |Volgende stap                                                                                                     |
+|check |global error              |Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens.|
+|ensure|error style on            |Tweede telefoonnummer                                                                  |
+|check |error on                  |Tweede telefoonnummer                |Vul een geldig telefoonnnummer in                |
+|check |errors on others than     |Tweede telefoonnummer                |null                                             |
+|check |error style on others than|Tweede telefoonnummer                |null                                             |
 
