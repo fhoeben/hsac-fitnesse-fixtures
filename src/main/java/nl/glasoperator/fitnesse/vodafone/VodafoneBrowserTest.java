@@ -187,12 +187,12 @@ public class VodafoneBrowserTest extends BrowserTest {
         return result;
     }
 
-    private WebElement findByXPath(String xpathPattern, String... params) {
+    protected WebElement findByXPath(String xpathPattern, String... params) {
         By by = getSeleniumHelper().byXpath(xpathPattern, params);
         return getSeleniumHelper().findElement(by);
     }
 
-    private List<WebElement> findAllByXPath(String xpathPattern, String... params) {
+    protected List<WebElement> findAllByXPath(String xpathPattern, String... params) {
         By by = getSeleniumHelper().byXpath(xpathPattern, params);
         return getSeleniumHelper().driver().findElements(by);
     }

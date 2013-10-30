@@ -1,0 +1,2 @@
+|scenario|go to pickandchoose           |
+|open    |${VF_PORTAL_URL}/pickandchoose|

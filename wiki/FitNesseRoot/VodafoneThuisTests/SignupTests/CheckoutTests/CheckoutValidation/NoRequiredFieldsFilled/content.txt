@@ -20,24 +20,26 @@ Alle verplichte velden bij de 1e pagina.
 |check |error on      |Nieuw Vodafone Thuis e-mailadres            |Vul je gewenste e-mailadres in.           |
 
 
+|note
 !2 Nummerbehoud
 
 Alle verplichte velden bij de 2e pagina.
 
-|script|vodafone browser test                                                                                                                       |
-|go to checkout                                                                                                                                     |
-|click |Mevrouw                                                                                                                                     |
-|enter |Tester                                         |as              |Achternaam                                                                 |
-|enter |F. H.                                          |as              |Voornaam                                                                   |
-|enter |${CONTACT_EMAIL}                           |as              |E-mailadres                                                                |
-|enter |24528616                                       |as              |Telefoonnummer mobiel                                                      |
-|enter |27091975                                       |as              |Geboortedatum                                                              |
+|script|vodafone browser test                                                                                         |
+|go to checkout                                                                                                       |
+|click |Mevrouw                                                                                                       |
+|enter |Tester           |as              |Achternaam                                                                 |
+|enter |F. H.            |as              |Voornaam                                                                   |
+|enter |${CONTACT_EMAIL} |as              |E-mailadres                                                                |
+|enter |24528616         |as              |Telefoonnummer mobiel                                                      |
+|enter |27091975         |as              |Geboortedatum                                                              |
 |enter |${RANDOM_VF_USER}|as              |Nieuw Vodafone Thuis e-mailadres                                           |
-|enter |Tester                                         |as              |Naam rekeninghouder                                                        |
-|enter |151                                            |as              |IBAN/Bankrekeningnummer                                                    |
-|click |Volgende stap                                  |and wait for tag|h4                 |with text                 |Nummerbehoud                |
-|click |Volgende stap                                                                                                                               |
-|check |global error                                   |Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens.     |
-|ensure|error style on                                 |Nee                                                                                         |
-|check |error on                                       |Nee             |Geef aan of je je vaste telefoonnummer wilt overzetten naar Vodafone Thuis.|
+|enter |Tester           |as              |Naam rekeninghouder                                                        |
+|enter |151              |as              |IBAN/Bankrekeningnummer                                                    |
+|click |Volgende stap    |and wait for tag|h4                 |with text                 |Nummerbehoud                |
+|click |Volgende stap                                                                                                 |
+|check |global error     |Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens.     |
+|ensure|error style on   |Nee                                                                                         |
+|check |error on         |Nee             |Geef aan of je je vaste telefoonnummer wilt overzetten naar Vodafone Thuis.|
+|
 

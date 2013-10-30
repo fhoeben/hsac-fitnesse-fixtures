@@ -1,0 +1,23 @@
+!***> Expected cart content
+
+|scenario|check cart                                      |
+|check   |cart total   |Maandelijks        |€ 20,00       |
+|check   |cart total   |Eenmalig betaal je |€ 34,90       |
+|check   |cart products|Internet Full      |price |€ 20,00|
+|check   |cart products|Internet Full      |period|p. mnd.|
+|check   |cart products|Installatie monteur|price |€ 34,90|
+|check   |cart products|Installatie monteur|period|null   |
+*!
+
+|script|vodafone choose browser test                                 |
+|go to pickandchoose                                                 |
+|pick  |Internet|package         |Full                               |
+|check cart                                                          |
+|click |Bestel direct                                                |
+|enter |3731 ep |as              |Postcode                           |
+|enter |71      |as              |Huisnummer                         |
+|click |Verstuur|and wait for tag|h2|with text|Mogen wij je gegevens?|
+|check cart                                                          |
+|check |deliveryAddress                                              |!-Park Arenberg 71
+3731EP De Bilt-!|
+
