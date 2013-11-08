@@ -16,7 +16,7 @@ public class XmlHttpTest extends HttpTest {
      * @param namespace XML namespace the prefix should point to.
      */
     public void registerPrefixForNamespace(String prefix, String namespace) {
-        getEnvironment().registerNamespace(prefix, namespace);
+        getEnvironment().registerNamespace(prefix, getUrl(namespace));
     }
 
     /**
