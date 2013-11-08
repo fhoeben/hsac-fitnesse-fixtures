@@ -32,7 +32,14 @@ public class XmlHttpTest extends HttpTest {
      */
     @Override
     public String response() {
-        return xmlFormatter.format(super.response());
+        String response = super.response();
+        String result;
+        try {
+            result = xmlFormatter.format(response);
+        } catch (Exception e) {
+            result = response;
+        }
+        return result;
     }
 
     /**
