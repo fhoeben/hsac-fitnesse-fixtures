@@ -1,6 +1,6 @@
 Email adres with 1 character
 
-|script|vodafone browser test                                                                                                                 |
+|script|vodafone choose browser test                                                                                                                 |
 |go to checkout                                                                                                                               |
 |click |Mevrouw                                                                                                                               |
 |enter |F. H.                                         |as                                         |Voornaam                                   |
@@ -20,7 +20,7 @@ Email adres with 1 character
 
 Email adres with 11 characters
 
-|script|vodafone browser test                                                                                            |
+|script|vodafone choose browser test                                                                                            |
 |go to checkout                                                                                                          |
 |click |Mevrouw                                                                                                          |
 |enter |F. H.                                          |as                              |Voornaam                        |
@@ -40,7 +40,7 @@ Email adres with 11 characters
 
 Email adres with 31 characters
 
-|script|vodafone browser test                                                                                            |
+|script|vodafone choose browser test                                                                                            |
 |go to checkout                                                                                                          |
 |click |Mevrouw                                                                                                          |
 |enter |F. H.                                          |as                              |Voornaam                        |
@@ -62,7 +62,7 @@ Email adres with 31 characters
 
 Email adres with special character at the beginning, which isn't allowed
 
-|script|vodafone browser test                                                                                                  |
+|script|vodafone choose browser test                                                                                                  |
 |go to checkout                                                                                                                |
 |click |Mevrouw                                                                                                                |
 |enter |F. H.                     |as                              |Voornaam                                                   |
@@ -84,7 +84,7 @@ Email adres with special character at the beginning, which isn't allowed
 
 Email adres with special character at the end, which isn't allowed
 
-|script|vodafone browser test                                                                                                  |
+|script|vodafone choose browser test                                                                                                  |
 |go to checkout                                                                                                                |
 |click |Mevrouw                                                                                                                |
 |enter |F. H.                     |as                              |Voornaam                                                   |
@@ -104,7 +104,7 @@ Email adres with special character at the end, which isn't allowed
 
 Email adres with special character in word
 
-|script|vodafone browser test                                                                                             |
+|script|vodafone choose browser test                                                                                             |
 |go to checkout                                                                                                           |
 |click |Mevrouw                                                                                                           |
 |enter |F. H.                     |as                                     |Voornaam                                       |

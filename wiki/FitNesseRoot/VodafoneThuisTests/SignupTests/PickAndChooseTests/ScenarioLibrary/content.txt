@@ -1,2 +1,12 @@
 |scenario|go to pickandchoose           |
 |open    |${VF_PORTAL_URL}/pickandchoose|
+
+|scenario|check product _ in cart has price _ per  _|name,price,period       |
+|check   |cart products                             |@{name}|price |@{price} |
+|check   |cart products                             |@{name}|period|@{period}|
+
+|scenario     |check product _ in cart has monthly price _|name,price                            |
+|check product|@{name}                                    |in cart has price|@{price}|per|p. mnd.|
+
+|scenario     |check product _ in cart has one off price _|name,price                         |
+|check product|@{name}                                    |in cart has price|@{price}|per|null|

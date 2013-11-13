@@ -7,6 +7,11 @@
 
 *!
 
+
+|Library  |
+|soap test|
+
+
 !define FITNESSE_DIR {C:\SvnGlasoperator\fitnesse\source\trunk\wiki}
 
 |script      |selenium driver setup                                                      |
@@ -16,3 +21,4 @@
 |note        |startDriver            |org.openqa.selenium.ie.InternetExplorerDriver      |
 |note        |startDriver            |org.openqa.selenium.safari.SafariDriver            |
 |note        |startDriver            |org.openqa.selenium.firefox.FirefoxDriver          |
+

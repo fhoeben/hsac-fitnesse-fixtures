@@ -1,6 +1,6 @@
 Filled in the wrong tweede telefoonnummer
 
-|script|vodafone browser test                                                                                             |
+|script|vodafone choose browser test                                                                                             |
 |go to checkout                                                                                                           |
 |click |Mevrouw                                                                                                           |
 |enter |F. H.                     |as                                   |Voornaam                                         |

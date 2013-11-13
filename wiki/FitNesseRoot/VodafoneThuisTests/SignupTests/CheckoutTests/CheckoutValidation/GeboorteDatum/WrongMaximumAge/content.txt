@@ -1,0 +1,20 @@
+You are 120 years old, this must be too old
+
+|script|vodafone choose browser test                                                                                             |
+|go to checkout                                                                                                           |
+|click |Mevrouw                                                                                                           |
+|enter |F. H.                     |as                    |Voornaam                                                        |
+|enter |Hoeben                    |as                    |Achternaam                                                      |
+|enter |${CONTACT_EMAIL}      |as                    |E-mailadres                                                     |
+|enter |12121893                  |as                    |Geboortedatum                                                   |
+|enter |24528616                  |as                    |Telefoonnummer mobiel                                           |
+|enter |${RANDOM_VF_USER}         |as                    |Nieuw Vodafone Thuis e-mailadres                                |
+|enter |Tester                    |as                    |Naam rekeninghouder                                             |
+|enter |151                       |as                    |IBAN/Bankrekeningnummer                                         |
+|click |Volgende stap                                                                                                     |
+|check |global error              |Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens.|
+|ensure|error style on            |Geboortedatum                                                                          |
+|check |error on                  |Geboortedatum         |Je moet minstens 18 zijn om Vodafone Thuis te bestellen!        |
+|check |errors on others than     |Geboortedatum         |null                                                            |
+|check |error style on others than|Geboortedatum         |null                                                            |
+

@@ -1,0 +1,20 @@
+Tests if you actually can fill in 1 number. In this case a mobile number 
+
+|script|vodafone choose browser test                                                                         |
+|go to checkout                                                                                              |
+|click |Mevrouw                                                                                              |
+|enter |F. H.                                          |as                  |Voornaam                        |
+|enter |Hoeben                                         |as                  |Achternaam                      |
+|enter |test@glasoperator.nl                           |as                  |E-mailadres                     |
+|enter |27091975                                       |as                  |Geboortedatum                   |
+|enter |32423412                                       |as                  |Telefoonnummer mobiel           |
+|enter |!randomString (10) (abcdefghijklmnopqrstuvwxyz)|as                  |Nieuw Vodafone Thuis e-mailadres|
+|enter |Tester                                         |as                  |Naam rekeninghouder             |
+|enter |151                                            |as                  |IBAN/Bankrekeningnummer         |
+|click |Volgende stap                                                                                        |
+|check |global error                                   |null                                                 |
+|check |error style on                                 |Telfoonnummer mobiel|false                           |
+|check |error on                                       |Telfoonnummer mobiel|null                            |
+|check |error style on                                 |Tweede telfoonnummer|false                           |
+|check |error on                                       |Tweede telfoonnummer|null                            |
+

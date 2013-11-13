@@ -1,0 +1,19 @@
+You are 113 years old, this must be the maximum age
+
+|script|vodafone choose browser test                                             |
+|go to checkout                                                                  |
+|click |Mevrouw                                                                  |
+|enter |F. H.                     |as           |Voornaam                        |
+|enter |Hoeben                    |as           |Achternaam                      |
+|enter |${CONTACT_EMAIL}          |as           |E-mailadres                     |
+|enter |12121900                  |as           |Geboortedatum                   |
+|enter |24528616                  |as           |Telefoonnummer mobiel           |
+|enter |${RANDOM_VF_USER}         |as           |Nieuw Vodafone Thuis e-mailadres|
+|enter |Tester                    |as           |Naam rekeninghouder             |
+|enter |151                       |as           |IBAN/Bankrekeningnummer         |
+|click |Volgende stap                                                            |
+|check |global error              |null                                          |
+|check |error style on            |Geboortedatum|false                           |
+|check |error on                  |Geboortedatum|                                |
+|check |errors on others than     |Geboortedatum|null                            |
+|check |error style on others than|Geboortedatum|null                            |

@@ -1,0 +1,18 @@
+!***> Expected cart content
+
+|scenario|check cart                                   |
+|check   |cart total   |Maandelijks        |null       |
+|check   |cart total   |Eenmalig betaal je |null       |
+|check   |cart products|Internet Full      |price |null|
+|check   |cart products|Televisie Full     |price |null|
+|check   |cart products|Installatie monteur|price |null|
+|check   |cart products|Installatie monteur|period|null|
+*!
+
+|script|vodafone choose browser test|
+|go to pickandchoose                |
+|reject|pick |Televisie|package|Full|
+|check cart                         |
+|reject|click|Bestel direct         |
+
+

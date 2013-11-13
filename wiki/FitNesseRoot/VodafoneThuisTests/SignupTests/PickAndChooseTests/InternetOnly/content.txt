@@ -1,13 +1,15 @@
 !***> Expected cart content
 
-|scenario|check cart                                      |
-|check   |cart total   |Maandelijks        |€ 20,00       |
-|check   |cart total   |Eenmalig betaal je |€ 34,90       |
-|check   |cart products|Internet Full      |price |€ 20,00|
-|check   |cart products|Internet Full      |period|p. mnd.|
-|check   |cart products|Installatie monteur|price |€ 34,90|
-|check   |cart products|Installatie monteur|period|null   |
+|scenario|check cart                                     |
+|check   |cart total   |Maandelijks       |€ 50,00       |
+|check   |cart total   |Eenmalig betaal je|€ 37,50       |
+|check   |cart products|Internet 500      |price |€ 50,00|
+|check   |cart products|Internet 500      |period|p. mnd.|
+|check   |cart products|Installatie Basis |price |€ 37,50|
+|check   |cart products|Installatie Basis |period|null   |
 *!
+
+This test picks only the internet full package
 
 |script|vodafone choose browser test                                 |
 |go to pickandchoose                                                 |
@@ -18,6 +20,6 @@
 |enter |71      |as              |Huisnummer                         |
 |click |Verstuur|and wait for tag|h2|with text|Mogen wij je gegevens?|
 |check cart                                                          |
-|check |deliveryAddress                                              |!-Park Arenberg 71
+|check |value of|Het adres waar we je aansluiting gaan plaatsen:     |!-Park Arenberg 71
 3731EP De Bilt-!|
 

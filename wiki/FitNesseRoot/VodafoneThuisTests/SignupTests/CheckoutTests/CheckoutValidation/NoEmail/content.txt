@@ -1,6 +1,6 @@
 Forget to fill one required field and see we get an error there and no where else.
 
-|script|vodafone browser test                                                                                             |
+|script|vodafone choose browser test                                                                                             |
 |go to checkout                                                                                                           |
 |click |Mevrouw                                                                                                           |
 |enter |F. H.                     |as                               |Voornaam                                             |

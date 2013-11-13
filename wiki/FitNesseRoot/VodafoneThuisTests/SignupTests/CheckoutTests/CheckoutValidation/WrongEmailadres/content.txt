@@ -1,6 +1,6 @@
 Zonder @ met .com
 
-|script|vodafone browser test                                                                                                                  |
+|script|vodafone choose browser test                                                                                                                  |
 |go to checkout                                                                                                                                |
 |click |Mevrouw                                                                                                                                |
 |enter |F. H.                                          |as                               |Voornaam                                             |
@@ -20,7 +20,7 @@ Zonder @ met .com
 
 Zonder @ met ,com
 
-|script|vodafone browser test                                                                                                                  |
+|script|vodafone choose browser test                                                                                                                  |
 |go to checkout                                                                                                                                |
 |click |Mevrouw                                                                                                                                |
 |enter |F. H.                                          |as                               |Voornaam                                             |
@@ -40,7 +40,7 @@ Zonder @ met ,com
 
 Zonder @ alles aan elkaar
 
-|script|vodafone browser test                                                                                                                  |
+|script|vodafone choose browser test                                                                                                                  |
 |go to checkout                                                                                                                                |
 |click |Mevrouw                                                                                                                                |
 |enter |F. H.                                          |as                               |Voornaam                                             |
@@ -60,7 +60,7 @@ Zonder @ alles aan elkaar
 
 Met @ alles aan elkaar
 
-|script|vodafone browser test                                                                                                                  |
+|script|vodafone choose browser test                                                                                                                  |
 |go to checkout                                                                                                                                |
 |click |Mevrouw                                                                                                                                |
 |enter |F. H.                                          |as                               |Voornaam                                             |
@@ -81,7 +81,7 @@ Met @ alles aan elkaar
 
 Geen domeinnaam
 
-|script|vodafone browser test                                                                                                                  |
+|script|vodafone choose browser test                                                                                                                  |
 |go to checkout                                                                                                                                |
 |click |Mevrouw                                                                                                                                |
 |enter |F. H.                                          |as                               |Voornaam                                             |
@@ -101,7 +101,7 @@ Geen domeinnaam
 
 Domein met 1 letter
 
-|script|vodafone browser test                                                                                                                  |
+|script|vodafone choose browser test                                                                                                                  |
 |go to checkout                                                                                                                                |
 |click |Mevrouw                                                                                                                                |
 |enter |F. H.                                          |as                               |Voornaam                                             |
@@ -121,7 +121,7 @@ Domein met 1 letter
 
 Domein met teveel letters
 
-|script|vodafone browser test                                                                                                                  |
+|script|vodafone choose browser test                                                                                                                  |
 |go to checkout                                                                                                                                |
 |click |Mevrouw                                                                                                                                |
 |enter |F. H.                                          |as                               |Voornaam                                             |

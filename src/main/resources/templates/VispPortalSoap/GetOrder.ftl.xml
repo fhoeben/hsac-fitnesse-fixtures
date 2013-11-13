@@ -1,0 +1,9 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://glasoperator.nl/VispPortalSoap/2013/01">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <ns:GetOrder>
+            <ns:ispId>VDF</ns:ispId>
+            <ns:orderId>${orderId}</ns:orderId>
+        </ns:GetOrder>
+    </soapenv:Body>
+</soapenv:Envelope>
