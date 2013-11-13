@@ -24,7 +24,7 @@ public class XmlHttpTest extends HttpTest {
      */
     @Override
     public String request() {
-        return xmlFormatter.format(super.request());
+        return getEnvironment().getHtmlForXml(super.request());
     }
 
     /**
@@ -35,7 +35,7 @@ public class XmlHttpTest extends HttpTest {
         String response = super.response();
         String result;
         try {
-            result = xmlFormatter.format(response);
+            result = getEnvironment().getHtmlForXml(response);
         } catch (Exception e) {
             result = response;
         }
