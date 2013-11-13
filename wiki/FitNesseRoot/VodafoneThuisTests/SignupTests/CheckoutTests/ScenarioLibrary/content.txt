@@ -1,2 +1,228 @@
-|scenario|go to checkout           |
-|open    |${VF_PORTAL_URL}/checkout|
+|scenario|go to pickandchoose           |
+|open    |${VF_PORTAL_URL}/pickandchoose|
+
+
+|scenario|go to pickandchoose reseller _      |channel     |
+|open    |${VF_PORTAL_URL}/pickandchoose?channel=@{channel}|
+
+|scenario|go to packages   |
+|open    |${VF_PORTAL_URL}/|
+
+|scenario|go to packages reseller   |channel  |
+|open    |${VF_PORTAL_URL}/?channel=@{channel}|
+
+
+|scenario    |Open Package Details _|name                          |
+|click       |Info en opties        |in       |@{name}             |
+|wait for tag|h1                    |with text|Alles in één @{name}|
+
+|scenario|go to checkout                                                                         |
+|go to pickandchoose                                                                             |
+|pick    |Internet                          |package         |Internet 500                       |
+|pick    |Telefonie                         |package         |Bellen Start                       |
+|click   |Bestel direct                                                                          |
+|enter   |${POSTAL_CODE_EVERYTHING}         |as              |Postcode                           |
+|enter   |${POSTAL_CODE_EVERYTHING_HOUSE_NR}|as              |Huisnummer                         |
+|click   |Verstuur                          |and wait for tag|h2|with text|Mogen wij je gegevens?|
+
+
+|scenario       |call vispSoapEx _                                                        |method                                                     |
+|template       |!-VispPortalSoap/@{method}.ftl.xml-!                                                                                                 |
+|set value      |http://glasoperator.nl/VispPortalSoap/2013/01/IVispPortalSoapEx/@{method}|for header   |SOAPAction                                   |
+|post to        |${VISP_PORTAL_URL}/VispPortalSoapEx.svc                                                                                              |
+|show           |response                                                                                                                             |
+|check          |response status                                                          |200                                                        |
+|register prefix|vispEx                                                                   |for namespace|http://glasoperator.nl/VispPortalSoap/2013/01|
+
+|scenario       |get order from vispSoap _|orderId    |
+|set value      |$contractnummer          |for|orderId|
+|call vispSoapEx|!-GetOrder-!                         |
+
+
+!3 Scenario's to order
+
+!***> Expected cart content
+
+!***> Cart content helpers
+
+|scenario|check product _ in cart has price _ per  _|name,price,period       |
+|check   |cart products                             |@{name}|price |@{price} |
+|check   |cart products                             |@{name}|period|@{period}|
+
+|scenario     |check product _ in cart has monthly price _|name,price                            |
+|check product|@{name}                                    |in cart has price|@{price}|per|p. mnd.|
+
+|scenario     |check product _ in cart has one off price _|name,price                         |
+|check product|@{name}                                    |in cart has price|@{price}|per|null|
+*!
+
+!4 500/plus/plus
+
+|scenario     |check full cart                                        |
+|check        |cart total          |Eerste 12 maanden        |€ 80,00 |
+|check        |cart total          |Na 12 maanden            |€ 90,00 |
+|check        |cart total          |Eenmalig betaal je       |€ 0,00  |
+|check        |cart total          |Jouw korting             |€ 157,50|
+|check product|Internet 500        |in cart has monthly price|€ 50,00 |
+|check product|TV Plus             |in cart has monthly price|€ 25,00 |
+|check product|Bellen Plus         |in cart has monthly price|€ 15,00 |
+|check product|Installatie Basis   |in cart has one off price|€ 0,00  |
+|check product|Alles-in-één korting|in cart has monthly price|€ -10,00|
+
+
+!4 500/start/start
+
+|scenario     |check 500 cart                                         |
+|check        |cart total          |Eerste 12 maanden        |€ 55,00 |
+|check        |cart total          |Na 12 maanden            |€ 65,00 |
+|check        |cart total          |Eenmalig betaal je       |€ 0,00  |
+|check        |cart total          |Jouw korting             |€ 157,50|
+|check product|Internet 500        |in cart has monthly price|€ 50,00 |
+|check product|TV Start            |in cart has monthly price|€ 12,50 |
+|check product|Bellen Start        |in cart has monthly price|€ 2,50  |
+|check product|Installatie Basis   |in cart has one off price|€ 0,00  |
+|check product|Alles-in-één korting|in cart has monthly price|€ -10,00|
+
+*!
+
+
+!4 Order tripple play
+
+Order full triple play once you are already on pick and choose
+
+|scenario|order full triple play        |
+|pick    |Internet |package|Internet 500|
+|pick    |Televisie|package|TV Plus     |
+|pick    |Telefonie|package|Bellen Plus |
+|place full order                       |
+
+Order full triple play once you are on packages page
+
+|scenario                       |order 500 triple play via packages|
+|Open Package Details           |500                               |
+|place order                    |500                               |
+|note                           |!note televisie Start             |
+|check tv package count         |0                                 |
+|note                           |!note telefonie Start             |
+|check number of telephony      |1                                 |
+|check telephony flat fee option|null                              |
+
+
+Order full triple play once correct packages are in cart
+|scenario                 |place full order|
+|place order              |full            |
+|check tv full                             |
+|check telephony full                      |
+|check number of telephony|1               |
+
+|scenario|place order _                     |name                                                |
+|check @{name} cart                                                                              |
+|click   |Bestel direct                                                                          |
+|enter   |${POSTAL_CODE_EVERYTHING}         |as              |Postcode                           |
+|enter   |${POSTAL_CODE_EVERYTHING_HOUSE_NR}|as              |Huisnummer                         |
+|click   |Verstuur                          |and wait for tag|h2|with text|Mogen wij je gegevens?|
+|check @{name} cart                                                                              |
+|check   |value of                          |Het adres waar we je aansluiting gaan plaatsen:     |${POSTAL_CODE_EVERYTHING_STREET} ${POSTAL_CODE_EVERYTHING_HOUSE_NR}!-
+-!${POSTAL_CODE_EVERYTHING} ${POSTAL_CODE_EVERYTHING_CITY}|
+|fill personal details                                                                                                      |
+|click         |Volgende stap|and wait for tag                            |h4|with text|Nummerbehoud                        |
+|click         |Nee                                                                                                         |
+|click         |Volgende stap|and wait for tag                            |h2|with text|Controleer en verstuur je bestelling|
+|submit order and retrieve from vispSoap                                                                                    |
+|check         |xPath        |//vispEx:Street                             |${POSTAL_CODE_EVERYTHING_STREET}                 |
+|check         |xPath        |!-//vispEx:HouseNumber-!                    |${POSTAL_CODE_EVERYTHING_HOUSE_NR}               |
+|check         |xPath        |!-//vispEx:PostalCode-!                     |${POSTAL_CODE_EVERYTHING}                        |
+|check         |xPath        |//vispEx:City                               |${POSTAL_CODE_EVERYTHING_CITY_UPPER}             |
+|check         |xPath        |!-//vispEx:Debtor/vispEx:BankAccountNumber-!|$bankNumber                                      |
+|check internet|500                                                                                                         |
+
+|scenario       |fill personal details                                |
+|click          |Mevrouw                                              |
+|enter          |Téster           |as|Achternaam                      |
+|$lastName=     |value of         |Achternaam                         |
+|enter          |Pietje           |as|Voornaam                        |
+|$firstName=    |value of         |Voornaam                           |
+|enter          |de               |as|Tussenvoegsels                  |
+|$intercalation=|value of         |Tussenvoegsels                     |
+|enter          |${CONTACT_EMAIL} |as|E-mailadres                     |
+|$email=        |value of         |E-mailadres                        |
+|enter          |24528616         |as|Telefoonnummer mobiel           |
+|$mobile=       |value of         |Telefoonnummer mobiel              |
+|enter          |27091975         |as|Geboortedatum                   |
+|$birthDate=    |value of         |Geboortedatum                      |
+|enter          |${RANDOM_VF_USER}|as|Nieuw Vodafone Thuis e-mailadres|
+|$vf_thuis=     |value of         |Nieuw Vodafone Thuis e-mailadres   |
+|enter          |Tester           |as|Naam rekeninghouder             |
+|$bankName=     |value of         |Naam rekeninghouder                |
+|enter          |151              |as|IBAN/Bankrekeningnummer         |
+|$bankNumber=   |value of         |IBAN/Bankrekeningnummer            |
+
+|scenario               |submit order and retrieve from vispSoap                                                                                      |
+|$connectDate=          |value of             |Gewenste aansluitdatum:                                                                                |
+|click                  |Bestelling bevestigen|and wait for tag                                              |h2|with text|Bedankt voor je bestelling!|
+|check                  |value of             |e-mail                                                        |$email                                  |
+|$contractnummer=       |value of             |contractnummer                                                                                         |
+|get order from vispSoap|$contractnummer                                                                                                              |
+|check                  |xPath                |!-count(//vispEx:PhoneNumber[text() = '06$mobile'])-!         |1                                       |
+|check                  |xPath                |!-//vispEx:FirstName-!                                        |$firstName                              |
+|check                  |xPath                |!-//vispEx:Intercalation-!                                    |$intercalation                          |
+|check                  |xPath                |!-//vispEx:Surname-!                                          |$lastName                               |
+|check                  |xPath date           |!-//vispEx:BirthDate-!                                        |$birthDate                              |
+|check                  |xPath                |!-//vispEx:Debtor/vispEx:BankAccountName-!                    |$bankName                               |
+|check                  |xPath                |!-count(//vispEx:PersonMail/vispEx:Email[text() = '$email'])-!|1                                       |
+|check thuis email      |$vf_thuis                                                                                                                    |
+|check connect date     |$connectDate                                                                                                                 |
+
+
+!3 Check order content in Visp Boss
+
+|scenario|check internet _|speed                                                                                                                                               |
+|check   |xPath           |!-//vispEx:OrderProductParameter[vispEx:ParameterName/text() = 'Speed' and vispEx:ProductTypeId/text() = 'INTA' ]/vispEx:Value-!|@{speed}M/@{speed}M|
+
+|scenario|check thuis email _|address                                                                                                                                                                  |
+|check   |xPath              |!-count(//vispEx:PersonMail/vispEx:Email[text() = '@{address}@vodafonethuis.nl'])-!                                                          |1                          |
+|check   |xPath              |!-//vispEx:OrderProductParameter[vispEx:ParameterName/text() = 'UsernameWithDomain' and vispEx:ProductTypeId/text() = 'MAIL' ]/vispEx:Value-!|@{address}@vodafonethuis.nl|
+
+|scenario|check connect date|date                                                                          |
+|check   |xPath date        |!-//vispEx:OrderProduct[vispEx:ProductTypeId = 'INTA']/vispEx:WishDt-!|@{date}|
+
+
+!4 Tv
+
+|scenario                |check tv full |
+|check tv package ordered|Entertainment |
+|check tv package ordered|International |
+|check tv package ordered|Kids and Music|
+|check tv package ordered|Infotainment  |
+|check tv package count  |4             |
+
+|scenario|check tv package count|count                                                                                                                                    |
+|check   |xPath                 |!-count(//vispEx:OrderProductParameter[vispEx:ParameterName/text() = 'PackageName' and vispEx:ProductTypeId/text() = 'MVPL' ])-!|@{count}|
+
+|scenario|check tv package ordered|name                                                                                                                                                                 |
+|check   |xPath                   |!-count(//vispEx:OrderProductParameter[vispEx:ParameterName/text() = 'PackageName' and vispEx:ProductTypeId/text() = 'MVPL' and vispEx:Value/text() = '@{name}'])-!|1|
+
+
+!4 Telephony
+
+|scenario                       |check telephony full         |
+|check telephony flat fee option|!-NationalAndNationalMobile-!|
+
+|scenario|check telephony flat fee option|option                                                                                                                                            |
+|check   |xPath                          |!-//vispEx:OrderProductParameter[vispEx:ParameterName/text() = 'FlatFeeOption' and vispEx:ProductTypeId/text() = 'VNFF' ]/vispEx:Value-!|@{option}|
+
+|scenario|check number of telephony|count                                                                           |
+|check   |xPath                    |!-count(//vispEx:OrderProduct[vispEx:ProductTypeId/text() = 'VOIP' ])-!|@{count}|
+
+|scenario            |check number to port different address _|number                |
+|$addressId=         |xPath                                   |!-//vispEx:AddressId-!|
+|note                |!note we expect a different address than the delivery address  |
+|check number to port|@{number}                               |from   |!=$addressId  |
+
+|scenario            |check number to port same address _|number                |
+|$addressId=         |xPath                              |!-//vispEx:AddressId-!|
+|check number to port|@{number}                          |from    |$addressId   |
+
+|scenario|check number to port _ from _|number,addressId                                                                                                                                      |
+|check   |xPath                        |!-//vispEx:OrderProductParameter[vispEx:ParameterName/text() = 'PhoneNumber' and vispEx:ProductTypeId/text() = 'VPOR' ]/vispEx:Value-!   |@{number}   |
+|check   |xPath                        |!-//vispEx:OrderProductParameter[vispEx:ParameterName/text() = 'PortingAddress' and vispEx:ProductTypeId/text() = 'VPOR' ]/vispEx:Value-!|@{addressId}|

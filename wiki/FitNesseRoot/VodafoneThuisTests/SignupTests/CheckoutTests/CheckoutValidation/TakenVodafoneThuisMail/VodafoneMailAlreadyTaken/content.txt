@@ -1,6 +1,32 @@
-Vodafone Email adres is already taken
+Email addresses are reserved based on postcode/housenumber. Let's test we can't use the same email for orders on two different addresses.
 
-|script|vodafone browser test                                                                                                               |
+!define TAKEN_MAIL_ADDRESS {vf_already_taken_test}
+
+First order, no problem
+
+|script              |vodafone choose browser test                                                       |
+|go to packages                                                                                          |
+|Open Package Details|100                                                                                |
+|click               |Bestel direct                                                                      |
+|enter               |${POSTAL_CODE_NO_500}         |as              |Postcode                           |
+|enter               |${POSTAL_CODE_NO_500_HOUSE_NR}|as              |Huisnummer                         |
+|click               |Verstuur                      |and wait for tag|h2|with text|Mogen wij je gegevens?|
+|click               |Mevrouw                                                                            |
+|enter               |T.                            |as              |Voornaam                           |
+|enter               |Janssen                       |as              |Achternaam                         |
+|enter               |email@test.nl                 |as              |E-mailadres                        |
+|enter               |34528616                      |as              |Telefoonnummer mobiel              |
+|enter               |27091975                      |as              |Geboortedatum                      |
+|enter               |${TAKEN_MAIL_ADDRESS}         |as              |Nieuw Vodafone Thuis e-mailadres   |
+|enter               |Tester                        |as              |Naam rekeninghouder                |
+|enter               |151                           |as              |IBAN/Bankrekeningnummer            |
+|click               |Volgende stap                 |and wait for tag|h4|with text|Nummerbehoud          |
+
+
+
+2nd order Vodafone Email adres is already taken
+
+|script|vodafone choose browser test                                                                                                        |
 |go to checkout                                                                                                                             |
 |click |Mevrouw                                                                                                                             |
 |enter |F. H.                     |as                              |Voornaam                                                                |
@@ -8,7 +34,7 @@ Vodafone Email adres is already taken
 |enter |email@test.nl             |as                              |E-mailadres                                                             |
 |enter |24528616                  |as                              |Telefoonnummer mobiel                                                   |
 |enter |27091975                  |as                              |Geboortedatum                                                           |
-|enter |fefe                      |as                              |Nieuw Vodafone Thuis e-mailadres                                        |
+|enter |${TAKEN_MAIL_ADDRESS}     |as                              |Nieuw Vodafone Thuis e-mailadres                                        |
 |enter |Tester                    |as                              |Naam rekeninghouder                                                     |
 |enter |151                       |as                              |IBAN/Bankrekeningnummer                                                 |
 |click |Volgende stap                                                                                                                       |

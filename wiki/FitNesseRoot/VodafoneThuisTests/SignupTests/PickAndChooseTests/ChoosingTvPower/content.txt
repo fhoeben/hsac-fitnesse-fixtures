@@ -1,0 +1,45 @@
+!***> Expected cart content
+
+|scenario     |check cart                                             |
+|check        |cart total           |Maandelijks              |€ 52,50|
+|check        |cart total           |Eenmalig betaal je       |€ 37,50|
+|check product|Internet 50          |in cart has monthly price|€ 32,50|
+|check product|TV Extra             |in cart has monthly price|€ 20,00|
+|check product|Installatie Basis    |in cart has one off price|€ 37,50|
+|check product|Kids en Muziek pakket|in cart has monthly price|€ 0,00 |
+|check product|Infotainment Pakket  |in cart has monthly price|€ 0,00 |
+
+*!
+
+Choses TV power and select two extra channelpackages: Kids & Music and Entertainment. Also ensure that we cannot add more than 2, but we can change our choice.
+
+|script          |vodafone choose browser test                                                                        |
+|go to pickandchoose                                                                                                  |
+|pick            |Internet            |package                                    |Start                              |
+|check           |chosen package for  |Internet                                   |Start                              |
+|pick            |Televisie           |package                                    |Power                              |
+|check           |chosen package for  |Televisie                                  |Power                              |
+|click           |Bestel direct                                                                                       |
+|check           |error on            |Welke 2 extra zenderpakketten wil je erbij?|kies twee pakketten                |
+|click tv package|Kids                                                                                                |
+|click tv package|Science                                                                                             |
+|check cart                                                                                                           |
+|note            |!note clicking extra package does nothing                                                           |
+|click tv package|Entertainment                                                                                       |
+|check cart                                                                                                           |
+|note            |!note but we can change one                                                                         |
+|click tv package|Science                                                                                             |
+|click tv package|Entertainment                                                                                       |
+|check product   |Entertainment Pakket|in cart has monthly price                  |€ 0,00                             |
+|note            |!note and change back back                                                                          |
+|click tv package|Entertainment                                                                                       |
+|click tv package|Science                                                                                             |
+|check cart                                                                                                           |
+|click           |Bestel direct                                                                                       |
+|enter           |3731 ep             |as                                         |Postcode                           |
+|enter           |71                  |as                                         |Huisnummer                         |
+|click           |Verstuur            |and wait for tag                           |h2|with text|Mogen wij je gegevens?|
+|check cart                                                                                                           |
+|check           |value of            |Het adres waar we je aansluiting gaan plaatsen:                                |!-Park Arenberg 71
+3731EP De Bilt-!|
+

@@ -1,0 +1,30 @@
+!***> Expected cart content
+
+|scenario|check cart                                        |
+|check   |cart total   |Maandelijks          |€ 62,50       |
+|check   |cart total   |Eenmalig betaal je   |€ 37,50       |
+|check   |cart products|Internet 50          |price |€ 32,50|
+|check   |cart products|Internet 50          |period|p. mnd.|
+|check   |cart products|Installatie Basis    |price |€ 37,50|
+|check   |cart products|Installatie Basis    |period|null   |
+|check   |cart products|TV Start             |price |€ 12,50|
+|check   |cart products|TV Start             |period|p. mnd.|
+|check   |cart products|FOX Sports Eredivisie|price |€ 17,50|
+|check   |cart products|FOX Sports Eredivisie|period|p. mnd.|
+*!
+
+See if we can add 'Fox Sports Eredivisie'
+
+|script|vodafone choose browser test                                                                      |
+|go to pickandchoose                                                                                      |
+|pick  |Internet                  |package         |Start                                                 |
+|pick  |Televisie                 |package         |Start                                                 |
+|click |Welke opties wil je erbij?|option          |Fox Sports Eredivisie|button                          |
+|check cart                                                                                               |
+|click |Bestel direct                                                                                     |
+|enter |3731 ep                   |as              |Postcode                                              |
+|enter |71                        |as              |Huisnummer                                            |
+|click |Verstuur                  |and wait for tag|h2                   |with text|Mogen wij je gegevens?|
+|check cart                                                                                               |
+|check |value of                  |Het adres waar we je aansluiting gaan plaatsen:                        |!-Park Arenberg 71
+3731EP De Bilt-!|

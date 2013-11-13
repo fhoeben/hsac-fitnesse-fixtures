@@ -1,0 +1,26 @@
+!***> Expected cart content
+
+|scenario|check cart                                        |
+|check   |cart total   |Eerste 12 maanden   |€ 37,50        |
+|check   |cart total   |Na 12 maanden       |€ 47,50        |
+|check   |cart total   |Eenmalig betaal je  |€ 0,00         |
+|check   |cart total   |Jouw korting        |€ 157,50       |
+|check   |cart products|Internet 50         |price |€ 32,50 |
+|check   |cart products|Internet 50         |period|p. mnd. |
+|check   |cart products|TV Start            |price |€ 12,50 |
+|check   |cart products|TV Start            |period|p. mnd. |
+|check   |cart products|Bellen Start        |price |€ 2,50  |
+|check   |cart products|Bellen Start        |period|p. mnd. |
+|check   |cart products|Installatie Basis   |price |€ 0,00  |
+|check   |cart products|Installatie Basis   |period|null    |
+|check   |cart products|Alles-in-één korting|price |€ -10,00|
+|check   |cart products|Alles-in-één korting|period|p. mnd. |
+*!
+
+
+|script              |vodafone choose browser test|
+|Open Package Details|Alles in één 50             |
+|check cart                                       |
+
+                                                        
+

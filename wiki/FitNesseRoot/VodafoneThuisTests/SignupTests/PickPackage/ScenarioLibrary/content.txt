@@ -1,0 +1,11 @@
+|scenario|go to packages   |
+|open    |${VF_PORTAL_URL}/|
+
+
+|scenario    |Open Package Details _|name             |
+|go to packages                                       |
+|click       |Meer informatie       |in       |@{name}|
+|wait for tag|h1                    |with text|@{name}|
+
+
+                                                        

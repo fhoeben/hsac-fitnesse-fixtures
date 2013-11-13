@@ -1,0 +1,8 @@
+Place order as reseller and see the reseller's code is added to order in Visp Boss.
+
+
+|script                      |vodafone choose browser test                                                                  |
+|go to pickandchoose reseller|${CHANNEL_KEY}                                                                                |
+|order full triple play                                                                                                     |
+|check                       |xPath|!-//vispEx:OrderTag[vispEx:TagId/text() = 'channel']/vispEx:InstanceKey-!|${CHANNEL_KEY}|
+

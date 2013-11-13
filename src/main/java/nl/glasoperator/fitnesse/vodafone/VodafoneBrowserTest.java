@@ -117,6 +117,10 @@ public class VodafoneBrowserTest extends BrowserTest {
                 if (element == null) {
                     element = findByXPath("//label[normalize-space(text()) = '%s']/../following-sibling::p[@class='help-block']",
                                     label);
+                    if (element == null) {
+                        element = findByXPath("//h3[normalize-space(text()) = '%s']/..//div[contains (@class, 'errormessage')]",
+                                label);
+                    }
                 }
             }
         }
@@ -186,6 +190,7 @@ public class VodafoneBrowserTest extends BrowserTest {
         }
         return result;
     }
+
 
     protected WebElement findByXPath(String xpathPattern, String... params) {
         By by = getSeleniumHelper().byXpath(xpathPattern, params);
