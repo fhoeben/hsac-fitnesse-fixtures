@@ -18,8 +18,8 @@
 
 |scenario|go to checkout                                                                         |
 |go to pickandchoose                                                                             |
-|pick    |Internet                          |package         |Internet 500                       |
-|pick    |Telefonie                         |package         |Bellen Start                       |
+|pick    |Internet                          |package         |500                                |
+|pick    |Bellen                            |package         |Start                              |
 |click   |Bestel direct                                                                          |
 |enter   |${POSTAL_CODE_EVERYTHING}         |as              |Postcode                           |
 |enter   |${POSTAL_CODE_EVERYTHING_HOUSE_NR}|as              |Huisnummer                         |
@@ -90,11 +90,11 @@
 
 Order full triple play once you are already on pick and choose
 
-|scenario|order full triple play        |
-|pick    |Internet |package|Internet 500|
-|pick    |Televisie|package|TV Plus     |
-|pick    |Telefonie|package|Bellen Plus |
-|place full order                       |
+|scenario|order full triple play|
+|pick    |Internet |package|500 |
+|pick    |Televisie|package|Plus|
+|pick    |Bellen   |package|Plus|
+|place full order               |
 
 Order full triple play once you are on packages page
 
