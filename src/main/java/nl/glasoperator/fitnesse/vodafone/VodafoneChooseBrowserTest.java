@@ -14,7 +14,7 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
 
     public boolean pickPackage(final String type, final String packageName) {
         boolean result = false;
-        WebElement element = findByXPath("//h3[text() = '%s']", packageName);
+        WebElement element = findByXPath("//h3[contains(normalize-space(text()), '%s')]/..//h3[text() = '%s']", type, packageName);
         if (element != null) {
             result = clickElement(element);
             if (result) {
@@ -27,7 +27,7 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
                 });
                 if (result
                         && "Televisie".equals(type)
-                        && "TV Extra".equals(packageName)) {
+                        && "Extra".equals(packageName)) {
                     result = waitForTagWithText("h3", "Welke 2 extra zenderpakketten wil je erbij?");
                 }
             }
@@ -37,7 +37,7 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
 
     public String chosenPackageFor(String type) {
         String chosenPackage = null;
-        WebElement parentElement = findByXPath("//div[contains(@class, ' %s ')]//div[contains(@class, ' selected')]//h3", type.toLowerCase());
+        WebElement parentElement = findByXPath("//h3[contains(normalize-space(text()), '%s')]/..//div[contains(@class, ' selected')]//h3", type);
         if (parentElement != null) {
             chosenPackage = parentElement.getText();
         }
