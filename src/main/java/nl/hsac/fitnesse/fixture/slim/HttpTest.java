@@ -13,6 +13,7 @@ import java.util.Map;
  */
 public class HttpTest extends SlimFixture {
     private final Map<String, Object> currentValues = new LinkedHashMap<String, Object>();
+    private final Map<String, String> headerValues = new LinkedHashMap<String, String>();
     private HttpResponse response = createResponse();
     private String template;
 
@@ -59,6 +60,33 @@ public class HttpTest extends SlimFixture {
     }
 
     /**
+     * Stores value to be passed as headers.
+     * @param value value to be passed.
+     * @param name name to use this value for.
+     */
+    public void setValueForHeader(String value, String name) {
+        headerValues.put(name, getUrl(value));
+    }
+
+    /**
+     * Clears a header value previously set.
+     * @param name value to remove.
+     * @return true if value was present.
+     */
+    public boolean clearHeaderValue(String name) {
+        boolean result = headerValues.containsKey(name);
+        headerValues.remove(name);
+        return result;
+    }
+
+    /**
+     * Clears all header values previously set.
+     */
+    public void clearHeaderValues() {
+        currentValues.clear();
+    }
+
+    /**
      * Sends HTTP POST template with current values to service endpoint.
      * @param serviceUrl service endpoint to send XML to.
      * @return true if call could be made and response did not indicate error.
@@ -67,7 +95,7 @@ public class HttpTest extends SlimFixture {
         boolean result = false;
         response = createResponse();
         if (template != null) {
-            getEnvironment().doHttpPost(getUrl(serviceUrl), template, currentValues, response);
+            getEnvironment().doHttpPost(getUrl(serviceUrl), template, currentValues, response, headerValues);
             result = postProcessResponse();
         }
         return result;

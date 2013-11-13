@@ -12,6 +12,8 @@ import org.apache.http.impl.client.SystemDefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * Helper to make Http calls and get response.
@@ -33,10 +35,20 @@ public class HttpClient {
      *          statusCode will be filled.
      */
     public void post(String url, HttpResponse response) {
+        post(url, response, null);
+    }
+
+    /**
+     * @param url URL of service
+     * @param response response pre-populated with request to send. Response content and
+     *          statusCode will be filled.
+     * @param headers http headers to add
+     */
+    public void post(String url, HttpResponse response, Map<String, String> headers) {
         HttpPost methodPost = new HttpPost(url);
         HttpEntity ent = new StringEntity(response.getRequest(), TYPE);
         methodPost.setEntity(ent);
-        getResponse(url, response, methodPost);
+        getResponse(url, response, methodPost, headers);
     }
 
     /**
@@ -45,7 +57,7 @@ public class HttpClient {
      */
     public void get(String url, XmlHttpResponse response) {
         HttpGet method = new HttpGet(url);
-        getResponse(url, response, method);
+        getResponse(url, response, method, null);
     }
 
     /**
@@ -54,11 +66,19 @@ public class HttpClient {
      */
     public void get(String url, HttpResponse response) {
         HttpGet method = new HttpGet(url);
-        getResponse(url, response, method);
+        getResponse(url, response, method, null);
     }
 
-    private void getResponse(String url, HttpResponse response, HttpRequestBase method) {
+    private void getResponse(String url, HttpResponse response, HttpRequestBase method, Map<String, String> headers) {
         try {
+            if (headers != null) {
+                for (String key : headers.keySet()) {
+                    String value = headers.get(key);
+                    if (value != null) {
+                        method.setHeader(key, value);
+                    }
+                }
+            }
             org.apache.http.HttpResponse resp = getHttpResponse(url, method);
             int returnCode = resp.getStatusLine().getStatusCode();
             response.setStatusCode(returnCode);

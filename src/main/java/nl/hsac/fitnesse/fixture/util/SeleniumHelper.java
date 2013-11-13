@@ -198,16 +198,26 @@ public class SeleniumHelper {
      * @return ByXPath.
      */
     public By byXpath(String pattern, String... parameters) {
+        boolean containsSingleQuote = false;
+        boolean containsDoubleQuote = false;
         Object[] escapedParams = new Object[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
-            escapedParams[i] = xpathEscape(parameters[i]);
+            String param = parameters[i];
+            containsSingleQuote = containsSingleQuote || param.contains("'");
+            containsDoubleQuote = containsDoubleQuote || param.contains("\"");
+            escapedParams[i] = param;
         }
-        String xpath = String.format(pattern, escapedParams);
+        if (containsDoubleQuote && containsSingleQuote) {
+            throw new RuntimeException("Unsupported combination of single and double quotes");
+        }
+        String patternToUse;
+        if (containsSingleQuote) {
+            patternToUse = pattern.replace("'", "\"");
+        } else {
+            patternToUse = pattern;
+        }
+        String xpath = String.format(patternToUse, escapedParams);
         return By.xpath(xpath);
-    }
-
-    private String xpathEscape(String value) {
-        return StringEscapeUtils.escapeXml(value);
     }
 
     /**
