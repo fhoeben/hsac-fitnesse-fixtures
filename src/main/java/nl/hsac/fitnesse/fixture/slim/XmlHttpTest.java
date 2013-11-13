@@ -16,7 +16,7 @@ public class XmlHttpTest extends HttpTest {
      * @param namespace XML namespace the prefix should point to.
      */
     public void registerPrefixForNamespace(String prefix, String namespace) {
-        getEnvironment().registerNamespace(prefix, namespace);
+        getEnvironment().registerNamespace(prefix, getUrl(namespace));
     }
 
     /**
@@ -32,7 +32,14 @@ public class XmlHttpTest extends HttpTest {
      */
     @Override
     public String response() {
-        return xmlFormatter.format(super.response());
+        String response = super.response();
+        String result;
+        try {
+            result = xmlFormatter.format(response);
+        } catch (Exception e) {
+            result = response;
+        }
+        return result;
     }
 
     /**
