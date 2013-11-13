@@ -2,7 +2,6 @@ package nl.hsac.fitnesse.fixture.fit;
 
 import fit.ColumnFixture;
 import fit.Parse;
-import fit.TypeAdapter;
 
 /**
  * ColumnFixture with some enhancements.
@@ -77,40 +76,6 @@ public class OurColumnFixture extends ColumnFixture {
             if (arg.length > index) {
                 result = arg[index];
             }
-        }
-        return result;
-    }
-
-    @Override
-    public void check(Parse cell, TypeAdapter a) {
-        // this method can be removed if a release including fix for
-        // https://github.com/unclebob/fitnesse/issues/320 is used
-        try {
-            executeIfNeeded();
-        }
-        catch (Exception e) {
-            exception(cell, e);
-        }
-
-        // Fitnesse's version does not deal very well with actual null when expected value is RegEx
-        // https://github.com/unclebob/fitnesse/issues/320
-        String expected = cell.text();
-        if (!"".equals(expected)
-                && isNullValueForRegEx(a))  {
-            wrong(cell, "null");
-        } else {
-            super.check(cell, a);
-        }
-    }
-
-    private boolean isNullValueForRegEx(TypeAdapter a) {
-        boolean result = false;
-        try {
-            result = a != null
-                    && a.isRegex
-                    && a.get() == null;
-        } catch (Exception e) {
-            // it was not null, so ignore
         }
         return result;
     }
