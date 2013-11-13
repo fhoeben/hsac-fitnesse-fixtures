@@ -283,6 +283,13 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
+     * Clears HTML5's localStorage.
+     */
+    public void clearLocalStorage() {
+        getSeleniumHelper().executeJavascript("localStorage.clear();");
+    }
+
+    /**
      * Implementations should wait until the condition evaluates to a value that is neither null nor
      * false. Because of this contract, the return type must not be Void.
      * @param <T> the return type of the method, which must not be Void
