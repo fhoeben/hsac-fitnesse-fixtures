@@ -1,9 +1,9 @@
 !***> Expected cart content
 
 |scenario     |check cart                                             |
-|check        |cart total   |Maandelijks              |€ 32,50        |
+|check        |cart total   |Maandelijks              |€ 50,00        |
 |check        |cart total   |Eenmalig betaal je       |€ 100,00       |
-|check product|Internet 50  |in cart has monthly price|€ 32,50        |
+|check product|Internet 500 |in cart has monthly price|€ 50,00        |
 |check        |cart products|Installatie Uitgebreid   |price |€ 100,00|
 |check        |cart products|Installatie Uitgebreid   |period|null    |
 *!

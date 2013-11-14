@@ -15,8 +15,8 @@ This scenario must return no numerbehoud at the checkout
 
 |script|vodafone choose browser test                                  |
 |go to pickandchoose                                                  |
-|pick  |Internet |package         |Full                               |
-|pick  |Televisie|package         |Full                               |
+|pick  |Internet |package         |500                                |
+|pick  |Televisie|package         |Plus                               |
 |check cart                                                           |
 |click |Bestel direct                                                 |
 |enter |3731 ep  |as              |Postcode                           |

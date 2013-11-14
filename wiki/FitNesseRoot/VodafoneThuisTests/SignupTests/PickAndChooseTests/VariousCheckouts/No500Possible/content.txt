@@ -15,7 +15,7 @@ He doesn't check on the errorbox
 
 |script|vodafone choose browser test                                         |
 |go to pickandchoose                                                         |
-|pick  |Internet|package         |Full                                       |
+|pick  |Internet|package         |500                                        |
 |check cart                                                                  |
 |click |Bestel direct                                                        |
 |enter |7621 CL |as              |Postcode                                   |
@@ -23,7 +23,7 @@ He doesn't check on the errorbox
 |click |Verstuur|and wait for tag|h1     |with text|Stel zelf je pakket samen|
 |ensure|message box                                                          |
 |check cart                                                                  |
-|reject|pick    |Internet        |package|Full                               |
+|reject|pick    |Internet        |package|500                                |
 
 
 

@@ -11,7 +11,7 @@
 
 |script|vodafone choose browser test                                 |
 |go to pickandchoose                                                 |
-|pick  |Internet|package         |Start                              |
+|pick  |Internet|package         |50                                 |
 |check cart                                                          |
 |click |Bestel direct                                                |
 |enter |3731 ep |as              |Postcode                           |

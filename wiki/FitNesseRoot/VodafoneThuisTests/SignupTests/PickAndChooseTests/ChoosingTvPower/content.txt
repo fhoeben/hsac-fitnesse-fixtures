@@ -11,29 +11,29 @@
 
 *!
 
-Choses TV power and select two extra channelpackages: Kids & Music and Entertainment. Also ensure that we cannot add more than 2, but we can change our choice.
+Choses TV Extra and select two extra channelpackages: Kids & Music and Infotainment. Also ensure that we cannot add more than 2, but we can change our choice.
 
 |script          |vodafone choose browser test                                                                        |
 |go to pickandchoose                                                                                                  |
-|pick            |Internet            |package                                    |Start                              |
-|check           |chosen package for  |Internet                                   |Start                              |
-|pick            |Televisie           |package                                    |Power                              |
-|check           |chosen package for  |Televisie                                  |Power                              |
+|pick            |Internet            |package                                    |50                                 |
+|check           |chosen package for  |Internet                                   |50                                 |
+|pick            |Televisie           |package                                    |Extra                              |
+|check           |chosen package for  |Televisie                                  |Extra                              |
 |click           |Bestel direct                                                                                       |
 |check           |error on            |Welke 2 extra zenderpakketten wil je erbij?|kies twee pakketten                |
 |click tv package|Kids                                                                                                |
-|click tv package|Science                                                                                             |
+|click tv package|Infotainment                                                                                             |
 |check cart                                                                                                           |
 |note            |!note clicking extra package does nothing                                                           |
 |click tv package|Entertainment                                                                                       |
 |check cart                                                                                                           |
 |note            |!note but we can change one                                                                         |
-|click tv package|Science                                                                                             |
+|click tv package|Infotainment                                                                                             |
 |click tv package|Entertainment                                                                                       |
 |check product   |Entertainment Pakket|in cart has monthly price                  |€ 0,00                             |
 |note            |!note and change back back                                                                          |
 |click tv package|Entertainment                                                                                       |
-|click tv package|Science                                                                                             |
+|click tv package|Infotainment                                                                                             |
 |check cart                                                                                                           |
 |click           |Bestel direct                                                                                       |
 |enter           |3731 ep             |as                                         |Postcode                           |
