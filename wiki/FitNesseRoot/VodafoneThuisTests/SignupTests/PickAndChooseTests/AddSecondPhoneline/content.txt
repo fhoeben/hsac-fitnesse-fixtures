@@ -1,9 +1,9 @@
 !***> Expected cart content
 
 |scenario     |check cart                                                  |
-|check        |cart total         |Maandelijks              |€ 50,00       |
+|check        |cart total         |Maandelijks              |€ 67,50       |
 |check        |cart total         |Eenmalig betaal je       |€ 37,50       |
-|check product|Internet 50        |in cart has monthly price|€ 32,50       |
+|check product|Internet 500       |in cart has monthly price|€ 50,00       |
 |check product|Bellen Start       |in cart has monthly price|€ 2,50        |
 |check        |cart products      |Installatie Basis        |price |€ 37,50|
 |check        |cart products      |Installatie Basis        |period|null   |

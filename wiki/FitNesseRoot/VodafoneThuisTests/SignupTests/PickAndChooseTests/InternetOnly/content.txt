@@ -13,7 +13,7 @@ This test picks only the internet full package
 
 |script|vodafone choose browser test                                 |
 |go to pickandchoose                                                 |
-|pick  |Internet|package         |Full                               |
+|pick  |Internet|package         |500                               |
 |check cart                                                          |
 |click |Bestel direct                                                |
 |enter |3731 ep |as              |Postcode                           |

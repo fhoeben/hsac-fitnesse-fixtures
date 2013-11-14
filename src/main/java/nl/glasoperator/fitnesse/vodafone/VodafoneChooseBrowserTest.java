@@ -1,6 +1,7 @@
 package nl.glasoperator.fitnesse.vodafone;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
@@ -29,6 +30,30 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
                         && "Televisie".equals(type)
                         && "Extra".equals(packageName)) {
                     result = waitForTagWithText("h3", "Welke 2 extra zenderpakketten wil je erbij?");
+                }
+            }
+        }
+        return result;
+    }
+
+    public boolean enabledPackage(String type, String packageName) {
+        boolean result = false;
+        boolean retry = true;
+        for (int i = 0;
+             !result && retry;
+             i++) {
+            try {
+                result = pickPackage(type, packageName);
+            } catch (WebDriverException e) {
+                String msg = e.getMessage();
+                if (!msg.contains("Other element would receive the click")) {
+                    retry = false;
+                } else {
+                    if (i < 1) {
+                        waitSeconds(1);
+                    } else {
+                        retry = false;
+                    }
                 }
             }
         }
@@ -112,4 +137,18 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
         }
         return result;
     }
+
+    public boolean rejectPickPackage(final String type, final String packageName) {
+        boolean result = false;
+        WebElement element = findByXPath("//h3[contains(normalize-space(text()), '%s')]/..//h3[text() = '%s']/..", type, packageName);
+        if (null != element) {
+            result = false;
+            }
+        else {
+            result = clickElement(element);
+        }
+        return result;
+    }
+
+
 }

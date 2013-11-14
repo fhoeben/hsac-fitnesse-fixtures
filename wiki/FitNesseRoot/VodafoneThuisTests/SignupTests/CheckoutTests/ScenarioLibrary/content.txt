@@ -141,26 +141,30 @@ Order full triple play once correct packages are in cart
 
 
 
-|scenario       |fill personal details                                  |
-|click          |Mevrouw                                                |
-|enter          |${RANDOM_LAST_NAME}|as|Achternaam                      |
-|$lastName=     |value of           |Achternaam                         |
-|enter          |Pietje             |as|Voornaam                        |
-|$firstName=    |value of           |Voornaam                           |
-|enter          |de                 |as|Tussenvoegsels                  |
-|$intercalation=|value of           |Tussenvoegsels                     |
-|enter          |${CONTACT_EMAIL}   |as|E-mailadres                     |
-|$email=        |value of           |E-mailadres                        |
-|enter          |24528616           |as|Telefoonnummer mobiel           |
-|$mobile=       |value of           |Telefoonnummer mobiel              |
-|enter          |27091975           |as|Geboortedatum                   |
-|$birthDate=    |value of           |Geboortedatum                      |
-|enter          |${RANDOM_VF_USER}  |as|Nieuw Vodafone Thuis e-mailadres|
-|$vf_thuis=     |value of           |Nieuw Vodafone Thuis e-mailadres   |
-|enter          |Tester             |as|Naam rekeninghouder             |
-|$bankName=     |value of           |Naam rekeninghouder                |
-|enter          |151                |as|IBAN/Bankrekeningnummer         |
-|$bankNumber=   |value of           |IBAN/Bankrekeningnummer            |
+|scenario                 |fill personal details|
+|fill personal details for|${RANDOM_LAST_NAME}  |
+
+
+|scenario       |fill personal details for _|lastName                           |
+|click          |Mevrouw                                                        |
+|enter          |@{lastName}                |as|Achternaam                      |
+|$lastName=     |value of                   |Achternaam                         |
+|enter          |Pietje                     |as|Voornaam                        |
+|$firstName=    |value of                   |Voornaam                           |
+|enter          |de                         |as|Tussenvoegsels                  |
+|$intercalation=|value of                   |Tussenvoegsels                     |
+|enter          |${CONTACT_EMAIL}           |as|E-mailadres                     |
+|$email=        |value of                   |E-mailadres                        |
+|enter          |24528616                   |as|Telefoonnummer mobiel           |
+|$mobile=       |value of                   |Telefoonnummer mobiel              |
+|enter          |27091975                   |as|Geboortedatum                   |
+|$birthDate=    |value of                   |Geboortedatum                      |
+|enter          |${RANDOM_VF_USER}          |as|Nieuw Vodafone Thuis e-mailadres|
+|$vf_thuis=     |value of                   |Nieuw Vodafone Thuis e-mailadres   |
+|enter          |Tester                     |as|Naam rekeninghouder             |
+|$bankName=     |value of                   |Naam rekeninghouder                |
+|enter          |151                        |as|IBAN/Bankrekeningnummer         |
+|$bankNumber=   |value of                   |IBAN/Bankrekeningnummer            |
 
 |scenario               |submit order and retrieve from vispSoap                                                                                      |
 |$connectDate=          |value of             |Gewenste aansluitdatum:                                                                                |
