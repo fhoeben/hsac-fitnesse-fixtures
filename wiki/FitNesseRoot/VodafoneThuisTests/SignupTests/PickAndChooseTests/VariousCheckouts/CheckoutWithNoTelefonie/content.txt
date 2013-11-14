@@ -26,7 +26,7 @@ This scenario must return no numerbehoud at the checkout
 |check |value of |Het adres waar we je aansluiting gaan plaatsen:     |!-Park Arenberg 71
 3731EP De Bilt-!|
 |click           |Mevrouw                                                                                       |
-|enter           |Téster               |as              |Achternaam                                             |
+|enter           |${RANDOM_LAST_NAME}  |as              |Achternaam                                             |
 |enter           |F. H.                |as              |Voornaam                                               |
 |enter           |${CONTACT_EMAIL}     |as              |E-mailadres                                            |
 |$email=         |value of             |E-mailadres                                                             |

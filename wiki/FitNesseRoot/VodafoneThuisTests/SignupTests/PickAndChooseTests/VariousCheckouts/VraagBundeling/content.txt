@@ -31,7 +31,7 @@ Uses a postalcode for vraagbundeling. This scenario must return no aansluitdatum
 |check |value of |Het adres waar we je aansluiting gaan plaatsen:     |!-Maasstraat 93
 7417AG DEVENTER-!|
 |click           |Mevrouw                                                                                 |
-|enter           |Téster               |as              |Achternaam                                       |
+|enter           |${RANDOM_LAST_NAME}  |as              |Achternaam                                       |
 |enter           |F. H.                |as              |Voornaam                                         |
 |enter           |${CONTACT_EMAIL}     |as              |E-mailadres                                      |
 |$email=         |value of             |E-mailadres                                                       |

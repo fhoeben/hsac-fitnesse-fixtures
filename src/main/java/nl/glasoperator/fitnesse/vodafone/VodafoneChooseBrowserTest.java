@@ -14,7 +14,7 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
 
     public boolean pickPackage(final String type, final String packageName) {
         boolean result = false;
-        WebElement element = findByXPath("//h3[contains(normalize-space(text()), '%s')]/..//h3[text() = '%s']", type, packageName);
+        WebElement element = findByXPath("//h3[contains(normalize-space(text()), '%s')]/..//h3[text() = '%s']/..", type, packageName);
         if (element != null) {
             result = clickElement(element);
             if (result) {
@@ -112,6 +112,4 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
         }
         return result;
     }
-
-
 }

@@ -17,7 +17,7 @@ See if we can add 'Fox Sports Eredivisie'
 
 |script|vodafone choose browser test                                                                      |
 |go to pickandchoose                                                                                      |
-|pick  |Internet                  |package         |Start                                                 |
+|pick  |Internet                  |package         |50                                                    |
 |pick  |Televisie                 |package         |Start                                                 |
 |click |Welke opties wil je erbij?|option          |Fox Sports Eredivisie|button                          |
 |check cart                                                                                               |

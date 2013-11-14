@@ -1,0 +1,22 @@
+Order internet access and tv, on address in vraagbundeling, 3 step checkout, and see correct data in Visp Boss
+
+|script            |vodafone choose browser test                                                                                                         |
+|go to pickandchoose                                                                                                                                     |
+|pick              |Internet                              |package                                     |500                                              |
+|pick              |Televisie                             |package                                     |Plus                                             |
+|click             |Bestel direct                                                                                                                        |
+|enter             |${POSTAL_CODE_VRAAGBUNDELING}         |as                                          |Postcode                                         |
+|enter             |${POSTAL_CODE_VRAAGBUNDELING_HOUSE_NR}|as                                          |Huisnummer                                       |
+|click             |Verstuur                              |and wait for tag                            |h2|with text|Mogen wij je gegevens?              |
+|check             |step count                            |3                                                                                             |
+|$stepCount=       |step count                                                                                                                           |
+|fill personal details                                                                                                                                   |
+|click             |Volgende stap                         |and wait for tag                            |h2|with text|Controleer en verstuur je bestelling|
+|submit order and retrieve from vispSoap                                                                                                                 |
+|check             |xPath                                 |!-//vispEx:HouseNumber-!                    |${POSTAL_CODE_VRAAGBUNDELING_HOUSE_NR}           |
+|check             |xPath                                 |!-//vispEx:PostalCode-!                     |${POSTAL_CODE_VRAAGBUNDELING}                    |
+|check             |xPath                                 |!-//vispEx:Debtor/vispEx:BankAccountNumber-!|$bankNumber                                      |
+|check is vraagbundeling                                                                                                                                 |
+|check connect date|                                                                                                                                     |
+|check internet    |500                                                                                                                                  |
+|check tv full                                                                                                                                           |

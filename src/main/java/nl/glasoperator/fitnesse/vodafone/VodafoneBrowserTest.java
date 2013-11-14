@@ -140,7 +140,7 @@ public class VodafoneBrowserTest extends BrowserTest {
         WebElement element = findByXPath("//label[normalize-space(text()) = '%s']/ancestor::div[contains(@class, 'control-group')]", label);
         if (element == null) {
             element = findByXPath("//input[@aria-label = '%s']/ancestor::div[contains(@class, 'control-group')]",
-                            label);
+                    label);
         }
         return element;
     }
@@ -156,41 +156,41 @@ public class VodafoneBrowserTest extends BrowserTest {
     }
 
     public String errorsOnOthersThan(String label) {
-        String result = null;
-        List<WebElement> elements = findAllByXPath(
-                                        "//label[normalize-space(text()) != '%s']/following-sibling::div/p[@class='help-block' and normalize-space(text()) != '']",
-                                        label);
-        if (elements != null) {
-            List<String> errors = new ArrayList<String>(elements.size());
-            for (WebElement element : elements) {
-                String errorText = element.getText();
-                errors.add(errorText);
-            }
-            if (!errors.isEmpty()) {
-                result = errors.toString();
-            }
-        }
-        return result;
+        return getNonEmptyText("//label[normalize-space(text()) != '%s']/following-sibling::div/p[@class='help-block' and normalize-space(text()) != '']",
+                                label);
     }
 
     public String errorStyleOnOthersThan(String label) {
-        String result = null;
-        List<WebElement> elements = findAllByXPath(
-                                        "//div[contains(@class, 'error') and label[normalize-space(text()) != '%s']]/label",
-                                        label);
+        return getNonEmptyText("//div[contains(@class, 'error') and label[normalize-space(text()) != '%s']]/label",
+                                label);
+    }
+
+    public int stepCount() {
+        int result = 0;
+        List<WebElement> elements = findAllByXPath("//div[@class = 'progressbar_wrapper']/ul/li");
         if (elements != null) {
-            List<String> labels = new ArrayList<String>(elements.size());
-            for (WebElement element : elements) {
-                String labelText = element.getText();
-                labels.add(labelText);
-            }
-            if (!labels.isEmpty()) {
-                result = labels.toString();
-            }
+            result = elements.size();
         }
         return result;
     }
 
+    private String getNonEmptyText(String xpathExpr, String... params) {
+        String result = null;
+        List<WebElement> elements = findAllByXPath(xpathExpr, params);
+        if (elements != null) {
+            List<String> texts = new ArrayList<String>(elements.size());
+            for (WebElement element : elements) {
+                String labelText = element.getText();
+                if (!"".equals(labelText)) {
+                    texts.add(labelText);
+                }
+            }
+            if (!texts.isEmpty()) {
+                result = texts.toString();
+            }
+        }
+        return result;
+    }
 
     protected WebElement findByXPath(String xpathPattern, String... params) {
         By by = getSeleniumHelper().byXpath(xpathPattern, params);
