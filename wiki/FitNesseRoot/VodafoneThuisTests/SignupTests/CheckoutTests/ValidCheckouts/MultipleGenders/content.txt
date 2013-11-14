@@ -3,7 +3,7 @@ Checked: women
 |script          |vodafone choose browser test                                                            |
 |go to checkout                                                                                           |
 |click           |Mevrouw                                                                                 |
-|enter           |Téster               |as              |Achternaam                                       |
+|enter           |${RANDOM_LAST_NAME}  |as              |Achternaam                                       |
 |enter           |F. H.                |as              |Voornaam                                         |
 |enter           |${CONTACT_EMAIL}     |as              |E-mailadres                                      |
 |$email=         |value of             |E-mailadres                                                       |
@@ -25,7 +25,7 @@ Checked: man
 |script          |vodafone choose browser test                                                            |
 |go to checkout                                                                                           |
 |click           |De heer                                                                                 |
-|enter           |Téster               |as              |Achternaam                                       |
+|enter           |${RANDOM_LAST_NAME}  |as              |Achternaam                                       |
 |enter           |F. H.                |as              |Voornaam                                         |
 |enter           |${CONTACT_EMAIL}     |as              |E-mailadres                                      |
 |$email=         |value of             |E-mailadres                                                       |

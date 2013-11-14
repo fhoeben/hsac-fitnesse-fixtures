@@ -16,14 +16,15 @@
 |click       |Info en opties        |in       |@{name}             |
 |wait for tag|h1                    |with text|Alles in één @{name}|
 
-|scenario|go to checkout                                                                         |
-|go to pickandchoose                                                                             |
-|pick    |Internet                          |package         |500                                |
-|pick    |Bellen                            |package         |Start                              |
-|click   |Bestel direct                                                                          |
-|enter   |${POSTAL_CODE_EVERYTHING}         |as              |Postcode                           |
-|enter   |${POSTAL_CODE_EVERYTHING_HOUSE_NR}|as              |Huisnummer                         |
-|click   |Verstuur                          |and wait for tag|h2|with text|Mogen wij je gegevens?|
+|scenario   |go to checkout                                                                         |
+|go to pickandchoose                                                                                |
+|pick       |Internet                          |package         |500                                |
+|pick       |Bellen                            |package         |Start                              |
+|click      |Bestel direct                                                                          |
+|enter      |${POSTAL_CODE_EVERYTHING}         |as              |Postcode                           |
+|enter      |${POSTAL_CODE_EVERYTHING_HOUSE_NR}|as              |Huisnummer                         |
+|click      |Verstuur                          |and wait for tag|h2|with text|Mogen wij je gegevens?|
+|$stepCount=|step count                                                                             |
 
 
 |scenario       |call vispSoapEx _                                                        |method                                                     |
@@ -67,7 +68,7 @@
 |check product|TV Plus             |in cart has monthly price|€ 25,00 |
 |check product|Bellen Plus         |in cart has monthly price|€ 15,00 |
 |check product|Installatie Basis   |in cart has one off price|€ 0,00  |
-|check product|Alles-in-één korting|in cart has monthly price|€ -10,00|
+|check product|Alles in één korting|in cart has monthly price|€ -10,00|
 
 
 !4 500/start/start
@@ -81,7 +82,7 @@
 |check product|TV Start            |in cart has monthly price|€ 12,50 |
 |check product|Bellen Start        |in cart has monthly price|€ 2,50  |
 |check product|Installatie Basis   |in cart has one off price|€ 0,00  |
-|check product|Alles-in-één korting|in cart has monthly price|€ -10,00|
+|check product|Alles in één korting|in cart has monthly price|€ -10,00|
 
 *!
 
@@ -124,6 +125,8 @@ Order full triple play once correct packages are in cart
 |check @{name} cart                                                                              |
 |check   |value of                          |Het adres waar we je aansluiting gaan plaatsen:     |${POSTAL_CODE_EVERYTHING_STREET} ${POSTAL_CODE_EVERYTHING_HOUSE_NR}!-
 -!${POSTAL_CODE_EVERYTHING} ${POSTAL_CODE_EVERYTHING_CITY}|
+|check         |step count   |4                                                                                             |
+|$stepCount=   |step count                                                                                                  |
 |fill personal details                                                                                                      |
 |click         |Volgende stap|and wait for tag                            |h4|with text|Nummerbehoud                        |
 |click         |Nee                                                                                                         |
@@ -136,31 +139,34 @@ Order full triple play once correct packages are in cart
 |check         |xPath        |!-//vispEx:Debtor/vispEx:BankAccountNumber-!|$bankNumber                                      |
 |check internet|500                                                                                                         |
 
-|scenario       |fill personal details                                |
-|click          |Mevrouw                                              |
-|enter          |Téster           |as|Achternaam                      |
-|$lastName=     |value of         |Achternaam                         |
-|enter          |Pietje           |as|Voornaam                        |
-|$firstName=    |value of         |Voornaam                           |
-|enter          |de               |as|Tussenvoegsels                  |
-|$intercalation=|value of         |Tussenvoegsels                     |
-|enter          |${CONTACT_EMAIL} |as|E-mailadres                     |
-|$email=        |value of         |E-mailadres                        |
-|enter          |24528616         |as|Telefoonnummer mobiel           |
-|$mobile=       |value of         |Telefoonnummer mobiel              |
-|enter          |27091975         |as|Geboortedatum                   |
-|$birthDate=    |value of         |Geboortedatum                      |
-|enter          |${RANDOM_VF_USER}|as|Nieuw Vodafone Thuis e-mailadres|
-|$vf_thuis=     |value of         |Nieuw Vodafone Thuis e-mailadres   |
-|enter          |Tester           |as|Naam rekeninghouder             |
-|$bankName=     |value of         |Naam rekeninghouder                |
-|enter          |151              |as|IBAN/Bankrekeningnummer         |
-|$bankNumber=   |value of         |IBAN/Bankrekeningnummer            |
+
+
+|scenario       |fill personal details                                  |
+|click          |Mevrouw                                                |
+|enter          |${RANDOM_LAST_NAME}|as|Achternaam                      |
+|$lastName=     |value of           |Achternaam                         |
+|enter          |Pietje             |as|Voornaam                        |
+|$firstName=    |value of           |Voornaam                           |
+|enter          |de                 |as|Tussenvoegsels                  |
+|$intercalation=|value of           |Tussenvoegsels                     |
+|enter          |${CONTACT_EMAIL}   |as|E-mailadres                     |
+|$email=        |value of           |E-mailadres                        |
+|enter          |24528616           |as|Telefoonnummer mobiel           |
+|$mobile=       |value of           |Telefoonnummer mobiel              |
+|enter          |27091975           |as|Geboortedatum                   |
+|$birthDate=    |value of           |Geboortedatum                      |
+|enter          |${RANDOM_VF_USER}  |as|Nieuw Vodafone Thuis e-mailadres|
+|$vf_thuis=     |value of           |Nieuw Vodafone Thuis e-mailadres   |
+|enter          |Tester             |as|Naam rekeninghouder             |
+|$bankName=     |value of           |Naam rekeninghouder                |
+|enter          |151                |as|IBAN/Bankrekeningnummer         |
+|$bankNumber=   |value of           |IBAN/Bankrekeningnummer            |
 
 |scenario               |submit order and retrieve from vispSoap                                                                                      |
 |$connectDate=          |value of             |Gewenste aansluitdatum:                                                                                |
 |click                  |Bestelling bevestigen|and wait for tag                                              |h2|with text|Bedankt voor je bestelling!|
 |check                  |value of             |e-mail                                                        |$email                                  |
+|check                  |step count           |$stepCount                                                                                             |
 |$contractnummer=       |value of             |contractnummer                                                                                         |
 |get order from vispSoap|$contractnummer                                                                                                              |
 |check                  |xPath                |!-count(//vispEx:PhoneNumber[text() = '06$mobile'])-!         |1                                       |
@@ -185,6 +191,9 @@ Order full triple play once correct packages are in cart
 
 |scenario|check connect date|date                                                                          |
 |check   |xPath date        |!-//vispEx:OrderProduct[vispEx:ProductTypeId = 'INTA']/vispEx:WishDt-!|@{date}|
+
+|scenario|check is vraagbundeling                                                                                                                               |
+|check   |xPath|!-//vispEx:OrderProductParameter[vispEx:ParameterName/text() = 'IsVraagbundeling' and vispEx:ProductTypeId/text() = 'INTA' ]/vispEx:Value-!|True|
 
 
 !4 Tv

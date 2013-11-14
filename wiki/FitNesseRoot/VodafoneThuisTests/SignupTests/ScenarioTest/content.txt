@@ -27,7 +27,7 @@ De regels met de gekke '@{}' waarden beschrijven verwijzingen naar de variabelen
 |click   |Check adres                                    |and wait for tag|h1|with text|Stap 1 van 5|
 |click   |Verder                                         |and wait for tag|h1|with text|Stap 2 van 5|
 |select  |@{aanhef}                                      |for             |Aanhef                   |
-|enter   |Tester                                         |as              |Achternaam               |
+|enter   |${RANDOM_LAST_NAME}                            |as              |Achternaam               |
 |enter   |F. H.                                          |as              |Voorletter(s)            |
 |enter   |@{email}                                       |as              |E-mail                   |
 |enter   |0624528616                                     |as              |Telefoonnummer mobiel    |

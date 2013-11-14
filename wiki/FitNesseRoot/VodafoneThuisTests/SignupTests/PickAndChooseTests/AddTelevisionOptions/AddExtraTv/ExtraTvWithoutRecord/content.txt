@@ -13,19 +13,19 @@
 |check   |cart products|Extra Interactieve Box|period|p. mnd.|
 *!
 
-See if we can add 'Fox Sports Eredivisie'
+See if we can add 'Extra tv wihtout record'
 
-|script|vodafone choose browser test                                                                   |
-|go to pickandchoose                                                                                   |
-|pick  |Internet                  |package                   |Start                                    |
-|reject|click                     |Welke opties wil je erbij?|option  |extra tv |button                |
-|pick  |Televisie                 |package                   |Start                                    |
-|click |Welke opties wil je erbij?|option                    |extra tv|button                          |
-|check cart                                                                                            |
-|click |Bestel direct                                                                                  |
-|enter |3731 ep                   |as                        |Postcode                                 |
-|enter |71                        |as                        |Huisnummer                               |
-|click |Verstuur                  |and wait for tag          |h2      |with text|Mogen wij je gegevens?|
-|check cart                                                                                            |
-|check |value of                  |Het adres waar we je aansluiting gaan plaatsen:                     |!-Park Arenberg 71
+|script|vodafone choose browser test                                                                                    |
+|go to pickandchoose                                                                                                    |
+|pick  |Internet                  |package                   |50                                                        |
+|reject|click                     |Welke opties wil je erbij?|option                   |extra tv |button                |
+|pick  |Televisie                 |package                   |Start                                                     |
+|click |Welke opties wil je erbij?|option                    |Extra Interactieve TV Box|button                          |
+|check cart                                                                                                             |
+|click |Bestel direct                                                                                                   |
+|enter |3731 ep                   |as                        |Postcode                                                  |
+|enter |71                        |as                        |Huisnummer                                                |
+|click |Verstuur                  |and wait for tag          |h2                       |with text|Mogen wij je gegevens?|
+|check cart                                                                                                             |
+|check |value of                  |Het adres waar we je aansluiting gaan plaatsen:                                      |!-Park Arenberg 71
 3731EP De Bilt-!|

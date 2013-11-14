@@ -1,6 +1,7 @@
 !contents -R2 -g -p -f -h
 
 Values to be used as input 
+!define RANDOM_LAST_NAME {!randomString (50) (abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZáéíóúýäëïöüÿàèìòùâêîôûÀÈÌÒÙ  -) (Téster-)}
 !define RANDOM_VF_USER {!randomString (29) (abcdefghijklmnopqrstuvwxyz1234567890-_) (test-)a}
 !define CONTACT_EMAIL {test-auto@glasoperator.nl}
 
