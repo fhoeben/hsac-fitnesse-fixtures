@@ -1,13 +1,13 @@
 package nl.hsac.fitnesse.fixture.util;
 
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.SearchContext;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -320,4 +320,67 @@ public class SeleniumHelper {
         return b.toString();
     }
 
+    /**
+     * Takes screenshot of current page (as .png).
+     * @param baseName name for file created (without extension),
+     *                 if a file already exists with the supplied name an
+     *                 '_index' will be added.
+     * @return absolute path of file created.
+     */
+    public String takeScreenshot(String baseName) {
+        String result = null;
+        WebDriver d = driver();
+        if (!(d instanceof TakesScreenshot)) {
+            d = new Augmenter().augment(d);
+        }
+        if (d instanceof TakesScreenshot) {
+            TakesScreenshot ts = (TakesScreenshot) d;
+            byte[] png = ts.getScreenshotAs(OutputType.BYTES);
+            result = writeScreenshot(baseName, png);
+        }
+        return result;
+    }
+
+    private String writeScreenshot(String baseName, byte[] png) {
+        String result;
+        File output = determineFilename(baseName);
+        FileOutputStream target = null;
+        try {
+            target = new FileOutputStream(output);
+            target.write(png);
+            result = output.getAbsolutePath();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (target != null) {
+                try {
+                    target.close();
+                } catch (IOException ex) {
+                    // what to to?
+                }
+            }
+        }
+        return result;
+    }
+
+    private File determineFilename(String baseName) {
+        File output = new File(baseName + ".png");
+        // ensure directory exists
+        File parent = output.getAbsoluteFile().getParentFile();
+        if (!parent.exists()) {
+            if (!parent.mkdirs()) {
+                throw new IllegalArgumentException(
+                        "Unable to create directory: "
+                                + parent.getAbsolutePath());
+            }
+        }
+        int i = 0;
+        // determine first filename not yet in use.
+        while (output.exists()) {
+            i++;
+            String name = String.format(baseName + "_%s.png", i);
+            output = new File(name);
+        }
+        return output;
+    }
 }
