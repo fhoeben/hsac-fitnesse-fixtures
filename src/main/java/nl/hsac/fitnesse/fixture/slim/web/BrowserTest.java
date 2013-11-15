@@ -17,6 +17,7 @@ public class BrowserTest extends SlimFixture {
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
     private int secondsBeforeTimeout = 10;
     private String screenshotBase = FILES_DIR + "/screenshots/";
+    private String screenshotHeight = "200";
 
     public boolean open(String address) {
         String url = getUrl(address);
@@ -303,6 +304,13 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
+     * @param height height to use to display screenshot images
+     */
+    public void screenshotShowHeight(String height) {
+        screenshotHeight = height;
+    }
+
+    /**
      * Takes screenshot from current page
      * @param basename filename (below screenshot base directory).
      * @return location of screenshot.
@@ -318,8 +326,13 @@ public class BrowserTest extends SlimFixture {
                 String relativeFile = screenshotFile.substring(FILES_DIR.length());
                 relativeFile = relativeFile.replace('\\', '/');
                 String wikiUrl = "/files" + relativeFile;
-                wikiUrl = String.format("<a href=\"%s\">%s</a>",
-                        wikiUrl, screenshotFile);
+                if ("".equals(screenshotHeight)) {
+                    wikiUrl = String.format("<a href=\"%s\">%s</a>",
+                            wikiUrl, screenshotFile);
+                } else {
+                    wikiUrl = String.format("<a href=\"%1$s\"><img src=\"%1$s\" title=\"%2$s\" height=\"%3$s\"></a>",
+                            wikiUrl, screenshotFile, screenshotHeight);
+                }
                 screenshotFile = wikiUrl;
             }
         }
