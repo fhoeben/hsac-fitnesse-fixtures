@@ -131,16 +131,18 @@ public class BrowserTest extends SlimFixture {
         boolean result = false;
         boolean retry = true;
         for (int i = 0;
-             !result && retry && i < secondsBeforeTimeout();
+             !result && retry;
              i++) {
             try {
+                if (i > 0) {
+                    waitSeconds(1);
+                }
                 result = clickImpl(place);
             } catch (WebDriverException e) {
                 String msg = e.getMessage();
-                if (!msg.contains("Other element would receive the click")) {
+                if (!msg.contains("Other element would receive the click")
+                        ||  i == secondsBeforeTimeout()) {
                     retry = false;
-                } else {
-                    waitSeconds(1);
                 }
             }
         }
