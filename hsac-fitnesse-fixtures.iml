@@ -14,9 +14,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: org.fitnesse:fitnesse:20131110" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jgit:org.eclipse.jgit:2.3.1.201302201838-r" level="project" />
-    <orderEntry type="library" name="Maven: com.jcraft:jsch:0.1.46" level="project" />
-    <orderEntry type="library" name="Maven: org.fitnesse:fitnesse:20131110" level="project" />
     <orderEntry type="library" name="Maven: org.htmlparser:htmlparser:2.1" level="project" />
     <orderEntry type="library" name="Maven: org.htmlparser:htmllexer:2.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.velocity:velocity:1.7" level="project" />

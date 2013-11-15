@@ -1,16 +1,13 @@
 !***> Expected cart content
 
-|scenario|check cart                                        |
-|check   |cart total   |Maandelijks          |€ 62,50       |
-|check   |cart total   |Eenmalig betaal je   |€ 37,50       |
-|check   |cart products|Internet 50          |price |€ 32,50|
-|check   |cart products|Internet 50          |period|p. mnd.|
-|check   |cart products|Installatie Basis    |price |€ 37,50|
-|check   |cart products|Installatie Basis    |period|null   |
-|check   |cart products|TV Start             |price |€ 12,50|
-|check   |cart products|TV Start             |period|p. mnd.|
-|check   |cart products|FOX Sports Eredivisie|price |€ 17,50|
-|check   |cart products|FOX Sports Eredivisie|period|p. mnd.|
+|scenario     |check cart                                                    |
+|check        |cart total           |Maandelijks              |€ 62,50       |
+|check        |cart total           |Eenmalig betaal je       |€ 37,50       |
+|check product|Internet 50          |in cart has monthly price|€ 32,50       |
+|check        |cart products        |Installatie Basis        |price |€ 37,50|
+|check        |cart products        |Installatie Basis        |period|null   |
+|check product|TV Start             |in cart has monthly price|€ 12,50       |
+|check product|FOX Sports Eredivisie|in cart has monthly price|€ 17,50       |
 *!
 
 See if we can add 'Fox Sports Eredivisie'
