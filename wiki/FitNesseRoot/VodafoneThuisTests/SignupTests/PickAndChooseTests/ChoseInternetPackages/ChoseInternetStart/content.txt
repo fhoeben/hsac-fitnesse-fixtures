@@ -1,12 +1,11 @@
 !***> Expected cart content
 
-|scenario|check cart                                     |
-|check   |cart total   |Maandelijks       |€ 32,50       |
-|check   |cart total   |Eenmalig betaal je|€ 37,50       |
-|check   |cart products|Internet 50       |price |€ 32,50|
-|check   |cart products|Internet 50       |period|p. mnd.|
-|check   |cart products|Installatie Basis |price |€ 37,50|
-|check   |cart products|Installatie Basis |period|null   |
+|scenario     |check cart                                            |
+|check        |cart total   |Maandelijks              |€ 32,50       |
+|check        |cart total   |Eenmalig betaal je       |€ 37,50       |
+|check product|Internet 50  |in cart has monthly price|€ 32,50       |
+|check        |cart products|Installatie Basis        |price |€ 37,50|
+|check        |cart products|Installatie Basis        |period|null   |
 *!
 
 |script|vodafone choose browser test                                 |
