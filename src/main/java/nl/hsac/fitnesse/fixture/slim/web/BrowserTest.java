@@ -2,21 +2,21 @@ package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
-import org.openqa.selenium.By;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class BrowserTest extends SlimFixture {
+    private static final String FILES_DIR = new File("FitNesseRoot/files/").getAbsolutePath();
+
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
     private int secondsBeforeTimeout = 10;
+    private String screenshotBase = FILES_DIR + "/screenshots/";
 
     public boolean open(String address) {
         String url = getUrl(address);
@@ -290,6 +290,43 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
+     * @param directory sets base directory where screenshots will be stored.
+     */
+    public void screenshotBaseDirectory(String directory) {
+        if (directory.equals("")
+                || directory.endsWith("/")
+                || directory.endsWith("\\")) {
+            screenshotBase = directory;
+        } else {
+            screenshotBase = directory + "/";
+        }
+    }
+
+    /**
+     * Takes screenshot from current page
+     * @param basename filename (below screenshot base directory).
+     * @return location of screenshot.
+     */
+    public String takeScreenshot(String basename) {
+        String name = screenshotBase + basename;
+        String screenshotFile = getSeleniumHelper().takeScreenshot(name);
+        if (screenshotFile == null) {
+            throw new RuntimeException("Unable to take screenshot: does the webdriver support it?");
+        } else {
+            if (screenshotFile.startsWith(FILES_DIR)) {
+                // make href to screenshot
+                String relativeFile = screenshotFile.substring(FILES_DIR.length());
+                relativeFile = relativeFile.replace('\\', '/');
+                String wikiUrl = "/files" + relativeFile;
+                wikiUrl = String.format("<a href=\"%s\">%s</a>",
+                        wikiUrl, screenshotFile);
+                screenshotFile = wikiUrl;
+            }
+        }
+        return screenshotFile;
+    }
+
+    /**
      * Implementations should wait until the condition evaluates to a value that is neither null nor
      * false. Because of this contract, the return type must not be Void.
      * @param <T> the return type of the method, which must not be Void
@@ -298,8 +335,14 @@ public class BrowserTest extends SlimFixture {
      * @return result of condition.
      */
     protected <T> T waitUntil(ExpectedCondition<T> condition) {
-        FluentWait<WebDriver> wait = waitDriver().withTimeout(secondsBeforeTimeout(), TimeUnit.SECONDS);
-        return wait.until(condition);
+        try {
+            FluentWait<WebDriver> wait = waitDriver().withTimeout(secondsBeforeTimeout(), TimeUnit.SECONDS);
+            return wait.until(condition);
+        } catch (TimeoutException e) {
+            // take a screenshot of what was on screen
+            takeScreenshot("timeouts/" + getClass().getSimpleName() + "/timeout");
+            throw e;
+        }
     }
 
     private WebDriverWait waitDriver() {
