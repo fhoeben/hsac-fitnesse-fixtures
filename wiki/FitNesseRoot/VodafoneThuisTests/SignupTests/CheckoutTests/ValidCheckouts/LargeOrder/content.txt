@@ -1,18 +1,19 @@
 !***> Expected cart content
 
 |scenario     |check cart                                                              |
-|check        |cart total                           |Eerste 3 maanden         |€ 153,33|
-|check        |cart total                           |Na 3 maanden             |€ 167,50|
+|check        |cart total                           |Eerste 3 maanden         |€ 140,83|
+|check        |cart total                           |Na 3 maanden             |€ 155,00|
 |check        |cart total                           |Na 6 maanden             |€ 172,50|
 |check        |cart total                           |Na 12 maanden            |€ 182,50|
-|check        |cart total                           |Eenmalig betaal je       |€ 0,00  |
-|check        |cart total                           |Jouw korting             |€ 230,01|
+|check        |cart total                           |Eenmalig betaal je       |€ 30,00 |
+|check        |cart total                           |Jouw korting             |€ 342,51|
 |check product|Internet 500                         |in cart has monthly price|€ 50,00 |
 |check product|Installatie Basis                    |in cart has one off price|€ 0,00  |
+|check product|Activatiekosten                      |in cart has one off price|€ 30,00 |
 |check product|TV Plus                              |in cart has monthly price|€ 25,00 |
 |check product|Bellen Plus                          |in cart has monthly price|€ 15,00 |
 |check product|Alles in één korting                 |in cart has monthly price|€ -10,00|
-|check product|FOX Sports Combi                     |in cart has monthly price|€ 25,00 |
+|check product|FOX Sports Combi                     |in cart has monthly price|€ 12,50 |
 |check product|Sport1                               |in cart has monthly price|€ 3,33  |
 |check product|HBO                                  |in cart has monthly price|€ 10,00 |
 |check product|Erotiek Pakket                       |in cart has monthly price|€ 10,00 |
@@ -28,7 +29,7 @@ This test is going to make sure you can add all the avaiable TV options.
 |pick                     |Internet                          |package                                     |500                                                                           |
 |pick                     |Bellen                            |package                                     |Plus                                                                          |
 |pick                     |Televisie                         |package                                     |Plus                                                                          |
-|click                    |Welke opties wil je erbij?        |option                                      |Fox Sports Combi               |button                                        |
+|click                    |Welke opties wil je erbij?        |option                                      |FOX Sports Combi               |button                                        |
 |click                    |Welke opties wil je erbij?        |option                                      |Sport1                         |button                                        |
 |click                    |Welke opties wil je erbij?        |option                                      |HBO                            |button                                        |
 |click                    |Welke opties wil je erbij?        |option                                      |Erotiek pakket                 |button                                        |
