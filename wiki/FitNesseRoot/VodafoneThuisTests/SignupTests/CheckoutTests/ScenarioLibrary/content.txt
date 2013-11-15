@@ -62,12 +62,13 @@
 |scenario     |check full cart                                        |
 |check        |cart total          |Eerste 12 maanden        |€ 80,00 |
 |check        |cart total          |Na 12 maanden            |€ 90,00 |
-|check        |cart total          |Eenmalig betaal je       |€ 0,00  |
-|check        |cart total          |Jouw korting             |€ 157,50|
+|check        |cart total          |Eenmalig betaal je       |€ 30,00 |
+|check        |cart total          |Jouw korting             |€ 195,00|
 |check product|Internet 500        |in cart has monthly price|€ 50,00 |
 |check product|TV Plus             |in cart has monthly price|€ 25,00 |
 |check product|Bellen Plus         |in cart has monthly price|€ 15,00 |
 |check product|Installatie Basis   |in cart has one off price|€ 0,00  |
+|check product|Activatiekosten     |in cart has one off price|€ 30,00 |
 |check product|Alles in één korting|in cart has monthly price|€ -10,00|
 
 
@@ -76,12 +77,13 @@
 |scenario     |check 500 cart                                         |
 |check        |cart total          |Eerste 12 maanden        |€ 55,00 |
 |check        |cart total          |Na 12 maanden            |€ 65,00 |
-|check        |cart total          |Eenmalig betaal je       |€ 0,00  |
-|check        |cart total          |Jouw korting             |€ 157,50|
+|check        |cart total          |Eenmalig betaal je       |€ 30,00 |
+|check        |cart total          |Jouw korting             |€ 195,00|
 |check product|Internet 500        |in cart has monthly price|€ 50,00 |
 |check product|TV Start            |in cart has monthly price|€ 12,50 |
 |check product|Bellen Start        |in cart has monthly price|€ 2,50  |
 |check product|Installatie Basis   |in cart has one off price|€ 0,00  |
+|check product|Activatiekosten     |in cart has one off price|€ 30,00 |
 |check product|Alles in één korting|in cart has monthly price|€ -10,00|
 
 *!
