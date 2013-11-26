@@ -45,9 +45,13 @@ public class SlimFixture {
     }
 
     public boolean waitSeconds(int i) {
+        return waitMilliSeconds(i * 1000);
+    }
+
+    public boolean waitMilliSeconds(int i) {
         boolean result;
         try {
-            Thread.sleep(i * 1000);
+            Thread.sleep(i);
             result = true;
         } catch (InterruptedException e) {
             result = false;

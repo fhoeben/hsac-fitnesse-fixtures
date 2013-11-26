@@ -272,6 +272,36 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
+     * Scrolls browser window (and waits a bit) so top of place becomes visible.
+     * @param place element to scroll to.
+     */
+    public void scrollTo(String place) {
+        WebElement element = getElement(place);
+        if (place != null) {
+            scrollTo(element, 250);
+        }
+    }
+
+    /**
+     * Scrolls browser window so top of element becomes visible.
+     * @param element element to scroll to.
+     */
+    protected void scrollTo(WebElement element) {
+        getSeleniumHelper().executeJavascript("arguments[0].scrollIntoView(true);", element);
+    }
+
+    /**
+     * Scrolls browser window so top of element becomes visible.
+     * After scroll command some millisecond wait will allow scroll to complete.
+     * @param element element to scroll to.
+     * @param msToWaitAfterScroll number of milliseconds to wait.
+     */
+    protected void scrollTo(WebElement element, int msToWaitAfterScroll) {
+        scrollTo(element);
+        waitMilliSeconds(msToWaitAfterScroll);
+    }
+
+    /**
      * @param timeout number of seconds before waitUntil() throws TimeOutException.
      */
     public void secondsBeforeTimeout(int timeout) {

@@ -1,7 +1,12 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.SearchContext;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -181,14 +186,24 @@ public class SeleniumHelper {
     }
 
     /**
-     * Executes Javascript in browser.
+     * Executes Javascript in browser. If statementPattern contains the magic variable 'arguments'
+     * the parameters will also be passed to the statement. In the latter case the parameters
+     * must be a number, a boolean, a String, WebElement, or a List of any combination of the above.
+     * @see http://selenium.googlecode.com/git/docs/api/java/org/openqa/selenium/JavascriptExecutor.html#executeScript(java.lang.String,%20java.lang.Object...)
      * @param statementPattern javascript to run, possibly with placeholders to be replaced.
      * @param parameters placeholder values that should be replaced before executing the script.
+     * @return return value from statement.
      */
-    public void executeJavascript(String statementPattern, Object... parameters) {
+    public Object executeJavascript(String statementPattern, Object... parameters) {
+        Object result;
         String script = String.format(statementPattern, parameters);
         JavascriptExecutor jse = (JavascriptExecutor) driver();
-        jse.executeScript(script);
+        if (statementPattern.contains("arguments")) {
+            result = jse.executeScript(script, parameters);
+        } else {
+            result = jse.executeScript(script);
+        }
+        return result;
     }
 
     /**
