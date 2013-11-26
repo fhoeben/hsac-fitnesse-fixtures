@@ -1,13 +1,15 @@
 !***> Expected cart content
 
 |scenario     |check cart                                                  |
-|check        |cart total         |Maandelijks              |€ 67,50       |
-|check        |cart total         |Eenmalig betaal je       |€ 37,50       |
+|check        |cart total         |Maandelijks              |€ 57,50       |
+|check        |cart total         |Eenmalig betaal je       |€ 67,50       |
+|check        |cart total         |Je korting               |€ 37,50       |
 |check product|Internet 500       |in cart has monthly price|€ 50,00       |
 |check product|Bellen Start       |in cart has monthly price|€ 2,50        |
 |check        |cart products      |Installatie Basis        |price |€ 37,50|
 |check        |cart products      |Installatie Basis        |period|null   |
-|check product|Tweede telefoonlijn|in cart has monthly price|€ 15,00       |
+|check product|Tweede telefoonlijn|in cart has monthly price|€ 5,00        |
+|check        |cart products      |Activatiekosten          |price |€ 30,00|
 
 *!
 
@@ -24,6 +26,5 @@ First trying to add the second telephone line without picking a telephone packag
 |enter |71                        |as                        |Huisnummer                                                    |
 |click |Verstuur                  |and wait for tag          |h2                 |with text          |Mogen wij je gegevens?|
 |check cart                                                                                                                 |
-|check |value of                  |Het adres waar we je aansluiting gaan plaatsen:                                          |!-Park Arenberg 71
-3731EP De Bilt-!|
+
 

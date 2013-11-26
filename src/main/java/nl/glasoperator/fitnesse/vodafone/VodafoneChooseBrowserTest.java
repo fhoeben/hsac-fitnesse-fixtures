@@ -17,18 +17,29 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
         boolean result = false;
         WebElement element = findByXPath("//h3[contains(normalize-space(text()), '%s')]/..//h3[text() = '%s']/..", type, packageName);
         if (element != null) {
+            final String currentPackage = chosenPackageFor(type);
             result = clickElement(element);
             if (result) {
-                // wait for element to be highlighted
+                // wait for element to be (un)highlighted
                 result = waitUntil(new ExpectedCondition<Boolean>() {
                     @Override
                     public Boolean apply(WebDriver webDriver) {
-                        return packageName.equals(chosenPackageFor(type));
+                        boolean isChosen = packageName.equals(chosenPackageFor(type));
+                        boolean result;
+                        if (packageName.equals(currentPackage)) {
+                            // package clicked was already chosen, it must be unselected
+                            result = !isChosen;
+                        } else {
+                            // package clicked was not yet chosen, it must be selected
+                            result = isChosen;
+                        }
+                        return result;
                     }
                 });
                 if (result
                         && "Televisie".equals(type)
-                        && "Extra".equals(packageName)) {
+                        && "Extra".equals(packageName)
+                        && !packageName.equals(currentPackage)) {
                     result = waitForTagWithText("h3", "Welke 2 extra zenderpakketten wil je erbij?");
                 }
             }
@@ -64,6 +75,11 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
         String chosenPackage = null;
         WebElement parentElement = findByXPath("//h3[contains(normalize-space(text()), '%s')]/..//div[contains(@class, ' selected')]//h3", type);
         if (parentElement != null) {
+            String typeClassName = type.toLowerCase();
+            if ("bellen".equals(typeClassName)) {
+                typeClassName = "telefonie";
+            }
+            getSeleniumHelper().executeJavascript("$('.%s')[0].scrollIntoView();", typeClassName);
             chosenPackage = parentElement.getText();
         }
         return chosenPackage;
@@ -110,7 +126,7 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
     }
 
     public boolean clickTvPackage(String packageName) {
-        return clickByXPath("//label/b[contains(normalize-space(text()), '%s')]",
+        return clickByXPath("//span[contains(@class, 'label')]/b[contains(normalize-space(text()), '%s')]",
                 packageName);
     }
 
@@ -149,6 +165,25 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
         }
         return result;
     }
+
+    public Boolean productNotInCart(String productName) {
+        boolean result = true;
+       String product = getTextByXPath(CART_PRODUCT_ITEM_PATTERN + "/span", productName);
+        if (product != null) {
+            return result = false;
+        }
+        return result;
+    }
+
+    public String addressInMessagebox() {
+        String result = null;
+        WebElement element = findByXPath("//b[@class='address']");
+        if (element != null) {
+           result = element.getText();
+        }
+        return result;
+    }
+
 
 
 }
