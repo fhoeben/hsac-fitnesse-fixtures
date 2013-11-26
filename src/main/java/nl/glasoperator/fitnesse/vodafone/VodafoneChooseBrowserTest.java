@@ -72,13 +72,7 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
     }
 
     public String chosenPackageFor(String type) {
-        String chosenPackage = null;
-        WebElement parentElement = findByXPath("//h3[contains(normalize-space(text()), '%s')]/..//div[contains(@class, ' selected')]//h3", type);
-        if (parentElement != null) {
-            scrollTo(parentElement);
-            chosenPackage = parentElement.getText();
-        }
-        return chosenPackage;
+        return getTextByXPath("//h3[contains(normalize-space(text()), '%s')]/..//div[contains(@class, ' selected')]//h3", type);
     }
 
     public String cartTotal(String categoryName) {
