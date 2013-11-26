@@ -25,3 +25,9 @@ Postal codes to use in tests
 
 Reseller code to use
 !define CHANNEL_KEY {3_400075145_D2D_BLS_0}
+
+Package prices
+!define PRICE_INTERNET_50 {€ 32,50}
+!define PRICE_INTERNET_100 {€ 42,50}
+!define PRICE_INTERNET_500 {€ 50,00}
+
