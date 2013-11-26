@@ -75,11 +75,7 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
         String chosenPackage = null;
         WebElement parentElement = findByXPath("//h3[contains(normalize-space(text()), '%s')]/..//div[contains(@class, ' selected')]//h3", type);
         if (parentElement != null) {
-            String typeClassName = type.toLowerCase();
-            if ("bellen".equals(typeClassName)) {
-                typeClassName = "telefonie";
-            }
-            getSeleniumHelper().executeJavascript("$('.%s')[0].scrollIntoView();", typeClassName);
+            scrollTo(parentElement);
             chosenPackage = parentElement.getText();
         }
         return chosenPackage;
@@ -108,6 +104,7 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
         String result = null;
         WebElement element = findByXPath(xpathPattern, params);
         if (element != null) {
+            scrollTo(element);
             result = element.getText();
         }
         return result;
@@ -168,7 +165,7 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
 
     public Boolean productNotInCart(String productName) {
         boolean result = true;
-       String product = getTextByXPath(CART_PRODUCT_ITEM_PATTERN + "/span", productName);
+        String product = getTextByXPath(CART_PRODUCT_ITEM_PATTERN + "/span", productName);
         if (product != null) {
             return result = false;
         }
@@ -179,7 +176,8 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
         String result = null;
         WebElement element = findByXPath("//b[@class='address']");
         if (element != null) {
-           result = element.getText();
+            scrollTo(element);
+            result = element.getText();
         }
         return result;
     }
