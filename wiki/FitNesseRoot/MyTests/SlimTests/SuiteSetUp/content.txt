@@ -1,18 +1,18 @@
 !***> Fixture code locaties
 
-|Import                      |
-|nl.hsac.fitnesse.fixture    |
+|Import                           |
+|nl.hsac.fitnesse.fixture         |
 |nl.hsac.fitnesse.fixture.slim.web|
 
 *!
 
-!|script     |selenium driver setup                                                                                   |
-|set property|webdriver.chrome.driver|value  |/Users/fried/dev/hsac/hsac-fitnesse-fixtures/webdrivers/osx/chromedriver|
-|note        |startDriver            |org.openqa.selenium.chrome.ChromeDriver                                         |
-|set property|webdriver.ie.driver    |value  |C:\dev\hsac\hsac-fitnesse\webdrivers\IEDriverServer.exe                 |
-|startDriver |org.openqa.selenium.ie.InternetExplorerDriver                                                           |
-|note        |startDriver            |org.openqa.selenium.safari.SafariDriver                                         |
-|note        |startDriver            |org.openqa.selenium.firefox.FirefoxDriver                                       |
-|note        |connect to driver for  |firefox|at         |http://localhost:9999/test                                  |
-|note        |connect to driver for  |firefox|on         |ANY    |at    |http://localhost:9999/test                   |
-|note        |connect to driver for  |firefox|version    |2      |on    |ANY    |at    |http://localhost:9999/test    |
+!|script     |selenium driver setup                                                                                    |
+|set property|webdriver.chrome.driver|value  |/Users/fried/dev/hsac/hsac-fitnesse-fixtures/wiki/webdrivers/chromedriver|
+|startDriver |org.openqa.selenium.chrome.ChromeDriver                                                                  |
+|set property|webdriver.ie.driver    |value  |C:\dev\hsac\hsac-fitnesse\webdrivers\IEDriverServer.exe                  |
+|note        |startDriver            |org.openqa.selenium.ie.InternetExplorerDriver                                    |
+|note        |startDriver            |org.openqa.selenium.safari.SafariDriver                                          |
+|note        |startDriver            |org.openqa.selenium.firefox.FirefoxDriver                                        |
+|note        |connect to driver for  |firefox|at         |http://localhost:4444/wd/hub                                 |
+|note        |connect to driver for  |firefox|on         |ANY    |at    |http://localhost:4444/wd/hub                  |
+|note        |connect to driver for  |firefox|version    |2      |on    |ANY    |at    |http://localhost:4444/wd/hub   |
