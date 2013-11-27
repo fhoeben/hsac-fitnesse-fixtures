@@ -139,7 +139,7 @@
 						<argument>-jar</argument>
 						<argument>fitnesse-standalone.jar</argument>
 						<argument>-p</argument>
-						<argument>80</argument>
+						<argument>9090</argument>
 					</arguments>
 				</configuration>
 			</plugin>
