@@ -119,8 +119,7 @@ public class BrowserTest extends SlimFixture {
         By optionWithText = getSeleniumHelper().byXpath(optionXPath, selectId, optionValue);
         WebElement option = getSeleniumHelper().findElement(true, optionWithText);
         if (option != null) {
-            option.click();
-            result = true;
+            result = clickElement(option);
         }
         return result;
     }
@@ -157,6 +156,7 @@ public class BrowserTest extends SlimFixture {
     protected boolean clickElement(WebElement element) {
         boolean result = false;
         if (element != null) {
+            scrollTo(element);
             if (element.isDisplayed() && element.isEnabled()) {
                 element.click();
                 result = true;
@@ -241,11 +241,13 @@ public class BrowserTest extends SlimFixture {
                 By selectedOption = getSeleniumHelper().byXpath("//select[@id='%s']//option[@selected]", id);
                 WebElement option = getSeleniumHelper().findElement(true, selectedOption);
                 if (option != null) {
+                    scrollTo(option);
                     result = option.getText();
                 }
             } else {
                 result = element.getAttribute("value");
                 if (result == null) {
+                    scrollTo(element);
                     result = element.getText();
                 }
             }
@@ -272,13 +274,13 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
-     * Scrolls browser window (and waits a bit) so top of place becomes visible.
+     * Scrolls browser window so top of place becomes visible.
      * @param place element to scroll to.
      */
     public void scrollTo(String place) {
         WebElement element = getElement(place);
         if (place != null) {
-            scrollTo(element, 250);
+            scrollTo(element);
         }
     }
 
@@ -288,17 +290,6 @@ public class BrowserTest extends SlimFixture {
      */
     protected void scrollTo(WebElement element) {
         getSeleniumHelper().executeJavascript("arguments[0].scrollIntoView(true);", element);
-    }
-
-    /**
-     * Scrolls browser window so top of element becomes visible.
-     * After scroll command some millisecond wait will allow scroll to complete.
-     * @param element element to scroll to.
-     * @param msToWaitAfterScroll number of milliseconds to wait.
-     */
-    protected void scrollTo(WebElement element, int msToWaitAfterScroll) {
-        scrollTo(element);
-        waitMilliSeconds(msToWaitAfterScroll);
     }
 
     /**
