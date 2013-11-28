@@ -1,24 +1,23 @@
 !***> Expected cart content
 
-|scenario     |check cart                                                                    |
-|check        |cart total                           |Eerste 3 maanden         |€ 103,33      |
-|check        |cart total                           |Na 3 maanden             |€ 115,00      |
-|check        |cart total                           |Na 6 maanden             |€ 132,50      |
-|check        |cart total                           |Eenmalig betaal je       |€ 67,50       |
-|check        |cart total                           |Je korting               |€ 177,51      |
-|check        |cart products                        |Activatiekosten          |price |€ 30,00|
-|check product|Internet 50                          |in cart has monthly price|€ 32,50       |
-|check        |cart products                        |Installatie Basis        |price |€ 37,50|
-|check        |cart products                        |Installatie Basis        |period|null   |
-|check product|TV Plus                              |in cart has monthly price|€ 25,00       |
-|ensure       |product                              |FOX Sports Eredivisie    |not in cart   |
-|ensure       |product                              |FOX Sports Internationaal|not in cart   |
-|check product|FOX Sports Combi                     |in cart has monthly price|€ 12,50       |
-|check product|Sport1                               |in cart has monthly price|€ 3,33        |
-|check product|HBO                                  |in cart has monthly price|€ 10,00       |
-|check product|Erotiek Pakket                       |in cart has monthly price|€ 10,00       |
-|check product|Interactieve Box met harddiskrecorder|in cart has monthly price|€ 5,00        |
-|check product|Extra Interactieve Box               |in cart has monthly price|€ 5,00        |
+|scenario     |check cart                                                                             |
+|check        |cart total                           |Eerste 3 maanden         |€ 103,33               |
+|check        |cart total                           |Na 3 maanden             |€ 115,00               |
+|check        |cart total                           |Na 6 maanden             |€ 132,50               |
+|check        |cart total                           |Eenmalig betaal je       |€ 67,50                |
+|check        |cart total                           |Je korting               |€ 177,51               |
+|check        |cart products                        |Activatiekosten          |price     |€ 30,00     |
+|check product|Internet 50                          |in cart has monthly price|${PRICE_INTERNET_50}   |
+|check product|Installatie Basis                    |in cart has one off price|€ 37,50                |
+|check product|TV Plus                              |in cart has monthly price|${PRICE_TELEVISIE_PLUS}|
+|ensure       |product                              |FOX Sports Eredivisie    |not in cart            |
+|ensure       |product                              |FOX Sports Internationaal|not in cart            |
+|check product|FOX Sports Combi                     |in cart has monthly price|€ 12,50                |
+|check product|Sport1                               |in cart has monthly price|€ 3,33                 |
+|check product|HBO                                  |in cart has monthly price|€ 10,00                |
+|check product|Erotiek Pakket                       |in cart has monthly price|€ 10,00                |
+|check product|Interactieve Box met harddiskrecorder|in cart has monthly price|€ 5,00                 |
+|check product|Extra Interactieve Box               |in cart has monthly price|€ 5,00                 |
 *!
 
 This test is going to make sure you can add all the avaiable TV options.
