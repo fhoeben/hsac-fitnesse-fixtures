@@ -176,6 +176,11 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
         return result;
     }
 
+    public boolean clickOption(String type, String choice) {
+        return clickByXPath("//div[@class='accordion-heading']/a[normalize-space(text()) = '%s']/..//label[normalize-space(text()) = '%s']",
+                type, choice);
+    }
+
 
 
 }

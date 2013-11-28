@@ -22,4 +22,3 @@ Forget to fill one required field and see we get an error there and no where els
 |check |error on                  |Huisnummer                |Vul je huisnummer in.                                       |
 |check |errors on others than     |Huisnummer                |null                                                        |
 |check |error style on others than|Huisnummer                |null                                                        |
-|show  |take screenshot           |numberportingValidation/noHousenumber                                                  |

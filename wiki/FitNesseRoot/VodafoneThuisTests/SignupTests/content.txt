@@ -6,8 +6,8 @@ Values to be used as input
 !define CONTACT_EMAIL {test-auto@glasoperator.nl}
 
 Urls to use in tests
-#!define VF_PORTAL_URL {https://orderportalvf-test.glasoperator.nl}
-!define VF_PORTAL_URL {http://localhost:53486}
+!define VF_PORTAL_URL {https://orderportalvf-test.glasoperator.nl}
+#!define VF_PORTAL_URL {http://localhost:53486}
 !define VISP_PORTAL_URL {http://internalonly-dev.glasoperator.nl/Visp.PortalSoap}
 
 Postal codes to use in tests
