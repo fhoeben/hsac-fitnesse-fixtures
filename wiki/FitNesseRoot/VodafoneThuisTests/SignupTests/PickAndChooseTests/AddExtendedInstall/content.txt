@@ -1,11 +1,10 @@
 !***> Expected cart content
 
-|scenario     |check cart                                                   |
-|check        |cart total   |Maandelijks              |${PRICE_INTERNET_500}|
-|check        |cart total   |Eenmalig betaal je       |€ 130,00             |
-|check product|Internet 500 |in cart has monthly price|${PRICE_INTERNET_500}|
-|check        |cart products|Installatie Uitgebreid   |price    |€ 100,00   |
-|check        |cart products|Installatie Uitgebreid   |period   |null       |
+|scenario     |check cart                                                            |
+|check        |cart total            |Maandelijks              |${PRICE_INTERNET_500}|
+|check        |cart total            |Eenmalig betaal je       |€ 130,00             |
+|check product|Internet 500          |in cart has monthly price|${PRICE_INTERNET_500}|
+|check product|Installatie Uitgebreid|in cart has one off price|€ 100,00             |
 *!
 
 See if we can add 'uitgebreide installatie'

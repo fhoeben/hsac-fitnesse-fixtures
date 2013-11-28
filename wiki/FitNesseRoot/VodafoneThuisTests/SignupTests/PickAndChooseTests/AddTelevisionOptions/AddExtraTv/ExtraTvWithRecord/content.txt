@@ -1,13 +1,12 @@
 !***> Expected cart content
 
-|scenario     |check cart                                                                                |
-|check        |cart total                                 |Maandelijks              |€ 55,00             |
-|check        |cart total                                 |Eenmalig betaal je       |€ 67,50             |
-|check product|Internet 50                                |in cart has monthly price|${PRICE_INTERNET_50}|
-|check        |cart products                              |Installatie Basis        |price    |€ 37,50   |
-|check        |cart products                              |Installatie Basis        |period   |null      |
-|check product|TV Start                                   |in cart has monthly price|€ 12,50             |
-|check product|Extra Interactieve Box met harddiskrecorder|in cart has monthly price|€ 10,00             |
+|scenario     |check cart                                                                                    |
+|check        |cart total                                 |Maandelijks              |€ 55,00                 |
+|check        |cart total                                 |Eenmalig betaal je       |€ 67,50                 |
+|check product|Internet 50                                |in cart has monthly price|${PRICE_INTERNET_50}    |
+|check product|Installatie Basis                          |in cart has one off price|€ 37,50                 |
+|check product|TV Start                                   |in cart has monthly price|${PRICE_TELEVISIE_START}|
+|check product|Extra Interactieve Box met harddiskrecorder|in cart has monthly price|€ 10,00                 |
 *!
 
 See if we can add 'ExtraTvWithRecord'

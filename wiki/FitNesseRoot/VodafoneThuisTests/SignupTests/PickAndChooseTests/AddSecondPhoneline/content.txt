@@ -5,11 +5,10 @@
 |check        |cart total         |Eenmalig betaal je       |€ 67,50              |
 |check        |cart total         |Je korting               |€ 37,50              |
 |check product|Internet 500       |in cart has monthly price|${PRICE_INTERNET_500}|
-|check product|Bellen Start       |in cart has monthly price|€ 2,50               |
-|check        |cart products      |Installatie Basis        |price     |€ 37,50   |
-|check        |cart products      |Installatie Basis        |period    |null      |
+|check product|Bellen Start       |in cart has monthly price|${PRICE_BELLEN_START}|
+|check product|Installatie Basis  |in cart has one off price|€ 37,50              |
 |check product|Tweede telefoonlijn|in cart has monthly price|€ 5,00               |
-|check        |cart products      |Activatiekosten          |price     |€ 30,00   |
+|check        |cart products      |Activatiekosten          |price    |€ 30,00    |
 
 *!
 
