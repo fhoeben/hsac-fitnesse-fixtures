@@ -98,7 +98,7 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
         String result = null;
         WebElement element = findByXPath(xpathPattern, params);
         if (element != null) {
-            scrollTo(element);
+            scrollIfNotDisplayed(element);
             result = element.getText();
         }
         return result;
@@ -170,7 +170,7 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
         String result = null;
         WebElement element = findByXPath("//b[@class='address']");
         if (element != null) {
-            scrollTo(element);
+            scrollIfNotDisplayed(element);
             result = element.getText();
         }
         return result;

@@ -156,7 +156,7 @@ public class BrowserTest extends SlimFixture {
     protected boolean clickElement(WebElement element) {
         boolean result = false;
         if (element != null) {
-            scrollTo(element);
+            scrollIfNotDisplayed(element);
             if (element.isDisplayed() && element.isEnabled()) {
                 element.click();
                 result = true;
@@ -241,13 +241,13 @@ public class BrowserTest extends SlimFixture {
                 By selectedOption = getSeleniumHelper().byXpath("//select[@id='%s']//option[@selected]", id);
                 WebElement option = getSeleniumHelper().findElement(true, selectedOption);
                 if (option != null) {
-                    scrollTo(option);
+                    scrollIfNotDisplayed(option);
                     result = option.getText();
                 }
             } else {
                 result = element.getAttribute("value");
                 if (result == null) {
-                    scrollTo(element);
+                    scrollIfNotDisplayed(element);
                     result = element.getText();
                 }
             }
@@ -290,6 +290,16 @@ public class BrowserTest extends SlimFixture {
      */
     protected void scrollTo(WebElement element) {
         getSeleniumHelper().executeJavascript("arguments[0].scrollIntoView(true);", element);
+    }
+
+    /**
+     * Scrolls browser window if element is not currently visible so top of element becomes visible.
+     * @param element element to scroll to.
+     */
+    protected void scrollIfNotDisplayed(WebElement element) {
+        if (!element.isDisplayed()) {
+            scrollTo(element);
+        }
     }
 
     /**
