@@ -1,28 +1,28 @@
 !***> Expected cart content
 
-|scenario     |check cart                                                                          |
-|check        |cart total                                 |Maandelijks              |€ 52,50       |
-|check        |cart total                                 |Eenmalig betaal je       |€ 67,50       |
-|check product|Internet 50                                |in cart has monthly price|€ 32,50       |
-|check        |cart products                              |Installatie Basis        |price |€ 37,50|
-|check        |cart products                              |Installatie Basis        |period|null   |
-|check product|TV Start                                   |in cart has monthly price|€ 12,50       |
-|check product|Extra Interactieve Box met harddiskrecorder|in cart has monthly price|€ 7,50        |
+|scenario     |check cart                                                                                |
+|check        |cart total                                 |Maandelijks              |€ 55,00             |
+|check        |cart total                                 |Eenmalig betaal je       |€ 67,50             |
+|check product|Internet 50                                |in cart has monthly price|${PRICE_INTERNET_50}|
+|check        |cart products                              |Installatie Basis        |price    |€ 37,50   |
+|check        |cart products                              |Installatie Basis        |period   |null      |
+|check product|TV Start                                   |in cart has monthly price|€ 12,50             |
+|check product|Extra Interactieve Box met harddiskrecorder|in cart has monthly price|€ 10,00             |
 *!
 
 See if we can add 'ExtraTvWithRecord'
 
-|script|vodafone choose browser test                                                                                    |
-|go to pickandchoose                                                                                                    |
-|pick  |Internet                  |package                   |50                                                        |
-|reject|click                     |Welke opties wil je erbij?|option                   |extra tv |button                |
-|pick  |Televisie                 |package                   |Start                                                     |
-|click |Welke opties wil je erbij?|option                    |Extra Interactieve TV Box|button                          |
-|click |Met opnemen en pauzeren                                                                                         |
-|check cart                                                                                                             |
-|click |Bestel direct                                                                                                   |
-|enter |3731 ep                   |as                        |Postcode                                                  |
-|enter |71                        |as                        |Huisnummer                                                |
-|click |Verstuur                  |and wait for tag          |h2                       |with text|Mogen wij je gegevens?|
-|check cart                                                                                                             |
+|script|vodafone choose browser test                                                                                            |
+|go to pickandchoose                                                                                                            |
+|pick  |Internet                          |package                   |50                                                        |
+|reject|click                             |Welke opties wil je erbij?|option                   |extra tv |button                |
+|pick  |Televisie                         |package                   |Start                                                     |
+|click |Welke opties wil je erbij?        |option                    |Extra Interactieve TV Box|button                          |
+|click |Extra Interactieve TV Box         |option                    |Met opnemen en pauzeren                                   |
+|check cart                                                                                                                     |
+|click |Bestel direct                                                                                                           |
+|enter |${POSTAL_CODE_EVERYTHING}         |as                        |Postcode                                                  |
+|enter |${POSTAL_CODE_EVERYTHING_HOUSE_NR}|as                        |Huisnummer                                                |
+|click |Verstuur                          |and wait for tag          |h2                       |with text|Mogen wij je gegevens?|
+|check cart                                                                                                                     |
 
