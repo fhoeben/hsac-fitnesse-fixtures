@@ -28,6 +28,6 @@
 |check cart                            |
 |reject|enabled|Bellen   |package|Plus |
 |check cart                            |
-|reject|click  |Bestel direct          |
+
 
 
