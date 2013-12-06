@@ -1,15 +1,14 @@
 !***> Expected cart content
 
-|scenario     |check cart                                                   |
-|check        |cart total   |Eerste 12 maanden        |€ 80,00              |
-|check        |cart total   |Na 12 maanden            |€ 90,00              |
-|check        |cart total   |Eenmalig betaal je       |€ 30,00              |
-|check        |cart total   |Je korting               |€ 195,00             |
-|check product|Internet 500 |in cart has monthly price|${PRICE_INTERNET_500}|
-|check product|TV Plus      |in cart has monthly price|€ 25,00              |
-|check product|Bellen Plus  |in cart has monthly price|€ 15,00              |
-|check        |cart products|Installatie Basis        |price     |€ 0,00    |
-|check        |cart products|Installatie Basis        |period    |null      |
+|scenario     |check cart                                                         |
+|check        |cart total       |Eerste 12 maanden        |€ 80,00                |
+|check        |cart total       |Na 12 maanden            |€ 90,00                |
+|check        |cart total       |Eenmalig betaal je       |€ 30,00                |
+|check        |cart total       |Je korting               |€ 195,00               |
+|check product|Internet 500     |in cart has monthly price|${PRICE_INTERNET_500}  |
+|check product|TV Plus          |in cart has monthly price|${PRICE_TELEVISIE_PLUS}|
+|check product|Bellen Plus      |in cart has monthly price|${PRICE_BELLEN_PLUS}   |
+|check product|Installatie Basis|in cart has one off price|€ 0,00                 |
 *!
 
 Uses a postalcode for vraagbundeling. This scenario must return no aansluitdatum keuze

@@ -13,31 +13,31 @@
 
 Choses TV Extra and select two extra channelpackages: Kids & Music and Infotainment. Also ensure that we cannot add more than 2, but we can change our choice.
 
-|script          |vodafone choose browser test                                                                                           |
-|go to pickandchoose                                                                                                                     |
-|pick            |Internet            |package                                    |50                                                    |
-|check           |chosen package for  |Internet                                   |50                                                    |
-|pick            |Televisie           |package                                    |Extra                                                 |
-|check           |chosen package for  |Televisie                                  |Extra                                                 |
-|click           |Bestel direct                                                                                                          |
-|check           |error on            |Welke 2 extra zenderpakketten wil je erbij?|Vergeet niet je 2 extra zenderpakketten te selecteren!|
-|click tv package|Kids                                                                                                                   |
-|click tv package|Infotainment                                                                                                           |
-|check cart                                                                                                                              |
-|note            |!note clicking extra package does nothing                                                                              |
-|click tv package|Entertainment                                                                                                          |
-|check cart                                                                                                                              |
-|note            |!note but we can change one                                                                                            |
-|click tv package|Infotainment                                                                                                           |
-|click tv package|Entertainment                                                                                                          |
-|check product   |Entertainment Pakket|in cart has monthly price                  |€ 0,00                                                |
-|note            |!note and change back back                                                                                             |
-|click tv package|Entertainment                                                                                                          |
-|click tv package|Infotainment                                                                                                           |
-|check cart                                                                                                                              |
-|click           |Bestel direct                                                                                                          |
-|enter           |3731 ep             |as                                         |Postcode                                              |
-|enter           |71                  |as                                         |Huisnummer                                            |
-|click           |Verstuur            |and wait for tag                           |h2       |with text      |Mogen wij je gegevens?      |
-|check cart                                                                                                                              |
+|script          |vodafone choose browser test                                                                                                         |
+|go to pickandchoose                                                                                                                                   |
+|pick            |Internet                          |package                                    |50                                                    |
+|check           |chosen package for                |Internet                                   |50                                                    |
+|pick            |Televisie                         |package                                    |Extra                                                 |
+|check           |chosen package for                |Televisie                                  |Extra                                                 |
+|click           |Bestel direct                                                                                                                        |
+|check           |error on                          |Welke 2 extra zenderpakketten wil je erbij?|Vergeet niet je 2 extra zenderpakketten te selecteren!|
+|click tv package|Kids                                                                                                                                 |
+|click tv package|Infotainment                                                                                                                         |
+|check cart                                                                                                                                            |
+|note            |!note clicking extra package does nothing                                                                                            |
+|click tv package|Entertainment                                                                                                                        |
+|check cart                                                                                                                                            |
+|note            |!note but we can change one                                                                                                          |
+|click tv package|Infotainment                                                                                                                         |
+|click tv package|Entertainment                                                                                                                        |
+|check product   |Entertainment Pakket              |in cart has monthly price                  |€ 0,00                                                |
+|note            |!note and change back back                                                                                                           |
+|click tv package|Entertainment                                                                                                                        |
+|click tv package|Infotainment                                                                                                                         |
+|check cart                                                                                                                                            |
+|click           |Bestel direct                                                                                                                        |
+|enter           |${POSTAL_CODE_EVERYTHING}         |as                                         |Postcode                                              |
+|enter           |${POSTAL_CODE_EVERYTHING_HOUSE_NR}|as                                         |Huisnummer                                            |
+|click           |Verstuur                          |and wait for tag                           |h2       |with text      |Mogen wij je gegevens?      |
+|check cart                                                                                                                                            |
 

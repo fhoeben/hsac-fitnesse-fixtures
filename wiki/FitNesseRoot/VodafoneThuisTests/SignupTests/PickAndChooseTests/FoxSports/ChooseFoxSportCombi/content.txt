@@ -1,27 +1,26 @@
 !***> Expected cart content
 
-|scenario     |check cart                                               |
-|check        |cart total      |Eerste 6 maanden         |€ 70,00       |
-|check        |cart total      |Na 6 maanden             |€ 82,50       |
-|check        |cart total      |Eenmalig betaal je       |€ 67,50       |
-|check        |cart total      |Je korting             |€ 112,50      |
-|check product|Internet 50     |in cart has monthly price|€ 32,50       |
-|check        |cart products   |Installatie Basis        |price |€ 37,50|
-|check        |cart products   |Installatie Basis        |period|null   |
-|check product|TV Plus         |in cart has monthly price|€ 25,00       |
-|ensure       |product         |FOX Sports Eredivisie    |not in cart   |
-|ensure       |product         |FOX Sports International |not in cart   |
-|check product|FOX Sports Combi|in cart has monthly price|€ 12,50       |
+|scenario     |check cart                                                         |
+|check        |cart total       |Eerste 6 maanden         |€ 70,00                |
+|check        |cart total       |Na 6 maanden             |€ 82,50                |
+|check        |cart total       |Eenmalig betaal je       |€ 67,50                |
+|check        |cart total       |Je korting               |€ 112,50               |
+|check product|Internet 50      |in cart has monthly price|${PRICE_INTERNET_50}   |
+|check product|Installatie Basis|in cart has one off price|€ 37,50                |
+|check product|TV Plus          |in cart has monthly price|${PRICE_TELEVISIE_PLUS}|
+|ensure       |product          |FOX Sports Eredivisie    |not in cart            |
+|ensure       |product          |FOX Sports International |not in cart            |
+|check product|FOX Sports Combi |in cart has monthly price|€ 12,50                |
 *!
 
-This test is going to make sure you can add Fox Sports Combi, and when you add Fox Sports Eredivisie and/or Fox Sport Internationaal these options are not avaiable in the cart and get added by the price
+This test is going to make sure you can add Fox Sports Combi, and when you add Fox Sports Eredivisie and/or Fox Sport International these options are not avaiable in the cart and get added by the price
 
 |script|vodafone choose browser test                                                                                  |
 |go to pickandchoose                                                                                                  |
 |pick  |Internet                          |package         |50                                                        |
 |pick  |Televisie                         |package         |Plus                                                      |
 |click |Welke opties wil je erbij?        |option          |FOX Sports Eredivisie    |button                          |
-|click |Welke opties wil je erbij?        |option          |FOX Sports Internationaal|button                          |
+|click |Welke opties wil je erbij?        |option          |FOX Sports International|button                          |
 |click |Welke opties wil je erbij?        |option          |FOX Sports Combi         |button                          |
 |check cart                                                                                                           |
 |click |Bestel direct                                                                                                 |

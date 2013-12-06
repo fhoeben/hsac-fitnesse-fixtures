@@ -2,13 +2,15 @@
 
 Values to be used as input 
 !define RANDOM_LAST_NAME {!randomString (50) (abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZáéíóúýäëïöüÿàèìòùâêîôûÀÈÌÒÙ  -) (Téster-)}
-!define RANDOM_VF_USER {!randomString (29) (abcdefghijklmnopqrstuvwxyz1234567890-_) (test-)a}
+!define RANDOM_VF_USER {!randomString (29) (abcdefghijklmnopqrstuvwxyz1234567890-_) (test-)b}
 !define CONTACT_EMAIL {test-auto@glasoperator.nl}
 
 Urls to use in tests
-!define VF_PORTAL_URL {https://orderportalvf-test.glasoperator.nl}
+!define VF_PORTAL_URL {https://thuisbestellen-acc.vodafone.nl}
+#!define VF_PORTAL_URL {https://orderportalvf-test.glasoperator.nl}
 #!define VF_PORTAL_URL {http://localhost:53486}
-!define VISP_PORTAL_URL {http://internalonly-dev.glasoperator.nl/Visp.PortalSoap}
+#!define VISP_PORTAL_URL {http://internalonly-dev.glasoperator.nl/Visp.PortalSoap}
+!define VISP_PORTAL_URL {http://internalonly-acc.glasoperator.nl/Visp.PortalSoap}
 
 Postal codes to use in tests
 !define POSTAL_CODE_EVERYTHING {3731EP}

@@ -1,29 +1,27 @@
 !***> Expected cart content
 
-|scenario|check cart                                     |
-|check   |cart total   |Maandelijks       |€ 50,00       |
-|check   |cart total   |Eenmalig betaal je|€ 67,50       |
-|check   |cart products|Internet 500      |price |€ 50,00|
-|check   |cart products|Internet 500      |period|p. mnd.|
-|check   |cart products|Installatie Basis |price |€ 37,50|
-|check   |cart products|Installatie Basis |period|null   |
+|scenario     |check cart                                                       |
+|check        |cart total       |Maandelijks              |€ 50,00              |
+|check        |cart total       |Eenmalig betaal je       |€ 67,50              |
+|check product|Internet 500     |in cart has monthly price|${PRICE_INTERNET_500}|
+|check product|Installatie Basis|in cart has one off price|€ 37,50              |
 *!
 
 Internet 500 chosen on a postal code which is not supported. This scenario must return to the pick and choose.
 He doesn't check on the errorbox
 
 
-|script|vodafone choose browser test                                         |
-|go to pickandchoose                                                         |
-|pick  |Internet|package         |500                                        |
-|check cart                                                                  |
-|click |Bestel direct                                                        |
-|enter |7621 CL |as              |Postcode                                   |
-|enter |30      |as              |Huisnummer                                 |
-|click |Verstuur|and wait for tag|h1     |with text|Stel zelf je pakket samen|
-|ensure|message box                                                          |
-|check cart                                                                  |
-|reject|pick    |Internet        |package|500                                |
+|script|vodafone choose browser test                                                               |
+|go to pickandchoose                                                                               |
+|pick  |Internet                      |package         |500                                        |
+|check cart                                                                                        |
+|click |Bestel direct                                                                              |
+|enter |${POSTAL_CODE_NO_500}         |as              |Postcode                                   |
+|enter |${POSTAL_CODE_NO_500_HOUSE_NR}|as              |Huisnummer                                 |
+|click |Verstuur                      |and wait for tag|h1     |with text|Stel zelf je pakket samen|
+|ensure|message box                                                                                |
+|check cart                                                                                        |
+|reject|pick                          |Internet        |package|500                                |
 
 
 

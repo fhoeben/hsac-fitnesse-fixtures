@@ -1,0 +1,29 @@
+!|scenario    |check FoxEre cart                                       |
+|check        |cart total           |Eerste 6 maanden         |€ 46,25 |
+|$firstMontly=|cart total           |Eerste 6 maanden                  |
+|check        |cart total           |Na 6 maanden             |€ 55,00 |
+|check        |cart total           |Na 12 maanden            |€ 65,00 |
+|check        |cart total           |Eenmalig betaal je       |€ 30,00 |
+|$oneOff=     |cart total           |Eenmalig betaal je                |
+|check        |cart total           |Je korting               |€ 247,50|
+|check product|Internet 50          |in cart has monthly price|€ 32,50 |
+|check product|TV Start             |in cart has monthly price|€ 12,50 |
+|check product|Bellen Start         |in cart has monthly price|€ 2,50  |
+|check product|Installatie Basis    |in cart has one off price|€ 0,00  |
+|check product|FOX Sports Eredivisie|in cart has monthly price|€ 8,75  |
+|check product|Activatiekosten      |in cart has one off price|€ 30,00 |
+|check product|Alles in één korting |in cart has monthly price|€ -10,00|
+
+
+|script                  |vodafone choose browser test                                        |
+|go to pickandchoose                                                                          |
+|pick                    |Internet                  |package     |50                          |
+|pick                    |Televisie                 |package     |Start                       |
+|pick                    |Bellen                    |package     |Start                       |
+|click                   |Welke opties wil je erbij?|option      |FOX Sports Eredivisie|button|
+|place order             |!-FoxEre-!                                                          |
+|check tv package count  |1                                                                   |
+|check tv package ordered|FOX sports Eredivisie                                               |
+|check offer prices                                                                           |
+|check total discount    |€ -75,00                  |for category|O                           |
+|check total discount    |€ -18,75                  |for category|P                           |

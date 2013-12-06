@@ -10,6 +10,8 @@ Order internet access and tv, and see correct data in Visp Boss
 |click                    |Verstuur                          |and wait for tag                            |h2|with text|Mogen wij je gegevens?                    |
 |check                    |step count                        |4                                                                                                   |
 |$stepCount=              |step count                                                                                                                             |
+|$firstMontly=            |cart total                        |Maandelijks                                                                                         |
+|$oneOff=                 |cart total                        |Eenmalig betaal je                                                                                  |
 |fill personal details                                                                                                                                            |
 |click                    |Volgende stap                     |and wait for tag                            |h4|with text|Gewenste aansluitdatum voor Vodafone Thuis|
 |click                    |Volgende stap                     |and wait for tag                            |h2|with text|Controleer en verstuur je bestelling      |
@@ -21,3 +23,5 @@ Order internet access and tv, and see correct data in Visp Boss
 |check internet           |500                                                                                                                                    |
 |check tv full                                                                                                                                                    |
 |check number of telephony|0                                                                                                                                      |
+|check offer prices                                                                                                                                               |
+|check total discount     |€ -37,50                          |for category                                |O                                                      |

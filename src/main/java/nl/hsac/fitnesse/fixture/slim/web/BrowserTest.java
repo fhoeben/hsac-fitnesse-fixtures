@@ -290,6 +290,7 @@ public class BrowserTest extends SlimFixture {
      */
     protected void scrollTo(WebElement element) {
         getSeleniumHelper().executeJavascript("arguments[0].scrollIntoView(true);", element);
+        waitMilliSeconds(500);
     }
 
     /**

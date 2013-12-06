@@ -3,6 +3,6 @@ Place order as reseller via packages overview and see the reseller's code is add
 
 |script                 |vodafone choose browser test                                                                  |
 |go to packages reseller|${CHANNEL_KEY}                                                                                |
-|order 500 triple play via packages                                                                                    |
+|order                  |500  |triple play via packages                                                                |
 |check                  |xPath|!-//vispEx:OrderTag[vispEx:TagId/text() = 'channel']/vispEx:InstanceKey-!|${CHANNEL_KEY}|
-
+|check triple play no options                                                                                          |
