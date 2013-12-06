@@ -1,11 +1,11 @@
 You are 120 years old, this must be too old
 
-|script|vodafone choose browser test                                                                                             |
+|script|vodafone choose browser test                                                                                      |
 |go to checkout                                                                                                           |
 |click |Mevrouw                                                                                                           |
 |enter |F. H.                     |as                    |Voornaam                                                        |
 |enter |Hoeben                    |as                    |Achternaam                                                      |
-|enter |${CONTACT_EMAIL}      |as                    |E-mailadres                                                     |
+|enter |${CONTACT_EMAIL}          |as                    |E-mailadres                                                     |
 |enter |12121893                  |as                    |Geboortedatum                                                   |
 |enter |24528616                  |as                    |Telefoonnummer mobiel                                           |
 |enter |${RANDOM_VF_USER}         |as                    |Nieuw Vodafone Thuis e-mailadres                                |

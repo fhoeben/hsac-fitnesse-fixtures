@@ -33,6 +33,9 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
                             // package clicked was not yet chosen, it must be selected
                             result = isChosen;
                         }
+                        if (result && "Internet".equals(type)) {
+                            waitMilliSeconds(250);
+                        }
                         return result;
                     }
                 });
@@ -72,6 +75,14 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
     }
 
     public String chosenPackageFor(String type) {
+        String groupName = type.toLowerCase();
+        if ("bellen".equals(groupName)) {
+            groupName = "telefonie";
+        }
+        WebElement group = findByXPath("//div[@class = 'maingroup %s group']", groupName);
+        if (group != null) {
+            scrollTo(group);
+        }
         return getTextByXPath("//h3[contains(normalize-space(text()), '%s')]/..//div[contains(@class, ' selected')]//h3", type);
     }
 
@@ -131,8 +142,8 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
     }
 
     //check if messagebox appears
-    public Boolean messageBox() {
-        Boolean result = null;
+    public boolean messageBox() {
+        boolean result = false;
         List<WebElement> elements = findAllByXPath("//div[@id = 'messagebox' and contains(@class, 'message red')]");
         if (elements != null) {
             for (WebElement element : elements) {
@@ -143,6 +154,11 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
             }
         }
         return result;
+    }
+
+    //check if messagebox appears
+    public String messageBoxText() {
+        return getTextByXPath("//div[@id = 'messagebox']/p[2]");
     }
 
     public boolean rejectPickPackage(final String type, final String packageName) {

@@ -1,0 +1,8 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://glasoperator.nl/VispPortalSoap/2013/01">
+<soapenv:Body>
+        <ns:GenerateOffer>
+            <ns:ispId>VDF</ns:ispId>
+            <ns:customerId>${customerId}</ns:customerId>
+        </ns:GenerateOffer>
+    </soapenv:Body>
+</soapenv:Envelope>

@@ -4,10 +4,15 @@ import nl.hsac.fitnesse.fixture.slim.XmlHttpTest;
 import nl.hsac.fitnesse.fixture.util.CalendarUtil;
 
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class SoapTest extends XmlHttpTest {
+    private static final Locale NL = Locale.forLanguageTag("nl");
+
     public String xPathDate(String xPathExpr) {
         String nlDate = "";
         String xmlDate = xPath(xPathExpr);
@@ -18,5 +23,27 @@ public class SoapTest extends XmlHttpTest {
             nlDate = df.format(cal);
         }
         return nlDate;
+    }
+
+    public String setValueForTrim(String value, String name, String postFix) {
+        String valueToSet;
+        if (value.endsWith(postFix)) {
+            valueToSet = value.substring(0, value.length() - postFix.length());
+        } else {
+            valueToSet = value;
+        }
+        setValueFor(valueToSet, name);
+        return valueToSet;
+    }
+
+    public String xPathAmount(String xPath) {
+        String result = null;
+        Double amount = xPathDouble(xPath);
+        if (amount != null) {
+            DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance(NL);
+            decimalFormat.applyPattern("0.00");
+            result = "€ " + decimalFormat.format(amount);
+        }
+        return result;
     }
 }

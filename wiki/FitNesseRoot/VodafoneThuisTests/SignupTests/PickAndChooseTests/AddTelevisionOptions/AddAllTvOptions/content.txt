@@ -11,7 +11,7 @@
 |check product|Installatie Basis                    |in cart has one off price|€ 37,50                |
 |check product|TV Plus                              |in cart has monthly price|${PRICE_TELEVISIE_PLUS}|
 |ensure       |product                              |FOX Sports Eredivisie    |not in cart            |
-|ensure       |product                              |FOX Sports Internationaal|not in cart            |
+|ensure       |product                              |FOX Sports International|not in cart            |
 |check product|FOX Sports Combi                     |in cart has monthly price|€ 12,50                |
 |check product|Sport1                               |in cart has monthly price|€ 3,33                 |
 |check product|HBO                                  |in cart has monthly price|€ 10,00                |
@@ -27,7 +27,7 @@ This test is going to make sure you can add all the avaiable TV options.
 |pick  |Internet                          |package         |50                                                              |
 |pick  |Televisie                         |package         |Plus                                                            |
 |click |Welke opties wil je erbij?        |option          |FOX Sports Eredivisie          |button                          |
-|click |Welke opties wil je erbij?        |option          |FOX Sports Internationaal      |button                          |
+|click |Welke opties wil je erbij?        |option          |FOX Sports International      |button                          |
 |click |Welke opties wil je erbij?        |option          |FOX Sports Combi               |button                          |
 |click |Welke opties wil je erbij?        |option          |Sport1                         |button                          |
 |click |Welke opties wil je erbij?        |option          |HBO                            |button                          |

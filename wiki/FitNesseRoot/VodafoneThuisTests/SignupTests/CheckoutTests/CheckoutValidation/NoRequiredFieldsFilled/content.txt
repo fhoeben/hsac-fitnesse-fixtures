@@ -2,7 +2,7 @@
 
 Alle verplichte velden bij de 1e pagina.
 
-|script|vodafone choose browser test                                                                                 |
+|script|vodafone choose browser test                                                                          |
 |go to checkout                                                                                               |
 |click |Volgende stap                                                                                         |
 |check |global error  |Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens.|
@@ -25,7 +25,7 @@ Alle verplichte velden bij de 1e pagina.
 
 Alle verplichte velden bij de 2e pagina.
 
-|script|vodafone choose browser test                                                                                         |
+|script|vodafone choose browser test                                                                                  |
 |go to checkout                                                                                                       |
 |click |Mevrouw                                                                                                       |
 |enter |Tester           |as              |Achternaam                                                                 |
@@ -41,5 +41,5 @@ Alle verplichte velden bij de 2e pagina.
 |check |global error     |Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens.     |
 |ensure|error style on   |Nee                                                                                         |
 |check |error on         |Nee             |Geef aan of je je vaste telefoonnummer wilt overzetten naar Vodafone Thuis.|
-|
+
 

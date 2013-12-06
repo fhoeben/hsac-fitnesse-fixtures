@@ -87,7 +87,7 @@ public class XmlHttpTest extends HttpTest {
     }
 
     @Override
-    protected XmlHttpResponse getResponse() {
+    public XmlHttpResponse getResponse() {
         return (XmlHttpResponse) super.getResponse();
     }
 
