@@ -36,14 +36,22 @@ public class BrowserTest extends SlimFixture {
      * @return true, if element was found.
      */
     public boolean enterAs(String value, String place) {
-        boolean result = false;
-        WebElement element = getElement(place);
-        if (element != null) {
+        final WebElement element = getElement(place);
+        boolean result = waitUntilInteractable(element);
+        if (result) {
             element.clear();
             sendValue(element, value);
-            result = true;
         }
         return result;
+    }
+
+    protected boolean waitUntilInteractable(final WebElement element) {
+        return waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                return element != null && element.isDisplayed() && element.isEnabled();
+            }
+        });
     }
 
     /**

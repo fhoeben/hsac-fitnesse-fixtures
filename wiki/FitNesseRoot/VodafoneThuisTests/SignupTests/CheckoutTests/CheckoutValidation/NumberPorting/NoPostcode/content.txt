@@ -15,7 +15,6 @@ Forget to fill one required field and see we get an error there and no where els
 |click       |Ja                                                                                                                |
 |enter       |0761234567                |as                        |Welk nummer wil je overzetten?                              |
 |click       |Ik gebruik dit nummer momenteel op een ander adres                                                                |
-|wait seconds|1                                                                                                                 |
 |enter       |46                        |as                        |Huisnummer                                                  |
 |click       |Volgende stap                                                                                                     |
 |check       |global error              |Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens.|
