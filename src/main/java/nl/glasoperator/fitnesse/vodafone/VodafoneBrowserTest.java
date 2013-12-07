@@ -192,13 +192,4 @@ public class VodafoneBrowserTest extends BrowserTest {
         return result;
     }
 
-    protected WebElement findByXPath(String xpathPattern, String... params) {
-        By by = getSeleniumHelper().byXpath(xpathPattern, params);
-        return getSeleniumHelper().findElement(by);
-    }
-
-    protected List<WebElement> findAllByXPath(String xpathPattern, String... params) {
-        By by = getSeleniumHelper().byXpath(xpathPattern, params);
-        return getSeleniumHelper().driver().findElements(by);
-    }
 }
