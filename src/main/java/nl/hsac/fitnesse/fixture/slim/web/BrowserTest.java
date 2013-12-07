@@ -37,14 +37,22 @@ public class BrowserTest extends SlimFixture {
      * @return true, if element was found.
      */
     public boolean enterAs(String value, String place) {
-        boolean result = false;
-        WebElement element = getElement(place);
-        if (element != null) {
+        final WebElement element = getElement(place);
+        boolean result = waitUntilInteractable(element);
+        if (result) {
             element.clear();
             sendValue(element, value);
-            result = true;
         }
         return result;
+    }
+
+    protected boolean waitUntilInteractable(final WebElement element) {
+        return waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                return element != null && element.isDisplayed() && element.isEnabled();
+            }
+        });
     }
 
     /**
@@ -272,6 +280,30 @@ public class BrowserTest extends SlimFixture {
 
     protected WebElement getElement(String place) {
         return getSeleniumHelper().getElement(place);
+    }
+
+    public String textByXPath(String xPath) {
+        return getTextByXPath(xPath);
+    }
+
+    protected String getTextByXPath(String xpathPattern, String... params) {
+        String result = null;
+        WebElement element = findByXPath(xpathPattern, params);
+        if (element != null) {
+            scrollIfNotDisplayed(element);
+            result = element.getText();
+        }
+        return result;
+    }
+
+    protected WebElement findByXPath(String xpathPattern, String... params) {
+        By by = getSeleniumHelper().byXpath(xpathPattern, params);
+        return getSeleniumHelper().findElement(by);
+    }
+
+    protected List<WebElement> findAllByXPath(String xpathPattern, String... params) {
+        By by = getSeleniumHelper().byXpath(xpathPattern, params);
+        return getSeleniumHelper().driver().findElements(by);
     }
 
     public void waitMilliSecondAfterScroll(int msToWait) {
