@@ -273,6 +273,30 @@ public class BrowserTest extends SlimFixture {
         return getSeleniumHelper().getElement(place);
     }
 
+    public String textByXPath(String xPath) {
+        return getTextByXPath(xPath);
+    }
+
+    protected String getTextByXPath(String xpathPattern, String... params) {
+        String result = null;
+        WebElement element = findByXPath(xpathPattern, params);
+        if (element != null) {
+            scrollIfNotDisplayed(element);
+            result = element.getText();
+        }
+        return result;
+    }
+
+    protected WebElement findByXPath(String xpathPattern, String... params) {
+        By by = getSeleniumHelper().byXpath(xpathPattern, params);
+        return getSeleniumHelper().findElement(by);
+    }
+
+    protected List<WebElement> findAllByXPath(String xpathPattern, String... params) {
+        By by = getSeleniumHelper().byXpath(xpathPattern, params);
+        return getSeleniumHelper().driver().findElements(by);
+    }
+
     /**
      * Scrolls browser window so top of place becomes visible.
      * @param place element to scroll to.

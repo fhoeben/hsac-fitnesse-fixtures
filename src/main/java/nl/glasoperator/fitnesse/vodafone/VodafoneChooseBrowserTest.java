@@ -105,16 +105,6 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
         return result;
     }
 
-    private String getTextByXPath(String xpathPattern, String... params) {
-        String result = null;
-        WebElement element = findByXPath(xpathPattern, params);
-        if (element != null) {
-            scrollIfNotDisplayed(element);
-            result = element.getText();
-        }
-        return result;
-    }
-
     //click the option to add a extra service
     public boolean clickOptionButton(String type, String choice) {
         return clickByXPath("//h3[normalize-space(text()) = '%s']/..//a[normalize-space(text()) = '%s']/..//label",
