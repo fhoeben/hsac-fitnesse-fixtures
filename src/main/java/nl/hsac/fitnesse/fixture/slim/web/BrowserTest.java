@@ -16,6 +16,7 @@ public class BrowserTest extends SlimFixture {
 
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
     private int secondsBeforeTimeout = 10;
+    private int waitAfterScroll = 0;
     private String screenshotBase = FILES_DIR + "/screenshots/";
     private String screenshotHeight = "200";
 
@@ -305,6 +306,10 @@ public class BrowserTest extends SlimFixture {
         return getSeleniumHelper().driver().findElements(by);
     }
 
+    public void waitMilliSecondAfterScroll(int msToWait) {
+        waitAfterScroll = msToWait;
+    }
+
     /**
      * Scrolls browser window so top of place becomes visible.
      * @param place element to scroll to.
@@ -322,7 +327,9 @@ public class BrowserTest extends SlimFixture {
      */
     protected void scrollTo(WebElement element) {
         getSeleniumHelper().executeJavascript("arguments[0].scrollIntoView(true);", element);
-        waitMilliSeconds(500);
+        if (waitAfterScroll > 0) {
+            waitMilliSeconds(waitAfterScroll);
+        }
     }
 
     /**

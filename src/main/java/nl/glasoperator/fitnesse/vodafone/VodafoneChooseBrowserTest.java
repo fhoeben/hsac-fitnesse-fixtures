@@ -13,6 +13,10 @@ import java.util.List;
 public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
     private static final String CART_PRODUCT_ITEM_PATTERN = "//div[@id = 'overview_order']//li[contains(normalize-space(div/b/text()), '%s')]/div[@class = 'order-right']";
 
+    public VodafoneChooseBrowserTest() {
+        waitMilliSecondAfterScroll(500);
+    }
+
     public boolean pickPackage(final String type, final String packageName) {
         boolean result = false;
         WebElement element = findByXPath("//h3[contains(normalize-space(text()), '%s')]/..//h3[text() = '%s']/..", type, packageName);
