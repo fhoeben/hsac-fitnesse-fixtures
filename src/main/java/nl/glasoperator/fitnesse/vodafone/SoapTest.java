@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class SoapTest extends XmlHttpTest {
-    private static final Locale NL = Locale.forLanguageTag("nl");
+    private static final Locale NL = new Locale("nl");
 
     public String xPathDate(String xPathExpr) {
         String nlDate = "";
