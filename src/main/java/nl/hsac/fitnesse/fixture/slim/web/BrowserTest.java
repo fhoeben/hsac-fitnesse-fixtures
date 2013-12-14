@@ -2,7 +2,12 @@ package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -22,8 +27,27 @@ public class BrowserTest extends SlimFixture {
 
     public boolean open(String address) {
         String url = getUrl(address);
-        getSeleniumHelper().navigate().to(url);
+        getNavigation().to(url);
         return true;
+    }
+
+    public boolean back() {
+        getNavigation().back();
+        return true;
+    }
+
+    public boolean forward() {
+        getNavigation().forward();
+        return true;
+    }
+
+    public boolean refresh() {
+        getNavigation().refresh();
+        return true;
+    }
+
+    private WebDriver.Navigation getNavigation() {
+        return getSeleniumHelper().navigate();
     }
 
     public String pageTitle() {
