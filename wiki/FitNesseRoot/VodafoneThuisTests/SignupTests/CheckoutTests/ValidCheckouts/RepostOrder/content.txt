@@ -1,4 +1,4 @@
-Test to see that second order on same address on same day does not result in 2nd order in database, but just returns order number of first order.
+Test to see that going back from 'Thank you screen' and then forward again does not create new order, but just shows same order id.
 
 !define LAST_NAME {Janssen}
 
@@ -10,10 +10,8 @@ Test to see that second order on same address on same day does not result in 2nd
 |click                    |Volgende stap        |and wait for tag|h2|with text|Controleer en verstuur je bestelling|
 |click                    |Bestelling bevestigen|and wait for tag|h2|with text|Bedankt voor je bestelling!         |
 |$firstOrderNr=           |value of             |contractnummer                                                    |
-
-|script                   |vodafone choose browser test                                                            |
-|go to checkout                                                                                                    |
-|fill personal details for|${LAST_NAME}                                                                            |
+|back                                                                                                              |
+|fill personal details for|${LAST_NAME}         |create          |${RANDOM_VF_USER}                                |
 |click                    |Volgende stap        |and wait for tag|h4|with text|Nummerbehoud                        |
 |click                    |Nee                                                                                     |
 |click                    |Volgende stap        |and wait for tag|h2|with text|Controleer en verstuur je bestelling|
