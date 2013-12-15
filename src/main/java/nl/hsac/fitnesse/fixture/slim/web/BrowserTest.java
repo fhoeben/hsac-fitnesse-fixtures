@@ -2,12 +2,7 @@ package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
-import org.openqa.selenium.By;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -33,6 +28,13 @@ public class BrowserTest extends SlimFixture {
 
     public boolean back() {
         getNavigation().back();
+        // firefox sometimes prevents immediate back, if previous page was reached via POST
+        WebElement element = getSeleniumHelper().findElement(By.id("errorTryAgain"));
+        if (element != null) {
+            element.click();
+            Alert alert = getSeleniumHelper().driver().switchTo().alert();
+            alert.accept();
+        }
         return true;
     }
 
