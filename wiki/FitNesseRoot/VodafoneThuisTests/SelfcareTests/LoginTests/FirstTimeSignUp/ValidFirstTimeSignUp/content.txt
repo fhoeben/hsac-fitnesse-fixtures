@@ -1,0 +1,69 @@
+Here we test '''the first time when somebody follows the link to create a selfcare'''. Then we test various paths:
+
+-'''check that you get an error when given email not attached to token'''
+-'''check that password is too short, but contains digit and special character'''
+-'''check that password is long enough and contains special character, but doesn't contains digit'''
+-'''check that password is long enough and contains digit, but doesn't contains special character'''
+-'''herhaal password doesn't match with password'''
+
+
+|script|vodafone choose browser test                                                                                                                     |
+|open  |https://orderportalvf-test.glasoperator.nl                                                                                                       |
+|click |Ik wil mijn pakket zelf samenstellen                                                                                                             |
+|pick  |Internet                  |package           |500Mb                                                                                              |
+|click |Bestel direct                                                                                                                                    |
+|enter |3731EP                    |as                |Postcode                                                                                           |
+|enter |71                        |as                |Huisnummer                                                                                         |
+|click |Verstuur                  |and wait for tag  |h2               |with text               |Mogen wij je gegevens?                                  |
+|fill personal details                                                                                                                                   |
+|click |Volgende stap             |and wait for tag  |h4               |with text               |Gewenste aansluitdatum voor Vodafone Thuis              |
+|click |Zo snel mogelijk                                                                                                                                 |
+|click |Volgende stap             |and wait for tag  |h2               |with text               |Controleer en verstuur je bestelling                    |
+|click |Bestelling bevestigen     |and wait for tag  |h2               |with text               |Bedankt voor je bestelling!                             |
+|click |Naar My Vodafone Thuis    |and wait for tag  |h1               |with text               |Wijzig je Vodafone Thuis wachtwoord                     |
+|note  |Hier wordt eerst email ingevuld die niet gekoppeld wordt aan het token                                                                           |
+|enter |eenmail@testcom.com       |as                |E-mailadres                                                                                        |
+|enter |Test.Wachtwoord1          |as                |Wachtwoord                                                                                         |
+|enter |Test.Wachtwoord1          |as                |Herhaal wachtwoord                                                                                 |
+|click |Verstuur                                                                                                                                         |
+|check |global error              |Het wachtwoord voor deze gebruikersnaam kan niet met de gebruikte link gewijzigd worden.                              |
+|note  |Hier testen we met een goed emailadres                                                                                                           |
+|enter |$vf_thuis@vodafonethuis.nl|as                |E-mailadres                                                                                        |
+|note  |Hier testen we eerst dat het wachtwoord te kort is maar wel hoofdletter en speciaal teken                                                        |
+|enter |Test#                     |as                |Wachtwoord                                                                                         |
+|enter |Test#                     |as                |Herhaal wachtwoord                                                                                 |
+|click |Verstuur                                                                                                                                         |
+|ensure|error style on            |Wachtwoord                                                                                                            |
+|check |error on                  |Wachtwoord        |Het wachtwoord dient minimaal 8 karakters, 1 hoofdletter, 1 cijfer en 1 speciaal teken te bevatten.|
+|ensure|error style on            |Herhaal wachtwoord                                                                                                    |
+|check |error on                  |Herhaal wachtwoord|Het wachtwoord dient minimaal 8 karakters, 1 hoofdletter, 1 cijfer en 1 speciaal teken te bevatten.|
+|note  |Dit is zonder speciaal teken, maar wel hoofdletter en lang genoeg                                                                                |
+|enter |Testtesttest              |as                |Wachtwoord                                                                                         |
+|enter |Testtesttest              |as                |Herhaal wachtwoord                                                                                 |
+|click |Verstuur                                                                                                                                         |
+|ensure|error style on            |Wachtwoord                                                                                                            |
+|check |error on                  |Wachtwoord        |Het wachtwoord dient minimaal 8 karakters, 1 hoofdletter, 1 cijfer en 1 speciaal teken te bevatten.|
+|ensure|error style on            |Herhaal wachtwoord                                                                                                    |
+|check |error on                  |Herhaal wachtwoord|Het wachtwoord dient minimaal 8 karakters, 1 hoofdletter, 1 cijfer en 1 speciaal teken te bevatten.|
+|note  |Dit is geen hoofdletter, maar wel speciaal teken en lang genoeg                                                                                  |
+|enter |test#testtest             |as                |Wachtwoord                                                                                         |
+|enter |test#testtest             |as                |Herhaal wachtwoord                                                                                 |
+|click |Verstuur                                                                                                                                         |
+|ensure|error style on            |Wachtwoord                                                                                                            |
+|check |error on                  |Wachtwoord        |Het wachtwoord dient minimaal 8 karakters, 1 hoofdletter, 1 cijfer en 1 speciaal teken te bevatten.|
+|ensure|error style on            |Herhaal wachtwoord                                                                                                    |
+|check |error on                  |Herhaal wachtwoord|Het wachtwoord dient minimaal 8 karakters, 1 hoofdletter, 1 cijfer en 1 speciaal teken te bevatten.|
+|note  |Hier testen we een goed wachtwoord maar bij tweede wachtwoord gaat verkeerd                                                                      |
+|enter |Test.Wachtwoord1          |as                |Wachtwoord                                                                                         |
+|enter |Test#testtest             |as                |Herhaal wachtwoord                                                                                 |
+|click |Verstuur                                                                                                                                         |
+|ensure|error style on            |Herhaal wachtwoord                                                                                                    |
+|check |error on                  |Herhaal wachtwoord|Je wachtwoorden komen niet overeen.                                                                |
+|note  |Hier gaat alles goed                                                                                                                             |
+|enter |Test.Wachtwoord1          |as                |Wachtwoord                                                                                         |
+|enter |Test.Wachtwoord1          |as                |Herhaal wachtwoord                                                                                 |
+|click |Verstuur                  |and wait for tag  |h1               |with text               |My Vodafone Thuis                                       |
+|click |Uitloggen                 |and wait for tag  |h1               |with text               |Onze Alles-in-1 pakketten:                              |
+
+
+

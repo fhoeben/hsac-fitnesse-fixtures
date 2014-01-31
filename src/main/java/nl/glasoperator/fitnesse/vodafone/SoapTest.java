@@ -46,4 +46,14 @@ public class SoapTest extends XmlHttpTest {
         }
         return result;
     }
+
+    public boolean connectDateBeforeApril() {
+        boolean result = true;
+        String actualConnectDate = xPath("//vispEx:OrderProduct[vispEx:ProductTypeId = 'INTA']/vispEx:WishDt");
+        if (new CalendarUtil().buildXMLGregorianCalendar().toXMLFormat().compareTo("2014-04-01") < 0) {
+            result = actualConnectDate.compareTo("2014-04-01") < 0;
+        }
+        return result;
+    }
+
 }

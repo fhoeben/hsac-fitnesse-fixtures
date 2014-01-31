@@ -1,2 +1,2 @@
 |script|vodafone browser test|
-|clear local storage|
+|clear local storage         |

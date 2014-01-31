@@ -1,5 +1,4 @@
-Forget to fill house number field and see we get an error there and no where else. 
-Move outside of postcode field before checking.
+'''Forget to fill house number field''' and see we '''get an error there and no where else'''.  '''Move outside of postcode field before checking.'''
 
 |script|vodafone choose browser test                                                                                      |
 |go to checkout                                                                                                           |

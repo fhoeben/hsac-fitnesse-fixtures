@@ -3,7 +3,7 @@
 |scenario|check cart                                   |
 |check   |cart total   |Maandelijks        |null       |
 |check   |cart total   |Eenmalig betaal je |null       |
-|check   |cart products|Internet Full      |price |null|
+|check   |cart products|Internet 500Mb      |price |null|
 |check   |cart products|Televisie Start    |price |null|
 |check   |cart products|Televisie Extra    |price |null|
 |check   |cart products|Televisie Plus     |price |null|

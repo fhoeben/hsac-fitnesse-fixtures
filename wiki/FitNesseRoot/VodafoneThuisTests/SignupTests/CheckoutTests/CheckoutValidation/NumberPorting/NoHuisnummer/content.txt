@@ -1,4 +1,4 @@
-Forget to fill one required field and see we get an error there and no where else.
+'''Forget to fill the required field''' ''huisnummer'' at numberporting. Must '''return an error on this field and nowhere else'''
 
 |script|vodafone choose browser test                                                                                      |
 |go to checkout                                                                                                           |

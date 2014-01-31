@@ -22,3 +22,6 @@
 |note        |startDriver            |org.openqa.selenium.safari.SafariDriver            |
 |note        |startDriver            |org.openqa.selenium.firefox.FirefoxDriver          |
 
+|script |vodafone browser test |
+|go to pickandchoose           |
+|give consent ${COOKIE_CONSENT}|

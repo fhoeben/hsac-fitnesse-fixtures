@@ -9,7 +9,7 @@
 
 |script|vodafone choose browser test                                                           |
 |go to pickandchoose                                                                           |
-|pick  |Internet                          |package         |500                                |
+|pick  |Internet                          |package         |500Mb                                |
 |check cart                                                                                    |
 |click |Bestel direct                                                                          |
 |enter |${POSTAL_CODE_EVERYTHING}         |as              |Postcode                           |

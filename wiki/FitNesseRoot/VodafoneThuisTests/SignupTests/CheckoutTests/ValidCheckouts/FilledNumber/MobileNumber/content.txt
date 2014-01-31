@@ -1,4 +1,4 @@
-Tests if you actually can fill in 1 number. In this case a mobile number 
+Tests if you actually can '''fill in 1 number'''. In this case a ''mobile number'' 
 
 |script|vodafone choose browser test                                                                         |
 |go to checkout                                                                                              |

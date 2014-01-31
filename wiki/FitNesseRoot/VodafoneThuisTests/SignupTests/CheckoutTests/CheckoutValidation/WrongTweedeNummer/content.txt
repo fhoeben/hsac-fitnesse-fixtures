@@ -1,6 +1,6 @@
-Filled in the wrong tweede telefoonnummer
+'''Filled in an invalid tweede telefoonnummer'''. This '''must return an error and nowhere else'''
 
-|script|vodafone choose browser test                                                                                             |
+|script|vodafone choose browser test                                                                                      |
 |go to checkout                                                                                                           |
 |click |Mevrouw                                                                                                           |
 |enter |F. H.                     |as                                   |Voornaam                                         |
@@ -17,4 +17,3 @@ Filled in the wrong tweede telefoonnummer
 |check |error on                  |Tweede telefoonnummer                |Vul een geldig telefoonnnummer in                |
 |check |errors on others than     |Tweede telefoonnummer                |null                                             |
 |check |error style on others than|Tweede telefoonnummer                |null                                             |
-

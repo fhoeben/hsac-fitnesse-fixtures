@@ -1,7 +1,6 @@
-Email addresses are reserved based on postcode/housenumber. Let's test we can't use the same email for orders on two different addresses.
+Email addresses are reserved based on postcode/housenumber. Let's test '''we can't use the same email for orders on two different addresses.'''
 
 !define TAKEN_MAIL_ADDRESS {vf_already_taken_test}
-
 First order, no problem
 
 |script              |vodafone choose browser test                                                       |
@@ -21,8 +20,6 @@ First order, no problem
 |enter               |Tester                        |as              |Naam rekeninghouder                |
 |enter               |151                           |as              |IBAN/Bankrekeningnummer            |
 |click               |Volgende stap                 |and wait for tag|h4|with text|Nummerbehoud          |
-
-
 
 2nd order Vodafone Email adres is already taken
 

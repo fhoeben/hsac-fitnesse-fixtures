@@ -1,16 +1,18 @@
 !***> Expected cart content
 
 |scenario     |check cart                                                         |
-|check        |cart total       |Maandelijks              |€ 75,00                |
+|check        |cart total       |Maandelijks              |€ 67,50                |
 |check        |cart total       |Eenmalig betaal je       |€ 67,50                |
-|check product|Internet 500     |in cart has monthly price|${PRICE_INTERNET_500}  |
+|check product|Internet 100     |in cart has monthly price|${PRICE_INTERNET_100}  |
 |check product|TV Plus          |in cart has monthly price|${PRICE_TELEVISIE_PLUS}|
 |check product|Installatie Basis|in cart has one off price|€ 37,50                |
 *!
 
+Here we'll pick '''internet 100''' and '''Televisie Plus'''
+
 |script|vodafone choose browser test                                                           |
 |go to pickandchoose                                                                           |
-|pick  |Internet                          |package         |500                                |
+|pick  |Internet                          |package         |100Mb                              |
 |pick  |Televisie                         |package         |Plus                               |
 |check cart                                                                                    |
 |click |Bestel direct                                                                          |

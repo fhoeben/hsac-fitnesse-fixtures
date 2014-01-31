@@ -1,4 +1,4 @@
-You are 113 years old, this must be the maximum age
+Here we '''tests the maximun age'''. You are ''113 years old'', this must be the '''maximum''' age
 
 |script|vodafone choose browser test                                             |
 |go to checkout                                                                  |

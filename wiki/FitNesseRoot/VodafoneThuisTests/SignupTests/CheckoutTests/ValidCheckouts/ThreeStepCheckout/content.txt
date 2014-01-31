@@ -2,7 +2,7 @@ Order internet access and tv, on address in vraagbundeling, 3 step checkout, and
 
 |script            |vodafone choose browser test                                                                                                         |
 |go to pickandchoose                                                                                                                                     |
-|pick              |Internet                              |package                                     |500                                              |
+|pick              |Internet                              |package                                     |500Mb                                            |
 |pick              |Televisie                             |package                                     |Plus                                             |
 |click             |Bestel direct                                                                                                                        |
 |enter             |${POSTAL_CODE_VRAAGBUNDELING}         |as                                          |Postcode                                         |

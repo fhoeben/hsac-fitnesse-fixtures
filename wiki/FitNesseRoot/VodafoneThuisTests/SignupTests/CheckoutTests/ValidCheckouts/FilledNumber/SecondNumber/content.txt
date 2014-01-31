@@ -1,4 +1,4 @@
-Tests if you actually can fill in 1 number. In this case a second number
+Tests if you actually can '''fill in 1 number'''. In this case a ''second number''
 
 |script|vodafone choose browser test                                           |
 |go to checkout                                                                |

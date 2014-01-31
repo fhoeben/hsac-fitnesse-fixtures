@@ -1,19 +1,19 @@
-Forget to fill one required field and see we get an error there and no where else.
+Here we''' forget to fill in the required field''' ''Naam rekening houder''. This must '''return an error on this field and nowhere else'''
 
-|script|vodafone choose browser test                                                                                                                  |
-|go to checkout                                                                                                                                |
-|click |Mevrouw                                                                                                                                |
-|enter |F. H.                                          |as                                |Voornaam                                            |
-|enter |Hoeben                                         |as                                |Achternaam                                          |
-|enter |${CONTACT_EMAIL}                           |as                                |E-mailadres                                         |
-|enter |24528616                                       |as                                |Telefoonnummer mobiel                               |
-|enter |27091975                                       |as                                |Geboortedatum                                       |
-|enter |${RANDOM_VF_USER}|as                                |Nieuw Vodafone Thuis e-mailadres                    |
-|enter |151                                            |as                                |IBAN/Bankrekeningnummer                             |
-|clear |Naam rekeninghouder                                                                                                                    |
-|click |Volgende stap                                                                                                                          |
-|check |global error                                   |Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens.|
-|ensure|error style on                                 |Naam rekeninghouder                                                                    |
-|check |error on                                       |Naam rekeninghouder               |Vul de naam van de rekeninghouder in.               |
-|check |errors on others than                          |Naam rekeninghouder               |null                                                |
-|check |error style on others than                     |Naam rekeninghouder               |null                                                |
+|script|vodafone choose browser test                                                                                      |
+|go to checkout                                                                                                           |
+|click |Mevrouw                                                                                                           |
+|enter |F. H.                     |as                                |Voornaam                                            |
+|enter |Hoeben                    |as                                |Achternaam                                          |
+|enter |${CONTACT_EMAIL}          |as                                |E-mailadres                                         |
+|enter |24528616                  |as                                |Telefoonnummer mobiel                               |
+|enter |27091975                  |as                                |Geboortedatum                                       |
+|enter |${RANDOM_VF_USER}         |as                                |Nieuw Vodafone Thuis e-mailadres                    |
+|enter |151                       |as                                |IBAN/Bankrekeningnummer                             |
+|clear |Naam rekeninghouder                                                                                               |
+|click |Volgende stap                                                                                                     |
+|check |global error              |Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens.|
+|ensure|error style on            |Naam rekeninghouder                                                                    |
+|check |error on                  |Naam rekeninghouder               |Vul de naam van de rekeninghouder in.               |
+|check |errors on others than     |Naam rekeninghouder               |null                                                |
+|check |error style on others than|Naam rekeninghouder               |null                                                |

@@ -1,19 +1,19 @@
 !***> Expected cart content
 
 |scenario     |check cart                                                          |
-|check        |cart total       |Maandelijks              |€ 45,00                 |
+|check        |cart total       |Maandelijks              |€ 55,00                 |
 |check        |cart total       |Eenmalig betaal je       |€ 67,50                 |
-|check product|Internet 50      |in cart has monthly price|${PRICE_INTERNET_50}    |
+|check product|Internet 100     |in cart has monthly price|${PRICE_INTERNET_100}   |
 |check product|Installatie Basis|in cart has one off price|€ 37,50                 |
 |check product|TV Start         |in cart has monthly price|${PRICE_TELEVISIE_START}|
 |check        |cart products    |TV Start                 |period     |p. mnd.     |
 *!
 
-See if we can add tv option and then remove it. Here will Fox Sports Eredivisie be added and removed 
+See if we can '''add tv option and then remove it'''. Here will '''Fox Sports Eredivisie''' be added and removed 
 
 |script       |vodafone choose browser test                                                                                |
 |go to pickandchoose                                                                                                       |
-|pick         |Internet                  |package                   |50                                                    |
+|pick         |Internet                  |package                   |100Mb                                                 |
 |pick         |Televisie                 |package                   |Start                                                 |
 |click        |Welke opties wil je erbij?|option                    |FOX Sports Eredivisie|button                          |
 |check product|FOX Sports Eredivisie     |in cart has monthly  price|€ 8,75                                                |
