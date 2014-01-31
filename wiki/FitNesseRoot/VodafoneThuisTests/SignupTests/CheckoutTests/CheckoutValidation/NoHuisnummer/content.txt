@@ -1,0 +1,12 @@
+Here we '''forget to fill in the required field''' of ''huisnummer''. This must '''return an error on this field and no where else'''.
+
+|script|vodafone choose browser test                               |
+|go to pickandchoose                                               |
+|pick  |Internet                  |package   |500Mb                |
+|click |Bestel direct                                              |
+|enter |3731EP                    |as        |Postcode             |
+|click |Verstuur                                                   |
+|ensure|error style on            |Huisnummer                      |
+|check |postcode error on         |Huisnummer|Vul je huisnummer in.|
+|check |errors on others than     |Huisnummer|null                 |
+|check |error style on others than|Huisnummer|null                 |

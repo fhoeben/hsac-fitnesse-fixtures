@@ -1,17 +1,17 @@
 !***> Expected cart content
 
 |scenario     |check cart                                                            |
-|check        |cart total            |Maandelijks              |${PRICE_INTERNET_500}|
+|check        |cart total            |Maandelijks              |${PRICE_INTERNET_100}|
 |check        |cart total            |Eenmalig betaal je       |€ 130,00             |
-|check product|Internet 500          |in cart has monthly price|${PRICE_INTERNET_500}|
+|check product|Internet 100          |in cart has monthly price|${PRICE_INTERNET_100}|
 |check product|Installatie Uitgebreid|in cart has one off price|€ 100,00             |
 *!
 
-See if we can add 'uitgebreide installatie'
+Here we'll test if we can '''add 'uitgebreide installatie''''
 
 |script|vodafone choose browser test                                                                                                                                    |
 |go to pickandchoose                                                                                                                                                    |
-|pick  |Internet                          |package                  |500                                                                                                |
+|pick  |Internet                          |package                  |100Mb                                                                                              |
 |click |Installatie                       |option                   |Uitgebreide installatie door onze monteur         |button                                          |
 |check cart                                                                                                                                                             |
 |click |Bestel direct                                                                                                                                                   |

@@ -1,18 +1,18 @@
-Forget to fill one required field and see we get an error there and no where else.
+Here we'll '''forget to fill in a required field''', this time '''no aanhef'''. Must '''return an error on that field, no where else.'''
 
-|script|vodafone choose browser test                                                                                             |
-|go to checkout                                                                                                           |
-|enter |${RANDOM_LAST_NAME}       |as                             |Achternaam                                             |
-|enter |F. H.                     |as                             |Voornaam                                               |
-|enter |${CONTACT_EMAIL}      |as                             |E-mailadres                                            |
-|enter |24528616                  |as                             |Telefoonnummer mobiel                                  |
-|enter |27091975                  |as                             |Geboortedatum                                          |
-|enter |${RANDOM_VF_USER}         |as                             |Nieuw Vodafone Thuis e-mailadres                       |
-|enter |Tester                    |as                             |Naam rekeninghouder                                    |
-|enter |151                       |as                             |IBAN/Bankrekeningnummer                                |
-|click |Volgende stap                                                                                                     |
-|check |global error              |Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens.|
-|ensure|error style on            |De heer                                                                                |
-|check |error on                  |De heer                        |Maak een keuze.                                        |
-|check |errors on others than     |De heer                        |null                                                   |
-|check |error style on others than|De heer                        |null                                                   |
+| script | vodafone choose browser test |
+| go to checkout |
+| enter | ${RANDOM_LAST_NAME} | as | Achternaam |
+| enter | F. H. | as | Voornaam |
+| enter | ${CONTACT_EMAIL} | as | E-mailadres |
+| enter | 24528616 | as | Telefoonnummer mobiel |
+| enter | 27091975 | as | Geboortedatum |
+| enter | ${RANDOM_VF_USER} | as | Nieuw Vodafone Thuis e-mailadres |
+| enter | Tester | as | Naam rekeninghouder |
+| enter | 151 | as | IBAN/Bankrekeningnummer |
+| click | Volgende stap |
+| check | global error | Één of meerdere velden zijn niet correct ingevuld. Check de opgegeven persoonsgegevens. |
+| ensure | error style on | De heer |
+| check | error on | De heer | Maak een keuze. |
+| check | errors on others than | De heer | null |
+| check | error style on others than | De heer | null |

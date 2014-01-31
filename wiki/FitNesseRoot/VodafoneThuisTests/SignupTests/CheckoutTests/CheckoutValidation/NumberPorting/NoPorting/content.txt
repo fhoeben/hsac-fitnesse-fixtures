@@ -1,4 +1,4 @@
-Choose for no porting
+Here we will '''choose for no porting'''
 
 |script|vodafone choose browser test                                                                                           |
 |go to checkout                                                                                                                |

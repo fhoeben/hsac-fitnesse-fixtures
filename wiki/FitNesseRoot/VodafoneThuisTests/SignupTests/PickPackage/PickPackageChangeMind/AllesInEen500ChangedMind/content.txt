@@ -1,0 +1,13 @@
+Here we '''order alles in een 500 and change our mind'''
+
+|script              |vodafone choose browser test                                                |
+|go to packages                                                                                   |
+|Open Package Details|500                                                                         |
+|click               |Bestel direct                                                               |
+|enter               |3731EP        |as                       |Postcode                           |
+|enter               |71            |as                       |Huisnummer                         |
+|click               |Verstuur      |and wait for tag         |h2|with text|Mogen wij je gegevens?|
+|click change order                                                                               |
+|check product       |Internet 500Mb|in cart has monthly price|${PRICE_INTERNET_500}              |
+|check product       |TV Start      |in cart has monthly price|${PRICE_TELEVISIE_START}           |
+|check product       |Bellen Start  |in cart has monthly price|${PRICE_BELLEN_START}              |

@@ -2,7 +2,7 @@ Order internet access and tv, and see correct data in Visp Boss
 
 |script                   |vodafone choose browser test                                                                                                           |
 |go to pickandchoose                                                                                                                                              |
-|pick                     |Internet                          |package                                     |500                                                    |
+|pick                     |Internet                          |package                                     |50Mb                                                   |
 |pick                     |Televisie                         |package                                     |Plus                                                   |
 |click                    |Bestel direct                                                                                                                          |
 |enter                    |${POSTAL_CODE_EVERYTHING}         |as                                          |Postcode                                               |
@@ -20,7 +20,7 @@ Order internet access and tv, and see correct data in Visp Boss
 |check                    |xPath                             |!-//vispEx:PostalCode-!                     |${POSTAL_CODE_EVERYTHING}                              |
 |check                    |xPath                             |!-//vispEx:Debtor/vispEx:BankAccountNumber-!|$bankNumber                                            |
 |check connect date       |$connectDate                                                                                                                           |
-|check internet           |500                                                                                                                                    |
+|check internet           |50                                                                                                                                     |
 |check tv full                                                                                                                                                    |
 |check number of telephony|0                                                                                                                                      |
 |check offer prices                                                                                                                                               |

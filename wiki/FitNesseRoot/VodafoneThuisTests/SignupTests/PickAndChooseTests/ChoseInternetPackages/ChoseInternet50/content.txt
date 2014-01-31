@@ -1,0 +1,20 @@
+!***> Expected cart content
+
+|scenario     |check cart                                                      |
+|check        |cart total       |Maandelijks              |€ 32,50             |
+|check        |cart total       |Eenmalig betaal je       |€ 67,50             |
+|check product|Internet 50      |in cart has monthly price|${PRICE_INTERNET_50}|
+|check product|Installatie Basis|in cart has one off price|€ 37,50             |
+*!
+
+|script|vodafone choose browser test                                                           |
+|go to pickandchoose                                                                           |
+|pick  |Internet                          |package         |50Mb                               |
+|check cart                                                                                    |
+|click |Bestel direct                                                                          |
+|enter |${POSTAL_CODE_EVERYTHING}         |as              |Postcode                           |
+|enter |${POSTAL_CODE_EVERYTHING_HOUSE_NR}|as              |Huisnummer                         |
+|click |Verstuur                          |and wait for tag|h2|with text|Mogen wij je gegevens?|
+|check cart                                                                                    |
+
+

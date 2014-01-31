@@ -17,6 +17,14 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
         waitMilliSecondAfterScroll(500);
     }
 
+    @Override
+    protected boolean clickElement(WebElement element) {
+        boolean result = super.clickElement(element);
+        // give all our cool JS animations a chance
+        waitMilliSeconds(500);
+        return result;
+    }
+
     public boolean pickPackage(final String type, final String packageName) {
         boolean result = false;
         WebElement element = findByXPath("//h3[contains(normalize-space(text()), '%s')]/..//h3[text() = '%s']/..", type, packageName);
@@ -111,7 +119,7 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
 
     //click the option to add a extra service
     public boolean clickOptionButton(String type, String choice) {
-        return clickByXPath("//h3[normalize-space(text()) = '%s']/..//a[normalize-space(text()) = '%s']/..//label",
+        return clickByXPath("//h3[normalize-space(text()) = '%s']/..//a/span[normalize-space(text()) = '%s']/../..//label",
                                 type, choice);
     }
 
@@ -122,7 +130,7 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
     }
 
     public boolean clickTvPackage(String packageName) {
-        return clickByXPath("//span[contains(@class, 'label')]/b[contains(normalize-space(text()), '%s')]",
+        return clickByXPath("//div[contains(@class, 'controls left')]/input[@aria-label = '%s']",
                 packageName);
     }
 
@@ -187,10 +195,33 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
     }
 
     public boolean clickOption(String type, String choice) {
-        return clickByXPath("//div[@class='accordion-heading']/a[normalize-space(text()) = '%s']/..//label[normalize-space(text()) = '%s']",
+        return clickByXPath("//div[@class='accordion-heading']/a/span[normalize-space(text()) = '%s']/../..//label[normalize-space(text()) = '%s']",
                 type, choice);
     }
 
+    public boolean clickChangeOrder() {
+        return clickByXPath("//a[@class='wijzig']");
+    }
+
+    public String errorPageMessage() {
+        String result = null;
+        WebElement element = findByXPath("//div[contains(@class, 'span9')]/h1");
+        if (element != null) {
+            scrollIfNotDisplayed(element);
+            result = element.getText();
+        }
+        return result;
+    }
+
+    public String requestedPageMessage() {
+        String result = null;
+        WebElement element = findByXPath("//div[contains(@class, 'span9')]/p");
+        if (element != null) {
+            scrollIfNotDisplayed(element);
+            result = element.getText();
+        }
+        return result;
+    }
 
 
 }

@@ -29,7 +29,7 @@
                 <Address AddressId="48" Street="Park Arenberg" City="DE BILT" PostalCode="3731EP" HouseNumber="79" Kix="3731EP79" Line1="Park Arenberg 79" Line2="3731EP  DE BILT" />
             </Addresses>
             <Products>
-                <Product OrderProductId="CAK77672P001" OrderId="CAK77672-O001" ProductTypeId="INTA" WishDt="2013-12-31" GoOrderProductId="3805962886/P001">
+                <Product OrderProductId="CAK77672P001" OrderId="CAK77672-O001" ProductTypeId="INTA" WishDt="2013-12-31" PlanDt="2014-01-02" InServiceDt="2014-01-02" GoOrderProductId="3805962886/P001">
                     <ProductParameters>
                         <ProductParameter ParameterName="DeliveryAddress" Value="48" />
                         <ProductParameter ParameterName="IP" Value="1 Dynamic" />

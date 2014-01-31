@@ -13,29 +13,31 @@ Internet 500 chosen on a postal code which is not supported. This scenario must 
 |check product|Installatie Basis|in cart has one off price|€ 37,50              |
 *!
 
-|script|vodafone choose browser test                                                           |
-|go to pickandchoose                                                                           |
-|pick  |Internet                       |package         |500                                   |
-|check cart                                                                                    |
-|click |Bestel direct                                                                          |
-|enter |${POSTAL_CODE_NOTHING}         |as              |Postcode                              |
-|enter |${POSTAL_CODE_NOTHING_HOUSE_NR}|as              |Huisnummer                            |
-|click |Verstuur                       |and wait for tag|h1|with text|Stel zelf je pakket samen|
-|ensure|message box                                                                            |
-|check |message box text               |${MSG}                                                 |
-|check cart                                                                                    |
+|script      |vodafone choose browser test                                                           |
+|go to pickandchoose                                                                                 |
+|pick        |Internet                       |package         |500Mb                                 |
+|check cart                                                                                          |
+|click       |Bestel direct                                                                          |
+|enter       |${POSTAL_CODE_NOTHING}         |as              |Postcode                              |
+|enter       |${POSTAL_CODE_NOTHING_HOUSE_NR}|as              |Huisnummer                            |
+|click       |Verstuur                       |and wait for tag|h1|with text|Stel zelf je pakket samen|
+|wait seconds|1                                                                                      |
+|ensure      |message box                                                                            |
+|check       |message box text               |${MSG}                                                 |
+|check cart                                                                                          |
 
 !2 Via packages
 
-|script              |vodafone choose browser test                                                  |
-|go to packages                                                                                     |
-|Open Package Details|500                                                                           |
-|click               |Bestel direct                                                                 |
-|enter               |${POSTAL_CODE_NOTHING}         |as              |Postcode                     |
-|enter               |${POSTAL_CODE_NOTHING_HOUSE_NR}|as              |Huisnummer                   |
-|click               |Verstuur                       |and wait for tag|h1|with text|Alles in één 500|
-|ensure              |message box                                                                   |
-|check               |message box text               |${MSG}                                        |
+|script              |vodafone choose browser test                                                   |
+|go to packages                                                                                      |
+|Open Package Details|500                                                                            |
+|click               |Bestel direct                                                                  |
+|enter               |${POSTAL_CODE_NOTHING}         |as              |Postcode                      |
+|enter               |${POSTAL_CODE_NOTHING_HOUSE_NR}|as              |Huisnummer                    |
+|click               |Verstuur                       |and wait for tag|h1|with text|Alles-in-1  500Mb|
+|wait seconds        |1                                                                              |
+|ensure              |message box                                                                    |
+|check               |message box text               |${MSG}                                         |
 
 
 

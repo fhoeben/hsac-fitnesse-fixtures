@@ -1,0 +1,9 @@
+Here we'll test if you can '''login with a existing user, with wright password.'''
+
+|script|vodafone choose browser test                                                          |
+|open  |${VF_SELF_CARE_URL}                                                                   |
+|clear local storage                                                                          |
+|enter |testmailvdf8@vodafonethuis.nl|as              |E-mailadres                            |
+|enter |!-Test.Wachtwoord1-!         |as              |Wachtwoord                             |
+|click |Inloggen                     |and wait for tag|h1|with text|My Vodafone Thuis         |
+|click |Uitloggen                    |and wait for tag|h1|with text|Onze Alles-in-1 pakketten:|

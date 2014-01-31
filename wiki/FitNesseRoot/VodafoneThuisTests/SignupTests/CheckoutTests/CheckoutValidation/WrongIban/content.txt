@@ -1,6 +1,8 @@
+Here we'll test '''several wrong IBAN's'''
+
 Changed NL(rest of IBAN) to ML(rest of IBAN)
 
-|script|vodafone choose browser test                                                                                             |
+|script|vodafone choose browser test                                                                                      |
 |go to checkout                                                                                                           |
 |click |Mevrouw                                                                                                           |
 |enter |F. H.                     |as                              |Voornaam                                              |
@@ -21,7 +23,7 @@ Changed NL(rest of IBAN) to ML(rest of IBAN)
 
 IBAN added an extra number
 
-|script|vodafone choose browser test                                                                                             |
+|script|vodafone choose browser test                                                                                      |
 |go to checkout                                                                                                           |
 |click |Mevrouw                                                                                                           |
 |enter |F. H.                     |as                              |Voornaam                                              |
@@ -42,7 +44,7 @@ IBAN added an extra number
 
 IBAN one number less
 
-|script|vodafone choose browser test                                                                                             |
+|script|vodafone choose browser test                                                                                      |
 |go to checkout                                                                                                           |
 |click |Mevrouw                                                                                                           |
 |enter |F. H.                     |as                              |Voornaam                                              |
@@ -63,7 +65,7 @@ IBAN one number less
 
 IBAN wrong bankcode
 
-|script|vodafone choose browser test                                                                                             |
+|script|vodafone choose browser test                                                                                      |
 |go to checkout                                                                                                           |
 |click |Mevrouw                                                                                                           |
 |enter |F. H.                     |as                              |Voornaam                                              |

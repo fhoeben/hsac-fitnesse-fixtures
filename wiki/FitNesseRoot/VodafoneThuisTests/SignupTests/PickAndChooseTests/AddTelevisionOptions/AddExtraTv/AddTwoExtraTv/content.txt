@@ -1,20 +1,20 @@
 !***> Expected cart content
 
-|scenario     |check cart                                                                                    |
-|check        |cart total                                 |Maandelijks              |€ 60,00                 |
-|check        |cart total                                 |Eenmalig betaal je       |€ 67,50                 |
-|check product|Internet 50                                |in cart has monthly price|${PRICE_INTERNET_50}    |
-|check product|Installatie Basis                          |in cart has one off price|€ 37,50                 |
-|check product|TV Start                                   |in cart has monthly price|${PRICE_TELEVISIE_START}|
-|check product|Extra Interactieve Box                     |in cart has monthly price|€ 5,00                  |
-|check product|Extra Interactieve Box met harddiskrecorder|in cart has monthly price|€ 10,00                 |
+|scenario     |check cart                                                                                       |
+|check        |cart total                                    |Maandelijks              |€ 70,00                 |
+|check        |cart total                                    |Eenmalig betaal je       |€ 67,50                 |
+|check product|Internet 100                                  |in cart has monthly price|${PRICE_INTERNET_100}   |
+|check product|Installatie Basis                             |in cart has one off price|€ 37,50                 |
+|check product|TV Start                                      |in cart has monthly price|${PRICE_TELEVISIE_START}|
+|check product|Extra Interactieve TV Box                     |in cart has monthly price|€ 5,00                  |
+|check product|Extra Interactieve TV Box met harddiskrecorder|in cart has monthly price|€ 10,00                 |
 *!
 
-See if we can add two extra tv, one without recording and one with
+Here we'll test if we can '''add two extra tv, one without recording and one with'''
 
 |script|vodafone choose browser test                                                                                                                   |
 |go to pickandchoose                                                                                                                                   |
-|pick  |Internet                          |package                   |50                                                                               |
+|pick  |Internet                          |package                   |100Mb                                                                            |
 |reject|click                             |Welke opties wil je erbij?|option                          |Extra Interactieve TV Box|button                |
 |pick  |Televisie                         |package                   |Start                                                                            |
 |click |Welke opties wil je erbij?        |option                    |Extra Interactieve TV Box       |button                                          |

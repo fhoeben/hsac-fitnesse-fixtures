@@ -1,28 +1,25 @@
-Checked: women
+Checked: women and if optin works. Also if these optin are in SOAP call
 
-|script          |vodafone choose browser test                                                            |
-|go to checkout                                                                                           |
-|click           |Mevrouw                                                                                 |
-|enter           |${RANDOM_LAST_NAME}  |as              |Achternaam                                       |
-|enter           |F. H.                |as              |Voornaam                                         |
-|enter           |${CONTACT_EMAIL}     |as              |E-mailadres                                      |
-|$email=         |value of             |E-mailadres                                                       |
-|enter           |24528616             |as              |Telefoonnummer mobiel                            |
-|enter           |27091975             |as              |Geboortedatum                                    |
-|enter           |${RANDOM_VF_USER}    |as              |Nieuw Vodafone Thuis e-mailadres                 |
-|enter           |Tester               |as              |Naam rekeninghouder                              |
-|enter           |151                  |as              |IBAN/Bankrekeningnummer                          |
-|click           |Volgende stap        |and wait for tag|h4|with text|Nummerbehoud                        |
-|click           |Nee                                                                                     |
-|click           |Zo snel mogelijk                                                                        |
-|click           |Volgende stap        |and wait for tag|h2|with text|Controleer en verstuur je bestelling|
-|click           |Bestelling bevestigen|and wait for tag|h2|with text|Bedankt voor je bestelling!         |
-|check           |value of             |e-mail          |$email                                           |
-|$contractnummer=|value of             |contractnummer                                                    |
+|script             |vodafone choose browser test                                                             |
+|go to checkout                                                                                               |
+|click              |Mevrouw                                                                                  |
+|enter              |${RANDOM_LAST_NAME} |as               |Achternaam                                        |
+|enter              |F. H.               |as               |Voornaam                                          |
+|enter              |${CONTACT_EMAIL}    |as               |E-mailadres                                       |
+|$email=            |value of            |E-mailadres                                                         |
+|enter              |24528616            |as               |Telefoonnummer mobiel                             |
+|enter              |27091975            |as               |Geboortedatum                                     |
+|enter              |${RANDOM_VF_USER}   |as               |Nieuw Vodafone Thuis e-mailadres                  |
+|enter              |Tester              |as               |Naam rekeninghouder                               |
+|enter              |151                 |as               |IBAN/Bankrekeningnummer                           |
+|click              |Volgende stap       |and wait for tag |h4 |with text|Nummerbehoud                        |
+|click              |Nee                                                                                      |
+|click              |Zo snel mogelijk                                                                         |
+|click              |Volgende stap       |and wait for tag |h2 |with text|Controleer en verstuur je bestelling|
 
 Checked: man
 
-|script          |vodafone choose browser test                                                            |
+|script               |vodafone choose browser test                                      |
 |go to checkout                                                                                           |
 |click           |De heer                                                                                 |
 |enter           |${RANDOM_LAST_NAME}  |as              |Achternaam                                       |

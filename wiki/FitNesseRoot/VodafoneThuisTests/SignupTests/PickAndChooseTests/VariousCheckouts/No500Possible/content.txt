@@ -11,17 +11,18 @@ Internet 500 chosen on a postal code which is not supported. This scenario must 
 He doesn't check on the errorbox
 
 
-|script|vodafone choose browser test                                                               |
-|go to pickandchoose                                                                               |
-|pick  |Internet                      |package         |500                                        |
-|check cart                                                                                        |
-|click |Bestel direct                                                                              |
-|enter |${POSTAL_CODE_NO_500}         |as              |Postcode                                   |
-|enter |${POSTAL_CODE_NO_500_HOUSE_NR}|as              |Huisnummer                                 |
-|click |Verstuur                      |and wait for tag|h1     |with text|Stel zelf je pakket samen|
-|ensure|message box                                                                                |
-|check cart                                                                                        |
-|reject|pick                          |Internet        |package|500                                |
+|script      |vodafone choose browser test                         |
+|go to pickandchoose                                               |
+|pick        |Internet                      |package |500Mb        |
+|check cart                                                        |
+|click       |Bestel direct                                        |
+|enter       |${POSTAL_CODE_NO_500}         |as      |Postcode     |
+|enter       |${POSTAL_CODE_NO_500_HOUSE_NR}|as      |Huisnummer   |
+|click       |Verstuur                                             |
+|wait seconds|1                                                    |
+|ensure      |message box                                          |
+|check cart                                                        |
+|reject      |pick                          |Internet|package|500Mb|
 
 
 

@@ -1,4 +1,4 @@
-You are 18 years old
+Here we test '''the minimum age'''. You are ''18 years'' old this must the '''minimum'''
 
 |script|vodafone choose browser test                                             |
 |go to checkout                                                                  |

@@ -1,21 +1,21 @@
 !***> Expected cart content
 
 |scenario     |check cart                                                              |
-|check        |cart total           |Eerste 6 maanden         |€ 53,75                 |
-|check        |cart total           |Na 6 maanden             |€ 62,50                 |
+|check        |cart total           |Eerste 6 maanden         |€ 63,75                 |
+|check        |cart total           |Na 6 maanden             |€ 72,50                 |
 |check        |cart total           |Eenmalig betaal je       |€ 67,50                 |
 |check        |cart total           |Je korting               |€ 90,00                 |
-|check product|Internet 50          |in cart has monthly price|${PRICE_INTERNET_50}    |
+|check product|Internet 100         |in cart has monthly price|${PRICE_INTERNET_100}   |
 |check product|Installatie Basis    |in cart has one off price|€ 37,50                 |
 |check product|TV Start             |in cart has monthly price|${PRICE_TELEVISIE_START}|
 |check product|FOX Sports Eredivisie|in cart has monthly price|€ 8,75                  |
 *!
 
-See if we can add 'Fox Sports Eredivisie'
+See if we can '''add 'Fox Sports Eredivisie''''
 
 |script|vodafone choose browser test                                                                              |
 |go to pickandchoose                                                                                              |
-|pick  |Internet                          |package         |50                                                    |
+|pick  |Internet                          |package         |100Mb                                                 |
 |pick  |Televisie                         |package         |Start                                                 |
 |click |Welke opties wil je erbij?        |option          |FOX Sports Eredivisie|button                          |
 |check cart                                                                                                       |

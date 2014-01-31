@@ -1,11 +1,11 @@
-Forget to fill one required field and see we get an error there and no where else.
+'''Forget to fill the required field''' of ''geboortedatum''. This '''must return an error on this field and no where else.'''
 
-|script|vodafone choose browser test                                                                                             |
+|script|vodafone choose browser test                                                                                      |
 |go to checkout                                                                                                           |
 |click |Mevrouw                                                                                                           |
 |enter |F. H.                     |as                                |Voornaam                                            |
 |enter |Hoeben                    |as                                |Achternaam                                          |
-|enter |${CONTACT_EMAIL}      |as                                |E-mailadres                                         |
+|enter |${CONTACT_EMAIL}          |as                                |E-mailadres                                         |
 |enter |24528616                  |as                                |Telefoonnummer mobiel                               |
 |enter |${RANDOM_VF_USER}         |as                                |Nieuw Vodafone Thuis e-mailadres                    |
 |enter |Tester                    |as                                |Naam rekeninghouder                                 |

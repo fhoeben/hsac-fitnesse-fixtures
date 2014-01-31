@@ -1,0 +1,7 @@
+Here we'll test when the user tries to '''ask for a password reset via an invalid token'''
+   
+
+|script|vodafone choose browser test                                                              |
+|open  |https://myvodafonethuis-tst.glasoperator.nl/login/changepassword?token=werfwerwerw        |
+|check |global error|Je wachtwoord link is niet geldig. Vraag opnieuw een wachtwoordwijziging aan.|
+

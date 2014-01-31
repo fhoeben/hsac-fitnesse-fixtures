@@ -29,7 +29,7 @@
                 <Address AddressId="1049" Street="Park Arenberg" City="DE BILT" PostalCode="3731EP" HouseNumber="51" Kix="3731EP51" Line1="Park Arenberg 51" Line2="3731EP  DE BILT" />
             </Addresses>
             <Products>
-                <Product OrderProductId="LTX64576P001" OrderId="LTX64576-O001" ProductTypeId="INTA" WishDt="2014-01-01">
+                <Product OrderProductId="LTX64576P001" OrderId="LTX64576-O001" ProductTypeId="INTA" WishDt="2014-01-01" PlanDt="2014-01-02" InServiceDt="2014-01-02">
                     <ProductParameters>
                         <ProductParameter ParameterName="DeliveryAddress" Value="1049" />
                         <ProductParameter ParameterName="IP" Value="1 Dynamic" />

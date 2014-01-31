@@ -1,7 +1,6 @@
 package nl.glasoperator.fitnesse.vodafone;
 
 import nl.hsac.fitnesse.fixture.slim.web.BrowserTest;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import java.text.ParseException;
@@ -19,6 +18,22 @@ public class VodafoneBrowserTest extends BrowserTest {
             result = super.clickImpl(place);
         }
         return result;
+    }
+
+    @Override
+    public void clearLocalStorage() {
+        super.clearLocalStorage();
+        getSeleniumHelper().executeJavascript("sessionStorage.clear();");
+    }
+
+    public String dateValueOf(String place) throws ParseException {
+        String value = valueOf(place);
+        if (value != null && !"".equals(value)) {
+            SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+            Date d = df.parse(value);
+            value = df.format(d);
+        }
+        return value;
     }
 
     public String selectConnectDateWeeksInFuture(int weekCount) throws ParseException {
@@ -84,7 +99,7 @@ public class VodafoneBrowserTest extends BrowserTest {
 
     public String globalError() {
         String result = null;
-        List<WebElement> elements = findAllByXPath("//div[contains(@class, 'alert-formerror')]");
+        List<WebElement> elements = findAllByXPath("//div[contains(@class, 'alert alert-formerror')]");
         if (elements != null) {
             for (WebElement element : elements) {
                 if (element.isDisplayed()) {
@@ -120,7 +135,10 @@ public class VodafoneBrowserTest extends BrowserTest {
                     if (element == null) {
                         element = findByXPath("//h3[normalize-space(text()) = '%s']/..//div[contains (@class, 'errormessage')]",
                                 label);
-                    }
+                        //if (element == null) {
+                           // element = findByXPath("//div[@id = 'postcodecheck']//div[contains (@class, 'alert alert-formerror')]");
+                    //}
+                  }
                 }
             }
         }
@@ -191,5 +209,34 @@ public class VodafoneBrowserTest extends BrowserTest {
         }
         return result;
     }
+
+    public String postcodeErrorOn(String label) {
+        String result = null;
+        WebElement element = findErrorMessagePostcode(label);
+        if (element != null) {
+            result = element.getText();
+        }
+        return result;
+    }
+
+
+
+    private WebElement findErrorMessagePostcode(String label) {
+        WebElement element = findByXPath("//div[@id = 'postcodecheck']//div[contains (@class, 'alert alert-formerror')]");
+        return element;
+    }
+
+    public String helpDeskPhoneNumber() {
+        String result = null;
+        WebElement element = findByXPath("//div[contains(@class, 'hulp-nodig')]/p");
+        if (element != null) {
+            scrollIfNotDisplayed(element);
+            result = element.getText();
+        }
+        return result;
+    }
+
+
+
 
 }

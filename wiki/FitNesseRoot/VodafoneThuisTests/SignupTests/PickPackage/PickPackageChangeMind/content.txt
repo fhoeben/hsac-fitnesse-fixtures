@@ -1,0 +1,3 @@
+!contents -R2 -g -p -f -h
+
+'''In this suite we're going to test when you choose a predefined package and you're in the check out you are able to change your mind and go back to the "alles in een" selection page'''

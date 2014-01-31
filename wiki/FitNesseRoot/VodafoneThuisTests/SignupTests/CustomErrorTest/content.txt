@@ -1,0 +1,7 @@
+Check that we get a nice HTML error page, and not ASP.Net internals...
+
+|script  |Soap Test                                         |
+|template|!-VdfWeb/BadPost.xml-!                            |
+|post to |${VF_PORTAL_URL}/checkout/bedankt                 |
+|check   |response       |=~/.*Er is iets verkeerd gegaan.*/|
+|check   |response status|500                               |
