@@ -28,7 +28,9 @@ public class BrowserTest extends SlimFixture {
 
     public boolean back() {
         getNavigation().back();
+
         // firefox sometimes prevents immediate back, if previous page was reached via POST
+        waitMilliSeconds(500);
         WebElement element = getSeleniumHelper().findElement(By.id("errorTryAgain"));
         if (element != null) {
             element.click();
@@ -191,7 +193,7 @@ public class BrowserTest extends SlimFixture {
     protected boolean clickElement(WebElement element) {
         boolean result = false;
         if (element != null) {
-            scrollIfNotDisplayed(element);
+            scrollIfNotOnScreen(element);
             if (element.isDisplayed() && element.isEnabled()) {
                 element.click();
                 result = true;
@@ -234,9 +236,17 @@ public class BrowserTest extends SlimFixture {
             @Override
             public Boolean apply(WebDriver webDriver) {
                 boolean ok = false;
+
+                //Goes too fast for IE sometimes for this particular check (StaleElementReferenceException thrown). Therefore a short delay.
+                if (expectedText.contains("Mogen wij je gegevens")) {
+                    waitMilliSeconds(500);
+                }
+
                 List<WebElement> elements = webDriver.findElements(By.tagName(tagName));
                 if (elements != null) {
                     for (WebElement element : elements) {
+
+
                         try {
                             String actual = element.getText();
                             if (expectedText == null) {
@@ -276,13 +286,13 @@ public class BrowserTest extends SlimFixture {
                 By selectedOption = getSeleniumHelper().byXpath("//select[@id='%s']//option[@selected]", id);
                 WebElement option = getSeleniumHelper().findElement(true, selectedOption);
                 if (option != null) {
-                    scrollIfNotDisplayed(option);
+                    scrollIfNotOnScreen(option);
                     result = option.getText();
                 }
             } else {
                 result = element.getAttribute("value");
                 if (result == null) {
-                    scrollIfNotDisplayed(element);
+                    scrollIfNotOnScreen(element);
                     result = element.getText();
                 }
             }
@@ -316,7 +326,7 @@ public class BrowserTest extends SlimFixture {
         String result = null;
         WebElement element = findByXPath(xpathPattern, params);
         if (element != null) {
-            scrollIfNotDisplayed(element);
+            scrollIfNotOnScreen(element);
             result = element.getText();
         }
         return result;
@@ -362,10 +372,29 @@ public class BrowserTest extends SlimFixture {
      * Scrolls browser window if element is not currently visible so top of element becomes visible.
      * @param element element to scroll to.
      */
-    protected void scrollIfNotDisplayed(WebElement element) {
-        if (!element.isDisplayed()) {
+    protected void scrollIfNotOnScreen(WebElement element) {
+        boolean elementOnScreen = (Boolean)getSeleniumHelper().executeJavascript(elementOnScreenJavascript(), element);
+        if (element.isDisplayed() && !elementOnScreen) {
             scrollTo(element);
         }
+    }
+
+    private String elementOnScreenJavascript()
+    {
+        return  "    var win = $(window);\n" +
+                "    \n" +
+                "    var viewport = {\n" +
+                "        top : win.scrollTop(),\n" +
+                "        left : win.scrollLeft()\n" +
+                "    };\n" +
+                "    viewport.right = viewport.left + win.width();\n" +
+                "    viewport.bottom = viewport.top + win.height();\n" +
+                "    \n" +
+                "    var bounds = $(arguments[0]).offset();\n" +
+                "    bounds.right = bounds.left + $(arguments[0]).outerWidth();\n" +
+                "    bounds.bottom = bounds.top + $(arguments[0]).outerHeight();\n" +
+                "    \n" +
+                "    return (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom));";
     }
 
     /**

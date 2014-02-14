@@ -13,14 +13,19 @@
 
 
 !define FITNESSE_DIR {C:\SvnGlasoperator\fitnesse\source\trunk\wiki}
+!define SELENIUM_GRID {!-http://devvm01.wiericke.local:4444/wd/hub-!}
 
-|script      |selenium driver setup                                                      |
-|set property|webdriver.chrome.driver|value|${FITNESSE_DIR}\webdrivers\chromedriver.exe  |
-|startDriver |org.openqa.selenium.chrome.ChromeDriver                                    |
-|set property|webdriver.ie.driver    |value|${FITNESSE_DIR}\webdrivers\IEDriverServer.exe|
-|note        |startDriver            |org.openqa.selenium.ie.InternetExplorerDriver      |
-|note        |startDriver            |org.openqa.selenium.safari.SafariDriver            |
-|note        |startDriver            |org.openqa.selenium.firefox.FirefoxDriver          |
+|script               |selenium driver setup                                                                  |
+|set property         |webdriver.chrome.driver|value            |${FITNESSE_DIR}\webdrivers\chromedriver.exe  |
+|note                 |startDriver            |org.openqa.selenium.chrome.ChromeDriver                        |
+|set property         |webdriver.ie.driver    |value            |${FITNESSE_DIR}\webdrivers\IEDriverServer.exe|
+|note                 |startDriver            |org.openqa.selenium.ie.InternetExplorerDriver                  |
+|note                 |startDriver            |org.openqa.selenium.safari.SafariDriver                        |
+|note                 |startDriver            |org.openqa.selenium.firefox.FirefoxDriver                      |
+|note                 |connect to driver for  |chrome           |at             |${SELENIUM_GRID}             |
+|note                 |connect to driver for  |firefox          |at             |${SELENIUM_GRID}             |
+|note                 |connect to driver for  |internet explorer|at             |${SELENIUM_GRID}             |
+|connect to driver for|${browser}             |at               |${SELENIUM_GRID}                             |
 
 |script |vodafone browser test |
 |go to pickandchoose           |

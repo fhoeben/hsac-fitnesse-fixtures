@@ -1,5 +1,5 @@
 |script|vodafone choose browser test                                                                       |
-|open  |https://orderportalvf-test.glasoperator.nl                                                         |
+|open  |${VF_PORTAL_URL}                                                                                   |
 |click |Ik wil mijn pakket zelf samenstellen                                                               |
 |pick  |Internet                  |package         |500Mb                                                  |
 |click |Bestel direct                                                                                      |
@@ -19,7 +19,7 @@
 |click |Uitloggen                 |and wait for tag|h1|with text|Onze Alles-in-1 pakketten:                |
 
 |script|vodafone choose browser test                                                 |
-|open  |https://myvodafonethuis-tst.glasoperator.nl                                  |
+|open  |${VF_SELF_CARE_URL}                                                          |
 |click |Wachtwoord vergeten?      |and wait for tag|h1|with text|Wachtwoord vergeten?|
 |enter |$vf_thuis@vodafonethuis.nl|as              |E-mailadres                      |
 |click |Verstuur                  |and wait for tag|h1|with text|Bedankt             |

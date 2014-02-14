@@ -8,7 +8,7 @@ Here we'll test if we can '''ask for a reset multiple times on the same emailadr
 |click |Verstuur              |and wait for tag|h1|with text|Bedankt             |
 
 |script|vodafone choose browser test                                                    |
-|open  |https://myvodafonethuis-tst.glasoperator.nl/                                    |
+|open  |${VF_SELF_CARE_URL}                                                             |
 |click |Wachtwoord vergeten?  |and wait for tag  |h1  |with text  |Wachtwoord vergeten? |
 |enter |test@vodafonethuis4.nl|as                |E-mailadres                           |
 |click |Verstuur                                                                        |

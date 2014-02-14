@@ -1,5 +1,6 @@
 package nl.glasoperator.fitnesse.vodafone;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
@@ -19,6 +20,27 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
 
     @Override
     protected boolean clickElement(WebElement element) {
+        // wait until form_mask (loading gif with overlay) is faded out (= animation).
+        waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                WebElement mask = null;
+
+                try {
+                    mask = webDriver.findElement(By.cssSelector(".form_mask"));
+                } catch (WebDriverException e) {
+                    if (e.getMessage().contains("Unable to find element")) {
+                        return true;
+                    }
+                }
+
+                if (mask != null) {
+                    return !mask.isDisplayed();
+                }
+
+                return true;
+            }
+        });
         boolean result = super.clickElement(element);
         // give all our cool JS animations a chance
         waitMilliSeconds(500);
@@ -188,7 +210,7 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
         String result = null;
         WebElement element = findByXPath("//b[@class='address']");
         if (element != null) {
-            scrollIfNotDisplayed(element);
+            scrollIfNotOnScreen(element);
             result = element.getText();
         }
         return result;
@@ -207,7 +229,7 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
         String result = null;
         WebElement element = findByXPath("//div[contains(@class, 'span9')]/h1");
         if (element != null) {
-            scrollIfNotDisplayed(element);
+            scrollIfNotOnScreen(element);
             result = element.getText();
         }
         return result;
@@ -217,11 +239,60 @@ public class VodafoneChooseBrowserTest extends VodafoneBrowserTest {
         String result = null;
         WebElement element = findByXPath("//div[contains(@class, 'span9')]/p");
         if (element != null) {
-            scrollIfNotDisplayed(element);
+            scrollIfNotOnScreen(element);
             result = element.getText();
         }
         return result;
     }
 
+    public boolean EmailAccount(String email) {
+        boolean result = false;
+        WebElement element = findByXPath("//ul[contains(@class, 'emails')]/li/span[contains(normalize-space(text()), '%s')]", email);
+        if (element == null) {
+            element = findByXPath("//div[contains(@class, 'span5 text-right')]/p/strong[normalize-space(text()) = '%s']",
+                    email);
+        }
+        if (element != null) {
+             result = true;
+        }
+        return result;
+    }
 
+    public String MainEmailAccount() {
+        String result = null;
+        WebElement element = findByXPath("//ul[contains(@class, 'emails')]/li[1]/span/strong");
+        if (element != null) {
+            result = element.getText();
+        }
+        return result;
+    }
+
+    // Check the EmailSettings label (h2) and value (as in the next [div class="options"] contains value)
+    public boolean EmailLabelValue(String label, String value)
+    {
+        boolean result = false;
+        WebElement labelElement = findByXPath("//h2[contains(normalize-space(text()), '%s')]", label);
+        WebElement valueElement = findByXPath("//h2[contains(normalize-space(text()), '%s')]/../div[contains(@class, 'settings-block')]", label);
+        if (labelElement != null && valueElement != null)
+        {
+            result = labelElement.getText().contains( label) && valueElement.getText().contains(value);
+        }
+        return result;
+    }
+
+    public boolean showEmailSettingsOf(String email){
+        return clickByXPath("//ul[contains(@class, 'emails')]/li/span[contains(normalize-space(text()), '%s')]/..//a[contains(@class, 'btn btn-secondary')]",
+                email);
+    }
+
+    public boolean checkDetailsContains(String label, String value){
+        boolean result = false;
+        WebElement labelElement = findByXPath("//h2[contains(normalize-space(text()), '%s')]", label);
+        WebElement valueElement = findByXPath("//h2[contains(normalize-space(text()), '%s')]/../div[contains(@class, 'settings-block')]", label);
+        if (labelElement != null && valueElement != null)
+        {
+            result = labelElement.getText().contains( label) && valueElement.getText().contains(value);
+        }
+    return result;
+    }
 }

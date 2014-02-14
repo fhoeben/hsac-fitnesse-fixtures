@@ -14,7 +14,7 @@ public class SoapTest extends XmlHttpTest {
     private static final Locale NL = new Locale("nl");
 
     public String xPathDate(String xPathExpr) {
-        String nlDate = "";
+        String nlDate = null;
         String xmlDate = xPath(xPathExpr);
         if (!(xmlDate == null || "".equals(xmlDate))) {
             XMLGregorianCalendar date = new CalendarUtil().buildXMLGregorianCalendar(xmlDate);

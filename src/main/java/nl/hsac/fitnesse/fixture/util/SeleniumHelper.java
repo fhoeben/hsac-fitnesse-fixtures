@@ -398,4 +398,8 @@ public class SeleniumHelper {
         }
         return output;
     }
+
+    public WebDriver getWebDriver() {
+        return webDriver;
+    }
 }
