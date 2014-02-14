@@ -230,7 +230,7 @@ public class VodafoneBrowserTest extends BrowserTest {
         String result = null;
         WebElement element = findByXPath("//div[contains(@class, 'hulp-nodig')]/p");
         if (element != null) {
-            scrollIfNotDisplayed(element);
+            scrollIfNotOnScreen(element);
             result = element.getText();
         }
         return result;

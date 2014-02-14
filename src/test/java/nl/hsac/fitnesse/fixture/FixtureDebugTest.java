@@ -12,7 +12,7 @@ public class FixtureDebugTest {
 
     @Test
     public void testWithFitnesse() throws Exception {
-        String suite = "VodafoneThuisTests.SignupTests.CheckoutTests.ValidCheckouts.FoxPricing.EredivisieOnly";
+        String suite = "VodafoneThuisTests.SignupTests.HealthCheckTest";
         // allow suite to execute to be overriden via system property
         String propSuite = System.getProperty("fitnesseSuiteToRun");
         if (!StringUtils.isEmpty(propSuite)) {

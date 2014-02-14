@@ -1,0 +1,11 @@
+Here we'll test if you can use '''forgotten password''' and you fill in a '''emailadres with white spaces at the beginning and end'''
+
+''Both at beginning and end''
+
+|script|vodafone choose browser test                                                              |
+|open  |${VF_SELF_CARE_URL}                                                                       |
+|clear local storage                                                                              |
+|click |Wachtwoord vergeten?                   |and wait for tag|h1|with text|Wachtwoord vergeten?|
+|enter |!-  testmailvdf12@vodafonethuis.nl   -!|as              |E-mailadres                      |
+|click |Verstuur                               |and wait for tag|h1|with text|Bedankt             |
+

@@ -1,0 +1,4 @@
+|script  |http test                           |
+|get from|${VF_SELF_CARE_URL}/HealthCheck.ashx|
+|check   |response status         |200        |
+|show    |html response                       |

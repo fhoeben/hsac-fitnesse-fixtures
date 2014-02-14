@@ -38,7 +38,7 @@
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
-			<version>2.37.0</version>
+			<version>2.39.0</version>
 		</dependency>
 		<!-- Testing -->
 		<dependency>
@@ -116,6 +116,7 @@
 					<test>FixtureDebugTest</test>
 					<systemPropertyVariables>
 						<fitnesseSuiteToRun>${fitnesseSuiteToRun}</fitnesseSuiteToRun>
+						<browser>${browser}</browser>
 					</systemPropertyVariables>
 					<workingDirectory>wiki</workingDirectory>
 					<disableXmlReport>true</disableXmlReport>

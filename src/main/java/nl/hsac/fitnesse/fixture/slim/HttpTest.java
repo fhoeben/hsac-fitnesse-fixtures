@@ -181,6 +181,15 @@ public class HttpTest extends SlimFixture {
     }
 
     /**
+     * @return HTML response received last time postTo() or get() was called.
+     */
+    public String htmlResponse() {
+        String content = response.getResponse();
+        content = "<div>" + content + "</div>";
+        return content;
+    }
+
+    /**
      * @return http status received last time postTo() was called.
      */
     public int responseStatus() {
