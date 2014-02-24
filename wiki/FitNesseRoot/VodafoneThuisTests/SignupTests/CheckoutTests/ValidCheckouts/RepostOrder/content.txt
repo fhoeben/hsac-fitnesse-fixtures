@@ -5,7 +5,8 @@ Test to see that going back from 'Thank you screen' and then forward again does 
 |script                   |vodafone choose browser test                                                            |
 |go to checkout                                                                                                    |
 |fill personal details for|${LAST_NAME}                                                                            |
-|click                    |Volgende stap        |and wait for tag|h4|with text|Nummerbehoud                        |
+|click                    |Volgende stap        |and wait for tag|h4|with text|Huidige aansluiting                 |
+|click                    |DSL                                                                                     |
 |click                    |Nee                                                                                     |
 |click                    |Volgende stap        |and wait for tag|h2|with text|Controleer en verstuur je bestelling|
 |click                    |Bestelling bevestigen|and wait for tag|h2|with text|Bedankt voor je bestelling!         |

@@ -15,10 +15,14 @@ public class BrowserTest extends SlimFixture {
     private static final String FILES_DIR = new File("FitNesseRoot/files/").getAbsolutePath();
 
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
-    private int secondsBeforeTimeout = 10;
+    private int secondsBeforeTimeout;
     private int waitAfterScroll = 0;
     private String screenshotBase = FILES_DIR + "/screenshots/";
     private String screenshotHeight = "200";
+
+    public BrowserTest() {
+        secondsBeforeTimeout(SeleniumHelper.DEFAULT_TIMEOUT_SECONDS);
+    }
 
     public boolean open(String address) {
         String url = getUrl(address);
@@ -181,6 +185,9 @@ public class BrowserTest extends SlimFixture {
                     retry = false;
                 }
             }
+            // don't wait forever trying to click
+            // only try secondsBeforeTimeout + 1 times
+            retry &= i > secondsBeforeTimeout();
         }
         return result;
     }
@@ -402,6 +409,8 @@ public class BrowserTest extends SlimFixture {
      */
     public void secondsBeforeTimeout(int timeout) {
         secondsBeforeTimeout = timeout;
+        int timeoutInMs = timeout * 1000;
+        getSeleniumHelper().setPageLoadWait(timeoutInMs);
     }
 
     /**

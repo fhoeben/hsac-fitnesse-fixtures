@@ -34,8 +34,8 @@ Use this scenario if disabled.
 |scenario|go to pickandchoose reseller _           |channel           |
 |open    |${VF_PORTAL_URL}/pakketsamenstellen/fiber?channel=@{channel}|
 
-|scenario  |go to packages     |
-|open      |${VF_PORTAL_URL}/  |
+|scenario|go to packages   |
+|open    |${VF_PORTAL_URL}/|
 
 |scenario|go to packages reseller   |channel  |
 |open    |${VF_PORTAL_URL}/?channel=@{channel}|
@@ -189,26 +189,31 @@ Order full triple play once correct packages are in cart
 |check telephony full                      |
 |check number of telephony|1               |
 
-|scenario   |place order _                     |name                                                                                                                         |
-|check @{name} cart                                                                                                                                                          |
-|click      |Bestel direct                                                                                                                                                   |
-|enter      |${POSTAL_CODE_EVERYTHING}         |as                                                  |Postcode                                                                |
-|enter      |${POSTAL_CODE_EVERYTHING_HOUSE_NR}|as                                                  |Huisnummer                                                              |
-|click      |Verstuur                          |and wait for tag                                    |h2        |with text        |Mogen wij je gegevens?                     |
-|check @{name} cart                                                                                                                                                          |
-|check      |address in messagebox             |${POSTAL_CODE_EVERYTHING_STREET} ${POSTAL_CODE_EVERYTHING_HOUSE_NR}, ${POSTAL_CODE_EVERYTHING} ${POSTAL_CODE_EVERYTHING_CITY}|
-|check      |step count                        |4                                                                                                                            |
-|$stepCount=|step count                                                                                                                                                      |
-|fill personal details                                                                                                                                                       |
-|click      |Volgende stap                     |and wait for tag                                    |h4        |with text        |Nummerbehoud                               |
-|click      |Nee                                                                                                                                                             |
-|click      |Volgende stap                     |and wait for tag                                    |h2        |with text        |Controleer en verstuur je bestelling       |
-|submit order and retrieve from vispSoap                                                                                                                                     |
-|check      |xPath                             |//vispEx:Street                                     |${POSTAL_CODE_EVERYTHING_STREET}                                        |
-|check      |xPath                             |!-//vispEx:HouseNumber-!                            |${POSTAL_CODE_EVERYTHING_HOUSE_NR}                                      |
-|check      |xPath                             |!-//vispEx:PostalCode-!                             |${POSTAL_CODE_EVERYTHING}                                               |
-|check      |xPath                             |//vispEx:City                                       |${POSTAL_CODE_EVERYTHING_CITY_UPPER}                                    |
-|check      |xPath                             |!-//vispEx:Debtor/vispEx:BankAccountNumber-!        |$bankNumber                                                             |
+|scenario    |place order _                     |name                                                                                                                                        |
+|check @{name} cart                                                                                                                                                                          |
+|click       |Bestel direct                                                                                                                                                                  |
+|enter       |${POSTAL_CODE_EVERYTHING}         |as                                                                                        |Postcode                                         |
+|$postalCode=|value of                          |Postcode                                                                                                                                    |
+|enter       |${POSTAL_CODE_EVERYTHING_HOUSE_NR}|as                                                                                        |Huisnummer                                       |
+|$houseNr=   |value of                          |Huisnummer                                                                                                                                  |
+|click       |Verstuur                          |and wait for tag                                                                          |h2|with text|Mogen wij je gegevens?              |
+|check @{name} cart                                                                                                                                                                          |
+|check       |address in messagebox             |${POSTAL_CODE_EVERYTHING_STREET} ${POSTAL_CODE_EVERYTHING_HOUSE_NR}, ${POSTAL_CODE_EVERYTHING} ${POSTAL_CODE_EVERYTHING_CITY}               |
+|check       |step count                        |4                                                                                                                                           |
+|$stepCount= |step count                                                                                                                                                                     |
+|fill personal details                                                                                                                                                                       |
+|click       |Volgende stap                     |and wait for tag                                                                          |h4|with text|Nummerbehoud                        |
+|click       |Kabel (o.a. UPC & Ziggo)                                                                                                                                                       |
+|click       |Nee                                                                                                                                                                            |
+|click       |Volgende stap                     |and wait for tag                                                                          |h2|with text|Controleer en verstuur je bestelling|
+|submit order and retrieve from vispSoap                                                                                                                                                     |
+|check       |xPath                             |//vispEx:Street                                                                           |${POSTAL_CODE_EVERYTHING_STREET}                 |
+|check       |xPath                             |!-//vispEx:HouseNumber-!                                                                  |${POSTAL_CODE_EVERYTHING_HOUSE_NR}               |
+|check       |xPath                             |!-//vispEx:PostalCode-!                                                                   |${POSTAL_CODE_EVERYTHING}                        |
+|check       |xPath                             |//vispEx:City                                                                             |${POSTAL_CODE_EVERYTHING_CITY_UPPER}             |
+|check       |xPath                             |!-//vispEx:Debtor/vispEx:BankAccountNumber-!                                              |$bankNumber                                      |
+|check       |xPath                             |!-//vispEx:OrderProductParameter[vispEx:ParameterName/text() = 'IsPorting']/vispEx:Value-!|false                                            |
+|check       |xPath                             |!-//vispEx:OrderTag[vispEx:TagId/text() = 'currentConnection']/vispEx:InstanceKey-!       |cable                                            |
 
 |scenario                 |fill personal details|
 |fill personal details for|${RANDOM_LAST_NAME}  |

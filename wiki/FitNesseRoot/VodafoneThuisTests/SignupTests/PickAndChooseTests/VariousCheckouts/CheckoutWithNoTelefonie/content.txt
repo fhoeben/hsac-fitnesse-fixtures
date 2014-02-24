@@ -32,6 +32,7 @@ Here we'll pick '''internet 100mb''' and '''televisie plus'''. This scenario mus
 |enter           |Tester                            |as              |Naam rekeninghouder                                    |
 |enter           |151                               |as              |IBAN/Bankrekeningnummer                                |
 |click           |Volgende stap                     |and wait for tag|h4|with text|Gewenste aansluitdatum voor Vodafone Thuis|
+|click           |Kabel (o.a. UPC & Ziggo)                                                                                   |
 |click           |Volgende stap                     |and wait for tag|h2|with text|Controleer en verstuur je bestelling      |
 |click           |Bestelling bevestigen             |and wait for tag|h2|with text|Bedankt voor je bestelling!               |
 |check           |value of                          |e-mail          |$email                                                 |

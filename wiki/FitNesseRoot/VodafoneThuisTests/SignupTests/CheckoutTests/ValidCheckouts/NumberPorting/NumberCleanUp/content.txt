@@ -7,6 +7,7 @@ We have to use different last names and user names to ensure we get different or
 |go to checkout                                                                                                                 |
 |fill personal details for        |@{lastName}               |create          |@{userName}                                      |
 |click                            |Volgende stap             |and wait for tag|h4|with text|Nummerbehoud                        |
+|click                            |DSL                                                                                          |
 |click                            |Ja                                                                                           |
 |enter                            |@{numberAsEntered}        |as              |Welk nummer wil je overzetten                    |
 |click                            |Volgende stap             |and wait for tag|h2|with text|Controleer en verstuur je bestelling|
@@ -15,9 +16,9 @@ We have to use different last names and user names to ensure we get different or
 
 |script|vodafone choose browser test|
 
-|order with numberporting                                              |
-|lastName           |userName         |numberAsEntered  |numberAsStored|
-|${RANDOM_LAST_NAME}|${RANDOM_VF_USER}|033-4806411      |0334806411    |
-|${RANDOM_LAST_NAME}|${RANDOM_VF_USER}|033 4806412      |0334806412    |
-|${RANDOM_LAST_NAME}|${RANDOM_VF_USER}|033 4806 413     |0334806413    |
+|order with numberporting                                            |
+|lastName           |userName         |numberAsEntered|numberAsStored|
+|${RANDOM_LAST_NAME}|${RANDOM_VF_USER}|033-4806411    |0334806411    |
+|${RANDOM_LAST_NAME}|${RANDOM_VF_USER}|033 4806412    |0334806412    |
+|${RANDOM_LAST_NAME}|${RANDOM_VF_USER}|033 4806 413   |0334806413    |
 

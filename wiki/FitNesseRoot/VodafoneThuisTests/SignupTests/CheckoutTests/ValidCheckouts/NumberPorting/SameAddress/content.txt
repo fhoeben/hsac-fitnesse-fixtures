@@ -4,6 +4,7 @@
 |go to checkout                                                                                                                                      |
 |fill personal details                                                                                                                               |
 |click                            |Volgende stap      |and wait for tag                            |h4|with text|Nummerbehoud                        |
+|click                            |DSL                                                                                                               |
 |click                            |Ja                                                                                                                |
 |enter                            |${PHONE_NR_TO_PORT}|as                                          |Welk nummer wil je overzetten                    |
 |click                            |Volgende stap      |and wait for tag                            |h2|with text|Controleer en verstuur je bestelling|
