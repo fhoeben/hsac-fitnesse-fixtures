@@ -1,12 +1,14 @@
 Here we test '''the minimum age'''. You are ''18 years'' old this must the '''minimum'''
 
+!define MIN_BIRTHDATE {!monthsFromToday (ddMMYYYY) -216}
+
 |script|vodafone choose browser test                                             |
 |go to checkout                                                                  |
 |click |Mevrouw                                                                  |
 |enter |F. H.                     |as           |Voornaam                        |
 |enter |Hoeben                    |as           |Achternaam                      |
 |enter |${CONTACT_EMAIL}          |as           |E-mailadres                     |
-|enter |12121994                  |as           |Geboortedatum                   |
+|enter |${MIN_BIRTHDATE}          |as           |Geboortedatum                   |
 |enter |24528616                  |as           |Telefoonnummer mobiel           |
 |enter |${RANDOM_VF_USER}         |as           |Nieuw Vodafone Thuis e-mailadres|
 |enter |Tester                    |as           |Naam rekeninghouder             |

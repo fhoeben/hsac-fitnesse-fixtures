@@ -8,20 +8,9 @@ Here we test '''the first time when somebody follows the link to create a selfca
 
 
 |script       |vodafone choose browser test                                                                                                                        |
-|open         |${VF_PORTAL_URL}                                                                                                                                    |
-|click        |Ik wil mijn pakket zelf samenstellen                                                                                                                |
-|pick         |Internet                     |package           |500Mb                                                                                              |
-|click        |Bestel direct                                                                                                                                       |
-|enter        |3731EP                       |as                |Postcode                                                                                           |
-|$postalCode= |value of                     |Postcode                                                                                                              |
-|enter        |71                           |as                |Huisnummer                                                                                         |
-|click        |Verstuur                     |and wait for tag  |h2               |with text               |Mogen wij je gegevens?                                  |
-|fill personal details                                                                                                                                             |
-|click        |Volgende stap                |and wait for tag  |h4               |with text               |Gewenste aansluitdatum voor Vodafone Thuis              |
-|click        |Zo snel mogelijk                                                                                                                                    |
-|click        |Volgende stap                |and wait for tag  |h2               |with text               |Controleer en verstuur je bestelling                    |
-|click        |Bestelling bevestigen        |and wait for tag  |h2               |with text               |Bedankt voor je bestelling!                             |
-|click        |Naar My Vodafone Thuis       |and wait for tag  |h1               |with text               |Wijzig je Vodafone Thuis wachtwoord                     |
+|go to pickandchoose                                                                                                                                               |
+|order full triple play                                                                                                                                            |
+|click        |Naar My Vodafone Thuis       |and wait for tag  |h1                 |with text                 |Wijzig je Vodafone Thuis wachtwoord                 |
 |note         |Hier wordt eerst email ingevuld die niet gekoppeld wordt aan het token                                                                              |
 |enter        |eenmail@testcom.com          |as                |E-mailadres                                                                                        |
 |enter        |Test.Wachtwoord1             |as                |Wachtwoord                                                                                         |
@@ -63,8 +52,8 @@ Here we test '''the first time when somebody follows the link to create a selfca
 |note         |Hier gaat alles goed                                                                                                                                |
 |enter        |Test.Wachtwoord1             |as                |Wachtwoord                                                                                         |
 |enter        |Test.Wachtwoord1             |as                |Herhaal wachtwoord                                                                                 |
-|click        |Verstuur                     |and wait for tag  |h1               |with text               |My Vodafone Thuis                                       |
-|click        |Naar je persoonlijke gegevens|and wait for tag  |h1               |with text               |Je persoonlijke gegevens                                |
+|click        |Verstuur                     |and wait for tag  |h1                 |with text                 |My Vodafone Thuis                                   |
+|click        |Naar je persoonlijke gegevens|and wait for tag  |h1                 |with text                 |Je persoonlijke gegevens                            |
 |check details|Je adresgegevens             |contains          |$firstName                                                                                         |
 |check details|Je adresgegevens             |contains          |$lastName                                                                                          |
 |check details|Je adresgegevens             |contains          |$postalCode                                                                                        |
@@ -74,4 +63,4 @@ Here we test '''the first time when somebody follows the link to create a selfca
 |check details|Betaalgegevens               |contains          |$bankNumber                                                                                        |
 |check details|Betaalgegevens               |contains          |$bankName                                                                                          |
 |check details|Privacy                      |contains          |Vodafone mag mijn (verkeers) gegevens niet gebruiken                                               |
-|click        |Uitloggen                    |and wait for tag  |h1               |with text               |Onze Alles-in-1 pakketten:                              |
+|click        |Uitloggen                    |and wait for tag  |h1                 |with text                 |Onze Alles-in-1 pakketten:                          |

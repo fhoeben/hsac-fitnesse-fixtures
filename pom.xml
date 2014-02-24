@@ -137,6 +137,7 @@
 					<executable>java</executable>
 					<workingDirectory>wiki</workingDirectory>
 					<arguments>
+						<argument>-Dbrowser=${browser}</argument>
 						<argument>-jar</argument>
 						<argument>fitnesse-standalone.jar</argument>
 						<argument>-p</argument>

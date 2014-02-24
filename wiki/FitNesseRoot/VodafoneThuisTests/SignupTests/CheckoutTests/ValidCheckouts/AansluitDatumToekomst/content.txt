@@ -1,19 +1,22 @@
 '''Here we'll take a ''aansluit datum'' in the future'''
 
-|script       |vodafone choose browser test                                                                         |
-|go to checkout                                                                                                     |
-|fill personal details                                                                                              |
-|click        |Volgende stap      |and wait for tag               |h4|with text|Nummerbehoud                        |
-|click        |Nee                                                                                                  |
-|click        |Gewenste aansluitdatum                                                                               |
-|$connectDate=|select connect date|15                             |weeks in future                                  |
-|click        |Volgende stap      |and wait for tag               |h2|with text|Controleer en verstuur je bestelling|
-|check        |value of           |Gewenste aansluitdatum:        |$connectDate                                     |
-|click        |Vodafone mag mijn (verkeers) gegevens gebruiken voor commerciële activiteiten                        |
-|submit order and retrieve from vispSoap                                                                            |
-|check        |xPath              |//vispEx:Street                |${POSTAL_CODE_EVERYTHING_STREET}                 |
-|check        |xPath              |!-//vispEx:HouseNumber-!       |${POSTAL_CODE_EVERYTHING_HOUSE_NR}               |
-|check        |xPath              |!-//vispEx:PostalCode-!        |${POSTAL_CODE_EVERYTHING}                        |
-|check        |xPath              |//vispEx:City                  |${POSTAL_CODE_EVERYTHING_CITY_UPPER}             |
-|check        |xPath              |!-//vispEx:ConsentForOffers-!  |phone, letter, email                             |
-|check        |xPath              |!-//vispEx:ConsentForResearch-!|phone, letter, email                             |
+|script       |vodafone choose browser test                                                                                                                                    |
+|go to checkout                                                                                                                                                                |
+|fill personal details                                                                                                                                                         |
+|click        |Volgende stap      |and wait for tag                                                                          |h4|with text|Nummerbehoud                        |
+|click        |DSL                                                                                                                                                             |
+|click        |Nee                                                                                                                                                             |
+|click        |Gewenste aansluitdatum                                                                                                                                          |
+|$connectDate=|select connect date|15                                                                                        |weeks in future                                  |
+|click        |Volgende stap      |and wait for tag                                                                          |h2|with text|Controleer en verstuur je bestelling|
+|check        |value of           |Gewenste aansluitdatum:                                                                   |$connectDate                                     |
+|click        |Vodafone mag mijn (verkeers) gegevens gebruiken voor commerciële activiteiten                                                                                   |
+|submit order and retrieve from vispSoap                                                                                                                                       |
+|check        |xPath              |//vispEx:Street                                                                           |${POSTAL_CODE_EVERYTHING_STREET}                 |
+|check        |xPath              |!-//vispEx:HouseNumber-!                                                                  |${POSTAL_CODE_EVERYTHING_HOUSE_NR}               |
+|check        |xPath              |!-//vispEx:PostalCode-!                                                                   |${POSTAL_CODE_EVERYTHING}                        |
+|check        |xPath              |//vispEx:City                                                                             |${POSTAL_CODE_EVERYTHING_CITY_UPPER}             |
+|check        |xPath              |!-//vispEx:ConsentForOffers-!                                                             |phone, letter, email                             |
+|check        |xPath              |!-//vispEx:ConsentForResearch-!                                                           |phone, letter, email                             |
+|check        |xPath              |!-//vispEx:OrderProductParameter[vispEx:ParameterName/text() = 'IsPorting']/vispEx:Value-!|false                                            |
+|check        |xPath              |!-//vispEx:OrderTag[vispEx:TagId/text() = 'currentConnection']/vispEx:InstanceKey-!       |dsl                                              |

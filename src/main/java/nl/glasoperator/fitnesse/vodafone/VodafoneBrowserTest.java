@@ -1,7 +1,9 @@
 package nl.glasoperator.fitnesse.vodafone;
 
 import nl.hsac.fitnesse.fixture.slim.web.BrowserTest;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,6 +26,15 @@ public class VodafoneBrowserTest extends BrowserTest {
     public void clearLocalStorage() {
         super.clearLocalStorage();
         getSeleniumHelper().executeJavascript("sessionStorage.clear();");
+    }
+
+    @Override
+    protected <T> T waitUntil(ExpectedCondition<T> condition) {
+        try {
+            return super.waitUntil(condition);
+        } catch (TimeoutException e) {
+            throw new StopTestOnTimeout(e);
+        }
     }
 
     public String dateValueOf(String place) throws ParseException {

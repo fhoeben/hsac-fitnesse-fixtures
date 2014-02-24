@@ -244,6 +244,14 @@ public class SeleniumHelper {
     }
 
     /**
+     * Sets how long to wait on opening a page.
+     * @param pageLoadWait time in milliseconds to wait.
+     */
+    public void setPageLoadWait(int pageLoadWait) {
+        driver().manage().timeouts().pageLoadTimeout(pageLoadWait, TimeUnit.MILLISECONDS);
+    }
+
+    /**
      * Finds first element matching the By supplied.
      * @param by criteria.
      * @return element if found, null if none could be found.
