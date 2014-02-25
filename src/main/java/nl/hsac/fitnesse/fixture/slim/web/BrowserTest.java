@@ -507,7 +507,13 @@ public class BrowserTest extends SlimFixture {
             return wait.until(condition);
         } catch (TimeoutException e) {
             // take a screenshot of what was on screen
-            String screenShotFile = createScreenshot("timeouts/" + getClass().getSimpleName() + "/timeout");
+            String screenShotFile = null;
+            try {
+                screenShotFile = createScreenshot("timeouts/" + getClass().getSimpleName() + "/timeout");
+            } catch (Exception sse) {
+                // unable to take screenshot
+                sse.printStackTrace();
+            }
             if (screenShotFile == null) {
                 throw new TimeoutStopTestException(e);
             } else {
