@@ -1,5 +1,0 @@
-Here we '''just take a screenshot to see if everything works'''
-
-|script|vodafone choose browser test|
-|go to packages                     |
-|show|take screenshot|test|

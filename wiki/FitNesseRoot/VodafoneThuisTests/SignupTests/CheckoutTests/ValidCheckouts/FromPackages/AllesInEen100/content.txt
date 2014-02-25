@@ -1,6 +1,0 @@
-Here we '''order alles in een 100'''
-
-|script|vodafone choose browser test|
-|go to packages                     |
-|order |100|triple play via packages|
-|check triple play no options       |

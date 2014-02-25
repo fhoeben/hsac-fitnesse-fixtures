@@ -1,9 +1,0 @@
-Here we'll test if '''the link password forgotten is clickable. '''Also we '''enter a valid emailadress and sent the email'''
-   
-
-|script|vodafone choose browser test                                                                                                                  |
-|open  |${VF_SELF_CARE_URL}                                                                                                                           |
-|click |Wachtwoord vergeten?        |and wait for tag                |h1                |with text                |Wachtwoord vergeten?               |
-|enter |taccount002@vodafonethuis.nl|as                              |E-mailadres                                                                     |
-|click |Verstuur                    |and wait for tag                |h1                |with text                |Bedankt                            |
-|check |requested page message      |Je nieuwe wachtwoord is verstuurd naar je e-mailadres. Je zou deze e-mail binnen enkele minuten moeten ontvangen.|

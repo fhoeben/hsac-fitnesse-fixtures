@@ -1,8 +1,0 @@
-Here we will test the '''forgotten password''' this time with an '''emailadress which is attached to multiple costumers'''
-
-|script|vodafone choose browser test                                                                                                             |
-|open  |${VF_SELF_CARE_URL}                                                                                                                      |
-|click |Wachtwoord vergeten?    |and wait for tag                |h1                |with text               |Wachtwoord vergeten?               |
-|enter |f.hoeben@glasoperator.nl|as                              |E-mailadres                                                                    |
-|click |Verstuur                                                                                                                                 |
-|check |global error            |Dit e-mailadres kan niet gebruikt worden om het wachtwoord te wijzigen. Gebruik je vodafonethuis.nl e-mailadres.|

@@ -1,6 +1,0 @@
-Here we'll test if we get an '''page not found''' error when we try to acces a non-existing page
-
-
-|script|vodafone choose browser test                |
-|open  |${VF_PORTAL_URL}/test                       |
-|check |error page message|We hebben overal gezocht,|
