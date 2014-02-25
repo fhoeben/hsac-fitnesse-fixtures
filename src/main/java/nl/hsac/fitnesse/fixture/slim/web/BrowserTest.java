@@ -191,7 +191,7 @@ public class BrowserTest extends SlimFixture {
             }
             // don't wait forever trying to click
             // only try secondsBeforeTimeout + 1 times
-            retry &= i > secondsBeforeTimeout();
+            retry &= i < secondsBeforeTimeout();
         }
         return result;
     }
