@@ -1,9 +1,0 @@
-Here we'll test if the '''link password forgotten is clickable'''. This time we enter a '''wrong emailadress, this must return a error'''
-
-|script|vodafone choose browser test                                           |
-|open  |${VF_SELF_CARE_URL}                                                    |
-|click |Wachtwoord vergeten?|and wait for tag|h1|with text|Wachtwoord vergeten?|
-|enter |testvodafonethuis.nl|as              |E-mailadres                      |
-|click |Verstuur                                                               |
-|ensure|error style on      |E-mailadres                                       |
-|check |error on            |E-mailadres     |Vul een geldig e-mailadres in.   |

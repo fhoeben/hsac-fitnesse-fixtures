@@ -1,6 +1,0 @@
-|script|vodafone choose browser test                                                                |
-|go to packages                                                                                     |
-|click |Ik wil mijn pakket zelf samenstellen|and wait for tag|h1|with text|Stel zelf je pakket samen|
-
-
-                                                        

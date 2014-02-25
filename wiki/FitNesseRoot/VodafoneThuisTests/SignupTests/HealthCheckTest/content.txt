@@ -1,4 +1,0 @@
-|script  |http test                        |
-|get from|${VF_PORTAL_URL}/HealthCheck.ashx|
-|check   |response status       |200       |
-|show    |html response                    |
