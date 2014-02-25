@@ -248,11 +248,6 @@ public class BrowserTest extends SlimFixture {
             public Boolean apply(WebDriver webDriver) {
                 boolean ok = false;
 
-                //Goes too fast for IE sometimes for this particular check (StaleElementReferenceException thrown). Therefore a short delay.
-                if (expectedText.contains("Mogen wij je gegevens")) {
-                    waitMilliSeconds(500);
-                }
-
                 List<WebElement> elements = webDriver.findElements(By.tagName(tagName));
                 if (elements != null) {
                     for (WebElement element : elements) {
