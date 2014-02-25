@@ -387,20 +387,17 @@ public class BrowserTest extends SlimFixture {
 
     private String elementOnScreenJavascript()
     {
-        return  "    var win = $(window);\n" +
-                "    \n" +
-                "    var viewport = {\n" +
-                "        top : win.scrollTop(),\n" +
-                "        left : win.scrollLeft()\n" +
-                "    };\n" +
-                "    viewport.right = viewport.left + win.width();\n" +
-                "    viewport.bottom = viewport.top + win.height();\n" +
-                "    \n" +
-                "    var bounds = $(arguments[0]).offset();\n" +
-                "    bounds.right = bounds.left + $(arguments[0]).outerWidth();\n" +
-                "    bounds.bottom = bounds.top + $(arguments[0]).outerHeight();\n" +
-                "    \n" +
-                "    return (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom));";
+        return  "var win = $(window);\n" +
+                "var viewport = {\n" +
+                "    top : win.scrollTop(),\n" +
+                "    left : win.scrollLeft()\n" +
+                "};\n" +
+                "viewport.right = viewport.left + win.width();\n" +
+                "viewport.bottom = viewport.top + win.height();\n" +
+                "var bounds = $(arguments[0]).offset();\n" +
+                "bounds.right = bounds.left + $(arguments[0]).outerWidth();\n" +
+                "bounds.bottom = bounds.top + $(arguments[0]).outerHeight();\n" +
+                "return (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom));";
     }
 
     /**
