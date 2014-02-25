@@ -26,7 +26,11 @@ public class BrowserTest extends SlimFixture {
 
     public boolean open(String address) {
         String url = getUrl(address);
-        getNavigation().to(url);
+        try {
+            getNavigation().to(url);
+        } catch (TimeoutException e) {
+            throw new TimeoutStopTestException("Unable to go to: " + url, e);
+        }
         return true;
     }
 
@@ -453,8 +457,7 @@ public class BrowserTest extends SlimFixture {
      * @return location of screenshot.
      */
     public String takeScreenshot(String basename) {
-        String name = screenshotBase + basename;
-        String screenshotFile = getSeleniumHelper().takeScreenshot(name);
+        String screenshotFile = createScreenshot(basename);
         if (screenshotFile == null) {
             throw new RuntimeException("Unable to take screenshot: does the webdriver support it?");
         } else {
@@ -476,6 +479,11 @@ public class BrowserTest extends SlimFixture {
         return screenshotFile;
     }
 
+    private String createScreenshot(String basename) {
+        String name = screenshotBase + basename;
+        return getSeleniumHelper().takeScreenshot(name);
+    }
+
     /**
      * Implementations should wait until the condition evaluates to a value that is neither null nor
      * false. Because of this contract, the return type must not be Void.
@@ -490,8 +498,12 @@ public class BrowserTest extends SlimFixture {
             return wait.until(condition);
         } catch (TimeoutException e) {
             // take a screenshot of what was on screen
-            takeScreenshot("timeouts/" + getClass().getSimpleName() + "/timeout");
-            throw e;
+            String screenShotFile = createScreenshot("timeouts/" + getClass().getSimpleName() + "/timeout");
+            if (screenShotFile == null) {
+                throw new TimeoutStopTestException(e);
+            } else {
+                throw new TimeoutStopTestException("Screenshot available at: " + screenShotFile, e);
+            }
         }
     }
 

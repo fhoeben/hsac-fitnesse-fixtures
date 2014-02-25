@@ -92,10 +92,17 @@ public class HttpTest extends SlimFixture {
      * @return true if call could be made and response did not indicate error.
      */
     public boolean postTo(String serviceUrl) {
-        boolean result = false;
+        boolean result;
         response = createResponse();
-        if (template != null) {
-            getEnvironment().doHttpPost(getUrl(serviceUrl), template, currentValues, response, headerValues);
+        if (template == null) {
+            throw new StopTestException("No template available to use in post");
+        } else {
+            String url = getUrl(serviceUrl);
+            try {
+                getEnvironment().doHttpPost(url, template, currentValues, response, headerValues);
+            } catch (Throwable t) {
+                throw new StopTestException("Unable to get response from POST to: " + url, t);
+            }
             result = postProcessResponse();
         }
         return result;
@@ -107,9 +114,15 @@ public class HttpTest extends SlimFixture {
      * @return true if call could be made and response did not indicate error.
      */
     public boolean getFrom(String serviceUrl) {
+        boolean result;
         String url = createUrlWithParams(serviceUrl);
-        response = getEnvironment().doHttpGet(url);
-        return postProcessResponse();
+        try {
+            response = getEnvironment().doHttpGet(url);
+        } catch (Throwable t) {
+            throw new StopTestException("Unable to GET response from: " + url, t);
+        }
+        result = postProcessResponse();
+        return result;
     }
 
     String createUrlWithParams(String serviceUrl) {
