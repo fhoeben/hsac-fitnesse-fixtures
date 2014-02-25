@@ -13,6 +13,18 @@ import java.util.concurrent.TimeUnit;
 
 public class BrowserTest extends SlimFixture {
     private static final String FILES_DIR = new File("FitNesseRoot/files/").getAbsolutePath();
+    private static final String ELEMENT_ON_SCREEN_JS =
+            "var win = $(window);\n" +
+            "var viewport = {\n" +
+            "    top : win.scrollTop(),\n" +
+            "    left : win.scrollLeft()\n" +
+            "};\n" +
+            "viewport.right = viewport.left + win.width();\n" +
+            "viewport.bottom = viewport.top + win.height();\n" +
+            "var bounds = $(arguments[0]).offset();\n" +
+            "bounds.right = bounds.left + $(arguments[0]).outerWidth();\n" +
+            "bounds.bottom = bounds.top + $(arguments[0]).outerHeight();\n" +
+            "return (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom));";
 
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
     private int secondsBeforeTimeout;
@@ -251,8 +263,6 @@ public class BrowserTest extends SlimFixture {
                 List<WebElement> elements = webDriver.findElements(By.tagName(tagName));
                 if (elements != null) {
                     for (WebElement element : elements) {
-
-
                         try {
                             String actual = element.getText();
                             if (expectedText == null) {
@@ -379,25 +389,32 @@ public class BrowserTest extends SlimFixture {
      * @param element element to scroll to.
      */
     protected void scrollIfNotOnScreen(WebElement element) {
-        boolean elementOnScreen = (Boolean)getSeleniumHelper().executeJavascript(elementOnScreenJavascript(), element);
-        if (element.isDisplayed() && !elementOnScreen) {
+        if (element.isDisplayed() && !isElementOnScreen(element)) {
             scrollTo(element);
         }
     }
 
-    private String elementOnScreenJavascript()
-    {
-        return  "var win = $(window);\n" +
-                "var viewport = {\n" +
-                "    top : win.scrollTop(),\n" +
-                "    left : win.scrollLeft()\n" +
-                "};\n" +
-                "viewport.right = viewport.left + win.width();\n" +
-                "viewport.bottom = viewport.top + win.height();\n" +
-                "var bounds = $(arguments[0]).offset();\n" +
-                "bounds.right = bounds.left + $(arguments[0]).outerWidth();\n" +
-                "bounds.bottom = bounds.top + $(arguments[0]).outerHeight();\n" +
-                "return (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom));";
+    /**
+     * Determines whether element can be see in browser's window.
+     * @param place element to check.
+     * @return true if element is displayed and in viewport.
+     */
+    public boolean isVisible(String place) {
+        boolean result = false;
+        WebElement element = getElement(place);
+        if (element != null) {
+            result = element.isDisplayed() && isElementOnScreen(element);
+        }
+        return result;
+    }
+
+    /**
+     * Checks whether element is in browser's viewport.
+     * @param element element to check
+     * @return true if element is in browser's viewport.
+     */
+    protected boolean isElementOnScreen(WebElement element) {
+        return (Boolean)getSeleniumHelper().executeJavascript(ELEMENT_ON_SCREEN_JS, element);
     }
 
     /**
