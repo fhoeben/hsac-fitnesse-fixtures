@@ -1,13 +1,12 @@
 package nl.hsac.fitnesse.fixture;
 
+import fitnesse.components.PluginsClassLoader;
 import fitnesse.junit.JUnitHelper;
 import fitnesse.junit.JUnitXMLTestListener;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 
 import javax.xml.namespace.NamespaceContext;
-import java.io.IOException;
-import java.net.ServerSocket;
 
 /**
  * Helper for unit tests.
@@ -25,32 +24,14 @@ public class UnitTestHelper {
      * @return JUnitHelper.
      */
     public static JUnitHelper createFitnesseHelper() {
+        try {
+            new PluginsClassLoader().addPluginsToClassLoader();
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to adds plugins to classpath", e);
+        }
         // the paths supplied are relative to the working directory set in pom.xml (i.e. wiki)
         JUnitXMLTestListener resultsListener = new JUnitXMLTestListener("../target/failsafe-reports");
         JUnitHelper jUnitHelper = new JUnitHelper(".", "../target/fitnesse-results", resultsListener);
-        // FIT needs a local free port
-        int localPort = getRandomFreePort();
-        jUnitHelper.setPort(localPort);
         return jUnitHelper;
-    }
-    
-    private static int getRandomFreePort() {
-        int localPort = 80;
-        ServerSocket socket = null;
-        try {
-            socket = new ServerSocket(0);
-            localPort = socket.getLocalPort();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (socket != null) {
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    // just ignore
-                }
-            }
-        }
-        return localPort;
     }
 }
