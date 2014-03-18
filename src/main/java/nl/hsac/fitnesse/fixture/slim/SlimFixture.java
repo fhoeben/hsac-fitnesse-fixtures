@@ -29,6 +29,23 @@ public class SlimFixture {
     }
 
     /**
+     * Stores a (global) value so it can be accessed by other fixtures/pages.
+     * @param symbolName name to store value under.
+     * @param value value to store.
+     */
+    public void setGlobalValue(String symbolName, String value) {
+        getEnvironment().setSymbol(symbolName, value);
+    }
+
+    /**
+     * Retrieves a (global) value, which was previously stored using #setGlobalValue().
+     * @param symbolName name value was stored under.
+     */
+    public String getGlobalValue(String symbolName) {
+        return getEnvironment().getSymbol(symbolName);
+    }
+
+    /**
      * Removes result of wiki formatting (for e.g. email addresses) if needed.
      * @param rawValue value as received from Fitnesse.
      * @return rawValue if it was just text, cleaned version if it was not.
