@@ -1,6 +1,5 @@
 package nl.hsac.fitnesse.fixture.slim;
 
-import nl.hsac.fitnesse.fixture.util.XMLFormatter;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 
 /**
@@ -8,8 +7,6 @@ import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
  * Example use: make SOAP calls using #postTo().
  */
 public class XmlHttpTest extends HttpTest {
-    private final XMLFormatter xmlFormatter = new XMLFormatter();
-
     /**
      * Register a prefix to use in XPath expressions.
      * @param prefix prefix to be used in xPath expressions.
