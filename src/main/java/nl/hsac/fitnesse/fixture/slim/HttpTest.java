@@ -115,9 +115,10 @@ public class HttpTest extends SlimFixture {
      */
     public boolean getFrom(String serviceUrl) {
         boolean result;
+        response = createResponse();
         String url = createUrlWithParams(serviceUrl);
         try {
-            response = getEnvironment().doHttpGet(url);
+            getEnvironment().doGet(url, response);
         } catch (Throwable t) {
             throw new StopTestException("Unable to GET response from: " + url, t);
         }
