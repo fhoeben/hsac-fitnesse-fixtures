@@ -249,7 +249,12 @@ public class Environment {
         return response;
     }
 
-    private void doGet(String url, HttpResponse response) {
+    /**
+     * GETs content from URL.
+     * @param url url to get from.
+     * @param response response to store url and response value in.
+     */
+    public void doGet(String url, HttpResponse response) {
         response.setRequest(url);
         httpClient.get(url, response);
     }
