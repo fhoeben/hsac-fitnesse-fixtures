@@ -20,24 +20,27 @@ public class XmlHttpTest extends HttpTest {
     }
 
     /**
-     * @return request sent last time postTo() was called.
+     * @return request sent last time postTo() or getFrom() was called.
      */
     @Override
     public String request() {
-        return getEnvironment().getHtmlForXml(super.request());
+        return formatValue(super.request());
     }
 
     /**
-     * @return response received last time postTo() was called.
+     * @return response received last time postTo() or getFrom() was called.
      */
     @Override
     public String response() {
-        String response = super.response();
+        return formatValue(super.response());
+    }
+
+    private String formatValue(String value) {
         String result;
         try {
-            result = getEnvironment().getHtmlForXml(response);
+            result = getEnvironment().getHtmlForXml(value);
         } catch (Exception e) {
-            result = response;
+            result = value;
         }
         return result;
     }
