@@ -14,12 +14,10 @@ public class FixtureDebugTest {
     public void testWithFitnesse() throws Exception {
         String suiteName = "MyTests";
 
-        if (!StringUtils.isEmpty(suiteOverrideVariableName)) {
-            // allow suite to execute to be overriden via system property (e.g. for use by build server)
-            String propSuite = System.getProperty(suiteOverrideVariableName);
-            if (!StringUtils.isEmpty(propSuite)) {
-                suiteName = propSuite;
-            }
+        // allow suite to execute to be overriden via system property (e.g. for use by build server)
+        String propSuite = System.getProperty(suiteOverrideVariableName);
+        if (!StringUtils.isEmpty(propSuite)) {
+            suiteName = propSuite;
         }
 
         new FitnesseFromJUnitRunner().assertSuitePasses(suiteName);
