@@ -3,6 +3,10 @@ package nl.hsac.fitnesse.junit;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.junit.JUnitHelper;
 import fitnesse.junit.JUnitXMLTestListener;
+import fitnesse.junit.JavaFormatter;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Helper to run Fitnesse tests from JUnit tests.
@@ -25,7 +29,27 @@ public class FitnesseFromJUnitRunner {
         JUnitXMLTestListener resultsListener = new JUnitXMLTestListener(xmlOutputPath);
         JUnitHelper jUnitHelper = new JUnitHelper(fitnesseRoot, htmlOutputPath, resultsListener);
 
-        jUnitHelper.assertSuitePasses(suiteName);
+        try {
+            jUnitHelper.assertSuitePasses(suiteName);
+        } finally {
+            addFilesToHtmlOutput();
+        }
+    }
+
+    protected void addFilesToHtmlOutput() throws IOException {
+        copyResourceToHtmlOutput("css/fitnesse.css");
+        copyResourceToHtmlOutput("css/fitnesse_pages.css");
+        copyResourceToHtmlOutput("css/fitnesse_wiki.css");
+        copyResourceToHtmlOutput("css/fitnesse_straight.css");
+
+    }
+
+    protected void copyResourceToHtmlOutput(String resource) throws IOException {
+        String src = "/fitnesse/resources/" + resource;
+        String dest = htmlOutputPath + "/" + resource;
+
+        File target = new File(dest);
+        JavaFormatter.FileCopier.copy(src, target);
     }
 
     /**
