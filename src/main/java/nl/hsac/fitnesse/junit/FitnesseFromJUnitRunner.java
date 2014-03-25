@@ -19,7 +19,7 @@ public class FitnesseFromJUnitRunner {
 
     /**
      * Runs a suite of Fitnesse tests. One JUnit test will be reported for each page executed.
-     * @param suiteName name of suite to run (maybe overridden by a system property
+     * @param suiteName name of suite to run
      * @throws Exception
      */
     public void assertSuitePasses(String suiteName) throws Exception {
