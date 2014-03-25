@@ -86,6 +86,9 @@ public class SeleniumHelper {
             element = getElementByLabelOccurrence(place, 1);
         }
         if (element == null) {
+            element = findElement(byXpath("//input[@placeholder='%s']", place));
+        }
+        if (element == null) {
             element = findElement(byXpath("//input[@value='%s']", place));
         }
         if (element == null) {
@@ -102,6 +105,9 @@ public class SeleniumHelper {
         }
         if (element == null) {
             element = getElementByPartialLabelOccurrence(place, 1);
+        }
+        if (element == null) {
+            element = findElement(byXpath("//input[contains(@placeholder, '%s')]", place));
         }
         if (element == null) {
             element = findElement(byXpath("//input[contains(@value, '%s')]", place));
