@@ -42,13 +42,14 @@ Using a scenario allows us to generate multiple request, only changing certain v
 
 By using a Freemarker template we can have more dynamic body content.
 
-|script   |xml http test                   |
-|set value|element text   |for|text        |
-|template |samplePost.ftl.xml              |
-|post to  |${URL}                          |
-|check    |response status|200             |
-|show     |request                         |
-|set value|more           |for|extraElement|
-|post to  |${URL}                          |
-|check    |response status|200             |
-|show     |request                         |
+|script          |xml http test                                |
+|template        |samplePost.ftl.xml                           |
+|set value       |http://hsac.nl/sample|for header|SOAPAction  |
+|set value       |element text         |for       |text        |
+|post template to|${URL}                                       |
+|check           |response status      |200                    |
+|show            |request                                      |
+|set value       |more                 |for       |extraElement|
+|post template to|${URL}                                       |
+|check           |response status      |200                    |
+|show            |request                                      |
