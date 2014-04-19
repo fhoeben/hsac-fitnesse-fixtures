@@ -223,6 +223,16 @@ public class Environment {
     public void doHttpPost(String url, String templateName, Object model, HttpResponse result, Map<String, String> headers) {
         String request = processTemplate(templateName, model);
         result.setRequest(request);
+        doHttpPost(url, result, headers);
+    }
+
+    /**
+     * Performs POST to supplied url of result's request.
+     * @param url url to post to.
+     * @param result result containing request, its response will be filled.
+     * @param headers headers to add.
+     */
+    public void doHttpPost(String url, HttpResponse result, Map<String, String> headers) {
         httpClient.post(url, result, headers);
     }
 

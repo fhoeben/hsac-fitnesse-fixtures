@@ -1,0 +1,54 @@
+!define URL {http://localhost:9090}
+
+!2 Body in Wiki
+
+Send a HTTP POST supplying the content to post in a variable so the script table does not have newlines in its cells. 
+
+!define POST_BODY { {{{
+<MyContent>
+  <content a='c'/>
+</MyContent>
+}}} }
+
+|script|xml http test            |
+|post  |${POST_BODY}   |to|${URL}|
+|check |response status|200      |
+
+
+!2 Body via scenario
+
+Using a scenario allows us to generate multiple request, only changing certain values.
+
+!*> Scenario definition
+!define POST_BODY_2 { {{{
+<MyContent>
+  <content a='@{attribuut}'>@{text}</content>
+</MyContent>
+}}} }
+
+|script|xml http test|
+
+|auto-scenario|send request             |
+|post         |${POST_BODY_2} |to|${URL}|
+|check        |response status|200      |
+*!
+
+|send request                     |
+|attribuut   |text                |
+|f           |element text        |
+|my attribute|another element text|
+
+!2 Body from template
+
+By using a Freemarker template we can have more dynamic body content.
+
+|script   |xml http test                   |
+|set value|element text   |for|text        |
+|template |samplePost.ftl.xml              |
+|post to  |${URL}                          |
+|check    |response status|200             |
+|show     |request                         |
+|set value|more           |for|extraElement|
+|post to  |${URL}                          |
+|check    |response status|200             |
+|show     |request                         |
