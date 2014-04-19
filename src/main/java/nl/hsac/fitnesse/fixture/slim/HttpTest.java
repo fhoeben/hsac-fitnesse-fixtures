@@ -94,7 +94,7 @@ public class HttpTest extends SlimFixture {
      * @param serviceUrl service endpoint to send XML to.
      * @return true if call could be made and response did not indicate error.
      */
-    public boolean postTo(String serviceUrl) {
+    public boolean postTemplateTo(String serviceUrl) {
         boolean result;
         response = createResponse();
         if (template == null) {
