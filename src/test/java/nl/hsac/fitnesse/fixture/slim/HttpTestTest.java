@@ -63,4 +63,22 @@ public class HttpTestTest {
         getUrl = client.createUrlWithParams("http://mysite.nl:8080/test");
         assertEquals("http://mysite.nl:8080/test?param", getUrl);
     }
+
+    @Test
+    public void testBodyCleanup() {
+        String body = "<xml>";
+        String cleaned = client.cleanupBody(body);
+        assertEquals(body, cleaned);
+    }
+
+    @Test
+    public void testBodyCleanupPre() {
+        String cleaned = client.cleanupBody("<pre> \n" +
+                "&lt;MyContent&gt;\n" +
+                "  &lt;content a='c'/&gt;\n" +
+                "&lt;/MyContent&gt;\n" +
+                " </pre>");
+
+        assertEquals("<MyContent>\n  <content a='c'/>\n</MyContent>", cleaned);
+    }
 }
