@@ -1,0 +1,4 @@
+!1 Test suite Browser Tests
+!contents -R2 -g -p -f -h
+
+Example tests using Selenium via !-BrowserTest-! fixture.

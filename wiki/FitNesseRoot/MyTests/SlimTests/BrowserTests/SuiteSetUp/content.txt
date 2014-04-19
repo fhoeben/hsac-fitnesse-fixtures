@@ -1,0 +1,20 @@
+!***> Fixture code locations
+!include -c .MyTests.SlimTests.SuiteSetUp
+
+|Import                           |
+|nl.hsac.fitnesse.fixture.slim.web|
+
+*!
+
+!define GRID_HUB {http://localhost:4444/wd/hub}
+
+!|script     |selenium driver setup                                                             |
+|set property|webdriver.chrome.driver|value  |${FITNESSE_ROOTPATH}/webdrivers/osx/chromedriver  |
+|startDriver |org.openqa.selenium.chrome.ChromeDriver                                           |
+|set property|webdriver.ie.driver    |value  |${FITNESSE_ROOTPATH}/webdrivers/IEDriverServer.exe|
+|note        |startDriver            |org.openqa.selenium.ie.InternetExplorerDriver             |
+|note        |startDriver            |org.openqa.selenium.safari.SafariDriver                   |
+|note        |startDriver            |org.openqa.selenium.firefox.FirefoxDriver                 |
+|note        |connect to driver for  |firefox|at        |${GRID_HUB}                            |
+|note        |connect to driver for  |firefox|on        |ANY   |at   |${GRID_HUB}               |
+|note        |connect to driver for  |firefox|version   |2     |on   |ANY   |at   |${GRID_HUB}  |

@@ -2,11 +2,14 @@ package nl.hsac.fitnesse.fixture.slim;
 
 import freemarker.template.Template;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Fixture to make HTTP requests using Slim scripts and/or scenarios.
@@ -91,7 +94,7 @@ public class HttpTest extends SlimFixture {
      * @param serviceUrl service endpoint to send XML to.
      * @return true if call could be made and response did not indicate error.
      */
-    public boolean postTo(String serviceUrl) {
+    public boolean postTemplateTo(String serviceUrl) {
         boolean result;
         response = createResponse();
         if (template == null) {
@@ -104,6 +107,38 @@ public class HttpTest extends SlimFixture {
                 throw new StopTestException("Unable to get response from POST to: " + url, t);
             }
             result = postProcessResponse();
+        }
+        return result;
+    }
+
+    /**
+     * Sends HTTP POST body to service endpoint.
+     * @param body content to post
+     * @param serviceUrl service endpoint to send XML to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean postTo(String body, String serviceUrl) {
+        boolean result;
+        response = createResponse();
+        String cleanedBody = cleanupBody(body);
+        response.setRequest(cleanedBody);
+        String url = getUrl(serviceUrl);
+        try {
+            getEnvironment().doHttpPost(url, response, headerValues);
+        } catch (Throwable t) {
+            throw new StopTestException("Unable to get response from POST to: " + url, t);
+        }
+        result = postProcessResponse();
+        return result;
+    }
+
+    protected String cleanupBody(String body) {
+        String result = body;
+        Pattern preFormatted = Pattern.compile("<pre>\\s*(.*?)\\s*</pre>", Pattern.DOTALL);
+        Matcher matcher = preFormatted.matcher(body);
+        if (matcher.matches()) {
+            String escapedBody = matcher.group(1);
+            result = StringEscapeUtils.unescapeHtml4(escapedBody);
         }
         return result;
     }
