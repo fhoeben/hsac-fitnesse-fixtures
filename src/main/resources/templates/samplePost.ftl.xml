@@ -1,0 +1,10 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://hsac.nl/samplePost">
+<soapenv:Body>
+        <ns:sample>
+            <ns:content>${text}</ns:content>
+<#if extraElement??>
+            <ns:extra>${extraElement}</ns:extra>
+</#if>
+        </ns:sample>
+    </soapenv:Body>
+</soapenv:Envelope>
