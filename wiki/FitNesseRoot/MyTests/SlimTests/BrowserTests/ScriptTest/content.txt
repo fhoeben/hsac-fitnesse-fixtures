@@ -2,6 +2,7 @@
 |open        |http://funda.nl                                                        |
 |enter       |Maliebaan, Utrecht|for                            |Locatie             |
 |select      |€ 500.000         |for                            |Prijsklasse         |
+|select      |€ 1.500.000       |for                            |tot                 |
 |click       |Zoeken                                                                 |
 |click       |Maliebaan 50 A                                                         |
 |check       |page title        |Huis te koop: Maliebaan 50 A 3581 CS Utrecht [funda]|
