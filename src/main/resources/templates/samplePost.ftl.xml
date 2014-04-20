@@ -1,10 +1,10 @@
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://hsac.nl/samplePost">
-<soapenv:Body>
-        <ns:sample>
-            <ns:content>${text}</ns:content>
-<#if extraElement??>
-            <ns:extra>${extraElement}</ns:extra>
-</#if>
-        </ns:sample>
-    </soapenv:Body>
-</soapenv:Envelope>
+<s11:Envelope xmlns:s11="http://schemas.xmlsoap.org/soap/envelope/">
+	<s11:Body>
+		<ns1:GetWeather xmlns:ns1="http://www.webserviceX.NET">
+			<#if cityName??>
+			<ns1:CityName>${cityName}</ns1:CityName>
+    		</#if>
+			<ns1:CountryName>${countryName}</ns1:CountryName>
+		</ns1:GetWeather>
+	</s11:Body>
+</s11:Envelope>
