@@ -11,7 +11,13 @@
 |check       |value of          |woonoppervlakte                |300 m²              |
 |click       |Foto's                                                                 |
 |check       |page title        |=~/.*Foto's.*/                                      |
+|show        |take screenshot   |Foto_1                                              |
 |click       |Volgende foto                                                          |
+|wait seconds|1                                                                      |
+|show        |take screenshot   |Foto_2                                              |
 |click       |Volgende foto                                                          |
+|wait seconds|1                                                                      |
+|show        |take screenshot   |Foto_3                                              |
 |click       |Vergroten                                                              |
-|wait seconds|2                                                                      |
+|wait seconds|1                                                                      |
+|show        |take screenshot   |Foto_3_groot                                        |
