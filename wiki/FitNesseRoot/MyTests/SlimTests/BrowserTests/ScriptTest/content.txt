@@ -1,13 +1,13 @@
 |script|browser test     |
-|open  |http://google.com|
-|enter |Bob   |for   |q  |
-|click |btnG             |
-|clear |q                |
+|open  |http://funda.nl|
+|enter |Maliebaan, Utrecht   |for   |Locatie  |
+|select|€ 500.000|for|Prijsklasse|
+|click|Zoeken|
+|click|Maliebaan 50 A|
+|click|Omschrijving|
+|click|Foto's|
+|click|Volgende foto|
+|wait seconds|2|
+|click|Volgende foto|
+|wait seconds|2|
 
-|scenario|feel lucky  |query  |
-|open    |http://google.com/en|
-|enter   |@query      |for |q |
-|click   |Google Search       |
-
-|script          |
-|feel lucky|fried|
