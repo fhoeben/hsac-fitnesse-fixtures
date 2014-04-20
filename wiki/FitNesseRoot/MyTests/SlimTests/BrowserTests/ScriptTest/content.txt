@@ -1,13 +1,16 @@
-|script|browser test     |
-|open  |http://funda.nl|
-|enter |Maliebaan, Utrecht   |for   |Locatie  |
-|select|€ 500.000|for|Prijsklasse|
-|click|Zoeken|
-|click|Maliebaan 50 A|
-|click|Omschrijving|
-|click|Foto's|
-|click|Volgende foto|
-|wait seconds|2|
-|click|Volgende foto|
-|wait seconds|2|
-
+|script      |browser test                                                           |
+|open        |http://funda.nl                                                        |
+|enter       |Maliebaan, Utrecht|for                            |Locatie             |
+|select      |€ 500.000         |for                            |Prijsklasse         |
+|click       |Zoeken                                                                 |
+|click       |Maliebaan 50 A                                                         |
+|check       |page title        |Huis te koop: Maliebaan 50 A 3581 CS Utrecht [funda]|
+|click       |Kenmerken                                                              |
+|check       |value of          |Oorspronkelijke vraagprijs     |€ 1.395.000 k.k.    |
+|check       |value of          |woonoppervlakte                |300 m²              |
+|click       |Foto's                                                                 |
+|check       |page title        |=~/.*Foto's.*/                                      |
+|click       |Volgende foto                                                          |
+|click       |Volgende foto                                                          |
+|click       |Vergroten                                                              |
+|wait seconds|2                                                                      |

@@ -98,6 +98,9 @@ public class SeleniumHelper {
             element = findElement(By.linkText(place));
         }
         if (element == null) {
+            element = findElement(byXpath("//th[normalize-space(text())='%s']/../td ", place));
+        }
+        if (element == null) {
             element = findElement(By.name(place));
         }
         if (element == null) {
@@ -114,6 +117,9 @@ public class SeleniumHelper {
         }
         if (element == null) {
             element = findElement(By.partialLinkText(place));
+        }
+        if (element == null) {
+            element = findElement(byXpath("//th[contains(normalize-space(text()), '%s')]/../td ", place));
         }
         return element;
     }
