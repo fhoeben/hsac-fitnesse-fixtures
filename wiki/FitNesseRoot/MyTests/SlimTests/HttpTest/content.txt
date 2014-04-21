@@ -71,18 +71,18 @@ Performs HTTP GET instead of POST
 
 By using a Freemarker template we can have more dynamic body content.
 
-|script          |xml http test                                                                                       |
-|template        |samplePost.ftl.xml                                                                                  |
-|set value       |http://www.webserviceX.NET/GetWeather  |for header                       |SOAPAction                |
-|set value       |Canada                                 |for                              |countryName               |
-|post template to|http://www.webservicex.com/globalweather.asmx                                                       |
-|check           |response status                        |500                                                         |
-|show            |request                                                                                             |
-|show            |response                                                                                            |
-|register prefix |wsX                                    |for namespace                    |http://www.webserviceX.NET|
-|set value       |Vancouver International Air-Port, B. C.|for                              |cityName                  |
-|post template to|http://www.webservicex.com/globalweather.asmx                                                       |
-|check           |response status                        |200                                                         |
-|show            |request                                                                                             |
-|show            |response                                                                                            |
-|check           |xPath                                  |!-//wsX:GetWeatherResult/text()-!|                          |
+|script          |xml http test                                                                   |
+|template        |samplePost.ftl.xml                                                              |
+|set value       |http://www.webserviceX.NET/GetWeather  |for header   |SOAPAction                |
+|set value       |Canada                                 |for          |countryName               |
+|post template to|http://www.webservicex.com/globalweather.asmx                                   |
+|check           |response status                        |500                                     |
+|show            |request                                                                         |
+|show            |response                                                                        |
+|register prefix |wsX                                    |for namespace|http://www.webserviceX.NET|
+|set value       |Vancouver International Air-Port, B. C.|for          |cityName                  |
+|post template to|http://www.webservicex.com/globalweather.asmx                                   |
+|check           |response status                        |200                                     |
+|show            |request                                                                         |
+|show            |response                                                                        |
+|show            |xPath                                  |!-//wsX:GetWeatherResult/text()-!       |
