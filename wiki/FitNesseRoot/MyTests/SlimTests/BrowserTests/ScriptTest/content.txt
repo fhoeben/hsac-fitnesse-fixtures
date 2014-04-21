@@ -1,7 +1,18 @@
+!1 Web site testing using !-BrowserTest-!
+
+
+On this page we test whether we can find a nice house which is for sale in Utrecht, The Netherlands. 
+We check whether they have not been changing the original asking price or its size in square meters. Furthermore we look at, and capture, the first three pictures
+
+To do this we use a [[Slim script table][.FitNesse.UserGuide.SliM.ScriptTable]] driving the Java class !-BrowserTest-! (which uses Selenium).
+This class allows us to specify what we want to do using a web browser, by the (end user visible) texts on screen. We don't need to specify any HTML code or write any custom Java logic. By only using the texts visible on screen we only need to change the script if the site's interaction design changes, but not for changes in HTML structure, element naming or styling.
+
+The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
+
 |script      |browser test                                                           |
 |open        |http://funda.nl                                                        |
 |enter       |Maliebaan, Utrecht|for                            |Locatie             |
-|select      |€ 500.000         |for                            |Prijsklasse         |
+|select      |€ 1.000.000       |for                            |Prijsklasse         |
 |select      |€ 1.500.000       |for                            |tot                 |
 |click       |Zoeken                                                                 |
 |click       |Maliebaan 50 A                                                         |
