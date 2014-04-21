@@ -1,12 +1,13 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import org.w3c.dom.Node;
-import org.w3c.dom.bootstrap.DOMImplementationRegistry;
-import org.w3c.dom.ls.DOMImplementationLS;
-import org.w3c.dom.ls.LSSerializer;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.ByteArrayInputStream;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import java.io.StringReader;
+import java.io.StringWriter;
 
 /**
  * Formats XML.
@@ -19,16 +20,19 @@ public class XMLFormatter {
      */
     public String format(String xml) {
         try {
-            ByteArrayInputStream is = new ByteArrayInputStream(xml.getBytes("UTF-8"));
-            Node document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(is).getDocumentElement();
             boolean keepDeclaration = xml.startsWith("<?xml");
-            DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
-            DOMImplementationLS impl = (DOMImplementationLS) registry.getDOMImplementation("LS");
-            LSSerializer writer = impl.createLSSerializer();
 
-            writer.getDomConfig().setParameter("format-pretty-print", true); 
-            writer.getDomConfig().setParameter("xml-declaration", keepDeclaration);
-            return writer.writeToString(document).replace(" encoding=\"UTF-16\"?", " encoding=\"UTF-8\"?");
+            Source xmlInput = new StreamSource(new StringReader(xml));
+            StreamResult xmlOutput = new StreamResult(new StringWriter());
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            if (keepDeclaration) {
+                transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+            }
+            transformer.transform(xmlInput, xmlOutput);
+            return xmlOutput.getWriter().toString();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
