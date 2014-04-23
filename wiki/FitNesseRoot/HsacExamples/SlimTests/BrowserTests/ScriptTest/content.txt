@@ -1,4 +1,4 @@
-!1 Web site testing using !-BrowserTest-!
+!1 Website testing using !-BrowserTest-!
 
 
 On this page we test whether we can find a nice house which is for sale in Utrecht, The Netherlands. 
@@ -21,9 +21,11 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |check       |value of          |Oorspronkelijke vraagprijs     |€ 1.395.000 k.k.    |
 |check       |value of          |woonoppervlakte                |300 m²              |
 |click       |Foto's                                                                 |
+|note        |Check whether the page title matches the supplied regular expression   |
 |check       |page title        |=~/.*Foto's.*/                                      |
 |show        |take screenshot   |Foto_1                                              |
 |click       |Volgende foto                                                          |
+|note        |Wait for the loading of the next photo to complete                     |
 |wait seconds|1                                                                      |
 |show        |take screenshot   |Foto_2                                              |
 |click       |Volgende foto                                                          |
