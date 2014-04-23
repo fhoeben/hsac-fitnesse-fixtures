@@ -3,7 +3,7 @@
 
 On this page we test whether we check the prices of a couple of houses for sale in Utrecht, The Netherlands. 
 On this test continues where ScriptTest left of. It uses a [[Slim scenario][.FitNesse.UserGuide.SliM.ScenarioTable]] to define a parameterized script.
-This is then invoked multiple times from a [[Decision table][.FitNesse.UserGuide.SliM.DecisionTable], once for each row.
+This is then invoked multiple times from a [[Decision table][.FitNesse.UserGuide.SliM.DecisionTable]], once for each row.
 
 
 The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
