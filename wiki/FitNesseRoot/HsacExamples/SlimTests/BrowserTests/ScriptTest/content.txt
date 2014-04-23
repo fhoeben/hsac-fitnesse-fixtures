@@ -11,7 +11,7 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |script      |browser test                                                           |
 |open        |http://funda.nl                                                        |
-|enter       |Maliebaan, Utrecht|for                            |Locatie             |
+|enter       |Maliebaan, Utrecht|as                             |Locatie             |
 |select      |€ 1.000.000       |for                            |Prijsklasse         |
 |select      |€ 1.500.000       |for                            |tot                 |
 |click       |Zoeken                                                                 |
