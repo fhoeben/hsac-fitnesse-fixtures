@@ -39,7 +39,7 @@ Using a scenario allows us to generate multiple request, only changing certain v
 
 |script|xml http test|
 
-|auto-scenario  |send request                                                        |
+|table template |send request                                                        |
 |post           |${POST_BODY_2} |to                   |${URL}                        |
 |check          |response status|200                                                 |
 |show           |response                                                            |
