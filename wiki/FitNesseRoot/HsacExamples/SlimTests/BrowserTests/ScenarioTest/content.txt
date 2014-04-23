@@ -9,7 +9,7 @@ This is then invoked multiple times from a [[Decision table][.FitNesse.UserGuide
 The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
 
 |scenario|check original price _|address, city, price, originalPrice        |
-|open    |http://funda.nl                                                   |
+|open    |http://www.funda.nl                                               |
 |enter   |@{address}, @{city}   |as                        |Locatie         |
 |click   |Zoeken                                                            |
 |click   |@{address}                                                        |

@@ -10,7 +10,7 @@ This class allows us to specify what we want to do using a web browser, by the (
 The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
 
 |script      |browser test                                                           |
-|open        |http://funda.nl                                                        |
+|open        |http://www.funda.nl                                                    |
 |enter       |Maliebaan, Utrecht|as                             |Locatie             |
 |select      |€ 1.000.000       |for                            |Prijsklasse         |
 |select      |€ 1.500.000       |for                            |tot                 |
