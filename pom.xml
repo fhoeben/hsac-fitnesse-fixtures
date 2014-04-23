@@ -144,7 +144,7 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<!-- Use dependency:unpack to copy all classes from dependencies to ${standalone.classpath},
+				<!-- Use dependency:copy-dependencies to copy all jar from dependencies to ${standalone.classpath},
 					 where classes from this project end up also, so that all fixtures and
 					 dependencies are available to Fitnesse without need to have Maven to run tests.
 				-->

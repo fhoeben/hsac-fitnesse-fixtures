@@ -22,6 +22,7 @@ Som extra Wiki symbols that can be used:
 The official location for build server compiled fixture classes:
 
 !path fixtures
+!path fixtures/*.jar
 When developing and changing the fixtures, we will work based on the pom.xml:
 
 !pomFile ../pom.xml@compile
