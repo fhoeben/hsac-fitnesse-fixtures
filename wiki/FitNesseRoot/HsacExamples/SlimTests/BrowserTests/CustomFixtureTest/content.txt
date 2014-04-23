@@ -1,0 +1,24 @@
+!1 Website testing using custom subclass of !-BrowserTest-!
+
+
+On this page we test whether we can find a nice house which is for sale in Utrecht, The Netherlands. 
+We use a custom subclass of !-BrowserTest-! !-FundaTest-! to make the test (i.e. this wiki page) more descriptive, and less fragile to HTML changes, compared to ScriptTest (which used an XPath directly to get the photo count).
+
+The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
+
+We need to indicate in which package our custom class can be found.
+|import                 |
+|nl.hsac.fitnesse.sample|
+
+|script|funda test                                                        |
+|open  |http://www.funda.nl                                               |
+|enter |Maliebaan, Utrecht           |as            |Locatie              |
+|select|€ 1.000.000                  |for           |Prijsklasse          |
+|select|€ 1.500.000                  |for           |tot                  |
+|click |Zoeken                                                            |
+|click |Maliebaan 50 A                                                    |
+|click |Foto's                                                            |
+|note  |Use custom method to get number of photos                         |
+|check |photo count                  |23                                  |
+|note  |Since the custom method returns a number we can do relative checks|
+|check |photo count                  |>10                                 |
