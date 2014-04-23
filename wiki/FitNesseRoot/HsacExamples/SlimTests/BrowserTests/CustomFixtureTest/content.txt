@@ -2,7 +2,7 @@
 
 
 On this page we test whether we can find a nice house which is for sale in Utrecht, The Netherlands. 
-We use a custom subclass of !-BrowserTest-! !-FundaTest-! to make the test (i.e. this wiki page) more descriptive, and less fragile to HTML changes, compared to ScriptTest (which used an XPath directly to get the photo count).
+We use a custom subclass of !-BrowserTest-!, !-nl.hsac.fitnesse.sample.FundaTest-!, to make the test (i.e. this wiki page) more descriptive, and less fragile to HTML changes, compared to ScriptTest (which used an XPath directly to get the photo count).
 
 The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
 
