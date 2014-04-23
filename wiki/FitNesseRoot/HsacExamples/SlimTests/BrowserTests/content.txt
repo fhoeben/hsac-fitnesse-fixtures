@@ -1,4 +1,5 @@
-!1 Test suite Browser Tests
 !contents -R2 -g -p -f -h
 
-Example tests using Selenium via !-BrowserTest-! fixture.
+>ScriptTest shows the basic functionality of !-BrowserTest-! to test websites. 
+>ScenarioTest takes this to the next level by using a parameterized script (i.e. scenario). 
+The >TableTemplateTest simplifies the parameterization of the script. 
