@@ -34,3 +34,6 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |click       |Vergroten                                                              |
 |wait seconds|1                                                                      |
 |show        |take screenshot   |Foto_3_groot                                        |
+
+When multiple similar sequences of steps are needed a script can be generalized using a scenario, which is show in ScenarioTest. 
+To make test more readable, maintainable and powerful we can also create custom subclasses of !-BrowserTest-!. This is shown in CustomFixtureTest.
