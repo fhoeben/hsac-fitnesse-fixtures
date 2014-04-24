@@ -1,10 +1,25 @@
 !1 Website testing using custom subclass of !-BrowserTest-!
 
+On this page we test whether we can find a nice house which is for sale in Utrecht, The Netherlands and check how many photos are available. 
+First we do this with ''plain !-BrowserTest-!'', then with a ''custom subclass, !-nl.hsac.fitnesse.sample.FundaTest-!'', to make the test (i.e. this wiki page) more descriptive, and less fragile to HTML changes.
 
-On this page we test whether we can find a nice house which is for sale in Utrecht, The Netherlands. 
-We use a custom subclass of !-BrowserTest-!, !-nl.hsac.fitnesse.sample.FundaTest-!, to make the test (i.e. this wiki page) more descriptive, and less fragile to HTML changes, compared to ScriptTest (which used an XPath directly to get the photo count).
+!2 Using !-BrowserFixture-!
 
-The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
+|script|browser test                                                                  |
+|open  |http://www.funda.nl                                                           |
+|enter |Maliebaan, Utrecht         |as                            |Locatie            |
+|select|€ 1.000.000                |for                           |Prijsklasse        |
+|select|€ 1.500.000                |for                           |tot                |
+|click |Zoeken                                                                        |
+|click |Maliebaan 50 A                                                                |
+|click |Foto's                                                                        |
+|note  |Check any element's text based on an xPath, makes test fragile to HTML changes|
+|check |text by xPath              |//span[@class='hits']         |(23)               |
+
+What can we do with a custom subclass...
+
+!2 Using !-FundaTest-!
+
 
 We need to indicate in which package our custom class can be found.
 |import                 |
@@ -19,6 +34,6 @@ We need to indicate in which package our custom class can be found.
 |click |Maliebaan 50 A                                                    |
 |click |Foto's                                                            |
 |note  |Use custom method to get number of photos                         |
-|check |photo count                  |23                                  |
+|check |number of photos             |23                                  |
 |note  |Since the custom method returns a number we can do relative checks|
-|check |photo count                  |>10                                 |
+|check |number of photos             |>10                                 |

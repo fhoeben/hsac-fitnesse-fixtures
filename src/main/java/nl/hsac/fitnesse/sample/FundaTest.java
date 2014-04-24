@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  */
 public class FundaTest extends BrowserTest {
     private static final Pattern COUNT_PATTERN = Pattern.compile("\\((\\d+)\\)");
-    public int photoCount() {
+    public int numberOfPhotos() {
         String countText = textByXPath("//span[@class='hits']");
         Matcher m = COUNT_PATTERN.matcher(countText);
         if (!m.matches()) {
