@@ -9,30 +9,28 @@ This class allows us to specify what we want to do using a web browser, by the (
 
 The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
 
-|script      |browser test                                                                  |
-|open        |http://www.funda.nl                                                           |
-|enter       |Maliebaan, Utrecht   |as                               |Locatie               |
-|select      |€ 1.000.000          |for                              |Prijsklasse           |
-|select      |€ 1.500.000          |for                              |tot                   |
-|click       |Zoeken                                                                        |
-|click       |Maliebaan 50 A                                                                |
-|check       |page title           |Huis te koop: Maliebaan 50 A 3581 CS Utrecht [funda]    |
-|click       |Kenmerken                                                                     |
-|check       |value of             |Oorspronkelijke vraagprijs       |€ 1.395.000 k.k.      |
-|check       |value of             |woonoppervlakte                  |300 m²                |
-|click       |Foto's                                                                        |
-|note        |Check whether the page title matches the supplied regular expression          |
-|check       |page title           |=~/.*Foto's.*/                                          |
-|note        |Check any element's text based on an xPath, makes test fragile but is powerful|
-|check       |text by xPath        |//span[@class='hits']            |(23)                  |
-|show        |take screenshot      |Foto_1                                                  |
-|click       |Volgende foto                                                                 |
-|note        |Wait for the loading of the next photo to complete                            |
-|wait seconds|1                                                                             |
-|show        |take screenshot      |Foto_2                                                  |
-|click       |Volgende foto                                                                 |
-|wait seconds|1                                                                             |
-|show        |take screenshot      |Foto_3                                                  |
-|click       |Vergroten                                                                     |
-|wait seconds|1                                                                             |
-|show        |take screenshot      |Foto_3_groot                                            |
+|script      |browser test                                                           |
+|open        |http://www.funda.nl                                                    |
+|enter       |Maliebaan, Utrecht|as                             |Locatie             |
+|select      |€ 1.000.000       |for                            |Prijsklasse         |
+|select      |€ 1.500.000       |for                            |tot                 |
+|click       |Zoeken                                                                 |
+|click       |Maliebaan 50 A                                                         |
+|check       |page title        |Huis te koop: Maliebaan 50 A 3581 CS Utrecht [funda]|
+|click       |Kenmerken                                                              |
+|check       |value of          |Oorspronkelijke vraagprijs     |€ 1.395.000 k.k.    |
+|check       |value of          |woonoppervlakte                |300 m²              |
+|click       |Foto's                                                                 |
+|note        |Check whether the page title matches the supplied regular expression   |
+|check       |page title        |=~/.*Foto's.*/                                      |
+|show        |take screenshot   |Foto_1                                              |
+|click       |Volgende foto                                                          |
+|note        |Wait for the loading of the next photo to complete                     |
+|wait seconds|1                                                                      |
+|show        |take screenshot   |Foto_2                                              |
+|click       |Volgende foto                                                          |
+|wait seconds|1                                                                      |
+|show        |take screenshot   |Foto_3                                              |
+|click       |Vergroten                                                              |
+|wait seconds|1                                                                      |
+|show        |take screenshot   |Foto_3_groot                                        |
