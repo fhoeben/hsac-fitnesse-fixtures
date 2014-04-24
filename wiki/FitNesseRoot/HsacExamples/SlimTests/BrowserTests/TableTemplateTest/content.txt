@@ -28,3 +28,5 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |address         |city   |price           |original price  |square meters|year built|volume  |
 |Maliebaan 50 A  |Utrecht|€ 1.295.000 k.k.|€ 1.395.000 k.k.|300          |1930      |900 m³  |
 |Wilhelminapark 7|Utrecht|€ 1.500.000 k.k.|null            |335          |1907      |1.200 m³|
+
+To make test more readable, maintainable and powerful we can also create custom subclasses of !-BrowserTest-!. This is shown in CustomFixtureTest.
