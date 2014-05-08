@@ -1,6 +1,6 @@
 !2 Http GET
 
-Performs HTTP GET instead of POST
+Performs HTTP GET adding values as parameters in the query string.
 
 |script         |xml http test                                                       |
 |set value      |90210          |for                  |ZIP                           |
