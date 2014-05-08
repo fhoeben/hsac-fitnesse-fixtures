@@ -1,0 +1,20 @@
+!2 Body in Wiki
+
+Send a HTTP POST supplying the content to post in a variable so the script table does not have newlines in its cells. 
+
+!define POST_BODY { {{{
+<s11:Envelope xmlns:s11="http://schemas.xmlsoap.org/soap/envelope/">
+  <s11:Body>
+    <ns1:GetCityWeatherByZIP xmlns:ns1="http://ws.cdyne.com/WeatherWS/">
+      <ns1:ZIP>90210</ns1:ZIP>
+    </ns1:GetCityWeatherByZIP>
+  </s11:Body>
+</s11:Envelope>
+}}} }
+
+|script         |xml http test                                                       |
+|post           |${POST_BODY}   |to                   |${URL}                        |
+|check          |response status|200                                                 |
+|show           |response                                                            |
+|register prefix|weather        |for namespace        |http://ws.cdyne.com/WeatherWS/|
+|check          |xPath          |//weather:City/text()|Beverly Hills                 |
