@@ -12,7 +12,7 @@ public class FixtureDebugTest {
 
     @Test
     public void testWithFitnesse() throws Exception {
-        String suiteName = "MyTests.SlimTests.HttpTest";
+        String suiteName = "HsacExamples.SlimTests.HttpTests";
 
         // allow suite to execute to be overriden via system property (e.g. for use by build server)
         String propSuite = System.getProperty(suiteOverrideVariableName);
