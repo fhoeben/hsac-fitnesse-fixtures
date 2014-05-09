@@ -12,6 +12,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
+		<fitnesse.port>9090</fitnesse.port>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -139,7 +140,7 @@
 						<argument>-jar</argument>
 						<argument>fitnesse-standalone.jar</argument>
 						<argument>-p</argument>
-						<argument>9090</argument>
+						<argument>${fitnesse.port}</argument>
 					</arguments>
 				</configuration>
 			</plugin>
