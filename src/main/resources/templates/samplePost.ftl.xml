@@ -1,0 +1,10 @@
+<s11:Envelope xmlns:s11="http://schemas.xmlsoap.org/soap/envelope/">
+	<s11:Body>
+		<ns1:GetWeather xmlns:ns1="http://www.webserviceX.NET">
+			<#if cityName??>
+			<ns1:CityName>${cityName}</ns1:CityName>
+    		</#if>
+			<ns1:CountryName>${countryName}</ns1:CountryName>
+		</ns1:GetWeather>
+	</s11:Body>
+</s11:Envelope>

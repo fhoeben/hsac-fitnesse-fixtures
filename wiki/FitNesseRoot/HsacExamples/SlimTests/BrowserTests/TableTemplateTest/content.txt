@@ -1,0 +1,32 @@
+!1 Website testing using ''table test'' and !-BrowserTest-!
+
+
+On this page we test whether we check the prices of a couple of houses for sale in Utrecht, The Netherlands. 
+On this test continues where ScenarioTest left of. It uses a custom subclass of [[Slim's scenario][.FitNesse.UserGuide.SliM.ScenarioTable]] to define a parameterized script.
+This is then invoked multiple times from a [[Decision table][.FitNesse.UserGuide.SliM.DecisionTable]], once for each row.
+The advantage of this subclass is that the scenario's parameters do not have to be listed in its first row. This is, of course, especially convenient when there are many parameters.
+
+
+The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
+
+|table template|check original price                                             |
+|open          |http://www.funda.nl                                              |
+|enter         |@{address}, @{city}|as                        |Locatie           |
+|click         |Zoeken                                                           |
+|click         |@{address}                                                       |
+|click         |Kenmerken                                                        |
+|check         |value of           |Vraagprijs                |@{price}          |
+|check         |value of           |Oorspronkelijke vraagprijs|@{originalPrice}  |
+|check         |value of           |Inhoud                    |@{volume}         |
+|check         |value of           |woonoppervlakte           |@{squareMeters} m²|
+|check         |value of           |Bouwjaar                  |@{yearBuilt}      |
+
+
+|script|browser test|
+
+|check original price                                                                        |
+|address         |city   |price           |original price  |square meters|year built|volume  |
+|Maliebaan 50 A  |Utrecht|€ 1.295.000 k.k.|€ 1.395.000 k.k.|300          |1930      |900 m³  |
+|Wilhelminapark 7|Utrecht|€ 1.500.000 k.k.|null            |335          |1907      |1.200 m³|
+
+To make test more readable, maintainable and powerful we can also create custom subclasses of !-BrowserTest-!. This is shown in CustomFixtureTest.

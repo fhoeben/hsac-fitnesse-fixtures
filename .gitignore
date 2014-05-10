@@ -1,0 +1,14 @@
+wiki/FitNesseRoot/**/*.zip
+wiki/FitNesseRoot/files/screenshots
+wiki/FitNesseRoot/files/testResults
+wiki/FitNesseRoot/ErrorLogs
+hsac-fitnesse-fixtures.iml
+wiki/FitNesseRoot/FitNesse
+wiki/FitNesseRoot/PageFooter
+wiki/FitNesseRoot/PageHeader
+wiki/FitNesseRoot/RecentChanges
+wiki/FitNesseRoot/TemplateLibrary
+wiki/fixtures/
+properties
+updateDoNotCopyOverList
+updateList

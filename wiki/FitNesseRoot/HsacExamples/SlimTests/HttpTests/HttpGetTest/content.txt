@@ -1,0 +1,12 @@
+!2 Http GET
+
+Performs HTTP GET adding values as parameters in the query string.
+
+|script         |xml http test                                                       |
+|set value      |90210          |for                  |ZIP                           |
+|get from       |${URL}/GetCityWeatherByZIP                                          |
+|check          |response status|200                                                 |
+|show           |request                                                             |
+|show           |response                                                            |
+|register prefix|weather        |for namespace        |http://ws.cdyne.com/WeatherWS/|
+|check          |xPath          |//weather:City/text()|Beverly Hills                 |

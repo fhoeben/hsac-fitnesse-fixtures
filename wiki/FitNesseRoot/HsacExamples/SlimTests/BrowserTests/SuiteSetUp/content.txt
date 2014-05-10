@@ -1,0 +1,32 @@
+This set up page is executed once, before any tests in this suite.
+In it we configure which Java packages contain the logic for our fixtures, which browser we want to use for Selenium tests and we start this browser.
+This means we do not have to do this in every test, which means easier maintenance and better performance.
+
+Stopping the browser is done in SuiteTearDown, which is done after all tests in this suite are completed.
+
+!***> Fixture code locations
+!include -c .MyTests.SlimTests.SuiteSetUp
+
+|Import                           |
+|nl.hsac.fitnesse.fixture.slim.web|
+
+*!
+
+The Selenium configuration below uses lines starting with ''|note'' to have configuration values present that are not currently used.
+This allows us to switch to another browser by just adding ''|note'' to one line and removing it from another, instead of typing the entire line.
+
+Furthermore this configuration is prepared for both running the browser on the same (development) machine running Fitnesse (with ''startDriver''), as remotely on a node in a Selenium Grid (with ''connect to driver for''). 
+The latter allows tests to be executed on different operating systems. This is also very useful to run tests as part of a continuous integration server (i.e. build server), when no browsers are installed on the server running the tests. 
+
+!define GRID_HUB {http://remote-selenium.local:4444/wd/hub}
+
+!|script     |selenium driver setup                                                                       |
+|set property|webdriver.chrome.driver|value            |${FITNESSE_ROOTPATH}/webdrivers/osx/chromedriver  |
+|startDriver |org.openqa.selenium.chrome.ChromeDriver                                                     |
+|set property|webdriver.ie.driver    |value            |${FITNESSE_ROOTPATH}/webdrivers/IEDriverServer.exe|
+|note        |startDriver            |org.openqa.selenium.ie.InternetExplorerDriver                       |
+|note        |startDriver            |org.openqa.selenium.safari.SafariDriver                             |
+|note        |startDriver            |org.openqa.selenium.firefox.FirefoxDriver                           |
+|note        |connect to driver for  |chrome           |at                  |${GRID_HUB}                  |
+|note        |connect to driver for  |internet explorer|at                  |${GRID_HUB}                  |
+|note        |connect to driver for  |firefox          |at                  |${GRID_HUB}                  |
