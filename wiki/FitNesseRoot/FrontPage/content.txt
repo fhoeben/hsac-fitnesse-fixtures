@@ -1,7 +1,7 @@
 !1 Welcome to [[FitNesse][FitNesse.FitNesse]]!
 !3 ''The fully integrated stand-alone acceptance testing framework and wiki.''
 
-HsacExamples
+This installation is extended with features from the project hsac-fitnesse-plugin. Documentation about these features can be found in HsacExamples.
 
 # Here is a good place to add your first page (WikiWord). For example, MyTopLevelApplicationPage
 To add your first "page", click the [[Edit][FrontPage?edit]] button and add a [[!-WikiWord-!][FitNesse.UserGuide.WikiWord]] to the page.
