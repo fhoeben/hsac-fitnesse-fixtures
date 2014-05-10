@@ -1,0 +1,6 @@
+!contents -R2 -g -p -f -h
+
+Tests showing various ways to make Http calls using !-nl.hsac.fitnesse.fixture.slim.XmlHttpTest-!.
+
+Address of web service used by multiple tests in this suite:
+!define URL {http://wsf.cdyne.com/WeatherWS/Weather.asmx}

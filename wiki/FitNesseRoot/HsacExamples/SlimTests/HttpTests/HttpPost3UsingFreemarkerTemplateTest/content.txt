@@ -1,0 +1,36 @@
+!2 Body from template
+
+By using a Freemarker template we can have more dynamic body content.
+
+!define GLOBAL_WEATHER_URL {http://www.webservicex.com/globalweather.asmx}
+!define GLOBAL_WEATHER_TEMPLATE_NAME {samplePost.ftl.xml}
+
+!3 Don't send a cityName element: error
+
+The Freemarker template will not send a cityName element if no value is supplied (the whole element will be omitted, as can be seen in the request below). The service will not like this.
+Omitting the element on a null value could not be done when the body was in the scenario content.
+
+|script          |xml http test                                               |
+|template        |${GLOBAL_WEATHER_TEMPLATE_NAME}                             |
+|set value       |http://www.webserviceX.NET/GetWeather|for header|SOAPAction |
+|set value       |Canada                               |for       |countryName|
+|post template to|${GLOBAL_WEATHER_URL}                                       |
+|check           |response status                      |500                   |
+|show            |request                                                     |
+|show            |response                                                    |
+
+!3 Send a cityName element: success
+
+When a cityName value is set the enclosing element is sent by the Freemarker template (as visible in the shown request content below), and the SOAP call will succeed.
+
+|script          |xml http test                                                                   |
+|template        |${GLOBAL_WEATHER_TEMPLATE_NAME}                                                 |
+|set value       |http://www.webserviceX.NET/GetWeather  |for header   |SOAPAction                |
+|set value       |Canada                                 |for          |countryName               |
+|set value       |Vancouver International Air-Port, B. C.|for          |cityName                  |
+|post template to|${GLOBAL_WEATHER_URL}                                                           |
+|check           |response status                        |200                                     |
+|show            |request                                                                         |
+|show            |response                                                                        |
+|register prefix |wsX                                    |for namespace|http://www.webserviceX.NET|
+|show            |xPath                                  |!-//wsX:GetWeatherResult/text()-!       |

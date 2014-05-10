@@ -1,0 +1,6 @@
+!contents -R2 -g -p -f -h
+
+>ScriptTest shows the basic functionality of !-BrowserTest-! to test websites. 
+>ScenarioTest takes this to the next level by using a parameterized script (i.e. scenario). 
+The >TableTemplateTest simplifies the parameterization of the script.
+>CustomFixtureTest shows the usage of a custom subclass of !-BrowserTest-! to make test content more descriptive by encapsulating knowledge of the site's HTML in Java code. 
