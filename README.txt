@@ -12,8 +12,6 @@ The baseline Fitnesse installation offers the following features:
     - HSAC's fitnesse-plugin to add additional Wiki features (random values, calculating relative dates, Slim scenarios without need to specify all parameters),
     - easy fixture debugging,
 
-
-
 1. To create the standalone Fitnesse installation:
 Execute 'mvn clean test dependency:copy-dependencies', the standalone installation is present in the wiki directory (and can be distributed by just copying this).
 This standalone installation can be started using 'java -jar fitnesse-standalone.jar' from the wiki directory.
@@ -32,5 +30,6 @@ or (preferably) by adding an environment variable, called fitnesseSuiteToRun, sp
 Import this project in your favorite Java IDE (with Maven support).
 
 To start Fitnesse: have the IDE execute 'mvn compile exec:exec'. The port used by Fitnesse can be controlled by changing the fitnesse.port property's value in pom.xml.
+Fitnesse will be available at http://localhost:<fitnesse.port>/, example usage of the symbols and fixtures can be seen in http://localhost:<fitnesse.port>/HsacExamples.
 
 To debug a fixture used in a Fitnesse page: change suiteName variable to contain page name in nl.hsac.fitnesse.fixture.FixtureDebugTest, then just debug this test (with 'wiki' directory as working directory).
