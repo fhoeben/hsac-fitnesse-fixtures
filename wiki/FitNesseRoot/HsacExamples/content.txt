@@ -1,7 +1,7 @@
 !contents -R2 -g -p -f -h
 
 The hsac-fitnesse-fixtures project contains some Fitnesse fixture (base) classes and a baseline Fitnesse installation.
-At the [[bottom of this page][HsacExamples#Symbols]] example usage of the symbols is shown. The fixtures are used in the children of this page.
+>SymbolSamples shows example usage of the Wiki symbols added by hsac-fitnesse-plugin. The fixtures are used in the children of >SlimTests.
 
 The fixtures provided aim to assist in testing (SOAP) web services and web applications (using Selenium) minimizing
 the amount of (custom) Java code needed to define tests.
@@ -39,20 +39,6 @@ Fitnesse will be available at !-http://localhost:<fitnesse.port>/-!
 
 To debug a fixture used in a Fitnesse page: change suiteName variable to contain page name in nl.hsac.fitnesse.fixture.FixtureDebugTest, then just debug this test (with 'wiki' directory as working directory).
 !anchor Symbols
-
-!2 Symbol samples
-
-Some extra Wiki symbols that can be used:
-
-|random BSN                                                      |{{{!-!randomBSN -! }}}                                     |!randomBSN                                       |
-|random positive integer                                         |{{{!-!randomInt           -! }}}                           |!randomInt                                       |
-|random integer (between where upper is non-inclusive)           |{{{!-!randomInt (10,20)            -!  }}}                 |!randomInt (10,20)                               |
-|random string (random (but at most 100) length)                 |{{{!-!randomString        -! }}}                           |!randomString                                    |
-|random string (fixed length)                                    |{{{!-!randomString (20) -! }}}                             |!randomString (20)                               |
-|random string (fixed length, choice of characters)              |{{{!-!randomString (10) (abcdefghijklmnopqrstuvwxyz -)-!}}}|!randomString (10) (abcdefghijklmnopqrstuvwxyz -)|
-|random string (fixed length, choice of characters, fixed prefix)|{{{!-!randomString (10) (xyz) (aap)    -! }}}              |!randomString (10) (xyz) (aap)                   |
-|months from today                                               |{{{!-!monthsFromToday (yyyy-MM-dd) +10 -! }}}              |!monthsFromToday (yyyy-MM-dd) +10                |
-|week days from today                                            |{{{!-!weekDaysFromToday (yyyy-MM-dd) -6 -! }}}             |!weekDaysFromToday (yyyy-MM-dd) -6               |
 
 !***> Code location
 
