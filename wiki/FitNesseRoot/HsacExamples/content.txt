@@ -1,10 +1,9 @@
 !contents -R2 -g -p -f -h
 
 The hsac-fitnesse-fixtures project contains some Fitnesse fixture (base) classes and a baseline Fitnesse installation.
-At the [[bottom of this page][HsacExamples#Symbols]] example usage of the symbols is shown. The fixtures are used in the children of this page.
+>SymbolSamples shows example usage of the Wiki symbols added by hsac-fitnesse-plugin. The fixtures are used in the children of >SlimTests.
 
-The fixtures provided aim to assist in testing (SOAP) web services and web applications (using Selenium) minimizing
-the amount of (custom) Java code needed to define tests.
+The fixtures provided aim to assist in testing (SOAP) web services and web applications (using Selenium) minimizing the amount of (custom) Java code needed to define tests. (To use the add the lines specified [[below][HsacExamples#classpath]] to your root Wiki page.)
 
 !2 Baseline installation features
 
@@ -17,50 +16,44 @@ The baseline Fitnesse installation offers the following features:
   * HSAC's fitnesse-plugin to add additional Wiki features (random values, calculating relative dates, Slim scenarios without need to specify all parameters),
   * easy fixture debugging,
 
-!3 1. To create the standalone Fitnesse installation:
-Execute 'mvn clean test dependency:copy-dependencies', the standalone installation is present in the wiki directory (and can be distributed by just copying this).
-This standalone installation can be started using 'java -jar fitnesse-standalone.jar' from the wiki directory.
+!3 1. Create standalone Fitnesse installation
+To create a standalone installation execute {{{ mvn clean test dependency:copy-dependencies }}}
+The standalone installation is present in the wiki directory (and can be distributed by just copying this directory).
+This standalone installation can be started using {{{ java -jar fitnesse-standalone.jar }}} from the wiki directory.
 
 
-!3 2. To run the tests on a build server:
-Have the build server checkout the project and execute 'mvn clean test-compile failsafe:integration-test'.
+!3 2. Run on build server
+To run the tests on a build server have the build server checkout the project and execute {{{ mvn clean test-compile failsafe:integration-test }}}
 The result in JUnit XML results can be found in: target/failsafe-reports (most build servers will pick these up automatically)
 The HTML results can be found in: target/fitnesse-results/<SuiteName>.html
 
-The Fitnesse suite to run can be specified by changing the value of the suiteName variable in nl.hsac.fitnesse.fixture.FixtureDebugTest,
-or (preferably) by adding an environment variable, called fitnesseSuiteToRun, specifying the suite to run to the build server's mvn execution.
+The Fitnesse suite to run can be specified by changing the value of the !style_code[suiteName] variable in !style_code[nl.hsac.fitnesse.fixture.FixtureDebugTest],
+or (preferably) by adding an environment variable, called !style_code[fitnesseSuiteToRun], specifying the suite to run to the build server's mvn execution.
 
 
-!3 3. Fixture developer installation:
+!3 3. Fixture developer installation
 Import this project in your favorite Java IDE (with Maven support).
 
-To start Fitnesse: have the IDE execute 'mvn compile exec:exec'. The port used by Fitnesse can be controlled by changing the fitnesse.port property's value in pom.xml.
-Fitnesse will be available at !-http://localhost:<fitnesse.port>/-!
+To start Fitnesse: have the IDE execute {{{ mvn compile exec:exec }}}The port used by Fitnesse can be controlled by changing the !style_code[fitnesse.port] property's value in pom.xml.
+Fitnesse will be available at !- http://localhost:&lt;fitnesse.port>/ -!
 
-To debug a fixture used in a Fitnesse page: change suiteName variable to contain page name in nl.hsac.fitnesse.fixture.FixtureDebugTest, then just debug this test (with 'wiki' directory as working directory).
-!anchor Symbols
+To debug a fixture used in a Fitnesse page: change !style_code[suiteName] variable to contain page name in !style_code[nl.hsac.fitnesse.fixture.FixtureDebugTest], then just debug this test '''(with 'wiki' directory as working directory)'''.
 
-!2 Symbol samples
+!anchor classpath
 
-Some extra Wiki symbols that can be used:
-
-|random BSN                                                      |{{{!-!randomBSN -! }}}                                     |!randomBSN                                       |
-|random positive integer                                         |{{{!-!randomInt           -! }}}                           |!randomInt                                       |
-|random integer (between where upper is non-inclusive)           |{{{!-!randomInt (10,20)            -!  }}}                 |!randomInt (10,20)                               |
-|random string (random (but at most 100) length)                 |{{{!-!randomString        -! }}}                           |!randomString                                    |
-|random string (fixed length)                                    |{{{!-!randomString (20) -! }}}                             |!randomString (20)                               |
-|random string (fixed length, choice of characters)              |{{{!-!randomString (10) (abcdefghijklmnopqrstuvwxyz -)-!}}}|!randomString (10) (abcdefghijklmnopqrstuvwxyz -)|
-|random string (fixed length, choice of characters, fixed prefix)|{{{!-!randomString (10) (xyz) (aap)    -! }}}              |!randomString (10) (xyz) (aap)                   |
-|months from today                                               |{{{!-!monthsFromToday (yyyy-MM-dd) +10 -! }}}              |!monthsFromToday (yyyy-MM-dd) +10                |
-|week days from today                                            |{{{!-!weekDaysFromToday (yyyy-MM-dd) -6 -! }}}             |!weekDaysFromToday (yyyy-MM-dd) -6               |
-
-!***> Code location
-
-The official location for build server compiled fixture classes:
-
+!4 Making fixtures accessible
+To ensure the fixtures (and all dependencies as specified in the project's pom.xml) are available, add the following lines to the root Wiki page containing the tests.
+{{{
 !path fixtures
 !path fixtures/*.jar
-When developing and changing the fixtures, we will work based on the pom.xml:
+!pomFile ../pom.xml@compile
+}}} The first two will ensure all classes are accessible when working standalone, the last will be used by Java developers changing fixtures (with a Maven installation).
 
+!*> Class path for these examples
+The location when working standalone:
+!path fixtures
+!path fixtures/*.jar
+
+When developing and changing the fixtures, we will work based on the pom.xml:
 !pomFile ../pom.xml@compile
 *!
