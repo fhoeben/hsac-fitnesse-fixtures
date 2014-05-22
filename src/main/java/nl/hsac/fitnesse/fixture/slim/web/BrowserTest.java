@@ -289,6 +289,10 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
+    public String spaceNormalized(String input) {
+        return input.trim().replaceAll("\\s+", " ");
+    }
+
     public String valueOf(String place) {
         return valueFor(place);
     }
@@ -346,6 +350,25 @@ public class BrowserTest extends SlimFixture {
             result = element.getText();
         }
         return result;
+    }
+
+    public String textByClassName(String className) {
+        return getTextByClassName(className);
+    }
+
+    protected String getTextByClassName(String className) {
+        String result = null;
+        WebElement element = findByClassName(className);
+        if (element != null) {
+            scrollIfNotOnScreen(element);
+            result = element.getText();
+        }
+        return result;
+    }
+
+    protected WebElement findByClassName(String className) {
+        By by = By.className(className);
+        return getSeleniumHelper().findElement(by);
     }
 
     protected WebElement findByXPath(String xpathPattern, String... params) {
