@@ -32,4 +32,4 @@ The heuristic to find places tries a number of translations of end user terms to
 |refresh                                                    |refreshes the current page (i.e. clicks the brower's refresh button)                                   |
 |text by xPath <element xpath>                              |retrieves the text of the first element found by evaluating the xPath against the current page's DOM   |
 |text by class name <class>                                 |retrieves the text of the first element found with the specified class                                 |
-|wait seconds <seconds>                                     |waits the specified number of seconds (e.g. for an animation to complete                               |
+|wait seconds <seconds>                                     |waits the specified number of seconds (e.g. for an animation to complete)                              |
