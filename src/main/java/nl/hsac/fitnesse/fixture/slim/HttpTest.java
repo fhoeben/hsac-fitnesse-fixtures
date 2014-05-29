@@ -22,7 +22,7 @@ public class HttpTest extends SlimFixture {
 
     /**
      * Sets template to use.
-     * @param aTemplate name of template file
+     * @param aTemplate name of template file (relative to 'templates' directory on classpath)
      * @return true if template could be found.
      */
     public boolean template(String aTemplate) {
