@@ -1,6 +1,34 @@
-!contents -R2 -g -p -f -h
+!-(Xml)HttpTest-! defines a basic language (a DSL of sorts) to interact with a website via HTTP requests (allowing SOAP (and REST) services to be tested). The XML subclass adds functionality to perform checks using XPath expressions on the response received.
+This basic functionality will suffice for many tests, but can be extended by creating a custom subclass. 
 
-Tests showing various ways to make Http calls using !-nl.hsac.fitnesse.fixture.slim.XmlHttpTest-!.
+The tests in this suite show example usage of this fixture:
+>HttpGetTest shows how an example GET requests, specifying parameters in the query string.
+>HttpPost1Test sends a POST request to a SOAP service, also adding an HTTP header.
+The >HttpPost2UsingScenarioTest makes multiple SOAP calls to a service, where scenario parameters are used to change an input variable's value for each call.
+>HttpPost3UsingFreemarkerTemplateTest shows the usage of a [[Freemarker][http://freemarker.org]] template to define the content of a SOAP request. This allows for dynamic request structure.
+
+!2 Language
+
+The main commands/keywords (i.e. public methods) offered by !-nl.hsac.fitnesse.fixture.slim.XmlHttpTest-! are listed below.
+
+-|Comment|
+|get from <url>                              |Sends a GET to the specified url (parameters can be added using 'set value for').                                                                                             |
+|post <body> to <url>                        |Sends a POST containing the specified body to the url.                                                                                                                        |
+|post template to <url>                      |Sends a POST to the specified url, determining the body by combining the configured template and values (see 'set value for' and 'template')                                  |
+|template <location>                         |Configures the Freemarker template to use on next call using 'post template to'.                                                                                              |
+|set value <value> for <name>                |Stores the value for either a query or template parameter with the supplied name.                                                                                             |
+|set value <value> for header <name>         |Stores the value for an HTTP header to add to subsequent requests.                                                                                                            |
+|clear values                                |Clears the list of name/value pairs to be added to GET requests or template evaluation.                                                                                       |
+|clear header values                         |Clears the list of HTTP headers to be sent with requests.                                                                                                                     |
+|request                                     |Returns the last url (including parameters) used for 'get from' or the body used for 'post (template) to'. Intended to be used in combination with the 'show' command.        |
+|response                                    |Returns the last response body returned. Intended to be used in combination with the 'show' or 'check' commands.                                                              |
+|html response                               |Returns the last response body returned as HTML to be embedded in the test result table (in combination with the 'show' command).                                             |
+|response status                             |HTTP status code of last response received.                                                                                                                                   |
+|response is valid                           |Whether the last request was successful, or an error.                                                                                                                         |
+|xPath <expression>                          |Evaluates the expression against the last response received.                                                                                                                  |
+|register prefix <prefix> for namespace <url>|Defines a prefix to be used to identify a namespace in subsequent 'xPath' evaluation.                                                                                         |
+|xPath int <expression>                      |Evaluates the expression against the last response received, returning a whole number (allowing [[relative value tests][.FitNesse.UserGuide.SliM.ValueComparisons]]).         |
+|xPath double <expression>                   |Evaluates the expression against the last response received, returning a floating point number (allowing [[relative value tests][.FitNesse.UserGuide.SliM.ValueComparisons]]).|
 
 Address of web service used by multiple tests in this suite:
 !define URL {http://wsf.cdyne.com/WeatherWS/Weather.asmx}
