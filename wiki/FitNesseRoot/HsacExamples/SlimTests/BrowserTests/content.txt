@@ -21,6 +21,9 @@ The heuristic to find places tries a number of translations of end user terms to
 |click <place> and wait for tag <tag name> with text <value>|performs a click and waits until a page containing a tag with the specified text is shown              |
 |enter <value> as <input>                                   |clears the current value of an input and types the value                                               |
 |select <value> for <input>                                 |selects a value in the drop down box (or radio button)                                                 |
+|press tab                                                  |sends press of 'Tab' key to browser                                                                    |
+|press enter                                                |sends press of 'Enter' key to browser                                                                  |
+|press esc                                                  |sends press of 'Esc' key to browser                                                                    |
 |clear <input>                                              |removes the content in the input                                                                       |
 |take screenshot <name>                                     |stores the current browser's content as <name><unique>.png (used in combination with 'show' verb)      |
 |value of <input>                                           |retrieves the current value of the input (for use with 'check' verb or variable assignment)            |

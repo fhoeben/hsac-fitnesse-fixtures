@@ -264,6 +264,13 @@ public class SeleniumHelper {
     }
 
     /**
+     * @return currently active element.
+     */
+    public WebElement getActiveElement() {
+        return driver().switchTo().activeElement();
+    }
+
+    /**
      * Finds first element matching the By supplied.
      * @param by criteria.
      * @return element if found, null if none could be found.
