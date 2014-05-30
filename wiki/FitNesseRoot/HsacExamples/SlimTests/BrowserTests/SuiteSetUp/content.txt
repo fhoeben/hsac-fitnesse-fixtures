@@ -15,15 +15,15 @@ Stopping the browser is done in SuiteTearDown, which is done after all tests in 
 The Selenium configuration below uses lines starting with ''|note'' to have configuration values present that are not currently used.
 This allows us to switch to another browser by just adding ''|note'' to one line and removing it from another, instead of typing the entire line.
 
-Furthermore this configuration is prepared for both running the browser on the same (development) machine running Fitnesse (with ''startDriver''), as remotely on a node in a Selenium Grid (with ''connect to driver for''). 
+Furthermore this configuration is prepared for both running the browser on the same (development) machine running Fitnesse (with ''start driver for''), as remotely on a node in a Selenium Grid (with ''connect to driver for''). 
 The latter allows tests to be executed on different operating systems. This is also very useful to run tests as part of a continuous integration server (i.e. build server), when no browsers are installed on the server running the tests. 
 
 !define GRID_HUB {http://remote-selenium.local:4444/wd/hub}
 
 !|script         |selenium driver setup                                 |
-|note|start driver for|chrome                                                |
-|note|start driver for     |internet explorer               |
-|start driver for     |firefox                         |
+|note            |start driver for     |chrome                          |
+|note            |start driver for     |internet explorer               |
+|start driver for|firefox                                               |
 |note            |start driver for     |safari                          |
 |note            |connect to driver for|chrome           |at|${GRID_HUB}|
 |note            |connect to driver for|internet explorer|at|${GRID_HUB}|
