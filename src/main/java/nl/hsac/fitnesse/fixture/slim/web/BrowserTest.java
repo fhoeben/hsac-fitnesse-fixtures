@@ -147,7 +147,7 @@ public class BrowserTest extends SlimFixture {
      * Simulates pressing keys.
      * @return true, if an element was active the keys could be sent to.
      */
-    private boolean sendKeysToActiveElement(Keys keys) {
+    protected boolean sendKeysToActiveElement(Keys keys) {
         boolean result = false;
         WebElement element = getSeleniumHelper().getActiveElement();
         if (element != null) {
