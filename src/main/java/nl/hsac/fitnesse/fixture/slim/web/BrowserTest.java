@@ -120,6 +120,44 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
+     * Simulates pressing the 'Tab' key.
+     * @return true, if an element was active the key could be sent to.
+     */
+    public boolean pressTab() {
+        return sendKeysToActiveElement(Keys.TAB);
+    }
+
+    /**
+     * Simulates pressing the 'Enter' key.
+     * @return true, if an element was active the key could be sent to.
+     */
+    public boolean pressEnter() {
+        return sendKeysToActiveElement(Keys.ENTER);
+    }
+
+    /**
+     * Simulates pressing the 'Esc' key.
+     * @return true, if an element was active the key could be sent to.
+     */
+    public boolean pressEsc() {
+        return sendKeysToActiveElement(Keys.ESCAPE);
+    }
+
+    /**
+     * Simulates pressing keys.
+     * @return true, if an element was active the keys could be sent to.
+     */
+    private boolean sendKeysToActiveElement(Keys keys) {
+        boolean result = false;
+        WebElement element = getSeleniumHelper().getActiveElement();
+        if (element != null) {
+            element.sendKeys(keys);
+            result = true;
+        }
+        return result;
+    }
+
+    /**
      * Sends Fitnesse cell content to element.
      * @param element element to call sendKeys() on.
      * @param value cell content.
