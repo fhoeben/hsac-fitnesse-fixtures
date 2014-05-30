@@ -4,9 +4,14 @@ import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.safari.SafariDriver;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -40,6 +45,50 @@ public class SeleniumDriverSetup {
             result = true;
         }
         return result;
+    }
+
+    /**
+     * Starts a local instance of the selenium driver for the specified browser
+     * (using defaults to determine the correct class and configuration properties).
+     * and injects it into SeleniumHelper, so other fixtures can use it.
+     * @param browser name of browser to connect to.
+     * @return true if instance was created and injected into SeleniumHelper.
+     * @throws Exception if no instance could be created.
+     */
+    public boolean startDriverFor(String browser) throws Exception {
+        boolean result = false;
+        String browserName = browser.toLowerCase();
+        if ("firefox".equals(browserName)) {
+            result = startDriver(FirefoxDriver.class.getName());
+        } else if ("safari".equals(browserName)) {
+            result = startDriver(SafariDriver.class.getName());
+        } else if ("chrome".equals(browserName)) {
+            String driverPath = getExecutable("chromedriver");
+            setPropertyValue("webdriver.chrome.driver", driverPath);
+            result = startDriver(ChromeDriver.class.getName());
+        } else if ("internet explorer".equals(browserName)) {
+            String driverPath = getExecutable("IEDriverServer");
+            setPropertyValue("webdriver.ie.driver", driverPath);
+            result = startDriver(InternetExplorerDriver.class.getName());
+        } else {
+            throw new IllegalArgumentException("No defaults known for: " + browser);
+        }
+        return result;
+    }
+
+    private String getExecutable(String basename) {
+        String name = basename;
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("win")) {
+            name += ".exe";
+        } else if (os.contains("mac")) {
+            name = "osx" + File.separator + basename;
+        }
+        File f = new File("webdrivers", name);
+        if (f.exists()) {
+            name = f.getAbsolutePath();
+        }
+        return name;
     }
 
     /**
