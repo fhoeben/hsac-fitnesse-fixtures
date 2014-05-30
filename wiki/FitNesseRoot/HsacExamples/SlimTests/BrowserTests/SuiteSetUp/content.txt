@@ -20,14 +20,11 @@ The latter allows tests to be executed on different operating systems. This is a
 
 !define GRID_HUB {http://remote-selenium.local:4444/wd/hub}
 
-!|script     |selenium driver setup                                                                                 |
-|note        |set property           |webdriver.chrome.driver|value|${FITNESSE_ROOTPATH}/webdrivers/chromedriver.exe|
-|set property|webdriver.chrome.driver|value                  |${FITNESSE_ROOTPATH}/webdrivers/osx/chromedriver      |
-|startDriver |org.openqa.selenium.chrome.ChromeDriver                                                               |
-|set property|webdriver.ie.driver    |value                  |${FITNESSE_ROOTPATH}/webdrivers/IEDriverServer.exe    |
-|note        |startDriver            |org.openqa.selenium.ie.InternetExplorerDriver                                 |
-|note        |startDriver            |org.openqa.selenium.safari.SafariDriver                                       |
-|note        |startDriver            |org.openqa.selenium.firefox.FirefoxDriver                                     |
-|note        |connect to driver for  |chrome                 |at   |${GRID_HUB}                                     |
-|note        |connect to driver for  |internet explorer      |at   |${GRID_HUB}                                     |
-|note        |connect to driver for  |firefox                |at   |${GRID_HUB}                                     |
+!|script         |selenium driver setup                                 |
+|note|start driver for|chrome                                                |
+|note|start driver for     |internet explorer               |
+|start driver for     |firefox                         |
+|note            |start driver for     |safari                          |
+|note            |connect to driver for|chrome           |at|${GRID_HUB}|
+|note            |connect to driver for|internet explorer|at|${GRID_HUB}|
+|note            |connect to driver for|firefox          |at|${GRID_HUB}|
