@@ -118,7 +118,6 @@
 					<systemPropertyVariables>
 						<fitnesseSuiteToRun>${fitnesseSuiteToRun}</fitnesseSuiteToRun>
 					</systemPropertyVariables>
-					<disableXmlReport>true</disableXmlReport>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -154,7 +153,7 @@
 					<includes>**/*</includes>
 					<excludes>META-INF,META-INF/**</excludes>
 					<includeScope>compile</includeScope>
-					<excludeArtifactIds>fitnesse</excludeArtifactIds>
+					<excludeArtifactIds>fitnesse,junit</excludeArtifactIds>
 					<outputDirectory>${standalone.classpath}</outputDirectory>
 				</configuration>
 			</plugin>
