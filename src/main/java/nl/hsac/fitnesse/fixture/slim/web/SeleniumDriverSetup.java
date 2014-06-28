@@ -87,6 +87,11 @@ public class SeleniumDriverSetup {
         File f = new File("webdrivers", name);
         if (f.exists()) {
             name = f.getAbsolutePath();
+        } else {
+            f = new File("wiki/webdrivers", name);
+            if (f.exists()) {
+                name = f.getAbsolutePath();
+            }
         }
         return name;
     }
