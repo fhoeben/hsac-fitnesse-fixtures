@@ -118,6 +118,14 @@
 					<systemPropertyVariables>
 						<fitnesseSuiteToRun>${fitnesseSuiteToRun}</fitnesseSuiteToRun>
 					</systemPropertyVariables>
+					<properties>
+						<property>
+							<name>listener</name>
+							<value>nl.hsac.fitnesse.junit.JUnitXMLPerPageListener</value>
+						</property>
+					</properties>
+					<!-- Our listener will create XML failsafe should not, or all tests are reported twice -->
+					<disableXmlReport>true</disableXmlReport>
 				</configuration>
 			</plugin>
 			<plugin>
