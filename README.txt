@@ -23,7 +23,7 @@ The result in JUnit XML results can be found in: target/failsafe-reports (most b
 The HTML results can be found in: target/fitnesse-results/<SuiteName>.html
 
 The Fitnesse suite to run can be specified by changing the value of the @Name annotation in nl.hsac.fitnesse.fixture.FixtureDebugTest,
-or (preferably) by adding an environment variable, called fitnesseSuiteToRun, specifying the suite to run to the build server's mvn execution.
+or (preferably) by adding a system property, called fitnesseSuiteToRun, specifying the suite to run to the build server's mvn execution.
 
 
 3. Fixture developer installation:
