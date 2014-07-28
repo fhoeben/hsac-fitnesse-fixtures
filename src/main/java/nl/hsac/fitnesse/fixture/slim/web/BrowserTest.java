@@ -14,17 +14,14 @@ import java.util.concurrent.TimeUnit;
 public class BrowserTest extends SlimFixture {
     private static final String FILES_DIR = new File("FitNesseRoot/files/").getAbsolutePath();
     private static final String ELEMENT_ON_SCREEN_JS =
-            "var win = $(window);\n" +
-            "var viewport = {\n" +
-            "    top : win.scrollTop(),\n" +
-            "    left : win.scrollLeft()\n" +
-            "};\n" +
-            "viewport.right = viewport.left + win.width();\n" +
-            "viewport.bottom = viewport.top + win.height();\n" +
-            "var bounds = $(arguments[0]).offset();\n" +
-            "bounds.right = bounds.left + $(arguments[0]).outerWidth();\n" +
-            "bounds.bottom = bounds.top + $(arguments[0]).outerHeight();\n" +
-            "return (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom));";
+                    "var el = arguments[0]\n" +
+                    "if (el instanceof jQuery) { el = el[0]; }\n" +
+                    "var rect = el.getBoundingClientRect();\n" +
+                    "return (\n" +
+                    "  rect.top >= 0 &&\n" +
+                    "  rect.left >= 0 &&\n" +
+                    "  rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&\n" +
+                    "  rect.right <= (window.innerWidth || document.documentElement.clientWidth));";
 
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
     private int secondsBeforeTimeout;
