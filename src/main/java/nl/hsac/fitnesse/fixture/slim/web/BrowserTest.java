@@ -14,9 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class BrowserTest extends SlimFixture {
     private static final String FILES_DIR = new File("FitNesseRoot/files/").getAbsolutePath();
     private static final String ELEMENT_ON_SCREEN_JS =
-                    "var el = arguments[0]\n" +
-                    "if (el instanceof jQuery) { el = el[0]; }\n" +
-                    "var rect = el.getBoundingClientRect();\n" +
+                    "var rect = arguments[0].getBoundingClientRect();\n" +
                     "return (\n" +
                     "  rect.top >= 0 &&\n" +
                     "  rect.left >= 0 &&\n" +
