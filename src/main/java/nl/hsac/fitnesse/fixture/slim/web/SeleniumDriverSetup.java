@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.Environment;
+import nl.hsac.fitnesse.fixture.slim.SlimFixture;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
@@ -14,11 +15,12 @@ import org.openqa.selenium.safari.SafariDriver;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 /**
  * Script fixture to set up webdriver to be used by Selenium tests.
  */
-public class SeleniumDriverSetup {
+public class SeleniumDriverSetup extends SlimFixture {
     /**
      * Sets system property (needed by the WebDriver to be set up).
      * @param propName name of property to set.
@@ -133,8 +135,24 @@ public class SeleniumDriverSetup {
     public boolean connectToDriverForVersionOnAt(String browser, String version, String platformName, String url)
             throws MalformedURLException {
         Platform platform = Platform.valueOf(platformName);
-        URL remoteUrl = new URL(url);
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities(browser, version, platform);
+        desiredCapabilities.setVersion(version);
+        return createAndSetRemoteDriver(url, desiredCapabilities);
+    }
+
+    public boolean connectToDriverAtWithCapabilities(String url, Map<String, String> capabilities)
+            throws MalformedURLException {
+        DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
+        for (Map.Entry<String, String> capability : capabilities.entrySet()) {
+            desiredCapabilities.setCapability(capability.getKey(), capability.getValue());
+        }
+        return createAndSetRemoteDriver(url, desiredCapabilities);
+    }
+
+    protected boolean createAndSetRemoteDriver(String url, DesiredCapabilities desiredCapabilities)
+            throws MalformedURLException {
+        String cleanUrl = cleanupValue(url);
+        URL remoteUrl = new URL(cleanUrl);
         RemoteWebDriver remoteWebDriver = new RemoteWebDriver(remoteUrl, desiredCapabilities);
         setDriver(remoteWebDriver);
         return true;

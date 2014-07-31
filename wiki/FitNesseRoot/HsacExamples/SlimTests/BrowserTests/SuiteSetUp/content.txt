@@ -28,3 +28,4 @@ The latter allows tests to be executed on different operating systems. This is a
 |note            |connect to driver for|chrome           |at|${GRID_HUB}|
 |note            |connect to driver for|internet explorer|at|${GRID_HUB}|
 |note            |connect to driver for|firefox          |at|${GRID_HUB}|
+|note  |connect to driver at |${GRID_HUB}      |with capabilities|!{browserName:internet explorer, platform:Windows 8.1, version:11}|
