@@ -414,6 +414,11 @@ public class BrowserTest extends SlimFixture {
         return getSeleniumHelper().driver().findElements(by);
     }
 
+    protected List<WebElement> findAllByCss(String cssPattern, String... params) {
+        By by = getSeleniumHelper().byCss(cssPattern, params);
+        return getSeleniumHelper().driver().findElements(by);
+    }
+
     public void waitMilliSecondAfterScroll(int msToWait) {
         waitAfterScroll = msToWait;
     }
