@@ -225,7 +225,7 @@ public class SeleniumHelper {
      * @return ByCssSelector.
      */
     public By byCss(String pattern, String... parameters) {
-        String selector = String.format(pattern, (Object[]) parameters);
+        String selector = fillPattern(pattern, parameters);
         return By.cssSelector(selector);
     }
 
@@ -236,6 +236,17 @@ public class SeleniumHelper {
      * @return ByXPath.
      */
     public By byXpath(String pattern, String... parameters) {
+        String xpath = fillPattern(pattern, parameters);
+        return By.xpath(xpath);
+    }
+
+    /**
+     * Fills in placeholders in pattern using the supplied parameters.
+     * @param pattern pattern to fill (in String.format style).
+     * @param parameters parameters to use.
+     * @return filled in pattern.
+     */
+    protected String fillPattern(String pattern, String[] parameters) {
         boolean containsSingleQuote = false;
         boolean containsDoubleQuote = false;
         Object[] escapedParams = new Object[parameters.length];
@@ -254,8 +265,7 @@ public class SeleniumHelper {
         } else {
             patternToUse = pattern;
         }
-        String xpath = String.format(patternToUse, escapedParams);
-        return By.xpath(xpath);
+        return String.format(patternToUse, escapedParams);
     }
 
     /**
