@@ -86,10 +86,10 @@ public class SeleniumHelper {
             element = getElementByLabelOccurrence(place, 1);
         }
         if (element == null) {
-            element = findElement(byXpath("//input[@placeholder='%s']", place));
+            element = findElement(byCss("input[placeholder='%s']", place));
         }
         if (element == null) {
-            element = findElement(byXpath("//input[@value='%s']", place));
+            element = findElement(byCss("input[value='%s']", place));
         }
         if (element == null) {
             element = findElement(byXpath("//button[normalize-space(text())='%s']", place));
@@ -110,10 +110,10 @@ public class SeleniumHelper {
             element = getElementByPartialLabelOccurrence(place, 1);
         }
         if (element == null) {
-            element = findElement(byXpath("//input[contains(@placeholder, '%s')]", place));
+            element = findElement(byCss("input[placeholder~='%s']", place));
         }
         if (element == null) {
-            element = findElement(byXpath("//input[contains(@value, '%s')]", place));
+            element = findElement(byCss("input[value~='%s']", place));
         }
         if (element == null) {
             element = findElement(By.partialLinkText(place));
@@ -131,9 +131,9 @@ public class SeleniumHelper {
      * @return element found if any, null otherwise.
      */
     public WebElement getElementByLabelOccurrence(String labelText, int index) {
-        return getElementByLabel(labelText,
-                                    indexedXPath("//label[normalize-space(text())='%s']", index),
-                                    indexedXPath("//*[@aria-label='%s']", index));
+        return getElementByLabel(labelText, index,
+                                    "//label[normalize-space(text())='%s']",
+                                    "");
     }
 
     /**
@@ -143,9 +143,9 @@ public class SeleniumHelper {
      * @return element found if any, null otherwise.
      */
     public WebElement getElementByStartLabelOccurrence(String labelText, int index) {
-        return getElementByLabel(labelText,
-                                    indexedXPath("//label[starts-with(normalize-space(text()), '%s')]", index),
-                                    indexedXPath("//*[starts-with(@aria-label, '%s')]", index));
+        return getElementByLabel(labelText, index,
+                                    "//label[starts-with(normalize-space(text()), '%s')]",
+                                    "|");
     }
 
     /**
@@ -155,24 +155,24 @@ public class SeleniumHelper {
      * @return element found if any, null otherwise.
      */
     public WebElement getElementByPartialLabelOccurrence(String labelText, int index) {
-        return getElementByLabel(labelText,
-                indexedXPath("//label[contains(normalize-space(text()), '%s')]", index),
-                indexedXPath("//*[contains(@aria-label, '%s')]", index));
+        return getElementByLabel(labelText, index,
+                "//label[contains(normalize-space(text()), '%s')]",
+                "~");
     }
 
     private String indexedXPath(String xpathBase, int index) {
         return String.format("(%s)[%s]", xpathBase, index);
     }
 
-    private WebElement getElementByLabel(String labelText, String firstXPath, String secondXPath) {
+    private WebElement getElementByLabel(String labelText, int index, String xPath, String cssSelectorModifier) {
         WebElement element = null;
-        WebElement label = findElement(byXpath(firstXPath, labelText));
+        WebElement label = findElement(byXpath(indexedXPath(xPath, index), labelText));
         if (label != null) {
             String forAttr = label.getAttribute("for");
             element = findElement(By.id(forAttr));
         }
         if (element == null) {
-            element = findElement(byXpath(secondXPath, labelText));
+            element = findElement(byCss("[aria-label%s='%s']", cssSelectorModifier, labelText), index - 1);
         }
         return element;
     }
@@ -216,6 +216,17 @@ public class SeleniumHelper {
             result = jse.executeScript(script);
         }
         return result;
+    }
+
+    /**
+     * Creates By based on CSS selector, supporting placeholder replacement.
+     * @param pattern basic CSS selectot, possibly with placeholders.
+     * @param parameters values for placeholders.
+     * @return ByCssSelector.
+     */
+    public By byCss(String pattern, String... parameters) {
+        String selector = String.format(pattern, (Object[]) parameters);
+        return By.cssSelector(selector);
     }
 
     /**
@@ -288,6 +299,21 @@ public class SeleniumHelper {
      */
     public WebElement findElement(boolean atMostOne, By by) {
         return findElement(driver(), atMostOne, by);
+    }
+
+    /**
+     * Finds the nth element matching the By supplied.
+     * @param by criteria.
+     * @param index (zero based) matching element to return.
+     * @return element if found, null if none could be found.
+     */
+    public WebElement findElement(By by, int index) {
+        WebElement element = null;
+        List<WebElement> elements = driver().findElements(by);
+        if (elements.size() > index) {
+            element = elements.get(index);
+        }
+        return element;
     }
 
     /**
