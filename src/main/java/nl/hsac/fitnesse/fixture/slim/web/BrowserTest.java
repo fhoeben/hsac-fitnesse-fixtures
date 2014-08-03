@@ -2,7 +2,14 @@ package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
-import org.openqa.selenium.*;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -12,7 +19,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class BrowserTest extends SlimFixture {
-    private static final String FILES_DIR = new File("FitNesseRoot/files/").getAbsolutePath();
     private static final String ELEMENT_ON_SCREEN_JS =
                     "var rect = arguments[0].getBoundingClientRect();\n" +
                     "return (\n" +
@@ -24,7 +30,8 @@ public class BrowserTest extends SlimFixture {
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
     private int secondsBeforeTimeout;
     private int waitAfterScroll = 0;
-    private String screenshotBase = FILES_DIR + "/screenshots/";
+    private final String filesDir = getEnvironment().getFitNesseFilesSectionDir();
+    private String screenshotBase = new File(filesDir, "screenshots").getPath() + "/";
     private String screenshotHeight = "200";
 
     public BrowserTest() {
@@ -531,9 +538,9 @@ public class BrowserTest extends SlimFixture {
         if (screenshotFile == null) {
             throw new RuntimeException("Unable to take screenshot: does the webdriver support it?");
         } else {
-            if (screenshotFile.startsWith(FILES_DIR)) {
+            if (screenshotFile.startsWith(filesDir)) {
                 // make href to screenshot
-                String relativeFile = screenshotFile.substring(FILES_DIR.length());
+                String relativeFile = screenshotFile.substring(filesDir.length());
                 relativeFile = relativeFile.replace('\\', '/');
                 String wikiUrl = "/files" + relativeFile;
                 if ("".equals(screenshotHeight)) {
