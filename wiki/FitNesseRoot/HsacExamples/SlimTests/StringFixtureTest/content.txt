@@ -1,5 +1,5 @@
 !-StringFixture-! is a fixture with helper methods to allow more (String) manipulation to be done in the Wiki.
-It is intended to be used is as a [[library][.FitNesse.UserGuide.SliM.LibraryTable]] to add its methods to the methods available via another fixture in s script table.
+It is intended to be used is as a [[library][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.LibraryTable]] to add its methods to the methods available via another fixture in s script table.
 
 This page demonstrates the features of the class (!-nl.hsac.fitnesse.fixture.slim.StringFixture-!) and therefore uses it on its own in a script table (instead of inside a script using a different fixture).
 
