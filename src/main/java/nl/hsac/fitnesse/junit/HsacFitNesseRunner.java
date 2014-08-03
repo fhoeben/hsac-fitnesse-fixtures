@@ -3,9 +3,12 @@ package nl.hsac.fitnesse.junit;
 import fitnesse.FitNesseContext;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.junit.FitNesseSuite;
+import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.junit.patchFor486.FitNesseRunner;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.runners.model.InitializationError;
+
+import java.io.File;
 
 /**
  * JUnit Runner to run a FitNesse suite or page as JUnit test.
@@ -21,6 +24,12 @@ public class HsacFitNesseRunner extends FitNesseRunner {
 
     public HsacFitNesseRunner(Class<?> suiteClass) throws InitializationError {
         super(suiteClass);
+        try {
+            String fitNesseRootDir = new File(getFitNesseDir(suiteClass), getFitNesseRoot(suiteClass)).getAbsolutePath();
+            Environment.getInstance().setFitNesseRoot(fitNesseRootDir);
+        } catch (Exception e) {
+            throw new InitializationError(e);
+        }
     }
 
     @Override

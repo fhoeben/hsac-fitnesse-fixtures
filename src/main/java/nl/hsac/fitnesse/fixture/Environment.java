@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture;
 
 import fit.exception.FitFailureException;
+import fitnesse.ContextConfigurator;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
@@ -30,6 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Environment {
     private final static Environment INSTANCE = new Environment();
+    private String fitNesseRoot = ContextConfigurator.DEFAULT_ROOT;
     private Configuration freemarkerConfig;
     private FreeMarkerHelper fmHelper;
     private ConcurrentHashMap<String, Template> templateCache;
@@ -373,4 +375,30 @@ public class Environment {
     public SeleniumHelper getSeleniumHelper() {
         return seleniumHelper;
     }
+
+    /**
+     * @return directory containing FitNesse's root.
+     */
+    public String getFitNesseRootDir() {
+        return fitNesseRoot;
+    }
+
+    /**
+     * @return directory containing FitNesse's files section.
+     */
+    public String getFitNesseFilesSectionDir() {
+        return new File(fitNesseRoot, "files").getAbsolutePath();
+    }
+
+    /**
+     * @param fitNesseRoot directory containing FitNesse's root.
+     */
+    public void setFitNesseRoot(String fitNesseRoot) {
+        File root = new File(fitNesseRoot);
+        if (!root.exists() || !root.isDirectory()) {
+            throw new IllegalArgumentException("value for fitNesseRoot must be an existing directory");
+        }
+        this.fitNesseRoot = fitNesseRoot;
+    }
+
 }
