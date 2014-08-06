@@ -25,8 +25,11 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     public HsacFitNesseRunner(Class<?> suiteClass) throws InitializationError {
         super(suiteClass);
         try {
-            String fitNesseRootDir = new File(getFitNesseDir(suiteClass), getFitNesseRoot(suiteClass)).getAbsolutePath();
-            Environment.getInstance().setFitNesseRoot(fitNesseRootDir);
+            // we include images in output so build server will have single
+            // directory containing both HTML results and the images created by the tests
+            String outputDir = getOutputDir(suiteClass);
+            new File(outputDir).mkdirs();
+            Environment.getInstance().setFitNesseRoot(outputDir);
         } catch (Exception e) {
             throw new InitializationError(e);
         }

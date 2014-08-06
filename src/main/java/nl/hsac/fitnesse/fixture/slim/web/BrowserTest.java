@@ -542,7 +542,7 @@ public class BrowserTest extends SlimFixture {
                 // make href to screenshot
                 String relativeFile = screenshotFile.substring(filesDir.length());
                 relativeFile = relativeFile.replace('\\', '/');
-                String wikiUrl = "/files" + relativeFile;
+                String wikiUrl = "files" + relativeFile;
                 if ("".equals(screenshotHeight)) {
                     wikiUrl = String.format("<a href=\"%s\">%s</a>",
                             wikiUrl, screenshotFile);
