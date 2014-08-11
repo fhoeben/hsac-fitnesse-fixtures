@@ -18,14 +18,14 @@ This allows us to switch to another browser by just adding ''|note'' to one line
 Furthermore this configuration is prepared for both running the browser on the same (development) machine running Fitnesse (with ''start driver for''), as remotely on a node in a Selenium Grid (with ''connect to driver for''). 
 The latter allows tests to be executed on different operating systems. This is also very useful to run tests as part of a continuous integration server (i.e. build server), when no browsers are installed on the server running the tests. 
 
-!define GRID_HUB {http://remote-selenium.local:4444/wd/hub}
+!define GRID_HUB {http://hsac:d05ad739-51e2-49ba-b021-7241e0b428e0@ondemand.saucelabs.com:80/wd/hub}
 
-!|script         |selenium driver setup                                 |
-|note            |start driver for     |chrome                          |
-|note            |start driver for     |internet explorer               |
-|start driver for|firefox                                               |
-|note            |start driver for     |safari                          |
-|note            |connect to driver for|chrome           |at|${GRID_HUB}|
-|note            |connect to driver for|internet explorer|at|${GRID_HUB}|
-|note            |connect to driver for|firefox          |at|${GRID_HUB}|
-|note  |connect to driver at |${GRID_HUB}      |with capabilities|!{browserName:internet explorer, platform:Windows 8.1, version:11}|
+|script|selenium driver setup                                                                                                       |
+|start driver for     |chrome                                                                                                |
+|note  |start driver for     |internet explorer                                                                                     |
+|note  |start driver for     |firefox                                                                                               |
+|note  |start driver for     |safari                                                                                                |
+|note  |connect to driver for|chrome           |version          |35         |on         |MAC        |at        |${GRID_HUB}        |
+|note  |connect to driver for|internet explorer|at               |${GRID_HUB}                                                       |
+|note  |connect to driver for|firefox          |at               |${GRID_HUB}                                                       |
+|note|connect to driver at |${GRID_HUB}      |with capabilities|!{browserName:internet explorer, platform:Windows 8.1, version:11}|
