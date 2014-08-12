@@ -3,6 +3,8 @@ package nl.hsac.fitnesse.fixture.util;
 import nl.hsac.fitnesse.fixture.Environment;
 
 import javax.xml.namespace.NamespaceContext;
+
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -200,6 +202,21 @@ public class XmlHttpResponse extends HttpResponse {
         return type;
     }
 
+    /**
+     * @param xPathExpr expression to apply to response.
+     * @param params values to put inside expression before evaluation
+     * @return all results of xpath expression.
+     * @throws RuntimeException if no valid response was available or XPath could not be evaluated.
+     */
+    public List<String> getAllXPath(String xPathExpr, Object... params) {
+        validResponse();
+        return getRawAllXPath(response, xPathExpr, params);
+    }
+
+    protected List<String> getRawAllXPath(String soapResponse, String xPathExpr, Object... params) {
+        String expr = String.format(xPathExpr, params);
+        return XPathHelper.getAllXPath(namespaceContext, soapResponse, expr);
+    }
 
     /**
      * @param aNamespaceContext the namespaceContext to set

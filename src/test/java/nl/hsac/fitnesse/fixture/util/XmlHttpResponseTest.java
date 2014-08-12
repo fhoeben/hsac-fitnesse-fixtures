@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -140,5 +141,12 @@ public class XmlHttpResponseTest {
         expressionsToCheck.put("//*[local-name()='amountPremiumYear']", "amount");
         expressionsToCheck.put("//*[local-name()='calculatedResult']", "result");
         return expressionsToCheck;
+    }
+
+    @Test
+    public void testAllXPath() {
+        XmlHttpResponse resp = getOKResponse();
+        List<String> xpathResults = resp.getAllXPath("//*");
+        assertEquals(3, xpathResults.size());
     }
 }
