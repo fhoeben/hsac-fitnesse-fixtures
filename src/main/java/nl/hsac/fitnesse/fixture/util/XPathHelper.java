@@ -39,10 +39,6 @@ public class XPathHelper {
     public static List<String> getAllXPath(NamespaceContext context, String xml, String xPathExpr) {
         List<String> result = null;
         
-        if (!xPathExpr.endsWith("/text()")) {
-            xPathExpr = xPathExpr + "/text()";
-        }
-
         NodeList nodes = (NodeList) evaluateXpath(context, xml, xPathExpr, XPathConstants.NODESET);
         if (nodes != null) {
             result = new ArrayList<String>(nodes.getLength());

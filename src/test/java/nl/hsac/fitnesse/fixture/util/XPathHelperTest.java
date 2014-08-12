@@ -6,7 +6,6 @@ import nl.hsac.fitnesse.fixture.leanapps.LalPolicyXPaths;
 import org.junit.Test;
 
 import javax.xml.namespace.NamespaceContext;
-
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -50,10 +49,10 @@ public class XPathHelperTest {
     public void testAllXmlNoText() {
         LalPolicyXPaths.registerNamespace();
         String responseString = FileUtil.loadFile("leanapps/getPolicyCheckResponse.xml");
-        List<String> all = XPathHelper.getAllXPath(NS_CONTEXT, responseString, "//lal:oid");
+        List<String> all = XPathHelper.getAllXPath(NS_CONTEXT, responseString, "//*/@xsi:type");
 
-        assertEquals(28, all.size());
-        assertEquals("11600596", all.get(1));
+        assertEquals(13, all.size());
+        assertEquals("ns:PostalAddress", all.get(1));
     }
 
     @Test
