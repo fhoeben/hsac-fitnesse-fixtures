@@ -146,7 +146,7 @@ public class XmlHttpResponseTest {
     @Test
     public void testAllXPath() {
         XmlHttpResponse resp = getOKResponse();
-        List<String> xpathResults = resp.getAllXPath("//*");
+        List<String> xpathResults = resp.getAllXPath("//*/text()");
         assertEquals(3, xpathResults.size());
     }
 }
