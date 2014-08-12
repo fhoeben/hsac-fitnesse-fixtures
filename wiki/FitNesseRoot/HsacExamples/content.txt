@@ -1,9 +1,10 @@
 !contents -R2 -g -p -f -h
 
-The hsac-fitnesse-fixtures project contains some Fitnesse fixture (base) classes and a baseline Fitnesse installation.
->SymbolSamples shows example usage of the Wiki symbols added by hsac-fitnesse-plugin. The fixtures are used in the children of >SlimTests.
+The hsac-fitnesse-fixtures project assists in testing (SOAP) web services and web applications. To this end it contains a baseline installation of [[!-FitNesse-!][http://fitnesse.org]] and some !-FitNesse-! fixture (base) classes.
 
-The fixtures provided aim to assist in testing (SOAP) web services and web applications (using Selenium) minimizing the amount of (custom) Java code needed to define tests. (To use the add the lines specified [[below][HsacExamples#classpath]] to your root Wiki page.)
+The fixtures provided allow testing (SOAP) web services and web applications (using [[Selenium][http://docs.seleniumhq.org]]) minimizing the amount of (custom) Java code needed to define tests. (To use them add the lines specified [[below][HsacExamples#classpath]] to your root Wiki page.)
+
+>SymbolSamples shows example usage of the Wiki symbols added by hsac-fitnesse-plugin. The fixtures are used in the children of >SlimTests.
 
 !2 Baseline installation features
 
