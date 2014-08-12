@@ -7,12 +7,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DecompressingHttpClient;
-import org.apache.http.impl.client.SystemDefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -23,10 +21,7 @@ public class HttpClient {
     private final static org.apache.http.client.HttpClient HTTP_CLIENT;
 
     static {
-        SystemDefaultHttpClient backend = new SystemDefaultHttpClient();
-        HTTP_CLIENT = new DecompressingHttpClient(backend);
-        HTTP_CLIENT.getParams().setParameter("http.useragent", HttpClient.class.getName());
-
+        HTTP_CLIENT = HttpClients.custom().useSystemProperties().setUserAgent(HttpClient.class.getName()).build();
     }
 
     /**
