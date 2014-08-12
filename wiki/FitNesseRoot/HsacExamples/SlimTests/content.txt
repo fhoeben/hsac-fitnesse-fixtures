@@ -1,8 +1,8 @@
-Examples and documentation of fixtures to be used in [[Slim][.FitNesse.UserGuide.SliM]] tests.
+Examples and documentation of fixtures to be used in [[Slim][.FitNesse.UserGuide.WritingAcceptanceTests.SliM]] tests.
 
 !contents -R2 -g -p -f -h
 
-A single integration test (i.e. wiki page) can combine the usage to these fixtures either by defining separate tables for each, or by using the concept of [[libraries][.FitNesse.UserGuide.SliM.LibraryTable]].
+A single integration test (i.e. wiki page) can combine the usage to these fixtures either by defining separate tables for each, or by using the concept of [[libraries][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.LibraryTable]].
 Libraries allow a single script table to combine methods defined by multiple fixtures. For instance to have test using a single script that first places an online order using [[a browser][>BrowserTests]] and then checks the order's content in a back-end system with [[a SOAP call][>HttpTests]].   
 
 !define TEST_SYSTEM {slim} 
