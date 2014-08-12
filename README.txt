@@ -1,7 +1,6 @@
-This project contains some Fitnesse fixture (base) classes and a baseline Fitnesse installation.
+This project assists in testing (SOAP) web services and web applications by providing an application to define and run tests. To this end it contains a baseline installation of FitNesse (an acceptance testing wiki framework) and some FitNesse fixture (base) classes.
 
-The fixtures provided aim to assist in testing (SOAP) web services and web applications (using Selenium) minimizing
-the amount of (custom) Java code needed to define tests.
+The fixtures provided aim to assist in testing (SOAP) web services and web applications (using Selenium) minimizing the amount of (custom) Java code needed to define tests.
 
 The baseline Fitnesse installation offers the following features:
 1. Ability to easily create a standalone (no JDK or Maven required) Fitnesse environment.
