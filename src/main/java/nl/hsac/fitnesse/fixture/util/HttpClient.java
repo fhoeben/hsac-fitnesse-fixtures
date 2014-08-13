@@ -1,8 +1,5 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import java.io.IOException;
-import java.util.Map;
-
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -13,6 +10,9 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
+import java.io.IOException;
+import java.util.Map;
+
 /**
  * Helper to make Http calls and get response.
  */
@@ -21,8 +21,7 @@ public class HttpClient {
     private final static org.apache.http.client.HttpClient HTTP_CLIENT;
 
     static {
-        HTTP_CLIENT = HttpClients.custom().useSystemProperties().disableContentCompression()
-                .setUserAgent(HttpClient.class.getName()).build();
+        HTTP_CLIENT = HttpClients.custom().useSystemProperties().setUserAgent(HttpClient.class.getName()).build();
     }
 
     /**
