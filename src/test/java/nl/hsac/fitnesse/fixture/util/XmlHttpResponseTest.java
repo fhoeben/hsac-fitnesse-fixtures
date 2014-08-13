@@ -17,6 +17,8 @@ import static org.junit.Assert.*;
  */
 public class XmlHttpResponseTest {
     final static String OK_RESP = "<?xml version='1.0' encoding='UTF-8'?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Body><ns2:yarOpportunityResponse xmlns:ns2=\"http://www.openuri.org/\" xmlns=\"http://www.leanapps.com/life/wslife\"><opportunityReturn><errorStatus>OK</errorStatus><calculatedResult>13.44</calculatedResult><amountPremiumYear>158.86</amountPremiumYear></opportunityReturn></ns2:yarOpportunityResponse></soapenv:Body></soapenv:Envelope>";
+    final static String MULTIPLY_NODES_RESP = "<?xml version='1.0' encoding='UTF-8'?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Body><ns2:yarOpportunityResponse xmlns:ns2=\"http://www.openuri.org/\" xmlns=\"http://www.leanapps.com/life/wslife\"><opportunityReturns><errorStatus>OK</errorStatus><opportunityReturn><calculatedResult>125.14</calculatedResult><amountPremiumYear>125.14</amountPremiumYear></opportunityReturn><opportunityReturn><calculatedResult>13.44</calculatedResult><amountPremiumYear>158.86</amountPremiumYear></opportunityReturn><opportunityReturn><calculatedResult>19.37</calculatedResult><amountPremiumYear>139.24</amountPremiumYear></opportunityReturn></opportunityReturns></ns2:yarOpportunityResponse></soapenv:Body></soapenv:Envelope>";
+
 
     @Rule
     public ExpectedException expect = ExpectedException.none();
@@ -65,6 +67,28 @@ public class XmlHttpResponseTest {
     }
 
     /**
+     * Tests getting of XPath
+     */
+    @Test
+    public void testGetXPathList() {
+        XmlHttpResponse resp = new XmlHttpResponse();
+        resp.setResponse(MULTIPLY_NODES_RESP);
+
+        List<String> xpathResult =
+                resp.getAllXPath("//*[local-name()='amountPremiumYear']/text()");
+        assertEquals(3, xpathResult.size());
+        assertEquals("125.14", xpathResult.get(0));
+        assertEquals("158.86", xpathResult.get(1));
+        assertEquals("139.24", xpathResult.get(2));
+
+        xpathResult = resp.getAllXPath("//*[local-name()='calculatedResult']/text()");
+        assertEquals(3, xpathResult.size());
+        assertEquals("125.14", xpathResult.get(0));
+        assertEquals("13.44", xpathResult.get(1));
+        assertEquals("19.37", xpathResult.get(2));
+    }
+
+    /**
      * Tests getting of XPath as double
      */
     @Test
@@ -80,7 +104,7 @@ public class XmlHttpResponseTest {
         resp.setResponse(OK_RESP);
         return resp;
     }
-    
+
     @Test
     public void testCheckXPathsCorrect() {
         XmlHttpResponse resp = getOKResponse();
@@ -88,9 +112,9 @@ public class XmlHttpResponseTest {
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("amount", "158.86");
         values.put("result", "13.44");
-        
+
         Map<String, String> expressionsToCheck = createExprToCheck();
-        
+
         XPathCheckResult checkResult = resp.checkXPaths(values, expressionsToCheck);
         assertEquals("OK", checkResult.getResult());
         assertNull(checkResult.getMismatchDetail());
@@ -103,9 +127,9 @@ public class XmlHttpResponseTest {
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("amount", "158.860");
         values.put("result", "013.440000");
-        
+
         Map<String, String> expressionsToCheck = createExprToCheck();
-        
+
         XPathCheckResult checkResult = resp.checkXPaths(values, expressionsToCheck);
         assertEquals("OK", checkResult.getResult());
         assertNull(checkResult.getMismatchDetail());
@@ -119,11 +143,11 @@ public class XmlHttpResponseTest {
         values.put("amount", "12");
         values.put("result", "1");
         values.put("status", "OK");
-        
+
         Map<String, String> expressionsToCheck = createExprToCheck();
         expressionsToCheck.put("//*[local-name()='errorStatus']", "unknownKey");
         expressionsToCheck.put("//noMatchXPath", "status");
-        
+
         String expected = SoapCallMapColumnFixture.NO_ESCAPE_PREFIX
                             + "NOK:\n<ul>\n"
                             + " <li>result: 1 <> 13.44</li>\n"
