@@ -81,6 +81,18 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
+     * @return current page's content type.
+     */
+    public String pageContentType() {
+        String result = null;
+        Object ct = getSeleniumHelper().executeJavascript("return document.contentType;");
+        if (ct != null) {
+            result = ct.toString();
+        }
+        return result;
+    }
+
+    /**
      * Replaces content at place by value.
      * @param value value to set.
      * @param place element to set value on.
