@@ -224,9 +224,20 @@ public abstract class FitNesseRunner extends ParentRunner<WikiPage> {
     testRunner.executeTestPages();
     TestSummary summary = testFormatter.getTotalSummary();
 
-    assertEquals("wrong", 0, summary.getWrong());
-    assertEquals("exceptions", 0, summary.getExceptions());
-    assertTrue(msgAtLeastOneTest(suiteName, summary), summary.getRight() > 0);
+    try {
+        assertEquals("wrong", 0, summary.getWrong());
+        assertEquals("exceptions", 0, summary.getExceptions());
+        assertTrue(msgAtLeastOneTest(suiteName, summary), summary.getRight() > 0);
+    } catch (AssertionError ae) {
+        removeInvalidSureFireCharactersAndRethrow(ae);
+    }
+  }
+
+  private void removeInvalidSureFireCharactersAndRethrow(AssertionError ae) {
+      String errorMessage = ae.getMessage();
+      errorMessage = errorMessage.replaceAll("<", "[");
+      errorMessage = errorMessage.replaceAll(">", "]");
+      throw new AssertionError(errorMessage);
   }
 
   private String msgAtLeastOneTest(String pageName, TestSummary summary) {
