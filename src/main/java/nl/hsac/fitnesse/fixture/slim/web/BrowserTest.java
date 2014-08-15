@@ -158,10 +158,26 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
+     * Simulates pressing a key.
+     * @param key key to press, can be a normal letter (e.g. 'M') or a special key (e.g. 'down').
+     * @return true, if an element was active the key could be sent to.
+     */
+    public boolean press(String key) {
+        CharSequence s;
+        try {
+            s = Keys.valueOf(key.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            s = key;
+        }
+        return sendKeysToActiveElement(s);
+    }
+
+    /**
      * Simulates pressing keys.
+     * @param keys keys to press.
      * @return true, if an element was active the keys could be sent to.
      */
-    protected boolean sendKeysToActiveElement(Keys keys) {
+    protected boolean sendKeysToActiveElement(CharSequence keys) {
         boolean result = false;
         WebElement element = getSeleniumHelper().getActiveElement();
         if (element != null) {
