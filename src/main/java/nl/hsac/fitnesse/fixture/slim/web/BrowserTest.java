@@ -76,6 +76,77 @@ public class BrowserTest extends SlimFixture {
         return getSeleniumHelper().navigate();
     }
 
+    public boolean switchToNextTab() {
+        boolean result = false;
+        List<String> tabs = getTabHandles();
+        if (tabs.size() > 1) {
+            int currentTab = getCurrentTabIndex(tabs);
+            int nextTab = currentTab + 1;
+            if (nextTab == tabs.size()) {
+                nextTab = 0;
+            }
+            goToTab(tabs, nextTab);
+            result = true;
+        }
+        return result;
+    }
+
+    public boolean switchToPreviousTab() {
+        boolean result = false;
+        List<String> tabs = getTabHandles();
+        if (tabs.size() > 1) {
+            int currentTab = getCurrentTabIndex(tabs);
+            int nextTab = currentTab - 1;
+            if (nextTab == -1) {
+                nextTab = tabs.size() - 1;
+            }
+            goToTab(tabs, nextTab);
+            result = true;
+        }
+        return result;
+    }
+
+    public boolean closeTab() {
+        boolean result = false;
+        List<String> tabs = getTabHandles();
+        int currentTab = getCurrentTabIndex(tabs);
+        int tabToGoTo = -1;
+        if (currentTab > 0) {
+            tabToGoTo = currentTab - 1;
+        } else {
+            if (tabs.size() > 1) {
+                tabToGoTo = 1;
+            }
+        }
+        if (tabToGoTo > -1) {
+            WebDriver driver = getSeleniumHelper().driver();
+            driver.close();
+            goToTab(tabs, tabToGoTo);
+            result = true;
+        }
+        return result;
+    }
+
+    public int tabCount() {
+        return getTabHandles().size();
+    }
+
+    public int currentTabIndex() {
+        return getCurrentTabIndex(getTabHandles()) + 1;
+    }
+
+    protected int getCurrentTabIndex(List<String> tabHandles) {
+        return getSeleniumHelper().getCurrentTabIndex(tabHandles);
+    }
+
+    protected void goToTab(List<String> tabHandles, int indexToGoTo) {
+        getSeleniumHelper().goToTab(tabHandles, indexToGoTo);
+    }
+
+    protected List<String> getTabHandles() {
+        return getSeleniumHelper().getTabHandles();
+    }
+
     public String pageTitle() {
         return getSeleniumHelper().getPageTitle();
     }
