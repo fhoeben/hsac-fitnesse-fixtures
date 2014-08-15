@@ -402,6 +402,57 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
+    public String valueOfInRowWhereIs(String requestedColumnName, String selectOnColumn, String selectOnValue) {
+        String result = null;
+        String columnXPath = getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue);
+        String requestedIndex = getXPathForColumnIndex(requestedColumnName);
+        WebElement element = findByXPath("%s[%s]", columnXPath, requestedIndex);
+        if (element != null) {
+            scrollIfNotOnScreen(element);
+            result = element.getText();
+        }
+        return result;
+    }
+
+    public boolean clickInRowWhereIs(String place, String selectOnColumn, String selectOnValue) {
+        boolean result = false;
+        String columnXPath = getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue);
+        // find an input to click in the row
+        WebElement element = findByXPath("%s//input[@value='%s']", columnXPath, place);
+        if (element == null) {
+            // see whether there is an element with the specified place as text() in the row
+            element = findByXPath("%s//*[contains(normalize-space(text()),'%s')]", columnXPath, place);
+        }
+        if (element != null) {
+            result = clickElement(element);
+        }
+        return result;
+    }
+
+    /**
+     * Creates an XPath expression that will find a cell in a row, selecting the row based on the
+     * text in a specific column (identified by its header text).
+     * @param columnName header text of the column to find value in.
+     * @param value text to find in column with the supplied header.
+     * @return XPath expression selecting a td in the row
+     */
+    protected String getXPathForColumnInRowByValueInOtherColumn(String columnName, String value) {
+        String selectIndex = getXPathForColumnIndex(columnName);
+        return String.format("//tr[normalize-space(td[%s]/descendant-or-self::text())='%s']/td", selectIndex, value);
+    }
+
+    /**
+     * Creates an XPath expression that will determine, for a row, which index to use to select the cell in the column
+     * with the supplied header text value.
+     * @param columnName name of column in header (th)
+     * @return XPath expression which can be used to select a td in a row
+     */
+    protected String getXPathForColumnIndex(String columnName) {
+        // determine how many columns are before the column with the requested name
+        // the column with the requested name will have an index of the value +1 (since XPath indexes are 1 based)
+        return String.format("count(//tr/th[normalize-space(descendant-or-self::text())='%s']/preceding-sibling::th)+1", columnName);
+    }
+
     protected WebElement getElement(String place) {
         return getSeleniumHelper().getElement(place);
     }
