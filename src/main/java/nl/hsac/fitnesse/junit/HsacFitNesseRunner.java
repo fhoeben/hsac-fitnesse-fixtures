@@ -1,8 +1,8 @@
 package nl.hsac.fitnesse.junit;
 
+import fitnesse.ContextConfigurator;
 import fitnesse.FitNesseContext;
 import fitnesse.components.PluginsClassLoader;
-import fitnesse.junit.FitNesseSuite;
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.junit.patchFor486.FitNesseRunner;
 import org.apache.commons.lang3.StringUtils;
@@ -39,9 +39,9 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     protected String getSuiteName(Class<?> klass) throws InitializationError {
         String name = System.getProperty(suiteOverrideVariableName);
         if (StringUtils.isEmpty(name)) {
-            FitNesseSuite.Name nameAnnotation = klass.getAnnotation(FitNesseSuite.Name.class);
+            Suite nameAnnotation = klass.getAnnotation(Suite.class);
             if (nameAnnotation == null) {
-                throw new InitializationError("There must be a @Name annotation");
+                throw new InitializationError("There must be a @Suite annotation");
             }
             name = nameAnnotation.value();
         }
@@ -49,13 +49,18 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     }
 
     @Override
-    protected String getFitNesseDir(Class<?> suiteClass) throws Exception {
+    protected String getFitNesseDir(Class<?> suiteClass) {
         return "wiki";
     }
 
     @Override
     protected String getOutputDir(Class<?> klass) throws InitializationError {
         return "target/fitnesse-results";
+    }
+
+    @Override
+    protected String getFitNesseRoot(Class<?> suiteClass) {
+        return ContextConfigurator.DEFAULT_ROOT;
     }
 
     @Override
