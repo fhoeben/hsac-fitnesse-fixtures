@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.junit;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
@@ -73,7 +74,7 @@ public class JUnitXMLPerPageListener extends RunListener {
 
         if (exception != null) {
             failureXml = "<failure type=\"" + exception.getClass().getName()
-                    + "\" message=\"" + exception.getMessage()
+                    + "\" message=\"" + getMessage(exception)
                     + "\"></failure>";
             if (exception instanceof AssertionError)
                 failures = 1;
@@ -86,6 +87,11 @@ public class JUnitXMLPerPageListener extends RunListener {
                 + testName + "\">" + "<properties></properties>" + "<testcase classname=\""
                 + testName + "\" time=\"" + executionTime + "\" name=\""
                 + testName + "\">" + failureXml + "</testcase>" + "</testsuite>";
+    }
+
+    protected String getMessage(Throwable exception) {
+        String errorMessage = exception.getMessage();
+        return StringEscapeUtils.escapeXml(errorMessage);
     }
 
     /**
