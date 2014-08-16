@@ -10,6 +10,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Base class for Fixtures that use a Map to store the set column values,
@@ -17,6 +20,7 @@ import java.util.Map;
  */
 public class MapColumnFixture extends OurColumnFixture {
     private final Map<String, Object> currentRowValues = new HashMap<String, Object>();
+    public static final String DEFAULT_ARRAY_SEPARATOR = ",";
 
     @Override
     public void reset() {
@@ -98,10 +102,10 @@ public class MapColumnFixture extends OurColumnFixture {
             rowValues.put(key, translation);
         }
     }
-    
+
     /**
      * Places default values (if any) before each row.
-     * 
+     *
      * @param values
      *            map to put defaults in.
      */
@@ -162,6 +166,18 @@ public class MapColumnFixture extends OurColumnFixture {
                 saveBinding.adapter = result.adapter;
                 result = saveBinding;
             }
+        } else if (header.endsWith("?$")) { // compare return with value in symbol
+            String originalBody = heads.body; // Save originalBody so we can show it in testresult page
+            heads.body = header.substring(0, header.length()-1); // Remove the $ so originalCreateBinding will create a Binding.QueryBinding
+            result = originalCreateBinding(column, heads); // use originalCreateBinding so we can set the adapter
+            if (result instanceof Binding.QueryBinding) {
+                // We want to compare value in symbol with return value and made our own QueryBinding to do so.
+                Binding queryBinding = new QueryBinding();
+                queryBinding.adapter = result.adapter; // I think adapter is necessary so it can see if values matches or not
+                result = queryBinding;
+            }
+            heads.body = originalBody;
+
         } else {
             return new MapBinding(header);
         }
@@ -181,14 +197,17 @@ public class MapColumnFixture extends OurColumnFixture {
                 Object valueObj = getValue();
                 String symbolValue = String.valueOf(valueObj);
                 String symbolName = cell.text();
-                Fixture.setSymbol(symbolName, symbolValue);
+
+                if (valueObj instanceof Object[]) {
+                    // <ARRAY> Store return value as array.
+                    Fixture.setSymbol(symbolName, valueObj);
+                    symbolValue = Arrays.toString((Object[]) valueObj);
+                } else {
+                    Fixture.setSymbol(symbolName, symbolValue);
+                }
                 cell.addToBody(Fixture.gray("<a id=\"" + symbolName + "\"> = " + symbolValue + "</a>"));
             } catch (Exception e) {
-                if (cell.text().isEmpty()) {
-                    cell.addToBody(gray("error"));
-                } else {
-                    fixture.exception(cell, e);
-                }
+                handleException(fixture, cell, e);
             }
         }
 
@@ -202,7 +221,7 @@ public class MapColumnFixture extends OurColumnFixture {
         }
     }
 
-    class ParameterBinding extends Binding {
+    public class ParameterBinding extends Binding {
         private final String header;
 
         public ParameterBinding(String headerName) {
@@ -228,7 +247,7 @@ public class MapColumnFixture extends OurColumnFixture {
                                  result = symbolValue;
                                  cell.addToBody(" = ");
                              } else {
-                                result = result + "," + symbolValue;
+                                 result = result + DEFAULT_ARRAY_SEPARATOR + symbolValue;
                                 cell.addToBody(", ");
                              }
                              cell.addToBody(paramHRef(nestedPath[0], symbolValue));
@@ -238,10 +257,24 @@ public class MapColumnFixture extends OurColumnFixture {
                      }
                      getCurrentRowValues().put(header, result);
                 } else {
-                    String valueString = (String) Fixture.getSymbol(path[0]);
+                    Object symbol = Fixture.getSymbol(path[0]);
+                    String valueString = "";
                     Object value = null;
-                    if (!"null".equals(valueString)) {
-                        value = unmarshallParamValue(path, valueString);
+                    if (symbol instanceof String) {
+                        valueString = (String) Fixture.getSymbol(path[0]);
+                        if (!"null".equals(valueString)) {
+                            value = unmarshallParamValue(path, valueString);
+                        }
+                    } else if (symbol instanceof Object[]) {
+                        // <ARRAY> Stored value is array.
+                        if (path.length > 1) {
+                            int index = getIndexFromSymbolArray(path);
+                            value = getSymbolArrayValue(symbol, index);
+                            valueString = (String) value;
+                        } else {
+                            value = (symbol);
+                            valueString = Arrays.toString((Object[]) value);
+                        }
                     }
                     getCurrentRowValues().put(header, value);
                     cell.addToBody(" = " + paramHRef(symbolName, valueString));
@@ -292,6 +325,157 @@ public class MapColumnFixture extends OurColumnFixture {
             }
             currentRowValues.put(header, text);
         }
+    }
+
+    private class QueryBinding extends Binding.QueryBinding {
+
+        /**
+         * Special behavior: assumes the celltext is the name of a symbol and the return value of the column must be compared with the symbol value.
+         * The special fitnesse values 'blank', 'null', '' are handled in the standard way though.
+         */
+        @Override
+        public void doCell(Fixture aFixture, Parse aCell) {
+            String originalCellText = aCell.text();
+            String newText = null;
+            String extraCellText =  "";
+            try {
+                if (!isSpecialBlankValueForFitnesse(originalCellText)) { // don't interfere with standard special behavior
+                    // Assume the text is a symbol name of an array of those
+                    if (originalCellText.startsWith("Array[") && originalCellText.endsWith("]")) {
+                        // array of symbols and/of strings
+                        newText = originalCellText.substring(6, originalCellText.length());
+                        String separator = getParameter("ARRAY_SEPARATOR", DEFAULT_ARRAY_SEPARATOR);
+                        // match string $variable1,variable2]    Note: ',' can be another array_seperator
+                        Pattern pattern = Pattern.compile(String.format("\\$(.*?)(%s|])", separator));
+                        Matcher matcher = pattern.matcher(newText);
+                        while (matcher.find()) {
+                            // replace all symbol entries by values
+                            String symbolName = matcher.group();
+                            // replace the $variable name with value of getSymbolValue(variable_name)
+                            newText = newText.replace(symbolName.substring(0, symbolName.length() - 1),
+                                    getSymbolValue(symbolName.substring(1, symbolName.length() - 1)));
+                        }
+                        newText = newText.substring(0, newText.length() - 1);
+                    } else {
+                        // single element, we assume the text is a symbol
+                        newText = getSymbolValue(originalCellText);
+                    }
+                    aCell.body = newText;
+                    extraCellText = String.format(" (%s)", originalCellText);
+                }
+                super.doCell(aFixture, aCell);
+                aCell.addToBody(extraCellText);
+
+            } catch (NoSuchSymbolException e) {
+                aCell.body = e.getMessage();
+                aFixture.wrong(aCell);
+            }
+        }
+
+    }
+
+    private String getSymbolValue(String originalSymbolName) throws NoSuchSymbolException {
+        String[] cellContent = null;
+        String symbolName = null;
+        String newText = null;
+        if (originalSymbolName.contains(".")) {
+            cellContent = StringUtils.split(originalSymbolName, '.');
+            symbolName= cellContent[0];
+        } else {
+            symbolName = originalSymbolName;
+        }
+        Object symbolValue = Fixture.getSymbol(symbolName);
+        if (symbolValue instanceof Object[]) {
+            // cell text is element of array
+            int arrayIndex = getIndexFromSymbolArray(cellContent);
+            newText = (String) getSymbolArrayValue(symbolValue, arrayIndex);
+        } else if (cellContent != null && cellContent.length == 2) {
+            // cell text is nested object
+            newText = (String) symbolValue;
+            MapParameter mapValue = MapParameter.parse(newText);
+            if (mapValue != null) {
+                newText = mapValue.get(cellContent[1]).toString();
+            }
+        } else {
+            newText = (String) (symbolValue);
+        }
+        if (newText == null) {
+            throw new NoSuchSymbolException(String.format("No value for symbol '%s' found.", originalSymbolName));
+        }
+        return newText;
+    }
+
+    private void handleException(Fixture fixture, Parse cell, Exception e) {
+        if (cell.text().isEmpty()) {
+            cell.addToBody(gray("error"));
+        } else {
+            fixture.exception(cell, e);
+        }
+    }
+
+    private class NoSuchSymbolException extends Exception {
+        private static final long serialVersionUID = 1L;
+
+        public NoSuchSymbolException(String message) {
+            super(message);
+        }
+    }
+
+    /**
+     * Gets fixture parameter value by parameter key match.
+     * Parameter should be defined in format <parameterKey>=<parameterValue>.
+     * @param paramKey parameter key
+     * @param defaultValue default parameter value
+     * @return the fixture parameter value
+     */
+    private String getParameter(String paramKey, String defaultValue) {
+        String paramValue = defaultValue;
+        if (StringUtils.isNotBlank(paramKey) && args != null && args.length > 0) {
+            for (String arg : args) {
+                String[] parameter = arg.split("=");
+                if (parameter != null && parameter.length == 2 && paramKey.equals(parameter[0])) {
+                    paramValue = parameter[1];
+                    break;
+                }
+            }
+        }
+        return paramValue;
+    }
+
+    /**
+     * When cellContent contains a symbol that is an array, the specific element can be addressed
+     * in the cell. However the index doesn't start at 0 but on 1 to make it more readable.
+     * @param cellContent symbol of array with specification of element: ie arrayname.1 stands for arrayname[0]
+     * @return the java index of the array (arrayname.1 returns 0, arrayname.2 return 1, etc)
+     */
+    private int getIndexFromSymbolArray(String[] cellContent) {
+        int index = Integer.valueOf(cellContent[1]) - 1;
+        return index;
+    }
+
+    /**
+     * Fetch the value from arraySymbol on specified index.
+     * @param arraySymbol symbol from Fixture that is array
+     * @param index to find element from array
+     * @return the element from the symbol array
+     */
+    private Object getSymbolArrayValue(Object arraySymbol, int index) {
+        Object result = null;
+        if (index > -1 && index < ((Object[]) arraySymbol).length) {
+            result = ((Object[]) arraySymbol)[index];
+        }
+        return result;
+    }
+
+    boolean isSpecialBlankValueForFitnesse(String text) {
+        if ("".equals(text)) {
+            return true;
+        } else if ("blank".equalsIgnoreCase(text)) {
+            return true;
+        } else if ("null".equalsIgnoreCase(text)) {
+            return true;
+        }
+        return false;
     }
 
     /**

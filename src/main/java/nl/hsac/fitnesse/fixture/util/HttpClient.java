@@ -21,7 +21,8 @@ public class HttpClient {
     private final static org.apache.http.client.HttpClient HTTP_CLIENT;
 
     static {
-        HTTP_CLIENT = HttpClients.custom().useSystemProperties().setUserAgent(HttpClient.class.getName()).build();
+        HTTP_CLIENT = HttpClients.custom().useSystemProperties().disableContentCompression()
+                .setUserAgent(HttpClient.class.getName()).build();
     }
 
     /**
