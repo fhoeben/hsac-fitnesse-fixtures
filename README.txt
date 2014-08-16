@@ -21,7 +21,7 @@ Have the build server checkout the project and execute 'mvn clean test-compile f
 The result in JUnit XML results can be found in: target/failsafe-reports (most build servers will pick these up automatically)
 The HTML results can be found in: target/fitnesse-results/<SuiteName>.html
 
-The Fitnesse suite to run can be specified by changing the value of the @Name annotation in nl.hsac.fitnesse.fixture.FixtureDebugTest,
+The Fitnesse suite to run can be specified by changing the value of the @Suite annotation in nl.hsac.fitnesse.fixture.FixtureDebugTest,
 or (preferably) by adding a system property, called fitnesseSuiteToRun, specifying the suite to run to the build server's mvn execution.
 
 
@@ -31,4 +31,4 @@ Import this project in your favorite Java IDE (with Maven support).
 To start Fitnesse: have the IDE execute 'mvn compile exec:exec'. The port used by Fitnesse can be controlled by changing the fitnesse.port property's value in pom.xml.
 Fitnesse will be available at http://localhost:<fitnesse.port>/, example usage of the symbols and fixtures can be seen in http://localhost:<fitnesse.port>/HsacExamples.
 
-To debug a fixture used in a Fitnesse page: change the @Name annotation's value to contain page name in nl.hsac.fitnesse.fixture.FixtureDebugTest, then just debug this test.
+To debug a fixture used in a Fitnesse page: change the @Suite annotation's value to contain page name in nl.hsac.fitnesse.fixture.FixtureDebugTest, then just debug this test.
