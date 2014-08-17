@@ -166,10 +166,15 @@ public class SeleniumHelper {
 
     private WebElement getElementByLabel(String labelText, int index, String xPath, String cssSelectorModifier) {
         WebElement element = null;
-        WebElement label = findElement(byXpath(indexedXPath(xPath, index), labelText));
+        String labelPattern = indexedXPath(xPath, index);
+        WebElement label = findElement(byXpath(labelPattern, labelText));
         if (label != null) {
             String forAttr = label.getAttribute("for");
-            element = findElement(By.id(forAttr));
+            if (forAttr == null || "".equals(forAttr)) {
+                element = findElement(byXpath(labelPattern + "/input", labelText));
+            } else {
+                element = findElement(By.id(forAttr));
+            }
         }
         if (element == null) {
             element = findElement(byCss("[aria-label%s='%s']", cssSelectorModifier, labelText), index - 1);
