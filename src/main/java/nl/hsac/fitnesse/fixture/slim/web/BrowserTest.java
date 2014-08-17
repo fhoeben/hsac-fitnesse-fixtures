@@ -444,10 +444,7 @@ public class BrowserTest extends SlimFixture {
                 String id = element.getAttribute("id");
                 By selectedOption = getSeleniumHelper().byXpath("//select[@id='%s']//option[@selected]", id);
                 WebElement option = getSeleniumHelper().findElement(true, selectedOption);
-                if (option != null) {
-                    scrollIfNotOnScreen(option);
-                    result = option.getText();
-                }
+                result = getElementText(option);
             } else {
                 result = element.getAttribute("value");
                 if (result == null) {
@@ -473,21 +470,40 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
+    public String valueOfColumnNumberInRowNumber(int columnIndex, int rowIndex) {
+        String xPath = String.format("//tr[%s]/td[%s]", rowIndex, columnIndex);
+        WebElement element = findByXPath(xPath);
+        return getElementText(element);
+    }
+
+    public String valueOfInRowNumber(String requestedColumnName, int rowIndex) {
+        String columnXPath = String.format("//tr[%s]/td", rowIndex);
+        return valueInRow(columnXPath, requestedColumnName);
+    }
+
     public String valueOfInRowWhereIs(String requestedColumnName, String selectOnColumn, String selectOnValue) {
-        String result = null;
         String columnXPath = getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue);
+        return valueInRow(columnXPath, requestedColumnName);
+    }
+
+    protected String valueInRow(String columnXPath, String requestedColumnName) {
         String requestedIndex = getXPathForColumnIndex(requestedColumnName);
         WebElement element = findByXPath("%s[%s]", columnXPath, requestedIndex);
-        if (element != null) {
-            scrollIfNotOnScreen(element);
-            result = element.getText();
-        }
-        return result;
+        return getElementText(element);
+    }
+
+    public boolean clickInRowNumber(String place, int rowIndex) {
+        String columnXPath = String.format("//tr[%s]/td", rowIndex);
+        return clickInRow(columnXPath, place);
     }
 
     public boolean clickInRowWhereIs(String place, String selectOnColumn, String selectOnValue) {
-        boolean result = false;
         String columnXPath = getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue);
+        return clickInRow(columnXPath, place);
+    }
+
+    protected boolean clickInRow(String columnXPath, String place) {
+        boolean result = false;
         // find an input to click in the row
         WebElement element = findByXPath("%s//input[@value='%s']", columnXPath, place);
         if (element == null) {
@@ -535,10 +551,7 @@ public class BrowserTest extends SlimFixture {
     protected String getTextByXPath(String xpathPattern, String... params) {
         String result = null;
         WebElement element = findByXPath(xpathPattern, params);
-        if (element != null) {
-            scrollIfNotOnScreen(element);
-            result = element.getText();
-        }
+        result = getElementText(element);
         return result;
     }
 
@@ -547,13 +560,8 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected String getTextByClassName(String className) {
-        String result = null;
         WebElement element = findByClassName(className);
-        if (element != null) {
-            scrollIfNotOnScreen(element);
-            result = element.getText();
-        }
-        return result;
+        return getElementText(element);
     }
 
     protected WebElement findByClassName(String className) {
@@ -578,6 +586,15 @@ public class BrowserTest extends SlimFixture {
 
     public void waitMilliSecondAfterScroll(int msToWait) {
         waitAfterScroll = msToWait;
+    }
+
+    protected String getElementText(WebElement element) {
+        String result = null;
+        if (element != null) {
+            scrollIfNotOnScreen(element);
+            result = element.getText();
+        }
+        return result;
     }
 
     /**
