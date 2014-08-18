@@ -349,6 +349,18 @@ public class BrowserTest extends SlimFixture {
 
     protected boolean clickImpl(String place) {
         WebElement element = getElement(place);
+        if (element == null) {
+            element = findByXPath("//*[@onclick and normalize-space(text())='%s']", place);
+            if (element == null) {
+                element = findByXPath("//*[@onclick and contains(normalize-space(text()),'%s')]", place);
+                if (element == null) {
+                    element = findByXPath("//*[@onclick and normalize-space(descendant::text())='%s']", place);
+                    if (element == null) {
+                        element = findByXPath("//*[@onclick and contains(normalize-space(descendant::text()),'%s')]", place);
+                    }
+                }
+            }
+        }
         return clickElement(element);
     }
 
