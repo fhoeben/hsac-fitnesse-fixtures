@@ -2,14 +2,7 @@ package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -440,6 +433,76 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
+    public boolean clickAndWaitForClassWithText(String place, final String cssClassName, final String expectedText) {
+        boolean result = click(place);
+        if (result) {
+            result = waitForClassWithText(cssClassName, expectedText);
+        }
+        return result;
+    }
+
+    public boolean waitForClassWithText(final String cssClassName, final String expectedText) {
+        boolean result;
+        final String textToLookFor;
+        if (expectedText != null) {
+            // wiki sends newlines as <br/>, Selenium reports <br/> as newlines ;-)
+            textToLookFor = expectedText.replace("<br/>", "\n");
+        } else {
+            textToLookFor = expectedText;
+        }
+        result = waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                boolean ok = false;
+
+                WebElement element = webDriver.findElement(By.className(cssClassName));
+                if (element != null) {
+                    try {
+                        String actual = element.getText();
+                        if (textToLookFor == null) {
+                            ok = actual == null;
+                        } else {
+                            if (actual == null) {
+                                actual = element.getAttribute("value");
+                            }
+                            ok = textToLookFor.equals(actual);
+                        }
+                    } catch (StaleElementReferenceException e) {
+                        // element detached from DOM
+                        ok = false;
+                    }
+                }
+                return ok;
+            }
+        });
+        return result;
+    }
+
+    public boolean clickAndWaitForClass(String place, final String cssClassName) {
+        boolean result = click(place);
+        if (result) {
+            result = waitForClass(cssClassName);
+        }
+        return result;
+    }
+
+    public boolean waitForClass(final String cssClassName) {
+        boolean result;
+        result = waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                boolean ok = false;
+
+                WebElement element = webDriver.findElement(By.className(cssClassName));
+                if (element != null) {
+                    ok = true;
+                }
+                return ok;
+            }
+        });
+        return result;
+    }
+
     public String spaceNormalized(String input) {
         return input.trim().replaceAll("\\s+", " ");
     }
@@ -786,5 +849,18 @@ public class BrowserTest extends SlimFixture {
      */
     void setSeleniumHelper(SeleniumHelper helper) {
         seleniumHelper = helper;
+    }
+
+    public int currentBrowserWidth() {
+        WebDriver.Window window = getSeleniumHelper().driver().manage().window();
+        window.setPosition(new Point(0, 0));
+        return window.getSize().getWidth();
+    }
+
+    public void setBrowserWidth(int newWidth) {
+        WebDriver.Window window = getSeleniumHelper().driver().manage().window();
+        window.setPosition(new Point(0, 0));
+        int currentBrowserHeight = window.getSize().getHeight();
+        window.setSize(new Dimension(newWidth, currentBrowserHeight));
     }
 }
