@@ -372,21 +372,25 @@ public class BrowserTest extends SlimFixture {
     public boolean clickAndWaitForPage(String place, final String pageName) {
         boolean result = click(place);
         if (result) {
-            result = waitUntil(new ExpectedCondition<Boolean>() {
-                @Override
-                public Boolean apply(WebDriver webDriver) {
-                    boolean ok = false;
-                    try {
-                        ok = pageTitle().equals(pageName);
-                    } catch (StaleElementReferenceException e) {
-                        // element detached from DOM
-                        ok = false;
-                    }
-                    return ok;
-                }
-            });
+            result = waitForPage(pageName);
         }
         return result;
+    }
+
+    public boolean waitForPage(final String pageName) {
+        return waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                boolean ok = false;
+                try {
+                    ok = pageTitle().equals(pageName);
+                } catch (StaleElementReferenceException e) {
+                    // element detached from DOM
+                    ok = false;
+                }
+                return ok;
+            }
+        });
     }
 
     public boolean clickAndWaitForTagWithText(String place, final String tagName, final String expectedText) {
@@ -398,39 +402,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     public boolean waitForTagWithText(final String tagName, final String expectedText) {
-        boolean result;
-        result = waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver webDriver) {
-                boolean ok = false;
-
-                List<WebElement> elements = webDriver.findElements(By.tagName(tagName));
-                if (elements != null) {
-                    for (WebElement element : elements) {
-                        try {
-                            String actual = element.getText();
-                            if (expectedText == null) {
-                                ok = actual == null;
-                            } else {
-                                if (actual == null) {
-                                    actual = element.getAttribute("value");
-                                }
-                                ok = expectedText.equals(actual);
-                            }
-                        } catch (StaleElementReferenceException e) {
-                            // element detached from DOM
-                            ok = false;
-                        }
-                        if (ok) {
-                            // no need to continue to check other elements
-                            break;
-                        }
-                    }
-                }
-                return ok;
-            }
-        });
-        return result;
+        return waitForElementWithText(By.tagName(tagName), expectedText);
     }
 
     public boolean clickAndWaitForClassWithText(String place, final String cssClassName, final String expectedText) {
@@ -442,40 +414,59 @@ public class BrowserTest extends SlimFixture {
     }
 
     public boolean waitForClassWithText(final String cssClassName, final String expectedText) {
-        boolean result;
-        final String textToLookFor;
+        return waitForElementWithText(By.className(cssClassName), expectedText);
+    }
+
+    protected boolean waitForElementWithText(final By by, String expectedText) {
+        final String textToLookFor = cleanExpectedValue(expectedText);
+        return waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                boolean ok = false;
+
+                List<WebElement> elements = webDriver.findElements(by);
+                if (elements != null) {
+                    for (WebElement element : elements) {
+                        ok = hasText(element, textToLookFor);
+                        if (ok) {
+                            // no need to continue to check other elements
+                            break;
+                        }
+                    }
+                }
+                return ok;
+            }
+        });
+    }
+
+    protected String cleanExpectedValue(String expectedText) {
+        String textToLookFor;
         if (expectedText != null) {
             // wiki sends newlines as <br/>, Selenium reports <br/> as newlines ;-)
             textToLookFor = expectedText.replace("<br/>", "\n");
         } else {
             textToLookFor = expectedText;
         }
-        result = waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver webDriver) {
-                boolean ok = false;
+        return textToLookFor;
+    }
 
-                WebElement element = webDriver.findElement(By.className(cssClassName));
-                if (element != null) {
-                    try {
-                        String actual = element.getText();
-                        if (textToLookFor == null) {
-                            ok = actual == null;
-                        } else {
-                            if (actual == null) {
-                                actual = element.getAttribute("value");
-                            }
-                            ok = textToLookFor.equals(actual);
-                        }
-                    } catch (StaleElementReferenceException e) {
-                        // element detached from DOM
-                        ok = false;
-                    }
+    protected boolean hasText(WebElement element, String textToLookFor) {
+        boolean ok;
+        try {
+            String actual = getElementText(element);
+            if (textToLookFor == null) {
+                ok = actual == null;
+            } else {
+                if (actual == null) {
+                    actual = element.getAttribute("value");
                 }
-                return ok;
+                ok = textToLookFor.equals(actual);
             }
-        });
-        return result;
+        } catch (StaleElementReferenceException e) {
+            // element detached from DOM
+            ok = false;
+        }
+        return ok;
     }
 
     public boolean clickAndWaitForClass(String place, final String cssClassName) {
