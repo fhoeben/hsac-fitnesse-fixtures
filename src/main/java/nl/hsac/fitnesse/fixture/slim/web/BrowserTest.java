@@ -624,10 +624,8 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected String getTextByXPath(String xpathPattern, String... params) {
-        String result = null;
         WebElement element = findByXPath(xpathPattern, params);
-        result = getElementText(element);
-        return result;
+        return getElementText(element);
     }
 
     public String textByClassName(String className) {
