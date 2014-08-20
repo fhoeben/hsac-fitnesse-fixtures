@@ -2,14 +2,7 @@ package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -349,6 +342,18 @@ public class BrowserTest extends SlimFixture {
 
     protected boolean clickImpl(String place) {
         WebElement element = getElement(place);
+        if (element == null) {
+            element = findByXPath("//*[@onclick and normalize-space(text())='%s']", place);
+            if (element == null) {
+                element = findByXPath("//*[@onclick and contains(normalize-space(text()),'%s')]", place);
+                if (element == null) {
+                    element = findByXPath("//*[@onclick and normalize-space(descendant::text())='%s']", place);
+                    if (element == null) {
+                        element = findByXPath("//*[@onclick and contains(normalize-space(descendant::text()),'%s')]", place);
+                    }
+                }
+            }
+        }
         return clickElement(element);
     }
 
@@ -367,21 +372,25 @@ public class BrowserTest extends SlimFixture {
     public boolean clickAndWaitForPage(String place, final String pageName) {
         boolean result = click(place);
         if (result) {
-            result = waitUntil(new ExpectedCondition<Boolean>() {
-                @Override
-                public Boolean apply(WebDriver webDriver) {
-                    boolean ok = false;
-                    try {
-                        ok = pageTitle().equals(pageName);
-                    } catch (StaleElementReferenceException e) {
-                        // element detached from DOM
-                        ok = false;
-                    }
-                    return ok;
-                }
-            });
+            result = waitForPage(pageName);
         }
         return result;
+    }
+
+    public boolean waitForPage(final String pageName) {
+        return waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                boolean ok = false;
+                try {
+                    ok = pageTitle().equals(pageName);
+                } catch (StaleElementReferenceException e) {
+                    // element detached from DOM
+                    ok = false;
+                }
+                return ok;
+            }
+        });
     }
 
     public boolean clickAndWaitForTagWithText(String place, final String tagName, final String expectedText) {
@@ -393,34 +402,91 @@ public class BrowserTest extends SlimFixture {
     }
 
     public boolean waitForTagWithText(final String tagName, final String expectedText) {
+        return waitForElementWithText(By.tagName(tagName), expectedText);
+    }
+
+    public boolean clickAndWaitForClassWithText(String place, final String cssClassName, final String expectedText) {
+        boolean result = click(place);
+        if (result) {
+            result = waitForClassWithText(cssClassName, expectedText);
+        }
+        return result;
+    }
+
+    public boolean waitForClassWithText(final String cssClassName, final String expectedText) {
+        return waitForElementWithText(By.className(cssClassName), expectedText);
+    }
+
+    protected boolean waitForElementWithText(final By by, String expectedText) {
+        final String textToLookFor = cleanExpectedValue(expectedText);
+        return waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                boolean ok = false;
+
+                List<WebElement> elements = webDriver.findElements(by);
+                if (elements != null) {
+                    for (WebElement element : elements) {
+                        ok = hasText(element, textToLookFor);
+                        if (ok) {
+                            // no need to continue to check other elements
+                            break;
+                        }
+                    }
+                }
+                return ok;
+            }
+        });
+    }
+
+    protected String cleanExpectedValue(String expectedText) {
+        String textToLookFor;
+        if (expectedText != null) {
+            // wiki sends newlines as <br/>, Selenium reports <br/> as newlines ;-)
+            textToLookFor = expectedText.replace("<br/>", "\n");
+        } else {
+            textToLookFor = expectedText;
+        }
+        return textToLookFor;
+    }
+
+    protected boolean hasText(WebElement element, String textToLookFor) {
+        boolean ok;
+        try {
+            String actual = getElementText(element);
+            if (textToLookFor == null) {
+                ok = actual == null;
+            } else {
+                if (actual == null) {
+                    actual = element.getAttribute("value");
+                }
+                ok = textToLookFor.equals(actual);
+            }
+        } catch (StaleElementReferenceException e) {
+            // element detached from DOM
+            ok = false;
+        }
+        return ok;
+    }
+
+    public boolean clickAndWaitForClass(String place, final String cssClassName) {
+        boolean result = click(place);
+        if (result) {
+            result = waitForClass(cssClassName);
+        }
+        return result;
+    }
+
+    public boolean waitForClass(final String cssClassName) {
         boolean result;
         result = waitUntil(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver webDriver) {
                 boolean ok = false;
 
-                List<WebElement> elements = webDriver.findElements(By.tagName(tagName));
-                if (elements != null) {
-                    for (WebElement element : elements) {
-                        try {
-                            String actual = element.getText();
-                            if (expectedText == null) {
-                                ok = actual == null;
-                            } else {
-                                if (actual == null) {
-                                    actual = element.getAttribute("value");
-                                }
-                                ok = expectedText.equals(actual);
-                            }
-                        } catch (StaleElementReferenceException e) {
-                            // element detached from DOM
-                            ok = false;
-                        }
-                        if (ok) {
-                            // no need to continue to check other elements
-                            break;
-                        }
-                    }
+                WebElement element = webDriver.findElement(By.className(cssClassName));
+                if (element != null) {
+                    ok = true;
                 }
                 return ok;
             }
@@ -549,10 +615,8 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected String getTextByXPath(String xpathPattern, String... params) {
-        String result = null;
         WebElement element = findByXPath(xpathPattern, params);
-        result = getElementText(element);
-        return result;
+        return getElementText(element);
     }
 
     public String textByClassName(String className) {
@@ -774,5 +838,18 @@ public class BrowserTest extends SlimFixture {
      */
     void setSeleniumHelper(SeleniumHelper helper) {
         seleniumHelper = helper;
+    }
+
+    public int currentBrowserWidth() {
+        WebDriver.Window window = getSeleniumHelper().driver().manage().window();
+        window.setPosition(new Point(0, 0));
+        return window.getSize().getWidth();
+    }
+
+    public void setBrowserWidth(int newWidth) {
+        WebDriver.Window window = getSeleniumHelper().driver().manage().window();
+        window.setPosition(new Point(0, 0));
+        int currentBrowserHeight = window.getSize().getHeight();
+        window.setSize(new Dimension(newWidth, currentBrowserHeight));
     }
 }
