@@ -344,16 +344,18 @@ public class MapColumnFixture extends OurColumnFixture {
                     if (originalCellText.startsWith("Array[") && originalCellText.endsWith("]")) {
                         // array of symbols and/of strings
                         newText = originalCellText.substring(6, originalCellText.length());
-                        String separator = getParameter("ARRAY_SEPARATOR", DEFAULT_ARRAY_SEPARATOR);
+                        String separator = getArraySeperator();
                         // match string $variable1,variable2]    Note: ',' can be another array_seperator
                         Pattern pattern = Pattern.compile(String.format("\\$(.*?)(%s|])", separator));
+
                         Matcher matcher = pattern.matcher(newText);
                         while (matcher.find()) {
                             // replace all symbol entries by values
                             String symbolName = matcher.group();
+                            int seperatorLength = matcher.group(2).length();
                             // replace the $variable name with value of getSymbolValue(variable_name)
-                            newText = newText.replace(symbolName.substring(0, symbolName.length() - 1),
-                                    getSymbolValue(symbolName.substring(1, symbolName.length() - 1)));
+                            newText = newText.replace(symbolName.substring(0, symbolName.length() - seperatorLength),
+                                    getSymbolValue(symbolName.substring(1, symbolName.length() - seperatorLength)));
                         }
                         newText = newText.substring(0, newText.length() - 1);
                     } else {
@@ -440,6 +442,14 @@ public class MapColumnFixture extends OurColumnFixture {
             }
         }
         return paramValue;
+    }
+
+    /**
+     * Fetch the array separator, which has a default value if not configured.
+     * @return the array seperator
+     */
+    public String getArraySeperator() {
+        return getParameter("ARRAY_SEPARATOR", DEFAULT_ARRAY_SEPARATOR);
     }
 
     /**
