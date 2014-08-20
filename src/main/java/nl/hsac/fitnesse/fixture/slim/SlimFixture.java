@@ -33,15 +33,15 @@ public class SlimFixture {
      * @param symbolName name to store value under.
      * @param value value to store.
      */
-    public void setGlobalValue(String symbolName, String value) {
+    public void setGlobalValueTo(String symbolName, String value) {
         getEnvironment().setSymbol(symbolName, value);
     }
 
     /**
-     * Retrieves a (global) value, which was previously stored using #setGlobalValue().
+     * Retrieves a (global) value, which was previously stored using #setGlobalValueTo().
      * @param symbolName name value was stored under.
      */
-    public String getGlobalValue(String symbolName) {
+    public String globalValue(String symbolName) {
         return getEnvironment().getSymbol(symbolName);
     }
 

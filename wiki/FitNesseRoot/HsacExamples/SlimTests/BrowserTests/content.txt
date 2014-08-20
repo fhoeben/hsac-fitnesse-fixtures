@@ -17,8 +17,6 @@ The heuristic to find places tries a number of translations of end user terms to
 -|Comment|
 |open <url>                                                        |opens the specified URL                                                                                                                          |
 |click <place>                                                     |performs mouse click at the designated place (e.g. link/button/checkbox/radio button)                                                            |
-|click <place> and wait for page title <title>                     |performs a click and waits until a page with the specified title is shown                                                                        |
-|click <place> and wait for tag <tag name> with text <value>       |performs a click and waits until a page containing a tag with the specified text is shown                                                        |
 |enter <value> as <input>                                          |clears the current value of an input and types the value                                                                                         |
 |select <value> for <input>                                        |selects a value in the drop down box (or radio button)                                                                                           |
 |press <key>                                                       |sends press of a key (e.g. Tab, Enter, Escape, Space, M) to browser                                                                              |
@@ -26,6 +24,11 @@ The heuristic to find places tries a number of translations of end user terms to
 |take screenshot <name>                                            |stores the current browser's content as <name><unique>.png (used in combination with 'show' verb)                                                |
 |value of <input>                                                  |retrieves the current value of the input (for use with 'check' verb or variable assignment)                                                      |
 |page title                                                        |retrieves the current page's title (for use with 'check' verb)                                                                                   |
+|wait for page title <title>                                       |performs a click and waits until a page with the specified title is shown                                                                        |
+|wait for tag <tag name> with text <value>                         |waits until a page containing a tag with the specified text is shown                                                                             |
+|wait for class <class name>                                       |waits until a page containing an element with the supplied CSS class is shown                                                                    |
+|wait for class <class name> with text <value>                     |waits until a page containing an element with the supplied CSS class and specified text is shown                                                 |
+|wait seconds <seconds>                                            |waits the specified number of seconds (e.g. for an animation to complete)                                                                        |
 |is visible <place>                                                |whether specified place is visible in browser's window (used in combination with 'ensure' and 'reject')                                          |
 |scroll to <place>                                                 |scrolls the designated place into view                                                                                                           |
 |back                                                              |goes back 1 page in the browser's history (i.e. clicks browser's back button)                                                                    |
@@ -43,4 +46,3 @@ The heuristic to find places tries a number of translations of end user terms to
 |click <place> in row where <selectColumn> is <selectValue>        |finds the first row where the column with header 'selectColumn' is 'selectValue' and clicks the button or link whose text matches 'place'        |
 |text by xPath <element xpath>                                     |retrieves the text of the first element found by evaluating the xPath against the current page's DOM                                             |
 |text by class name <class>                                        |retrieves the text of the first element found with the specified class                                                                           |
-|wait seconds <seconds>                                            |waits the specified number of seconds (e.g. for an animation to complete)                                                                        |
