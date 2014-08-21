@@ -2,10 +2,9 @@
 To use the symbol and array behavior, one must start by adding a $ to the end of the columnname.
 
 !2 Compare result with symbol
-This functionality was added when we wanted to compare a returning value with a value that was earlier returned in the same testpage.
-How to use this functionality is demonstrated with the use of the !-CompareValues-! fixture. However this will work for all fixtures extending the nl.hsac.fitnesse.fixture.fit.MapColumnFixture.
+This functionality was added when we wanted to compare a returning value with a value that was earlier returned in the same testpage. How to use this functionality is demonstrated with the use of the !-CompareValues-! fixture. However this will work for all fixtures extending the nl.hsac.fitnesse.fixture.fit.MapColumnFixture.
 
-!3 Demonstration of comparing with symbol: 
+!3 Demonstration of comparing with symbol:
 
 First store value1 and value2 in symbols so we can compare with them later.
 |!-CompareValues-!                      |
@@ -13,29 +12,26 @@ First store value1 and value2 in symbols so we can compare with them later.
 |1     |2     |symbolValue1|symbolValue2|
 
 Now compare new value1 and value2 with the values stored in symbolValue1 and symbolValue2.
-|!-CompareValues-!                                                                   |
-|value1|value2|value1?$    |value2?$    |                                            |
-|1     |2     |symbolValue1|symbolValue2|Success: values are equal to the symbols.   |
-|1     |3     |symbolValue1|symbolValue2|Failure: value2 is not equal to symbolValue2|
+
+|!-CompareValues-!                      |
+|value1|value2|value1?$    |value2?$    |
+|1     |2     |symbolValue1|symbolValue2|
+Tip: to see how the output is in case of a failure, change value1 and/or value2.
 
 !2 Compare result with an array
-Functionality is added to compare the returning value of a column fixture with an array of values. The array of values can consist out of literal values, symbols or a combination of the two. If the array contains symbols, the symbols need to be prefixed with a $. 
-While the symbol comparison (discussed above) works for all fixtures extending from the nl.hsac.fitnesse.fixture.fit.MapColumnFixture, for comparing with array one need to implement a method that returns the array of values as a string, separated by a delimiter.
-For an example, see the asArray method of the !-CompareValuesFixture-! class.
+Functionality is added to compare the returning value of a column fixture with an array of values. The array of values can consist out of literal values, symbols or a combination of the two. If the array contains symbols, the symbols need to be prefixed with a $.  While the symbol comparison (discussed above) works for all fixtures extending from the nl.hsac.fitnesse.fixture.fit.MapColumnFixture, for comparing with array one need to implement a method that returns the array of values as a string, separated by a delimiter. For an example, see the asDelimiterSepList method of the !-CompareValuesFixture-! class.
 
-!3 Demonstration of comparing with an array: 
+!3 Demonstration of comparing with an array:
 
-Compare value1 and value2 with values and symbols in an array. 
-|!-CompareValues-!|                                                                                                               |
-|value1           |value2|asArray?$                         |                                                                     |
-|1                |2     |Array[1,2]                        |Success: values are equal to the literals in the array.              |
-|1                |2     |Array[$symbolValue1,$symbolValue2]|Success: values are equal to the symbols in the array.               |
-|1                |2     |Array[$symbolValue1,2]            |Success: values are equal to the symbol and literal in the array.    |
-|1                |2     |Array[1,3]                        |Failure: values are not equal to the literals in the array.          |
-|1                |1     |Array[$symbolValue1,$symbolValue2]|Failure: values are not equal to the symbols in the array.           |
-|1                |1     |Array[$symbolValue1,2]            |Failure: values are not equal to the symbol and literal in the array.|
+Compare value1 and value2 with values and symbols in an array.
+|!-CompareValues-!|                                         |
+|value1           |value2|asDelimiterSepList?$              |
+|1                |2     |Array[1,2]                        |
+|1                |2     |Array[$symbolValue1,$symbolValue2]|
+|1                |2     |Array[$symbolValue1,2]            |
+Tip: to see how the output is in case of a failure, change value1 and/or value2.
 
 The default array separator is a comma. If you need another separator, ie // then you can specify this by using the ARRAY_SEPARATOR parameter.
-|!-CompareValues-!|ARRAY_SEPARATOR=//                                                                               |
-|value1           |value2|asArray?$                          |                                                      |
-|1                |2     |Array[$symbolValue1//$symbolValue2]|Success: values are equal to the symbols in the array.|
+|!-CompareValues-!|ARRAY_SEPARATOR=//                        |
+|value1           |value2|asDelimiterSepList?$               |
+|1                |2     |Array[$symbolValue1//$symbolValue2]|
