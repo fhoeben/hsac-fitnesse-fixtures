@@ -37,8 +37,12 @@ public class CompareValuesFixture extends MapColumnFixture {
         return (String) getCurrentRowValues().get(VALUE2);
     }
 
-    public String asArray() {
+    public String asDelimiterSepList() {
         return value1() + getArraySeperator() + value2();
+    }
+
+    public String[] asArray() {
+        return new String[] {value1(), value2()};
     }
 }
 
