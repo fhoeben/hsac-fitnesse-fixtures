@@ -70,6 +70,12 @@ public class BrowserTest extends SlimFixture {
         return getSeleniumHelper().navigate();
     }
 
+    public boolean openInNewTab(String url) {
+        String cleanUrl = cleanupValue(url);
+        getSeleniumHelper().executeJavascript("window.open('%s', '_blank')", cleanUrl);
+        return switchToNextTab();
+    }
+
     public boolean switchToNextTab() {
         boolean result = false;
         List<String> tabs = getTabHandles();
