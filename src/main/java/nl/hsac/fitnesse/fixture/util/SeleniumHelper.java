@@ -468,8 +468,12 @@ public class SeleniumHelper {
     }
 
     public int getCurrentTabIndex(List<String> tabHandles) {
-        String currentHandle = driver().getWindowHandle();
-        return tabHandles.indexOf(currentHandle);
+        try {
+            String currentHandle = driver().getWindowHandle();
+            return tabHandles.indexOf(currentHandle);
+        } catch (NoSuchWindowException e) {
+            return -1;
+        }
     }
 
     public void goToTab(List<String> tabHandles, int indexToGoTo) {

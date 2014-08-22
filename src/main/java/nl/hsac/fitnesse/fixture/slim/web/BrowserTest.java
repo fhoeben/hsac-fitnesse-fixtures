@@ -90,7 +90,7 @@ public class BrowserTest extends SlimFixture {
         if (tabs.size() > 1) {
             int currentTab = getCurrentTabIndex(tabs);
             int nextTab = currentTab - 1;
-            if (nextTab == -1) {
+            if (nextTab < 0) {
                 nextTab = tabs.size() - 1;
             }
             goToTab(tabs, nextTab);
