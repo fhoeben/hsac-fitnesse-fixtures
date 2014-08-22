@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 public class BrowserTest extends SlimFixture {
     private static final String ELEMENT_ON_SCREEN_JS =
-                    "var rect = arguments[0].getBoundingClientRect();\n" +
+            "var rect = arguments[0].getBoundingClientRect();\n" +
                     "return (\n" +
                     "  rect.top >= 0 &&\n" +
                     "  rect.left >= 0 &&\n" +
@@ -571,10 +571,14 @@ public class BrowserTest extends SlimFixture {
     protected boolean clickInRow(String columnXPath, String place) {
         boolean result = false;
         // find an input to click in the row
-        WebElement element = findByXPath("%s//input[@value='%s']", columnXPath, place);
+        WebElement element = findByXPath("%s//input[contains(@value, '%s')]", columnXPath, place);
         if (element == null) {
             // see whether there is an element with the specified place as text() in the row
             element = findByXPath("%s//*[contains(normalize-space(text()),'%s')]", columnXPath, place);
+            if (element == null) {
+                // find an input to click in the row by its title (aka tooltip)
+                element = findByXPath("%s//input[contains(@title, '%s')]", columnXPath, place);
+            }
         }
         if (element != null) {
             result = clickElement(element);
