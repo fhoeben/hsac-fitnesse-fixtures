@@ -121,6 +121,14 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
+    public void ensureOnlyOneTab() {
+        ensureActiveTabIsNotClosed();
+        int tabCount = tabCount();
+        for (int i = 1; i < tabCount; i++) {
+            closeTab();
+        }
+    }
+
     public boolean ensureActiveTabIsNotClosed() {
         boolean result = false;
         List<String> tabHandles = getTabHandles();
