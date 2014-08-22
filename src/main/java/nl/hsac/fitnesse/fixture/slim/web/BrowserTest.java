@@ -29,6 +29,7 @@ public class BrowserTest extends SlimFixture {
 
     public BrowserTest() {
         secondsBeforeTimeout(SeleniumHelper.DEFAULT_TIMEOUT_SECONDS);
+        ensureActiveTabIsNotClosed();
     }
 
     public boolean open(String address) {
@@ -116,6 +117,17 @@ public class BrowserTest extends SlimFixture {
             driver.close();
             goToTab(tabs, tabToGoTo);
             result = true;
+        }
+        return result;
+    }
+
+    public boolean ensureActiveTabIsNotClosed() {
+        boolean result = false;
+        List<String> tabHandles = getTabHandles();
+        int currentTab = getCurrentTabIndex(tabHandles);
+        if (currentTab < 0) {
+            result = true;
+            goToTab(tabHandles, 0);
         }
         return result;
     }
