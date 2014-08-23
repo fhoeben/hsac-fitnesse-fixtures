@@ -172,7 +172,7 @@ public class SeleniumDriverSetup extends SlimFixture {
         return true;
     }
 
-    private SeleniumHelper getHelper() {
+    protected SeleniumHelper getHelper() {
         return Environment.getInstance().getSeleniumHelper();
     }
 }
