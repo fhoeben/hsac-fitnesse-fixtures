@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
+import nl.hsac.fitnesse.fixture.util.SecurityUtil;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.MalformedURLException;
@@ -24,7 +25,7 @@ public class SauceLabsSeleniumSetup extends SeleniumDriverSetup {
 
     public boolean connectWithCapabilities(Map<String, String> capabilities) throws MalformedURLException {
         boolean result = connectToDriverAtWithCapabilities(getDriverUrl(), capabilities);
-        String jobId = jobId();
+        String jobId = getJobId();
         getEnvironment().setSymbol(SAUCE_LABS_JOB_ID, jobId);
         return result;
     }
@@ -34,7 +35,38 @@ public class SauceLabsSeleniumSetup extends SeleniumDriverSetup {
     }
 
     public String jobId() {
+        return getEnvironment().getSymbol(SAUCE_LABS_JOB_ID);
+    }
+
+    private String getJobId() {
         return ((RemoteWebDriver) getHelper().driver()).getSessionId().toString();
+    }
+
+    public String jobLink() {
+        String url = String.format("https://saucelabs.com/jobs/%s?auth=%s",
+                jobId(), authToken());
+        return String.format("<a href=\"%s\">%s</a>", url, url);
+    }
+
+    public String overviewOfRun() {
+        return String.format("<div><script type=\"text/javascript\" src=\"https://saucelabs.com/job-embed/%s.js?auth=%s\"></script></div>",
+               jobId(), authToken());
+    }
+
+    public String liveVideoOfRunLink() {
+        String url = String.format("https://saucelabs.com/manual/live_from_job/%s?auth=%s",
+                jobId(), authToken());
+        return String.format("<a href=\"%s\" target=\"_blank\">%s</a>", url, url);
+    }
+
+    public String videoOfRun() {
+        return String.format("<div style=\"width=%s;height=%s;\"><script src=\"https://saucelabs.com/video-embed/%s.js?auth=%s\"></script></div>",
+                                "600px", "450px", jobId(), authToken());
+    }
+
+    public String authToken() {
+        String key = getEnvironment().getSymbol(USER_PROPERTY) + ":" + getEnvironment().getSymbol(ACCESS_KEY_PROPERTY);
+        return SecurityUtil.hmacEncode("HmacMD5", jobId(), key);
     }
 
     protected String getDriverUrl() {
@@ -43,7 +75,7 @@ public class SauceLabsSeleniumSetup extends SeleniumDriverSetup {
 
     protected String getUser() {
         String result = user;
-        if (user != null && !"".equals(user)) {
+        if (result == null || "".equals(result)) {
             result = System.getProperty(USER_PROPERTY);
         }
         if (result == null || "".equals(result)) {
@@ -55,7 +87,7 @@ public class SauceLabsSeleniumSetup extends SeleniumDriverSetup {
 
     protected String getAccessKey() {
         String result = accessKey;
-        if (accessKey != null && !"".equals(accessKey)) {
+        if (result == null || "".equals(result)) {
             result = System.getProperty(ACCESS_KEY_PROPERTY);
         }
         if (result == null || "".equals(result)) {
