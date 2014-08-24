@@ -26,7 +26,7 @@ This standalone installation can be started using {{{ java -jar fitnesse-standal
 !3 2. Run on build server
 To run the tests on a build server have the build server checkout the project and execute {{{ mvn clean test-compile failsafe:integration-test }}}
 The result in JUnit XML results can be found in: target/failsafe-reports (most build servers will pick these up automatically)
-The HTML results can be found in: target/fitnesse-results/<SuiteName>.html
+The HTML results can be found in: target/fitnesse-results/index.html
 
 The Fitnesse suite to run can be specified by changing the value of the !style_code[@Suite]'s value in !style_code[nl.hsac.fitnesse.fixture.FixtureDebugTest],
 or (preferably) by adding a system property, called !style_code[fitnesseSuiteToRun], specifying the suite to run to the build server's mvn execution.
