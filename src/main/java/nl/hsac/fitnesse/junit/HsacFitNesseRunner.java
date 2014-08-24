@@ -27,11 +27,9 @@ import java.util.List;
  */
 public class HsacFitNesseRunner extends FitNesseRunner {
     private final static String suiteOverrideVariableName = "fitnesseSuiteToRun";
-    private Class<?> suiteClass;
 
     public HsacFitNesseRunner(Class<?> suiteClass) throws InitializationError {
         super(suiteClass);
-        this.suiteClass = suiteClass;
         try {
             // we include images in output so build server will have single
             // directory containing both HTML results and the images created by the tests
@@ -80,8 +78,9 @@ public class HsacFitNesseRunner extends FitNesseRunner {
 
     @Override
     protected void runPages(List<WikiPage> pages, RunNotifier notifier) {
-            super.runPages(pages, notifier);
+        super.runPages(pages, notifier);
         try {
+            Class<?> suiteClass = getTestClass().getJavaClass();
             String outputDir = getOutputDir(suiteClass);
             String suiteName = getSuiteName(suiteClass);
             String filename = suiteName + ".html";
