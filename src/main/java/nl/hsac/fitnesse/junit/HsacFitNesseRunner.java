@@ -87,12 +87,15 @@ public class HsacFitNesseRunner extends FitNesseRunner {
             String path = new File(outputDir, filename).getAbsolutePath();
             String overviewHtml = FileUtil.streamToString(new FileInputStream(path), path);
             if (overviewHtml != null) {
-                String videoEmbed = new SauceLabsSeleniumSetup().videoOfRun();
-                String newOverview = overviewHtml.replace("<table", videoEmbed + "<table");
-                FileUtil.writeFile(new File(outputDir, "index.html").getAbsolutePath(), newOverview);
+                String indexHtml = getIndexHtmlContent(overviewHtml);
+                FileUtil.writeFile(new File(outputDir, "index.html").getAbsolutePath(), indexHtml);
             }
         } catch (Exception e) {
         }
+    }
 
+    protected String getIndexHtmlContent(String overviewHtml) {
+        String videoEmbed = new SauceLabsSeleniumSetup().videoOfRun();
+        return overviewHtml.replace("<table", videoEmbed + "<table");
     }
 }
