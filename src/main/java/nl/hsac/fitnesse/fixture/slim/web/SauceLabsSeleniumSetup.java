@@ -60,7 +60,7 @@ public class SauceLabsSeleniumSetup extends SeleniumDriverSetup {
     }
 
     public String videoOfRun() {
-        return String.format("<div style=\"width=%s;height=%s;\"><script src=\"https://saucelabs.com/video-embed/%s.js?auth=%s\"></script></div>",
+        return String.format("<div style=\"width:%s; height:%s;\"><script src=\"https://saucelabs.com/video-embed/%s.js?auth=%s\"></script></div>",
                                 "600px", "450px", jobId(), authToken());
     }
 
