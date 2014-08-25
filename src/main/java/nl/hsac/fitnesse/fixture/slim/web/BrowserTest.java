@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 public class BrowserTest extends SlimFixture {
     private static final String ELEMENT_ON_SCREEN_JS =
-                    "var rect = arguments[0].getBoundingClientRect();\n" +
+            "var rect = arguments[0].getBoundingClientRect();\n" +
                     "return (\n" +
                     "  rect.top >= 0 &&\n" +
                     "  rect.left >= 0 &&\n" +
@@ -29,6 +29,7 @@ public class BrowserTest extends SlimFixture {
 
     public BrowserTest() {
         secondsBeforeTimeout(SeleniumHelper.DEFAULT_TIMEOUT_SECONDS);
+        ensureActiveTabIsNotClosed();
     }
 
     public boolean open(String address) {
@@ -69,6 +70,12 @@ public class BrowserTest extends SlimFixture {
         return getSeleniumHelper().navigate();
     }
 
+    public boolean openInNewTab(String url) {
+        String cleanUrl = cleanupValue(url);
+        getSeleniumHelper().executeJavascript("window.open('%s', '_blank')", cleanUrl);
+        return switchToNextTab();
+    }
+
     public boolean switchToNextTab() {
         boolean result = false;
         List<String> tabs = getTabHandles();
@@ -90,7 +97,7 @@ public class BrowserTest extends SlimFixture {
         if (tabs.size() > 1) {
             int currentTab = getCurrentTabIndex(tabs);
             int nextTab = currentTab - 1;
-            if (nextTab == -1) {
+            if (nextTab < 0) {
                 nextTab = tabs.size() - 1;
             }
             goToTab(tabs, nextTab);
@@ -116,6 +123,25 @@ public class BrowserTest extends SlimFixture {
             driver.close();
             goToTab(tabs, tabToGoTo);
             result = true;
+        }
+        return result;
+    }
+
+    public void ensureOnlyOneTab() {
+        ensureActiveTabIsNotClosed();
+        int tabCount = tabCount();
+        for (int i = 1; i < tabCount; i++) {
+            closeTab();
+        }
+    }
+
+    public boolean ensureActiveTabIsNotClosed() {
+        boolean result = false;
+        List<String> tabHandles = getTabHandles();
+        int currentTab = getCurrentTabIndex(tabHandles);
+        if (currentTab < 0) {
+            result = true;
+            goToTab(tabHandles, 0);
         }
         return result;
     }
@@ -571,10 +597,14 @@ public class BrowserTest extends SlimFixture {
     protected boolean clickInRow(String columnXPath, String place) {
         boolean result = false;
         // find an input to click in the row
-        WebElement element = findByXPath("%s//input[@value='%s']", columnXPath, place);
+        WebElement element = findByXPath("%s//input[contains(@value, '%s')]", columnXPath, place);
         if (element == null) {
             // see whether there is an element with the specified place as text() in the row
             element = findByXPath("%s//*[contains(normalize-space(text()),'%s')]", columnXPath, place);
+            if (element == null) {
+                // find an input to click in the row by its title (aka tooltip)
+                element = findByXPath("%s//input[contains(@title, '%s')]", columnXPath, place);
+            }
         }
         if (element != null) {
             result = clickElement(element);

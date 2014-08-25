@@ -1,12 +1,6 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.SearchContext;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -468,8 +462,12 @@ public class SeleniumHelper {
     }
 
     public int getCurrentTabIndex(List<String> tabHandles) {
-        String currentHandle = driver().getWindowHandle();
-        return tabHandles.indexOf(currentHandle);
+        try {
+            String currentHandle = driver().getWindowHandle();
+            return tabHandles.indexOf(currentHandle);
+        } catch (NoSuchWindowException e) {
+            return -1;
+        }
     }
 
     public void goToTab(List<String> tabHandles, int indexToGoTo) {
