@@ -563,9 +563,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     public String valueOfColumnNumberInRowNumber(int columnIndex, int rowIndex) {
-        String xPath = String.format("//tr[%s]/td[%s]", rowIndex, columnIndex);
-        WebElement element = findByXPath(xPath);
-        return getElementText(element);
+        return getTextByXPath("//tr[%s]/td[%s]", Integer.toString(rowIndex), Integer.toString(columnIndex));
     }
 
     public String valueOfInRowNumber(String requestedColumnName, int rowIndex) {
@@ -580,8 +578,7 @@ public class BrowserTest extends SlimFixture {
 
     protected String valueInRow(String columnXPath, String requestedColumnName) {
         String requestedIndex = getXPathForColumnIndex(requestedColumnName);
-        WebElement element = findByXPath("%s[%s]", columnXPath, requestedIndex);
-        return getElementText(element);
+        return getTextByXPath("%s[%s]", columnXPath, requestedIndex);
     }
 
     public boolean clickInRowNumber(String place, int rowIndex) {
@@ -602,8 +599,8 @@ public class BrowserTest extends SlimFixture {
             // see whether there is an element with the specified place as text() in the row
             element = findByXPath("%s//*[contains(normalize-space(text()),'%s')]", columnXPath, place);
             if (element == null) {
-                // find an input to click in the row by its title (aka tooltip)
-                element = findByXPath("%s//input[contains(@title, '%s')]", columnXPath, place);
+                // find an element to click in the row by its title (aka tooltip)
+                element = findByXPath("%s//*[contains(@title, '%s')]", columnXPath, place);
             }
         }
         if (element != null) {
@@ -645,8 +642,16 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected String getTextByXPath(String xpathPattern, String... params) {
-        WebElement element = findByXPath(xpathPattern, params);
-        return getElementText(element);
+        String result;
+        try {
+            WebElement element = findByXPath(xpathPattern, params);
+            result = getElementText(element);
+        } catch (StaleElementReferenceException e) {
+            // sometime we are troubled by ajax updates that cause 'stale state' let's try once more if that is the case
+            WebElement element = findByXPath(xpathPattern, params);
+            result = getElementText(element);
+        }
+        return result;
     }
 
     public String textByClassName(String className) {
@@ -654,8 +659,16 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected String getTextByClassName(String className) {
-        WebElement element = findByClassName(className);
-        return getElementText(element);
+        String result;
+        try {
+            WebElement element = findByClassName(className);
+            result = getElementText(element);
+        } catch (StaleElementReferenceException e) {
+            // sometime we are troubled by ajax updates that cause 'stale state' let's try once more if that is the case
+            WebElement element = findByClassName(className);
+            result = getElementText(element);
+        }
+        return result;
     }
 
     protected WebElement findByClassName(String className) {
