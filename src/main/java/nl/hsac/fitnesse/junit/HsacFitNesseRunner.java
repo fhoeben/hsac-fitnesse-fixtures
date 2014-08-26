@@ -3,12 +3,17 @@ package nl.hsac.fitnesse.junit;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesseContext;
 import fitnesse.components.PluginsClassLoader;
+import fitnesse.wiki.WikiPage;
 import nl.hsac.fitnesse.fixture.Environment;
+import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.junit.patchFor486.FitNesseRunner;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.util.List;
 
 /**
  * JUnit Runner to run a FitNesse suite or page as JUnit test.
@@ -68,5 +73,27 @@ public class HsacFitNesseRunner extends FitNesseRunner {
         new PluginsClassLoader(getFitNesseDir(suiteClass)).addPluginsToClassLoader();
 
         return super.createContext(suiteClass);
+    }
+
+    @Override
+    protected void runPages(List<WikiPage> pages, RunNotifier notifier) {
+        super.runPages(pages, notifier);
+        try {
+            Class<?> suiteClass = getTestClass().getJavaClass();
+            String outputDir = getOutputDir(suiteClass);
+            String suiteName = getSuiteName(suiteClass);
+            String filename = suiteName + ".html";
+            String path = new File(outputDir, filename).getAbsolutePath();
+            String overviewHtml = FileUtil.streamToString(new FileInputStream(path), path);
+            if (overviewHtml != null) {
+                String indexHtml = getIndexHtmlContent(overviewHtml);
+                FileUtil.writeFile(new File(outputDir, "index.html").getAbsolutePath(), indexHtml);
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    protected String getIndexHtmlContent(String overviewHtml) {
+        return overviewHtml;
     }
 }
