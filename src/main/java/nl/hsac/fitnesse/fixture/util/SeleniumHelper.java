@@ -166,6 +166,9 @@ public class SeleniumHelper {
             String forAttr = label.getAttribute("for");
             if (forAttr == null || "".equals(forAttr)) {
                 element = findElement(byXpath(labelPattern + "/input", labelText));
+                if (element == null) {
+                    element = findElement(byXpath(labelPattern + "/select", labelText));
+                }
             } else {
                 element = findElement(By.id(forAttr));
             }
