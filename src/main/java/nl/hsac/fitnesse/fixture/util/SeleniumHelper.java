@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.fixture.util;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.Augmenter;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
@@ -326,6 +327,21 @@ public class SeleniumHelper {
             element = elements.get(index);
         }
         return element;
+    }
+
+    /**
+     * @return the session id from the current driver (if available).
+     */
+    public String getSessionId() {
+        String result = null;
+        WebDriver d = driver();
+        if (d instanceof RemoteWebDriver) {
+            Object s = ((RemoteWebDriver) d).getSessionId();
+            if (s != null) {
+                result = s.toString();
+            }
+        }
+        return result;
     }
 
     /**
