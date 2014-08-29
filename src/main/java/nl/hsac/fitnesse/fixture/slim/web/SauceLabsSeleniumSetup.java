@@ -1,7 +1,6 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.util.SecurityUtil;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.MalformedURLException;
 import java.util.Map;
@@ -25,7 +24,7 @@ public class SauceLabsSeleniumSetup extends SeleniumDriverSetup {
 
     public boolean connectWithCapabilities(Map<String, String> capabilities) throws MalformedURLException {
         boolean result = connectToDriverAtWithCapabilities(getDriverUrl(), capabilities);
-        String jobId = getJobId();
+        String jobId = getHelper().getSessionId();
         getEnvironment().setSymbol(SAUCE_LABS_JOB_ID, jobId);
         return result;
     }
@@ -36,10 +35,6 @@ public class SauceLabsSeleniumSetup extends SeleniumDriverSetup {
 
     public String jobId() {
         return getEnvironment().getSymbol(SAUCE_LABS_JOB_ID);
-    }
-
-    private String getJobId() {
-        return ((RemoteWebDriver) getHelper().driver()).getSessionId().toString();
     }
 
     public String jobLink() {
