@@ -5,6 +5,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.wiki.WikiPage;
 import nl.hsac.fitnesse.fixture.Environment;
+import nl.hsac.fitnesse.fixture.slim.web.SeleniumDriverSetup;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.junit.patchFor486.FitNesseRunner;
 import org.apache.commons.lang3.StringUtils;
@@ -94,6 +95,11 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     }
 
     protected String getIndexHtmlContent(String overviewHtml) {
-        return overviewHtml;
+        String result = overviewHtml;
+        String runSummary = SeleniumDriverSetup.getLastRunSummary();
+        if (runSummary != null) {
+            result = overviewHtml.replace("<table", runSummary + "<table");
+        }
+        return result;
     }
 }

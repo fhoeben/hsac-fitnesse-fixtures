@@ -1,3 +1,3 @@
 |script|selenium driver setup|
-|stopDriver                  |
-
+|show  |run summary          |
+|stop driver                 |
