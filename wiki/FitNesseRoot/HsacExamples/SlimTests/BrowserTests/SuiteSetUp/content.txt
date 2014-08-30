@@ -20,9 +20,6 @@ The latter allows tests to be executed on different operating systems. This is a
 
 !define GRID_HUB {http://hsac:d05ad739-51e2-49ba-b021-7241e0b428e0@ondemand.saucelabs.com:80/wd/hub}
 
-|script                   |Sauce Labs Selenium Setup                              |
-|set user                 |hsac                                                   |
-|set access key           |d05ad739-51e2-49ba-b021-7241e0b428e0                   |
-|connect with capabilities|!{browserName:chrome, platform:Windows 8.1, version:36}|
-|show                     |job link                                               |
-|show                     |live video of run link                                 |
+|script              |Selenium Driver Setup                                                                |
+|connect to driver at|${GRID_HUB}|with capabilities|!{browserName:chrome, platform:Windows 8.1, version:36}|
+|show                |driver description                                                                   |
