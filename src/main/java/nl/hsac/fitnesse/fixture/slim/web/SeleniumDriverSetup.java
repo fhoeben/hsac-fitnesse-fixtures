@@ -218,10 +218,7 @@ public class SeleniumDriverSetup extends SlimFixture {
         String result = "";
         if (SauceLabsHelper.isRelevant(lastRemoteUrl)) {
             String jobLink = SauceLabsHelper.getJobLink(lastRemoteUrl, getHelper().getSessionId());
-            result = String.format("<ul><li><a href=\"%s\" target=\"_blank\">Job details</a></li>", jobLink);
-
-            String videoLink = SauceLabsHelper.getLinkToLiveViewOfRun(lastRemoteUrl, getHelper().getSessionId());
-            result += String.format("<li><a href=\"%s\" target=\"_blank\">Live video</a></li></ul>", videoLink);
+            result = String.format("<a href=\"%s\" target=\"_blank\">Job details</a>", jobLink);
         }
         return result;
     }
