@@ -14,19 +14,28 @@ import org.junit.runners.model.InitializationError;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * JUnit Runner to run a FitNesse suite or page as JUnit test.
  *
  * The suite/page to run must be specified either via the Java property
  * 'fitnesseSuiteToRun', or by adding a FitNesseSuite.Name annotation to the test class.
- * If both are present the environment variable is used.
+ * If both are present the system property is used.
+ *
+ * The Selenium driver used for tests may be overridden (from what is configured in the wiki)
+ * by specifying the property 'seleniumGridUrl' and either 'seleniumBrowser' or 'seleniumCapabilities'.
  *
  * The HTML generated for each page is saved in target/fitnesse-results
  */
 public class HsacFitNesseRunner extends FitNesseRunner {
     private final static String suiteOverrideVariableName = "fitnesseSuiteToRun";
+
+    private final static String seleniumOverrideUrlVariableName = "seleniumGridUrl";
+    private final static String seleniumOverrideBrowserVariableName = "seleniumBrowser";
+    private final static String seleniumOverrideCapabilitiesVariableName = "seleniumCapabilities";
 
     public HsacFitNesseRunner(Class<?> suiteClass) throws InitializationError {
         super(suiteClass);
@@ -78,7 +87,15 @@ public class HsacFitNesseRunner extends FitNesseRunner {
 
     @Override
     protected void runPages(List<WikiPage> pages, RunNotifier notifier) {
-        super.runPages(pages, notifier);
+        boolean seleniumConfigOverridden = configureSeleniumIfNeeded();
+        try {
+            super.runPages(pages, notifier);
+        } finally {
+            if (seleniumConfigOverridden) {
+                shutdownSelenium();
+            }
+        }
+
         try {
             Class<?> suiteClass = getTestClass().getJavaClass();
             String outputDir = getOutputDir(suiteClass);
@@ -92,6 +109,65 @@ public class HsacFitNesseRunner extends FitNesseRunner {
             }
         } catch (Exception e) {
         }
+    }
+
+    /**
+     * Determines whether system properties should override Selenium configuration in wiki.
+     * If so Selenium will be configured according to property values, and locked so that wiki pages
+     * no longer control Selenium setup.
+     * @return true if Selenium was configured.
+     */
+    protected boolean configureSeleniumIfNeeded() {
+        boolean result = false;
+        try {
+            String gridUrl = System.getProperty(seleniumOverrideUrlVariableName);
+            if (!StringUtils.isEmpty(gridUrl)) {
+                String capabilitiesString = System.getProperty(seleniumOverrideCapabilitiesVariableName);
+                if (StringUtils.isEmpty(capabilitiesString)) {
+                    String browser = System.getProperty(seleniumOverrideBrowserVariableName);
+                    if (!StringUtils.isEmpty(browser)) {
+                        result = true;
+                        new SeleniumDriverSetup().connectToDriverForAt(browser, gridUrl);
+                    }
+                } else {
+                    Map<String, String> capabilities = parseCapabilities(capabilitiesString);
+                    result = true;
+                    new SeleniumDriverSetup().connectToDriverAtWithCapabilities(gridUrl, capabilities);
+                }
+            }
+
+            if (result) {
+                SeleniumDriverSetup.lockConfig();
+            }
+            return result;
+        } catch (Exception e) {
+            throw new RuntimeException("Error overriding Selenium config", e);
+        }
+    }
+
+    protected Map<String, String> parseCapabilities(String capabilitiesString) {
+        try {
+            Map<String, String> result = new LinkedHashMap<String, String>();
+            if (capabilitiesString.startsWith("\"") && capabilitiesString.endsWith("\"")) {
+                capabilitiesString = capabilitiesString.substring(1, capabilitiesString.length() - 2);
+            }
+            String[] capas = capabilitiesString.split(",");
+            for (String capa : capas) {
+                String[] kv = capa.split(":");
+                String key = kv[0].trim();
+                String value = kv[1].trim();
+                result.put(key, value);
+            }
+            return result;
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to parse Selenium capabilities: " + capabilitiesString
+                                        + "\nExpected format: key:value(, key:value)*", e);
+        }
+    }
+
+    protected void shutdownSelenium() {
+        SeleniumDriverSetup.unlockConfig();
+        new SeleniumDriverSetup().stopDriver();
     }
 
     protected String getIndexHtmlContent(String overviewHtml) {
