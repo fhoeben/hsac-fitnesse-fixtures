@@ -130,6 +130,9 @@
 					<test>FixtureDebugTest</test>
 					<systemPropertyVariables>
 						<fitnesseSuiteToRun>${fitnesseSuiteToRun}</fitnesseSuiteToRun>
+						<seleniumGridUrl>${seleniumGridUrl}</seleniumGridUrl>
+						<seleniumBrowser>${seleniumBrowser}</seleniumBrowser>
+						<seleniumCapabilities>${seleniumCapabilities}</seleniumCapabilities>
 					</systemPropertyVariables>
 					<properties>
 						<property>
