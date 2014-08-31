@@ -25,6 +25,7 @@ import java.util.Map;
 public class SeleniumDriverSetup extends SlimFixture {
     public static final String REMOTE_URL_KEY = "SeleniumRemoteUrl";
     private static final String LAST_RUN_SUMMARY = "SeleniumLastRunSummary";
+    protected static boolean OVERRIDE_ACTIVE = false;
 
     /**
      * Sets system property (needed by the WebDriver to be set up).
@@ -33,6 +34,10 @@ public class SeleniumDriverSetup extends SlimFixture {
      * @return true.
      */
     public boolean setPropertyValue(String propName, String value) {
+        if (OVERRIDE_ACTIVE) {
+            return true;
+        }
+
         System.setProperty(propName, value);
         return true;
     }
@@ -44,6 +49,10 @@ public class SeleniumDriverSetup extends SlimFixture {
      * @throws Exception if no instance could be created.
      */
     public boolean startDriver(String driverClassName) throws Exception {
+        if (OVERRIDE_ACTIVE) {
+            return true;
+        }
+
         boolean result = false;
         Class<?> driverClass = Class.forName(driverClassName);
         Object driver = driverClass.newInstance();
@@ -63,6 +72,10 @@ public class SeleniumDriverSetup extends SlimFixture {
      * @throws Exception if no instance could be created.
      */
     public boolean startDriverFor(String browser) throws Exception {
+        if (OVERRIDE_ACTIVE) {
+            return true;
+        }
+
         boolean result = false;
         String browserName = browser.toLowerCase();
         if ("firefox".equals(browserName)) {
@@ -228,6 +241,10 @@ public class SeleniumDriverSetup extends SlimFixture {
 
     protected boolean createAndSetRemoteDriver(String url, DesiredCapabilities desiredCapabilities)
             throws MalformedURLException {
+        if (OVERRIDE_ACTIVE) {
+            return true;
+        }
+
         String cleanUrl = cleanupValue(url);
         URL remoteUrl = new URL(cleanUrl);
         RemoteWebDriver remoteWebDriver = new RemoteWebDriver(remoteUrl, desiredCapabilities);
@@ -259,10 +276,29 @@ public class SeleniumDriverSetup extends SlimFixture {
      * @return true.
      */
     public boolean stopDriver() {
+        if (OVERRIDE_ACTIVE) {
+            return true;
+        }
+
         // ensure we store summary
         runSummary();
         getHelper().close();
         return true;
+    }
+
+    /**
+     * Prevents instances from creating new Selenium drivers.
+     * This can be used to control Selenium configuration independent from Wiki content.
+     */
+    public static void lockConfig() {
+        OVERRIDE_ACTIVE = true;
+    }
+
+    /**
+     * Enables normal behavior (i.e. instances can create new Selenium drivers).
+     */
+    public static void unlockConfig() {
+        OVERRIDE_ACTIVE = false;
     }
 
     protected SeleniumHelper getHelper() {
