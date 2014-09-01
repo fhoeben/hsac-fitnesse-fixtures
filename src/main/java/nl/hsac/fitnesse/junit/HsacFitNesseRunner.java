@@ -194,7 +194,10 @@ public class HsacFitNesseRunner extends FitNesseRunner {
             for (String capa : capas) {
                 String[] kv = capa.split(":");
                 String key = kv[0].trim();
-                String value = kv[1].trim();
+                String value = "";
+                if (kv.length > 1) {
+                    value = kv[1].trim();
+                }
                 result.put(key, value);
             }
             return result;
