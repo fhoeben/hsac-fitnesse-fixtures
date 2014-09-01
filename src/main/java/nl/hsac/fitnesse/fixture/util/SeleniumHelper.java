@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class SeleniumHelper {
     /** Default time in seconds the wait web driver waits unit throwing TimeOutException. */
     public static final int DEFAULT_TIMEOUT_SECONDS = 10;
+    private DriverFactory factory;
     private WebDriver webDriver;
     private WebDriverWait webDriverWait;
     private boolean shutdownHookEnabled = false;
@@ -349,6 +350,9 @@ public class SeleniumHelper {
      * @return selenium web driver.
      */
     public WebDriver driver() {
+        if (webDriver == null && factory != null) {
+            factory.createDriver();
+        }
         return webDriver;
     }
 
@@ -497,4 +501,11 @@ public class SeleniumHelper {
         return new ArrayList<String>(driver().getWindowHandles());
     }
 
+    public void setDriverFactory(DriverFactory aFactory) {
+        factory = aFactory;
+    }
+
+    public static interface DriverFactory {
+        public void createDriver();
+    }
 }
