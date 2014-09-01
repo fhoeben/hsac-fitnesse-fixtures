@@ -7,13 +7,16 @@ import fitnesse.wiki.WikiPage;
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.slim.web.SeleniumDriverSetup;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
+import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
 import nl.hsac.fitnesse.junit.patchFor486.FitNesseRunner;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
+import org.openqa.selenium.WebDriver;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.net.MalformedURLException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -128,24 +131,52 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     protected boolean configureSeleniumIfNeeded() {
         boolean result = false;
         try {
-            String gridUrl = System.getProperty(seleniumOverrideUrlVariableName);
+            SeleniumHelper.DriverFactory factory = null;
+            final String gridUrl = System.getProperty(seleniumOverrideUrlVariableName);
             if (!StringUtils.isEmpty(gridUrl)) {
-                String capabilitiesString = System.getProperty(seleniumOverrideCapabilitiesVariableName);
+                final String capabilitiesString = System.getProperty(seleniumOverrideCapabilitiesVariableName);
                 if (StringUtils.isEmpty(capabilitiesString)) {
-                    String browser = System.getProperty(seleniumOverrideBrowserVariableName);
+                    final String browser = System.getProperty(seleniumOverrideBrowserVariableName);
                     if (!StringUtils.isEmpty(browser)) {
                         result = true;
-                        new SeleniumDriverSetup().connectToDriverForAt(browser, gridUrl);
+                        factory = new SeleniumHelper.DriverFactory() {
+                            @Override
+                            public void createDriver() {
+                                SeleniumDriverSetup.unlockConfig();
+                                try {
+                                    new SeleniumDriverSetup().connectToDriverForAt(browser, gridUrl);
+                                } catch (MalformedURLException e) {
+                                    throw new RuntimeException("Unable to create driver at hub: "
+                                            + gridUrl + " for: " +browser, e);
+                                } finally {
+                                    SeleniumDriverSetup.lockConfig();
+                                }
+                            }
+                        };
                     }
                 } else {
-                    Map<String, String> capabilities = parseCapabilities(capabilitiesString);
+                    final Map<String, String> capabilities = parseCapabilities(capabilitiesString);
                     result = true;
-                    new SeleniumDriverSetup().connectToDriverAtWithCapabilities(gridUrl, capabilities);
+                    factory = new SeleniumHelper.DriverFactory() {
+                        @Override
+                        public void createDriver() {
+                            SeleniumDriverSetup.unlockConfig();
+                            try {
+                                new SeleniumDriverSetup().connectToDriverAtWithCapabilities(gridUrl, capabilities);
+                            } catch (MalformedURLException e) {
+                                throw new RuntimeException("Unable to create driver at: "
+                                        + gridUrl + " with: " + capabilities, e);
+                            } finally {
+                                SeleniumDriverSetup.lockConfig();
+                            }
+                        }
+                    };
                 }
             }
 
             if (result) {
                 SeleniumDriverSetup.lockConfig();
+                Environment.getInstance().getSeleniumHelper().setDriverFactory(factory);
             }
             return result;
         } catch (Exception e) {
