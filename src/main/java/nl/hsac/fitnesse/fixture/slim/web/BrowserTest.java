@@ -72,7 +72,15 @@ public class BrowserTest extends SlimFixture {
 
     public boolean openInNewTab(String url) {
         String cleanUrl = cleanupValue(url);
+        final int tabCount = tabCount();
         getSeleniumHelper().executeJavascript("window.open('%s', '_blank')", cleanUrl);
+        // ensure new window is open
+        waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                return tabCount() > tabCount;
+            }
+        });
         return switchToNextTab();
     }
 
