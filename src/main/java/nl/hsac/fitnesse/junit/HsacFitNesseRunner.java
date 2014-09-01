@@ -92,23 +92,31 @@ public class HsacFitNesseRunner extends FitNesseRunner {
             super.runPages(pages, notifier);
         } finally {
             if (seleniumConfigOverridden) {
-                shutdownSelenium();
+                try {
+                    shutdownSelenium();
+                }
+                catch (Exception e) {
+                }
+            }
+
+            try {
+                Class<?> suiteClass = getTestClass().getJavaClass();
+                String outputDir = getOutputDir(suiteClass);
+                String suiteName = getSuiteName(suiteClass);
+                String filename = suiteName + ".html";
+                File overviewFile = new File(outputDir, filename);
+                if (overviewFile.exists()) {
+                    String path = overviewFile.getAbsolutePath();
+                    String overviewHtml = FileUtil.streamToString(new FileInputStream(path), path);
+                    if (overviewHtml != null) {
+                        String indexHtml = getIndexHtmlContent(overviewHtml);
+                        FileUtil.writeFile(new File(outputDir, "index.html").getAbsolutePath(), indexHtml);
+                    }
+                }
+            } catch (Exception e) {
             }
         }
 
-        try {
-            Class<?> suiteClass = getTestClass().getJavaClass();
-            String outputDir = getOutputDir(suiteClass);
-            String suiteName = getSuiteName(suiteClass);
-            String filename = suiteName + ".html";
-            String path = new File(outputDir, filename).getAbsolutePath();
-            String overviewHtml = FileUtil.streamToString(new FileInputStream(path), path);
-            if (overviewHtml != null) {
-                String indexHtml = getIndexHtmlContent(overviewHtml);
-                FileUtil.writeFile(new File(outputDir, "index.html").getAbsolutePath(), indexHtml);
-            }
-        } catch (Exception e) {
-        }
     }
 
     /**
