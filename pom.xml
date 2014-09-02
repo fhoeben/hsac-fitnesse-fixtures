@@ -6,7 +6,7 @@
 
 	<groupId>nl.hsac</groupId>
 	<artifactId>hsac-fitnesse-fixtures</artifactId>
-	<version>1.5-SNAPSHOT</version>
+	<version>1.6-SNAPSHOT</version>
 	<url>https://github.com/fhoeben/hsac-fitnesse-fixtures</url>
 
 	<properties>
@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>org.fitnesse</groupId>
 			<artifactId>fitnesse</artifactId>
-			<version>20140623</version>
+			<version>20140901</version>
 		</dependency>
 
 		<dependency>
