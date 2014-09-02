@@ -256,18 +256,38 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
-     * Simulates pressing a key.
+     * Simulates pressing a key (or a combination of keys).
+     * (Unfortunately not all combinations seem to be accepted by all drivers, e.g.
+     * Chrome on OSX seems to ignore Command+A or Command+T; https://code.google.com/p/selenium/issues/detail?id=5919).
      * @param key key to press, can be a normal letter (e.g. 'M') or a special key (e.g. 'down').
+     *            Combinations can be passed by separating the keys to send with '+' (e.g. Command + T).
      * @return true, if an element was active the key could be sent to.
      */
     public boolean press(String key) {
+        CharSequence s;
+        String[] parts = key.split("\\s*\\+\\s*");
+        if (parts.length > 1
+                && !"".equals(parts[0]) && !"".equals(parts[1])) {
+            CharSequence[] sequence = new CharSequence[parts.length];
+            for (int i = 0; i < parts.length; i++) {
+                sequence[i] = parseKey(parts[i]);
+            }
+            s = Keys.chord(sequence);
+        } else {
+            s = parseKey(key);
+        }
+
+        return sendKeysToActiveElement(s);
+    }
+
+    protected CharSequence parseKey(String key) {
         CharSequence s;
         try {
             s = Keys.valueOf(key.toUpperCase());
         } catch (IllegalArgumentException e) {
             s = key;
         }
-        return sendKeysToActiveElement(s);
+        return s;
     }
 
     /**
