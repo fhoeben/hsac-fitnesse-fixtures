@@ -3,16 +3,15 @@ package nl.hsac.fitnesse.junit;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesseContext;
 import fitnesse.components.PluginsClassLoader;
+import fitnesse.junit.FitNesseRunner;
 import fitnesse.wiki.WikiPage;
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.slim.web.SeleniumDriverSetup;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
-import nl.hsac.fitnesse.junit.patchFor486.FitNesseRunner;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
-import org.openqa.selenium.WebDriver;
 
 import java.io.File;
 import java.io.FileInputStream;
