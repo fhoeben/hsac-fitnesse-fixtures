@@ -14,7 +14,7 @@ This page demonstrates the features of the class (!-nl.hsac.fitnesse.fixture.sli
 |check |replace all          |(\d{4})-(\d{1,2})-(\d{1,2})|in      |1975-12-3  |with|$3-$2-$1|3-12-1975|
 
 
-Conversions to numbers (so that [[relative checks][.FitNesse.UserGuide.SliM.ValueComparisons]] can be done).
+Conversions to numbers (so that [[relative checks][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ValueComparisons]] can be done).
 
 |script|string fixture                                            |
 |check |convert to int   |100      |100                           |
@@ -25,7 +25,7 @@ Conversions to numbers (so that [[relative checks][.FitNesse.UserGuide.SliM.Valu
 |check |extract int from |A200BC001|using|A(\d+)BC(\d+)|group|2|1 |
 
 
-And this can be combined with usage of [[variables/symbols][.FitNesse.UserGuide.SliM.SymbolsInTables]] and [[scenarios][.FitNesse.UserGuide.SliM.ScenarioTable]] to define more complex checks:
+And this can be combined with usage of [[variables/symbols][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.SymbolsInTables]] and [[scenarios][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScenarioTable]] to define more complex checks:
 |scenario|compare yyyy-M-d date _ to dd-MM-yyyy _|input, output                                              |
 |$date=  |replace all                            |^(\d{4})-(\d)-(\d)$    |in|@{input}|with|$1-0$2-0$3        |
 |$date=  |replace all                            |^(\d{4})-(\d\d)-(\d)$  |in|$date   |with|$1-$2-0$3         |
