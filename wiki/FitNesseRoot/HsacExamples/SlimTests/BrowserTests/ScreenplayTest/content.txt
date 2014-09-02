@@ -1,0 +1,19 @@
+!1 Website testing using !-BrowserTest-! with Screenplay
+
+On this page we compare the asking price of the same house on two websites. We use a special version of Slim's !-ScriptTable-!, a screenplay, which will automatically take a screenshot after each action.
+ 
+The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
+
+|screenplay|browser test                                                 |
+|open      |http://www.huizenzoeker.nl                                   |
+|enter     |Maliebaan, Utrecht|for       |Plaats, postcode met straatnaam|
+|press enter                                                             |
+|click     |Maliebaan                                                    |
+|click     |Maliebaan 50 A                                               |
+|$price=   |text by XPath     |//div[@class='prijs']/strong              |
+|open      |http://www.funda.nl                                          |
+|enter     |Maliebaan, Utrecht|as        |Locatie                        |
+|click     |Zoeken                                                       |
+|click     |Maliebaan 50 A                                               |
+|click     |Kenmerken                                                    |
+|check     |value of          |Vraagprijs|$price k.k.                    |
