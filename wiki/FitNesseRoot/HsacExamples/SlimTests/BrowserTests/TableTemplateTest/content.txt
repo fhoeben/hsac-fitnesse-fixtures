@@ -1,4 +1,4 @@
-!1 Website testing using ''table test'' and !-BrowserTest-!
+!1 Website testing using ''table template'' and !-BrowserTest-!
 
 
 On this page we test whether we check the prices of a couple of houses for sale in Utrecht, The Netherlands. 
