@@ -1,10 +1,10 @@
-!1 Website testing using !-BrowserTest-! with Screenplay
+!1 Website testing using !-BrowserTest-! with Storyboard
 
-On this page we compare the asking price of the same house on two websites. We use a special version of Slim's !-ScriptTable-!, a screenplay, which will automatically take a screenshot after each action.
+On this page we compare the asking price of the same house on two websites. We use a special version of Slim's !-ScriptTable-!, a storyboard, which will automatically take a screenshot after each action. 
  
 The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
 
-|screenplay|browser test                                                 |
+|storyboard|browser test                                                 |
 |open      |http://www.huizenzoeker.nl                                   |
 |enter     |Maliebaan, Utrecht|for       |Plaats, postcode met straatnaam|
 |press enter                                                             |
