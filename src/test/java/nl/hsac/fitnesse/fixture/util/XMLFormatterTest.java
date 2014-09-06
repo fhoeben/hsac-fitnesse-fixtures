@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 public class XMLFormatterTest {
     private XMLFormatter formatter = new XMLFormatter();
 
-//    @Test
+    @Test
     public void testDefaultNamespacePreserved() {
         String response = FileUtil.loadFile("GetWeatherSoapResponse.xml");
         String expected = FileUtil.loadFile("GetWeatherSoapResponseFormatted.xml");
