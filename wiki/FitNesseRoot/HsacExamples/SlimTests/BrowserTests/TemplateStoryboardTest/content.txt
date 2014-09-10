@@ -1,0 +1,29 @@
+!1 Website testing using ''template storyboard'' and !-BrowserTest-!
+
+
+On this page we test whether we check the prices of a couple of houses for sale in Utrecht, The Netherlands. 
+This test continues where StoryboardTest left off and combines it with TableTemplateTest. It uses 'template storyboard', a further custom extension of [[Slim's scenario][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScenarioTable]], to define a parameterized script where a screenshot is taken for each action.
+
+The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
+
+|template storyboard|check original price                                             |
+|open               |http://www.funda.nl                                              |
+|enter              |@{address}, @{city}|as                        |Locatie           |
+|select             |€ 1.000.000        |for                       |Prijsklasse       |
+|select             |€ 2.000.000        |for                       |tot               |
+|click              |Zoeken                                                           |
+|click              |@{address}                                                       |
+|click              |Kenmerken                                                        |
+|check              |value of           |Vraagprijs                |@{price}          |
+|check              |value of           |Oorspronkelijke vraagprijs|@{originalPrice}  |
+|check              |value of           |Inhoud                    |@{volume}         |
+|check              |value of           |woonoppervlakte           |@{squareMeters} m²|
+|check              |value of           |Bouwjaar                  |@{yearBuilt}      |
+
+
+|storyboard|browser test|
+
+|check original price                                                                        |
+|address         |city   |price           |original price  |square meters|year built|volume  |
+|Maliebaan 50 A  |Utrecht|€ 1.295.000 k.k.|€ 1.395.000 k.k.|300          |1930      |900 m³  |
+|Wilhelminapark 2|Utrecht|€ 1.975.000 k.k.|null            |440          |Voor 1906 |1.300 m³|

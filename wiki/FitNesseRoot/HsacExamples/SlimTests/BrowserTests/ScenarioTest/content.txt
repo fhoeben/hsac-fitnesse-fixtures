@@ -11,6 +11,8 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |scenario|check original price _|address, city, price, originalPrice        |
 |open    |http://www.funda.nl                                               |
 |enter   |@{address}, @{city}   |as                        |Locatie         |
+|select  |€ 1.000.000           |for                       |Prijsklasse     |
+|select  |€ 2.000.000           |for                       |tot             |
 |click   |Zoeken                                                            |
 |click   |@{address}                                                        |
 |click   |Kenmerken                                                         |
@@ -22,7 +24,7 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |check original price                                      |
 |address         |city   |price           |original price  |
 |Maliebaan 50 A  |Utrecht|€ 1.295.000 k.k.|€ 1.395.000 k.k.|
-|Wilhelminapark 7|Utrecht|€ 1.500.000 k.k.|null            |
+|Wilhelminapark 2|Utrecht|€ 1.975.000 k.k.|null            |
 
 Writing the scenario like this can become a bit cumbersome when many parameters are needed. They are repeated in: the scenario's first row, the scenario rows where they are used and the table headers where the scenario is invoked.
 Repeating the parameters in the first row of the scenario definition can be omitted using a custom extension to Slim. This is shown in TableTemplateTest.

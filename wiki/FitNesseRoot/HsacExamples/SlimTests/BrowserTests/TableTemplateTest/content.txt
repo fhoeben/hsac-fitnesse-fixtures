@@ -1,4 +1,4 @@
-!1 Website testing using ''table test'' and !-BrowserTest-!
+!1 Website testing using ''table template'' and !-BrowserTest-!
 
 
 On this page we test whether we check the prices of a couple of houses for sale in Utrecht, The Netherlands. 
@@ -9,6 +9,8 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |table template|check original price                                             |
 |open          |http://www.funda.nl                                              |
 |enter         |@{address}, @{city}|as                        |Locatie           |
+|select        |€ 1.000.000        |for                       |Prijsklasse       |
+|select        |€ 2.000.000        |for                       |tot               |
 |click         |Zoeken                                                           |
 |click         |@{address}                                                       |
 |click         |Kenmerken                                                        |
@@ -24,6 +26,6 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |check original price                                                                        |
 |address         |city   |price           |original price  |square meters|year built|volume  |
 |Maliebaan 50 A  |Utrecht|€ 1.295.000 k.k.|€ 1.395.000 k.k.|300          |1930      |900 m³  |
-|Wilhelminapark 7|Utrecht|€ 1.500.000 k.k.|null            |335          |1907      |1.200 m³|
+|Wilhelminapark 2|Utrecht|€ 1.975.000 k.k.|null            |440          |Voor 1906 |1.300 m³|
 
 To make test more readable, maintainable and powerful we can also create custom subclasses of !-BrowserTest-!. This is shown in CustomFixtureTest.

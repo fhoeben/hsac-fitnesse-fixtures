@@ -72,7 +72,15 @@ public class BrowserTest extends SlimFixture {
 
     public boolean openInNewTab(String url) {
         String cleanUrl = cleanupValue(url);
+        final int tabCount = tabCount();
         getSeleniumHelper().executeJavascript("window.open('%s', '_blank')", cleanUrl);
+        // ensure new window is open
+        waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                return tabCount() > tabCount;
+            }
+        });
         return switchToNextTab();
     }
 
@@ -248,18 +256,38 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
-     * Simulates pressing a key.
+     * Simulates pressing a key (or a combination of keys).
+     * (Unfortunately not all combinations seem to be accepted by all drivers, e.g.
+     * Chrome on OSX seems to ignore Command+A or Command+T; https://code.google.com/p/selenium/issues/detail?id=5919).
      * @param key key to press, can be a normal letter (e.g. 'M') or a special key (e.g. 'down').
+     *            Combinations can be passed by separating the keys to send with '+' (e.g. Command + T).
      * @return true, if an element was active the key could be sent to.
      */
     public boolean press(String key) {
+        CharSequence s;
+        String[] parts = key.split("\\s*\\+\\s*");
+        if (parts.length > 1
+                && !"".equals(parts[0]) && !"".equals(parts[1])) {
+            CharSequence[] sequence = new CharSequence[parts.length];
+            for (int i = 0; i < parts.length; i++) {
+                sequence[i] = parseKey(parts[i]);
+            }
+            s = Keys.chord(sequence);
+        } else {
+            s = parseKey(key);
+        }
+
+        return sendKeysToActiveElement(s);
+    }
+
+    protected CharSequence parseKey(String key) {
         CharSequence s;
         try {
             s = Keys.valueOf(key.toUpperCase());
         } catch (IllegalArgumentException e) {
             s = key;
         }
-        return sendKeysToActiveElement(s);
+        return s;
     }
 
     /**
@@ -563,9 +591,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     public String valueOfColumnNumberInRowNumber(int columnIndex, int rowIndex) {
-        String xPath = String.format("//tr[%s]/td[%s]", rowIndex, columnIndex);
-        WebElement element = findByXPath(xPath);
-        return getElementText(element);
+        return getTextByXPath("//tr[%s]/td[%s]", Integer.toString(rowIndex), Integer.toString(columnIndex));
     }
 
     public String valueOfInRowNumber(String requestedColumnName, int rowIndex) {
@@ -580,8 +606,7 @@ public class BrowserTest extends SlimFixture {
 
     protected String valueInRow(String columnXPath, String requestedColumnName) {
         String requestedIndex = getXPathForColumnIndex(requestedColumnName);
-        WebElement element = findByXPath("%s[%s]", columnXPath, requestedIndex);
-        return getElementText(element);
+        return getTextByXPath("%s[%s]", columnXPath, requestedIndex);
     }
 
     public boolean clickInRowNumber(String place, int rowIndex) {
@@ -602,8 +627,8 @@ public class BrowserTest extends SlimFixture {
             // see whether there is an element with the specified place as text() in the row
             element = findByXPath("%s//*[contains(normalize-space(text()),'%s')]", columnXPath, place);
             if (element == null) {
-                // find an input to click in the row by its title (aka tooltip)
-                element = findByXPath("%s//input[contains(@title, '%s')]", columnXPath, place);
+                // find an element to click in the row by its title (aka tooltip)
+                element = findByXPath("%s//*[contains(@title, '%s')]", columnXPath, place);
             }
         }
         if (element != null) {
@@ -645,8 +670,16 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected String getTextByXPath(String xpathPattern, String... params) {
-        WebElement element = findByXPath(xpathPattern, params);
-        return getElementText(element);
+        String result;
+        try {
+            WebElement element = findByXPath(xpathPattern, params);
+            result = getElementText(element);
+        } catch (StaleElementReferenceException e) {
+            // sometime we are troubled by ajax updates that cause 'stale state' let's try once more if that is the case
+            WebElement element = findByXPath(xpathPattern, params);
+            result = getElementText(element);
+        }
+        return result;
     }
 
     public String textByClassName(String className) {
@@ -654,8 +687,16 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected String getTextByClassName(String className) {
-        WebElement element = findByClassName(className);
-        return getElementText(element);
+        String result;
+        try {
+            WebElement element = findByClassName(className);
+            result = getElementText(element);
+        } catch (StaleElementReferenceException e) {
+            // sometime we are troubled by ajax updates that cause 'stale state' let's try once more if that is the case
+            WebElement element = findByClassName(className);
+            result = getElementText(element);
+        }
+        return result;
     }
 
     protected WebElement findByClassName(String className) {

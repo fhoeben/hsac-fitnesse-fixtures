@@ -2,7 +2,9 @@ package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
+import nl.hsac.fitnesse.fixture.util.SauceLabsHelper;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -21,6 +23,10 @@ import java.util.Map;
  * Script fixture to set up webdriver to be used by Selenium tests.
  */
 public class SeleniumDriverSetup extends SlimFixture {
+    public static final String REMOTE_URL_KEY = "SeleniumRemoteUrl";
+    private static final String LAST_RUN_SUMMARY = "SeleniumLastRunSummary";
+    protected static boolean OVERRIDE_ACTIVE = false;
+
     /**
      * Sets system property (needed by the WebDriver to be set up).
      * @param propName name of property to set.
@@ -28,6 +34,10 @@ public class SeleniumDriverSetup extends SlimFixture {
      * @return true.
      */
     public boolean setPropertyValue(String propName, String value) {
+        if (OVERRIDE_ACTIVE) {
+            return true;
+        }
+
         System.setProperty(propName, value);
         return true;
     }
@@ -39,6 +49,10 @@ public class SeleniumDriverSetup extends SlimFixture {
      * @throws Exception if no instance could be created.
      */
     public boolean startDriver(String driverClassName) throws Exception {
+        if (OVERRIDE_ACTIVE) {
+            return true;
+        }
+
         boolean result = false;
         Class<?> driverClass = Class.forName(driverClassName);
         Object driver = driverClass.newInstance();
@@ -58,6 +72,10 @@ public class SeleniumDriverSetup extends SlimFixture {
      * @throws Exception if no instance could be created.
      */
     public boolean startDriverFor(String browser) throws Exception {
+        if (OVERRIDE_ACTIVE) {
+            return true;
+        }
+
         boolean result = false;
         String browserName = browser.toLowerCase();
         if ("firefox".equals(browserName)) {
@@ -149,13 +167,100 @@ public class SeleniumDriverSetup extends SlimFixture {
         return createAndSetRemoteDriver(url, desiredCapabilities);
     }
 
+    public String driverDescription() {
+        String result = null;
+        WebDriver driver = getHelper().driver();
+        if (driver != null) {
+            StringBuilder builder = new StringBuilder("<div>");
+            builder.append("<pre>");
+            builder.append(driver.getClass().getName());
+            builder.append("</pre>");
+
+            if (driver instanceof RemoteWebDriver) {
+                RemoteWebDriver remoteDriver = (RemoteWebDriver) driver;
+
+                URL lastRemoteUrl = getLastRemoteUrl();
+                if (lastRemoteUrl != null) {
+                    builder.append(" at <strong>");
+                    builder.append(lastRemoteUrl.getHost());
+                    builder.append("</strong>");
+                }
+                builder.append(describeCapabilities(remoteDriver));
+                builder.append(extendedDriverDescription(lastRemoteUrl));
+            }
+            builder.append("</div>");
+            result = builder.toString();
+        }
+        return result;
+    }
+
+    public String runSummary() {
+        String result = null;
+        String sessionId = getHelper().getSessionId();
+        if (sessionId != null && !"".equals(sessionId)) {
+            URL lastRemoteUrl = getLastRemoteUrl();
+            if (lastRemoteUrl != null) {
+                if (SauceLabsHelper.isRelevant(lastRemoteUrl)) {
+                    result = SauceLabsHelper.getTagToEmbedVideoOfRun(lastRemoteUrl, sessionId);
+                }
+            }
+        }
+        getEnvironment().setSymbol(LAST_RUN_SUMMARY, result);
+        return result;
+    }
+
+    public static String getLastRunSummary() {
+        return Environment.getInstance().getSymbol(LAST_RUN_SUMMARY);
+    }
+
+    protected String describeCapabilities(RemoteWebDriver remoteDriver) {
+        StringBuilder result = new StringBuilder("<table><tbody>");
+        Capabilities capabilities = remoteDriver.getCapabilities();
+        for (Map.Entry<String, ?> entry : capabilities.asMap().entrySet()) {
+            result.append("<tr><th>");
+            result.append(entry.getKey());
+            result.append("</th><td>");
+            result.append(entry.getValue());
+            result.append("</td></tr>");
+        }
+        result.append("</tbody></table>");
+        return result.toString();
+    }
+
+    protected String extendedDriverDescription(URL lastRemoteUrl) {
+        String result = "";
+        if (SauceLabsHelper.isRelevant(lastRemoteUrl)) {
+            String jobLink = SauceLabsHelper.getJobLink(lastRemoteUrl, getHelper().getSessionId());
+            result = String.format("<a href=\"%s\" target=\"_blank\">Job details</a>", jobLink);
+        }
+        return result;
+    }
+
     protected boolean createAndSetRemoteDriver(String url, DesiredCapabilities desiredCapabilities)
             throws MalformedURLException {
+        if (OVERRIDE_ACTIVE) {
+            return true;
+        }
+
         String cleanUrl = cleanupValue(url);
         URL remoteUrl = new URL(cleanUrl);
         RemoteWebDriver remoteWebDriver = new RemoteWebDriver(remoteUrl, desiredCapabilities);
         setDriver(remoteWebDriver);
+        getEnvironment().setSymbol(REMOTE_URL_KEY, cleanUrl);
         return true;
+    }
+
+    public static URL getLastRemoteUrl() {
+        URL result = null;
+        String urlValue = Environment.getInstance().getSymbol(REMOTE_URL_KEY);
+        if (urlValue != null) {
+            try {
+                result = new URL(urlValue);
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return result;
     }
 
     private void setDriver(WebDriver webDriver) {
@@ -168,11 +273,32 @@ public class SeleniumDriverSetup extends SlimFixture {
      * @return true.
      */
     public boolean stopDriver() {
+        if (OVERRIDE_ACTIVE) {
+            return true;
+        }
+
+        // ensure we store summary
+        runSummary();
         getHelper().close();
         return true;
     }
 
-    private SeleniumHelper getHelper() {
+    /**
+     * Prevents instances from creating new Selenium drivers.
+     * This can be used to control Selenium configuration independent from Wiki content.
+     */
+    public static void lockConfig() {
+        OVERRIDE_ACTIVE = true;
+    }
+
+    /**
+     * Enables normal behavior (i.e. instances can create new Selenium drivers).
+     */
+    public static void unlockConfig() {
+        OVERRIDE_ACTIVE = false;
+    }
+
+    protected SeleniumHelper getHelper() {
         return Environment.getInstance().getSeleniumHelper();
     }
 }
