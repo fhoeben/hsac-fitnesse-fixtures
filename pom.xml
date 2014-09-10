@@ -6,7 +6,7 @@
 
 	<groupId>nl.hsac</groupId>
 	<artifactId>hsac-fitnesse-fixtures</artifactId>
-	<version>1.5-SNAPSHOT</version>
+	<version>1.6.0</version>
 	<url>https://github.com/fhoeben/hsac-fitnesse-fixtures</url>
 
 	<properties>
@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>org.fitnesse</groupId>
 			<artifactId>fitnesse</artifactId>
-			<version>20140623</version>
+			<version>20140901</version>
 		</dependency>
 
 		<dependency>
@@ -130,6 +130,9 @@
 					<test>FixtureDebugTest</test>
 					<systemPropertyVariables>
 						<fitnesseSuiteToRun>${fitnesseSuiteToRun}</fitnesseSuiteToRun>
+						<seleniumGridUrl>${seleniumGridUrl}</seleniumGridUrl>
+						<seleniumBrowser>${seleniumBrowser}</seleniumBrowser>
+						<seleniumCapabilities>${seleniumCapabilities}</seleniumCapabilities>
 					</systemPropertyVariables>
 					<properties>
 						<property>

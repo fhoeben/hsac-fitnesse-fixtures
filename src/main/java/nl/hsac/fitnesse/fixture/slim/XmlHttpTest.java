@@ -2,6 +2,8 @@ package nl.hsac.fitnesse.fixture.slim;
 
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 
+import java.util.List;
+
 /**
  * Fixture to make HTTP requests returning XNL using Slim scripts and/or scenarios.
  * Example use: make SOAP calls using #postTo().
@@ -38,6 +40,29 @@ public class XmlHttpTest extends HttpTest {
             result = getEnvironment().getHtmlForXml(value);
         } catch (Exception e) {
             result = value;
+        }
+        return result;
+    }
+
+    /**
+     * Gets a HTML list with all matches to the supplied XPath.
+     * @param xPathExpr expression to evaluate.
+     * @return list containing all results of expression evaluation against last response received, null if there were no matches.
+     * @throws RuntimeException if no valid response was available or XPath could not be evaluated.
+     */
+    public String allXPathMatches(String xPathExpr) {
+        String result = null;
+        List<String> allXPath = getResponse().getAllXPath(xPathExpr);
+        if (allXPath != null && !allXPath.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("<div><ul>");
+            for (String match : allXPath) {
+                sb.append("<li>");
+                sb.append(match);
+                sb.append("</li>");
+            }
+            sb.append("</ul></div>");
+            result = sb.toString();
         }
         return result;
     }
