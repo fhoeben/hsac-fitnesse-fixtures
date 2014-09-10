@@ -33,9 +33,21 @@ public class BrowserTest extends SlimFixture {
     }
 
     public boolean open(String address) {
-        String url = getUrl(address);
+        final String url = getUrl(address);
         try {
             getNavigation().to(url);
+            waitUntil(new ExpectedCondition<Boolean>() {
+                @Override
+                public Boolean apply(WebDriver webDriver) {
+                    String readyState = getSeleniumHelper().executeJavascript("return document.readyState").toString();
+                    // IE 7 is reported to return "loaded"
+                    boolean done = "complete".equalsIgnoreCase(readyState) || "loaded".equalsIgnoreCase(readyState);
+                    if (!done) {
+                        System.err.printf("Open of %s returned while document.readyState was %s", url, readyState);
+                    }
+                    return done;
+                }
+            });
         } catch (TimeoutException e) {
             throw new TimeoutStopTestException("Unable to go to: " + url, e);
         }
