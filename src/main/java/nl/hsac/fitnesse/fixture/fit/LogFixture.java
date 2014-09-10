@@ -16,7 +16,7 @@ public class LogFixture extends MapColumnFixture {
     private CalendarUtil calendarUtil = new CalendarUtil();
 
     public String timeStamp() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         XMLGregorianCalendar now = calendarUtil.buildXMLGregorianCalendarDateTime(new GregorianCalendar());
         return dateFormat.format(now.toGregorianCalendar().getTime());
 
