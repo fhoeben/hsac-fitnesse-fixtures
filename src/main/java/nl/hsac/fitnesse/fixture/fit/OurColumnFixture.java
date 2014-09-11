@@ -3,6 +3,9 @@ package nl.hsac.fitnesse.fixture.fit;
 import fit.ColumnFixture;
 import fit.Parse;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 /**
  * ColumnFixture with some enhancements.
  */
@@ -78,6 +81,21 @@ public class OurColumnFixture extends ColumnFixture {
             }
         }
         return result;
+    }
+
+    /**
+     * @return current time, can be useful to trace a row's execution to log files of the system under test.
+     */
+    public String timeStamp() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(getTimeStampPattern());
+        return dateFormat.format(Calendar.getInstance().getTime());
+    }
+
+    /**
+     * @return pattern used to format current time by #timeStamp().
+     */
+    protected String getTimeStampPattern() {
+        return "yyyy-MM-dd HH:mm:ss";
     }
 
     @Override
