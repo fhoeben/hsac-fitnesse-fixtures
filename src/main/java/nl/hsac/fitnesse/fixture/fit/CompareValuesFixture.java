@@ -3,10 +3,9 @@ package nl.hsac.fitnesse.fixture.fit;
 
 
 /**
-  * Waits before continuing to the next fixture.
+  * Compare values value1 and value2 in multiple ways.
  */
 public class CompareValuesFixture extends MapColumnFixture {
-    public int waitTimeSeconds;
     private final static String VALUE1 = "value1";
     private final static String VALUE2 = "value2";
 
