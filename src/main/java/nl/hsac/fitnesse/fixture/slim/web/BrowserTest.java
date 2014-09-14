@@ -435,14 +435,6 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
-    public boolean clickAndWaitForPage(String place, final String pageName) {
-        boolean result = click(place);
-        if (result) {
-            result = waitForPage(pageName);
-        }
-        return result;
-    }
-
     public boolean waitForPage(final String pageName) {
         return waitUntil(new ExpectedCondition<Boolean>() {
             @Override
@@ -459,24 +451,8 @@ public class BrowserTest extends SlimFixture {
         });
     }
 
-    public boolean clickAndWaitForTagWithText(String place, final String tagName, final String expectedText) {
-        boolean result = click(place);
-        if (result) {
-            result = waitForTagWithText(tagName, expectedText);
-        }
-        return result;
-    }
-
     public boolean waitForTagWithText(final String tagName, final String expectedText) {
         return waitForElementWithText(By.tagName(tagName), expectedText);
-    }
-
-    public boolean clickAndWaitForClassWithText(String place, final String cssClassName, final String expectedText) {
-        boolean result = click(place);
-        if (result) {
-            result = waitForClassWithText(cssClassName, expectedText);
-        }
-        return result;
     }
 
     public boolean waitForClassWithText(final String cssClassName, final String expectedText) {
@@ -533,14 +509,6 @@ public class BrowserTest extends SlimFixture {
             ok = false;
         }
         return ok;
-    }
-
-    public boolean clickAndWaitForClass(String place, final String cssClassName) {
-        boolean result = click(place);
-        if (result) {
-            result = waitForClass(cssClassName);
-        }
-        return result;
     }
 
     public boolean waitForClass(final String cssClassName) {
