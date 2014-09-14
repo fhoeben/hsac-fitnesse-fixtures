@@ -285,7 +285,12 @@ public class SeleniumHelper {
      * @param pageLoadWait time in milliseconds to wait.
      */
     public void setPageLoadWait(int pageLoadWait) {
-        driver().manage().timeouts().pageLoadTimeout(pageLoadWait, TimeUnit.MILLISECONDS);
+        try {
+            driver().manage().timeouts().pageLoadTimeout(pageLoadWait, TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            // https://code.google.com/p/selenium/issues/detail?id=6015
+            System.err.println("Unable to set page load timeout (known issue for Safari): " + e.getMessage());
+        }
     }
 
     /**
