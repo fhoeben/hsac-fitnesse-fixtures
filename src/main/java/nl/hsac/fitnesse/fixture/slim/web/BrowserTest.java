@@ -570,6 +570,18 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
+    public boolean enterAsInRowWhereIs(String value, String requestedColumnName, String selectOnColumn, String selectOnValue) {
+        String columnXPath = getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue);
+        String requestedIndex = getXPathForColumnIndex(requestedColumnName);
+        WebElement element = findByXPath("%s[%s]//input", columnXPath, requestedIndex);
+        boolean result = waitUntilInteractable(element);
+        if (result) {
+            element.clear();
+            sendValue(element, value);
+        }
+        return result;
+    }
+
     public String valueOfColumnNumberInRowNumber(int columnIndex, int rowIndex) {
         return getTextByXPath("//tr[%s]/td[%s]", Integer.toString(rowIndex), Integer.toString(columnIndex));
     }
