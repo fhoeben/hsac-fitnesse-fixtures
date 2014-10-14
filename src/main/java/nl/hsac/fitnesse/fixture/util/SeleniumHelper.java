@@ -173,12 +173,12 @@ public class SeleniumHelper {
         if (label != null) {
             String forAttr = label.getAttribute("for");
             if (forAttr == null || "".equals(forAttr)) {
-                element = findElement(byXpath(labelPattern + "/input", labelText));
+                element = findElement(byXpath(labelPattern + "//input", labelText));
                 if (element == null) {
-                    element = findElement(byXpath(labelPattern + "/select", labelText));
+                    element = findElement(byXpath(labelPattern + "//select", labelText));
                 }
                 if (element == null) {
-                    element = findElement(byXpath(labelPattern + "/textarea", labelText));
+                    element = findElement(byXpath(labelPattern + "//textarea", labelText));
                 }
             } else {
                 element = findElement(By.id(forAttr));
