@@ -94,6 +94,9 @@ public class SeleniumHelper {
             element = findElement(By.linkText(place));
         }
         if (element == null) {
+            element = findElement(byCss("textarea[placeholder='%s']", place));
+        }
+        if (element == null) {
             element = findElement(byXpath("//th[normalize-space(text())='%s']/../td ", place));
         }
         if (element == null) {
@@ -113,6 +116,9 @@ public class SeleniumHelper {
         }
         if (element == null) {
             element = findElement(By.partialLinkText(place));
+        }
+        if (element == null) {
+            element = findElement(byCss("textarea[placeholder~='%s']", place));
         }
         if (element == null) {
             element = findElement(byXpath("//th[contains(normalize-space(text()), '%s')]/../td ", place));
@@ -170,6 +176,9 @@ public class SeleniumHelper {
                 element = findElement(byXpath(labelPattern + "/input", labelText));
                 if (element == null) {
                     element = findElement(byXpath(labelPattern + "/select", labelText));
+                }
+                if (element == null) {
+                    element = findElement(byXpath(labelPattern + "/textarea", labelText));
                 }
             } else {
                 element = findElement(By.id(forAttr));

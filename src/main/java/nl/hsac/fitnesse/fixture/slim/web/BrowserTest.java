@@ -574,6 +574,9 @@ public class BrowserTest extends SlimFixture {
         String columnXPath = getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue);
         String requestedIndex = getXPathForColumnIndex(requestedColumnName);
         WebElement element = findByXPath("%s[%s]//input", columnXPath, requestedIndex);
+        if (element == null) {
+            element = findByXPath("%s[%s]//textarea", columnXPath, requestedIndex);
+        }
         boolean result = waitUntilInteractable(element);
         if (result) {
             element.clear();
