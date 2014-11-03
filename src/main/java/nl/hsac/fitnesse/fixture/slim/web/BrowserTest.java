@@ -537,6 +537,17 @@ public class BrowserTest extends SlimFixture {
     }
 
     public String valueFor(String place) {
+        String result;
+        try {
+            result = valueForImpl(place);
+        } catch (StaleElementReferenceException e) {
+            // sometimes ajax updates get in the way. In that case we try again
+            result = valueForImpl(place);
+        }
+        return result;
+    }
+
+    private String valueForImpl(String place) {
         String result = null;
         WebElement element = getElement(place);
         if (element != null) {
