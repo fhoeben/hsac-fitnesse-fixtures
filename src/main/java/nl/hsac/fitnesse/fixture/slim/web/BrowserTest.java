@@ -557,10 +557,14 @@ public class BrowserTest extends SlimFixture {
                 WebElement option = getSeleniumHelper().findElement(true, selectedOption);
                 result = getElementText(option);
             } else {
-                result = element.getAttribute("value");
-                if (result == null) {
-                    scrollIfNotOnScreen(element);
-                    result = element.getText();
+                if ("checkbox".equals(element.getAttribute("type"))) {
+                    result = String.valueOf("true".equals(element.getAttribute("checked")));
+                } else {
+                    result = element.getAttribute("value");
+                    if (result == null) {
+                        scrollIfNotOnScreen(element);
+                        result = element.getText();
+                    }
                 }
             }
         }
