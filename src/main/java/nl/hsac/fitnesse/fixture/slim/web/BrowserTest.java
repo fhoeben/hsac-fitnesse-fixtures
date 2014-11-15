@@ -597,11 +597,11 @@ public class BrowserTest extends SlimFixture {
     }
 
     public String valueOfColumnNumberInRowNumber(int columnIndex, int rowIndex) {
-        return getTextByXPath("//tr[%s]/td[%s]", Integer.toString(rowIndex), Integer.toString(columnIndex));
+        return getTextByXPath("(//tr[boolean(td)])[%s]/td[%s]", Integer.toString(rowIndex), Integer.toString(columnIndex));
     }
 
     public String valueOfInRowNumber(String requestedColumnName, int rowIndex) {
-        String columnXPath = String.format("//tr[%s]/td", rowIndex);
+        String columnXPath = String.format("(//tr[boolean(td)])[%s]/td", rowIndex);
         return valueInRow(columnXPath, requestedColumnName);
     }
 
@@ -616,7 +616,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     public boolean clickInRowNumber(String place, int rowIndex) {
-        String columnXPath = String.format("//tr[%s]/td", rowIndex);
+        String columnXPath = String.format("(//tr[boolean(td)])[%s]/td", rowIndex);
         return clickInRow(columnXPath, place);
     }
 
