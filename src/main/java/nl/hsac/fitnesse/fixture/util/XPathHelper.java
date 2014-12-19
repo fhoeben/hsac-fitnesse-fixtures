@@ -72,9 +72,20 @@ public class XPathHelper {
                 }
                 
             } catch (XPathExpressionException e) {
-                throw new FitFailureException("Unable to evaluate xpath: " + xPathExpr);
+                String msg = getMessage(e);
+                throw new FitFailureException("Unable to evaluate xpath: " + xPathExpr + "\n" + msg);
             }
         }
         return result;
+    }
+
+    private static String getMessage(XPathExpressionException e) {
+        String msg;
+        Throwable t = e;
+        do {
+            msg = t.getMessage();
+            t = t.getCause();
+        } while (msg == null && t != null);
+        return msg;
     }
 }
