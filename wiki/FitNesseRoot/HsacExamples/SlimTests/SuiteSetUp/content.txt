@@ -1,4 +1,4 @@
-An [[import table][.FitNesse.UserGuide.SliM.ImportTable]] defines which Java packages may contain fixture classes. 
+An [[import table][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ImportTable]] defines which Java packages may contain fixture classes. 
 
 For these examples the following packages are required:
 |Import                           |
