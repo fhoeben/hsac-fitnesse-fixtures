@@ -32,14 +32,6 @@ public class GetWeatherFixture extends SoapCallMapColumnFixture<XmlHttpResponse>
     }
 }}}
 
-!2 Standard Methods
-
-!-SoapCallMapColumnFixture-! offers a set of methods to retrieve information on the SOAP exchange. Any fixture derived from this fixture also has these methods, so output columns displaying this information may be added to all tables using these fixtures, without custom Java code. The table below shows some of this standard information in its output columns: the request sent, the time (in milliseconds) the call took, and the full response sent by the server.
-
-|Get Weather                                                                                        |
-|countryName|cityName                               |request?|responseTime?|response?|weatherResult?|
-|Canada     |Vancouver International Air-Port, B. C.|        |             |         |              |
-
 !2 Check Call
 Sometimes testing a SOAP service requires more than a single call the test needs to validate more than the call's response. !-SoapCallMapColumnFixture-! has a feature for this, allowing a second call to be made to validate the outcome of the first. An example usage would be a call to retrieve an account's details, to validate whether the call to the service to create the account has worked.
 To use this feature a couple of things need to be done: update the fixture class with some configuration logic to define how the 'check call' must be made, add a method that uses 'getRawCheckResponse()', and add a column to the test table in the wiki to call this method.
@@ -50,3 +42,23 @@ To configure the check call one usually specifies which (Freemarker) template to
 !3 Triggering the Check Call
 Validating the check call gives the expected response is similar to checking the service's response. A method needs to be defined that extracts a value from the check call's response and the test table needs to be extended with an output column mapping to this method.
 '''Please note:''' The check call is only executed when its response is needed (i.e. 'getRawCheckResponse()' is called), so if no output column refers to a method needing this response the call is not made. 
+
+!3 Example
+
+|Symbols                                                                        |
+|key              |value                                                        |
+|conversionUrl    |http://www.webservicex.net/CurrencyConvertor.asmx            |
+|lbExchangeRateUrl|http://www.lb.lt/webservices/ExchangeRates/ExchangeRates.asmx|
+
+|To Lithuanian Lita                                |
+|from|conversionRate?|exchangeRate?|margin?        |
+|USD |               |             |0.99 < _ < 1.01|
+|EUR |               |             |0.99 < _ < 1.01|
+
+!2 Standard Methods
+
+!-SoapCallMapColumnFixture-! offers a set of methods to retrieve information on the SOAP exchange. Any fixture derived from this fixture also has these methods, so output columns displaying this information may be added to all tables using these fixtures, without custom Java code. The table below shows some of this standard information in its output columns: the request sent, the time (in milliseconds) the call took, and the full response sent by the server.
+
+|Get Weather                                                                                        |
+|countryName|cityName                               |request?|responseTime?|response?|weatherResult?|
+|Canada     |Vancouver International Air-Port, B. C.|        |             |         |              |
