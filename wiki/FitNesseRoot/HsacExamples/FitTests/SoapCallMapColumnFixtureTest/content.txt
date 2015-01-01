@@ -30,6 +30,7 @@ public class GetWeatherFixture extends SoapCallMapColumnFixture<XmlHttpResponse>
         String result = getRawResponse().getXPath("//wsX:GetWeatherResult/text()");
         return xmlAsHtml(result);
     }
+}
 }}}
 
 !2 Check Call
