@@ -98,12 +98,9 @@ public class ToLithuanianLitaFixture extends SoapCallMapColumnFixture<XmlHttpRes
 
 !2 Standard Methods
 
-!-SoapCallMapColumnFixture-! offers a set of methods to retrieve information on the SOAP exchange. Any fixture derived from this fixture also has these methods, so output columns displaying this information may be added to all tables using these fixtures, without custom Java code. The table below shows some of this standard information in its output columns: the request sent, the time (in milliseconds) the call took, and the full response sent by the server.
+!-SoapCallMapColumnFixture-! offers a set of methods to retrieve information on the SOAP exchange(s). Any fixture derived from this fixture also has these methods, so output columns displaying this information may be added to all tables using these fixtures, without custom Java code. 
 
-|Get Weather                                                                                        |
-|countryName|cityName                               |request?|responseTime?|response?|weatherResult?|
-|Canada     |Vancouver International Air-Port, B. C.|        |             |         |              |
-
-|To Lithuanian Lita                                  |
-|from|margin?|checkRequest?|checkTime?|checkResponse?|
-|USD |       |             |          |              |
+The table below shows some of this standard information in its output columns: the request sent, the time (in milliseconds) the call took, and the full response sent by the server for both the service and check calls.
+|To Lithuanian Lita                                                           |
+|from|request?|responseTime?|response?|checkRequest?|checkTime?|checkResponse?|
+|USD |        |             |         |             |          |              |
