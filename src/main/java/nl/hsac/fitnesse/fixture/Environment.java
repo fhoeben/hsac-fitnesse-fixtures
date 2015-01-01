@@ -199,7 +199,20 @@ public class Environment {
      * @param result result to populate with response.
      */
     public void callService(String url, String templateName, Object model, XmlHttpResponse result) {
-        doHttpPost(url, templateName, model, result);
+        callService(url, templateName, model, result, null);
+    }
+
+    /**
+     * Performs POST to supplied url of result of applying template with model.
+     * All namespaces registered in this environment will be registered with result.
+     * @param url url to post to.
+     * @param templateName name of template to use.
+     * @param model model for template.
+     * @param result result to populate with response.
+     * @param headers headers to add.
+     */
+    public void callService(String url, String templateName, Object model, XmlHttpResponse result, Map<String, String> headers) {
+        doHttpPost(url, templateName, model, result, headers);
         setNamespaceContext(result);
     }
 

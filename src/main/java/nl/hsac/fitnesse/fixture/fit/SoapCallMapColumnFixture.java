@@ -3,6 +3,9 @@ package nl.hsac.fitnesse.fixture.fit;
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 
+import java.util.Collections;
+import java.util.Map;
+
 /**
  * Base class for Fixtures making SOAP calls, where checks are also performed using SOAP.
  */
@@ -33,12 +36,54 @@ public abstract class SoapCallMapColumnFixture<Response extends XmlHttpResponse>
             super.executeCheckCall();
         } catch (RuntimeException e) {
             // ignore, no checkResponse will be available
-            XmlHttpResponse checkResponse = new XmlHttpResponse();
+            XmlHttpResponse checkResponse = getEnvironment().createInstance(getCheckResponseClass());
             checkResponse.setResponse("Unable to perform check. Error: " + e.getMessage());
             setRawCheckResponse(checkResponse);
         }
     }
 
+    @Override
+    protected XmlHttpResponse callCheckService() {
+        return getEnvironment().createInstance(getCheckResponseClass());
+    }
+
+    /**
+     * Creates response, calls service using configured template and current row's values and calls SOAP service.
+     * @param urlSymbolKey key of symbol containing service's URL.
+     * @param soapAction SOAPAction header value (null if no header is required).
+     * @return filled response
+     */
+    protected Response callServiceImpl(String urlSymbolKey, String soapAction) {
+        String url = getSymbol(urlSymbolKey).toString();
+        Response response = getEnvironment().createInstance(getResponseClass());
+        callSoapService(url, getTemplateName(), soapAction, response);
+        return response;
+    }
+
+    /**
+     * Creates check response, calls service using configured check template and current row's values and calls SOAP service.
+     * @param urlSymbolKey key of symbol containing check service's URL.
+     * @param soapAction SOAPAction header value (null if no header is required).
+     * @return filled check response
+     */
+    protected XmlHttpResponse callCheckServiceImpl(String urlSymbolKey, String soapAction) {
+        String url = getSymbol(urlSymbolKey).toString();
+        XmlHttpResponse response = getEnvironment().createInstance(getCheckResponseClass());
+        callSoapService(url, getCheckTemplateName(), soapAction, response);
+        return response;
+    }
+
+    /**
+     * Calls SOAP service using template and current row's values.
+     * @param url url of service to call.
+     * @param templateName name of template to use to create POST body.
+     * @param soapAction SOAPAction header value (null if no header is required).
+     * @param response response to fill based on call.
+     */
+    protected void callSoapService(String url, String templateName, String soapAction, XmlHttpResponse response) {
+        Map<String, String> headers = soapAction != null ? Collections.singletonMap("SOAPAction", soapAction) : null;
+        getEnvironment().callService(url, templateName, getCurrentRowValues(), response, headers);
+    }
 
     /**
      * @return request to be sent formatted to be displayed
