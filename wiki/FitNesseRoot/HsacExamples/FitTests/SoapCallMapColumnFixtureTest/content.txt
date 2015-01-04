@@ -117,7 +117,7 @@ Below is an example table which uses a subclass of the 'To Lithuanian Lita' fixt
 The Java code for the 'To Lithuanian Lita Retrying' fixture is: {{{
 public class ToLithuanianLitaRetryingFixture extends ToLithuanianLitaFixture {
     @Override
-    protected boolean isRetryDesirable(XmlHttpResponse aCheckResponse) {
+    protected boolean isRetryDesirable() {
         return !conversionRate().equals(exchangeRate());
     }
 }

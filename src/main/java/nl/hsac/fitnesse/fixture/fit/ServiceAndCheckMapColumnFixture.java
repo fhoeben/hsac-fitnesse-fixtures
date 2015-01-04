@@ -141,7 +141,7 @@ public abstract class ServiceAndCheckMapColumnFixture<Response, CheckResponse> e
     protected void executeCheckWithRetry() {
         tryCount++;
         executeCheckCall();
-        if (tryCount < maxTries && isRetryDesirable(checkResponse)) {
+        if (tryCount < maxTries && isRetryDesirable()) {
             // not changed yet, try again
             executeCheckWithRetry();
         } else {
@@ -157,10 +157,11 @@ public abstract class ServiceAndCheckMapColumnFixture<Response, CheckResponse> e
     }
 
     /**
-     * @param aCheckResponse response from last call to check template.
+     * Determine whether response from last call to check service indicate another call is needed, or not.
+     * The last check call's response is available using {@link #getRawCheckResponse()}
      * @return does check response warrant retry, or not.
      */
-    protected boolean isRetryDesirable(CheckResponse aCheckResponse) {
+    protected boolean isRetryDesirable() {
         return false;
     }
 
