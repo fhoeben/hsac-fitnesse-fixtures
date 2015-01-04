@@ -46,7 +46,7 @@ Validating the check call gives the expected response is similar to checking the
 
 !3 Example With Check Call
 
-In the example below we call a service offered by the Bank of Lithuania to check the exchange rate returned by a currency conversion web service, we ensure the two rates returned are within 1%.
+In the example below we call a service offered by the Bank of Lithuania to check the exchange rate returned by a currency conversion web service, we ensure the two rates returned are within 10% (for US dollars) or 1% (for Euros).
 
 |Symbols                                                                        |
 |key              |value                                                        |
@@ -55,7 +55,7 @@ In the example below we call a service offered by the Bank of Lithuania to check
 
 |To Lithuanian Lita                                |
 |from|conversionRate?|exchangeRate?|margin?        |
-|USD |               |             |0.99 < _ < 1.01|
+|USD |               |             |0.90 < _ < 1.10|
 |EUR |               |             |0.99 < _ < 1.01|
 
 The Java code for the 'To Lithuanian Lita' fixture is another single class: {{{
