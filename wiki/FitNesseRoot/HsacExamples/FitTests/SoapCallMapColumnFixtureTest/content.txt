@@ -42,7 +42,8 @@ Sometimes testing a SOAP service requires more than a single call the test needs
 To use this feature a couple of things need to be done: update the fixture class with some configuration logic to define how the 'check call' must be made, add a method that uses 'getRawCheckResponse()', and add a column to the test table in the wiki to call this method.
 
 !3 Configure Check Call
-To configure the check call one usually specifies which (Freemarker) template to use for the check call (the constructor is an obvious choice for a call to 'setCheckTemplateName()'). Furthermore one needs to override 'callCheckService()' to make the actual SOAP call to the check service. Usually this entails calling 'callCheckServiceImpl()', possibly after adding a result value from the original service call to the current row's values (for instance the id of the account created).
+To configure the check call one usually specifies which (Freemarker) template to use for the check call (the constructor is an obvious choice for a call to 'setCheckTemplateName()'). Furthermore one needs to override 'callCheckService()' to make the actual SOAP call to the check service, usually done by calling 'callCheckServiceImpl()'.
+Sometimes it is desirable to add one or more result values from the original service call to the current row's values so that the can be used in the check call (for instance the id of the account created). This can be done by overriding 'addResultsToValuesForCheck()'.
 
 !3 Triggering the Check Call
 Validating the check call gives the expected response is similar to checking the service's response. A method needs to be defined that extracts a value from the check call's response and the test table needs to be extended with an output column mapping to this method.
