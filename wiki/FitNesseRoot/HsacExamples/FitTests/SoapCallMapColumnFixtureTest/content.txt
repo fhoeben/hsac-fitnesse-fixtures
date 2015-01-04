@@ -1,6 +1,6 @@
 By extending !-SoapCallMapColumnFixture-! a Fit test can easily make SOAP calls. The request to send is created using a Freemarker template, all input column's values can be used in template, without requiring Java fields or properties in the fixture class. Output columns (columns whose name ends on a '?') require Java methods to be defined, generally performing a XPath expression on the service's response.
 
-This page calls a weather service, similar to [[Slim !-HttpPost-! using Freemarker example][.HsacExamples.SlimTests.HttpTests.HttpPost3UsingFreemarkerTemplateTest]]. On this page we use an instance of !-SymbolsFixture-! to configure the URL of the service to call. This is a best practice, allowing the url to be configured without changing Java code but not requiring it to be repeated for each table calling the same service. Normally the symbols fixture is placed on a !-SuiteSetup-! page, accessible to all tests in the suite.
+The first example below calls a weather service, similar to [[Slim !-HttpPost-! using Freemarker example][.HsacExamples.SlimTests.HttpTests.HttpPost3UsingFreemarkerTemplateTest]]. On this page we use an instance of !-SymbolsFixture-! to configure the URL of the service to call. This is a best practice, allowing the url to be configured without changing Java code but not requiring it to be repeated for each table calling the same service. Normally the symbols fixture is placed on a !-SuiteSetup-! page, accessible to all tests in the suite.
 
 |Symbols                                                 |
 |key       |value                                        |
@@ -95,12 +95,34 @@ public class ToLithuanianLitaFixture extends SoapCallMapColumnFixture<XmlHttpRes
 }
 }}}
 
+!2 Checking Asynchronous Calls
+
+Some web services return a response to the caller before the call is fully processed. They are asynchronous as the processing continues without the caller having to wait for a response. Validating whether such a service calls has the expected result offers a bit of a challenge: how do you determine whether the expected result will never be reached, or it is just NOT YET reached? And even when you know a maximum amount of time it might take for the result to be reached, it would be nice that if the result is reached sooner the test suite continues without having to wait the maximum amount of time.
+!-SoapCallMapColumnFixture-! offers a mechanism to deal with this last problem. It allows the check call to be executed multiple times (with a configurable wait between the calls) until the response to the call indicates processing of the original call is completed, or until a (configurable) maximum amount of calls is completed. If the original call is fully processed quickly the test will continue to the next row in the table, when a longer wait is needed it will do so, but it will not wait indefinitely.
+
+Configuring this retry behavior involves three things: how to determine whether the original call is fully processed, the maximum number of times the check call may be retried and (optionally) how long to wait between check calls. The first configuration is done in Java code, the latter two are done in the wiki using the test table's header.
+Whether another call to the check service is needed is defined by overriding the method 'isRetryDesirable()', which is passed the response from the last check call.
+Configuring the maximum number of calls and the wait time between calls is done using [[Fit's fixture parameter feature][.FitNesse.UserGuide.WritingAcceptanceTests.FitFramework.ParametersInFixtures]] (i.e. by adding cells to the first row of the table, after the fixture name). The first parameter is the maximum number of tries, the second is the wait time between calls (in milliseconds).
+
+Below is an example table which uses a subclass of the 'To Lithuanian Lita' fixture which retries retrieving the rate from the central bank for at most 4 times, with a 100ms interval, until the two rates retrieved are identical. (This is a bit contrived, even non-sensical, example as we don't expect the result from the check call to change, but it shows the concept of the retry mechanism.) 
+|To Lithuanian Lita Retrying|4              |100          |
+|from                       |conversionRate?|exchangeRate?|
+|USD                        |               |             |
+
+The Java code for the 'To Lithuanian Lita Retrying' fixture is: {{{
+public class ToLithuanianLitaRetryingFixture extends ToLithuanianLitaFixture {
+    @Override
+    protected boolean isRetryDesirable(XmlHttpResponse aCheckResponse) {
+        return !conversionRate().equals(exchangeRate());
+    }
+}
+}}}
 
 !2 Standard Methods
 
 !-SoapCallMapColumnFixture-! offers a set of methods to retrieve information on the SOAP exchange(s). Any fixture derived from this fixture also has these methods, so output columns displaying this information may be added to all tables using these fixtures, without custom Java code. 
 
-The table below shows some of this standard information in its output columns: the request sent, the time (in milliseconds) the call took, and the full response sent by the server for both the service and check calls.
-|To Lithuanian Lita                                                           |
-|from|request?|responseTime?|response?|checkRequest?|checkTime?|checkResponse?|
-|USD |        |             |         |             |          |              |
+The table below shows some of this standard information in its output columns: the request sent, the time (in milliseconds) the call took, the full response sent by the server for both the service and check calls, and how often the check call was executed.
+|To Lithuanian Lita Retrying|4       |50                                                                       |
+|from                       |request?|responseTime?|response?|checkRequest?|checkTime?|checkResponse?|tryCount?|
+|USD                        |        |             |         |             |          |              |4        |
