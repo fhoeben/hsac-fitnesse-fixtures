@@ -1,10 +1,8 @@
 package nl.hsac.fitnesse.sample;
 
-import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
-
 public class ToLithuanianLitaRetryingFixture extends ToLithuanianLitaFixture {
     @Override
-    protected boolean isRetryDesirable(XmlHttpResponse aCheckResponse) {
+    protected boolean isRetryDesirable() {
         return !conversionRate().equals(exchangeRate());
     }
 }
