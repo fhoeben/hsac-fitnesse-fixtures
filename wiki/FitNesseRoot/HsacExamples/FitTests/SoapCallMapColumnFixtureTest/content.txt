@@ -1,5 +1,8 @@
 By extending !-SoapCallMapColumnFixture-! a Fit test can easily make SOAP calls. The request to send is created using a Freemarker template, all input column's values can be used in template, without requiring Java fields or properties in the fixture class. Output columns (columns whose name ends on a '?') require Java methods to be defined, generally performing a XPath expression on the service's response.
-
+This page outlines the main features of this class: [[calling a service][#callService]], [[performing an extra call to validate the result of the call][#checkCall]], [[dealing with asynchronous services][#asyncService]] and [[standard methods to access 'meta information' on the exchange][#standardMethods]].
+ 
+!anchor callService
+!2 Call Service
 The first example below calls a weather service, similar to [[Slim !-HttpPost-! using Freemarker example][.HsacExamples.SlimTests.HttpTests.HttpPost3UsingFreemarkerTemplateTest]]. On this page we use an instance of !-SymbolsFixture-! to configure the URL of the service to call. This is a best practice, allowing the url to be configured without changing Java code but not requiring it to be repeated for each table calling the same service. Normally the symbols fixture is placed on a !-SuiteSetup-! page, accessible to all tests in the suite.
 
 |Symbols                                                 |
@@ -33,6 +36,7 @@ public class GetWeatherFixture extends SoapCallMapColumnFixture<XmlHttpResponse>
 }
 }}}
 
+!anchor checkCall
 !2 Check Call
 Sometimes testing a SOAP service requires more than a single call the test needs to validate more than the call's response. !-SoapCallMapColumnFixture-! has a feature for this, allowing a second call to be made to validate the outcome of the first. An example usage would be a call to retrieve an account's details, to validate whether the call to the service to create the account has worked.
 To use this feature a couple of things need to be done: update the fixture class with some configuration logic to define how the 'check call' must be made, add a method that uses 'getRawCheckResponse()', and add a column to the test table in the wiki to call this method.
@@ -95,6 +99,7 @@ public class ToLithuanianLitaFixture extends SoapCallMapColumnFixture<XmlHttpRes
 }
 }}}
 
+!anchor asyncService
 !2 Checking Asynchronous Calls
 
 Some web services return a response to the caller before the call is fully processed. They are asynchronous as the processing continues without the caller having to wait for a response. Validating whether such a service calls has the expected result offers a bit of a challenge: how do you determine whether the expected result will never be reached, or it is just NOT YET reached? And even when you know a maximum amount of time it might take for the result to be reached, it would be nice that if the result is reached sooner the test suite continues without having to wait the maximum amount of time.
@@ -118,6 +123,7 @@ public class ToLithuanianLitaRetryingFixture extends ToLithuanianLitaFixture {
 }
 }}}
 
+!anchor standardMethods
 !2 Standard Methods
 
 !-SoapCallMapColumnFixture-! offers a set of methods to retrieve information on the SOAP exchange(s). Any fixture derived from this fixture also has these methods, so output columns displaying this information may be added to all tables using these fixtures, without custom Java code. 
