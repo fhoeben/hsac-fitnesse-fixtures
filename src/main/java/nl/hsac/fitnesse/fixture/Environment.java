@@ -18,8 +18,8 @@ import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
 import nl.hsac.fitnesse.fixture.util.TimeoutHelper;
 import nl.hsac.fitnesse.fixture.util.XMLFormatter;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
-import util.StringUtil;
 
 import java.io.File;
 import java.util.Map;
@@ -360,7 +360,7 @@ public class Environment {
     public ProgramResponse invokeProgram(int timeout, String directory, String command,
                                          String... arguments) {
         ProgramResponse result = new ProgramResponse();
-        if (directory != null && !StringUtil.isBlank(directory)) {
+        if (directory != null && !StringUtils.isBlank(directory)) {
             result.setDirectory(new File(directory));
         }
         result.setCommand(command);
