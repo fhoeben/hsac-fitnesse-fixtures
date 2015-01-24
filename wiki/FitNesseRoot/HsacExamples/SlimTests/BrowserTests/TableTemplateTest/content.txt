@@ -2,29 +2,29 @@
 
 
 On this page we test whether we check the prices of a couple of houses for sale in Utrecht, The Netherlands. 
-This test continues where ScenarioTest left of. It uses 'table template', a custom extension of [[Slim's scenario][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScenarioTable]], to define a parameterized script. This is then invoked multiple times from a [[Decision table][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.DecisionTable]], once for each row. The advantage of this custom extension is that the scenario's parameters do not have to be listed in its first row (but only in the rows where they are used and in the decision table). This is, of course, especially convenient when there are many parameters.
+This test continues where ScenarioTest left of. It uses 'table template', a custom extension of [[Slim's scenario][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScenarioTable]], to define a parameterized script. This is then invoked multiple times from a [[Decision table][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.DecisionTable]], once for each row. The advantage of this custom extension is that the scenario's parameters do not have to be listed in its first row (but only in the rows where they are used and in the decision table). This is, of course, especially convenient when there are many parameters. 'Table template' supports both input and output parameters, just like regular scenarios (even though that is not documented very clearly). Output parameters are indicated in the decision table by the fact that their column header ends with '?'. 
 
 The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
 
-|table template|check original price                                             |
-|open          |http://www.funda.nl                                              |
-|enter         |@{address}, @{city}|as                        |Locatie           |
-|select        |€ 1.000.000        |for                       |Prijsklasse       |
-|select        |€ 2.000.000        |for                       |tot               |
-|click         |Zoeken                                                           |
-|click         |@{address}                                                       |
-|click         |Kenmerken                                                        |
-|check         |value of           |Vraagprijs                |@{price}          |
-|check         |value of           |Oorspronkelijke vraagprijs|@{originalPrice}  |
-|check         |value of           |Inhoud                    |@{volume}         |
-|check         |value of           |woonoppervlakte           |@{squareMeters} m²|
-|check         |value of           |Bouwjaar                  |@{yearBuilt}      |
+|table template |check original price                                  |
+|open           |http://www.funda.nl                                   |
+|enter          |@{address}, @{city}|as             |Locatie           |
+|select         |€ 1.000.000        |for            |Prijsklasse       |
+|select         |€ 2.000.000        |for            |tot               |
+|click          |Zoeken                                                |
+|click          |@{address}                                            |
+|click          |Kenmerken                                             |
+|$price=        |value of           |Vraagprijs                        |
+|$originalPrice=|value of           |Oorspronkelijke vraagprijs        |
+|$volume=       |value of           |Inhoud                            |
+|check          |value of           |woonoppervlakte|@{squareMeters} m²|
+|$yearBuilt=    |value of           |Bouwjaar                          |
 
 
 |script|browser test|
 
 |check original price                                                                        |
-|address         |city   |price           |original price  |square meters|year built|volume  |
+|address         |city   |price?          |originalPrice?  |square meters|yearBuilt?|volume? |
 |Maliebaan 50 A  |Utrecht|€ 1.295.000 k.k.|€ 1.395.000 k.k.|300          |1930      |900 m³  |
 |Wilhelminapark 2|Utrecht|€ 1.975.000 k.k.|null            |440          |Voor 1906 |1.300 m³|
 
