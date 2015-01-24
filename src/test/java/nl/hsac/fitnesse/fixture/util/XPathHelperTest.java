@@ -31,7 +31,8 @@ public class XPathHelperTest {
             XPathHelper.getXPath(null, responseString, "\\status");
             fail("expected exception");
         } catch (FitFailureException e) {
-            assertEquals("Unable to evaluate xpath: \\status", e.getMessage());
+            assertEquals("Unable to evaluate xpath: \\status\n" +
+                    "A location path was expected, but the following token was encountered:  \\", e.getMessage());
         }
     }
 
