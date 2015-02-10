@@ -13,7 +13,20 @@ public class TimeoutStopTestException extends StopTestException {
      * @param cause timeout exception thrown by Selenium.
      */
     public TimeoutStopTestException(String message, TimeoutException cause) {
-        super(message, cause);
+        this(true, message, cause);
+    }
+
+    /**
+     * Creates new.
+     * @param stackTraceInWiki whether wiki should include the stack trace of this exception, or just the message
+     * @param message message for exception.
+     * @param cause timeout exception thrown by Selenium.
+     */
+    public TimeoutStopTestException(boolean stackTraceInWiki, String message, TimeoutException cause) {
+        super(stackTraceInWiki
+                    ? message
+                    : String.format("message:<<%s>>", message),
+                cause);
     }
 
     /**
