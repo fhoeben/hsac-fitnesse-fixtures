@@ -13,7 +13,7 @@ public class TimeoutStopTestException extends StopTestException {
      * @param cause timeout exception thrown by Selenium.
      */
     public TimeoutStopTestException(String message, TimeoutException cause) {
-        this(true, message, cause);
+        super(message, cause);
     }
 
     /**
@@ -23,10 +23,7 @@ public class TimeoutStopTestException extends StopTestException {
      * @param cause timeout exception thrown by Selenium.
      */
     public TimeoutStopTestException(boolean stackTraceInWiki, String message, TimeoutException cause) {
-        super(stackTraceInWiki
-                    ? message
-                    : String.format("message:<<%s>>", message),
-                cause);
+        super(stackTraceInWiki, message, cause);
     }
 
     /**
