@@ -859,20 +859,25 @@ public class BrowserTest extends SlimFixture {
         if (screenshotFile == null) {
             throw new RuntimeException("Unable to take screenshot: does the webdriver support it?");
         } else {
-            if (screenshotFile.startsWith(filesDir)) {
-                // make href to screenshot
-                String relativeFile = screenshotFile.substring(filesDir.length());
-                relativeFile = relativeFile.replace('\\', '/');
-                String wikiUrl = "files" + relativeFile;
-                if ("".equals(screenshotHeight)) {
-                    wikiUrl = String.format("<a href=\"%s\">%s</a>",
-                            wikiUrl, screenshotFile);
-                } else {
-                    wikiUrl = String.format("<a href=\"%1$s\"><img src=\"%1$s\" title=\"%2$s\" height=\"%3$s\"></a>",
-                            wikiUrl, screenshotFile, screenshotHeight);
-                }
-                screenshotFile = wikiUrl;
+            screenshotFile = getScreenshotLink(screenshotFile);
+        }
+        return screenshotFile;
+    }
+
+    private String getScreenshotLink(String screenshotFile) {
+        if (screenshotFile.startsWith(filesDir)) {
+            // make href to screenshot
+            String relativeFile = screenshotFile.substring(filesDir.length());
+            relativeFile = relativeFile.replace('\\', '/');
+            String wikiUrl = "files" + relativeFile;
+            if ("".equals(screenshotHeight)) {
+                wikiUrl = String.format("<a href=\"%s\">%s</a>",
+                        wikiUrl, screenshotFile);
+            } else {
+                wikiUrl = String.format("<a href=\"%1$s\"><img src=\"%1$s\" title=\"%2$s\" height=\"%3$s\"/></a>",
+                        wikiUrl, screenshotFile, screenshotHeight);
             }
+            screenshotFile = wikiUrl;
         }
         return screenshotFile;
     }
@@ -922,7 +927,9 @@ public class BrowserTest extends SlimFixture {
             if (screenShotFile == null) {
                 throw new TimeoutStopTestException(e);
             } else {
-                throw new TimeoutStopTestException("Screenshot available at: " + screenShotFile, e);
+                String message = String.format("<div>Timed-out waiting (after %ss). Page content:%s</div>",
+                                        secondsBeforeTimeout(), getScreenshotLink(screenShotFile));
+                throw new TimeoutStopTestException(false, message, e);
             }
         }
     }
