@@ -2,7 +2,16 @@ package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
-import org.openqa.selenium.*;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -869,8 +878,24 @@ public class BrowserTest extends SlimFixture {
     }
 
     private String createScreenshot(String basename) {
-        String name = screenshotBase + basename;
+        String name = getScreenshotBasename(basename);
         return getSeleniumHelper().takeScreenshot(name);
+    }
+
+    private String createScreenshot(String basename, Throwable t) {
+        String screenshotFile;
+        byte[] screenshotInException = getSeleniumHelper().findScreenshot(t);
+        if (screenshotInException == null || screenshotInException.length == 0) {
+            screenshotFile = createScreenshot(basename);
+        } else {
+            String name = getScreenshotBasename(basename);
+            screenshotFile = getSeleniumHelper().writeScreenshot(name, screenshotInException);
+        }
+        return screenshotFile;
+    }
+
+    private String getScreenshotBasename(String basename) {
+        return screenshotBase + basename;
     }
 
     /**
@@ -889,7 +914,7 @@ public class BrowserTest extends SlimFixture {
             // take a screenshot of what was on screen
             String screenShotFile = null;
             try {
-                screenShotFile = createScreenshot("timeouts/" + getClass().getSimpleName() + "/timeout");
+                screenShotFile = createScreenshot("timeouts/" + getClass().getSimpleName() + "/timeout", e);
             } catch (Exception sse) {
                 // unable to take screenshot
                 sse.printStackTrace();

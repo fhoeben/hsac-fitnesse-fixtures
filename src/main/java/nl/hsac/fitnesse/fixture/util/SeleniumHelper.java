@@ -1,8 +1,10 @@
 package nl.hsac.fitnesse.fixture.util;
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.internal.Base64Encoder;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.ScreenshotException;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
@@ -455,7 +457,32 @@ public class SeleniumHelper {
         return result;
     }
 
-    private String writeScreenshot(String baseName, byte[] png) {
+    /**
+     * Finds screenshot embedded in throwable, if any.
+     * @param t exception to search in.
+     * @return content of screenshot (if any is present), null otherwise.
+     */
+    public byte[] findScreenshot(Throwable t) {
+        byte[] result = null;
+        if (t != null) {
+            if (t instanceof ScreenshotException) {
+                String encodedScreenshot = ((ScreenshotException)t).getBase64EncodedScreenshot();
+                result = new Base64Encoder().decode(encodedScreenshot);
+            } else {
+                result = findScreenshot(t.getCause());
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Saves screenshot (as .png).
+     * @param baseName name for file created (without extension),
+     *                 if a file already exists with the supplied name an
+     *                 '_index' will be added.
+     * @return absolute path of file created.
+     */
+    public String writeScreenshot(String baseName, byte[] png) {
         String result;
         File output = determineFilename(baseName);
         FileOutputStream target = null;
