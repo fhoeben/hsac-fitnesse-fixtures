@@ -1,23 +1,21 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
+import nl.hsac.fitnesse.fixture.util.BinaryHttpResponse;
+import nl.hsac.fitnesse.fixture.util.FileUtil;
+import nl.hsac.fitnesse.fixture.util.HttpResponse;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.cookie.BasicClientCookie;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class BrowserTest extends SlimFixture {
@@ -35,6 +33,7 @@ public class BrowserTest extends SlimFixture {
     private final String filesDir = getEnvironment().getFitNesseFilesSectionDir();
     private String screenshotBase = new File(filesDir, "screenshots").getPath() + "/";
     private String screenshotHeight = "200";
+    private String downloadBase = new File(filesDir, "downloads").getPath() + "/";
 
     public BrowserTest() {
         secondsBeforeTimeout(SeleniumHelper.DEFAULT_TIMEOUT_SECONDS);
@@ -865,11 +864,10 @@ public class BrowserTest extends SlimFixture {
     }
 
     private String getScreenshotLink(String screenshotFile) {
-        if (screenshotFile.startsWith(filesDir)) {
+        String wikiUrl = getWikiUrl(screenshotFile);
+        if (wikiUrl != null) {
             // make href to screenshot
-            String relativeFile = screenshotFile.substring(filesDir.length());
-            relativeFile = relativeFile.replace('\\', '/');
-            String wikiUrl = "files" + relativeFile;
+
             if ("".equals(screenshotHeight)) {
                 wikiUrl = String.format("<a href=\"%s\">%s</a>",
                         wikiUrl, screenshotFile);
@@ -880,6 +878,35 @@ public class BrowserTest extends SlimFixture {
             screenshotFile = wikiUrl;
         }
         return screenshotFile;
+    }
+
+    private String getWikiUrl(String filePath) {
+        String wikiUrl = null;
+        if (filePath.startsWith(filesDir)) {
+            String relativeFile = filePath.substring(filesDir.length());
+            relativeFile = relativeFile.replace('\\', '/');
+            wikiUrl = "files" + relativeFile;
+        }
+        return wikiUrl;
+    }
+
+    /**
+     * Gets absolute path from wiki url if it exists.
+     * @param wikiUrl
+     * @return
+     */
+    protected String getFilePathFromWikiUrl(String wikiUrl) {
+        String url = getUrl(wikiUrl);
+        File file;
+        if (url.startsWith("files/")) {
+            String relativeFile = url.substring("files".length());
+            relativeFile = relativeFile.replace('/', File.separatorChar);
+            String pathname = filesDir + relativeFile;
+            file = new File(pathname);
+        } else {
+            file = new File(url);
+        }
+        return file.exists() ? file.getAbsolutePath() : url;
     }
 
     private String createScreenshot(String basename) {
@@ -965,4 +992,88 @@ public class BrowserTest extends SlimFixture {
         int currentBrowserHeight = window.getSize().getHeight();
         window.setSize(new Dimension(newWidth, currentBrowserHeight));
     }
+
+    /**
+     * Downloads binary content from specified url (using the browser's cookies).
+     * @param url url to download from
+     * @return link to downloaded file
+     */
+    public String downloadContentFrom(String url) {
+        String result = null;
+        if (url != null) {
+            result = url;
+            BinaryHttpResponse resp = new BinaryHttpResponse();
+            getUrlContent(url, resp);
+            byte[] content = resp.getResponseContent();
+            if (content == null) {
+                result = resp.getResponse();
+            } else {
+                String fileName = resp.getFileName();
+                String baseName = FilenameUtils.getBaseName(fileName);
+                String ext = FilenameUtils.getExtension(fileName);
+                String downloadedFile = FileUtil.saveToFile(getDownloadName(baseName), ext, content);
+                String wikiUrl = getWikiUrl(downloadedFile);
+                if (wikiUrl != null) {
+                    // make href to file
+                    result = String.format("<a href=\"%s\">%s</a>", wikiUrl, fileName);
+                } else {
+                    result = downloadedFile;
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Selects a file using a file upload control.
+     * @param fileName file to upload
+     * @param place file input to select the file for
+     * @return true, if place was a file input and file existed.
+     */
+    public boolean selectFileFor(String fileName, String place) {
+        boolean result = false;
+        if (fileName != null) {
+            WebElement element = getElement(place);
+            if (element != null) {
+                if ("input".equalsIgnoreCase(element.getTagName())
+                        && "file".equalsIgnoreCase(element.getAttribute("type"))) {
+                    String fullPath = getFilePathFromWikiUrl(fileName);
+                    if (new File(fullPath).exists()) {
+                        element.sendKeys(fullPath);
+                        result = true;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    private String getDownloadName(String baseName) {
+        return downloadBase + baseName;
+    }
+
+    /**
+     * GETs content of specified URL, using the browsers cookies.
+     * @param url url to retrieve content from
+     * @param resp response to store content in
+     */
+    protected void getUrlContent(String url, HttpResponse resp) {
+        Set<Cookie> browserCookies = getSeleniumHelper().getCookies();
+        BasicCookieStore cookieStore = new BasicCookieStore();
+        for (Cookie browserCookie : browserCookies) {
+            BasicClientCookie cookie = convertCookie(browserCookie);
+            cookieStore.addCookie(cookie);
+        }
+        resp.setCookieStore(cookieStore);
+        getEnvironment().doGet(url, resp);
+    }
+
+    private BasicClientCookie convertCookie(Cookie browserCookie) {
+        BasicClientCookie cookie = new BasicClientCookie(browserCookie.getName(), browserCookie.getValue());
+        cookie.setDomain(browserCookie.getDomain());
+        cookie.setPath(browserCookie.getPath());
+        cookie.setExpiryDate(browserCookie.getExpiry());
+        return cookie;
+    }
+
 }
