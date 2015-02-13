@@ -7,12 +7,10 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.ScreenshotException;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -148,8 +146,8 @@ public class SeleniumHelper {
      */
     public WebElement getElementByStartLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText, index,
-                                    "//label[starts-with(normalize-space(text()), '%s')]",
-                                    "|");
+                "//label[starts-with(normalize-space(text()), '%s')]",
+                "|");
     }
 
     /**
@@ -483,46 +481,7 @@ public class SeleniumHelper {
      * @return absolute path of file created.
      */
     public String writeScreenshot(String baseName, byte[] png) {
-        String result;
-        File output = determineFilename(baseName);
-        FileOutputStream target = null;
-        try {
-            target = new FileOutputStream(output);
-            target.write(png);
-            result = output.getAbsolutePath();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (target != null) {
-                try {
-                    target.close();
-                } catch (IOException ex) {
-                    // what to to?
-                }
-            }
-        }
-        return result;
-    }
-
-    private File determineFilename(String baseName) {
-        File output = new File(baseName + ".png");
-        // ensure directory exists
-        File parent = output.getAbsoluteFile().getParentFile();
-        if (!parent.exists()) {
-            if (!parent.mkdirs()) {
-                throw new IllegalArgumentException(
-                        "Unable to create directory: "
-                                + parent.getAbsolutePath());
-            }
-        }
-        int i = 0;
-        // determine first filename not yet in use.
-        while (output.exists()) {
-            i++;
-            String name = String.format(baseName + "_%s.png", i);
-            output = new File(name);
-        }
-        return output;
+        return FileUtil.saveToFile(baseName, "png", png);
     }
 
     public int getCurrentTabIndex(List<String> tabHandles) {
@@ -540,6 +499,13 @@ public class SeleniumHelper {
 
     public List<String> getTabHandles() {
         return new ArrayList<String>(driver().getWindowHandles());
+    }
+
+    /**
+     * @return current browser's cookies.
+     */
+    public Set<Cookie> getCookies() {
+        return driver().manage().getCookies();
     }
 
     public void setDriverFactory(DriverFactory aFactory) {

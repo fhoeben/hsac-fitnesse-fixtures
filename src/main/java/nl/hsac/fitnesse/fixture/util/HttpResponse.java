@@ -1,7 +1,9 @@
 package nl.hsac.fitnesse.fixture.util;
 
 import org.apache.http.HttpStatus;
+import org.apache.http.client.CookieStore;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -11,9 +13,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class HttpResponse {
     private final static Map<String, HttpResponse> INSTANCES = new ConcurrentHashMap<String, HttpResponse>();
 
+    private Map<String, String> responseHeaders = new HashMap<String, String>();
     private String request;
     protected String response;
     private int statusCode;
+    private CookieStore cookieStore;
 
     /**
      * @throws RuntimeException if no valid response is available
@@ -67,6 +71,28 @@ public class HttpResponse {
      */
     public void setStatusCode(int aStatusCode) {
         statusCode = aStatusCode;
+    }
+
+    /**
+     * @return headers in response.
+     */
+    public Map<String, String> getResponseHeaders() {
+        return responseHeaders;
+    }
+
+    /**
+     * @return cookie store for this request/response
+     */
+    public CookieStore getCookieStore() {
+        return cookieStore;
+    }
+
+    /**
+     * Sets cookie store to use for this request response
+     * @param cookieStore cookie store for this request/response
+     */
+    public void setCookieStore(CookieStore cookieStore) {
+        this.cookieStore = cookieStore;
     }
 
     @Override

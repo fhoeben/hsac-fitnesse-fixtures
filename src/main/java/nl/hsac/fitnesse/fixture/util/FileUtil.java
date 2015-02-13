@@ -1,12 +1,6 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 
 /**
  * File utilities.
@@ -116,5 +110,57 @@ public final class FileUtil {
             }
         }
         return new File(filename);
+    }
+
+    /**
+     * Saves byte[] to new file.
+     * @param baseName name for file created (without extension),
+     *                 if a file already exists with the supplied name an
+     *                 '_index' will be added.
+     * @param extension extension for file.
+     * @param content data to store in file.
+     * @return absolute path of created file.
+     */
+    public static String saveToFile(String baseName, String extension, byte[] content) {
+        String result;
+        File output = determineFilename(baseName, extension);
+        FileOutputStream target = null;
+        try {
+            target = new FileOutputStream(output);
+            target.write(content);
+            result = output.getAbsolutePath();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (target != null) {
+                try {
+                    target.close();
+                } catch (IOException ex) {
+                    // what to to?
+                }
+            }
+        }
+        return result;
+    }
+
+    private static File determineFilename(String baseName, String extension) {
+        File output = new File(baseName + "." + extension);
+        // ensure directory exists
+        File parent = output.getAbsoluteFile().getParentFile();
+        if (!parent.exists()) {
+            if (!parent.mkdirs()) {
+                throw new IllegalArgumentException(
+                        "Unable to create directory: "
+                                + parent.getAbsolutePath());
+            }
+        }
+        int i = 0;
+        // determine first filename not yet in use.
+        while (output.exists()) {
+            i++;
+            String name = String.format("%s_%s.%s", baseName, i, extension);
+            output = new File(name);
+        }
+        return output;
     }
 }
