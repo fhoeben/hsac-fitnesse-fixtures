@@ -1,7 +1,11 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import org.apache.commons.io.FilenameUtils;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class BinaryHttpResponse extends HttpResponse {
     private byte[] responseContent;
@@ -16,6 +20,16 @@ public class BinaryHttpResponse extends HttpResponse {
     }
 
     public String getFileName() {
+        if (fileName == null) {
+            try {
+                String reqUrl = getRequest();
+                URL url = new URL(reqUrl);
+                String path = url.getPath();
+                fileName = FilenameUtils.getName(path);
+            } catch (MalformedURLException e) {
+                // ignore
+            }
+        }
         return fileName;
     }
 

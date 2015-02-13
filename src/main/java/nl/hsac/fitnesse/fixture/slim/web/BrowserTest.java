@@ -994,6 +994,45 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
+     * Downloads the target of the supplied link.
+     * @param place link to follow.
+     * @return downloaded file if any, null otherwise.
+     */
+    public String download(String place) {
+        By selector = By.linkText(place);
+        WebElement element = getSeleniumHelper().findElement(selector);
+        if (element == null) {
+            selector = By.partialLinkText(place);
+            element = getSeleniumHelper().findElement(selector);
+            if (element == null) {
+                selector = By.id(place);
+                element = getSeleniumHelper().findElement(selector);
+                if (element == null) {
+                    selector = By.name(place);
+                    element = getSeleniumHelper().findElement(selector);
+                }
+            }
+        }
+        return downloadLinkTarget(element);
+    }
+
+    /**
+     * Downloads the target of the supplied link.
+     * @param element link to follow.
+     * @return downloaded file if any, null otherwise.
+     */
+    protected String downloadLinkTarget(WebElement element) {
+        String result = null;
+        if (element != null) {
+            String href = element.getAttribute("href");
+            if (href != null) {
+                result = downloadContentFrom(href);
+            }
+        }
+        return result;
+    }
+
+    /**
      * Downloads binary content from specified url (using the browser's cookies).
      * @param urlOrLink url to download from
      * @return link to downloaded file
