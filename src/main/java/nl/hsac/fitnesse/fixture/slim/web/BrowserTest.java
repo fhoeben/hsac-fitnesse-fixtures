@@ -995,13 +995,13 @@ public class BrowserTest extends SlimFixture {
 
     /**
      * Downloads binary content from specified url (using the browser's cookies).
-     * @param url url to download from
+     * @param urlOrLink url to download from
      * @return link to downloaded file
      */
-    public String downloadContentFrom(String url) {
+    public String downloadContentFrom(String urlOrLink) {
         String result = null;
-        if (url != null) {
-            result = url;
+        if (urlOrLink != null) {
+            String url = getUrl(urlOrLink);
             BinaryHttpResponse resp = new BinaryHttpResponse();
             getUrlContent(url, resp);
             byte[] content = resp.getResponseContent();
