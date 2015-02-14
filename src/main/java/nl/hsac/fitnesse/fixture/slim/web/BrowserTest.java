@@ -857,7 +857,7 @@ public class BrowserTest extends SlimFixture {
     public String takeScreenshot(String basename) {
         String screenshotFile = createScreenshot(basename);
         if (screenshotFile == null) {
-            throw new RuntimeException("Unable to take screenshot: does the webdriver support it?");
+            throw new SlimFixtureException(false, "Unable to take screenshot: does the webdriver support it?");
         } else {
             screenshotFile = getScreenshotLink(screenshotFile);
         }
