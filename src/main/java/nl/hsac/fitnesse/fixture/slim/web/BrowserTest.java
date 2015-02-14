@@ -31,7 +31,6 @@ public class BrowserTest extends SlimFixture {
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
     private int secondsBeforeTimeout;
     private int waitAfterScroll = 0;
-    private final String filesDir = getEnvironment().getFitNesseFilesSectionDir();
     private String screenshotBase = new File(filesDir, "screenshots").getPath() + "/";
     private String screenshotHeight = "200";
     private String downloadBase = new File(filesDir, "downloads").getPath() + "/";
@@ -879,35 +878,6 @@ public class BrowserTest extends SlimFixture {
             screenshotFile = wikiUrl;
         }
         return screenshotFile;
-    }
-
-    private String getWikiUrl(String filePath) {
-        String wikiUrl = null;
-        if (filePath.startsWith(filesDir)) {
-            String relativeFile = filePath.substring(filesDir.length());
-            relativeFile = relativeFile.replace('\\', '/');
-            wikiUrl = "files" + relativeFile;
-        }
-        return wikiUrl;
-    }
-
-    /**
-     * Gets absolute path from wiki url if it exists.
-     * @param wikiUrl
-     * @return
-     */
-    protected String getFilePathFromWikiUrl(String wikiUrl) {
-        String url = getUrl(wikiUrl);
-        File file;
-        if (url.startsWith("files/")) {
-            String relativeFile = url.substring("files".length());
-            relativeFile = relativeFile.replace('/', File.separatorChar);
-            String pathname = filesDir + relativeFile;
-            file = new File(pathname);
-        } else {
-            file = new File(url);
-        }
-        return file.exists() ? file.getAbsolutePath() : url;
     }
 
     private String createScreenshot(String basename) {

@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.fixture.slim;
 
 import nl.hsac.fitnesse.fixture.Environment;
 
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,6 +12,7 @@ import java.util.regex.Pattern;
 public class SlimFixture {
     private static final Pattern PATTERN = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>(.*)", Pattern.CASE_INSENSITIVE);
     private Environment environment = Environment.getInstance();
+    protected final String filesDir = getEnvironment().getFitNesseFilesSectionDir();
 
     /**
      * @return environment to be used.
@@ -75,4 +77,39 @@ public class SlimFixture {
         }
         return result;
     }
+
+    /**
+     * Converts a file path into a relative wiki path, if the path is insides the wiki's 'files' section.
+     * @param filePath path to file.
+     * @return relative URL pointing to the file (so a hyperlink to it can be created).
+     */
+    protected String getWikiUrl(String filePath) {
+        String wikiUrl = null;
+        if (filePath.startsWith(filesDir)) {
+            String relativeFile = filePath.substring(filesDir.length());
+            relativeFile = relativeFile.replace('\\', '/');
+            wikiUrl = "files" + relativeFile;
+        }
+        return wikiUrl;
+    }
+
+    /**
+     * Gets absolute path from wiki url, if file exists.
+     * @param wikiUrl a relative path that can be used in wiki page, or any file path.
+     * @return absolute path to the target of the url, if such a file exists; null if the target does not exist.
+     */
+    protected String getFilePathFromWikiUrl(String wikiUrl) {
+        String url = getUrl(wikiUrl);
+        File file;
+        if (url.startsWith("files/")) {
+            String relativeFile = url.substring("files".length());
+            relativeFile = relativeFile.replace('/', File.separatorChar);
+            String pathname = filesDir + relativeFile;
+            file = new File(pathname);
+        } else {
+            file = new File(url);
+        }
+        return file.exists() ? file.getAbsolutePath() : url;
+    }
+
 }
