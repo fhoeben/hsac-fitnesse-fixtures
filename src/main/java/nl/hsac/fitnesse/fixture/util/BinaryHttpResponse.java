@@ -64,6 +64,12 @@ public class BinaryHttpResponse extends HttpResponse {
 
     @Override
     public String toString() {
-        return getClass().getName() + ": " + getRequest();
+        String result;
+        if (getFileName() != null && responseContent != null) {
+            result = getFileName() + ": " + responseContent.length + " bytes";
+        } else {
+            result = getClass().getName() + ": " + getRequest();
+        }
+        return result;
     }
 }
