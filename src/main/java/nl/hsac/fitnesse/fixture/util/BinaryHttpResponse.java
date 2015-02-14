@@ -1,8 +1,7 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FilenameUtils;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -41,7 +40,7 @@ public class BinaryHttpResponse extends HttpResponse {
     public String getResponse() {
         String result = null;
         if (responseContent != null) {
-            result = new BASE64Encoder().encode(responseContent);
+            result = new Base64().encodeToString(responseContent);
         } else {
             result = super.getResponse();
         }
@@ -52,7 +51,7 @@ public class BinaryHttpResponse extends HttpResponse {
     public void setResponse(String aResponse) {
         if (aResponse != null) {
             try {
-                byte[] content = new BASE64Decoder().decodeBuffer(aResponse);
+                byte[] content = new Base64().decode(aResponse);
                 responseContent = content;
             } catch (Exception e) {
                 responseContent = null;
