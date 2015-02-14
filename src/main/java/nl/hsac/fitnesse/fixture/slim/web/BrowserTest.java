@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
+import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import nl.hsac.fitnesse.fixture.util.BinaryHttpResponse;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
@@ -1013,6 +1014,9 @@ public class BrowserTest extends SlimFixture {
                 }
             }
         }
+        if (element == null) {
+            throw new SlimFixtureException(false, "Unable to determine what to download for: " + place);
+        }
         return downloadLinkTarget(element);
     }
 
@@ -1027,6 +1031,8 @@ public class BrowserTest extends SlimFixture {
             String href = element.getAttribute("href");
             if (href != null) {
                 result = downloadContentFrom(href);
+            } else {
+                throw new SlimFixtureException(false, "Could not determine url to download from");
             }
         }
         return result;
@@ -1080,6 +1086,8 @@ public class BrowserTest extends SlimFixture {
                     if (new File(fullPath).exists()) {
                         element.sendKeys(fullPath);
                         result = true;
+                    } else {
+                        throw new SlimFixtureException(false, "Unable to find file: " + fullPath);
                     }
                 }
             }
