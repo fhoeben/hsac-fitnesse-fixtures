@@ -10,8 +10,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.*;
 import org.openqa.selenium.safari.SafariDriver;
 
 import java.io.File;
@@ -245,6 +244,10 @@ public class SeleniumDriverSetup extends SlimFixture {
         String cleanUrl = cleanupValue(url);
         URL remoteUrl = new URL(cleanUrl);
         RemoteWebDriver remoteWebDriver = new RemoteWebDriver(remoteUrl, desiredCapabilities);
+        FileDetector fd = remoteWebDriver.getFileDetector();
+        if (fd == null || fd instanceof UselessFileDetector) {
+            remoteWebDriver.setFileDetector(new LocalFileDetector());
+        }
         setDriver(remoteWebDriver);
         getEnvironment().setSymbol(REMOTE_URL_KEY, cleanUrl);
         return true;
