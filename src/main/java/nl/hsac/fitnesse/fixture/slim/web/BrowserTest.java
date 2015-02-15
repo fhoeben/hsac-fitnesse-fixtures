@@ -44,21 +44,22 @@ public class BrowserTest extends SlimFixture {
         final String url = getUrl(address);
         try {
             getNavigation().to(url);
-            waitUntil(new ExpectedCondition<Boolean>() {
-                @Override
-                public Boolean apply(WebDriver webDriver) {
-                    String readyState = getSeleniumHelper().executeJavascript("return document.readyState").toString();
-                    // IE 7 is reported to return "loaded"
-                    boolean done = "complete".equalsIgnoreCase(readyState) || "loaded".equalsIgnoreCase(readyState);
-                    if (!done) {
-                        System.err.printf("Open of %s returned while document.readyState was %s", url, readyState);
-                    }
-                    return done;
-                }
-            });
         } catch (TimeoutException e) {
-            throw new TimeoutStopTestException("Unable to go to: " + url, e);
+            handleTimeoutException(null, e);
         }
+        final StringBuffer sb = new StringBuffer();
+        waitUntil(sb, new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                String readyState = getSeleniumHelper().executeJavascript("return document.readyState").toString();
+                // IE 7 is reported to return "loaded"
+                boolean done = "complete".equalsIgnoreCase(readyState) || "loaded".equalsIgnoreCase(readyState);
+                if (!done) {
+                    sb.append(String.format("Open of %s returned while document.readyState was %s", url, readyState));
+                }
+                return done;
+            }
+        });
         return true;
     }
 
@@ -910,26 +911,46 @@ public class BrowserTest extends SlimFixture {
      * @return result of condition.
      */
     protected <T> T waitUntil(ExpectedCondition<T> condition) {
+        return waitUntil(null, condition);
+    }
+
+    /**
+     * Implementations should wait until the condition evaluates to a value that is neither null nor
+     * false. Because of this contract, the return type must not be Void.
+     * @param <T> the return type of the method, which must not be Void.
+     * @param description description of what is being waited for.
+     * @param condition condition to evaluate to determine whether waiting can be stopped.
+     * @throws org.openqa.selenium.TimeoutException if condition was not met before secondsBeforeTimeout.
+     * @return result of condition.
+     */
+    protected <T> T waitUntil(StringBuffer description, ExpectedCondition<T> condition) {
         try {
             FluentWait<WebDriver> wait = waitDriver().withTimeout(secondsBeforeTimeout(), TimeUnit.SECONDS);
             return wait.until(condition);
         } catch (TimeoutException e) {
-            // take a screenshot of what was on screen
-            String screenShotFile = null;
-            try {
-                screenShotFile = createScreenshot("timeouts/" + getClass().getSimpleName() + "/timeout", e);
-            } catch (Exception sse) {
-                // unable to take screenshot
-                sse.printStackTrace();
-            }
-            if (screenShotFile == null) {
-                throw new TimeoutStopTestException(e);
-            } else {
-                String message = String.format("<div>Timed-out waiting (after %ss). Page content:%s</div>",
-                                        secondsBeforeTimeout(), getScreenshotLink(screenShotFile));
-                throw new TimeoutStopTestException(false, message, e);
-            }
+            return handleTimeoutException(description, e);
         }
+    }
+
+    private <T> T handleTimeoutException(StringBuffer description, TimeoutException e) {
+        // take a screenshot of what was on screen
+        String screenShotFile = null;
+        try {
+            screenShotFile = createScreenshot("timeouts/" + getClass().getSimpleName() + "/timeout", e);
+        } catch (Exception sse) {
+            // unable to take screenshot
+            sse.printStackTrace();
+        }
+        String message;
+        if (screenShotFile == null) {
+            message = String.format("%sTimed-out waiting (after %ss).",
+                                    secondsBeforeTimeout());
+        } else {
+            message = String.format("<div>%sTimed-out waiting (after %ss). Page content:%s</div>",
+                                    description == null ? "" : description.toString(),
+                                    secondsBeforeTimeout(), getScreenshotLink(screenShotFile));
+        }
+        throw new TimeoutStopTestException(false, message, e);
     }
 
     private WebDriverWait waitDriver() {
