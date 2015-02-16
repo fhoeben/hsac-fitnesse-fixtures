@@ -657,6 +657,50 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
+     * Downloads the target of a link in a grid's row.
+     * @param place which link to download.
+     * @param rowNumber (1-based) row number to retrieve link from.
+     * @return downloaded file if any, null otherwise.
+     */
+    public String downloadFromRowNumber(String place, int rowNumber) {
+        String columnXPath = String.format("(//tr[boolean(td)])[%s]/td", rowNumber);
+        return downloadFromRow(columnXPath, place);
+    }
+
+    /**
+     * Downloads the target of a link in a grid, finding the row based on one of the other columns' value.
+     * @param place which link to download.
+     * @param selectOnColumn column header of cell whose value must be selectOnValue.
+     * @param selectOnValue value to be present in selectOnColumn to find correct row.
+     * @return downloaded file if any, null otherwise.
+     */
+    public String downloadFromRowWhereIs(String place, String selectOnColumn, String selectOnValue) {
+        String columnXPath = getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue);
+        return downloadFromRow(columnXPath, place);
+    }
+
+    protected String downloadFromRow(String columnXPath, String place) {
+        String result = null;
+        // find an a to download from based on its text()
+        WebElement element = findByXPath("%s//a[contains(normalize-space(text()),'%s')]", columnXPath, place);
+        if (element == null) {
+            // find an a to download based on its column header
+            String requestedIndex = getXPathForColumnIndex(place);
+            element = findByXPath("%s[%s]//a", columnXPath, requestedIndex);
+            if (element == null) {
+                // find an a to download in the row by its title (aka tooltip)
+                element = findByXPath("%s//a[contains(@title, '%s')]", columnXPath, place);
+            }
+        }
+        if (element == null) {
+            throw new SlimFixtureException(false, "Unable to find link: " + place);
+        } else {
+            result = downloadLinkTarget(element);
+        }
+        return result;
+    }
+
+    /**
      * Creates an XPath expression that will find a cell in a row, selecting the row based on the
      * text in a specific column (identified by its header text).
      * @param columnName header text of the column to find value in.
