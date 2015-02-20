@@ -88,7 +88,7 @@ public class SeleniumHelper {
             element = findElement(byCss("input[value='%s']", place));
         }
         if (element == null) {
-            element = findElement(byXpath("//button[normalize-space(text())='%s']", place));
+            element = findElement(byXpath("//button[normalize-space(descendant-or-self::text())='%s']", place));
         }
         if (element == null) {
             element = findElement(By.linkText(place));
@@ -97,7 +97,7 @@ public class SeleniumHelper {
             element = findElement(byCss("textarea[placeholder='%s']", place));
         }
         if (element == null) {
-            element = findElement(byXpath("//th[normalize-space(text())='%s']/../td ", place));
+            element = findElement(byXpath("//th[normalize-space(descendant-or-self::text())='%s']/../td ", place));
         }
         if (element == null) {
             element = findElement(By.name(place));
@@ -121,7 +121,7 @@ public class SeleniumHelper {
             element = findElement(byCss("textarea[placeholder~='%s']", place));
         }
         if (element == null) {
-            element = findElement(byXpath("//th[contains(normalize-space(text()), '%s')]/../td ", place));
+            element = findElement(byXpath("//th[contains(normalize-space(descendant-or-self::text()), '%s')]/../td ", place));
         }
         return element;
     }
@@ -134,7 +134,7 @@ public class SeleniumHelper {
      */
     public WebElement getElementByLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText, index,
-                                    "//label[normalize-space(text())='%s']",
+                                    "//label[normalize-space(descendant-or-self::text())='%s']",
                                     "");
     }
 
@@ -146,7 +146,7 @@ public class SeleniumHelper {
      */
     public WebElement getElementByStartLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText, index,
-                "//label[starts-with(normalize-space(text()), '%s')]",
+                "//label[starts-with(normalize-space(descendant-or-self::text()), '%s')]",
                 "|");
     }
 
@@ -158,7 +158,7 @@ public class SeleniumHelper {
      */
     public WebElement getElementByPartialLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText, index,
-                "//label[contains(normalize-space(text()), '%s')]",
+                "//label[contains(normalize-space(descendant-or-self::text()), '%s')]",
                 "~");
     }
 
