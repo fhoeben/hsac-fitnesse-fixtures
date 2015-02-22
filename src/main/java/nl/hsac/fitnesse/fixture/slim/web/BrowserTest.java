@@ -227,12 +227,13 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected boolean waitUntilInteractable(final WebElement element) {
-        return waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver webDriver) {
-                return element != null && element.isDisplayed() && element.isEnabled();
-            }
-        });
+        return element != null
+                && waitUntil(new ExpectedCondition<Boolean>() {
+                    @Override
+                    public Boolean apply(WebDriver webDriver) {
+                        return element.isDisplayed() && element.isEnabled();
+                    }
+                });
     }
 
     /**
