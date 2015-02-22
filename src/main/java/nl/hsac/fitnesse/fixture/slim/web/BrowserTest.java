@@ -45,6 +45,7 @@ public class BrowserTest extends SlimFixture {
         final String url = getUrl(address);
         try {
             getNavigation().to(url);
+            waitForAngularRequestsToFinish();
         } catch (TimeoutException e) {
             handleTimeoutException(e);
         }
@@ -1131,4 +1132,9 @@ public class BrowserTest extends SlimFixture {
         return cookie;
     }
 
+    public void waitForAngularRequestsToFinish() {
+        getSeleniumHelper().setScriptWait(10000);
+        ((JavascriptExecutor)getSeleniumHelper().driver()).executeAsyncScript("var callback = arguments[arguments.length - 1];" +
+                "angular.element(document.body).injector().get('$browser').notifyWhenNoOutstandingRequests(callback);");
+    }
 }
