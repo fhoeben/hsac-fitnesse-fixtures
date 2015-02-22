@@ -290,6 +290,14 @@ public class SeleniumHelper {
     }
 
     /**
+     * Sets how long to wait when executing asynchronous script calls.
+     * @param scriptTimeout time in milliseconds to wait.
+     */
+    public void setScriptWait(int scriptTimeout) {
+        driver().manage().timeouts().setScriptTimeout(scriptTimeout, TimeUnit.MILLISECONDS);
+    }
+
+    /**
      * Sets how long to wait on opening a page.
      * @param pageLoadWait time in milliseconds to wait.
      */
