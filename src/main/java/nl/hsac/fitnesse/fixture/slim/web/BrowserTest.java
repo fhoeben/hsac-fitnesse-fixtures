@@ -60,7 +60,6 @@ public class BrowserTest extends SlimFixture {
                 return done;
             }
         });
-        waitForAngularRequestsToFinish();
         return true;
     }
 
@@ -1131,10 +1130,6 @@ public class BrowserTest extends SlimFixture {
         cookie.setPath(browserCookie.getPath());
         cookie.setExpiryDate(browserCookie.getExpiry());
         return cookie;
-    }
-
-    public void waitForAngularRequestsToFinish() {
-        waitForJavascriptCallback("angular.element(document.body).injector().get('$browser').notifyWhenNoOutstandingRequests(callback);");
     }
 
     protected Object waitForJavascriptCallback(String statement) {
