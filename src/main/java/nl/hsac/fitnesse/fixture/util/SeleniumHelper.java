@@ -85,7 +85,7 @@ public class SeleniumHelper {
             element = findElement(byCss("input[placeholder='%s']", place));
         }
         if (element == null) {
-            element = findElement(byCss("input[value='%s']", place));
+            element = findElement(byCss("input[value='%s']:not([type='hidden'])", place));
         }
         if (element == null) {
             element = findElement(byXpath("//button[normalize-space(descendant-or-self::text())='%s']", place));
@@ -112,7 +112,7 @@ public class SeleniumHelper {
             element = findElement(byCss("input[placeholder~='%s']", place));
         }
         if (element == null) {
-            element = findElement(byCss("input[value~='%s']", place));
+            element = findElement(byCss("input[value~='%s']:not([type='hidden'])", place));
         }
         if (element == null) {
             element = findElement(By.partialLinkText(place));
