@@ -1134,7 +1134,8 @@ public class BrowserTest extends SlimFixture {
 
     public void waitForAngularRequestsToFinish() {
         getSeleniumHelper().setScriptWait(10000);
-        ((JavascriptExecutor)getSeleniumHelper().driver()).executeAsyncScript("var callback = arguments[arguments.length - 1];" +
+        getSeleniumHelper()
+                .waitForJavascriptCallback(
                 "angular.element(document.body).injector().get('$browser').notifyWhenNoOutstandingRequests(callback);");
     }
 }
