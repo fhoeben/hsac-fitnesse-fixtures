@@ -97,7 +97,7 @@ public class SeleniumHelper {
             element = findElement(byCss("textarea[placeholder='%s']", place));
         }
         if (element == null) {
-            element = findElement(byXpath("//th[normalize-space(descendant-or-self::text())='%s']/../td ", place));
+            element = findElement(byXpath("//th/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::th/../td ", place));
         }
         if (element == null) {
             element = findElement(By.name(place));
@@ -121,7 +121,7 @@ public class SeleniumHelper {
             element = findElement(byCss("textarea[placeholder~='%s']", place));
         }
         if (element == null) {
-            element = findElement(byXpath("//th[contains(normalize-space(descendant-or-self::text()), '%s')]/../td ", place));
+            element = findElement(byXpath("//th/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::th/../td ", place));
         }
         return element;
     }
