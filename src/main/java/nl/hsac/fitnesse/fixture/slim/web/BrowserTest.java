@@ -12,6 +12,7 @@ import org.apache.http.impl.cookie.BasicClientCookie;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
@@ -359,31 +360,16 @@ public class BrowserTest extends SlimFixture {
         WebElement element = getElement(selectPlace);
         if (element != null) {
             if (isSelect(element)) {
-                String attrToUse = "id";
-                String attrValue = element.getAttribute(attrToUse);
-                if (attrValue == null || attrValue.isEmpty()) {
-                    attrToUse = "name";
-                    attrValue = element.getAttribute(attrToUse);
+                By xpath = getSeleniumHelper().byXpath(".//option[normalize-space(text()) = '%s']", optionValue);
+                WebElement option = getSeleniumHelper().findElement(element, true, xpath);
+                if (option == null) {
+                    xpath = getSeleniumHelper().byXpath(".//option[contains(normalize-space(text()), '%s')]", optionValue);
+                    option = getSeleniumHelper().findElement(element, true, xpath);
                 }
-
-                if (attrValue != null && !attrValue.isEmpty()) {
-                    String xpathToOptions = "//select[@" + attrToUse + "='%s']//option";
-                    result = clickOption(attrValue, xpathToOptions + "[text()='%s']", optionValue);
-                    if (!result) {
-                        result = clickOption(attrValue, xpathToOptions + "[contains(text(), '%s')]", optionValue);
-                    }
+                if (option != null) {
+                    result = clickElement(option);
                 }
             }
-        }
-        return result;
-    }
-
-    private boolean clickOption(String selectId, String optionXPath, String optionValue) {
-        boolean result = false;
-        By optionWithText = getSeleniumHelper().byXpath(optionXPath, selectId, optionValue);
-        WebElement option = getSeleniumHelper().findElement(true, optionWithText);
-        if (option != null) {
-            result = clickElement(option);
         }
         return result;
     }
@@ -561,10 +547,11 @@ public class BrowserTest extends SlimFixture {
         WebElement element = getElement(place);
         if (element != null) {
             if (isSelect(element)) {
-                String id = element.getAttribute("id");
-                By selectedOption = getSeleniumHelper().byXpath("//select[@id='%s']//option[@selected]", id);
-                WebElement option = getSeleniumHelper().findElement(true, selectedOption);
-                result = getElementText(option);
+                Select s = new Select(element);
+                List<WebElement> options = s.getAllSelectedOptions();
+                if (options.size() > 0) {
+                    result = getElementText(options.get(0));
+                }
             } else {
                 if ("checkbox".equals(element.getAttribute("type"))) {
                     result = String.valueOf("true".equals(element.getAttribute("checked")));
