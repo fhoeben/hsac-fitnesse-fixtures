@@ -88,7 +88,7 @@ public class SeleniumHelper {
             element = findElement(byCss("input[value='%s']:not([type='hidden'])", place));
         }
         if (element == null) {
-            element = findElement(byXpath("//button[normalize-space(descendant-or-self::text())='%s']", place));
+            element = findElement(byXpath("//button/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::button", place));
         }
         if (element == null) {
             element = findElement(By.linkText(place));
