@@ -838,12 +838,13 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
-     * @param timeout number of seconds before waitUntil() throws TimeOutException.
+     * @param timeout number of seconds before waitUntil() and waitForJavascriptCallback() throw TimeOutException.
      */
     public void secondsBeforeTimeout(int timeout) {
         secondsBeforeTimeout = timeout;
         int timeoutInMs = timeout * 1000;
         getSeleniumHelper().setPageLoadWait(timeoutInMs);
+        getSeleniumHelper().setScriptWait(timeoutInMs);
     }
 
     /**
@@ -1131,4 +1132,11 @@ public class BrowserTest extends SlimFixture {
         return cookie;
     }
 
+    protected Object waitForJavascriptCallback(String statement) {
+        try {
+            return getSeleniumHelper().waitForJavascriptCallback(statement);
+        } catch (TimeoutException e) {
+            return handleTimeoutException(e);
+        }
+    }
 }
