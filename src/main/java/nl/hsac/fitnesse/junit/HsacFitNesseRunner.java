@@ -82,6 +82,8 @@ public class HsacFitNesseRunner extends FitNesseRunner {
 
     @Override
     protected FitNesseContext createContext(Class<?> suiteClass) throws Exception {
+        // disable maven-classpath-plugin, we expect all jars to be loaded as part of this jUnit run
+        System.setProperty("fitnesse.wikitext.widgets.MavenClasspathSymbolType.Disable", "true");
         new PluginsClassLoader(getFitNesseDir(suiteClass)).addPluginsToClassLoader();
 
         return super.createContext(suiteClass);
