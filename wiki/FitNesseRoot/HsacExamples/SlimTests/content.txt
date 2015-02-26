@@ -6,3 +6,4 @@ A single integration test (i.e. wiki page) can combine the usage to these fixtur
 Libraries allow a single script table to combine methods defined by multiple fixtures. For instance to have test using a single script that first places an online order using [[a browser][>BrowserTests]] and then checks the order's content in a back-end system with [[a SOAP call][>HttpTests]].   
 
 !define TEST_SYSTEM {slim} 
+!define slim.timeout {300}
