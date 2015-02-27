@@ -1,5 +1,7 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -8,6 +10,15 @@ import java.util.regex.Pattern;
  * Most likely use is as a library to add its methods to the methods available via another fixture in a script table.
  */
 public class StringFixture extends SlimFixture {
+    /**
+     * Returns value.
+     * @param value value to return
+     * @return value
+     */
+    public String valueOf(String value) {
+        return value;
+    }
+
     /**
      * Determines length of string.
      * @param value value to determine length of
@@ -19,6 +30,36 @@ public class StringFixture extends SlimFixture {
             length = value.length();
         }
         return length;
+    }
+
+    /**
+     * <p>Compares two Strings, returning <code>false</code> if they are equal.</p>
+     *
+     * <p><code>null</code>s are handled without exceptions. Two <code>null</code>
+     * references are considered to be equal. The comparison is case sensitive.</p>
+     *
+     * @see org.apache.commons.lang.StringUtils#equals(String, String)
+     * @param value1  the first String, may be null
+     * @param value2  the second String, may be null
+     * @return <code>false</code> if the Strings are equal, or both <code>null</code>
+     */
+    public boolean valueDiffersFrom(String value1, String value2) {
+        return !valueEquals(value1, value2);
+    }
+
+    /**
+     * <p>Compares two Strings, returning <code>true</code> if they are equal.</p>
+     *
+     * <p><code>null</code>s are handled without exceptions. Two <code>null</code>
+     * references are considered to be equal. The comparison is case sensitive.</p>
+     *
+     * @see org.apache.commons.lang.StringUtils#equals(String, String)
+     * @param value1  the first String, may be null
+     * @param value2  the second String, may be null
+     * @return <code>true</code> if the Strings are equal, or both <code>null</code>
+     */
+    public boolean valueEquals(String value1, String value2) {
+        return StringUtils.equals(value1, value2);
     }
 
     /**
