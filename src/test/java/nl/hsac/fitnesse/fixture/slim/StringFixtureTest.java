@@ -17,6 +17,30 @@ public class StringFixtureTest {
     }
 
     @Test
+    public void testValue() {
+        assertEquals("null", null, fixture.valueOf(null));
+        assertEquals("hello", "hello", fixture.valueOf("hello"));
+    }
+
+    @Test
+    public void testValueDiffersFrom() {
+        assertFalse("null - null", fixture.valueDiffersFrom(null, null));
+        assertFalse("hello - hello", fixture.valueDiffersFrom("hello", "hello"));
+        assertTrue("null - hello", fixture.valueDiffersFrom(null, "hello"));
+        assertTrue("hello - null", fixture.valueDiffersFrom("hello", null));
+        assertTrue("hello - hela", fixture.valueDiffersFrom("hello", "hela"));
+    }
+
+    @Test
+    public void testValueEquals() {
+        assertTrue("null - null", fixture.valueEquals(null, null));
+        assertTrue("hello - hello", fixture.valueEquals("hello", "hello"));
+        assertFalse("null - hello", fixture.valueEquals(null, "hello"));
+        assertFalse("hello - null", fixture.valueEquals("hello", null));
+        assertFalse("hello - hela", fixture.valueEquals("hello", "hela"));
+    }
+
+    @Test
     public void testTextContains() {
         assertFalse("null value", fixture.textContains(null, "Hello"));
         assertFalse("bad value", fixture.textContains("World", "Hello"));
