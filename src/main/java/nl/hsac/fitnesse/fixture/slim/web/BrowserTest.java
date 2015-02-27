@@ -356,8 +356,12 @@ public class BrowserTest extends SlimFixture {
     }
 
     private boolean clickSelectOption(String selectPlace, String optionValue) {
-        boolean result = false;
         WebElement element = getElement(selectPlace);
+        return clickSelectOption(element, optionValue);
+    }
+
+    protected boolean clickSelectOption(WebElement element, String optionValue) {
+        boolean result = false;
         if (element != null) {
             if (isSelect(element)) {
                 By xpath = getSeleniumHelper().byXpath(".//option[normalize-space(text()) = '%s']", optionValue);
