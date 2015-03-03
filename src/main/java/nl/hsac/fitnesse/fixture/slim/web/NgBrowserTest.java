@@ -1,5 +1,7 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
+import nl.hsac.fitnesse.fixture.util.NgClientSideScripts;
+
 /**
  * Browser Test targeted to test AngularJs apps.
  */
@@ -14,6 +16,6 @@ public class NgBrowserTest extends BrowserTest {
     }
 
     public void waitForAngularRequestsToFinish() {
-        waitForJavascriptCallback("angular.element(document.body).injector().get('$browser').notifyWhenNoOutstandingRequests(callback);");
+        waitForJavascriptCallback(NgClientSideScripts.WaitForAngular, "body");
     }
 }

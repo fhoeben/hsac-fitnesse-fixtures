@@ -1136,9 +1136,9 @@ public class BrowserTest extends SlimFixture {
         return cookie;
     }
 
-    protected Object waitForJavascriptCallback(String statement) {
+    protected Object waitForJavascriptCallback(String statement, Object... parameters) {
         try {
-            return getSeleniumHelper().waitForJavascriptCallback(statement);
+            return getSeleniumHelper().waitForJavascriptCallback(statement, parameters);
         } catch (TimeoutException e) {
             return handleTimeoutException(e);
         }
