@@ -18,12 +18,14 @@ Inspired by http://anthonychu.ca/post/end-to-end-testing-angular-apps-with-nunit
 |3    |4     |7      |
 
 
-|table template|divide                   |
-|enter         |@{numerator}|as |first   |
-|enter         |@{divisor}  |as |second  |
-|select        |/           |for|operator|
-|click         |Go!                      |
-|$quotient=    |value of    |latest      |
+|table template|divide                            |
+|enter         |@{numerator}|as      |first       |
+|check         |value of    |first   |@{numerator}|
+|enter         |@{divisor}  |as      |second      |
+|select        |/           |for     |operator    |
+|check         |value of    |operator|/           |
+|click         |Go!                               |
+|$quotient=    |value of    |latest               |
 
 |divide                     |
 |numerator|divisor|quotient?|
