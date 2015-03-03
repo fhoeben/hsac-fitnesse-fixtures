@@ -100,7 +100,7 @@ public class NgClientSideScripts {
         "var model = arguments[1];\n" +
         "var prefixes = ['ng-', 'ng_', 'data-ng-', 'x-ng-', 'ng\\\\:'];\n" +
         "for (var p = 0; p < prefixes.length; ++p) {\n" +
-        "    var selector = 'input[' + prefixes[p] + 'model=\"\"' + model + '\"\"]';\n" +
+        "    var selector = 'input[' + prefixes[p] + 'model=\"' + model + '\"]';\n" +
         "    var inputs = using.querySelectorAll(selector);\n" +
         "    if (inputs.length) {\n" +
         "        return inputs;\n" +
@@ -120,7 +120,7 @@ public class NgClientSideScripts {
         "var model = arguments[1];\n" +
         "var prefixes = ['ng-', 'ng_', 'data-ng-', 'x-ng-', 'ng\\\\:'];\n" +
         "for (var p = 0; p < prefixes.length; ++p) {\n" +
-        "    var selector = 'select[' + prefixes[p] + 'model=\"\"' + model + '\"\"]';\n" +
+        "    var selector = 'select[' + prefixes[p] + 'model=\"' + model + '\"]';\n" +
         "    var inputs = using.querySelectorAll(selector);\n" +
         "    if (inputs.length) {\n" +
         "        return inputs;\n" +
@@ -140,7 +140,7 @@ public class NgClientSideScripts {
         "var model = arguments[1];\n" +
         "var prefixes = ['ng-', 'ng_', 'data-ng-', 'x-ng-', 'ng\\\\:'];\n" +
         "for (var p = 0; p < prefixes.length; ++p) {\n" +
-        "    var selector = 'select[' + prefixes[p] + 'model=\"\"' + model + '\"\"] option:checked';\n" +
+        "    var selector = 'select[' + prefixes[p] + 'model=\"' + model + '\"] option:checked';\n" +
         "    var inputs = using.querySelectorAll(selector);\n" +
         "    if (inputs.length) {\n" +
         "        return inputs;\n" +
@@ -160,7 +160,7 @@ public class NgClientSideScripts {
         "var model = arguments[1];\n" +
         "var prefixes = ['ng-', 'ng_', 'data-ng-', 'x-ng-', 'ng\\\\:'];\n" +
         "for (var p = 0; p < prefixes.length; ++p) {\n" +
-        "    var selector = 'textarea[' + prefixes[p] + 'model=\"\"' + model + '\"\"]';\n" +
+        "    var selector = 'textarea[' + prefixes[p] + 'model=\"' + model + '\"]';\n" +
         "    var textareas = using.querySelectorAll(selector);\n" +
         "    if (textareas.length) {\n" +
         "        return textareas;\n" +
