@@ -7,6 +7,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.internal.WrapsDriver;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -37,8 +38,9 @@ public class JavascriptBy extends By {
     public JavascriptBy(String aRootElement, String aScript, Object... parameters) {
         rootElement = aRootElement;
         script = aScript;
-        List<Object> params = Arrays.asList(parameters);
-        params.add(0, rootElement);
+        List<Object> params = new ArrayList<Object>(parameters.length + 1);
+        params.add(rootElement);
+        params.addAll(Arrays.asList(parameters));
         scriptParameters = params.toArray();
     }
 
