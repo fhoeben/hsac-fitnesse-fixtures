@@ -547,8 +547,12 @@ public class BrowserTest extends SlimFixture {
     }
 
     private String valueForImpl(String place) {
-        String result = null;
         WebElement element = getElement(place);
+        return valueFor(element);
+    }
+
+    protected String valueFor(WebElement element) {
+        String result = null;
         if (element != null) {
             if (isSelect(element)) {
                 Select s = new Select(element);
