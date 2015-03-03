@@ -1,0 +1,18 @@
+Sample test on !-AngularJs-! application finding elements based on their Angular binding or model. 
+Inspired by http://anthonychu.ca/post/end-to-end-testing-angular-apps-with-nunit-and-specflow-using-protractornet/
+
+|table template|add                   |
+|enter         |@{first} |as |first   |
+|enter         |@{second}|as |second  |
+|select        |+        |for|operator|
+|click         |Go!                   |
+|$result=      |value of |latest      |
+
+|script|Ng Browser Test                          |
+|open  |http://juliemr.github.io/protractor-demo/|
+
+
+|add                 |
+|first|second|result?|
+|1    |2     |3      |
+|3    |4     |7      |
