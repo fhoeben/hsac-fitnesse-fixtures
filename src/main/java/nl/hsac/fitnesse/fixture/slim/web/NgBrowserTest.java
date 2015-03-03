@@ -70,7 +70,7 @@ public class NgBrowserTest extends BrowserTest {
     public boolean enterAs(String value, String place) {
         boolean result;
         waitForAngularRequestsToFinish();
-        WebElement angularModelInput = findInput(place);
+        WebElement angularModelInput = getAngularElementToEnterIn(place);
         if (angularModelInput == null) {
             result = super.enterAs(value, place);
         } else {
@@ -79,6 +79,14 @@ public class NgBrowserTest extends BrowserTest {
             result = true;
         }
         return result;
+    }
+
+    protected WebElement getAngularElementToEnterIn(String place) {
+        WebElement element = findInput(place);
+        if (element == null) {
+            element = findTextArea(place);
+        }
+        return element;
     }
 
     protected WebElement getAngularElement(String place) {
