@@ -44,7 +44,7 @@ public class NgBrowserTest extends BrowserTest {
     public String valueFor(String place) {
         String result;
         waitForAngularRequestsToFinish();
-        WebElement angularModelBinding = findByJavascript(NgClientSideScripts.FindBindings, place);
+        WebElement angularModelBinding = getAngularElement(place);
         if (angularModelBinding == null) {
             result = super.valueFor(place);
         } else {
@@ -57,7 +57,7 @@ public class NgBrowserTest extends BrowserTest {
     public boolean selectFor(String value, String place) {
         boolean result;
         waitForAngularRequestsToFinish();
-        WebElement angularModelSelect = findByJavascript(NgClientSideScripts.FindSelects, place);
+        WebElement angularModelSelect = findSelect(place);
         if (angularModelSelect == null) {
             result = super.selectFor(value, place);
         } else {
@@ -70,7 +70,7 @@ public class NgBrowserTest extends BrowserTest {
     public boolean enterAs(String value, String place) {
         boolean result;
         waitForAngularRequestsToFinish();
-        WebElement angularModelInput = findByJavascript(NgClientSideScripts.FindInputs, place);
+        WebElement angularModelInput = findInput(place);
         if (angularModelInput == null) {
             result = super.enterAs(value, place);
         } else {
@@ -79,6 +79,36 @@ public class NgBrowserTest extends BrowserTest {
             result = true;
         }
         return result;
+    }
+
+    protected WebElement getAngularElement(String place) {
+        WebElement element = findBinding(place);
+        if (element == null) {
+            element = findInput(place);
+        }
+        if (element == null) {
+            element = findSelect(place);
+        }
+        if (element == null) {
+            element = findTextArea(place);
+        }
+        return element;
+    }
+
+    protected WebElement findBinding(String place) {
+        return findByJavascript(NgClientSideScripts.FindBindings, place);
+    }
+
+    protected WebElement findSelect(String place) {
+        return findByJavascript(NgClientSideScripts.FindSelects, place);
+    }
+
+    protected WebElement findInput(String place) {
+        return findByJavascript(NgClientSideScripts.FindInputs, place);
+    }
+
+    protected WebElement findTextArea(String place) {
+        return findByJavascript(NgClientSideScripts.FindTextArea, place);
     }
 
     protected WebElement findByJavascript(String script, Object... parameters) {
