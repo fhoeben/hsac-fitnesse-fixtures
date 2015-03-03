@@ -16,3 +16,16 @@ Inspired by http://anthonychu.ca/post/end-to-end-testing-angular-apps-with-nunit
 |first|second|result?|
 |1    |2     |3      |
 |3    |4     |7      |
+
+
+|table template|divide                   |
+|enter         |@{numerator}|as |first   |
+|enter         |@{divisor}  |as |second  |
+|select        |/           |for|operator|
+|click         |Go!                      |
+|$quotient=    |value of    |latest      |
+
+|divide                     |
+|numerator|divisor|quotient?|
+|10       |2      |5        |
+|9        |3      |3        |
