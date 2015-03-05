@@ -279,6 +279,10 @@ public class SeleniumHelper {
         return By.xpath(xpath);
     }
 
+    public By byJavascript(String pattern, Object... arguments) {
+        return new JavascriptBy(pattern, arguments);
+    }
+
     /**
      * Fills in placeholders in pattern using the supplied parameters.
      * @param pattern pattern to fill (in String.format style).

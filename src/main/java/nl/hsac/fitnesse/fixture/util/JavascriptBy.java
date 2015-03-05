@@ -7,41 +7,24 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.internal.WrapsDriver;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Selenium By that finds elements by executing Javascript functions.
+ * Selenium By that finds elements by executing a Javascript function.
  */
 public class JavascriptBy extends By {
-    private final String rootElement;
     private final String script;
     private final Object[] scriptParameters;
 
     /**
-     * Creates new, where 'root element' will be <code>null</code>.
+     * Creates new.
      * @param aScript script to find with.
-     * @param parameters additional (after 'root element') arguments to the script.
+     * @param parameters arguments to the script.
      */
     public JavascriptBy(String aScript, Object... parameters) {
-        this(null, aScript, parameters);
-    }
-
-    /**
-     * Creates new.
-     * @param aRootElement first argument to the script.
-     * @param aScript script to find with.
-     * @param parameters additional (after 'root element') arguments to the script.
-     */
-    public JavascriptBy(String aRootElement, String aScript, Object... parameters) {
-        rootElement = aRootElement;
         script = aScript;
-        List<Object> params = new ArrayList<Object>(parameters.length + 1);
-        params.add(rootElement);
-        params.addAll(Arrays.asList(parameters));
-        scriptParameters = params.toArray();
+        scriptParameters = parameters;
     }
 
     @Override
