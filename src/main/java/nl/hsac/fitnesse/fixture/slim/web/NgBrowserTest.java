@@ -1,9 +1,11 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
-import nl.hsac.fitnesse.fixture.util.JavascriptBy;
 import nl.hsac.fitnesse.fixture.util.NgClientSideScripts;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Browser Test targeted to test AngularJs apps.
@@ -104,24 +106,27 @@ public class NgBrowserTest extends BrowserTest {
     }
 
     protected WebElement findBinding(String place) {
-        return findByJavascript(NgClientSideScripts.FindBindings, place);
+        return findNgElementByJavascript(NgClientSideScripts.FindBindings, place);
     }
 
     protected WebElement findSelect(String place) {
-        return findByJavascript(NgClientSideScripts.FindSelects, place);
+        return findNgElementByJavascript(NgClientSideScripts.FindSelects, place);
     }
 
     protected WebElement findInput(String place) {
-        return findByJavascript(NgClientSideScripts.FindInputs, place);
+        return findNgElementByJavascript(NgClientSideScripts.FindInputs, place);
     }
 
     protected WebElement findTextArea(String place) {
-        return findByJavascript(NgClientSideScripts.FindTextArea, place);
+        return findNgElementByJavascript(NgClientSideScripts.FindTextArea, place);
     }
 
-    protected WebElement findByJavascript(String script, Object... parameters) {
-        By by = new JavascriptBy(getAngularRoot(), script, parameters);
-        return getSeleniumHelper().findElement(by);
+    protected WebElement findNgElementByJavascript(String script, Object... parameters) {
+        List<Object> params = new ArrayList<Object>(parameters.length + 1);
+        params.add(getAngularRoot());
+        params.addAll(Arrays.asList(parameters));
+
+        return findByJavascript(script, parameters);
     }
 
     public String getAngularRoot() {

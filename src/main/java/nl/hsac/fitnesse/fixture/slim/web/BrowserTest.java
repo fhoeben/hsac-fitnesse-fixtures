@@ -9,7 +9,17 @@ import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
-import org.openqa.selenium.*;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
@@ -767,13 +777,27 @@ public class BrowserTest extends SlimFixture {
         return getSeleniumHelper().findElement(by);
     }
 
+    protected WebElement findByJavascript(String script, Object... parameters) {
+        By by = getSeleniumHelper().byJavascript(script, parameters);
+        return getSeleniumHelper().findElement(by);
+    }
+
     protected List<WebElement> findAllByXPath(String xpathPattern, String... params) {
         By by = getSeleniumHelper().byXpath(xpathPattern, params);
-        return getSeleniumHelper().driver().findElements(by);
+        return findElements(by);
     }
 
     protected List<WebElement> findAllByCss(String cssPattern, String... params) {
         By by = getSeleniumHelper().byCss(cssPattern, params);
+        return findElements(by);
+    }
+
+    protected List<WebElement> findAllByJavascript(String script, Object... parameters) {
+        By by = getSeleniumHelper().byJavascript(script, parameters);
+        return findElements(by);
+    }
+
+    protected List<WebElement> findElements(By by) {
         return getSeleniumHelper().driver().findElements(by);
     }
 
