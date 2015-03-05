@@ -7,6 +7,7 @@ import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.openqa.selenium.Alert;
@@ -343,8 +344,10 @@ public class BrowserTest extends SlimFixture {
      * @param value cell content.
      */
     protected void sendValue(WebElement element, String value) {
-        String keys = cleanupValue(value);
-        element.sendKeys(keys);
+        if (StringUtils.isNotEmpty(value)) {
+            String keys = cleanupValue(value);
+            element.sendKeys(keys);
+        }
     }
 
     public boolean selectAs(String value, String place) {
