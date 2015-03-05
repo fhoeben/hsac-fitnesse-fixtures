@@ -126,7 +126,7 @@ public class NgBrowserTest extends BrowserTest {
         params.add(getAngularRoot());
         params.addAll(Arrays.asList(parameters));
 
-        return findByJavascript(script, parameters);
+        return findByJavascript(script, params.toArray());
     }
 
     public String getAngularRoot() {
