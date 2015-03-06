@@ -18,9 +18,10 @@ public class NgClientSideScripts {
 
     /**
      * Tests (asynchronously) whether the angular global variable is present on a page.
-     * Retries in case the page is just loading slowly.
+     * Retries (with 1s interval) in case the page is just loading slowly.
      *
-     * arguments[0] {string} none.
+     * arguments[0] {int} number of times to try.
+     * arguments[1] {function} callback
      */
     public final static String TestForAngular =
             "var attempts = arguments[0];\n" +
