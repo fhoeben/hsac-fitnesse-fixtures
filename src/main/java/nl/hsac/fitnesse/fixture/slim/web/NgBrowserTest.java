@@ -154,7 +154,7 @@ public class NgBrowserTest extends BrowserTest {
     }
 
     protected WebElement findBinding(String place) {
-        return findNgElementByJavascript(NgClientSideScripts.FindBindings, place);
+        return findNgElementByJavascript(NgClientSideScripts.FindBindings, place, true, null);
     }
 
     protected WebElement findSelect(String place) {
@@ -170,7 +170,7 @@ public class NgBrowserTest extends BrowserTest {
     }
 
     protected List<WebElement> findRepeaterRows(String repeater) {
-        return findNgElementsByJavascript(NgClientSideScripts.FindAllRepeaterRows, repeater);
+        return findNgElementsByJavascript(NgClientSideScripts.FindAllRepeaterRows, repeater, true);
     }
 
     protected List<WebElement> findNgElementsByJavascript(String script, Object... parameters) {
@@ -185,8 +185,8 @@ public class NgBrowserTest extends BrowserTest {
 
     private Object[] getFindArguments(Object[] parameters) {
         List<Object> params = new ArrayList<Object>(parameters.length + 1);
-        params.add(getAngularRoot());
         params.addAll(Arrays.asList(parameters));
+        params.add(getAngularRoot());
         return params.toArray();
     }
 
