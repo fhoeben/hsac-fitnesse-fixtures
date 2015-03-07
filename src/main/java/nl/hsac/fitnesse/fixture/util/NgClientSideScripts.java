@@ -149,27 +149,7 @@ public class NgClientSideScripts {
                 "  return matches; /* Return the whole array for webdriver.findElements. */\n";
 
     /**
-     * Find input elements by model name.
-     *
-     * arguments[0] {Element} The scope of the search.
-     * arguments[1] {string} The model name.
-     *
-     * @return {Array.WebElement} The matching input elements.
-     */
-    public final static String FindInputs =
-        "var using = arguments[1] || document;\n" +
-        "var model = arguments[0];\n" +
-        "var prefixes = ['ng-', 'ng_', 'data-ng-', 'x-ng-', 'ng\\\\:'];\n" +
-        "for (var p = 0; p < prefixes.length; ++p) {\n" +
-        "    var selector = 'input[' + prefixes[p] + 'model=\"' + model + '\"]';\n" +
-        "    var inputs = using.querySelectorAll(selector);\n" +
-        "    if (inputs.length) {\n" +
-        "        return inputs;\n" +
-        "    }\n" +
-        "}";
-
-    /**
-     * Find multiple select elements by model name.
+     * Find select elements by model name.
      *
      * arguments[0] {Element} The scope of the search.
      * arguments[1] {string} The model name.
@@ -189,44 +169,33 @@ public class NgClientSideScripts {
         "}";
 
     /**
-     * Find selected option elements by model name.
+     * Find elements by model name.
      *
-     * arguments[0] {Element} The scope of the search.
-     * arguments[1] {string} The model name.
+     * @param {string} model The model name.
+     * @param {Element} using The scope of the search.
+     * @param {string} rootSelector The selector to use for the root app element.
      *
-     * @return {Array.WebElement} The matching select elements.
+     * @return {Array.<Element>} The matching elements.
      */
-    public final static String FindSelectedOptions =
+    public final static String FindElements =
         "var using = arguments[1] || document;\n" +
         "var model = arguments[0];\n" +
-        "var prefixes = ['ng-', 'ng_', 'data-ng-', 'x-ng-', 'ng\\\\:'];\n" +
-        "for (var p = 0; p < prefixes.length; ++p) {\n" +
-        "    var selector = 'select[' + prefixes[p] + 'model=\"' + model + '\"] option:checked';\n" +
-        "    var inputs = using.querySelectorAll(selector);\n" +
-        "    if (inputs.length) {\n" +
-        "        return inputs;\n" +
-        "    }\n" +
-        "}";
-
-    /**
-     * Find textarea elements by model name.
-     *
-     * arguments[0] {Element} The scope of the search.
-     * arguments[1] {String} The model name.
-     *
-     * @return {Array.WebElement} The matching textarea elements.
-     */
-    public final static String FindTextArea =
-        "var using = arguments[1] || document;\n" +
-        "var model = arguments[0];\n" +
-        "var prefixes = ['ng-', 'ng_', 'data-ng-', 'x-ng-', 'ng\\\\:'];\n" +
-        "for (var p = 0; p < prefixes.length; ++p) {\n" +
-        "    var selector = 'textarea[' + prefixes[p] + 'model=\"' + model + '\"]';\n" +
-        "    var textareas = using.querySelectorAll(selector);\n" +
-        "    if (textareas.length) {\n" +
-        "        return textareas;\n" +
-        "    }\n" +
-        "}";
+        "var rootSelector = arguments[2];\n" +
+                "var root = document.querySelector(rootSelector || 'body');\n" +
+                "  using = using || document;\n" +
+                "\n" +
+                "  if (angular.getTestability) {\n" +
+                "    return angular.getTestability(root).\n" +
+                "        findModels(using, model, true);\n" +
+                "  }\n" +
+                "  var prefixes = ['ng-', 'ng_', 'data-ng-', 'x-ng-', 'ng\\\\:'];\n" +
+                "  for (var p = 0; p < prefixes.length; ++p) {\n" +
+                "    var selector = '[' + prefixes[p] + 'model=\"' + model + '\"]';\n" +
+                "    var elements = using.querySelectorAll(selector);\n" +
+                "    if (elements.length) {\n" +
+                "      return elements;\n" +
+                "    }\n" +
+                "  }";
 
     /**
      * Find all rows of an ng-repeat.
