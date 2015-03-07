@@ -132,23 +132,13 @@ public class NgBrowserTest extends BrowserTest {
     }
 
     protected WebElement getAngularElementToEnterIn(String place) {
-        WebElement element = findInput(place);
-        if (element == null) {
-            element = findTextArea(place);
-        }
-        return element;
+        return findElement(place);
     }
 
     protected WebElement getAngularElement(String place) {
         WebElement element = findBinding(place);
         if (element == null) {
-            element = findInput(place);
-        }
-        if (element == null) {
-            element = findSelect(place);
-        }
-        if (element == null) {
-            element = findTextArea(place);
+            element = findElement(place);
         }
         return element;
     }
@@ -161,12 +151,8 @@ public class NgBrowserTest extends BrowserTest {
         return findNgElementByJavascript(NgClientSideScripts.FindSelects, place);
     }
 
-    protected WebElement findInput(String place) {
-        return findNgElementByJavascript(NgClientSideScripts.FindInputs, place);
-    }
-
-    protected WebElement findTextArea(String place) {
-        return findNgElementByJavascript(NgClientSideScripts.FindTextArea, place);
+    protected WebElement findElement(String place) {
+        return findNgElementByJavascript(NgClientSideScripts.FindElements, place, null);
     }
 
     protected List<WebElement> findRepeaterRows(String repeater) {
