@@ -729,7 +729,7 @@ public class BrowserTest extends SlimFixture {
     protected String getXPathForColumnIndex(String columnName) {
         // determine how many columns are before the column with the requested name
         // the column with the requested name will have an index of the value +1 (since XPath indexes are 1 based)
-        return String.format("count(//tr/th[normalize-space(descendant-or-self::text())='%s']/preceding-sibling::th)+1", columnName);
+        return String.format("count(//tr/th/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::th[1]/preceding-sibling::th)+1", columnName);
     }
 
     protected WebElement getElement(String place) {
