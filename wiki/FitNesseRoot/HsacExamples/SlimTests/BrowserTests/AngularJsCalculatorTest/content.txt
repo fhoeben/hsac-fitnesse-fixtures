@@ -17,6 +17,12 @@ Inspired by http://anthonychu.ca/post/end-to-end-testing-angular-apps-with-nunit
 |1    |2     |3      |
 |3    |4     |7      |
 
+|script                                                                                                    |
+|check|number of             |result in memory|2                                                           |
+|check|value of              |Result          |in row number|1     |of|result in memory|7                  |
+|check|value of column number|3               |in row number|1     |of|result in memory|7                  |
+|show |value of              |Time            |in row where |Result|is|3               |of|result in memory|
+|show |take screenshot       |2additions                                                                   |
 
 |table template|divide                            |
 |enter         |@{numerator}|as      |first       |
@@ -31,3 +37,6 @@ Inspired by http://anthonychu.ca/post/end-to-end-testing-angular-apps-with-nunit
 |numerator|divisor|quotient?|
 |10       |2      |5        |
 |9        |3      |3        |
+
+|script                            |
+|check|number of|result in memory|4|

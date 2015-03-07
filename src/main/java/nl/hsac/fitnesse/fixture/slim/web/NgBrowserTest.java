@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.util.NgClientSideScripts;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import java.util.ArrayList;
@@ -83,6 +84,53 @@ public class NgBrowserTest extends BrowserTest {
         return result;
     }
 
+    public int numberOf(String repeater) {
+        waitForAngularRequestsToFinish();
+        return findRepeaterRows(repeater).size();
+    }
+
+    public String valueOfColumnNumberInRowNumberOf(int columnIndex, int rowIndex, String repeater) {
+        return getTextInRepeaterColumn(Integer.toString(columnIndex), rowIndex, repeater);
+    }
+
+    public String valueOfInRowNumberOf(String columnName, int rowIndex, String repeater) {
+        String columnIndex = getXPathForColumnIndex(columnName);
+        return getTextInRepeaterColumn(columnIndex, rowIndex, repeater);
+    }
+
+    public String valueOfInRowWhereIsOf(String requestedColumnName, String selectOnColumn, String selectOnValue, String repeater) {
+        String result = null;
+        String compareIndex = getXPathForColumnIndex(selectOnColumn);
+        List<WebElement> rows = findRepeaterRows(repeater);
+        for (WebElement row : rows) {
+            String compareValue = getColumnText(row, compareIndex);
+            if ((selectOnValue == null && compareValue == null)
+                    || selectOnValue != null && selectOnValue.equals(compareValue)) {
+                String requestedIndex = getXPathForColumnIndex(requestedColumnName);
+                result = getColumnText(row, requestedIndex);
+                break;
+            }
+        }
+        return result;
+    }
+
+    protected String getTextInRepeaterColumn(String columnIndexXPath, int rowIndex, String repeater) {
+        String result = null;
+        waitForAngularRequestsToFinish();
+        List<WebElement> rows = findRepeaterRows(repeater);
+        if (rows.size() >= rowIndex) {
+            WebElement row = rows.get(rowIndex - 1);
+            result = getColumnText(row, columnIndexXPath);
+        }
+        return result;
+    }
+
+    private String getColumnText(WebElement row, String columnIndexXPath) {
+        By xPath = getSeleniumHelper().byXpath("td[%s]", columnIndexXPath);
+        WebElement cell = row.findElement(xPath);
+        return getElementText(cell);
+    }
+
     protected WebElement getAngularElementToEnterIn(String place) {
         WebElement element = findInput(place);
         if (element == null) {
@@ -121,12 +169,25 @@ public class NgBrowserTest extends BrowserTest {
         return findNgElementByJavascript(NgClientSideScripts.FindTextArea, place);
     }
 
+    protected List<WebElement> findRepeaterRows(String repeater) {
+        return findNgElementsByJavascript(NgClientSideScripts.FindAllRepeaterRows, repeater);
+    }
+
+    protected List<WebElement> findNgElementsByJavascript(String script, Object... parameters) {
+        Object[] arguments = getFindArguments(parameters);
+        return findAllByJavascript(script, arguments);
+    }
+
     protected WebElement findNgElementByJavascript(String script, Object... parameters) {
+        Object[] arguments = getFindArguments(parameters);
+        return findByJavascript(script, arguments);
+    }
+
+    private Object[] getFindArguments(Object[] parameters) {
         List<Object> params = new ArrayList<Object>(parameters.length + 1);
         params.add(getAngularRoot());
         params.addAll(Arrays.asList(parameters));
-
-        return findByJavascript(script, params.toArray());
+        return params.toArray();
     }
 
     public String getAngularRoot() {
