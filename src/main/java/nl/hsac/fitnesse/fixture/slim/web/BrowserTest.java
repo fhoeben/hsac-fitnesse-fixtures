@@ -717,7 +717,7 @@ public class BrowserTest extends SlimFixture {
      */
     protected String getXPathForColumnInRowByValueInOtherColumn(String columnName, String value) {
         String selectIndex = getXPathForColumnIndex(columnName);
-        return String.format("//tr[normalize-space(td[%s]/descendant-or-self::text())='%s']/td", selectIndex, value);
+        return String.format("//tr[td[%s]/descendant-or-self::text()[normalize-space(.)='%s']]/td", selectIndex, value);
     }
 
     /**
