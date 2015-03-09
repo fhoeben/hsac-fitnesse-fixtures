@@ -34,7 +34,7 @@ public class HttpClient {
      *          statusCode will be filled.
      */
     public void post(String url, HttpResponse response) {
-        post(url, response, null);
+        post(url, response, null, null);
     }
 
     /**
@@ -44,8 +44,19 @@ public class HttpClient {
      * @param headers http headers to add
      */
     public void post(String url, HttpResponse response, Map<String, String> headers) {
+        post(url, response, headers, null);
+    }
+
+    /**
+     * @param url URL of service
+     * @param response response pre-populated with request to send. Response content and
+     *          statusCode will be filled.
+     * @param headers http headers to add
+     * @param type contentType for request.
+     */
+    public void post(String url, HttpResponse response, Map<String, String> headers, ContentType type) {
         HttpPost methodPost = new HttpPost(url);
-        HttpEntity ent = new StringEntity(response.getRequest(), TYPE);
+        HttpEntity ent = new StringEntity(response.getRequest(), type == null ? TYPE : type);
         methodPost.setEntity(ent);
         getResponse(url, response, methodPost, headers);
     }
