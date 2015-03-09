@@ -20,6 +20,7 @@ import nl.hsac.fitnesse.fixture.util.XMLFormatter;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.http.entity.ContentType;
 
 import java.io.File;
 import java.util.Map;
@@ -212,7 +213,7 @@ public class Environment {
      * @param headers headers to add.
      */
     public void callService(String url, String templateName, Object model, XmlHttpResponse result, Map<String, String> headers) {
-        doHttpPost(url, templateName, model, result, headers);
+        doHttpPost(url, templateName, model, result, headers, null);
         setNamespaceContext(result);
     }
 
@@ -224,7 +225,7 @@ public class Environment {
      * @param result result to populate with response.
      */
     public void doHttpPost(String url, String templateName, Object model, HttpResponse result) {
-        doHttpPost(url, templateName, model, result, null);
+        doHttpPost(url, templateName, model, result, null, null);
     }
 
     /**
@@ -234,11 +235,12 @@ public class Environment {
      * @param model model for template.
      * @param result result to populate with response.
      * @param headers headers to add.
+     * @param contentType contentType for request.
      */
-    public void doHttpPost(String url, String templateName, Object model, HttpResponse result, Map<String, String> headers) {
+    public void doHttpPost(String url, String templateName, Object model, HttpResponse result, Map<String, String> headers, ContentType contentType) {
         String request = processTemplate(templateName, model);
         result.setRequest(request);
-        doHttpPost(url, result, headers);
+        doHttpPost(url, result, headers, contentType);
     }
 
     /**
@@ -246,9 +248,10 @@ public class Environment {
      * @param url url to post to.
      * @param result result containing request, its response will be filled.
      * @param headers headers to add.
+     * @param contentType contentType for request.
      */
-    public void doHttpPost(String url, HttpResponse result, Map<String, String> headers) {
-        httpClient.post(url, result, headers);
+    public void doHttpPost(String url, HttpResponse result, Map<String, String> headers, ContentType contentType) {
+        httpClient.post(url, result, headers, contentType);
     }
 
     /**

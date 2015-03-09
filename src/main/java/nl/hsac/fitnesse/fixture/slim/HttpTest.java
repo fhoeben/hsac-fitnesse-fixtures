@@ -3,6 +3,7 @@ package nl.hsac.fitnesse.fixture.slim;
 import freemarker.template.Template;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.http.entity.ContentType;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -19,6 +20,7 @@ public class HttpTest extends SlimFixture {
     private final Map<String, String> headerValues = new LinkedHashMap<String, String>();
     private HttpResponse response = createResponse();
     private String template;
+    private ContentType contentType;
 
     /**
      * Sets template to use.
@@ -102,7 +104,7 @@ public class HttpTest extends SlimFixture {
         } else {
             String url = getUrl(serviceUrl);
             try {
-                getEnvironment().doHttpPost(url, template, currentValues, response, headerValues);
+                getEnvironment().doHttpPost(url, template, currentValues, response, headerValues, getContentType());
             } catch (Throwable t) {
                 throw new StopTestException("Unable to get response from POST to: " + url, t);
             }
@@ -124,7 +126,7 @@ public class HttpTest extends SlimFixture {
         response.setRequest(cleanedBody);
         String url = getUrl(serviceUrl);
         try {
-            getEnvironment().doHttpPost(url, response, headerValues);
+            getEnvironment().doHttpPost(url, response, headerValues, getContentType());
         } catch (Throwable t) {
             throw new StopTestException("Unable to get response from POST to: " + url, t);
         }
@@ -259,4 +261,13 @@ public class HttpTest extends SlimFixture {
     protected HttpResponse createResponse() {
         return new HttpResponse();
     }
+
+    public ContentType getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(ContentType contentType) {
+        this.contentType = contentType;
+    }
+
 }

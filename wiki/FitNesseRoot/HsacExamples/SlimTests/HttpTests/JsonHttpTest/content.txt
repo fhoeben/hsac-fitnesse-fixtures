@@ -1,0 +1,29 @@
+|script  |json http test                            |
+|get from|http://echo.jsontest.com/key/value/one/two|
+|show    |response                                  |
+|check   |json path       |$.key       |value       |
+|check   |json path       |$.one       |two         |
+
+!define BAD_BODY { {{{
+json={"key":"value"
+}}} }
+
+|script|json http test                                         |
+|post  |${BAD_BODY}|to           |http://validate.jsontest.com/|
+|show  |response                                               |
+|check |json path  |$.validate   |false                        |
+|check |json path  |validate     |false                        |
+|check |json path  |.validate    |false                        |
+|check |json path  |$['validate']|false                        |
+|check |json path  |['validate'] |false                        |
+
+!define GOOD_BODY { {{{
+json={"key":"value"}
+}}} }
+
+|script|json http test                                     |
+|post  |${GOOD_BODY}|to      |http://validate.jsontest.com/|
+|show  |response                                           |
+|check |json path   |validate|true                         |
+|ensure|json path   |validate                              |
+|check |json path   |size    |>0                           |
