@@ -21,9 +21,10 @@ json={"key":"value"
 json={"key":"value"}
 }}} }
 
-|script|json http test                                     |
-|post  |${GOOD_BODY}|to      |http://validate.jsontest.com/|
-|show  |response                                           |
-|check |json path   |validate|true                         |
-|ensure|json path   |validate                              |
-|check |json path   |size    |>0                           |
+|script|json http test                                        |
+|post  |${GOOD_BODY}   |to      |http://validate.jsontest.com/|
+|show  |response                                              |
+|check |json path      |validate|true                         |
+|ensure|json path      |validate                              |
+|check |json path      |size    |>0                           |
+|check |json path count|$.*     |>=5                          |

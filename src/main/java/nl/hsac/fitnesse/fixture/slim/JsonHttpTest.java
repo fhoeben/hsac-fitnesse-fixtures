@@ -6,6 +6,8 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.Consts;
 import org.apache.http.entity.ContentType;
 
+import java.util.List;
+
 public class JsonHttpTest extends HttpTest {
     private final JsonFormatter formatter = new JsonFormatter();
     private final JsonPathHelper pathHelper = new JsonPathHelper();
@@ -47,6 +49,17 @@ public class JsonHttpTest extends HttpTest {
     }
 
     public Object jsonPath(String path) {
+        String jsonPath = getPathExpr(path);
+        return pathHelper.getJsonPath(getResponse().getResponse(), jsonPath);
+    }
+
+    public int jsonPathCount(String path) {
+        String jsonPath = getPathExpr(path);
+        List<Object> all = pathHelper.getAllJsonPath(getResponse().getResponse(), jsonPath);
+        return all.size();
+    }
+
+    protected String getPathExpr(String path) {
         String jsonPath = path;
         if (!path.startsWith("$")) {
             if (path.startsWith("[") || path.startsWith(".")) {
@@ -55,6 +68,6 @@ public class JsonHttpTest extends HttpTest {
                 jsonPath = "$." + path;
             }
         }
-        return pathHelper.getJsonPath(getResponse().getResponse(), jsonPath);
+        return jsonPath;
     }
 }
