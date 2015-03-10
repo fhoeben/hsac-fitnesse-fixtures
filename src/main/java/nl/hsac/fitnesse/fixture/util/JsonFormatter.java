@@ -6,7 +6,7 @@ import org.json.JSONObject;
 /**
  * Formats JSON strings.
  */
-public class JsonFormatter {
+public class JsonFormatter implements Formatter {
     /**
      * Creates formatted version of the supplied JSON.
      * @param json JSON to format.

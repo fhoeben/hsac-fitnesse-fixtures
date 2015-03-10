@@ -7,6 +7,7 @@ import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import nl.hsac.fitnesse.fixture.util.BsnUtil;
 import nl.hsac.fitnesse.fixture.util.DatesHelper;
+import nl.hsac.fitnesse.fixture.util.Formatter;
 import nl.hsac.fitnesse.fixture.util.FreeMarkerHelper;
 import nl.hsac.fitnesse.fixture.util.HttpClient;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
@@ -308,17 +309,27 @@ public class Environment {
     }
 
     /**
-     * Formats supplied XML string for display in Fitnesse page.
+     * Formats supplied XML string for display in FitNesse page.
      * @param xmlString XML to format.
      * @return HTML formatted version of xmlString
      */
     public String getHtmlForXml(String xmlString) {
+        return getHtml(xmlFormatter, xmlString);
+    }
+
+    /**
+     * Formats supplied value for display as pre-formatted text in FitNesse page.
+     * @param formatter formatter to use to generate pre-formatted text.
+     * @param value value to format.
+     * @return HTML formatted version of value.
+     */
+    public String getHtml(Formatter formatter, String value) {
         String result = null;
-        if (xmlString != null) {
-            if ("".equals(xmlString)) {
+        if (value != null) {
+            if ("".equals(value)) {
                 result = "";
             } else {
-                String formattedResponse = xmlFormatter.format(xmlString);
+                String formattedResponse = formatter.format(value);
                 result = "<pre>" + StringEscapeUtils.escapeHtml4(formattedResponse) + "</pre>";
             }
         }

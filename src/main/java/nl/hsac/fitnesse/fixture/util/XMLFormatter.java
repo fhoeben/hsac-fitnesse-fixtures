@@ -12,7 +12,7 @@ import java.io.StringWriter;
 /**
  * Formats XML.
  */
-public class XMLFormatter {
+public class XMLFormatter implements Formatter {
     /**
      * Creates formatted version of the supplied XML.
      * @param xml XML to format.
