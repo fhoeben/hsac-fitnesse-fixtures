@@ -7,6 +7,9 @@ import org.apache.http.entity.ContentType;
 
 import java.util.List;
 
+/**
+ * Fixture to make Http calls and interpret the result as JSON.
+ */
 public class JsonHttpTest extends HttpTest {
     private final JsonFormatter formatter = new JsonFormatter();
     private final JsonPathHelper pathHelper = new JsonPathHelper();

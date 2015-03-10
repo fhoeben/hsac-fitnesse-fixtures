@@ -1,8 +1,15 @@
+Example usage of making HTTP calls to get results in [[JSON][http://json.org]] notation and using [[!-JsonPath-!][http://goessner.net/articles/JsonPath/]] to validate the response's content.
+
+First a simple GET request.
+
 |script  |json http test                            |
 |get from|http://echo.jsontest.com/key/value/one/two|
 |show    |response                                  |
 |check   |json path       |$.key       |value       |
 |check   |json path       |$.one       |two         |
+
+
+Then a POST, showing the multiple notations of !-JsonPath-! expressions supported (notice that adding the '$.' prefix is not required).
 
 !define BAD_BODY { {{{
 json={"key":"value"
@@ -16,6 +23,9 @@ json={"key":"value"
 |check |json path  |.validate    |false                        |
 |check |json path  |$['validate']|false                        |
 |check |json path  |['validate'] |false                        |
+
+
+Next another POST, showing that expressions resulting in a boolean or integer value are recognized and can be used accordingly by the script table. Furthermore expressions returning more than a single member are supported.
 
 !define GOOD_BODY { {{{
 json={"key":"value"}
