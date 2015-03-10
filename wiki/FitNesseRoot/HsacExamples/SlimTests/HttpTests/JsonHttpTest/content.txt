@@ -50,8 +50,10 @@ Next another POST, posting of url-enoded values defined in the wiki.
 
 Next another POST, posting of url-enoded array of values defined in the wiki.
 
-|script        |json http test                                        |
-|set values    |televisie-start, internet-fiber-start|for  |products[]|
-|post values to|https://thuisbestellen.vodafone.nl/api/shoppingcart   |
-|show          |response                                              |
-|check         |json path                            |error|0         |
+|script        |json http test                                                                                   |
+|set values    |televisie-start, internet-fiber-start|for                                          |products[]   |
+|post values to|https://thuisbestellen.vodafone.nl/api/shoppingcart                                              |
+|show          |response                                                                                         |
+|check         |json path                            |error                                        |0            |
+|check         |json path                            |$.fields.order.basic_products[0].product_name|Internet 50Mb|
+|check         |json path                            |$.fields.order.basic_products[1].product_name|TV Start     |
