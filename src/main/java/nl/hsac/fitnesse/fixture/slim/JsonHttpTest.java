@@ -43,9 +43,13 @@ public class JsonHttpTest extends HttpTest {
     }
 
     public int jsonPathCount(String path) {
-        String jsonPath = getPathExpr(path);
-        List<Object> all = pathHelper.getAllJsonPath(getResponse().getResponse(), jsonPath);
+        List<Object> all = getAllMatches(path);
         return all.size();
+    }
+
+    protected List<Object> getAllMatches(String path) {
+        String jsonPath = getPathExpr(path);
+        return pathHelper.getAllJsonPath(getResponse().getResponse(), jsonPath);
     }
 
     /**
@@ -56,7 +60,7 @@ public class JsonHttpTest extends HttpTest {
      */
     public String allJsonPathMatches(String expr) {
         String result = null;
-        List<Object> allJsonPath = pathHelper.getAllJsonPath(getResponse().getResponse(), expr);
+        List<Object> allJsonPath = getAllMatches(expr);
         if (allJsonPath != null && !allJsonPath.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             sb.append("<div><ul>");
