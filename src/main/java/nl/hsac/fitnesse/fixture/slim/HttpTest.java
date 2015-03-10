@@ -38,12 +38,22 @@ public class HttpTest extends SlimFixture {
     }
 
     /**
-     * Stores value to be passed to template.
+     * Stores value to be passed to template, or GET.
      * @param value value to be passed.
      * @param name name to use this value for.
      */
     public void setValueFor(String value, String name) {
         currentValues.put(name, value);
+    }
+
+    /**
+     * Stores list of values to be passed to template, or GET.
+     * @param values comma separated list of values.
+     * @param name name to use this list for.
+     */
+    public void setValuesFor(String values, String name) {
+        String[] valueArrays = values.split("\\s*,\\s*");
+        getCurrentValues().put(name, valueArrays);
     }
 
     /**
@@ -169,26 +179,48 @@ public class HttpTest extends SlimFixture {
 
     String createUrlWithParams(String serviceUrl) {
         String baseUrl = getUrl(serviceUrl);
-        boolean isFirst = true;
-        if (baseUrl.contains("?") && !baseUrl.endsWith("?")) {
-            isFirst = false;
-        }
-
-        for (Map.Entry<String, Object> entry : currentValues.entrySet()) {
-            if (isFirst) {
-                isFirst = false;
-                if (!baseUrl.endsWith("?")) {
-                    baseUrl += "?";
-                }
-            } else {
+        if (!getCurrentValues().isEmpty()) {
+            if (baseUrl.contains("?") && !baseUrl.endsWith("?")) {
                 baseUrl += "&";
             }
-            baseUrl += urlEncode(entry.getKey());
-            if (entry.getValue() != null) {
-                baseUrl += "=" + urlEncode(entry.getValue().toString());
+            if (!baseUrl.contains("?")) {
+                baseUrl += "?";
             }
+            baseUrl += urlEncodeCurrentValues();
         }
         return baseUrl;
+    }
+
+    protected String urlEncodeCurrentValues() {
+        boolean isFirst = true;
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, Object> entry : getCurrentValues().entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            if (value instanceof Object[]) {
+                Object[] values = (Object[]) value;
+                for (Object v : values) {
+                    addEncodedKeyValue(sb, isFirst, key, v);
+                    isFirst = false;
+                }
+            } else {
+                addEncodedKeyValue(sb, isFirst, key, value);
+                isFirst = false;
+            }
+        }
+        return sb.toString();
+    }
+
+    private boolean addEncodedKeyValue(StringBuilder sb, boolean isFirst, String key, Object value) {
+        if (!isFirst) {
+            sb.append("&");
+        }
+        sb.append(urlEncode(key));
+        if (value != null) {
+            sb.append("=");
+            sb.append(urlEncode(value.toString()));
+        }
+        return isFirst;
     }
 
     protected String urlEncode(String str) {

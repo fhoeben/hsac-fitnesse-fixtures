@@ -31,11 +31,6 @@ public class JsonHttpTest extends HttpTest {
         return getEnvironment().getHtml(formatter, value);
     }
 
-    public void setValuesFor(String values, String name) {
-        String[] valueArrays = values.split("\\s*,\\s*");
-        getCurrentValues().put(name, valueArrays);
-    }
-
     public boolean postValuesTo(String serviceUrl) {
         String body = urlEncodeCurrentValues();
         return postToImpl(body, serviceUrl);
@@ -89,38 +84,6 @@ public class JsonHttpTest extends HttpTest {
             }
         }
         return jsonPath;
-    }
-
-    protected String urlEncodeCurrentValues() {
-        boolean isFirst = true;
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, Object> entry : getCurrentValues().entrySet()) {
-            String key = entry.getKey();
-            Object value = entry.getValue();
-            if (value instanceof String[]) {
-                String[] values = (String[]) value;
-                for (String v : values) {
-                    addEncodedKeyValue(sb, isFirst, key, v);
-                    isFirst = false;
-                }
-            } else {
-                addEncodedKeyValue(sb, isFirst, key, value);
-                isFirst = false;
-            }
-        }
-        return sb.toString();
-    }
-
-    private boolean addEncodedKeyValue(StringBuilder sb, boolean isFirst, String key, Object value) {
-        if (!isFirst) {
-            sb.append("&");
-        }
-        sb.append(urlEncode(key));
-        sb.append("=");
-        if (value != null) {
-            sb.append(urlEncode(value.toString()));
-        }
-        return isFirst;
     }
 
     @Override
