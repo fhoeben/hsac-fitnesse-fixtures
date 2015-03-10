@@ -31,6 +31,11 @@ public class JsonHttpTest extends HttpTest {
         return getEnvironment().getHtml(formatter, value);
     }
 
+    public void setValuesFor(String values, String name) {
+        String[] valueArrays = values.split("\\s*,\\s*");
+        getCurrentValues().put(name, valueArrays);
+    }
+
     public boolean postValuesTo(String serviceUrl) {
         String body = urlEncodeCurrentValues();
         return postToImpl(body, serviceUrl);
@@ -90,18 +95,32 @@ public class JsonHttpTest extends HttpTest {
         boolean isFirst = true;
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, Object> entry : getCurrentValues().entrySet()) {
-            if (isFirst) {
-                isFirst = false;
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            if (value instanceof String[]) {
+                String[] values = (String[]) value;
+                for (String v : values) {
+                    addEncodedKeyValue(sb, isFirst, key, v);
+                    isFirst = false;
+                }
             } else {
-                sb.append("&");
-            }
-            sb.append(urlEncode(entry.getKey()));
-            sb.append("=");
-            if (entry.getValue() != null) {
-                sb.append(urlEncode(entry.getValue().toString()));
+                addEncodedKeyValue(sb, isFirst, key, value);
+                isFirst = false;
             }
         }
         return sb.toString();
+    }
+
+    private boolean addEncodedKeyValue(StringBuilder sb, boolean isFirst, String key, Object value) {
+        if (!isFirst) {
+            sb.append("&");
+        }
+        sb.append(urlEncode(key));
+        sb.append("=");
+        if (value != null) {
+            sb.append(urlEncode(value.toString()));
+        }
+        return isFirst;
     }
 
     @Override
