@@ -48,6 +48,29 @@ public class JsonHttpTest extends HttpTest {
         return all.size();
     }
 
+    /**
+     * Gets a HTML list with all matches to the supplied JsonPath.
+     * @param expr expression to evaluate.
+     * @return list containing all results of expression evaluation against last response received, null if there were no matches.
+     * @throws RuntimeException if no valid response was available or Json Path could not be evaluated.
+     */
+    public String allJsonPathMatches(String expr) {
+        String result = null;
+        List<Object> allJsonPath = pathHelper.getAllJsonPath(getResponse().getResponse(), expr);
+        if (allJsonPath != null && !allJsonPath.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("<div><ul>");
+            for (Object match : allJsonPath) {
+                sb.append("<li>");
+                sb.append(match);
+                sb.append("</li>");
+            }
+            sb.append("</ul></div>");
+            result = sb.toString();
+        }
+        return result;
+    }
+
     protected String getPathExpr(String path) {
         String jsonPath = path;
         if (!path.startsWith("$")) {

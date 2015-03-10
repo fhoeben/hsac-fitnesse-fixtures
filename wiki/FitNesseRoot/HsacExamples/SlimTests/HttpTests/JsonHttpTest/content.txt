@@ -31,10 +31,11 @@ Next another POST, showing that expressions resulting in a boolean or integer va
 json={"key":"value"}
 }}} }
 
-|script|json http test                                        |
-|post  |${GOOD_BODY}   |to      |http://validate.jsontest.com/|
-|show  |response                                              |
-|check |json path      |validate|true                         |
-|ensure|json path      |validate                              |
-|check |json path      |size    |>0                           |
-|check |json path count|$.*     |>=5                          |
+|script|json http test                                              |
+|post  |${GOOD_BODY}         |to      |http://validate.jsontest.com/|
+|show  |response                                                    |
+|check |json path            |validate|true                         |
+|ensure|json path            |validate                              |
+|check |json path            |size    |>0                           |
+|check |json path count      |$.*     |>=5                          |
+|show  |all json path matches|*                                     |
