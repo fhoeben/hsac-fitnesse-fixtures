@@ -62,6 +62,16 @@ public class HttpTestTest {
         client.setValueFor(null, "param");
         getUrl = client.createUrlWithParams("http://mysite.nl:8080/test");
         assertEquals("http://mysite.nl:8080/test?param", getUrl);
+
+        client.clearValues();
+        client.setValueFor("", "param");
+        getUrl = client.createUrlWithParams("http://mysite.nl:8080/test");
+        assertEquals("http://mysite.nl:8080/test?param=", getUrl);
+
+        client.clearValues();
+        client.setValuesFor("one, two,   three", "param");
+        getUrl = client.createUrlWithParams("http://mysite.nl:8080/test");
+        assertEquals("http://mysite.nl:8080/test?param=one&param=two&param=three", getUrl);
     }
 
     @Test
