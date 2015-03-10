@@ -20,14 +20,6 @@ public class JsonHttpTest extends HttpTest {
     }
 
     /**
-     * @return request sent last time postTo() or getFrom() was called.
-     */
-    @Override
-    public String request() {
-        return formatValue(super.request());
-    }
-
-    /**
      * @return response received last time postTo() or getFrom() was called.
      */
     @Override
