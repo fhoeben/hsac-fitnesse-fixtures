@@ -6,6 +6,7 @@ import org.apache.http.Consts;
 import org.apache.http.entity.ContentType;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Fixture to make Http calls and interpret the result as JSON.
@@ -17,6 +18,7 @@ public class JsonHttpTest extends HttpTest {
     public JsonHttpTest() {
         setContentType(ContentType.create(ContentType.APPLICATION_FORM_URLENCODED.getMimeType(), Consts.UTF_8));
     }
+
     /**
      * @return request sent last time postTo() or getFrom() was called.
      */
@@ -35,6 +37,11 @@ public class JsonHttpTest extends HttpTest {
 
     private String formatValue(String value) {
         return getEnvironment().getHtml(formatter, value);
+    }
+
+    public boolean postValuesTo(String serviceUrl) {
+        String body = urlEncodeCurrentValues();
+        return postToImpl(body, serviceUrl);
     }
 
     public Object jsonPath(String path) {
@@ -85,5 +92,29 @@ public class JsonHttpTest extends HttpTest {
             }
         }
         return jsonPath;
+    }
+
+    protected String urlEncodeCurrentValues() {
+        boolean isFirst = true;
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, Object> entry : getCurrentValues().entrySet()) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sb.append("&");
+            }
+            sb.append(urlEncode(entry.getKey()));
+            sb.append("=");
+            if (entry.getValue() != null) {
+                sb.append(urlEncode(entry.getValue().toString()));
+            }
+        }
+        return sb.toString();
+    }
+
+    @Override
+    protected String urlEncode(String str) {
+        String strNoSpaces = str.replace(" ", "+");
+        return super.urlEncode(strNoSpaces);
     }
 }

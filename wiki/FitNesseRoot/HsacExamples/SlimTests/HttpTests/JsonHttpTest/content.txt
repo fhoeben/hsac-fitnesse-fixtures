@@ -39,3 +39,11 @@ json={"key":"value"}
 |check |json path            |size    |>0                           |
 |check |json path count      |$.*     |>=5                          |
 |show  |all json path matches|*                                     |
+
+Next another POST, posting of url-enoded values defined in the wiki.
+
+|script        |json http test                 |
+|set value     |{"key":"value 2"}|for     |json|
+|post values to|http://validate.jsontest.com/  |
+|show          |response                       |
+|check         |json path        |validate|true|
