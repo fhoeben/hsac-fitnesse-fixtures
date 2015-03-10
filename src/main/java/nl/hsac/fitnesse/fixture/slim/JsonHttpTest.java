@@ -2,7 +2,6 @@ package nl.hsac.fitnesse.fixture.slim;
 
 import nl.hsac.fitnesse.fixture.util.JsonFormatter;
 import nl.hsac.fitnesse.fixture.util.JsonPathHelper;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.Consts;
 import org.apache.http.entity.ContentType;
 
@@ -32,20 +31,7 @@ public class JsonHttpTest extends HttpTest {
     }
 
     private String formatValue(String value) {
-        String result = null;
-        try {
-            if (value != null) {
-                if ("".equals(value)) {
-                    result = "";
-                } else {
-                    String formattedResponse = formatter.format(value);
-                    result = "<pre>" + StringEscapeUtils.escapeHtml4(formattedResponse) + "</pre>";
-                }
-            }
-        } catch (Exception e) {
-            result = value;
-        }
-        return result;
+        return getEnvironment().getHtml(formatter, value);
     }
 
     public Object jsonPath(String path) {
