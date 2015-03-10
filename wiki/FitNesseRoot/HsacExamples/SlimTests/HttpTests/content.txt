@@ -6,6 +6,7 @@ The tests in this suite show example usage of this fixture:
 >HttpPost1Test sends a POST request to a SOAP service, also adding an HTTP header.
 The >HttpPost2UsingScenarioTest makes multiple SOAP calls to a service, where scenario parameters are used to change an input variable's value for each call.
 >HttpPost3UsingFreemarkerTemplateTest shows the usage of a [[Freemarker][http://freemarker.org]] template to define the content of a SOAP request. This allows for dynamic request structure.
+>JsonHttpTest shows an example with both GET and POST, using [[!-JsonPath-!][http://goessner.net/articles/JsonPath/]] to perform checks on the response. 
 
 !2 Language
 
