@@ -47,3 +47,11 @@ Next another POST, posting of url-enoded values defined in the wiki.
 |post values to|http://validate.jsontest.com/  |
 |show          |response                       |
 |check         |json path        |validate|true|
+
+Next another POST, posting of url-enoded array of values defined in the wiki.
+
+|script        |json http test                                        |
+|set values    |televisie-start, internet-fiber-start|for  |products[]|
+|post values to|https://thuisbestellen.vodafone.nl/api/shoppingcart   |
+|show          |response                                              |
+|check         |json path                            |error|0         |
