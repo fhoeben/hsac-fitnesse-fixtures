@@ -120,10 +120,14 @@ public class HttpTest extends SlimFixture {
      * @return true if call could be made and response did not indicate error.
      */
     public boolean postTo(String body, String serviceUrl) {
+        String cleanedBody = cleanupBody(body);
+        return postToImpl(cleanedBody, serviceUrl);
+    }
+
+    protected boolean postToImpl(String body, String serviceUrl) {
         boolean result;
         response = createResponse();
-        String cleanedBody = cleanupBody(body);
-        response.setRequest(cleanedBody);
+        response.setRequest(body);
         String url = getUrl(serviceUrl);
         try {
             getEnvironment().doHttpPost(url, response, headerValues, getContentType());
@@ -187,7 +191,7 @@ public class HttpTest extends SlimFixture {
         return baseUrl;
     }
 
-    private String urlEncode(String str) {
+    protected String urlEncode(String str) {
         try {
             return URLEncoder.encode(str, "utf-8");
         } catch (UnsupportedEncodingException e) {
