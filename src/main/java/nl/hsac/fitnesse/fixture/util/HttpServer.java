@@ -2,6 +2,8 @@ package nl.hsac.fitnesse.fixture.util;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.apache.http.entity.ContentType;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,13 +12,12 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import nl.hsac.fitnesse.fixture.util.HttpResponse;
-import org.apache.http.entity.ContentType;
-
 /**
  * Receiver for a callback from application being tested.
  */
 public class HttpServer <T extends HttpResponse> {
+    private static final ContentType XML_UTF8_TYPE = ContentType.parse(XmlHttpResponse.CONTENT_TYPE_XML_TEXT_UTF8);
+
     private final T response;
     private final com.sun.net.httpserver.HttpServer server;
     private final AtomicBoolean requestReceived = new AtomicBoolean(false);
@@ -139,7 +140,7 @@ public class HttpServer <T extends HttpResponse> {
                     aResponse.setRequest(request);
                     requestReceived.set(true);
 
-                    ContentType contentType = HttpClient.TYPE;
+                    ContentType contentType = XML_UTF8_TYPE;
                     byte[] responseBytes = aResponse.getResponse()
                                             .getBytes(contentType.getCharset());
                     he.sendResponseHeaders(aResponse.getStatusCode(),

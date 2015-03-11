@@ -10,6 +10,13 @@ import java.util.List;
  */
 public class XmlHttpTest extends HttpTest {
     /**
+     * Creates new.
+     */
+    public XmlHttpTest() {
+        setContentType(XmlHttpResponse.CONTENT_TYPE_XML_TEXT_UTF8);
+    }
+
+    /**
      * Register a prefix to use in XPath expressions.
      * @param prefix prefix to be used in xPath expressions.
      * @param namespace XML namespace the prefix should point to.

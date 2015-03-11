@@ -2,8 +2,6 @@ package nl.hsac.fitnesse.fixture.slim;
 
 import nl.hsac.fitnesse.fixture.util.JsonFormatter;
 import nl.hsac.fitnesse.fixture.util.JsonPathHelper;
-import org.apache.http.Consts;
-import org.apache.http.entity.ContentType;
 
 import java.util.List;
 import java.util.Map;
@@ -14,10 +12,6 @@ import java.util.Map;
 public class JsonHttpTest extends HttpTest {
     private final JsonFormatter formatter = new JsonFormatter();
     private final JsonPathHelper pathHelper = new JsonPathHelper();
-
-    public JsonHttpTest() {
-        setContentType(ContentType.create(ContentType.APPLICATION_FORM_URLENCODED.getMimeType(), Consts.UTF_8));
-    }
 
     /**
      * @return response received last time postTo() or getFrom() was called.

@@ -3,7 +3,6 @@ package nl.hsac.fitnesse.fixture.slim;
 import freemarker.template.Template;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.http.entity.ContentType;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -16,11 +15,14 @@ import java.util.regex.Pattern;
  * Fixture to make HTTP requests using Slim scripts and/or scenarios.
  */
 public class HttpTest extends SlimFixture {
+    /** Default content type for posts. */
+    public final static String DEFAULT_POST_CONTENT_TYPE = "application/x-www-form-urlencoded; charset=UTF-8";
+
     private final Map<String, Object> currentValues = new LinkedHashMap<String, Object>();
     private final Map<String, String> headerValues = new LinkedHashMap<String, String>();
     private HttpResponse response = createResponse();
     private String template;
-    private ContentType contentType;
+    private String contentType = DEFAULT_POST_CONTENT_TYPE;
 
     /**
      * Sets template to use.
@@ -126,7 +128,7 @@ public class HttpTest extends SlimFixture {
     /**
      * Sends HTTP POST body to service endpoint.
      * @param body content to post
-     * @param serviceUrl service endpoint to send XML to.
+     * @param serviceUrl service endpoint to send body to.
      * @return true if call could be made and response did not indicate error.
      */
     public boolean postTo(String body, String serviceUrl) {
@@ -298,12 +300,12 @@ public class HttpTest extends SlimFixture {
         return new HttpResponse();
     }
 
-    public ContentType getContentType() {
+    public String getContentType() {
         return contentType;
     }
 
-    public void setContentType(ContentType contentType) {
-        this.contentType = contentType;
+    public void setContentType(String aContentType) {
+        contentType = aContentType;
     }
 
 }
