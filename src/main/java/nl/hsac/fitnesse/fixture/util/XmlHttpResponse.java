@@ -13,6 +13,9 @@ import java.util.Map.Entry;
  * Wrapper around XML HTTP response (and request).
  */
 public class XmlHttpResponse extends HttpResponse {
+    /** Content type for requests. */
+    public final static String CONTENT_TYPE_XML_TEXT_UTF8 = "text/xml; charset=UTF-8";
+
     private NamespaceContext namespaceContext;
 
     @Override

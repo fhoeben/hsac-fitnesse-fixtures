@@ -1,6 +1,9 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import org.apache.http.*;
+import org.apache.http.Header;
+import org.apache.http.HeaderElement;
+import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -20,7 +23,6 @@ import java.util.Map;
  * Helper to make Http calls and get response.
  */
 public class HttpClient {
-    final static ContentType TYPE = ContentType.create(ContentType.TEXT_XML.getMimeType(), Consts.UTF_8);
     private final static org.apache.http.client.HttpClient HTTP_CLIENT;
 
     static {
@@ -32,31 +34,13 @@ public class HttpClient {
      * @param url URL of service
      * @param response response pre-populated with request to send. Response content and
      *          statusCode will be filled.
-     */
-    public void post(String url, HttpResponse response) {
-        post(url, response, null, null);
-    }
-
-    /**
-     * @param url URL of service
-     * @param response response pre-populated with request to send. Response content and
-     *          statusCode will be filled.
-     * @param headers http headers to add
-     */
-    public void post(String url, HttpResponse response, Map<String, String> headers) {
-        post(url, response, headers, null);
-    }
-
-    /**
-     * @param url URL of service
-     * @param response response pre-populated with request to send. Response content and
-     *          statusCode will be filled.
      * @param headers http headers to add
      * @param type contentType for request.
      */
-    public void post(String url, HttpResponse response, Map<String, String> headers, ContentType type) {
+    public void post(String url, HttpResponse response, Map<String, String> headers, String type) {
         HttpPost methodPost = new HttpPost(url);
-        HttpEntity ent = new StringEntity(response.getRequest(), type == null ? TYPE : type);
+        ContentType contentType = ContentType.parse(type);
+        HttpEntity ent = new StringEntity(response.getRequest(), contentType);
         methodPost.setEntity(ent);
         getResponse(url, response, methodPost, headers);
     }

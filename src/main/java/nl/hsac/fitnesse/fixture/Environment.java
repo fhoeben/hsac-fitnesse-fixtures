@@ -21,7 +21,6 @@ import nl.hsac.fitnesse.fixture.util.XMLFormatter;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.http.entity.ContentType;
 
 import java.io.File;
 import java.util.Map;
@@ -214,7 +213,7 @@ public class Environment {
      * @param headers headers to add.
      */
     public void callService(String url, String templateName, Object model, XmlHttpResponse result, Map<String, String> headers) {
-        doHttpPost(url, templateName, model, result, headers, null);
+        doHttpPost(url, templateName, model, result, headers, XmlHttpResponse.CONTENT_TYPE_XML_TEXT_UTF8);
         setNamespaceContext(result);
     }
 
@@ -226,7 +225,7 @@ public class Environment {
      * @param result result to populate with response.
      */
     public void doHttpPost(String url, String templateName, Object model, HttpResponse result) {
-        doHttpPost(url, templateName, model, result, null, null);
+        doHttpPost(url, templateName, model, result, null, XmlHttpResponse.CONTENT_TYPE_XML_TEXT_UTF8);
     }
 
     /**
@@ -238,7 +237,7 @@ public class Environment {
      * @param headers headers to add.
      * @param contentType contentType for request.
      */
-    public void doHttpPost(String url, String templateName, Object model, HttpResponse result, Map<String, String> headers, ContentType contentType) {
+    public void doHttpPost(String url, String templateName, Object model, HttpResponse result, Map<String, String> headers, String contentType) {
         String request = processTemplate(templateName, model);
         result.setRequest(request);
         doHttpPost(url, result, headers, contentType);
@@ -251,7 +250,7 @@ public class Environment {
      * @param headers headers to add.
      * @param contentType contentType for request.
      */
-    public void doHttpPost(String url, HttpResponse result, Map<String, String> headers, ContentType contentType) {
+    public void doHttpPost(String url, HttpResponse result, Map<String, String> headers, String contentType) {
         httpClient.post(url, result, headers, contentType);
     }
 
