@@ -6,26 +6,43 @@ The tests in this suite show example usage of this fixture:
 >HttpPost1Test sends a POST request to a SOAP service, also adding an HTTP header.
 The >HttpPost2UsingScenarioTest makes multiple SOAP calls to a service, where scenario parameters are used to change an input variable's value for each call.
 >HttpPost3UsingFreemarkerTemplateTest shows the usage of a [[Freemarker][http://freemarker.org]] template to define the content of a SOAP request. This allows for dynamic request structure.
->JsonHttpTest shows an example with both GET and POST, using [[!-JsonPath-!][http://goessner.net/articles/JsonPath/]] to perform checks on the response. 
+>JsonHttpTest shows examples with both GET and POST, using [[!-JsonPath-!][http://goessner.net/articles/JsonPath/]] to perform checks on the response. 
 
 !2 Language
 
-The main commands/keywords (i.e. public methods) offered by !-nl.hsac.fitnesse.fixture.slim.XmlHttpTest-! are listed below.
+!3 !-HttpTest-!
+The main commands/keywords (i.e. public methods) offered by !-nl.hsac.fitnesse.fixture.slim.HttpTest-! are listed below.
 
 -|Comment|
-|get from <url>                              |Sends a GET to the specified url (parameters can be added using 'set value for').                                                                                             |
-|post <body> to <url>                        |Sends a POST containing the specified body to the url.                                                                                                                        |
-|post template to <url>                      |Sends a POST to the specified url, determining the body by combining the configured template and values (see 'set value for' and 'template')                                  |
-|template <location>                         |Configures the Freemarker template to use on next call using 'post template to'.                                                                                              |
-|set value <value> for <name>                |Stores the value for either a query or template parameter with the supplied name.                                                                                             |
-|set value <value> for header <name>         |Stores the value for an HTTP header to add to subsequent requests.                                                                                                            |
-|clear values                                |Clears the list of name/value pairs to be added to GET requests or template evaluation.                                                                                       |
-|clear header values                         |Clears the list of HTTP headers to be sent with requests.                                                                                                                     |
-|request                                     |Returns the last url (including parameters) used for 'get from' or the body used for 'post (template) to'. Intended to be used in combination with the 'show' command.        |
-|response                                    |Returns the last response body returned. Intended to be used in combination with the 'show' or 'check' commands.                                                              |
-|html response                               |Returns the last response body returned as HTML to be embedded in the test result table (in combination with the 'show' command).                                             |
-|response status                             |HTTP status code of last response received.                                                                                                                                   |
-|response is valid                           |Whether the last request was successful, or an error.                                                                                                                         |
+|get from <url>                     |Sends a GET to the specified url (parameters can be added using 'set value(s) for').                                                                                  |
+|post <body> to <url>               |Sends a POST containing the specified body to the url.                                                                                                                |
+|post template to <url>             |Sends a POST to the specified url, determining the body by combining the configured template and values (see 'set value for' and 'template')                          |
+|template <location>                |Configures the Freemarker template to use on next call using 'post template to'.                                                                                      |
+|set value <value> for <name>       |Stores the value for either a query or template parameter with the supplied name.                                                                                     |
+|set values <values> for <name>     |Stores the a list of values (comma separated) for either a query or template parameter with the supplied name.                                                        |
+|post values to <url>               |Sends a POST containing all (url-encoded) values to the url.                                                                                                          |
+|set value <value> for header <name>|Stores the value for an HTTP header to add to subsequent requests.                                                                                                    |
+|clear values                       |Clears the list of name/value pairs to be added to GET requests or template evaluation.                                                                               |
+|clear header values                |Clears the list of HTTP headers to be sent with requests.                                                                                                             |
+|request                            |Returns the last url (including parameters) used for 'get from' or the body used for 'post (template) to'. Intended to be used in combination with the 'show' command.|
+|response                           |Returns the last response body returned. Intended to be used in combination with the 'show' or 'check' commands.                                                      |
+|html response                      |Returns the last response body returned as HTML to be embedded in the test result table (in combination with the 'show' command).                                     |
+|response status                    |HTTP status code of last response received.                                                                                                                           |
+|response is valid                  |Whether the last request was successful, or an error.                                                                                                                 |
+|set content type <content-type>    |Sets the content type to use when posting.                                                                                                                            |
+
+!3 !-JsonHttpTest-!
+The commands/keywords (i.e. public methods) added by !-nl.hsac.fitnesse.fixture.slim.JsonHttpTest-! are listed below.
+
+-|Comment|
+|json path <expression>            |Evaluates the (definite) expression against the last response received.                                                      |
+|json path count <expression>      |Evaluates the (indefinite) expression against the last response received, counting the number of results.                    |
+|all json path matches <expression>|Evaluates the expression against the last response received and returns all results. Intended to be used with 'show' command.|
+
+!3 !-XmlHttpTest-!
+The commands/keywords (i.e. public methods) added to those of !-HttpTest-! by !-nl.hsac.fitnesse.fixture.slim.XmlHttpTest-! are listed below.
+
+-|Comment|
 |xPath <expression>                          |Evaluates the expression against the last response received.                                                                                                                  |
 |all XPath matches <expression>              |Evaluates the expression against the last response received and returns all results. Intended to be used with 'show' command.                                                 |
 |register prefix <prefix> for namespace <url>|Defines a prefix to be used to identify a namespace in subsequent 'xPath' evaluation.                                                                                         |
