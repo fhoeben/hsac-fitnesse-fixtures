@@ -4,7 +4,6 @@ import nl.hsac.fitnesse.fixture.util.JsonFormatter;
 import nl.hsac.fitnesse.fixture.util.JsonPathHelper;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Fixture to make Http calls and interpret the result as JSON.
@@ -23,11 +22,6 @@ public class JsonHttpTest extends HttpTest {
 
     private String formatValue(String value) {
         return getEnvironment().getHtml(formatter, value);
-    }
-
-    public boolean postValuesTo(String serviceUrl) {
-        String body = urlEncodeCurrentValues();
-        return postToImpl(body, serviceUrl);
     }
 
     public Object jsonPath(String path) {

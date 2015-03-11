@@ -136,6 +136,16 @@ public class HttpTest extends SlimFixture {
         return postToImpl(cleanedBody, serviceUrl);
     }
 
+    /**
+     * Sends all values (url encoded) using post.
+     * @param serviceUrl service endpoint to send values to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean postValuesTo(String serviceUrl) {
+        String body = urlEncodeCurrentValues();
+        return postToImpl(body, serviceUrl);
+    }
+
     protected boolean postToImpl(String body, String serviceUrl) {
         boolean result;
         response = createResponse();
