@@ -1,4 +1,4 @@
-!-(Xml)HttpTest-! defines a basic language (a DSL of sorts) to interact with a website via HTTP requests (allowing SOAP (and REST) services to be tested). The XML subclass adds functionality to perform checks using XPath expressions on the response received.
+!-(Json/Xml)HttpTest-! defines a basic language (a DSL of sorts) to interact with a website via HTTP requests (allowing SOAP (and REST) services to be tested). The XML subclass adds functionality to perform checks using XPath expressions on the response received. The !-JsonHttpTest-! subclass adds functionality to perform checks using !-JsonPath-! expressions.
 This basic functionality will suffice for many tests, but can be extended by creating a custom subclass. 
 
 The tests in this suite show example usage of this fixture:
