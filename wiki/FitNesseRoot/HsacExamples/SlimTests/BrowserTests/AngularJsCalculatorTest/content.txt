@@ -1,4 +1,4 @@
-Sample test on !-AngularJs-! application finding elements based on their Angular binding or model. 
+Sample test on [[!-AngularJs-!][https://angularjs.org/]] application finding elements based on their Angular binding or model. 
 Inspired by http://anthonychu.ca/post/end-to-end-testing-angular-apps-with-nunit-and-specflow-using-protractornet/
 
 |table template|add                   |
@@ -17,12 +17,16 @@ Inspired by http://anthonychu.ca/post/end-to-end-testing-angular-apps-with-nunit
 |1    |2     |3      |
 |3    |4     |7      |
 
+Now let's see what we can do with the repeater 'result in memory'.
+
 |script                                                                                                    |
 |check|number of             |result in memory|2                                                           |
 |check|value of              |Result          |in row number|1     |of|result in memory|7                  |
 |check|value of column number|3               |in row number|1     |of|result in memory|7                  |
 |show |value of              |Time            |in row where |Result|is|3               |of|result in memory|
 |show |take screenshot       |2additions                                                                   |
+
+We can not only enter values based on their model, but also retrieve their values.
 
 |table template|divide                            |
 |enter         |@{numerator}|as      |first       |
