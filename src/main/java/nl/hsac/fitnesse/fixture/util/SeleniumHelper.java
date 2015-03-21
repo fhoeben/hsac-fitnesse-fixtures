@@ -522,6 +522,13 @@ public class SeleniumHelper {
         return FileUtil.saveToFile(baseName, "png", png);
     }
 
+    /**
+     * @return current browser window.
+     */
+    public WebDriver.Window getWindow() {
+        return driver().manage().window();
+    }
+
     public int getCurrentTabIndex(List<String> tabHandles) {
         try {
             String currentHandle = driver().getWindowHandle();
