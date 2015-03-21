@@ -64,10 +64,10 @@ public class SlimFixture {
     }
 
     public boolean waitSeconds(int i) {
-        return waitMilliSeconds(i * 1000);
+        return waitMilliseconds(i * 1000);
     }
 
-    public boolean waitMilliSeconds(int i) {
+    public boolean waitMilliseconds(int i) {
         boolean result;
         try {
             Thread.sleep(i);

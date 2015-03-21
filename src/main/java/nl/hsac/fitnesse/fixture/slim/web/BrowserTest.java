@@ -76,7 +76,7 @@ public class BrowserTest extends SlimFixture {
         getNavigation().back();
 
         // firefox sometimes prevents immediate back, if previous page was reached via POST
-        waitMilliSeconds(500);
+        waitMilliseconds(500);
         WebElement element = getSeleniumHelper().findElement(By.id("errorTryAgain"));
         if (element != null) {
             element.click();
@@ -833,7 +833,7 @@ public class BrowserTest extends SlimFixture {
     protected void scrollTo(WebElement element) {
         getSeleniumHelper().executeJavascript("arguments[0].scrollIntoView(true);", element);
         if (waitAfterScroll > 0) {
-            waitMilliSeconds(waitAfterScroll);
+            waitMilliseconds(waitAfterScroll);
         }
     }
 
