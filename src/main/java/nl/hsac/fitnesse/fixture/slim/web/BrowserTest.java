@@ -13,7 +13,6 @@ import org.apache.http.impl.cookie.BasicClientCookie;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
@@ -1025,34 +1024,25 @@ public class BrowserTest extends SlimFixture {
     }
 
     public int currentBrowserWidth() {
-        WebDriver.Window window = getWindow();
-        return window.getSize().getWidth();
+        return getSeleniumHelper().getWindowSize().getWidth();
     }
 
     public int currentBrowserHeight() {
-        WebDriver.Window window = getWindow();
-        return window.getSize().getHeight();
+        return getSeleniumHelper().getWindowSize().getHeight();
     }
 
     public void setBrowserWidth(int newWidth) {
-        WebDriver.Window window = getWindow();
-        int currentHeight = window.getSize().getHeight();
-        window.setSize(new Dimension(newWidth, currentHeight));
+        int currentHeight = getSeleniumHelper().getWindowSize().getHeight();
+        setBrowserSizeToBy(newWidth, currentHeight);
     }
 
     public void setBrowserHeight(int newHeight) {
-        WebDriver.Window window = getWindow();
-        int currentWidth = window.getSize().getWidth();
-        window.setSize(new Dimension(currentWidth, newHeight));
+        int currentWidth = getSeleniumHelper().getWindowSize().getWidth();
+        setBrowserSizeToBy(currentWidth, newHeight);
     }
 
     public void setBrowserSizeToBy(int newWidth, int newHeight) {
-        WebDriver.Window window = getWindow();
-        window.setSize(new Dimension(newWidth, newHeight));
-    }
-
-    protected WebDriver.Window getWindow() {
-        return getSeleniumHelper().getWindow();
+        getSeleniumHelper().setWindowSize(newWidth, newHeight);
     }
 
     /**

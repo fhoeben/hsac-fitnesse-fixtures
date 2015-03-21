@@ -523,6 +523,22 @@ public class SeleniumHelper {
     }
 
     /**
+     * @return current window's size.
+     */
+    public Dimension getWindowSize() {
+        return getWindow().getSize();
+    }
+
+    /**
+     * Sets current window's size.
+     * @param newWidth new width (in pixels)
+     * @param newHeight new height (in pixels)
+     */
+    public void setWindowSize(int newWidth, int newHeight) {
+        getWindow().setSize(new Dimension(newWidth, newHeight));
+    }
+
+    /**
      * @return current browser window.
      */
     public WebDriver.Window getWindow() {
