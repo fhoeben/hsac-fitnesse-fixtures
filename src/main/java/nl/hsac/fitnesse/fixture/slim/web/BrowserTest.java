@@ -1026,16 +1026,36 @@ public class BrowserTest extends SlimFixture {
     }
 
     public int currentBrowserWidth() {
-        WebDriver.Window window = getSeleniumHelper().driver().manage().window();
-        window.setPosition(new Point(0, 0));
+        WebDriver.Window window = getWindow();
         return window.getSize().getWidth();
     }
 
+    public int currentBrowserHeight() {
+        WebDriver.Window window = getWindow();
+        return window.getSize().getHeight();
+    }
+
     public void setBrowserWidth(int newWidth) {
-        WebDriver.Window window = getSeleniumHelper().driver().manage().window();
+        WebDriver.Window window = getWindow();
+        int currentHeight = window.getSize().getHeight();
+        window.setSize(new Dimension(newWidth, currentHeight));
+    }
+
+    public void setBrowserHeight(int newHeight) {
+        WebDriver.Window window = getWindow();
+        int currentWidth = window.getSize().getWidth();
+        window.setSize(new Dimension(currentWidth, newHeight));
+    }
+
+    public void setBrowserSizeToBy(int newWidth, int newHeight) {
+        WebDriver.Window window = getWindow();
+        window.setSize(new Dimension(newWidth, newHeight));
+    }
+
+    protected WebDriver.Window getWindow() {
+        WebDriver.Window window = getSeleniumHelper().getWindow();
         window.setPosition(new Point(0, 0));
-        int currentBrowserHeight = window.getSize().getHeight();
-        window.setSize(new Dimension(newWidth, currentBrowserHeight));
+        return window;
     }
 
     /**

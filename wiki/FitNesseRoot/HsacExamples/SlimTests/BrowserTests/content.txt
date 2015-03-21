@@ -9,6 +9,7 @@ The tests in this suite show example usage of this fixture:
 The >TableTemplateTest simplifies the parameterization of the script.
 >CustomFixtureTest shows the usage of a custom subclass of !-BrowserTest-! to make test content more descriptive by encapsulating knowledge of the site's HTML in Java code.
 >StoryboardTest shows a test where a screenshot is taken after each action. This is then combined with a scenario in >TemplateStoryboardTest.
+>ResizeTest shows some manipulation of the browser window.
 >AngularJsTest shows usage of !-NgBrowserTest-! aimed at testing [[!-AngularJs-!][https://angularjs.org]] applications. >AngularJsCalculatorTest takes it one step further, selecting elements by models, binding and repeater.
 
 !2 Language
@@ -56,6 +57,9 @@ The heuristic to find places tries a number of translations of end user terms to
 |download <place> from row where <selectColumn> is <selectValue>           |Finds the first row where the column with header 'selectColumn' is 'selectValue' and downloads the target of the link in column 'place', or with text 'place'.|
 |current browser width                                                     |Retrieves the current width of the browser's window (in pixels).                                                                                              |
 |set browser width <newWidth>                                              |Sets the width of the browser's window to 'newWidth' (in pixels).                                                                                             |
+|current browser height                                                    |Retrieves the current height of the browser's window (in pixels).                                                                                             |
+|set browser height <newHeight>                                            |Sets the height of the browser's window to 'newHeight' (in pixels).                                                                                           |
+|set browser size to <newWidth> to <newHeight>                             |Sets the size of the browser's window to 'newWidth' by 'newHeight' (in pixels).                                                                               |
 |text by xPath <element xpath>                                             |retrieves the text of the first element found by evaluating the xPath against the current page's DOM                                                          |
 |text by class name <class>                                                |retrieves the text of the first element found with the specified class                                                                                        |
 
