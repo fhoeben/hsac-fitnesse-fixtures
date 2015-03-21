@@ -15,7 +15,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -1053,9 +1052,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected WebDriver.Window getWindow() {
-        WebDriver.Window window = getSeleniumHelper().getWindow();
-        window.setPosition(new Point(0, 0));
-        return window;
+        return getSeleniumHelper().getWindow();
     }
 
     /**
