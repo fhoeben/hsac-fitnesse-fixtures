@@ -10,15 +10,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
@@ -1043,6 +1035,12 @@ public class BrowserTest extends SlimFixture {
 
     public void setBrowserSizeToBy(int newWidth, int newHeight) {
         getSeleniumHelper().setWindowSize(newWidth, newHeight);
+        Dimension actualSize = getSeleniumHelper().getWindowSize();
+        if (actualSize.getHeight() != newHeight || actualSize.getWidth() != newWidth) {
+            String message = String.format("Unable to change size to: %s x %s; size is: %s x %s",
+                                newWidth, newHeight, actualSize.getWidth(), actualSize.getHeight());
+            throw new SlimFixtureException(false, message);
+        }
     }
 
     /**
