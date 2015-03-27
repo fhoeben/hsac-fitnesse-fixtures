@@ -470,12 +470,19 @@ public class BrowserTest extends SlimFixture {
 
                 List<WebElement> elements = webDriver.findElements(by);
                 if (elements != null) {
-                    for (WebElement element : elements) {
-                        ok = hasText(element, textToLookFor);
-                        if (ok) {
-                            // no need to continue to check other elements
-                            break;
+                    try {
+                        for (WebElement element : elements) {
+                            // we don't want stale elements to make single
+                            // element false, but instead we stop processing
+                            // current list and do a new findElements
+                            ok = hasTextUnsafe(element, textToLookFor);
+                            if (ok) {
+                                // no need to continue to check other elements
+                                break;
+                            }
                         }
+                    } catch (StaleElementReferenceException e) {
+                        // find elements again if still allowed
                     }
                 }
                 return ok;
@@ -497,18 +504,24 @@ public class BrowserTest extends SlimFixture {
     protected boolean hasText(WebElement element, String textToLookFor) {
         boolean ok;
         try {
-            String actual = getElementText(element);
-            if (textToLookFor == null) {
-                ok = actual == null;
-            } else {
-                if (actual == null) {
-                    actual = element.getAttribute("value");
-                }
-                ok = textToLookFor.equals(actual);
-            }
+            ok = hasTextUnsafe(element, textToLookFor);
         } catch (StaleElementReferenceException e) {
             // element detached from DOM
             ok = false;
+        }
+        return ok;
+    }
+
+    protected boolean hasTextUnsafe(WebElement element, String textToLookFor) {
+        boolean ok;
+        String actual = getElementText(element);
+        if (textToLookFor == null) {
+            ok = actual == null;
+        } else {
+            if (actual == null) {
+                actual = element.getAttribute("value");
+            }
+            ok = textToLookFor.equals(actual);
         }
         return ok;
     }
