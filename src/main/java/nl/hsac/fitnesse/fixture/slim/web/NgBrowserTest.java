@@ -84,6 +84,12 @@ public class NgBrowserTest extends BrowserTest {
         return result;
     }
 
+    @Override
+    public boolean clear(String place) {
+        waitForAngularRequestsToFinish();
+        return super.clear(place);
+    }
+
     public int numberOf(String repeater) {
         waitForAngularRequestsToFinish();
         return findRepeaterRows(repeater).size();
@@ -112,6 +118,48 @@ public class NgBrowserTest extends BrowserTest {
             }
         }
         return result;
+    }
+
+    @Override
+    protected boolean clickInRow(String columnXPath, String place) {
+        waitForAngularRequestsToFinish();
+        return super.clickInRow(columnXPath, place);
+    }
+
+    @Override
+    public boolean enterAsInRowWhereIs(String value, String requestedColumnName, String selectOnColumn, String selectOnValue) {
+        waitForAngularRequestsToFinish();
+        return super.enterAsInRowWhereIs(value, requestedColumnName, selectOnColumn, selectOnValue);
+    }
+
+    @Override
+    protected String getTextByXPath(String xpathPattern, String... params) {
+        waitForAngularRequestsToFinish();
+        return super.getTextByXPath(xpathPattern, params);
+    }
+
+    @Override
+    protected String getTextByClassName(String className) {
+        waitForAngularRequestsToFinish();
+        return super.getTextByClassName(className);
+    }
+
+    @Override
+    protected String downloadFromRow(String columnXPath, String place) {
+        waitForAngularRequestsToFinish();
+        return super.downloadFromRow(columnXPath, place);
+    }
+
+    @Override
+    public String download(String place) {
+        waitForAngularRequestsToFinish();
+        return super.download(place);
+    }
+
+    @Override
+    public boolean selectFileFor(String fileName, String place) {
+        waitForAngularRequestsToFinish();
+        return super.selectFileFor(fileName, place);
     }
 
     protected String getTextInRepeaterColumn(String columnIndexXPath, int rowIndex, String repeater) {
