@@ -16,3 +16,4 @@ target/
 wiki/FitNesseRoot/files/testProgress
 wiki/FitNesseRoot/files/downloads
 .gitignore
+.idea/
