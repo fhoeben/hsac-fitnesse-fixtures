@@ -33,7 +33,7 @@ The HTML results can be found in: target/fitnesse-results/index.html
 The Fitnesse suite to run can be specified by changing the value of the !style_code[@Suite]'s value in !style_code[nl.hsac.fitnesse.fixture.FixtureDebugTest],
 or (preferably) by adding a system property, called !style_code[fitnesseSuiteToRun], specifying the suite to run to the build server's mvn execution.
 
-The Selenium configuration (e.g. what browser on what platform) to use when testing websites can be overridden by using system properties (i.e. !style_code[seleniumGridUrl] and either !style_code[seleniumBrowser] or !style_code[seleniumCapabilities]). This allows different configurations on the build server to test with different browsers, without requiring different Wiki content, but only requiring a different build configuration.
+The Selenium configuration (e.g. what browser on what platform) to use when testing websites can be overridden by using system properties. This allows different configurations on the build server to test with different browsers, without requiring different Wiki content, but only requiring a different build configuration. More details can be found in >SlimTests.BrowserTests.OverridingSeleniumSetup
 
 Example reports for [[Windows][https://github.com/fhoeben/hsac-fitnesse-fixtures/releases/download/v1.6.1/sample-results-chrome-windows.zip]] and [[OSX][https://github.com/fhoeben/hsac-fitnesse-fixtures/releases/download/v1.6.1/sample-results-chrome-osx.zip]] have been included in the 1.6.1 release showing the output of a run using a Sauce Labs selenium driver generates.
 
