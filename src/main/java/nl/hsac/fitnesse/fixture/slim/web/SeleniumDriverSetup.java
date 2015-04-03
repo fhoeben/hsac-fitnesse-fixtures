@@ -10,7 +10,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.remote.*;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.FileDetector;
+import org.openqa.selenium.remote.LocalFileDetector;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.UselessFileDetector;
 import org.openqa.selenium.safari.SafariDriver;
 
 import java.io.File;
@@ -89,6 +94,10 @@ public class SeleniumDriverSetup extends SlimFixture {
             String driverPath = getExecutable("IEDriverServer");
             setPropertyValue("webdriver.ie.driver", driverPath);
             result = startDriver(InternetExplorerDriver.class.getName());
+        } else if ("phantomjs".equals(browserName)) {
+            String driverPath = getExecutable("phantomjs");
+            setPropertyValue("phantomjs.binary.path", driverPath);
+            result = startDriver(PhantomJSDriver.class.getName());
         } else {
             throw new IllegalArgumentException("No defaults known for: " + browser);
         }
