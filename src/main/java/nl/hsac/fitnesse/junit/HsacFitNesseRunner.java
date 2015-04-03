@@ -9,16 +9,18 @@ import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.slim.web.SeleniumDriverSetup;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
+import nl.hsac.fitnesse.junit.selenium.LocalSeleniumDriverFactoryFactory;
+import nl.hsac.fitnesse.junit.selenium.SeleniumDriverFactoryFactory;
+import nl.hsac.fitnesse.junit.selenium.SeleniumGridDriverFactoryFactory;
+import nl.hsac.fitnesse.junit.selenium.SimpleSeleniumGridDriverFactoryFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.net.MalformedURLException;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * JUnit Runner to run a FitNesse suite or page as JUnit test.
@@ -34,14 +36,15 @@ import java.util.Map;
  */
 public class HsacFitNesseRunner extends FitNesseRunner {
     private final static String suiteOverrideVariableName = "fitnesseSuiteToRun";
-
-    private final static String seleniumOverrideUrlVariableName = "seleniumGridUrl";
-    private final static String seleniumOverrideBrowserVariableName = "seleniumBrowser";
-    private final static String seleniumOverrideCapabilitiesVariableName = "seleniumCapabilities";
+    protected final List<SeleniumDriverFactoryFactory> factoryFactories = new ArrayList<SeleniumDriverFactoryFactory>();
 
     public HsacFitNesseRunner(Class<?> suiteClass) throws InitializationError {
         super(suiteClass);
         try {
+            factoryFactories.add(new SimpleSeleniumGridDriverFactoryFactory());
+            factoryFactories.add(new SeleniumGridDriverFactoryFactory());
+            factoryFactories.add(new LocalSeleniumDriverFactoryFactory());
+
             // we include images in output so build server will have single
             // directory containing both HTML results and the images created by the tests
             String outputDir = getOutputDir(suiteClass);
@@ -130,82 +133,33 @@ public class HsacFitNesseRunner extends FitNesseRunner {
      * @return true if Selenium was configured.
      */
     protected boolean configureSeleniumIfNeeded() {
-        boolean result = false;
         try {
             SeleniumHelper.DriverFactory factory = null;
-            final String gridUrl = System.getProperty(seleniumOverrideUrlVariableName);
-            if (!StringUtils.isEmpty(gridUrl)) {
-                final String capabilitiesString = System.getProperty(seleniumOverrideCapabilitiesVariableName);
-                if (StringUtils.isEmpty(capabilitiesString)) {
-                    final String browser = System.getProperty(seleniumOverrideBrowserVariableName);
-                    if (!StringUtils.isEmpty(browser)) {
-                        result = true;
-                        factory = new SeleniumHelper.DriverFactory() {
-                            @Override
-                            public void createDriver() {
-                                SeleniumDriverSetup.unlockConfig();
-                                try {
-                                    new SeleniumDriverSetup().connectToDriverForAt(browser, gridUrl);
-                                } catch (MalformedURLException e) {
-                                    throw new RuntimeException("Unable to create driver at hub: "
-                                            + gridUrl + " for: " +browser, e);
-                                } finally {
-                                    SeleniumDriverSetup.lockConfig();
-                                }
-                            }
-                        };
-                    }
-                } else {
-                    final Map<String, String> capabilities = parseCapabilities(capabilitiesString);
-                    result = true;
-                    factory = new SeleniumHelper.DriverFactory() {
-                        @Override
-                        public void createDriver() {
-                            SeleniumDriverSetup.unlockConfig();
-                            try {
-                                new SeleniumDriverSetup().connectToDriverAtWithCapabilities(gridUrl, capabilities);
-                            } catch (MalformedURLException e) {
-                                throw new RuntimeException("Unable to create driver at: "
-                                        + gridUrl + " with: " + capabilities, e);
-                            } finally {
-                                SeleniumDriverSetup.lockConfig();
-                            }
-                        }
-                    };
+            SeleniumDriverFactoryFactory factoryFactory = getSeleniumDriverFactoryFactory();
+            if (factoryFactory != null) {
+                factory = factoryFactory.getDriverFactory();
+
+                if (factory != null) {
+                    SeleniumDriverSetup.lockConfig();
+                    Environment.getInstance().getSeleniumHelper().setDriverFactory(factory);
                 }
             }
 
-            if (result) {
-                SeleniumDriverSetup.lockConfig();
-                Environment.getInstance().getSeleniumHelper().setDriverFactory(factory);
-            }
-            return result;
+            return factory != null;
         } catch (Exception e) {
             throw new RuntimeException("Error overriding Selenium config", e);
         }
     }
 
-    protected Map<String, String> parseCapabilities(String capabilitiesString) {
-        try {
-            Map<String, String> result = new LinkedHashMap<String, String>();
-            if (capabilitiesString.startsWith("\"") && capabilitiesString.endsWith("\"")) {
-                capabilitiesString = capabilitiesString.substring(1, capabilitiesString.length() - 2);
+    protected SeleniumDriverFactoryFactory getSeleniumDriverFactoryFactory() {
+        SeleniumDriverFactoryFactory result = null;
+        for (SeleniumDriverFactoryFactory factory : factoryFactories) {
+            if (factory.willOverride()) {
+                result = factory;
+                break;
             }
-            String[] capas = capabilitiesString.split(",");
-            for (String capa : capas) {
-                String[] kv = capa.split(":");
-                String key = kv[0].trim();
-                String value = "";
-                if (kv.length > 1) {
-                    value = capa.substring(capa.indexOf(":") + 1).trim();
-                }
-                result.put(key, value);
-            }
-            return result;
-        } catch (Exception e) {
-            throw new RuntimeException("Unable to parse Selenium capabilities: " + capabilitiesString
-                                        + "\nExpected format: key:value(, key:value)*", e);
         }
+        return result;
     }
 
     protected void shutdownSelenium() {
