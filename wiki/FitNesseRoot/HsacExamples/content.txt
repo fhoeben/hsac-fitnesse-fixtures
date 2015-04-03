@@ -35,7 +35,7 @@ or (preferably) by adding a system property, called !style_code[fitnesseSuiteToR
 
 The Selenium configuration (e.g. what browser on what platform) to use when testing websites can be overridden by using system properties (i.e. !style_code[seleniumGridUrl] and either !style_code[seleniumBrowser] or !style_code[seleniumCapabilities]). This allows different configurations on the build server to test with different browsers, without requiring different Wiki content, but only requiring a different build configuration.
 
-Example configurations for [[Windows][https://fhoeben.ci.cloudbees.com/job/hsac-fitnesse-fixtures-run-FitNesseTests/]] and [[OSX][https://fhoeben.ci.cloudbees.com/job/hsac-fitnesse-fixtures-run-FitNesseTests-Mac/]] have been set up at Cloud Bees showing what kind of [[report][https://fhoeben.ci.cloudbees.com/job/hsac-fitnesse-fixtures-run-FitNesseTests/FitNesse_Results/]] a run using a [[Sauce Labs][https://saucelabs.com]] selenium driver generates.
+Example reports for [[Windows][https://github.com/fhoeben/hsac-fitnesse-fixtures/releases/download/v1.6.1/sample-results-chrome-windows.zip]] and [[OSX][https://github.com/fhoeben/hsac-fitnesse-fixtures/releases/download/v1.6.1/sample-results-chrome-osx.zip]] have been included in the 1.6.1 release showing the output of a run using a Sauce Labs selenium driver generates.
 
 !3 3. Fixture developer installation
 Import this project in your favorite Java IDE (with Maven support).
