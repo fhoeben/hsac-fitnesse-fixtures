@@ -14,13 +14,13 @@ import java.util.Map;
 public class SeleniumGridDriverFactoryFactory extends SeleniumDriverFactoryFactoryBase {
     @Override
     public boolean willOverride() {
-        return isPropertySet(seleniumOverrideUrlVariableName)
-                && isPropertySet(seleniumOverrideCapabilitiesVariableName);
+        return isPropertySet(SELENIUM_GRID_URL)
+                && isPropertySet(SELENIUM_CAPABILITIES);
     }
 
     @Override
     public SeleniumHelper.DriverFactory getDriverFactory() {
-        final String gridUrl = getProperty(seleniumOverrideUrlVariableName);
+        final String gridUrl = getProperty(SELENIUM_GRID_URL);
         final Map<String, String> capabilities = getCapabilities();
         return new SeleniumHelper.DriverFactory() {
             @Override
@@ -39,7 +39,7 @@ public class SeleniumGridDriverFactoryFactory extends SeleniumDriverFactoryFacto
     }
 
     protected Map<String, String> getCapabilities() {
-        String capabilitiesString = getProperty(seleniumOverrideCapabilitiesVariableName);
+        String capabilitiesString = getProperty(SELENIUM_CAPABILITIES);
         try {
             Map<String, String> result = new LinkedHashMap<String, String>();
             String[] capas = capabilitiesString.split(",");

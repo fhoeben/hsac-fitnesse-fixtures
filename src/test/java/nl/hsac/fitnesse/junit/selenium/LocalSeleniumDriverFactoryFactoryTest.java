@@ -6,14 +6,14 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class LocalSeleniumDriverFactoryFactoryTest {
-    private static final String ORIGINAL_PROP_VALUE = System.getProperty(SeleniumDriverFactoryFactoryBase.seleniumOverrideBrowserVariableName);
+    private static final String ORIGINAL_PROP_VALUE = System.getProperty(SeleniumDriverFactoryFactoryBase.SELENIUM_BROWSER);
 
     private LocalSeleniumDriverFactoryFactory factoryFactory = new LocalSeleniumDriverFactoryFactory();
 
     @AfterClass
     public static void cleanUp() {
         if (ORIGINAL_PROP_VALUE == null) {
-            System.clearProperty(SeleniumDriverFactoryFactoryBase.seleniumOverrideBrowserVariableName);
+            System.clearProperty(SeleniumDriverFactoryFactoryBase.SELENIUM_BROWSER);
         } else {
             setBrowser(ORIGINAL_PROP_VALUE);
         }
@@ -22,22 +22,22 @@ public class LocalSeleniumDriverFactoryFactoryTest {
     @Test
     public void testBasic() {
         setBrowser("chrome");
-        assertEquals("chrome", factoryFactory.getProperty(SeleniumDriverFactoryFactoryBase.seleniumOverrideBrowserVariableName));
+        assertEquals("chrome", factoryFactory.getProperty(SeleniumDriverFactoryFactoryBase.SELENIUM_BROWSER));
     }
 
     @Test
     public void testWithSpace() {
         setBrowser("internet explorer");
-        assertEquals("internet explorer", factoryFactory.getProperty(SeleniumDriverFactoryFactoryBase.seleniumOverrideBrowserVariableName));
+        assertEquals("internet explorer", factoryFactory.getProperty(SeleniumDriverFactoryFactoryBase.SELENIUM_BROWSER));
     }
 
     @Test
     public void testWithSpaceAndQuotes() {
         setBrowser("\"internet explorer\"");
-        assertEquals("internet explorer", factoryFactory.getProperty(SeleniumDriverFactoryFactoryBase.seleniumOverrideBrowserVariableName));
+        assertEquals("internet explorer", factoryFactory.getProperty(SeleniumDriverFactoryFactoryBase.SELENIUM_BROWSER));
     }
 
     private static void setBrowser(String value) {
-        System.setProperty(SeleniumDriverFactoryFactoryBase.seleniumOverrideBrowserVariableName, value);
+        System.setProperty(SeleniumDriverFactoryFactoryBase.SELENIUM_BROWSER, value);
     }
 }

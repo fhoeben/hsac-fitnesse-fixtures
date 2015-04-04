@@ -8,14 +8,14 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 public class SeleniumGridDriverFactoryFactoryTest {
-    private static final String ORIGINAL_PROP_VALUE = System.getProperty(SeleniumDriverFactoryFactoryBase.seleniumOverrideCapabilitiesVariableName);
+    private static final String ORIGINAL_PROP_VALUE = System.getProperty(SeleniumDriverFactoryFactoryBase.SELENIUM_CAPABILITIES);
 
     private SeleniumGridDriverFactoryFactory factoryFactory = new SeleniumGridDriverFactoryFactory();
 
     @AfterClass
     public static void cleanUp() {
         if (ORIGINAL_PROP_VALUE == null) {
-            System.clearProperty(SeleniumDriverFactoryFactoryBase.seleniumOverrideCapabilitiesVariableName);
+            System.clearProperty(SeleniumDriverFactoryFactoryBase.SELENIUM_CAPABILITIES);
         } else {
             setCapabilities(ORIGINAL_PROP_VALUE);
         }
@@ -47,6 +47,6 @@ public class SeleniumGridDriverFactoryFactoryTest {
     }
 
     private static void setCapabilities(String value) {
-        System.setProperty(SeleniumDriverFactoryFactoryBase.seleniumOverrideCapabilitiesVariableName, value);
+        System.setProperty(SeleniumDriverFactoryFactoryBase.SELENIUM_CAPABILITIES, value);
     }
 }
