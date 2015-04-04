@@ -43,7 +43,7 @@ public class SeleniumGridDriverFactoryFactory extends SeleniumDriverFactoryFacto
         try {
             Map<String, String> result = new LinkedHashMap<String, String>();
             if (capabilitiesString.startsWith("\"") && capabilitiesString.endsWith("\"")) {
-                capabilitiesString = capabilitiesString.substring(1, capabilitiesString.length() - 2);
+                capabilitiesString = capabilitiesString.substring(1, capabilitiesString.length() - 1);
             }
             String[] capas = capabilitiesString.split(",");
             for (String capa : capas) {
