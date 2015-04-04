@@ -18,7 +18,15 @@ public abstract class SeleniumDriverFactoryFactoryBase implements SeleniumDriver
     public abstract SeleniumHelper.DriverFactory getDriverFactory();
 
     protected boolean isPropertySet(String propertyName) {
-        String capabilitiesString = System.getProperty(propertyName);
-        return !StringUtils.isEmpty(capabilitiesString);
+        String value = getProperty(propertyName);
+        return !StringUtils.isEmpty(value);
+    }
+
+    protected String getProperty(String propertyName) {
+        String value = System.getProperty(propertyName);
+        if (value.startsWith("\"") && value.endsWith("\"")) {
+            value = value.substring(1, value.length() - 1);
+        }
+        return value;
     }
 }

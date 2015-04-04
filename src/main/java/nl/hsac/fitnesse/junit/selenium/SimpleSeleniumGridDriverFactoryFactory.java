@@ -18,8 +18,8 @@ public class SimpleSeleniumGridDriverFactoryFactory extends SeleniumDriverFactor
 
     @Override
     public SeleniumHelper.DriverFactory getDriverFactory() {
-        final String gridUrl = System.getProperty(seleniumOverrideUrlVariableName);
-        final String browser = System.getProperty(seleniumOverrideBrowserVariableName);
+        final String gridUrl = getProperty(seleniumOverrideUrlVariableName);
+        final String browser = getProperty(seleniumOverrideBrowserVariableName);
         return new SeleniumHelper.DriverFactory() {
             @Override
             public void createDriver() {

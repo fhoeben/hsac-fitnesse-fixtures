@@ -20,9 +20,8 @@ public class SeleniumGridDriverFactoryFactory extends SeleniumDriverFactoryFacto
 
     @Override
     public SeleniumHelper.DriverFactory getDriverFactory() {
-        final String gridUrl = System.getProperty(seleniumOverrideUrlVariableName);
-        final String capabilitiesString = System.getProperty(seleniumOverrideCapabilitiesVariableName);
-        final Map<String, String> capabilities = parseCapabilities(capabilitiesString);
+        final String gridUrl = getProperty(seleniumOverrideUrlVariableName);
+        final Map<String, String> capabilities = getCapabilities();
         return new SeleniumHelper.DriverFactory() {
             @Override
             public void createDriver() {
@@ -39,12 +38,10 @@ public class SeleniumGridDriverFactoryFactory extends SeleniumDriverFactoryFacto
         };
     }
 
-    protected Map<String, String> parseCapabilities(String capabilitiesString) {
+    protected Map<String, String> getCapabilities() {
+        String capabilitiesString = getProperty(seleniumOverrideCapabilitiesVariableName);
         try {
             Map<String, String> result = new LinkedHashMap<String, String>();
-            if (capabilitiesString.startsWith("\"") && capabilitiesString.endsWith("\"")) {
-                capabilitiesString = capabilitiesString.substring(1, capabilitiesString.length() - 1);
-            }
             String[] capas = capabilitiesString.split(",");
             for (String capa : capas) {
                 String[] kv = capa.split(":");
