@@ -12,14 +12,14 @@ import java.net.MalformedURLException;
 public class SimpleSeleniumGridDriverFactoryFactory extends SeleniumDriverFactoryFactoryBase {
     @Override
     public boolean willOverride() {
-        return isPropertySet(seleniumOverrideUrlVariableName)
-                && isPropertySet(seleniumOverrideBrowserVariableName);
+        return isPropertySet(SELENIUM_GRID_URL)
+                && isPropertySet(SELENIUM_BROWSER);
     }
 
     @Override
     public SeleniumHelper.DriverFactory getDriverFactory() {
-        final String gridUrl = getProperty(seleniumOverrideUrlVariableName);
-        final String browser = getProperty(seleniumOverrideBrowserVariableName);
+        final String gridUrl = getProperty(SELENIUM_GRID_URL);
+        final String browser = getProperty(SELENIUM_BROWSER);
         return new SeleniumHelper.DriverFactory() {
             @Override
             public void createDriver() {

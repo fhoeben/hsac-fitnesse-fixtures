@@ -11,13 +11,13 @@ import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
 public class LocalSeleniumDriverFactoryFactory extends SeleniumDriverFactoryFactoryBase {
     @Override
     public boolean willOverride() {
-        return !isPropertySet(seleniumOverrideUrlVariableName)
-                && isPropertySet(seleniumOverrideBrowserVariableName);
+        return !isPropertySet(SELENIUM_GRID_URL)
+                && isPropertySet(SELENIUM_BROWSER);
     }
 
     @Override
     public SeleniumHelper.DriverFactory getDriverFactory() {
-        final String browser = getProperty(seleniumOverrideBrowserVariableName);
+        final String browser = getProperty(SELENIUM_BROWSER);
         return new SeleniumHelper.DriverFactory() {
             @Override
             public void createDriver() {

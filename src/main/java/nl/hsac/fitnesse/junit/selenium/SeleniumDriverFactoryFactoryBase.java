@@ -7,9 +7,9 @@ import org.apache.commons.lang3.StringUtils;
  * Base class for Selenium driver factory factories.
  */
 public abstract class SeleniumDriverFactoryFactoryBase implements SeleniumDriverFactoryFactory {
-    public final static String seleniumOverrideUrlVariableName = "seleniumGridUrl";
-    public final static String seleniumOverrideBrowserVariableName = "seleniumBrowser";
-    public final static String seleniumOverrideCapabilitiesVariableName = "seleniumCapabilities";
+    public final static String SELENIUM_GRID_URL = "seleniumGridUrl";
+    public final static String SELENIUM_BROWSER = "seleniumBrowser";
+    public final static String SELENIUM_CAPABILITIES = "seleniumCapabilities";
 
     @Override
     public abstract boolean willOverride();
