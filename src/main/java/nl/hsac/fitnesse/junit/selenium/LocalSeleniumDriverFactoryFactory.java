@@ -17,7 +17,7 @@ public class LocalSeleniumDriverFactoryFactory extends SeleniumDriverFactoryFact
 
     @Override
     public SeleniumHelper.DriverFactory getDriverFactory() {
-        final String browser = System.getProperty(seleniumOverrideBrowserVariableName);
+        final String browser = getProperty(seleniumOverrideBrowserVariableName);
         return new SeleniumHelper.DriverFactory() {
             @Override
             public void createDriver() {
