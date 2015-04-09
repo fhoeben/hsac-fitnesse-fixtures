@@ -639,6 +639,12 @@ public class BrowserTest extends SlimFixture {
         return getTextByXPath("%s[%s]", columnXPath, requestedIndex);
     }
 
+    public boolean rowExistsWhereIs(String selectOnColumn, String selectOnValue) {
+        String columnXPath = getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue);
+        WebElement element = findByXPath(columnXPath);
+        return element != null;
+    }
+
     public boolean clickInRowNumber(String place, int rowIndex) {
         String columnXPath = String.format("(//tr[boolean(td)])[%s]/td", rowIndex);
         return clickInRow(columnXPath, place);
