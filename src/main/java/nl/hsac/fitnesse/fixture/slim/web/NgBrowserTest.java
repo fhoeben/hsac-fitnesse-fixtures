@@ -121,6 +121,12 @@ public class NgBrowserTest extends BrowserTest {
     }
 
     @Override
+    public boolean rowExistsWhereIs(String selectOnColumn, String selectOnValue) {
+        waitForAngularRequestsToFinish();
+        return super.rowExistsWhereIs(selectOnColumn, selectOnValue);
+    }
+
+    @Override
     protected boolean clickInRow(String columnXPath, String place) {
         waitForAngularRequestsToFinish();
         return super.clickInRow(columnXPath, place);
