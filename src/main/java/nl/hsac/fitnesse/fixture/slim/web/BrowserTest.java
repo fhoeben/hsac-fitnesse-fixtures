@@ -64,7 +64,9 @@ public class BrowserTest extends SlimFixture {
         WebElement element = getSeleniumHelper().findElement(By.id("errorTryAgain"));
         if (element != null) {
             element.click();
-            confirmAlert();
+            // don't use confirmAlert as this may be overridden in subclass and to get rid of the
+            // firefox pop-up we need the basic behavior
+            getSeleniumHelper().getAlert().accept();
         }
         return true;
     }
