@@ -72,8 +72,7 @@ public class BrowserTest extends SlimFixture {
         WebElement element = getSeleniumHelper().findElement(By.id("errorTryAgain"));
         if (element != null) {
             element.click();
-            Alert alert = getSeleniumHelper().driver().switchTo().alert();
-            alert.accept();
+            confirmAlert();
         }
         return true;
     }
@@ -90,6 +89,30 @@ public class BrowserTest extends SlimFixture {
 
     private WebDriver.Navigation getNavigation() {
         return getSeleniumHelper().navigate();
+    }
+
+    public boolean confirmAlert() {
+        boolean result = false;
+        Alert alert = getAlert();
+        if (alert != null) {
+            alert.accept();
+            result = true;
+        }
+        return result;
+    }
+
+    public boolean dismissAlert() {
+        boolean result = false;
+        Alert alert = getAlert();
+        if (alert != null) {
+            alert.dismiss();
+            result = true;
+        }
+        return result;
+    }
+
+    protected Alert getAlert() {
+        return getSeleniumHelper().driver().switchTo().alert();
     }
 
     public boolean openInNewTab(String url) {
