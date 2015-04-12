@@ -473,6 +473,14 @@ public class SeleniumHelper {
     }
 
     /**
+     * Trigger scrolling of window to ensure element is in visible.
+     * @param element element to scroll to.
+     */
+    public void scrollTo(WebElement element) {
+        executeJavascript("arguments[0].scrollIntoView(true);", element);
+    }
+
+    /**
      * Takes screenshot of current page (as .png).
      * @param baseName name for file created (without extension),
      *                 if a file already exists with the supplied name an

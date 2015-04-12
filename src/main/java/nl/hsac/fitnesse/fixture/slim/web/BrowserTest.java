@@ -861,7 +861,7 @@ public class BrowserTest extends SlimFixture {
      * @param element element to scroll to.
      */
     protected void scrollTo(WebElement element) {
-        getSeleniumHelper().executeJavascript("arguments[0].scrollIntoView(true);", element);
+        getSeleniumHelper().scrollTo(element);
         if (waitAfterScroll > 0) {
             waitMilliseconds(waitAfterScroll);
         }
