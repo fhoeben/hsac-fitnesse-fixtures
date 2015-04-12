@@ -116,7 +116,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     public boolean openInNewTab(String url) {
-        String cleanUrl = cleanupValue(url);
+        String cleanUrl = getUrl(url);
         final int tabCount = tabCount();
         getSeleniumHelper().executeJavascript("window.open('%s', '_blank')", cleanUrl);
         // ensure new window is open
