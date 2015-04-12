@@ -419,8 +419,11 @@ public class BrowserTest extends SlimFixture {
                 result = clickImpl(place);
             } catch (WebDriverException e) {
                 String msg = e.getMessage();
-                if (!msg.contains("Other element would receive the click")
-                        ||  i == secondsBeforeTimeout()) {
+                if (!msg.contains("Other element would receive the click")) {
+                    // unexpected exception: throw to wiki
+                    throw e;
+                }
+                if (i == secondsBeforeTimeout()) {
                     retry = false;
                 }
             }
