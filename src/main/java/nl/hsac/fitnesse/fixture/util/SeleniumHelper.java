@@ -19,6 +19,15 @@ import java.util.concurrent.TimeUnit;
 public class SeleniumHelper {
     /** Default time in seconds the wait web driver waits unit throwing TimeOutException. */
     public static final int DEFAULT_TIMEOUT_SECONDS = 10;
+
+    private static final String ELEMENT_ON_SCREEN_JS =
+            "var rect = arguments[0].getBoundingClientRect();\n" +
+                    "return (\n" +
+                    "  rect.top >= 0 &&\n" +
+                    "  rect.left >= 0 &&\n" +
+                    "  rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&\n" +
+                    "  rect.right <= (window.innerWidth || document.documentElement.clientWidth));";
+
     private DriverFactory factory;
     private WebDriver webDriver;
     private WebDriverWait webDriverWait;
@@ -309,6 +318,15 @@ public class SeleniumHelper {
             patternToUse = pattern;
         }
         return String.format(patternToUse, escapedParams);
+    }
+
+    /**
+     * Checks whether element is in browser's viewport.
+     * @param element element to check
+     * @return true if element is in browser's viewport.
+     */
+    public boolean isElementOnScreen(WebElement element) {
+        return (Boolean)executeJavascript(ELEMENT_ON_SCREEN_JS, element);
     }
 
     /**

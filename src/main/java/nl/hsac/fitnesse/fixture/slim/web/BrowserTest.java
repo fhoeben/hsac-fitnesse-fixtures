@@ -22,14 +22,6 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class BrowserTest extends SlimFixture {
-    private static final String ELEMENT_ON_SCREEN_JS =
-            "var rect = arguments[0].getBoundingClientRect();\n" +
-                    "return (\n" +
-                    "  rect.top >= 0 &&\n" +
-                    "  rect.left >= 0 &&\n" +
-                    "  rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&\n" +
-                    "  rect.right <= (window.innerWidth || document.documentElement.clientWidth));";
-
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
     private int secondsBeforeTimeout;
     private int waitAfterScroll = 0;
@@ -903,7 +895,7 @@ public class BrowserTest extends SlimFixture {
      * @return true if element is in browser's viewport.
      */
     protected boolean isElementOnScreen(WebElement element) {
-        return (Boolean)getSeleniumHelper().executeJavascript(ELEMENT_ON_SCREEN_JS, element);
+        return getSeleniumHelper().isElementOnScreen(element);
     }
 
     /**
