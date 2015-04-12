@@ -7,7 +7,7 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Modelled after code from {@linkhttp://www.tomred.net/tutorials/tomred-java-generate-hmac-md5-sha1.html}
+ * Modelled after code from http://www.tomred.net/tutorials/tomred-java-generate-hmac-md5-sha1.html
 */
 public class SecurityUtil {
     public static String hmacEncode(String algorithm, String input, String privateKey)
