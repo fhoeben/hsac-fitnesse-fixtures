@@ -543,10 +543,6 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
-    public String spaceNormalized(String input) {
-        return input.trim().replaceAll("\\s+", " ");
-    }
-
     public String valueOf(String place) {
         return valueFor(place);
     }
