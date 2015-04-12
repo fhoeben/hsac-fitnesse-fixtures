@@ -872,7 +872,7 @@ public class BrowserTest extends SlimFixture {
      * @param element element to scroll to.
      */
     protected void scrollIfNotOnScreen(WebElement element) {
-        if (element.isDisplayed() && !isElementOnScreen(element)) {
+        if (!element.isDisplayed() || !isElementOnScreen(element)) {
             scrollTo(element);
         }
     }
