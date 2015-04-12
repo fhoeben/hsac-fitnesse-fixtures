@@ -563,6 +563,19 @@ public class SeleniumHelper {
     }
 
     /**
+     * @return current alert, if one is present, null otherwise.
+     */
+    public Alert getAlert() {
+        Alert alert = null;
+        try {
+            alert = driver().switchTo().alert();
+        } catch (NoAlertPresentException e) {
+            // just leave alter null
+        }
+        return alert;
+    }
+
+    /**
      * @return current browser's cookies.
      */
     public Set<Cookie> getCookies() {
