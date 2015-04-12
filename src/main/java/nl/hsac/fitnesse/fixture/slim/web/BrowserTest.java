@@ -112,7 +112,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected Alert getAlert() {
-        return getSeleniumHelper().driver().switchTo().alert();
+        return getSeleniumHelper().getAlert();
     }
 
     public boolean openInNewTab(String url) {
