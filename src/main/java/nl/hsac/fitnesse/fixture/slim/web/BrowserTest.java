@@ -417,6 +417,9 @@ public class BrowserTest extends SlimFixture {
                     waitSeconds(1);
                 }
                 result = clickImpl(place);
+            } catch (TimeoutException e) {
+                String message = getTimeoutMessage(e);
+                throw new SlimFixtureException(false, message, e);
             } catch (WebDriverException e) {
                 String msg = e.getMessage();
                 if (!msg.contains("Other element would receive the click")) {
@@ -1018,6 +1021,11 @@ public class BrowserTest extends SlimFixture {
     }
 
     private <T> T handleTimeoutException(TimeoutException e) {
+        String message = getTimeoutMessage(e);
+        throw new TimeoutStopTestException(false, message, e);
+    }
+
+    private String getTimeoutMessage(TimeoutException e) {
         // take a screenshot of what was on screen
         String screenShotFile = null;
         try {
@@ -1034,7 +1042,7 @@ public class BrowserTest extends SlimFixture {
             message = String.format("<div>Timed-out waiting (after %ss). Page content:%s</div>",
                                     secondsBeforeTimeout(), getScreenshotLink(screenShotFile));
         }
-        throw new TimeoutStopTestException(false, message, e);
+        return message;
     }
 
     private WebDriverWait waitDriver() {
