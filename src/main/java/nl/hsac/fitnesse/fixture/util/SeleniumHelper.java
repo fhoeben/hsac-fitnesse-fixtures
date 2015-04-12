@@ -437,10 +437,10 @@ public class SeleniumHelper {
     /**
      * Finds element matching the By supplied.
      * @param context context to find element in.
-     * @param atMostOne true indicates multiple matching elements should trigger an exception
+     * @param atMostOne true indicates multiple matching elements (that have an id) should trigger an exception
      * @param by criteria.
      * @return element if found, null if none could be found.
-     * @throws RuntimeException if atMostOne is true and multiple elements match by.
+     * @throws RuntimeException if atMostOne is true and multiple elements (having an id) match the by.
      */
     public WebElement findElement(SearchContext context, boolean atMostOne, By by) {
         WebElement element = null;
