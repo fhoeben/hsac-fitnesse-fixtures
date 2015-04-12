@@ -162,7 +162,7 @@ public class StringFixture extends SlimFixture {
      * @param value input string.
      * @param regEx regular expression to match against value.
      * @param groupIndex index of group in regular expression containing the number.
-     * @return
+     * @return extracted number.
      */
     public Integer extractIntFromUsingGroup(String value, String regEx, int groupIndex) {
         Integer result = null;
