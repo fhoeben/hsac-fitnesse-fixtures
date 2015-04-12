@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.util.NgClientSideScripts;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -166,6 +167,12 @@ public class NgBrowserTest extends BrowserTest {
     public boolean selectFileFor(String fileName, String place) {
         waitForAngularRequestsToFinish();
         return super.selectFileFor(fileName, place);
+    }
+
+    @Override
+    protected Alert getAlert() {
+        waitForAngularRequestsToFinish();
+        return super.getAlert();
     }
 
     protected String getTextInRepeaterColumn(String columnIndexXPath, int rowIndex, String repeater) {
