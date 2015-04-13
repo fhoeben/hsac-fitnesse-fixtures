@@ -20,6 +20,15 @@
 		</license>
 	</licenses>
 
+	<developers>
+		<developer>
+			<name>Fried Hoeben</name>
+			<email>fitnesse@hsac.nl</email>
+			<organization>Hoeben Software Architecture Consulting B.V.</organization>
+			<organizationUrl>https://nl.linkedin.com/in/friedhoeben</organizationUrl>
+		</developer>
+	</developers>
+
 	<scm>
 		<connection>scm:git:git://github.com/fhoeben/hsac-fitnesse-fixtures.git</connection>
 		<url>https://github.com/fhoeben/hsac-fitnesse-fixtures.git</url>
