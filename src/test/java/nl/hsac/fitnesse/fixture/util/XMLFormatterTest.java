@@ -14,7 +14,7 @@ public class XMLFormatterTest {
 
         String formatted = formatter.format(response);
 
-        assertEquals(expected, formatted);
+        assertEquals(expected.replace("\r", ""), formatted.replace("\r", ""));
 
     }
 }
