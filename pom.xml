@@ -75,7 +75,11 @@
 			<exclusions>
 				<exclusion>
 					<groupId>org.seleniumhq.selenium</groupId>
-					<artifactId>*</artifactId>
+					<artifactId>selenium-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.seleniumhq.selenium</groupId>
+					<artifactId>selenium-remote-driver</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
