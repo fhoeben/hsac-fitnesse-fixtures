@@ -75,6 +75,7 @@ public class StringFixtureTest {
         assertEquals("$1", "23", fixture.replaceAllInWith("\\((\\d+)\\)", "(23)", "$1"));
         assertEquals("$1$0", "23(23)", fixture.replaceAllInWith("\\((\\d+)\\)", "(23)", "$1$0"));
         assertEquals("dot matches newline", "23\na", fixture.replaceAllInWith("\\((.*?)\\)", "(23\na)", "$1"));
+        assertEquals("null replace value is empty string", "hallo", fixture.replaceAllInWith(" user", "hallo user", null));
     }
 
     @Test
