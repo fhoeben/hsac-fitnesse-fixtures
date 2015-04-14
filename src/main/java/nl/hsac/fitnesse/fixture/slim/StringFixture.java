@@ -152,6 +152,10 @@ public class StringFixture extends SlimFixture {
     public String replaceAllInWith(String regEx, String value, String replace) {
         String result = null;
         if (value != null) {
+            if (replace == null) {
+                // empty cell in table is sent as null
+                replace = "";
+            }
             result = getMatcher(regEx, value).replaceAll(replace);
         }
         return result;
