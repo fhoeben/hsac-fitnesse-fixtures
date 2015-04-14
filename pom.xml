@@ -72,6 +72,12 @@
 			<groupId>com.codeborne</groupId>
 			<artifactId>phantomjsdriver</artifactId>
 			<version>1.2.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.seleniumhq.selenium</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- com.jayway.jsonpath uses slf4j for logging -->
 		<dependency>
