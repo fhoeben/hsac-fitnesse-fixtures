@@ -1034,7 +1034,7 @@ public class BrowserTest extends SlimFixture {
 
     private String getTimeoutMessage(TimeoutException e) {
         String screenshotBaseName = String.format("timeouts/%s/timeout", getClass().getSimpleName());
-        String messageBase = String.format("Timed-out waiting (after %ss).", secondsBeforeTimeout());
+        String messageBase = String.format("Timed-out waiting (after %ss)", secondsBeforeTimeout());
         return getSlimFixtureExceptionMessage(screenshotBaseName, messageBase, e);
     }
 
@@ -1044,7 +1044,7 @@ public class BrowserTest extends SlimFixture {
 
     protected void handleRequiredElementNotFound(String toFind, Throwable t) {
         String screenshotBaseName = String.format("notFound/%s/%s", getClass().getSimpleName(), toFind);
-        String messageBase = String.format("Unable to find: %s.", toFind);
+        String messageBase = String.format("Unable to find: %s", toFind);
         String message = getSlimFixtureExceptionMessage(screenshotBaseName, messageBase, t);
         throw new SlimFixtureException(false, message);
     }
