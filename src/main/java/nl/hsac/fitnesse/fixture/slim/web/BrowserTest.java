@@ -90,28 +90,29 @@ public class BrowserTest extends SlimFixture {
         return getSeleniumHelper().navigate();
     }
 
-    public boolean confirmAlert() {
-        boolean result = false;
+    public String alertText() {
         Alert alert = getAlert();
-        if (alert != null) {
-            alert.accept();
-            result = true;
-        }
-        return result;
+        return alert.getText();
+    }
+
+    public boolean confirmAlert() {
+        Alert alert = getAlert();
+        alert.accept();
+        return true;
     }
 
     public boolean dismissAlert() {
-        boolean result = false;
         Alert alert = getAlert();
-        if (alert != null) {
-            alert.dismiss();
-            result = true;
-        }
-        return result;
+        alert.dismiss();
+        return true;
     }
 
     protected Alert getAlert() {
-        return getSeleniumHelper().getAlert();
+        Alert alert = getSeleniumHelper().getAlert();
+        if (alert == null) {
+            handleRequiredElementNotFound("alert");
+        }
+        return alert;
     }
 
     public boolean openInNewTab(String url) {
@@ -1032,21 +1033,35 @@ public class BrowserTest extends SlimFixture {
     }
 
     private String getTimeoutMessage(TimeoutException e) {
+        String screenshotBaseName = String.format("timeouts/%s/timeout", getClass().getSimpleName());
+        String messageBase = String.format("Timed-out waiting (after %ss).", secondsBeforeTimeout());
+        return getSlimFixtureExceptionMessage(screenshotBaseName, messageBase, e);
+    }
+
+    protected void handleRequiredElementNotFound(String toFind) {
+        handleRequiredElementNotFound(toFind, null);
+    }
+
+    protected void handleRequiredElementNotFound(String toFind, Throwable t) {
+        String screenshotBaseName = String.format("notFound/%s/%s", getClass().getSimpleName(), toFind);
+        String messageBase = String.format("Unable to find: %s.", toFind);
+        String message = getSlimFixtureExceptionMessage(screenshotBaseName, messageBase, t);
+        throw new SlimFixtureException(false, message);
+    }
+
+    protected String getSlimFixtureExceptionMessage(String screenshotBaseName, String messageBase, Throwable t) {
         // take a screenshot of what was on screen
         String screenShotFile = null;
         try {
-            screenShotFile = createScreenshot("timeouts/" + getClass().getSimpleName() + "/timeout", e);
+            screenShotFile = createScreenshot(screenshotBaseName, t);
         } catch (Exception sse) {
             // unable to take screenshot
             sse.printStackTrace();
         }
-        String message;
-        if (screenShotFile == null) {
-            message = String.format("Timed-out waiting (after %ss).",
-                                    secondsBeforeTimeout());
-        } else {
-            message = String.format("<div>Timed-out waiting (after %ss). Page content:%s</div>",
-                                    secondsBeforeTimeout(), getScreenshotLink(screenShotFile));
+        String message = messageBase;
+        if (screenShotFile != null) {
+            message = String.format("<div>%s. Page content:%s</div>",
+                    messageBase, getScreenshotLink(screenShotFile));
         }
         return message;
     }
