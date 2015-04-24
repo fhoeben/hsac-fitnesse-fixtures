@@ -1,6 +1,17 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import org.openqa.selenium.*;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.NoSuchWindowException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.SearchContext;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.internal.Base64Encoder;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -18,7 +29,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class SeleniumHelper {
     /** Default time in seconds the wait web driver waits unit throwing TimeOutException. */
-    public static final int DEFAULT_TIMEOUT_SECONDS = 10;
+    private static final int DEFAULT_TIMEOUT_SECONDS = 10;
 
     private static final String ELEMENT_ON_SCREEN_JS =
             "var rect = arguments[0].getBoundingClientRect();\n" +
@@ -32,6 +43,7 @@ public class SeleniumHelper {
     private WebDriver webDriver;
     private WebDriverWait webDriverWait;
     private boolean shutdownHookEnabled = false;
+    private int defaultTimeoutSeconds = DEFAULT_TIMEOUT_SECONDS;
 
     /**
      * Sets up webDriver to be used.
@@ -46,7 +58,7 @@ public class SeleniumHelper {
         if (webDriver == null) {
             webDriverWait = null;
         } else {
-            webDriverWait = new WebDriverWait(webDriver, DEFAULT_TIMEOUT_SECONDS);
+            webDriverWait = new WebDriverWait(webDriver, getDefaultTimeoutSeconds());
         }
 
         if (!shutdownHookEnabled) {
@@ -610,6 +622,20 @@ public class SeleniumHelper {
 
     public void setDriverFactory(DriverFactory aFactory) {
         factory = aFactory;
+    }
+
+    /**
+     * @param timeoutSeconds default number of seconds to wait before throwing timeout exceptions
+     */
+    public void setDefaultTimeoutSeconds(int timeoutSeconds) {
+        defaultTimeoutSeconds = timeoutSeconds;
+    }
+
+    /**
+     * @return default time for waiting (in seconds).
+     */
+    public int getDefaultTimeoutSeconds() {
+        return defaultTimeoutSeconds;
     }
 
     public static interface DriverFactory {
