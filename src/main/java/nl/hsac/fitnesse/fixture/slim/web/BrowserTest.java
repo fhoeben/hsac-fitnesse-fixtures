@@ -30,7 +30,12 @@ public class BrowserTest extends SlimFixture {
     private String downloadBase = new File(filesDir, "downloads").getPath() + "/";
 
     public BrowserTest() {
-        secondsBeforeTimeout(SeleniumHelper.DEFAULT_TIMEOUT_SECONDS);
+        secondsBeforeTimeout(seleniumHelper.getDefaultTimeoutSeconds());
+        ensureActiveTabIsNotClosed();
+    }
+
+    public BrowserTest(int secondsBeforeTimeout) {
+        secondsBeforeTimeout(secondsBeforeTimeout);
         ensureActiveTabIsNotClosed();
     }
 

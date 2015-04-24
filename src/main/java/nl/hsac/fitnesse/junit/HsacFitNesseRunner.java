@@ -36,6 +36,7 @@ import java.util.List;
  */
 public class HsacFitNesseRunner extends FitNesseRunner {
     private final static String suiteOverrideVariableName = "fitnesseSuiteToRun";
+    private final static String SELENIUM_DEFAULT_TIMEOUT_PROP = "seleniumDefaultTimeout";
     protected final List<SeleniumDriverFactoryFactory> factoryFactories = new ArrayList<SeleniumDriverFactoryFactory>();
 
     public HsacFitNesseRunner(Class<?> suiteClass) throws InitializationError {
@@ -133,6 +134,7 @@ public class HsacFitNesseRunner extends FitNesseRunner {
      * @return true if Selenium was configured.
      */
     protected boolean configureSeleniumIfNeeded() {
+        setSeleniumDefaultTimeOut();
         try {
             SeleniumHelper.DriverFactory factory = null;
             SeleniumDriverFactoryFactory factoryFactory = getSeleniumDriverFactoryFactory();
@@ -149,6 +151,19 @@ public class HsacFitNesseRunner extends FitNesseRunner {
         } catch (Exception e) {
             throw new RuntimeException("Error overriding Selenium config", e);
         }
+    }
+
+    protected void setSeleniumDefaultTimeOut() {
+        String propValue = System.getProperty(SELENIUM_DEFAULT_TIMEOUT_PROP);
+        if (StringUtils.isNotEmpty(propValue)) {
+            try {
+                int timeoutSeconds = Integer.parseInt(propValue);
+                Environment.getInstance().getSeleniumHelper().setDefaultTimeoutSeconds(timeoutSeconds);
+            } catch (NumberFormatException e) {
+                throw new RuntimeException("Bad " + SELENIUM_DEFAULT_TIMEOUT_PROP + " system property: " + propValue, e);
+            }
+        }
+
     }
 
     protected SeleniumDriverFactoryFactory getSeleniumDriverFactoryFactory() {
