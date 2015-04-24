@@ -608,7 +608,7 @@ public class SeleniumHelper {
         try {
             alert = driver().switchTo().alert();
         } catch (NoAlertPresentException e) {
-            // just leave alter null
+            // just leave alert null
         }
         return alert;
     }
