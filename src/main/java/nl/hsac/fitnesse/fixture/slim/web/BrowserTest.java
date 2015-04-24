@@ -1046,7 +1046,7 @@ public class BrowserTest extends SlimFixture {
         String screenshotBaseName = String.format("notFound/%s/%s", getClass().getSimpleName(), toFind);
         String messageBase = String.format("Unable to find: %s", toFind);
         String message = getSlimFixtureExceptionMessage(screenshotBaseName, messageBase, t);
-        throw new SlimFixtureException(false, message);
+        throw new SlimFixtureException(false, message, t);
     }
 
     protected String getSlimFixtureExceptionMessage(String screenshotBaseName, String messageBase, Throwable t) {
