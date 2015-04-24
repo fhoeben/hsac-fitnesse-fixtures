@@ -158,6 +158,7 @@
 					<test>FixtureDebugTest</test>
 					<systemPropertyVariables>
 						<fitnesseSuiteToRun>${fitnesseSuiteToRun}</fitnesseSuiteToRun>
+						<seleniumDefaultTimeout>${seleniumDefaultTimeout}</seleniumDefaultTimeout>
 						<seleniumGridUrl>${seleniumGridUrl}</seleniumGridUrl>
 						<seleniumBrowser>${seleniumBrowser}</seleniumBrowser>
 						<seleniumCapabilities>${seleniumCapabilities}</seleniumCapabilities>

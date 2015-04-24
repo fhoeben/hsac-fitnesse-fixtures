@@ -31,6 +31,8 @@ import java.util.List;
  *
  * The Selenium driver used for tests may be overridden (from what is configured in the wiki)
  * by specifying the property 'seleniumGridUrl' and either 'seleniumBrowser' or 'seleniumCapabilities'.
+ * The default timeout (in seconds) for Selenium tests may be overridden by specifying the property
+ * 'seleniumDefaultTimeout'.
  *
  * The HTML generated for each page is saved in target/fitnesse-results
  */
@@ -163,7 +165,6 @@ public class HsacFitNesseRunner extends FitNesseRunner {
                 throw new RuntimeException("Bad " + SELENIUM_DEFAULT_TIMEOUT_PROP + " system property: " + propValue, e);
             }
         }
-
     }
 
     protected SeleniumDriverFactoryFactory getSeleniumDriverFactoryFactory() {
