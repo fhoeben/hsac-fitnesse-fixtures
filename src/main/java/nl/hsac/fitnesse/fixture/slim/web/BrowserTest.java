@@ -1027,7 +1027,7 @@ public class BrowserTest extends SlimFixture {
         }
     }
 
-    private <T> T handleTimeoutException(TimeoutException e) {
+    protected <T> T handleTimeoutException(TimeoutException e) {
         String message = getTimeoutMessage(e);
         throw new TimeoutStopTestException(false, message, e);
     }
