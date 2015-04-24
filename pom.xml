@@ -40,6 +40,12 @@
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
 		<fitnesse.port>9090</fitnesse.port>
+		<!-- Override properties to control settings during failsafe:integration-test-->
+		<fitnesseSuiteToRun></fitnesseSuiteToRun>
+		<seleniumDefaultTimeout></seleniumDefaultTimeout>
+		<seleniumGridUrl></seleniumGridUrl>
+		<seleniumBrowser></seleniumBrowser>
+		<seleniumCapabilities></seleniumCapabilities>
 	</properties>
 	<dependencies>
 		<dependency>
