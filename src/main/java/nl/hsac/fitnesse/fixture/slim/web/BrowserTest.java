@@ -408,9 +408,8 @@ public class BrowserTest extends SlimFixture {
         // if other element hides the element (in Chrome) an exception is thrown
         // we retry clicking the element a few times before giving up.
         boolean result = false;
-        boolean retry = true;
         for (int i = 0;
-             !result && retry;
+             !result;
              i++) {
             try {
                 if (i > 0) {
@@ -422,17 +421,13 @@ public class BrowserTest extends SlimFixture {
                 throw new SlimFixtureException(false, message, e);
             } catch (WebDriverException e) {
                 String msg = e.getMessage();
-                if (!msg.contains("Other element would receive the click")) {
-                    // unexpected exception: throw to wiki
-                    throw e;
-                }
-                if (i == secondsBeforeTimeout()) {
-                    retry = false;
+                if (!msg.contains("Other element would receive the click")
+                        || i == secondsBeforeTimeout()) {
+                    // unexpected exception or too many tries: throw to wiki
+                    String message = getSlimFixtureExceptionMessage("clickError", place, msg, e);
+                    throw new SlimFixtureException(false, message, e);
                 }
             }
-            // don't wait forever trying to click
-            // only try secondsBeforeTimeout + 1 times
-            retry &= i < secondsBeforeTimeout();
         }
         return result;
     }
@@ -1033,9 +1028,8 @@ public class BrowserTest extends SlimFixture {
     }
 
     private String getTimeoutMessage(TimeoutException e) {
-        String screenshotBaseName = String.format("timeouts/%s/timeout", getClass().getSimpleName());
         String messageBase = String.format("Timed-out waiting (after %ss)", secondsBeforeTimeout());
-        return getSlimFixtureExceptionMessage(screenshotBaseName, messageBase, e);
+        return getSlimFixtureExceptionMessage("timeouts", "timeout", messageBase, e);
     }
 
     protected void handleRequiredElementNotFound(String toFind) {
@@ -1043,10 +1037,14 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected void handleRequiredElementNotFound(String toFind, Throwable t) {
-        String screenshotBaseName = String.format("notFound/%s/%s", getClass().getSimpleName(), toFind);
         String messageBase = String.format("Unable to find: %s", toFind);
-        String message = getSlimFixtureExceptionMessage(screenshotBaseName, messageBase, t);
+        String message = getSlimFixtureExceptionMessage("notFound", toFind, messageBase, t);
         throw new SlimFixtureException(false, message, t);
+    }
+
+    protected String getSlimFixtureExceptionMessage(String screenshotFolder, String screenshotFile, String messageBase, Throwable t) {
+        String screenshotBaseName = String.format("%s/%s/%s", screenshotFolder, getClass().getSimpleName(), screenshotFile);
+        return getSlimFixtureExceptionMessage(screenshotBaseName, messageBase, t);
     }
 
     protected String getSlimFixtureExceptionMessage(String screenshotBaseName, String messageBase, Throwable t) {
