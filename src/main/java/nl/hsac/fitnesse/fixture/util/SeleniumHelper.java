@@ -620,6 +620,13 @@ public class SeleniumHelper {
         return driver().manage().getCookies();
     }
 
+    /**
+     * Deletes all of the browser's cookies (for the current domain).
+     */
+    public void deleteAllCookies() {
+        driver().manage().deleteAllCookies();
+    }
+
     public void setDriverFactory(DriverFactory aFactory) {
         factory = aFactory;
     }

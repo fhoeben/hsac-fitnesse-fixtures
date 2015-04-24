@@ -923,10 +923,17 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
-     * Clears HTML5's localStorage.
+     * Clears HTML5's localStorage (for the domain of the current open page in the browser).
      */
     public void clearLocalStorage() {
         getSeleniumHelper().executeJavascript("localStorage.clear();");
+    }
+
+    /**
+     * Deletes all cookies(for the domain of the current open page in the browser).
+     */
+    public void deleteAllCookies() {
+        getSeleniumHelper().deleteAllCookies();
     }
 
     /**
