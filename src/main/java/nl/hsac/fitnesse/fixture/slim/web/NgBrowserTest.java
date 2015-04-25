@@ -1,19 +1,64 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
+import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 import nl.hsac.fitnesse.fixture.util.NgClientSideScripts;
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Browser Test targeted to test AngularJs apps.
  */
 public class NgBrowserTest extends BrowserTest {
+    private final static Set<String> METHODS_NO_WAIT;
     private String angularRoot = null;
+
+    static {
+        METHODS_NO_WAIT = new HashSet<String>(Arrays.asList(
+                "open",
+                "takeScreenshot",
+                "openInNewTab",
+                "ensureActiveTabIsNotClosed",
+                "currentTabIndex",
+                "tabCount",
+                "ensureOnlyOneTab",
+                "closeTab",
+                "setAngularRoot",
+                "switchToNextTab",
+                "switchToPreviousTab",
+                "setAngularRoot",
+                "getAngularRoot"));
+        Method[] allMethods = NgBrowserTest.class.getMethods();
+        List<String> allMethodNames = new ArrayList<String>(allMethods.length);
+        for (Method method : allMethods) {
+            allMethodNames.add(method.getName());
+        }
+        List<String> notFound = new ArrayList<String>(0);
+        for (String methodName : METHODS_NO_WAIT) {
+            if (!allMethodNames.contains(methodName)) {
+                notFound.add(methodName);
+            }
+        }
+        if (!notFound.isEmpty()) {
+            throw new RuntimeException("Unable to locate methods to be skipped: " + notFound);
+        }
+    }
+
+    @Override
+    public Object aroundSlimInvoke(FixtureInteraction interaction, Method method, Object... arguments) throws InvocationTargetException, IllegalAccessException {
+        String methodName = method.getName();
+        if (!METHODS_NO_WAIT.contains(methodName)) {
+            waitForAngularRequestsToFinish();
+        }
+        return super.aroundSlimInvoke(interaction, method, arguments);
+    }
 
     @Override
     public boolean open(String address) {
@@ -33,21 +78,8 @@ public class NgBrowserTest extends BrowserTest {
     }
 
     @Override
-    protected void sendValue(WebElement element, String value) {
-        waitForAngularRequestsToFinish();
-        super.sendValue(element, value);
-    }
-
-    @Override
-    public boolean click(String place) {
-        waitForAngularRequestsToFinish();
-        return super.click(place);
-    }
-
-    @Override
     public String valueFor(String place) {
         String result;
-        waitForAngularRequestsToFinish();
         WebElement angularModelBinding = getAngularElement(place);
         if (angularModelBinding == null) {
             result = super.valueFor(place);
@@ -60,7 +92,6 @@ public class NgBrowserTest extends BrowserTest {
     @Override
     public boolean selectFor(String value, String place) {
         boolean result;
-        waitForAngularRequestsToFinish();
         WebElement angularModelSelect = findSelect(place);
         if (angularModelSelect == null) {
             result = super.selectFor(value, place);
@@ -73,7 +104,6 @@ public class NgBrowserTest extends BrowserTest {
     @Override
     public boolean enterAs(String value, String place) {
         boolean result;
-        waitForAngularRequestsToFinish();
         WebElement angularModelInput = getAngularElementToEnterIn(place);
         if (angularModelInput == null) {
             result = super.enterAs(value, place);
@@ -83,12 +113,6 @@ public class NgBrowserTest extends BrowserTest {
             result = true;
         }
         return result;
-    }
-
-    @Override
-    public boolean clear(String place) {
-        waitForAngularRequestsToFinish();
-        return super.clear(place);
     }
 
     public int numberOf(String repeater) {
@@ -121,63 +145,8 @@ public class NgBrowserTest extends BrowserTest {
         return result;
     }
 
-    @Override
-    public boolean rowExistsWhereIs(String selectOnColumn, String selectOnValue) {
-        waitForAngularRequestsToFinish();
-        return super.rowExistsWhereIs(selectOnColumn, selectOnValue);
-    }
-
-    @Override
-    protected boolean clickInRow(String columnXPath, String place) {
-        waitForAngularRequestsToFinish();
-        return super.clickInRow(columnXPath, place);
-    }
-
-    @Override
-    public boolean enterAsInRowWhereIs(String value, String requestedColumnName, String selectOnColumn, String selectOnValue) {
-        waitForAngularRequestsToFinish();
-        return super.enterAsInRowWhereIs(value, requestedColumnName, selectOnColumn, selectOnValue);
-    }
-
-    @Override
-    protected String getTextByXPath(String xpathPattern, String... params) {
-        waitForAngularRequestsToFinish();
-        return super.getTextByXPath(xpathPattern, params);
-    }
-
-    @Override
-    protected String getTextByClassName(String className) {
-        waitForAngularRequestsToFinish();
-        return super.getTextByClassName(className);
-    }
-
-    @Override
-    protected String downloadFromRow(String columnXPath, String place) {
-        waitForAngularRequestsToFinish();
-        return super.downloadFromRow(columnXPath, place);
-    }
-
-    @Override
-    public String download(String place) {
-        waitForAngularRequestsToFinish();
-        return super.download(place);
-    }
-
-    @Override
-    public boolean selectFileFor(String fileName, String place) {
-        waitForAngularRequestsToFinish();
-        return super.selectFileFor(fileName, place);
-    }
-
-    @Override
-    protected Alert getAlert() {
-        waitForAngularRequestsToFinish();
-        return super.getAlert();
-    }
-
     protected String getTextInRepeaterColumn(String columnIndexXPath, int rowIndex, String repeater) {
         String result = null;
-        waitForAngularRequestsToFinish();
         List<WebElement> rows = findRepeaterRows(repeater);
         if (rows.size() >= rowIndex) {
             WebElement row = rows.get(rowIndex - 1);
