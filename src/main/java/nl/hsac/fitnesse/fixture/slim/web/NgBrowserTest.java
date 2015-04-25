@@ -33,6 +33,22 @@ public class NgBrowserTest extends BrowserTest {
                 "setAngularRoot",
                 "switchToNextTab",
                 "switchToPreviousTab",
+                "waitForAngularRequestsToFinish",
+                "secondsBeforeTimeout",
+                "waitForPage",
+                "waitForTagWithText",
+                "waitForClassWithText",
+                "waitForClass",
+                "waitSeconds",
+                "waitMilliseconds",
+                "waitMilliSecondAfterScroll",
+                "screenshotBaseDirectory",
+                "screenshotShowHeight",
+                "setBrowserWidth",
+                "setBrowserHeight",
+                "setBrowserSizeToBy",
+                "setGlobalValueTo",
+                "globalValue",
                 "setAngularRoot",
                 "getAngularRoot"));
         Method[] allMethods = NgBrowserTest.class.getMethods();
@@ -44,6 +60,8 @@ public class NgBrowserTest extends BrowserTest {
         for (String methodName : METHODS_NO_WAIT) {
             if (!allMethodNames.contains(methodName)) {
                 notFound.add(methodName);
+            } else {
+                allMethodNames.remove(methodName);
             }
         }
         if (!notFound.isEmpty()) {
