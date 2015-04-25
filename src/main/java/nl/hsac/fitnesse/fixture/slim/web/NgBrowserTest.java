@@ -1,13 +1,13 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.util.NgClientSideScripts;
+import nl.hsac.fitnesse.slim.interaction.ReflectionHelper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -19,7 +19,8 @@ public class NgBrowserTest extends BrowserTest {
     private String angularRoot = null;
 
     static {
-        METHODS_NO_WAIT = new HashSet<String>(Arrays.asList(
+        METHODS_NO_WAIT = ReflectionHelper.validateMethodNames(
+                NgBrowserTest.class,
                 "open",
                 "takeScreenshot",
                 "openInNewTab",
@@ -48,23 +49,7 @@ public class NgBrowserTest extends BrowserTest {
                 "setGlobalValueTo",
                 "globalValue",
                 "setAngularRoot",
-                "getAngularRoot"));
-        Method[] allMethods = NgBrowserTest.class.getMethods();
-        List<String> methodsRequiringWait = new ArrayList<String>(allMethods.length);
-        for (Method method : allMethods) {
-            methodsRequiringWait.add(method.getName());
-        }
-        List<String> notFound = new ArrayList<String>(0);
-        for (String methodName : METHODS_NO_WAIT) {
-            if (!methodsRequiringWait.contains(methodName)) {
-                notFound.add(methodName);
-            } else {
-                methodsRequiringWait.remove(methodName);
-            }
-        }
-        if (!notFound.isEmpty()) {
-            throw new RuntimeException("Unable to locate methods to be skipped: " + notFound);
-        }
+                "getAngularRoot");
     }
 
     @Override
