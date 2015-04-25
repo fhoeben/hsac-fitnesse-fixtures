@@ -45,7 +45,7 @@
 		<dependency>
 			<groupId>org.fitnesse</groupId>
 			<artifactId>fitnesse</artifactId>
-			<version>20150226</version>
+			<version>20150424</version>
 		</dependency>
 
 		<dependency>
