@@ -52,16 +52,16 @@ public class NgBrowserTest extends BrowserTest {
                 "setAngularRoot",
                 "getAngularRoot"));
         Method[] allMethods = NgBrowserTest.class.getMethods();
-        List<String> allMethodNames = new ArrayList<String>(allMethods.length);
+        List<String> methodsRequiringWait = new ArrayList<String>(allMethods.length);
         for (Method method : allMethods) {
-            allMethodNames.add(method.getName());
+            methodsRequiringWait.add(method.getName());
         }
         List<String> notFound = new ArrayList<String>(0);
         for (String methodName : METHODS_NO_WAIT) {
-            if (!allMethodNames.contains(methodName)) {
+            if (!methodsRequiringWait.contains(methodName)) {
                 notFound.add(methodName);
             } else {
-                allMethodNames.remove(methodName);
+                methodsRequiringWait.remove(methodName);
             }
         }
         if (!notFound.isEmpty()) {
