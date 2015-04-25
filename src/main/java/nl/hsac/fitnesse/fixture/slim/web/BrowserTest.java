@@ -1,11 +1,14 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
+import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import nl.hsac.fitnesse.fixture.util.BinaryHttpResponse;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
+import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
+import nl.hsac.fitnesse.slim.interaction.InteractionAwareFixture;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.impl.client.BasicCookieStore;
@@ -17,17 +20,33 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-public class BrowserTest extends SlimFixture {
+public class BrowserTest extends SlimFixture implements InteractionAwareFixture {
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
     private int secondsBeforeTimeout;
     private int waitAfterScroll = 0;
     private String screenshotBase = new File(filesDir, "screenshots").getPath() + "/";
     private String screenshotHeight = "200";
     private String downloadBase = new File(filesDir, "downloads").getPath() + "/";
+
+    @Override
+    public Object aroundSlimInvoke(FixtureInteraction interaction, Method method, Object... arguments)
+            throws InvocationTargetException, IllegalAccessException {
+        try {
+            return interaction.methodInvoke(method, this, arguments);
+        } catch (SlimFixtureException e) {
+            throw e;
+        } catch (Throwable t) {
+            Throwable realEx = ExceptionHelper.stripReflectionException(t);
+            String msg = getSlimFixtureExceptionMessage("exception", realEx.getMessage(), realEx);
+            throw new SlimFixtureException(true, msg, realEx);
+        }
+    }
 
     public BrowserTest() {
         secondsBeforeTimeout(seleniumHelper.getDefaultTimeoutSeconds());
