@@ -1,18 +1,60 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 import nl.hsac.fitnesse.fixture.Environment;
+import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
+import nl.hsac.fitnesse.slim.interaction.InteractionAwareFixture;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Base class for Slim fixtures.
  */
-public class SlimFixture {
+public class SlimFixture  implements InteractionAwareFixture {
     private static final Pattern PATTERN = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>(.*)", Pattern.CASE_INSENSITIVE);
     private Environment environment = Environment.getInstance();
     protected final String filesDir = getEnvironment().getFitNesseFilesSectionDir();
+
+    @Override
+    public Object aroundSlimInvoke(FixtureInteraction interaction, Method method, Object... arguments)
+            throws InvocationTargetException, IllegalAccessException {
+        Object result;
+        try {
+            beforeInvoke(method, arguments);
+            result = invoke(interaction, method, arguments);
+        } catch (Throwable t) {
+            Throwable realEx = ExceptionHelper.stripReflectionException(t);
+            Throwable toThrow = handleException(method, arguments, realEx);
+            if (toThrow instanceof RuntimeException) {
+                throw (RuntimeException) toThrow;
+            } else if (toThrow instanceof Error) {
+                throw (Error) toThrow;
+            }
+            throw ExceptionHelper.wrapInReflectionException(toThrow);
+        }
+        result = afterCompletion(method, arguments, result);
+        return result;
+    }
+
+    protected void beforeInvoke(Method method, Object[] arguments) {
+    }
+
+    protected Object invoke(FixtureInteraction interaction, Method method, Object[] arguments)
+            throws InvocationTargetException, IllegalAccessException {
+        return interaction.methodInvoke(method, this, arguments);
+    }
+
+    protected Throwable handleException(Method method, Object[] arguments, Throwable t) {
+        return t;
+    }
+
+    protected Object afterCompletion(Method method, Object[] arguments, Object result) {
+        return result;
+    }
 
     /**
      * @return environment to be used.
