@@ -1,11 +1,9 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
-import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 import nl.hsac.fitnesse.fixture.util.NgClientSideScripts;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,12 +68,12 @@ public class NgBrowserTest extends BrowserTest {
     }
 
     @Override
-    public Object aroundSlimInvoke(FixtureInteraction interaction, Method method, Object... arguments) throws InvocationTargetException, IllegalAccessException {
+    protected void beforeInvoke(Method method, Object[] arguments) {
         String methodName = method.getName();
         if (!METHODS_NO_WAIT.contains(methodName)) {
             waitForAngularRequestsToFinish();
         }
-        return super.aroundSlimInvoke(interaction, method, arguments);
+        super.beforeInvoke(method, arguments);
     }
 
     @Override
