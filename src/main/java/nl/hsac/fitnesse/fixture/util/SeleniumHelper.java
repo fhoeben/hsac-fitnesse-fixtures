@@ -608,7 +608,7 @@ public class SeleniumHelper {
         try {
             alert = driver().switchTo().alert();
         } catch (NoAlertPresentException e) {
-            // just leave alter null
+            // just leave alert null
         }
         return alert;
     }
@@ -618,6 +618,13 @@ public class SeleniumHelper {
      */
     public Set<Cookie> getCookies() {
         return driver().manage().getCookies();
+    }
+
+    /**
+     * Deletes all of the browser's cookies (for the current domain).
+     */
+    public void deleteAllCookies() {
+        driver().manage().deleteAllCookies();
     }
 
     public void setDriverFactory(DriverFactory aFactory) {

@@ -90,28 +90,29 @@ public class BrowserTest extends SlimFixture {
         return getSeleniumHelper().navigate();
     }
 
-    public boolean confirmAlert() {
-        boolean result = false;
+    public String alertText() {
         Alert alert = getAlert();
-        if (alert != null) {
-            alert.accept();
-            result = true;
-        }
-        return result;
+        return alert.getText();
+    }
+
+    public boolean confirmAlert() {
+        Alert alert = getAlert();
+        alert.accept();
+        return true;
     }
 
     public boolean dismissAlert() {
-        boolean result = false;
         Alert alert = getAlert();
-        if (alert != null) {
-            alert.dismiss();
-            result = true;
-        }
-        return result;
+        alert.dismiss();
+        return true;
     }
 
     protected Alert getAlert() {
-        return getSeleniumHelper().getAlert();
+        Alert alert = getSeleniumHelper().getAlert();
+        if (alert == null) {
+            handleRequiredElementNotFound("alert");
+        }
+        return alert;
     }
 
     public boolean openInNewTab(String url) {
@@ -407,9 +408,8 @@ public class BrowserTest extends SlimFixture {
         // if other element hides the element (in Chrome) an exception is thrown
         // we retry clicking the element a few times before giving up.
         boolean result = false;
-        boolean retry = true;
         for (int i = 0;
-             !result && retry;
+             !result;
              i++) {
             try {
                 if (i > 0) {
@@ -421,17 +421,13 @@ public class BrowserTest extends SlimFixture {
                 throw new SlimFixtureException(false, message, e);
             } catch (WebDriverException e) {
                 String msg = e.getMessage();
-                if (!msg.contains("Other element would receive the click")) {
-                    // unexpected exception: throw to wiki
-                    throw e;
-                }
-                if (i == secondsBeforeTimeout()) {
-                    retry = false;
+                if (!msg.contains("Other element would receive the click")
+                        || i == secondsBeforeTimeout()) {
+                    // unexpected exception or too many tries: throw to wiki
+                    String message = getSlimFixtureExceptionMessage("clickError", place, msg, e);
+                    throw new SlimFixtureException(false, message, e);
                 }
             }
-            // don't wait forever trying to click
-            // only try secondsBeforeTimeout + 1 times
-            retry &= i < secondsBeforeTimeout();
         }
         return result;
     }
@@ -923,10 +919,17 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
-     * Clears HTML5's localStorage.
+     * Clears HTML5's localStorage (for the domain of the current open page in the browser).
      */
     public void clearLocalStorage() {
         getSeleniumHelper().executeJavascript("localStorage.clear();");
+    }
+
+    /**
+     * Deletes all cookies(for the domain of the current open page in the browser).
+     */
+    public void deleteAllCookies() {
+        getSeleniumHelper().deleteAllCookies();
     }
 
     /**
@@ -1019,27 +1022,44 @@ public class BrowserTest extends SlimFixture {
         }
     }
 
-    private <T> T handleTimeoutException(TimeoutException e) {
+    protected <T> T handleTimeoutException(TimeoutException e) {
         String message = getTimeoutMessage(e);
         throw new TimeoutStopTestException(false, message, e);
     }
 
     private String getTimeoutMessage(TimeoutException e) {
+        String messageBase = String.format("Timed-out waiting (after %ss)", secondsBeforeTimeout());
+        return getSlimFixtureExceptionMessage("timeouts", "timeout", messageBase, e);
+    }
+
+    protected void handleRequiredElementNotFound(String toFind) {
+        handleRequiredElementNotFound(toFind, null);
+    }
+
+    protected void handleRequiredElementNotFound(String toFind, Throwable t) {
+        String messageBase = String.format("Unable to find: %s", toFind);
+        String message = getSlimFixtureExceptionMessage("notFound", toFind, messageBase, t);
+        throw new SlimFixtureException(false, message, t);
+    }
+
+    protected String getSlimFixtureExceptionMessage(String screenshotFolder, String screenshotFile, String messageBase, Throwable t) {
+        String screenshotBaseName = String.format("%s/%s/%s", screenshotFolder, getClass().getSimpleName(), screenshotFile);
+        return getSlimFixtureExceptionMessage(screenshotBaseName, messageBase, t);
+    }
+
+    protected String getSlimFixtureExceptionMessage(String screenshotBaseName, String messageBase, Throwable t) {
         // take a screenshot of what was on screen
         String screenShotFile = null;
         try {
-            screenShotFile = createScreenshot("timeouts/" + getClass().getSimpleName() + "/timeout", e);
+            screenShotFile = createScreenshot(screenshotBaseName, t);
         } catch (Exception sse) {
             // unable to take screenshot
             sse.printStackTrace();
         }
-        String message;
-        if (screenShotFile == null) {
-            message = String.format("Timed-out waiting (after %ss).",
-                                    secondsBeforeTimeout());
-        } else {
-            message = String.format("<div>Timed-out waiting (after %ss). Page content:%s</div>",
-                                    secondsBeforeTimeout(), getScreenshotLink(screenShotFile));
+        String message = messageBase;
+        if (screenShotFile != null) {
+            message = String.format("<div>%s. Page content:%s</div>",
+                    messageBase, getScreenshotLink(screenShotFile));
         }
         return message;
     }
