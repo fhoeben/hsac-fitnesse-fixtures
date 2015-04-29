@@ -18,11 +18,11 @@ The baseline Fitnesse installation offers the following features:
   * easy fixture debugging,
 
 !3 1. Create standalone Fitnesse installation
-To create a standalone installation execute {{{ mvn clean test dependency:copy-dependencies }}}
-The standalone installation is present in the wiki directory (and can be distributed by just copying this directory).
-This standalone installation can be started using {{{ java -jar fitnesse-standalone.jar }}} from the wiki directory.
+Execute {{{mvn clean compile dependency:copy-dependencies assembly:single}}}
+The standalone installation is present in the wiki directory and as '...-standalone.zip' in the target directory. It can be distributed by just copying the wiki directory or by copying and extracting the zip file).
+This standalone installation can be started using {{{ java -jar fitnesse-standalone.jar }}} from the wiki directory (or directory where the 'standalone.zip' was extracted).
 
-A zip file containing the standalone version of the latest version of this project can be downloaded from the [[Cloud Bees build server][https://fhoeben.ci.cloudbees.com/job/hsac-fitnesse-fixtures/]].
+A zip file containing the standalone version of the latest version of this project can be downloaded from the [[!-GitHub-! releases][https://github.com/fhoeben/hsac-fitnesse-fixtures/releases]].
 
 
 !3 2. Run on build server
