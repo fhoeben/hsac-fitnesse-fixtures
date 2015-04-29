@@ -206,7 +206,7 @@
 					<includes>**/*</includes>
 					<excludes>META-INF,META-INF/**</excludes>
 					<includeScope>compile</includeScope>
-					<excludeArtifactIds>fitnesse,junit</excludeArtifactIds>
+					<excludeArtifactIds>fitnesse,junit,org.eclipse.jgit</excludeArtifactIds>
 					<outputDirectory>${standalone.classpath}</outputDirectory>
 				</configuration>
 			</plugin>
