@@ -13,8 +13,11 @@ The baseline Fitnesse installation offers the following features:
     - easy fixture debugging,
 
 1. To create the standalone Fitnesse installation:
-Execute 'mvn clean test dependency:copy-dependencies', the standalone installation is present in the wiki directory (and can be distributed by just copying this).
-This standalone installation can be started using 'java -jar fitnesse-standalone.jar' from the wiki directory.
+Execute 'mvn clean compile dependency:copy-dependencies assembly:single', the standalone installation is present in the wiki
+directory and as '...-standalone.zip' file in the target directory. It can be distributed by just copying the wiki directory
+or by copying and extracting the zip file).
+This standalone installation can be started using 'java -jar fitnesse-standalone.jar' from the wiki directory (or directory
+where the 'standalone.zip' was extracted).
 
 A zip file containing the latest release version of this project can be downloaded from the Releases (https://github.com/fhoeben/hsac-fitnesse-fixtures/releases).
 
