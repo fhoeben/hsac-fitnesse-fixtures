@@ -44,7 +44,7 @@ public class BrowserTest extends SlimFixture {
         Throwable result;
         if (!(t instanceof SlimFixtureException)) {
             String msg = getSlimFixtureExceptionMessage("exception", t.getMessage(), t);
-            result = new SlimFixtureException(true, msg, t);
+            result = new SlimFixtureException(false, msg, t);
         } else {
             result = super.handleException(method, arguments, t);
         }
@@ -1080,10 +1080,23 @@ public class BrowserTest extends SlimFixture {
         }
         String message = messageBase;
         if (screenShotFile != null) {
+            String exceptionMsg = formatExceptionMsg(messageBase);
             message = String.format("<div>%s. Page content:%s</div>",
-                    messageBase, getScreenshotLink(screenShotFile));
+                    exceptionMsg, getScreenshotLink(screenShotFile));
         }
         return message;
+    }
+
+    protected String formatExceptionMsg(String value) {
+        int start = 0;
+        if (value.startsWith("com.thoughtworks.selenium.SeleniumException: ")) {
+            start = "com.thoughtworks.selenium.SeleniumException: ".length();
+        }
+        int end = start + 56;
+        if (value.length() < end) {
+            end = value.length();
+        }
+        return value.substring(start, end);
     }
 
     private WebDriverWait waitDriver() {
