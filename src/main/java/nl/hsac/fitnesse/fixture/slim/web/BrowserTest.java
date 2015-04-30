@@ -76,6 +76,7 @@ public class BrowserTest extends SlimFixture {
                 boolean done = "complete".equalsIgnoreCase(readyState) || "loaded".equalsIgnoreCase(readyState);
                 if (!done) {
                     System.err.printf("Open of %s returned while document.readyState was %s", url, readyState);
+                    System.err.println();
                 }
                 return done;
             }
