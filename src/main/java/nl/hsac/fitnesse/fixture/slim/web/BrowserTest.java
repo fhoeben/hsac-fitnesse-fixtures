@@ -1097,7 +1097,12 @@ public class BrowserTest extends SlimFixture {
         if (value.length() < end) {
             end = value.length();
         }
-        return value.substring(start, end);
+        String messageToShow = value.substring(start, end);
+        if (!messageToShow.equals(value)) {
+            System.err.printf("Shortened message '%s' for display in wiki page", value);
+            System.err.println();
+        }
+        return messageToShow;
     }
 
     private WebDriverWait waitDriver() {
