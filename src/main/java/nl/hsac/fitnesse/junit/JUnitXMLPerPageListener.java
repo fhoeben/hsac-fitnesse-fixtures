@@ -6,9 +6,7 @@ import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * JUnit RunListener to be used during integration test executing FitNesse pages.
@@ -102,9 +100,13 @@ public class JUnitXMLPerPageListener extends RunListener {
      */
     protected void writeResult(String testName, String resultXml) throws IOException {
         String finalPath = getXmlFileName(testName);
-        FileWriter fw = null;
+        Writer fw = null;
         try {
-            fw = new FileWriter(finalPath);
+            fw = new BufferedWriter(
+                    new OutputStreamWriter(
+                        new FileOutputStream(finalPath),
+                        "UTF-8"));
+            fw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
             fw.write(resultXml);
         } finally {
             if (fw != null) {
