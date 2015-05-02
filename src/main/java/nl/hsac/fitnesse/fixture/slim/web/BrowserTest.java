@@ -1080,8 +1080,11 @@ public class BrowserTest extends SlimFixture {
             sse.printStackTrace();
         }
         String message = messageBase;
+        if (message == null) {
+            message = t.getClass().getName();
+        }
         if (screenShotFile != null) {
-            String exceptionMsg = formatExceptionMsg(messageBase);
+            String exceptionMsg = formatExceptionMsg(message);
             message = String.format("<div>%s. Page content:%s</div>",
                     exceptionMsg, getScreenshotLink(screenShotFile));
         }
@@ -1089,20 +1092,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected String formatExceptionMsg(String value) {
-        int start = 0;
-        if (value.startsWith("com.thoughtworks.selenium.SeleniumException: ")) {
-            start = "com.thoughtworks.selenium.SeleniumException: ".length();
-        }
-        int end = start + 56;
-        if (value.length() < end) {
-            end = value.length();
-        }
-        String messageToShow = value.substring(start, end);
-        if (!messageToShow.equals(value)) {
-            System.err.printf("Shortened message '%s' for display in wiki page", value);
-            System.err.println();
-        }
-        return messageToShow;
+        return value.replaceAll("(\\r)?\\n", "<br/>");
     }
 
     private WebDriverWait waitDriver() {
