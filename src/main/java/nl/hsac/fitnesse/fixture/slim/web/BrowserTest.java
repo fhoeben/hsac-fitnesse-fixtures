@@ -7,6 +7,7 @@ import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
@@ -1103,7 +1104,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected String formatExceptionMsg(String value) {
-        return value;
+        return StringEscapeUtils.escapeHtml4(value);
     }
 
     private WebDriverWait waitDriver() {
