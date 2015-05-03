@@ -50,9 +50,19 @@ public class SlimFixtureException extends RuntimeException {
     }
 
     private static String createMessage(boolean stackTraceInWiki, String message) {
-        return stackTraceInWiki
-                ? message
-                : String.format("message:<<%s>>", message);
+        String result = message;
+        if (!stackTraceInWiki) {
+            // Until https://github.com/unclebob/fitnesse/issues/731 is fixed
+            if (message.contains("\n")) {
+                message = message.replaceAll("(\\r)?\\n", "<br/>");
+                if (!message.startsWith("<") || !message.endsWith(">")) {
+                    // it is not yet HTML, make it HTML so we can use <br/>
+                    message = String.format("<div>%s</div>", message);
+                }
+            }
+            result = String.format("message:<<%s>>", message);
+        }
+        return result;
     }
 
 }
