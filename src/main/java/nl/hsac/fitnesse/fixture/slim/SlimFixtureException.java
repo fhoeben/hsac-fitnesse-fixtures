@@ -1,5 +1,7 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 /**
  * Exception in Slim fixture.
  */
@@ -54,11 +56,12 @@ public class SlimFixtureException extends RuntimeException {
         if (!stackTraceInWiki) {
             // Until https://github.com/unclebob/fitnesse/issues/731 is fixed
             if (message.contains("\n")) {
-                message = message.replaceAll("(\\r)?\\n", "<br/>");
                 if (!message.startsWith("<") || !message.endsWith(">")) {
                     // it is not yet HTML, make it HTML so we can use <br/>
+                    message = StringEscapeUtils.escapeHtml4(message);
                     message = String.format("<div>%s</div>", message);
                 }
+                message = message.replaceAll("(\\r)?\\n", "<br/>");
             }
             result = String.format("message:<<%s>>", message);
         }
