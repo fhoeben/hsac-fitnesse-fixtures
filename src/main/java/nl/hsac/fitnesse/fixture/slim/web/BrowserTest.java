@@ -43,7 +43,14 @@ public class BrowserTest extends SlimFixture {
     protected Throwable handleException(Method method, Object[] arguments, Throwable t) {
         Throwable result;
         if (!(t instanceof SlimFixtureException)) {
-            String msg = getSlimFixtureExceptionMessage("exception", t.getMessage(), t);
+            String message = t.getClass().getName();
+            String exceptionMsg = t.getMessage();
+            if (exceptionMsg != null) {
+                message += ": " + exceptionMsg;
+            }
+            String msg = getSlimFixtureExceptionMessage("exception", message, t);
+            // allow stack trace to be captured in FitNesse's executionLog
+            t.printStackTrace();
             result = new SlimFixtureException(false, msg, t);
         } else {
             result = super.handleException(method, arguments, t);
@@ -1081,7 +1088,11 @@ public class BrowserTest extends SlimFixture {
         }
         String message = messageBase;
         if (message == null) {
-            message = t.getClass().getName();
+            if (t == null) {
+                message = "";
+            } else {
+                message = t.getClass().getName();
+            }
         }
         if (screenShotFile != null) {
             String exceptionMsg = formatExceptionMsg(message);
@@ -1092,7 +1103,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected String formatExceptionMsg(String value) {
-        return value.replaceAll("(\\r)?\\n", "<br/>");
+        return value;
     }
 
     private WebDriverWait waitDriver() {
