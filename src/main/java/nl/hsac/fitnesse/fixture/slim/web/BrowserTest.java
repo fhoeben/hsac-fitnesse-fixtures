@@ -9,6 +9,7 @@ import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.openqa.selenium.Alert;
@@ -44,14 +45,7 @@ public class BrowserTest extends SlimFixture {
     protected Throwable handleException(Method method, Object[] arguments, Throwable t) {
         Throwable result;
         if (!(t instanceof SlimFixtureException)) {
-            String message = t.getClass().getName();
-            String exceptionMsg = t.getMessage();
-            if (exceptionMsg != null) {
-                message += ": " + exceptionMsg;
-            }
-            String msg = getSlimFixtureExceptionMessage("exception", message, t);
-            // allow stack trace to be captured in FitNesse's executionLog
-            t.printStackTrace();
+            String msg = getSlimFixtureExceptionMessage("exception", null, t);
             result = new SlimFixtureException(false, msg, t);
         } else {
             result = super.handleException(method, arguments, t);
@@ -1092,12 +1086,12 @@ public class BrowserTest extends SlimFixture {
             if (t == null) {
                 message = "";
             } else {
-                message = t.getClass().getName();
+                message = ExceptionUtils.getStackTrace(t);
             }
         }
         if (screenShotFile != null) {
             String exceptionMsg = formatExceptionMsg(message);
-            message = String.format("<div>%s. Page content:%s</div>",
+            message = String.format("<div><div>%s.</div><div>Page content:%s</div></div>",
                     exceptionMsg, getScreenshotLink(screenShotFile));
         }
         return message;
