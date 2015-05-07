@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
+import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.util.NgClientSideScripts;
 import nl.hsac.fitnesse.slim.interaction.ReflectionHelper;
 import org.openqa.selenium.By;
@@ -75,7 +76,10 @@ public class NgBrowserTest extends BrowserTest {
         if (root == null) {
             root = "body";
         }
-        waitForJavascriptCallback(NgClientSideScripts.WaitForAngular, root);
+        Object result = waitForJavascriptCallback(NgClientSideScripts.WaitForAngular, root);
+        if (result != null) {
+            throw new StopTestException(false, result.toString());
+        }
     }
 
     @Override
