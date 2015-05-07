@@ -55,11 +55,21 @@ public class NgBrowserTest extends BrowserTest {
 
     @Override
     protected void beforeInvoke(Method method, Object[] arguments) {
-        String methodName = method.getName();
-        if (!METHODS_NO_WAIT.contains(methodName)) {
+        if (requiresWaitForAngular(method)) {
             waitForAngularRequestsToFinish();
         }
         super.beforeInvoke(method, arguments);
+    }
+
+    /**
+     * Determines whether method requires waiting for all Angular requests to finish
+     * before it is invoked.
+     * @param method method to be invoked.
+     * @return true, if waiting for Angular is required, false otherwise.
+     */
+    protected boolean requiresWaitForAngular(Method method) {
+        String methodName = method.getName();
+        return !METHODS_NO_WAIT.contains(methodName);
     }
 
     @Override
