@@ -98,7 +98,7 @@ public class SlimFixture  implements InteractionAwareFixture {
         String result = null;
         Matcher matcher = PATTERN.matcher(rawValue);
         if (matcher.matches()) {
-            result = matcher.group(2);
+            result = matcher.group(2) + matcher.group(3);
         } else {
             result = rawValue;
         }
