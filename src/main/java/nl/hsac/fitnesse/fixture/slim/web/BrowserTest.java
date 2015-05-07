@@ -566,14 +566,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected String cleanExpectedValue(String expectedText) {
-        String textToLookFor;
-        if (expectedText != null) {
-            // wiki sends newlines as <br/>, Selenium reports <br/> as newlines ;-)
-            textToLookFor = expectedText.replace("<br/>", "\n");
-        } else {
-            textToLookFor = expectedText;
-        }
-        return textToLookFor;
+        return cleanupValue(expectedText);
     }
 
     protected boolean hasText(WebElement element, String textToLookFor) {
