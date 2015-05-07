@@ -35,11 +35,37 @@ import java.util.concurrent.TimeUnit;
 
 public class BrowserTest extends SlimFixture {
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
+    private NgBrowserTest ngBrowserTest;
     private int secondsBeforeTimeout;
     private int waitAfterScroll = 0;
     private String screenshotBase = new File(filesDir, "screenshots").getPath() + "/";
     private String screenshotHeight = "200";
     private String downloadBase = new File(filesDir, "downloads").getPath() + "/";
+
+    @Override
+    protected void beforeInvoke(Method method, Object[] arguments) {
+        super.beforeInvoke(method, arguments);
+        waitForAngularIfNeeded(method);
+    }
+
+    /**
+     * Determines whether the current method might require waiting for angular given the currently open site,
+     * and ensure it does if needed.
+     * @param method
+     */
+    protected void waitForAngularIfNeeded(Method method) {
+        if (ngBrowserTest == null) {
+            ngBrowserTest = new NgBrowserTest();
+        }
+        if (ngBrowserTest.requiresWaitForAngular(method) && currentSiteUsesAngular()) {
+            ngBrowserTest.waitForAngularRequestsToFinish();
+        }
+    }
+
+    protected boolean currentSiteUsesAngular() {
+        Object windowHasAngular = getSeleniumHelper().executeJavascript("return window.angular?1:0;");
+        return Long.valueOf(1).equals(windowHasAngular);
+    }
 
     @Override
     protected Throwable handleException(Method method, Object[] arguments, Throwable t) {
@@ -1283,5 +1309,13 @@ public class BrowserTest extends SlimFixture {
         } catch (TimeoutException e) {
             return handleTimeoutException(e);
         }
+    }
+
+    public NgBrowserTest getNgBrowserTest() {
+        return ngBrowserTest;
+    }
+
+    public void setNgBrowserTest(NgBrowserTest ngBrowserTest) {
+        this.ngBrowserTest = ngBrowserTest;
     }
 }
