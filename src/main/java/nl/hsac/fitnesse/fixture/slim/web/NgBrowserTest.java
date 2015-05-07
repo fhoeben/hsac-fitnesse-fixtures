@@ -88,7 +88,8 @@ public class NgBrowserTest extends BrowserTest {
         }
         Object result = waitForJavascriptCallback(NgClientSideScripts.WaitForAngular, root);
         if (result != null) {
-            throw new StopTestException(false, result.toString());
+            String msg = getSlimFixtureExceptionMessage("angular", result.toString(), null);
+            throw new StopTestException(false, msg);
         }
     }
 
