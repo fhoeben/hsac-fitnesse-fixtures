@@ -54,11 +54,10 @@ public class NgBrowserTest extends BrowserTest {
     }
 
     @Override
-    protected void beforeInvoke(Method method, Object[] arguments) {
+    protected void waitForAngularIfNeeded(Method method) {
         if (requiresWaitForAngular(method)) {
             waitForAngularRequestsToFinish();
         }
-        super.beforeInvoke(method, arguments);
     }
 
     /**

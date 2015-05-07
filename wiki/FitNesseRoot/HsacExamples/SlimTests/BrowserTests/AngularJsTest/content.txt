@@ -1,6 +1,6 @@
 We test a site that is implemented using !-AngularJS-!. These sites are quite dynamic and we have to make sure page rendering is complete before we execute a next step.
 
-|storyboard       |Ng Browser Test                                  |
+|storyboard       |Browser Test                                     |
 |open             |http://rest.kabasakalis.tk/music_db              |
 |enter            |Metallica|as     |Search name,country,year,genre.|
 |wait milliseconds|500                                              |
