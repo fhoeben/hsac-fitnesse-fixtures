@@ -45,3 +45,6 @@ To start Fitnesse: have the IDE execute 'mvn compile exec:exec'. The port used b
 Fitnesse will be available at http://localhost:<fitnesse.port>/, example usage of the symbols and fixtures can be seen in http://localhost:<fitnesse.port>/HsacExamples.
 
 To debug a fixture used in a Fitnesse page: change the @Suite annotation's value to contain page name in nl.hsac.fitnesse.fixture.FixtureDebugTest, then just debug this test.
+
+
+More information about this project can be found on its GitHub wiki: https://github.com/fhoeben/hsac-fitnesse-fixtures/wiki
