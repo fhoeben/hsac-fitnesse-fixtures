@@ -611,6 +611,26 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
+    public boolean waitForXPathVisible(final String xPath) {
+        By by = By.xpath(xPath);
+        return waitForVisible(by);
+    }
+
+    protected boolean waitForVisible(final By by) {
+        return waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                Boolean result = Boolean.FALSE;
+                WebElement element = getSeleniumHelper().findElement(by);
+                if (element != null) {
+                    scrollIfNotOnScreen(element);
+                    result = element.isDisplayed();
+                }
+                return result;
+            }
+        });
+    }
+
     public String valueOf(String place) {
         return valueFor(place);
     }
@@ -807,6 +827,11 @@ public class BrowserTest extends SlimFixture {
 
     protected WebElement getElement(String place) {
         return getSeleniumHelper().getElement(place);
+    }
+
+    public boolean clickByXPath(String xPath) {
+        WebElement element = findByXPath(xPath);
+        return clickElement(element);
     }
 
     public String textByXPath(String xPath) {
