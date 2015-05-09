@@ -70,6 +70,8 @@ The heuristic to find places tries a number of translations of end user terms to
 |set browser size to <newWidth> to <newHeight>                             |Sets the size of the browser's window to 'newWidth' by 'newHeight' (in pixels).                                                                               |
 |text by xPath <element xpath>                                             |retrieves the text of the first element found by evaluating the xPath against the current page's DOM                                                          |
 |text by class name <class>                                                |retrieves the text of the first element found with the specified class                                                                                        |
+|click by xPath <element xpath>                                            |clicks the first (displayed and enabled) element found by evaluating the xPath against the current page's DOM                                                 |
+|wait for xPath <element xpath> visible                                    |waits until a displayed element is found by evaluating the xPath against the current page's DOM                                                               |
 
 !3 !-NgBrowserTest-!
 
