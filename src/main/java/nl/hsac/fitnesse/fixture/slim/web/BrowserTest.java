@@ -37,7 +37,7 @@ public class BrowserTest extends SlimFixture {
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
     private NgBrowserTest ngBrowserTest;
     private int secondsBeforeTimeout;
-    private int waitAfterScroll = 0;
+    private int waitAfterScroll = 150;
     private String screenshotBase = new File(filesDir, "screenshots").getPath() + "/";
     private String screenshotHeight = "200";
     private String downloadBase = new File(filesDir, "downloads").getPath() + "/";
