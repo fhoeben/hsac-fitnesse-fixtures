@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
@@ -432,8 +433,12 @@ public class SeleniumHelper {
      * @return selenium web driver.
      */
     public WebDriver driver() {
-        if (webDriver == null && factory != null) {
-            factory.createDriver();
+        if (webDriver == null) {
+            if (factory == null) {
+                throw new StopTestException("Cannot use Selenium before a driver is started (for instance using SeleniumDriverSetup)");
+            } else {
+                factory.createDriver();
+            }
         }
         return webDriver;
     }
