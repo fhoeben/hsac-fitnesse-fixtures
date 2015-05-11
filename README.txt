@@ -6,7 +6,7 @@ The baseline Fitnesse installation offers the following features:
 1. Ability to easily create a standalone (no JDK or Maven required) Fitnesse environment.
 2. Run Fitnesse tests on a build server, reporting the results in both JUnit XML format and HTML.
 3. Fitnesse installation for fixture developers containing:
-    - the fixture base classes (and Selenium drivers from Chrome and Internet Explorer),
+    - the fixture base classes (and Selenium drivers for Chrome, Internet Explorer and PhantomJs),
     - Maven classpath plugin (such that tests can use all dependencies from pom.xml),
     - HSAC's fitnesse-plugin to add additional Wiki features (random values, calculating relative dates,
       Slim scenarios without need to specify all parameters, Slim scripts that take a screenshot after each step),
