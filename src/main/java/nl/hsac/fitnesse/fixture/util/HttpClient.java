@@ -54,7 +54,7 @@ public class HttpClient {
         getResponse(url, response, method, null);
     }
 
-    private void getResponse(String url, HttpResponse response, HttpRequestBase method, Map<String, String> headers) {
+    protected void getResponse(String url, HttpResponse response, HttpRequestBase method, Map<String, String> headers) {
         try {
             if (headers != null) {
                 for (String key : headers.keySet()) {
