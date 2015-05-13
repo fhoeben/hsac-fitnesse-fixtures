@@ -17,7 +17,12 @@ public class JsonHttpTest extends HttpTest {
      */
     @Override
     public String response() {
-        return formatValue(super.response());
+        String rawResponse = super.response();
+        try {
+            return formatValue(rawResponse);
+        } catch (Exception e) {
+            return rawResponse;
+        }
     }
 
     private String formatValue(String value) {
