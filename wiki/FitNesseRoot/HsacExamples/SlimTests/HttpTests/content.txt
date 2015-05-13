@@ -36,6 +36,7 @@ The main commands/keywords (i.e. public methods) offered by !-nl.hsac.fitnesse.f
 The commands/keywords (i.e. public methods) added by !-nl.hsac.fitnesse.fixture.slim.JsonHttpTest-! are listed below.
 
 -|Comment|
+|post values as json to <url>      |Sends a POST containing all values (as JSON properties) to the url.                                                          |
 |json path <expression>            |Evaluates the (definite) expression against the last response received.                                                      |
 |json path count <expression>      |Evaluates the (indefinite) expression against the last response received, counting the number of results.                    |
 |all json path matches <expression>|Evaluates the expression against the last response received and returns all results. Intended to be used with 'show' command.|

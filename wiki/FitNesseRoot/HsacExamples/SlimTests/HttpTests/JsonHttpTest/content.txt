@@ -60,14 +60,19 @@ Next another POST, posting of url-enoded array of values defined in the wiki.
 
 Next a POST/DELETE combination
 
-|script   |json http test                                                                                                            |
-|post     |{name: "dsfsdf", year_formed: "2010", genre_id: "1", country: "Afghanistan"}|to     |http://rest.kabasakalis.tk/api/artist|
-|set value|application/json                                                            |for    |Content-Type                         |
-|set value|application/json                                                            |for    |Accept                               |
-|check    |response status                                                             |200                                          |
-|show     |response                                                                                                                  |
-|$id=     |json path                                                                   |data.artist.id                               |
-|delete   |http://rest.kabasakalis.tk/api/artist/$id                                                                                 |
-|check    |response status                                                             |200                                          |
-|show     |response                                                                                                                  |
-|check    |json path                                                                   |success|true                                 |
+|script                |json http test                                 |
+|set value             |dsfsdf         |for                |name       |
+|set value             |2010           |for                |year_formed|
+|set value             |1              |for                |genre_id   |
+|set value             |Afghanistan    |for                |country    |
+|post values as json to|http://rest.kabasakalis.tk/api/artist          |
+|show                  |request                                        |
+|check                 |response status|200                            |
+|show                  |response                                       |
+|$id=                  |json path      |data.artist.id                 |
+|check                 |json path      |data.artist.name   |dsfsdf     |
+|check                 |json path      |data.artist.country|Afghanistan|
+|delete                |http://rest.kabasakalis.tk/api/artist/$id      |
+|check                 |response status|200                            |
+|show                  |response                                       |
+|check                 |json path      |success            |true       |

@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.fixture.slim;
 
 import nl.hsac.fitnesse.fixture.util.JsonFormatter;
 import nl.hsac.fitnesse.fixture.util.JsonPathHelper;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -11,6 +12,14 @@ import java.util.List;
 public class JsonHttpTest extends HttpTest {
     private final JsonFormatter formatter = new JsonFormatter();
     private final JsonPathHelper pathHelper = new JsonPathHelper();
+
+    public boolean postValuesAsJsonTo(String serviceUrl) {
+        return postToImpl(jsonEncodeCurrentValues(), serviceUrl);
+    }
+
+    protected String jsonEncodeCurrentValues() {
+        return new JSONObject(getCurrentValues()).toString();
+    }
 
     /**
      * @return response received last time postTo() or getFrom() was called.
