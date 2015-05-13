@@ -105,7 +105,7 @@ public class HttpTest extends SlimFixture {
 
     /**
      * Sends HTTP POST template with current values to service endpoint.
-     * @param serviceUrl service endpoint to send XML to.
+     * @param serviceUrl service endpoint to send request to.
      * @return true if call could be made and response did not indicate error.
      */
     public boolean postTemplateTo(String serviceUrl) {
@@ -172,8 +172,8 @@ public class HttpTest extends SlimFixture {
     }
 
     /**
-     * Sends HTTP GET to service endpoint to retrieve XML.
-     * @param serviceUrl service endpoint to send XML to.
+     * Sends HTTP GET to service endpoint to retrieve content.
+     * @param serviceUrl service endpoint to get content from.
      * @return true if call could be made and response did not indicate error.
      */
     public boolean getFrom(String serviceUrl) {
