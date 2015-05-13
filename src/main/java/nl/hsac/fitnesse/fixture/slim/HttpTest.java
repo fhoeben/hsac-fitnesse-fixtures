@@ -190,7 +190,7 @@ public class HttpTest extends SlimFixture {
     }
 
     /**
-     * Sends HTTP DELETE to service endpoint..
+     * Sends HTTP DELETE to service endpoint.
      * @param serviceUrl service endpoint to delete.
      * @return true if call could be made and response did not indicate error.
      */
