@@ -49,15 +49,6 @@ public class HttpClient {
      * @param url URL of service
      * @param response response to be filled.
      */
-    public void get(String url, XmlHttpResponse response) {
-        HttpGet method = new HttpGet(url);
-        getResponse(url, response, method, null);
-    }
-
-    /**
-     * @param url URL of service
-     * @param response response to be filled.
-     */
     public void get(String url, HttpResponse response) {
         HttpGet method = new HttpGet(url);
         getResponse(url, response, method, null);
