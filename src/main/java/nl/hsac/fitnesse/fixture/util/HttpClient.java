@@ -5,6 +5,7 @@ import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -51,6 +52,15 @@ public class HttpClient {
      */
     public void get(String url, HttpResponse response) {
         HttpGet method = new HttpGet(url);
+        getResponse(url, response, method, null);
+    }
+
+    /**
+     * @param url URL to send to DELETE to
+     * @param response response to be filled.
+     */
+    public void delete(String url, HttpResponse response) {
+        HttpDelete method = new HttpDelete(url);
         getResponse(url, response, method, null);
     }
 
