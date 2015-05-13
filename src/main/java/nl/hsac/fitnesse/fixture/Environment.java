@@ -287,6 +287,16 @@ public class Environment {
         httpClient.get(url, response);
     }
 
+    /**
+     * DELETEs content at URL.
+     * @param url url to send delete to.
+     * @param response response to store url and response value in.
+     */
+    public void doDelete(String url, HttpResponse response) {
+        response.setRequest(url);
+        httpClient.delete(url, response);
+    }
+
     private void setNamespaceContext(XmlHttpResponse response) {
         response.setNamespaceContext(getNamespaceContext());
     }

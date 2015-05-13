@@ -189,6 +189,24 @@ public class HttpTest extends SlimFixture {
         return result;
     }
 
+    /**
+     * Sends HTTP DELETE to service endpoint..
+     * @param serviceUrl service endpoint to delete.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean delete(String serviceUrl) {
+        boolean result;
+        response = createResponse();
+        String url = createUrlWithParams(serviceUrl);
+        try {
+            getEnvironment().doDelete(url, response);
+        } catch (Throwable t) {
+            throw new StopTestException("Unable to DELETE: " + url, t);
+        }
+        result = postProcessResponse();
+        return result;
+    }
+
     String createUrlWithParams(String serviceUrl) {
         String baseUrl = getUrl(serviceUrl);
         if (!getCurrentValues().isEmpty()) {
