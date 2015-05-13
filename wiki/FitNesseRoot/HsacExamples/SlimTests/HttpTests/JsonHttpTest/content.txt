@@ -57,3 +57,17 @@ Next another POST, posting of url-enoded array of values defined in the wiki.
 |check         |json path                            |error                                        |0            |
 |check         |json path                            |$.fields.order.basic_products[0].product_name|Internet 50Mb|
 |check         |json path                            |$.fields.order.basic_products[1].product_name|TV Start     |
+
+Next a POST/DELETE combination
+
+|script   |json http test                                                                                                            |
+|post     |{name: "dsfsdf", year_formed: "2010", genre_id: "1", country: "Afghanistan"}|to     |http://rest.kabasakalis.tk/api/artist|
+|set value|application/json                                                            |for    |Content-Type                         |
+|set value|application/json                                                            |for    |Accept                               |
+|check    |response status                                                             |200                                          |
+|show     |response                                                                                                                  |
+|$id=     |json path                                                                   |data.artist.id                               |
+|delete   |http://rest.kabasakalis.tk/api/artist/$id                                                                                 |
+|check    |response status                                                             |200                                          |
+|show     |response                                                                                                                  |
+|check    |json path                                                                   |success|true                                 |
