@@ -89,17 +89,21 @@ public class HttpClient {
                 responseHeaders.put(h.getName(), h.getValue());
             }
 
-            if (response instanceof BinaryHttpResponse) {
-                BinaryHttpResponse binaryHttpResponse = (BinaryHttpResponse) response;
-
-                byte[] content = EntityUtils.toByteArray(entity);
-                binaryHttpResponse.setResponseContent(content);
-
-                String fileName = getAttachmentFileName(resp);
-                binaryHttpResponse.setFileName(fileName);
+            if (entity == null) {
+                response.setResponse(null);
             } else {
-                String result = EntityUtils.toString(entity);
-                response.setResponse(result);
+                if (response instanceof BinaryHttpResponse) {
+                    BinaryHttpResponse binaryHttpResponse = (BinaryHttpResponse) response;
+
+                    byte[] content = EntityUtils.toByteArray(entity);
+                    binaryHttpResponse.setResponseContent(content);
+
+                    String fileName = getAttachmentFileName(resp);
+                    binaryHttpResponse.setFileName(fileName);
+                } else {
+                    String result = EntityUtils.toString(entity);
+                    response.setResponse(result);
+                }
             }
         } catch (Exception e) {
             throw new RuntimeException("Unable to get response from: " + url, e);
