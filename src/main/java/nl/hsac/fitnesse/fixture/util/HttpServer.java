@@ -88,7 +88,9 @@ public class HttpServer <T extends HttpResponse> {
      * Stops server from listening.
      */
     public void stopServer() {
-        server.stop(0);
+        synchronized (lock) {
+            server.stop(0);
+        }
     }
 
     private void bind(com.sun.net.httpserver.HttpServer server) {
