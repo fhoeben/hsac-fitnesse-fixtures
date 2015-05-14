@@ -10,7 +10,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Receiver for a callback from application being tested.
@@ -20,11 +20,12 @@ public class HttpServer <T extends HttpResponse> {
 
     private final T response;
     private final com.sun.net.httpserver.HttpServer server;
-    private final AtomicBoolean requestReceived = new AtomicBoolean(false);
+    private final AtomicInteger requestsReceived = new AtomicInteger(0);
+    private final Object lock = new Object();
 
     /**
      * Creates new.
-     * @param aPath context the server will serve.
+     * @param aPath context the server will serve (must start with '/').
      * @param aResponse response to send when request is received, request will
      *                  be added to it when this server receives one.
      */
@@ -48,27 +49,27 @@ public class HttpServer <T extends HttpResponse> {
     }
 
     /**
-     * @return response, with request filled if isRequestReceived() is true.
+     * @return response, with request filled (with last received request) if getRequestsReceived() is larger than 0.
      */
     public T getResponse() {
         return response;
     }
 
     /**
-     * @return true if this server received a request.
+     * @return number of requests this server received.
      */
-    public boolean isRequestReceived() {
-        return requestReceived.get();
+    public int getRequestsReceived() {
+        return requestsReceived.get();
     }
 
     /**
      * @param maxWait ms to wait at most.
-     * @return response with request filled, if one was received.
+     * @return response with last request filled, if at least one was received.
      */
     public T waitForRequest(long maxWait) {
         long start = System.currentTimeMillis();
         try {
-            while (!isRequestReceived()
+            while (requestsReceived.get() < 1
                     && (System.currentTimeMillis() - start) < maxWait) {
                 try {
                     Thread.sleep(50);
@@ -129,16 +130,18 @@ public class HttpServer <T extends HttpResponse> {
         return port;
     }
 
-    private HttpHandler getHandler(final T aResponse) {
+    protected HttpHandler getHandler(final T aResponse) {
         HttpHandler result = new HttpHandler() {
             @Override
             public void handle(HttpExchange he) throws IOException {
+            // ensure we never handle multiple requests at the same time
+            synchronized (lock) {
                 OutputStream os = null;
                 try {
                     InputStream is = he.getRequestBody();
                     String request = FileUtil.streamToString(is, "http request");
                     aResponse.setRequest(request);
-                    requestReceived.set(true);
+                    incrementRequestsReceived();
 
                     ContentType contentType = XML_UTF8_TYPE;
                     byte[] responseBytes = aResponse.getResponse()
@@ -155,9 +158,13 @@ public class HttpServer <T extends HttpResponse> {
                         os.close();
                     }
                 }
-
+            }
             }
         };
         return result;
+    }
+
+    protected int incrementRequestsReceived() {
+        return requestsReceived.incrementAndGet();
     }
 }
