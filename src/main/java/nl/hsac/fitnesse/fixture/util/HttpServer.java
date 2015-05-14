@@ -141,7 +141,6 @@ public class HttpServer <T extends HttpResponse> {
                     InputStream is = he.getRequestBody();
                     String request = FileUtil.streamToString(is, "http request");
                     aResponse.setRequest(request);
-                    incrementRequestsReceived();
 
                     ContentType contentType = XML_UTF8_TYPE;
                     byte[] responseBytes = aResponse.getResponse()
@@ -154,6 +153,7 @@ public class HttpServer <T extends HttpResponse> {
                     os.write(responseBytes);
                     os.flush();
                 } finally {
+                    incrementRequestsReceived();
                     if (os != null) {
                         os.close();
                     }
