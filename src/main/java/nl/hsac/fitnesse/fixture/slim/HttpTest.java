@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 public class HttpTest extends SlimFixture {
     /** Default content type for posts. */
     public final static String DEFAULT_POST_CONTENT_TYPE = "application/x-www-form-urlencoded; charset=UTF-8";
+    public final static Pattern PRE_FORMATTED_PATTERN = Pattern.compile("<pre>\\s*(.*?)\\s*</pre>", Pattern.DOTALL);
 
     private final Map<String, Object> currentValues = new LinkedHashMap<String, Object>();
     private final Map<String, String> headerValues = new LinkedHashMap<String, String>();
@@ -162,8 +163,7 @@ public class HttpTest extends SlimFixture {
 
     protected String cleanupBody(String body) {
         String result = body;
-        Pattern preFormatted = Pattern.compile("<pre>\\s*(.*?)\\s*</pre>", Pattern.DOTALL);
-        Matcher matcher = preFormatted.matcher(body);
+        Matcher matcher = PRE_FORMATTED_PATTERN.matcher(body);
         if (matcher.matches()) {
             String escapedBody = matcher.group(1);
             result = StringEscapeUtils.unescapeHtml4(escapedBody);
