@@ -111,7 +111,7 @@ public class HttpTest extends SlimFixture {
      */
     public boolean postTemplateTo(String serviceUrl) {
         boolean result;
-        response = createResponse();
+        resetResponse();
         if (template == null) {
             throw new StopTestException("No template available to use in post");
         } else {
@@ -149,7 +149,7 @@ public class HttpTest extends SlimFixture {
 
     protected boolean postToImpl(String body, String serviceUrl) {
         boolean result;
-        response = createResponse();
+        resetResponse();
         response.setRequest(body);
         String url = getUrl(serviceUrl);
         try {
@@ -178,7 +178,7 @@ public class HttpTest extends SlimFixture {
      */
     public boolean getFrom(String serviceUrl) {
         boolean result;
-        response = createResponse();
+        resetResponse();
         String url = createUrlWithParams(serviceUrl);
         try {
             getEnvironment().doGet(url, response);
@@ -196,7 +196,7 @@ public class HttpTest extends SlimFixture {
      */
     public boolean delete(String serviceUrl) {
         boolean result;
-        response = createResponse();
+        resetResponse();
         String url = createUrlWithParams(serviceUrl);
         try {
             getEnvironment().doDelete(url, response);
@@ -205,6 +205,10 @@ public class HttpTest extends SlimFixture {
         }
         result = postProcessResponse();
         return result;
+    }
+
+    protected void resetResponse() {
+        response = createResponse();
     }
 
     String createUrlWithParams(String serviceUrl) {
