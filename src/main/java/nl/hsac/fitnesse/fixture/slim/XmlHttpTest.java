@@ -25,30 +25,9 @@ public class XmlHttpTest extends HttpTest {
         getEnvironment().registerNamespace(prefix, getUrl(namespace));
     }
 
-    /**
-     * @return request sent last time postTo() or getFrom() was called.
-     */
     @Override
-    public String request() {
-        return formatValue(super.request());
-    }
-
-    /**
-     * @return response received last time postTo() or getFrom() was called.
-     */
-    @Override
-    public String response() {
-        return formatValue(super.response());
-    }
-
-    private String formatValue(String value) {
-        String result;
-        try {
-            result = getEnvironment().getHtmlForXml(value);
-        } catch (Exception e) {
-            result = value;
-        }
-        return result;
+    protected String formatValue(String value) {
+        return getEnvironment().getHtmlForXml(value);
     }
 
     /**
