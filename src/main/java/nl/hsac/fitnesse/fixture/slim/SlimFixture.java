@@ -97,22 +97,26 @@ public class SlimFixture  implements InteractionAwareFixture {
      * @return rawValue if it was just text, cleaned version if it was not.
      */
     protected String cleanupValue(String rawValue) {
-        String result;
-        Matcher matcher = PATTERN.matcher(rawValue);
-        if (matcher.matches()) {
-            result = matcher.group(2) + matcher.group(3);
-        } else {
-            result = cleanupPreFormatted(rawValue);
+        String result = null;
+        if (rawValue != null) {
+            Matcher matcher = PATTERN.matcher(rawValue);
+            if (matcher.matches()) {
+                result = matcher.group(2) + matcher.group(3);
+            } else {
+                result = cleanupPreFormatted(rawValue);
+            }
         }
         return result;
     }
 
     protected String cleanupPreFormatted(String rawValue) {
         String result = rawValue;
-        Matcher matcher = PRE_FORMATTED_PATTERN.matcher(rawValue);
-        if (matcher.matches()) {
-            String escapedBody = matcher.group(1);
-            result = StringEscapeUtils.unescapeHtml4(escapedBody);
+        if (rawValue != null) {
+            Matcher matcher = PRE_FORMATTED_PATTERN.matcher(rawValue);
+            if (matcher.matches()) {
+                String escapedBody = matcher.group(1);
+                result = StringEscapeUtils.unescapeHtml4(escapedBody);
+            }
         }
         return result;
     }
