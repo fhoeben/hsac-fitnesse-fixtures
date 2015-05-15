@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
 public class HttpTest extends SlimFixture {
     /** Default content type for posts. */
     public final static String DEFAULT_POST_CONTENT_TYPE = "application/x-www-form-urlencoded; charset=UTF-8";
-    public final static Pattern PRE_FORMATTED_PATTERN = Pattern.compile("<pre>\\s*(.*?)\\s*</pre>", Pattern.DOTALL);
 
     private final Map<String, Object> currentValues = new LinkedHashMap<String, Object>();
     private final Map<String, String> headerValues = new LinkedHashMap<String, String>();
@@ -46,7 +45,9 @@ public class HttpTest extends SlimFixture {
      * @param name name to use this value for.
      */
     public void setValueFor(String value, String name) {
-        currentValues.put(name, value);
+        String cleanName = cleanupValue(name);
+        String cleanValue = cleanupValue(value);
+        currentValues.put(cleanName, cleanValue);
     }
 
     /**
@@ -55,8 +56,12 @@ public class HttpTest extends SlimFixture {
      * @param name name to use this list for.
      */
     public void setValuesFor(String values, String name) {
+        String cleanName = cleanupValue(name);
         String[] valueArrays = values.split("\\s*,\\s*");
-        getCurrentValues().put(name, valueArrays);
+        for (int i = 0; i < valueArrays.length; i++) {
+            valueArrays[i] = cleanupValue(valueArrays[i]);
+        }
+        currentValues.put(cleanName, valueArrays);
     }
 
     /**
@@ -65,8 +70,9 @@ public class HttpTest extends SlimFixture {
      * @return true if value was present.
      */
     public boolean clearValue(String name) {
-        boolean result = currentValues.containsKey(name);
-        currentValues.remove(name);
+        String cleanName = cleanupValue(name);
+        boolean result = currentValues.containsKey(cleanName);
+        currentValues.remove(cleanName);
         return result;
     }
 
@@ -83,7 +89,9 @@ public class HttpTest extends SlimFixture {
      * @param name name to use this value for.
      */
     public void setValueForHeader(String value, String name) {
-        headerValues.put(name, getUrl(value));
+        String cleanName = cleanupValue(name);
+        String cleanValue = cleanupValue(value);
+        headerValues.put(cleanName, cleanValue);
     }
 
     /**
@@ -92,8 +100,9 @@ public class HttpTest extends SlimFixture {
      * @return true if value was present.
      */
     public boolean clearHeaderValue(String name) {
-        boolean result = headerValues.containsKey(name);
-        headerValues.remove(name);
+        String cleanName = cleanupValue(name);
+        boolean result = headerValues.containsKey(cleanName);
+        headerValues.remove(cleanName);
         return result;
     }
 
@@ -162,13 +171,7 @@ public class HttpTest extends SlimFixture {
     }
 
     protected String cleanupBody(String body) {
-        String result = body;
-        Matcher matcher = PRE_FORMATTED_PATTERN.matcher(body);
-        if (matcher.matches()) {
-            String escapedBody = matcher.group(1);
-            result = StringEscapeUtils.unescapeHtml4(escapedBody);
-        }
-        return result;
+        return cleanupPreFormatted(body);
     }
 
     /**

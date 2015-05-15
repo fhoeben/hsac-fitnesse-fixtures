@@ -4,6 +4,7 @@ import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
 import nl.hsac.fitnesse.slim.interaction.InteractionAwareFixture;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -16,6 +17,7 @@ import java.util.regex.Pattern;
  */
 public class SlimFixture  implements InteractionAwareFixture {
     private static final Pattern PATTERN = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>(.*)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern PRE_FORMATTED_PATTERN = Pattern.compile("<pre>\\s*(.*?)\\s*</pre>", Pattern.DOTALL);
     private Environment environment = Environment.getInstance();
     protected final String filesDir = getEnvironment().getFitNesseFilesSectionDir();
 
@@ -95,12 +97,22 @@ public class SlimFixture  implements InteractionAwareFixture {
      * @return rawValue if it was just text, cleaned version if it was not.
      */
     protected String cleanupValue(String rawValue) {
-        String result = null;
+        String result;
         Matcher matcher = PATTERN.matcher(rawValue);
         if (matcher.matches()) {
             result = matcher.group(2) + matcher.group(3);
         } else {
-            result = rawValue;
+            result = cleanupPreFormatted(rawValue);
+        }
+        return result;
+    }
+
+    protected String cleanupPreFormatted(String rawValue) {
+        String result = rawValue;
+        Matcher matcher = PRE_FORMATTED_PATTERN.matcher(rawValue);
+        if (matcher.matches()) {
+            String escapedBody = matcher.group(1);
+            result = StringEscapeUtils.unescapeHtml4(escapedBody);
         }
         return result;
     }
