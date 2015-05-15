@@ -288,17 +288,42 @@ public class HttpTest extends SlimFixture {
     }
 
     /**
-     * @return request sent last time postTo() was called.
+     * @return request sent last time.
      */
     public String request() {
-        return response.getRequest();
+        return safeFormatValue(response.getRequest());
     }
 
     /**
-     * @return response received last time postTo() was called.
+     * @return response received last time postTo(), delete() or getFrom() was called.
      */
     public String response() {
-        return response.getResponse();
+        return safeFormatValue(response.getResponse());
+    }
+
+    /**
+     * Internal method to format a value, which will just return the 'raw' value if there is a problem formatting.
+     * @param value value to format
+     * @return formatted value
+     */
+    protected final String safeFormatValue(String value) {
+        String result;
+        try {
+            result = formatValue(value);
+        } catch (Exception e) {
+            result = value;
+        }
+        return result;
+    }
+
+    /**
+     * Method that will take care of formatting a value, which may be overridden in subclasses.
+     * This implementation just returns value.
+     * @param value value to format
+     * @return formatted value
+     */
+    protected String formatValue(String value) {
+        return value;
     }
 
     /**
@@ -311,7 +336,7 @@ public class HttpTest extends SlimFixture {
     }
 
     /**
-     * @return http status received last time postTo() was called.
+     * @return http status received in response to last request.
      */
     public int responseStatus() {
         return response.getStatusCode();

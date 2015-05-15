@@ -21,20 +21,8 @@ public class JsonHttpTest extends HttpTest {
         return new JSONObject(getCurrentValues()).toString();
     }
 
-    /**
-     * @return response received last time postTo() or getFrom() was called.
-     */
     @Override
-    public String response() {
-        String rawResponse = super.response();
-        try {
-            return formatValue(rawResponse);
-        } catch (Exception e) {
-            return rawResponse;
-        }
-    }
-
-    private String formatValue(String value) {
+    protected String formatValue(String value) {
         return getEnvironment().getHtml(formatter, value);
     }
 
