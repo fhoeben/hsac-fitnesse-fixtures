@@ -8,11 +8,16 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Formats XML.
  */
 public class XMLFormatter implements Formatter {
+    public static final Pattern DECL_PATTERN = Pattern.compile("^<\\?xml\\s.*?\\?>", Pattern.DOTALL);
+    public static final Pattern ELEMENT_CONTENT_PATTERN = Pattern.compile(">\\s*(.*?)\\s*<", Pattern.DOTALL);
+
     /**
      * Creates formatted version of the supplied XML.
      * @param xml XML to format.
@@ -20,7 +25,7 @@ public class XMLFormatter implements Formatter {
      */
     public String format(String xml) {
         try {
-            boolean keepDeclaration = xml.startsWith("<?xml");
+            boolean keepDeclaration = DECL_PATTERN.matcher(xml).matches();
 
             Source xmlInput = new StreamSource(new StringReader(xml));
             StreamResult xmlOutput = new StreamResult(new StringWriter());
@@ -36,5 +41,36 @@ public class XMLFormatter implements Formatter {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Removes both XML declaration and trims all elements.
+     * @param xml XML to trim.
+     * @return trimmed version.
+     */
+    public static String trim(String xml) {
+        String content = removeDeclaration(xml);
+        return trimElements(content);
+    }
+
+    /**
+     * Removes XML declaration (if present).
+     * @param xml XML to remove declaration from.
+     * @return XML without declaration.
+     */
+    public static String removeDeclaration(String xml) {
+        Matcher matcher = DECL_PATTERN.matcher(xml);
+        return matcher.replaceFirst("");
+    }
+
+    /**
+     * Removes whitespace before and after each elements (and the entire document).
+     * @param xml XML to trim.
+     * @return trimmed version.
+     */
+    public static String trimElements(String xml) {
+        String result = xml.trim();
+        Matcher matcher = ELEMENT_CONTENT_PATTERN.matcher(result);
+        return matcher.replaceAll(">$1<");
     }
 }
