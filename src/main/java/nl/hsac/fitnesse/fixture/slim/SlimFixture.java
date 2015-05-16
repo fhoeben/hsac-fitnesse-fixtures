@@ -16,8 +16,6 @@ import java.util.regex.Pattern;
  * Base class for Slim fixtures.
  */
 public class SlimFixture  implements InteractionAwareFixture {
-    private static final Pattern PATTERN = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>(.*)", Pattern.CASE_INSENSITIVE);
-    private static final Pattern PRE_FORMATTED_PATTERN = Pattern.compile("<pre>\\s*(.*?)\\s*</pre>", Pattern.DOTALL);
     private Environment environment = Environment.getInstance();
     protected final String filesDir = getEnvironment().getFitNesseFilesSectionDir();
 
@@ -66,12 +64,7 @@ public class SlimFixture  implements InteractionAwareFixture {
     }
 
     protected String getUrl(String htmlLink) {
-        String result = htmlLink;
-        Matcher matcher = PATTERN.matcher(htmlLink);
-        if (matcher.matches()) {
-            result = matcher.group(1) + matcher.group(3);
-        }
-        return result;
+        return getEnvironment().getHtmlCleaner().getUrl(htmlLink);
     }
 
     /**
@@ -97,28 +90,7 @@ public class SlimFixture  implements InteractionAwareFixture {
      * @return rawValue if it was just text, cleaned version if it was not.
      */
     protected String cleanupValue(String rawValue) {
-        String result = null;
-        if (rawValue != null) {
-            Matcher matcher = PATTERN.matcher(rawValue);
-            if (matcher.matches()) {
-                result = matcher.group(2) + matcher.group(3);
-            } else {
-                result = cleanupPreFormatted(rawValue);
-            }
-        }
-        return result;
-    }
-
-    protected String cleanupPreFormatted(String rawValue) {
-        String result = rawValue;
-        if (rawValue != null) {
-            Matcher matcher = PRE_FORMATTED_PATTERN.matcher(rawValue);
-            if (matcher.matches()) {
-                String escapedBody = matcher.group(1);
-                result = StringEscapeUtils.unescapeHtml4(escapedBody);
-            }
-        }
-        return result;
+        return getEnvironment().getHtmlCleaner().cleanupValue(rawValue);
     }
 
     public boolean waitSeconds(int i) {

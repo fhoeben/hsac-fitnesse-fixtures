@@ -171,7 +171,7 @@ public class HttpTest extends SlimFixture {
     }
 
     protected String cleanupBody(String body) {
-        return cleanupPreFormatted(body);
+        return getEnvironment().getHtmlCleaner().cleanupPreFormatted(body);
     }
 
     /**
