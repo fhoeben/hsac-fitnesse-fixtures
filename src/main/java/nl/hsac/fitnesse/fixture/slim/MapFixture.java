@@ -1,8 +1,8 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import nl.hsac.fitnesse.fixture.util.MapHelper;
+
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Fixture to manipulate and generate map values. Generated values can be stored in variables so the can
@@ -10,9 +10,9 @@ import java.util.regex.Pattern;
  * This fixture can be used using Slim's dynamic decision tables or using scripts (and scenarios).
  */
 public class MapFixture extends SlimFixture {
-    private static final Pattern LIST_INDEX_PATTERN = Pattern.compile("(\\S+)\\[(\\d+)\\]");
 
     private final Map<String, Object> currentValues;
+    private MapHelper mapHelper;
 
     public MapFixture() {
         this(new LinkedHashMap<String, Object>());
@@ -20,6 +20,7 @@ public class MapFixture extends SlimFixture {
 
     public MapFixture(Map<String, Object> map) {
         currentValues = map;
+        mapHelper = new MapHelper();
     }
 
     /**
@@ -28,39 +29,36 @@ public class MapFixture extends SlimFixture {
      * @param name name to use this value for.
      */
     public void setValueFor(Object value, String name) {
-        if (isListName(name)) {
-            String valueStr = null;
-            if (value != null) {
-                valueStr = value.toString();
-            }
-            setValuesFor(valueStr, stripListIndicator(name));
-        } else {
-            if (name.endsWith("\\[]")) {
-                name = name.replace("\\[]", "[]");
-            }
-            String cleanName = cleanupValue(name);
-            Object cleanValue = value;
-            if (value instanceof String) {
-                cleanupValue((String) value);
-            }
-            getCurrentValues().put(cleanName, cleanValue);
-        }
+        setValueForIn(value, name, getCurrentValues());
     }
 
     /**
-     * Stores list of values to be passed to template.
+     * Stores value in map.
+     * @param value value to be passed.
+     * @param name name to use this value for.
+     * @param map map to store value in.
+     */
+    public void setValueForIn(Object value, String name, Map<String, Object> map) {
+        mapHelper.setValueForIn(value, name, map);
+    }
+
+    /**
+     * Stores list of values in map.
      * @param values comma separated list of values.
      * @param name name to use this list for.
      */
     public void setValuesFor(String values, String name) {
-        String cleanName = cleanupValue(name);
-        String[] valueArrays = values.split("\\s*,\\s*");
-        List<Object> valueObjects = new ArrayList<Object>(valueArrays.length);
-        for (int i = 0; i < valueArrays.length; i++) {
-            String cleanValue = cleanupValue(valueArrays[i]);
-            valueObjects.add(cleanValue);
-        }
-        getCurrentValues().put(cleanName, valueObjects);
+        mapHelper.setValuesForIn(values, name, getCurrentValues());
+    }
+
+    /**
+     * Stores list of values in map.
+     * @param values comma separated list of values.
+     * @param name name to use this list for.
+     * @param map map to store values in.
+     */
+    public void setValuesForIn(String values, String name, Map<String, Object> map) {
+        mapHelper.setValuesForIn(values, name, map);
     }
 
     /**
@@ -122,78 +120,7 @@ public class MapFixture extends SlimFixture {
 
     public Object valueIn(String name, Map<String, Object> map) {
         String cleanName = cleanupValue(name);
-        return getValue(map, cleanName);
-    }
-
-    protected Object getValue(Map<String, Object> map, String name) {
-        Object value = null;
-        if (map.containsKey(name)) {
-            value = map.get(name);
-        } else {
-            String[] parts = name.split("\\.", 2);
-            if (parts.length > 1) {
-                Object nested = map.get(parts[0]);
-                if (nested instanceof Map) {
-                    Map<String, Object> nestedMap = (Map<String, Object>) nested;
-                    value = getValue(nestedMap, parts[1]);
-                }
-            } else if (isListName(name)) {
-                value = getListValue(map, name);
-            } else if (isListIndexExpr(name)) {
-                value = getIndexedListValue(map, name);
-            }
-        }
-        return value;
-    }
-
-    protected Object getListValue(Map<String, Object> map, String name) {
-        return getValue(map, stripListIndicator(name));
-    }
-
-    protected Object getIndexedListValue(Map<String, Object> map, String name) {
-        Object value;
-        String prop = getListKeyName(name);
-        Object val = getValue(map, prop);
-        if (val instanceof List) {
-            List list = (List) val;
-            int index = getListIndex(name);
-            if (index < list.size()) {
-                value = list.get(index);
-            } else {
-                value = null;
-            }
-        } else {
-            throw new SlimFixtureException(false, prop + " is not a list, but " + val);
-        }
-        return value;
-    }
-
-    protected boolean isListName(String name) {
-        return name.endsWith("[]") && !name.endsWith("\\[]");
-    }
-
-    protected String stripListIndicator(String key) {
-        return key.substring(0, key.length() - 2);
-    }
-
-    protected boolean isListIndexExpr(String key) {
-        return getListIndexMatcher(key).matches();
-    }
-
-    protected String getListKeyName(String key) {
-        Matcher matcher = getListIndexMatcher(key);
-        matcher.matches();
-        return matcher.group(1);
-    }
-
-    protected int getListIndex(String key) {
-        Matcher matcher = getListIndexMatcher(key);
-        matcher.matches();
-        return Integer.parseInt(matcher.group(2));
-    }
-
-    private Matcher getListIndexMatcher(String key) {
-        return LIST_INDEX_PATTERN.matcher(key);
+        return mapHelper.getValue(map, cleanName);
     }
 
     /**
@@ -212,36 +139,15 @@ public class MapFixture extends SlimFixture {
         if (val instanceof Map) {
             result = ((Map) val).size();
         } else if (val instanceof String) {
-            result = sizeOf((String) val);
+            result = sizeOfIn((String) val, getCurrentValues());
         } else {
             throw new SlimFixtureException(false, "Cannot determine size of: " + val);
         }
         return result;
     }
 
-    protected int sizeOf(String expr) {
-        int result;
-        Object val = value(expr);
-        if (val instanceof Map) {
-            result = sizeOf(val);
-        } else if (val instanceof Collection) {
-            result = ((Collection) val).size();
-        } else {
-            throw new SlimFixtureException(false, expr + " is not a collection");
-        }
-        return result;
-    }
-
-    /**
-     * @param expr expression to evaluate against current map.
-     * @return number of elements in list/map.
-     */
-    public int lengthOf(String expr) {
-        Object val = value(expr);
-        if (val instanceof List) {
-            return ((List) val).size();
-        }
-        throw new SlimFixtureException(false, expr + " is not a list");
+    public int sizeOfIn(String expr, Map<String, Object> map) {
+        return mapHelper.sizeOfIn(expr, map);
     }
 
     /**
@@ -274,10 +180,10 @@ public class MapFixture extends SlimFixture {
      * @return true if both maps are equal.
      */
     public boolean contentOfEquals(Map<String, Object> one, Object two) {
-        if (one == null) {
-            return two == null;
-        } else {
-            return one.equals(two);
-        }
+        return mapHelper.contentOfEquals(one, two);
+    }
+
+    public void setMapHelper(MapHelper mapHelper) {
+        this.mapHelper = mapHelper;
     }
 }
