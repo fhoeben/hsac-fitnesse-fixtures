@@ -38,9 +38,9 @@
 |content equals|$hash1                                      |
 |reject        |content equals|$hash2                       |
 
-|script|map fixture                      |
-|check |value     |b     |in    |$hash4|2|
-|ensure|content of|$hash1|equals|$hash4  |
-|reject|content of|$hash2|equals|$hash4  |
-|check |size of   |$hash1|4              |
-
+|script|map fixture                         |
+|check |value     |b        |in    |$hash4|2|
+|check |value     |map.map.a|in    |$hash3|1|
+|ensure|content of|$hash1   |equals|$hash4  |
+|reject|content of|$hash2   |equals|$hash4  |
+|check |size of   |$hash1   |4              |
