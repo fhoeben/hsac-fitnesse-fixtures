@@ -5,20 +5,7 @@ import fitnesse.ContextConfigurator;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
-import nl.hsac.fitnesse.fixture.util.BsnUtil;
-import nl.hsac.fitnesse.fixture.util.DatesHelper;
-import nl.hsac.fitnesse.fixture.util.Formatter;
-import nl.hsac.fitnesse.fixture.util.FreeMarkerHelper;
-import nl.hsac.fitnesse.fixture.util.HttpClient;
-import nl.hsac.fitnesse.fixture.util.HttpResponse;
-import nl.hsac.fitnesse.fixture.util.NamespaceContextImpl;
-import nl.hsac.fitnesse.fixture.util.ProgramHelper;
-import nl.hsac.fitnesse.fixture.util.ProgramResponse;
-import nl.hsac.fitnesse.fixture.util.RandomUtil;
-import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
-import nl.hsac.fitnesse.fixture.util.TimeoutHelper;
-import nl.hsac.fitnesse.fixture.util.XMLFormatter;
-import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
+import nl.hsac.fitnesse.fixture.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -41,6 +28,7 @@ public class Environment {
     private long nextRelationNr = System.currentTimeMillis();
     private NamespaceContextImpl nsContext;
     private XMLFormatter xmlFormatter;
+    private JsonFormatter jsonFormatter;
     private BsnUtil bsnUtil = new BsnUtil();
     private RandomUtil randomUtil = new RandomUtil();
     private TimeoutHelper timeoutHelper = new TimeoutHelper();
@@ -65,6 +53,8 @@ public class Environment {
         xmlFormatter = new XMLFormatter();
         nsContext = new NamespaceContextImpl();
         fillNamespaceContext();
+
+        jsonFormatter = new JsonFormatter();
 
         httpClient = new HttpClient();
 
@@ -324,6 +314,15 @@ public class Environment {
      */
     public String getHtmlForXml(String xmlString) {
         return getHtml(xmlFormatter, xmlString);
+    }
+
+    /**
+     * Formats supplied Json string for display in FitNesse page.
+     * @param jsonString json to format.
+     * @return HTML formatted version of jsonString
+     */
+    public String getHtmlForJson(String jsonString) {
+        return getHtml(jsonFormatter, jsonString);
     }
 
     /**
