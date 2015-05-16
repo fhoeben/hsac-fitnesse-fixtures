@@ -1,9 +1,6 @@
 package nl.hsac.fitnesse.fixture.slim;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -204,17 +201,37 @@ public class MapFixture extends SlimFixture {
     }
 
     /**
-     * @return number of elements in map.
+     * @param val map or expression to count elements in.
+     * @return number of elements in map or list.
      */
-    public int sizeOf(Map<String, Object> map) {
-        if (map == null) {
-            throw new SlimFixtureException(false, "cannot determine size of null");
+    public int sizeOf(Object val) {
+        int result;
+        if (val instanceof Map) {
+            result = ((Map) val).size();
+        } else if (val instanceof String) {
+            result = sizeOf((String) val);
+        } else {
+            throw new SlimFixtureException(false, "Cannot determine size of: " + val);
         }
-        return map.size();
+        return result;
+    }
+
+    protected int sizeOf(String expr) {
+        int result;
+        Object val = value(expr);
+        if (val instanceof Map) {
+            result = sizeOf(val);
+        } else if (val instanceof Collection) {
+            result = ((Collection) val).size();
+        } else {
+            throw new SlimFixtureException(false, expr + " is not a collection");
+        }
+        return result;
     }
 
     /**
-     * @return number of elements in map.
+     * @param expr expression to evaluate against current map.
+     * @return number of elements in list/map.
      */
     public int lengthOf(String expr) {
         Object val = value(expr);

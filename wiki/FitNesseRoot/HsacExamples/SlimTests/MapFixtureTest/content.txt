@@ -22,6 +22,7 @@
 |check      |value      |e[0]     |7   |
 |check      |value      |f[1]     |asas|
 |$hash4=    |value      |map.map       |
+|check      |size of    |map.map  |4   |
 |$allKeys2= |all keys                  |
 |show       |all values                |
 |$hash5=    |copy map                  |
@@ -32,8 +33,8 @@
 |$aliases2=    |value         |aliases[]                    |
 |check         |value         |aliases[0]|!-github@hsac.nl-!|
 |check         |value         |aliases[2]|null              |
-|check         |length of     |aliases   |2                 |
-|check         |length of     |aliases[] |2                 |
+|check         |size of       |aliases   |2                 |
+|check         |size of       |aliases[] |2                 |
 |content equals|$hash1                                      |
 |reject        |content equals|$hash2                       |
 
