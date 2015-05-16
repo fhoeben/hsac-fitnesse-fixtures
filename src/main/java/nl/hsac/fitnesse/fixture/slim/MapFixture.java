@@ -35,6 +35,9 @@ public class MapFixture extends SlimFixture {
             }
             setValuesFor(valueStr, stripListIndicator(name));
         } else {
+            if (name.endsWith("\\[]")) {
+                name = name.replace("\\[]", "[]");
+            }
             String cleanName = cleanupValue(name);
             Object cleanValue = value;
             if (value instanceof String) {
