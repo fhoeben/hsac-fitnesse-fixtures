@@ -1,0 +1,31 @@
+|ddt: map fixture            |
+|a|b|email           |hash?  |
+|1|2|fitnesse@hsac.nl|$hash1=|
+
+|ddt: map fixture                                                                         |
+|c             |map   |url                                                        |hash?  |
+|{{{ <xml/> }}}|$hash1|https://github.com/fhoeben/hsac-fitnesse-fixtures/releases/|$hash2=|
+|3             |$hash2|https://github.com/fhoeben/hsac-fitnesse-fixtures/wiki     |$hash3=|
+
+|script     |map fixture|$hash3        |
+|check      |value      |c        |3   |
+|check      |size       |3             |
+|clear value|c                         |
+|check      |size       |2             |
+|check      |value      |c        |null|
+|reject     |clear value|c             |
+|check      |value      |map.map.b|2   |
+|$hash4=    |value      |map.map       |
+|$allKeys2= |all keys                  |
+|show       |all values                |
+|$hash5=    |copy map                  |
+
+|script        |map fixture   |$hash4|
+|check         |value         |b  |2 |
+|content equals|$hash1               |
+|reject        |content equals|$hash2|
+
+|script|map fixture                      |
+|check |value     |b     |in    |$hash4|2|
+|ensure|content of|$hash1|equals|$hash4  |
+|reject|content of|$hash2|equals|$hash4  |

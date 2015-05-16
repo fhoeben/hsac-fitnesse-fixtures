@@ -53,9 +53,12 @@ public class FreemarkerFixture extends SlimFixture {
      * @param value value to be passed.
      * @param name name to use this value for.
      */
-    public void setValueFor(String value, String name) {
+    public void setValueFor(Object value, String name) {
         String cleanName = cleanupValue(name);
-        String cleanValue = cleanupValue(value);
+        Object cleanValue = value;
+        if (value instanceof String) {
+            cleanupValue((String) value);
+        }
         currentValues.put(cleanName, cleanValue);
     }
 
@@ -97,7 +100,7 @@ public class FreemarkerFixture extends SlimFixture {
         clearValues();
     }
 
-    public void set(String key, String value) {
+    public void set(String key, Object value) {
         setValueFor(value, key);
     }
 
