@@ -32,6 +32,8 @@
 |$aliases2=    |value         |aliases[]                    |
 |check         |value         |aliases[0]|!-github@hsac.nl-!|
 |check         |value         |aliases[2]|null              |
+|check         |length of     |aliases   |2                 |
+|check         |length of     |aliases[] |2                 |
 |content equals|$hash1                                      |
 |reject        |content equals|$hash2                       |
 
@@ -39,3 +41,5 @@
 |check |value     |b     |in    |$hash4|2|
 |ensure|content of|$hash1|equals|$hash4  |
 |reject|content of|$hash2|equals|$hash4  |
+|check |size of   |$hash1|4              |
+

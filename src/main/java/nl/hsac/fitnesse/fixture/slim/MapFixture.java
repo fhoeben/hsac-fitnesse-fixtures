@@ -200,7 +200,28 @@ public class MapFixture extends SlimFixture {
      * @return number of elements in map.
      */
     public int size() {
-        return getCurrentValues().size();
+        return sizeOf(getCurrentValues());
+    }
+
+    /**
+     * @return number of elements in map.
+     */
+    public int sizeOf(Map<String, Object> map) {
+        if (map == null) {
+            throw new SlimFixtureException(false, "cannot determine size of null");
+        }
+        return map.size();
+    }
+
+    /**
+     * @return number of elements in map.
+     */
+    public int lengthOf(String expr) {
+        Object val = value(expr);
+        if (val instanceof List) {
+            return ((List) val).size();
+        }
+        throw new SlimFixtureException(false, expr + " is not a list");
     }
 
     /**
