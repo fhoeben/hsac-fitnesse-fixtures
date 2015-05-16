@@ -67,12 +67,20 @@ Values for lists can either be set using the 'set values' method or by specifyin
 !3 Map as Argument
 Here we supply no map to the constructor, but pass the one to use in each script row or use the newly (empty) implicitly created map.
 
-|script   |map fixture                         |
-|check    |value     |b        |in    |$hash4|2|
-|check    |value     |map.map.a|in    |$hash3|1|
-|ensure   |content of|$hash1   |equals|$hash4  |
-|reject   |content of|$hash2   |equals|$hash4  |
-|check    |size of   |$hash1   |4              |
-|set value|a         |for      |b              |
-|set value|c         |for      |a              |
-|$hash6=  |copy map                            |
+|script    |map fixture                                                                                |
+|check     |value                |b                |in           |$hash4      |2                       |
+|set value |3                    |for              |b            |in          |$hash4                  |
+|note      |'''the wiki does not show the updated value for $hash4.b, but it is set correctly!'''      |
+|check     |value                |b                |in           |$hash4      |3                       |
+|check     |value                |map.map.a        |in           |$hash3      |1                       |
+|check     |size of              |aliases          |in           |$hash1      |2                       |
+|set values|mytest@hsac.nl       |for              |aliases      |in          |$hash1                  |
+|note      |'''the wiki does not show the updated value for $hash1.aliases, but it is set correctly!'''|
+|check     |size of              |aliases          |in           |$hash1      |1                       |
+|check     |value                |aliases[0]       |in           |$hash1      |!-mytest@hsac.nl-!      |
+|ensure    |content of           |$hash1           |equals       |$hash4                               |
+|reject    |content of           |$hash2           |equals       |$hash4                               |
+|check     |size of              |$hash1           |4                                                  |
+|set value |a                    |for              |b                                                  |
+|set value |c                    |for              |a                                                  |
+|$hash6=   |copy map                                                                                   |
