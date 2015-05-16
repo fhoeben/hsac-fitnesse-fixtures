@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Fixture to manipulate and generate map values. Generated values can be stored in variables so the can
@@ -11,6 +13,7 @@ import java.util.Map;
  * This fixture can be used using Slim's dynamic decision tables or using scripts (and scenarios).
  */
 public class MapFixture extends SlimFixture {
+    private static final Pattern LIST_INDEX_PATTERN = Pattern.compile("(\\S+)\\[(\\d+)\\]");
 
     private final Map<String, Object> currentValues;
 
@@ -28,12 +31,20 @@ public class MapFixture extends SlimFixture {
      * @param name name to use this value for.
      */
     public void setValueFor(Object value, String name) {
-        String cleanName = cleanupValue(name);
-        Object cleanValue = value;
-        if (value instanceof String) {
-            cleanupValue((String) value);
+        if (isListName(name)) {
+            String valueStr = null;
+            if (value != null) {
+                valueStr = value.toString();
+            }
+            setValuesFor(valueStr, stripListIndicator(name));
+        } else {
+            String cleanName = cleanupValue(name);
+            Object cleanValue = value;
+            if (value instanceof String) {
+                cleanupValue((String) value);
+            }
+            getCurrentValues().put(cleanName, cleanValue);
         }
-        getCurrentValues().put(cleanName, cleanValue);
     }
 
     /**
@@ -44,10 +55,12 @@ public class MapFixture extends SlimFixture {
     public void setValuesFor(String values, String name) {
         String cleanName = cleanupValue(name);
         String[] valueArrays = values.split("\\s*,\\s*");
+        List<Object> valueObjects = new ArrayList<Object>(valueArrays.length);
         for (int i = 0; i < valueArrays.length; i++) {
-            valueArrays[i] = cleanupValue(valueArrays[i]);
+            String cleanValue = cleanupValue(valueArrays[i]);
+            valueObjects.add(cleanValue);
         }
-        getCurrentValues().put(cleanName, valueArrays);
+        getCurrentValues().put(cleanName, valueObjects);
     }
 
     /**
@@ -124,9 +137,63 @@ public class MapFixture extends SlimFixture {
                     Map<String, Object> nestedMap = (Map<String, Object>) nested;
                     value = getValue(nestedMap, parts[1]);
                 }
+            } else if (isListName(name)) {
+                value = getListValue(map, name);
+            } else if (isListIndexExpr(name)) {
+                value = getIndexedListValue(map, name);
             }
         }
         return value;
+    }
+
+    protected Object getListValue(Map<String, Object> map, String name) {
+        return getValue(map, stripListIndicator(name));
+    }
+
+    protected Object getIndexedListValue(Map<String, Object> map, String name) {
+        Object value;
+        String prop = getListKeyName(name);
+        Object val = getValue(map, prop);
+        if (val instanceof List) {
+            List list = (List) val;
+            int index = getListIndex(name);
+            if (index < list.size()) {
+                value = list.get(index);
+            } else {
+                value = null;
+            }
+        } else {
+            throw new SlimFixtureException(false, prop + " is not a list, but " + val);
+        }
+        return value;
+    }
+
+    protected boolean isListName(String name) {
+        return name.endsWith("[]") && !name.endsWith("\\[]");
+    }
+
+    protected String stripListIndicator(String key) {
+        return key.substring(0, key.length() - 2);
+    }
+
+    protected boolean isListIndexExpr(String key) {
+        return getListIndexMatcher(key).matches();
+    }
+
+    protected String getListKeyName(String key) {
+        Matcher matcher = getListIndexMatcher(key);
+        matcher.matches();
+        return matcher.group(1);
+    }
+
+    protected int getListIndex(String key) {
+        Matcher matcher = getListIndexMatcher(key);
+        matcher.matches();
+        return Integer.parseInt(matcher.group(2));
+    }
+
+    private Matcher getListIndexMatcher(String key) {
+        return LIST_INDEX_PATTERN.matcher(key);
     }
 
     /**
