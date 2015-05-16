@@ -1,6 +1,6 @@
-|ddt: map fixture            |
-|a|b|email           |hash?  |
-|1|2|fitnesse@hsac.nl|$hash1=|
+|ddt: map fixture                                                 |
+|a|b|email           |aliases[]                           |hash?  |
+|1|2|fitnesse@hsac.nl|github@hsac.nl, !-FitNesse@hsac.nl-!|$hash1=|
 
 |ddt: map fixture                                                                         |
 |c             |map   |url                                                        |hash?  |
@@ -14,16 +14,26 @@
 |check      |size       |2             |
 |check      |value      |c        |null|
 |reject     |clear value|c             |
+|set value  |6          |for      |d   |
+|check      |size       |3             |
+|set values |7,8        |for      |e   |
+|set value  |9,asas     |for      |f[] |
 |check      |value      |map.map.b|2   |
+|check      |value      |e[0]     |7   |
+|check      |value      |f[1]     |asas|
 |$hash4=    |value      |map.map       |
 |$allKeys2= |all keys                  |
 |show       |all values                |
 |$hash5=    |copy map                  |
 
-|script        |map fixture   |$hash4|
-|check         |value         |b  |2 |
-|content equals|$hash1               |
-|reject        |content equals|$hash2|
+|script        |map fixture   |$hash4                       |
+|check         |value         |b         |2                 |
+|$aliases=     |value         |aliases                      |
+|$aliases2=    |value         |aliases[]                    |
+|check         |value         |aliases[0]|!-github@hsac.nl-!|
+|check         |value         |aliases[2]|null              |
+|content equals|$hash1                                      |
+|reject        |content equals|$hash2                       |
 
 |script|map fixture                      |
 |check |value     |b     |in    |$hash4|2|
