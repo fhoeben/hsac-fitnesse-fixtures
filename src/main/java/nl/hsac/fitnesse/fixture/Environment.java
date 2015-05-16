@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import java.io.File;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
 
 /**
  * Holds overall environment settings. Expected to be set up before actual tests
@@ -29,6 +30,7 @@ public class Environment {
     private NamespaceContextImpl nsContext;
     private XMLFormatter xmlFormatter;
     private JsonFormatter jsonFormatter;
+    private HtmlCleaner htmlCleaner;
     private BsnUtil bsnUtil = new BsnUtil();
     private RandomUtil randomUtil = new RandomUtil();
     private TimeoutHelper timeoutHelper = new TimeoutHelper();
@@ -55,6 +57,8 @@ public class Environment {
         fillNamespaceContext();
 
         jsonFormatter = new JsonFormatter();
+
+        htmlCleaner = new HtmlCleaner();
 
         httpClient = new HttpClient();
 
@@ -352,6 +356,13 @@ public class Environment {
      */
     public static void handleErrorResponse(String msg, String responseText) {
         throw new FitFailureException(msg + getInstance().getHtmlForXml(responseText));
+    }
+
+    /**
+     * @return helper to clean wiki values provided to fixtures.
+     */
+    public HtmlCleaner getHtmlCleaner() {
+        return htmlCleaner;
     }
 
     /**
