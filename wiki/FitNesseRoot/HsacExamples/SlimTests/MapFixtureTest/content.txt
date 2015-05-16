@@ -36,6 +36,7 @@
 |check         |size of       |aliases   |2                 |
 |check         |size of       |aliases[] |2                 |
 |content equals|$hash1                                      |
+|check         |copy map      |$hash1                       |
 |reject        |content equals|$hash2                       |
 
 |script|map fixture                         |
