@@ -1,6 +1,5 @@
 package nl.hsac.fitnesse.fixture.slim;
 
-import nl.hsac.fitnesse.fixture.util.JsonFormatter;
 import nl.hsac.fitnesse.fixture.util.JsonPathHelper;
 import org.json.JSONObject;
 
@@ -10,7 +9,6 @@ import java.util.List;
  * Fixture to make Http calls and interpret the result as JSON.
  */
 public class JsonHttpTest extends HttpTest {
-    private final JsonFormatter formatter = new JsonFormatter();
     private final JsonPathHelper pathHelper = new JsonPathHelper();
 
     public boolean postValuesAsJsonTo(String serviceUrl) {
@@ -23,7 +21,7 @@ public class JsonHttpTest extends HttpTest {
 
     @Override
     protected String formatValue(String value) {
-        return getEnvironment().getHtml(formatter, value);
+        return getEnvironment().getHtmlForJson(value);
     }
 
     public Object jsonPath(String path) {

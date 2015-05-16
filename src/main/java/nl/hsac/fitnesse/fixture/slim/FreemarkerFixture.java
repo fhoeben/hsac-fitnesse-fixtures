@@ -3,16 +3,12 @@ package nl.hsac.fitnesse.fixture.slim;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import nl.hsac.fitnesse.fixture.util.JsonFormatter;
-
 /**
  * Fixture to generate strings using Freemarker templates. These strings can be stored in variables so the can
  * be passed as arguments to methods of other fixtures.
  * This fixture can be used using Slim's dynamic decision tables or using scripts (and scenarios).
  */
 public class FreemarkerFixture extends SlimFixture {
-    private static final JsonFormatter JSON_FORMATTER = new JsonFormatter();
-
     private final String defaultTemplate;
 
     private final Map<String, Object> currentValues = new LinkedHashMap<String, Object>();
@@ -44,7 +40,7 @@ public class FreemarkerFixture extends SlimFixture {
             if (aTemplate.contains(".xml")) {
                 result = getEnvironment().getHtmlForXml(result);
             } else if (aTemplate.contains(".json")) {
-                result = getEnvironment().getHtml(JSON_FORMATTER, result);
+                result = getEnvironment().getHtmlForJson(result);
             }
         } catch (Exception e) {
             // can not be formatted, return raw result
