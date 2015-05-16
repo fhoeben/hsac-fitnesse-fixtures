@@ -1,31 +1,56 @@
+!-Map Fixture-! allows Maps to be defined and manipulated in the wiki. It is usable both in [[script tables][#scripts]] and [[dynamic decision tables][#ddt]].
+
+!anchor ddt
+
+!2 Dynamic Decision Table Usage
+The first examples show usage of the fixture in [[dynamic decision tables][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.DynamicDecisionTable]].
+
+!3 Define a Map
+Here we define a map (and store it in a Slim variable) using simple values and a list (indicated by the header name ending on '[]'), using a dynamic decision table. Any output column (header name ending on '?') will receive a copy of the map defined.
+
 |ddt: map fixture                                                 |
 |a|b|email           |aliases[]                           |hash?  |
 |1|2|fitnesse@hsac.nl|github@hsac.nl, !-FitNesse@hsac.nl-!|$hash1=|
 
+!3 Nested maps
+Here we define a map with a nested map under the 'map' key.
+
 |ddt: map fixture                                                                         |
-|c             |map   |url                                                        |hash?  |
+|c             |map   |url                                                        |map?   |
 |{{{ <xml/> }}}|$hash1|https://github.com/fhoeben/hsac-fitnesse-fixtures/releases/|$hash2=|
 |3             |$hash2|https://github.com/fhoeben/hsac-fitnesse-fixtures/wiki     |$hash3=|
 
-|script     |map fixture|$hash3        |
-|check      |value      |c        |3   |
-|check      |size       |3             |
-|clear value|c                         |
-|check      |size       |2             |
-|check      |value      |c        |null|
-|reject     |clear value|c             |
-|set value  |6          |for      |d   |
-|check      |size       |3             |
-|set values |7,8        |for      |e   |
-|set value  |9,asas     |for      |f[] |
-|check      |value      |map.map.b|2   |
-|check      |value      |e[0]     |7   |
-|check      |value      |f[1]     |asas|
-|$hash4=    |value      |map.map       |
-|check      |size of    |map.map  |4   |
-|$allKeys2= |all keys                  |
-|show       |all values                |
-|$hash5=    |copy map                  |
+!anchor scripts
+
+!2 Maps in a Script
+Here we manipulate a map using [[script tables][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScriptTable]]. This can be done either with or without a script to manipulate in the script's first row.
+
+!3 Map Supplied in Constructor
+The map to use is supplied using a constructor argument to the fixture. First we use 'hash3' defined above and then 'hash4', created by the first script.
+
+Values for lists can either be set using the 'set values' method or by specifying a key name ending on '[]'. (The '[]' will not be included in the key name. If you do want a key name ending on '[]' you have to specify '\[]', its content will not be seen as a list)
+
+|script     |map fixture|$hash3          |
+|check      |value      |c        |3     |
+|check      |size       |3               |
+|clear value|c                           |
+|check      |size       |2               |
+|check      |value      |c        |null  |
+|reject     |clear value|c               |
+|set value  |6          |for      |d     |
+|check      |size       |3               |
+|set values |7,8        |for      |e     |
+|set value  |9,asas     |for      |f[]   |
+|set value  |9,asas     |for      |g\[]  |
+|check      |value      |map.map.b|2     |
+|check      |value      |e[0]     |7     |
+|check      |value      |f[1]     |asas  |
+|check      |value      |g[]      |9,asas|
+|$hash4=    |value      |map.map         |
+|check      |size of    |map.map  |4     |
+|$allKeys2= |all keys                    |
+|show       |all values                  |
+|$hash5=    |copy map                    |
 
 |script        |map fixture   |$hash4                       |
 |check         |value         |b         |2                 |
@@ -39,9 +64,15 @@
 |check         |copy map      |$hash1                       |
 |reject        |content equals|$hash2                       |
 
-|script|map fixture                         |
-|check |value     |b        |in    |$hash4|2|
-|check |value     |map.map.a|in    |$hash3|1|
-|ensure|content of|$hash1   |equals|$hash4  |
-|reject|content of|$hash2   |equals|$hash4  |
-|check |size of   |$hash1   |4              |
+!3 Map as Argument
+Here we supply no map to the constructor, but pass the one to use in each script row or use the newly (empty) implicitly created map.
+
+|script   |map fixture                         |
+|check    |value     |b        |in    |$hash4|2|
+|check    |value     |map.map.a|in    |$hash3|1|
+|ensure   |content of|$hash1   |equals|$hash4  |
+|reject   |content of|$hash2   |equals|$hash4  |
+|check    |size of   |$hash1   |4              |
+|set value|a         |for      |b              |
+|set value|c         |for      |a              |
+|$hash6=  |copy map                            |
