@@ -13,7 +13,18 @@ public class MapHelper {
     private static final Pattern LIST_INDEX_PATTERN = Pattern.compile("(\\S+)\\[(\\d+)\\]");
     private HtmlCleaner htmlCleaner = new HtmlCleaner();
 
+    /**
+     * Gets value from map.
+     * @param map map to get value from.
+     * @param name name of (possibly nested) property to get value from.
+     * @return value found, if it could be found, null otherwise.
+     */
     public Object getValue(Map<String, Object> map, String name) {
+        String cleanName = htmlCleaner.cleanupValue(name);
+        return getValueImpl(map, cleanName);
+    }
+
+    protected Object getValueImpl(Map<String, Object> map, String name) {
         Object value = null;
         if (map.containsKey(name)) {
             value = map.get(name);
@@ -23,7 +34,7 @@ public class MapHelper {
                 Object nested = map.get(parts[0]);
                 if (nested instanceof Map) {
                     Map<String, Object> nestedMap = (Map<String, Object>) nested;
-                    value = getValue(nestedMap, parts[1]);
+                    value = getValueImpl(nestedMap, parts[1]);
                 }
             } else if (isListName(name)) {
                 value = getListValue(map, name);
@@ -91,6 +102,13 @@ public class MapHelper {
         }
     }
 
+    /**
+     * Determines size of either (Map or Collection) value in the map.
+     * @param expr expression indicating which (possibly nested) value in the map to determine size of.
+     * @param map map to find value in.
+     * @return size of value.
+     * @throws SlimFixtureException if the value found is not a Map or Collection.
+     */
     public int sizeOfIn(String expr, Map<String, Object> map) {
         int result;
         Object val = getValue(map, expr);
