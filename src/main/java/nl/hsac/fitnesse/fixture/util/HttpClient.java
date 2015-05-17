@@ -38,7 +38,7 @@ public class HttpClient {
      * @param headers http headers to add
      * @param type contentType for request.
      */
-    public void post(String url, HttpResponse response, Map<String, String> headers, String type) {
+    public void post(String url, HttpResponse response, Map<String, Object> headers, String type) {
         HttpPost methodPost = new HttpPost(url);
         ContentType contentType = ContentType.parse(type);
         HttpEntity ent = new StringEntity(response.getRequest(), contentType);
@@ -64,13 +64,13 @@ public class HttpClient {
         getResponse(url, response, method, null);
     }
 
-    protected void getResponse(String url, HttpResponse response, HttpRequestBase method, Map<String, String> headers) {
+    protected void getResponse(String url, HttpResponse response, HttpRequestBase method, Map<String, Object> headers) {
         try {
             if (headers != null) {
                 for (String key : headers.keySet()) {
-                    String value = headers.get(key);
+                    Object value = headers.get(key);
                     if (value != null) {
-                        method.setHeader(key, value);
+                        method.setHeader(key, value.toString());
                     }
                 }
             }

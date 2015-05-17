@@ -206,7 +206,7 @@ public class Environment {
      * @param result result to populate with response.
      * @param headers headers to add.
      */
-    public void callService(String url, String templateName, Object model, XmlHttpResponse result, Map<String, String> headers) {
+    public void callService(String url, String templateName, Object model, XmlHttpResponse result, Map<String, Object> headers) {
         doHttpPost(url, templateName, model, result, headers, XmlHttpResponse.CONTENT_TYPE_XML_TEXT_UTF8);
         setNamespaceContext(result);
     }
@@ -231,7 +231,7 @@ public class Environment {
      * @param headers headers to add.
      * @param contentType contentType for request.
      */
-    public void doHttpPost(String url, String templateName, Object model, HttpResponse result, Map<String, String> headers, String contentType) {
+    public void doHttpPost(String url, String templateName, Object model, HttpResponse result, Map<String, Object> headers, String contentType) {
         String request = processTemplate(templateName, model);
         result.setRequest(request);
         doHttpPost(url, result, headers, contentType);
@@ -244,7 +244,7 @@ public class Environment {
      * @param headers headers to add.
      * @param contentType contentType for request.
      */
-    public void doHttpPost(String url, HttpResponse result, Map<String, String> headers, String contentType) {
+    public void doHttpPost(String url, HttpResponse result, Map<String, Object> headers, String contentType) {
         httpClient.post(url, result, headers, contentType);
     }
 
