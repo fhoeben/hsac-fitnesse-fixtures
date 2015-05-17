@@ -65,7 +65,7 @@ public class MapHelper {
             String cleanName = htmlCleaner.cleanupValue(name);
             Object cleanValue = value;
             if (value instanceof String) {
-                htmlCleaner.cleanupValue((String) value);
+                cleanValue = htmlCleaner.cleanupValue((String) value);
             }
             map.put(cleanName, cleanValue);
         }
