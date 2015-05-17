@@ -81,7 +81,7 @@ public abstract class SoapCallMapColumnFixture<Response extends XmlHttpResponse>
      * @param response response to fill based on call.
      */
     protected void callSoapService(String url, String templateName, String soapAction, XmlHttpResponse response) {
-        Map<String, String> headers = soapAction != null ? Collections.singletonMap("SOAPAction", soapAction) : null;
+        Map<String, Object> headers = soapAction != null ? Collections.singletonMap("SOAPAction", (Object) soapAction) : null;
         getEnvironment().callService(url, templateName, getCurrentRowValues(), response, headers);
     }
 

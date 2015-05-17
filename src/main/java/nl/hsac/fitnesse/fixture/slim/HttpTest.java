@@ -8,6 +8,8 @@ import java.net.URLEncoder;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Fixture to make HTTP requests using Slim scripts and/or scenarios.
@@ -16,7 +18,7 @@ public class HttpTest extends SlimFixtureWithMap {
     /** Default content type for posts. */
     public final static String DEFAULT_POST_CONTENT_TYPE = "application/x-www-form-urlencoded; charset=UTF-8";
 
-    private final Map<String, String> headerValues = new LinkedHashMap<String, String>();
+    private final Map<String, Object> headerValues = new LinkedHashMap<String, Object>();
     private HttpResponse response = createResponse();
     private String template;
     private String contentType = DEFAULT_POST_CONTENT_TYPE;
@@ -41,10 +43,8 @@ public class HttpTest extends SlimFixtureWithMap {
      * @param value value to be passed.
      * @param name name to use this value for.
      */
-    public void setValueForHeader(String value, String name) {
-        String cleanName = cleanupValue(name);
-        String cleanValue = cleanupValue(value);
-        headerValues.put(cleanName, cleanValue);
+    public void setValueForHeader(Object value, String name) {
+        getMapHelper().setValueForIn(value, name, headerValues);
     }
 
     /**
@@ -65,6 +65,35 @@ public class HttpTest extends SlimFixtureWithMap {
     public void clearHeaderValues() {
         headerValues.clear();
     }
+
+    //// methods to support usage in dynamic decision tables
+
+    /**
+     * Called before next row is executed. (Clears all current and header values.)
+     */
+    @Override
+    public void reset() {
+        clearValues();
+        clearHeaderValues();
+    }
+
+    private static final Pattern HEADER_KEY_PATTERN = Pattern.compile("header:\\s*(\\.+)");
+    /**
+     * Sets a value.
+     * @param key (possibly nested) key to set value for.
+     * @param value value to be stored.
+     */
+    public void set(String key, Object value) {
+        Matcher m = HEADER_KEY_PATTERN.matcher(key);
+        if (m.matches()) {
+            String headerKey = m.group(1);
+            setValueForHeader(value, headerKey);
+        } else {
+            super.set(key, value);
+        }
+    }
+
+    //// end: methods to support usage in dynamic decision tables
 
     /**
      * Sends HTTP POST template with current values to service endpoint.
