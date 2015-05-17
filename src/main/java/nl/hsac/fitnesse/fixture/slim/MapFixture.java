@@ -59,15 +59,6 @@ public class MapFixture extends SlimFixtureWithMap {
      * Stores list of values in map.
      * @param values comma separated list of values.
      * @param name name to use this list for.
-     */
-    public void setValuesFor(String values, String name) {
-        getMapHelper().setValuesForIn(values, name, getCurrentValues());
-    }
-
-    /**
-     * Stores list of values in map.
-     * @param values comma separated list of values.
-     * @param name name to use this list for.
      * @param map map to store values in.
      */
     public void setValuesForIn(String values, String name, Map<String, Object> map) {
