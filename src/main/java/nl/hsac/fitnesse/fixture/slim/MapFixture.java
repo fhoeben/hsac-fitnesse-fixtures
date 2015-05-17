@@ -9,76 +9,34 @@ import java.util.*;
  * be passed as arguments to methods of other fixtures.
  * This fixture can be used using Slim's dynamic decision tables or using scripts (and scenarios).
  */
-public class MapFixture extends SlimFixture {
-
-    private final Map<String, Object> currentValues;
-    private MapHelper mapHelper;
-
+public class MapFixture extends SlimFixtureWithMap {
+    /**
+     * Creates new, having an empty current values collection.
+     */
     public MapFixture() {
-        this(new LinkedHashMap<String, Object>());
+        super();
     }
 
+    /**
+     * Creates new, using the elements of the supplied map as current values.
+     * @param map map to obtain current elements from.
+     */
     public MapFixture(Map<String, Object> map) {
-        currentValues = map;
-        mapHelper = new MapHelper();
+        super(map);
     }
 
-    /**
-     * Stores value to be passed to template, or GET.
-     * @param value value to be passed.
-     * @param name name to use this value for.
-     */
-    public void setValueFor(Object value, String name) {
-        setValueForIn(value, name, getCurrentValues());
-    }
+    //// methods to support usage in dynamic decision tables
 
     /**
-     * Stores value in map.
-     * @param value value to be passed.
-     * @param name name to use this value for.
-     * @param map map to store value in.
+     * Retrieves value for output column.
+     * @param headerName header of output column (without trailing '?').
+     * @return new map containing current values.
      */
-    public void setValueForIn(Object value, String name, Map<String, Object> map) {
-        mapHelper.setValueForIn(value, name, map);
+    public Map<String, Object> get(String headerName) {
+        return copyMap();
     }
 
-    /**
-     * Stores list of values in map.
-     * @param values comma separated list of values.
-     * @param name name to use this list for.
-     */
-    public void setValuesFor(String values, String name) {
-        mapHelper.setValuesForIn(values, name, getCurrentValues());
-    }
-
-    /**
-     * Stores list of values in map.
-     * @param values comma separated list of values.
-     * @param name name to use this list for.
-     * @param map map to store values in.
-     */
-    public void setValuesForIn(String values, String name, Map<String, Object> map) {
-        mapHelper.setValuesForIn(values, name, map);
-    }
-
-    /**
-     * Clears a values previously set.
-     * @param name value to remove.
-     * @return true if value was present.
-     */
-    public boolean clearValue(String name) {
-        String cleanName = cleanupValue(name);
-        boolean result = getCurrentValues().containsKey(cleanName);
-        getCurrentValues().remove(cleanName);
-        return result;
-    }
-
-    /**
-     * Clears all values previously set.
-     */
-    public void clearValues() {
-        getCurrentValues().clear();
-    }
+    //// methods to support usage in dynamic decision tables
 
     /**
      * @return a copy of the current map.
@@ -88,39 +46,42 @@ public class MapFixture extends SlimFixture {
     }
 
     /**
-     * Allows subclasses to manipulate current map (not a copy).
-     * @return current values.
+     * Stores value in map.
+     * @param value value to be passed.
+     * @param name name to use this value for.
+     * @param map map to store value in.
      */
-    protected Map<String, Object> getCurrentValues() {
-        return currentValues;
+    public void setValueForIn(Object value, String name, Map<String, Object> map) {
+        getMapHelper().setValueForIn(value, name, map);
     }
-
-    // methods to support usage in dynamic decision tables
-    public void reset() {
-        clearValues();
-    }
-
-    public void set(String key, Object value) {
-        setValueFor(value, key);
-    }
-
-    public Map<String, Object> get(String requestedValue) {
-        return copyMap();
-    }
-    // end: methods to support usage in dynamic decision tables
 
     /**
-     * Retrieves value of element at a specified key.
-     * @param name key to get value of (nested values may be retrieved by separating the keys with '.').
-     * @return value stored.
+     * Stores list of values in map.
+     * @param values comma separated list of values.
+     * @param name name to use this list for.
      */
-    public Object value(String name) {
-        return valueIn(name, getCurrentValues());
+    public void setValuesFor(String values, String name) {
+        getMapHelper().setValuesForIn(values, name, getCurrentValues());
     }
 
+    /**
+     * Stores list of values in map.
+     * @param values comma separated list of values.
+     * @param name name to use this list for.
+     * @param map map to store values in.
+     */
+    public void setValuesForIn(String values, String name, Map<String, Object> map) {
+        getMapHelper().setValuesForIn(values, name, map);
+    }
+
+    /**
+     * Gets value from map.
+     * @param name name of (possibly nested) property to get value from.
+     * @param map map to get value from.
+     * @return value found, if it could be found, null otherwise.
+     */
     public Object valueIn(String name, Map<String, Object> map) {
-        String cleanName = cleanupValue(name);
-        return mapHelper.getValue(map, cleanName);
+        return getMapHelper().getValue(map, name);
     }
 
     /**
@@ -146,8 +107,15 @@ public class MapFixture extends SlimFixture {
         return result;
     }
 
+    /**
+     * Determines size of either (Map or Collection) value in the map.
+     * @param expr expression indicating which (possibly nested) value in the map to determine size of.
+     * @param map map to find value in.
+     * @return size of value.
+     * @throws SlimFixtureException if the value found is not a Map or Collection.
+     */
     public int sizeOfIn(String expr, Map<String, Object> map) {
-        return mapHelper.sizeOfIn(expr, map);
+        return getMapHelper().sizeOfIn(expr, map);
     }
 
     /**
@@ -180,10 +148,6 @@ public class MapFixture extends SlimFixture {
      * @return true if both maps are equal.
      */
     public boolean contentOfEquals(Map<String, Object> one, Object two) {
-        return mapHelper.contentOfEquals(one, two);
-    }
-
-    public void setMapHelper(MapHelper mapHelper) {
-        this.mapHelper = mapHelper;
+        return getMapHelper().contentOfEquals(one, two);
     }
 }
