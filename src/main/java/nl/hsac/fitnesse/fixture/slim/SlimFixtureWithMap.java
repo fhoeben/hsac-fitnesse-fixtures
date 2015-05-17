@@ -38,6 +38,15 @@ public class SlimFixtureWithMap extends SlimFixture {
     }
 
     /**
+     * Stores list of values in map.
+     * @param values comma separated list of values.
+     * @param name name to use this list for.
+     */
+    public void setValuesFor(String values, String name) {
+        getMapHelper().setValuesForIn(values, name, getCurrentValues());
+    }
+
+    /**
      * Clears a values previously set.
      * @param name value to remove.
      * @return true if value was present.
