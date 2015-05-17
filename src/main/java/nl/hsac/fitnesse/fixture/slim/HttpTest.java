@@ -2,23 +2,20 @@ package nl.hsac.fitnesse.fixture.slim;
 
 import freemarker.template.Template;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
-import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Fixture to make HTTP requests using Slim scripts and/or scenarios.
  */
-public class HttpTest extends SlimFixture {
+public class HttpTest extends SlimFixtureWithMap {
     /** Default content type for posts. */
     public final static String DEFAULT_POST_CONTENT_TYPE = "application/x-www-form-urlencoded; charset=UTF-8";
 
-    private final Map<String, Object> currentValues = new LinkedHashMap<String, Object>();
     private final Map<String, String> headerValues = new LinkedHashMap<String, String>();
     private HttpResponse response = createResponse();
     private String template;
@@ -37,50 +34,6 @@ public class HttpTest extends SlimFixture {
             result = true;
         }
         return result;
-    }
-
-    /**
-     * Stores value to be passed to template, or GET.
-     * @param value value to be passed.
-     * @param name name to use this value for.
-     */
-    public void setValueFor(String value, String name) {
-        String cleanName = cleanupValue(name);
-        String cleanValue = cleanupValue(value);
-        currentValues.put(cleanName, cleanValue);
-    }
-
-    /**
-     * Stores list of values to be passed to template, or GET.
-     * @param values comma separated list of values.
-     * @param name name to use this list for.
-     */
-    public void setValuesFor(String values, String name) {
-        String cleanName = cleanupValue(name);
-        String[] valueArrays = values.split("\\s*,\\s*");
-        for (int i = 0; i < valueArrays.length; i++) {
-            valueArrays[i] = cleanupValue(valueArrays[i]);
-        }
-        currentValues.put(cleanName, valueArrays);
-    }
-
-    /**
-     * Clears a values previously set.
-     * @param name value to remove.
-     * @return true if value was present.
-     */
-    public boolean clearValue(String name) {
-        String cleanName = cleanupValue(name);
-        boolean result = currentValues.containsKey(cleanName);
-        currentValues.remove(cleanName);
-        return result;
-    }
-
-    /**
-     * Clears all values previously set.
-     */
-    public void clearValues() {
-        currentValues.clear();
     }
 
     /**
@@ -110,7 +63,7 @@ public class HttpTest extends SlimFixture {
      * Clears all header values previously set.
      */
     public void clearHeaderValues() {
-        currentValues.clear();
+        headerValues.clear();
     }
 
     /**
@@ -126,7 +79,7 @@ public class HttpTest extends SlimFixture {
         } else {
             String url = getUrl(serviceUrl);
             try {
-                getEnvironment().doHttpPost(url, template, currentValues, response, headerValues, getContentType());
+                getEnvironment().doHttpPost(url, template, getCurrentValues(), response, headerValues, getContentType());
             } catch (Throwable t) {
                 throw new StopTestException("Unable to get response from POST to: " + url, t);
             }
@@ -234,8 +187,8 @@ public class HttpTest extends SlimFixture {
         for (Map.Entry<String, Object> entry : getCurrentValues().entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
-            if (value instanceof Object[]) {
-                Object[] values = (Object[]) value;
+            if (value instanceof List) {
+                List values = (List) value;
                 for (Object v : values) {
                     addEncodedKeyValue(sb, isFirst, key, v);
                     isFirst = false;
@@ -343,13 +296,6 @@ public class HttpTest extends SlimFixture {
      */
     public int responseStatus() {
         return response.getStatusCode();
-    }
-
-    /**
-     * @return current values stored.
-     */
-    protected Map<String, Object> getCurrentValues() {
-        return currentValues;
     }
 
     protected HttpResponse getResponse() {
