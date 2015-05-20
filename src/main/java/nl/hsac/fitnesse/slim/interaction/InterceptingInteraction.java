@@ -1,10 +1,14 @@
 package nl.hsac.fitnesse.slim.interaction;
 
-import fitnesse.slim.fixtureInteraction.DefaultInteraction;
-import fitnesse.slim.fixtureInteraction.FixtureInteraction;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
+
+import nl.hsac.fitnesse.slim.converter.MapConverter;
+import nl.hsac.fitnesse.slim.converter.ObjectConverter;
+import fitnesse.slim.converters.ConverterRegistry;
+import fitnesse.slim.fixtureInteraction.DefaultInteraction;
+import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 
 /**
  * Own interaction to allow all calls from Slim to a fixture to be intercepted.
@@ -14,6 +18,11 @@ import java.lang.reflect.Method;
  * is used, we can use the InteractionAwareFixture present there.
  */
 public class InterceptingInteraction extends DefaultInteraction {
+    static {
+        ConverterRegistry.addConverter(Map.class, new MapConverter());
+        ConverterRegistry.addConverter(Object.class, new ObjectConverter());
+    }
+
     @Override
     public Object methodInvoke(Method method, Object instance, Object... convertedArgs)
             throws InvocationTargetException, IllegalAccessException {
