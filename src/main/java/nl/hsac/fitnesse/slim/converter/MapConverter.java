@@ -16,6 +16,10 @@ import java.util.Map;
 public class MapConverter extends fitnesse.slim.converters.MapConverter {
     @Override
     public String toString(Map hash) {
+        if (hash == null) {
+            return NULL_VALUE;
+        }
+
         HtmlTag table = createTag(hash, 0);
 
         return table.html().trim();
@@ -29,71 +33,21 @@ public class MapConverter extends fitnesse.slim.converters.MapConverter {
             HtmlTag row = new HtmlTag("tr");
             row.addAttribute("class", "hash_row");
             table.add(row);
-            String key = entry.getKey().toString();
-            HtmlTag keyCell = new HtmlTag("td", key.trim());
+            HtmlTag keyCell = new HtmlTag("td");
+            addCellContent(keyCell, entry.getKey());
             keyCell.addAttribute("class", "hash_key");
             row.add(keyCell);
 
             HtmlTag valueCell = new HtmlTag("td");
-            addValueContent(valueCell, entry.getValue());
+            addCellContent(valueCell, entry.getValue());
             valueCell.addAttribute("class", "hash_value");
             row.add(valueCell);
         }
         return table;
     }
 
-    protected void addValueContent(HtmlTag valueCell, Object entryValue) {
-        if (entryValue != null) {
-            Converter converter = getConverter(entryValue.getClass());
-            String convertedValue;
-            if (converter == null) {
-                convertedValue = entryValue.toString();
-            } else {
-                convertedValue = converter.toString(entryValue);
-            }
-            valueCell.add(convertedValue.trim());
-        } else {
-            valueCell.add("null");
-        }
-    }
-
-    protected Converter<?> getConverter(Class<?> clazz) {
-        //use converter set in registry
-        Converter<?> converter = ConverterRegistry.getConverterForClass(clazz);
-        if (converter == null) {
-            // use converter for superclass set in registry
-            Class<?> superclass = clazz.getSuperclass();
-            while (converter == null
-                    && superclass != null && !Object.class.equals(superclass)) {
-                converter = ConverterRegistry.getConverterForClass(superclass);
-                superclass = superclass.getSuperclass();
-            }
-            // use converter for implemented interface set in registry
-            converter = getConverterForInterface(clazz);
-        }
-        return converter;
-    }
-
-    protected static Converter<?> getConverterForInterface(Class<?> clazz) {
-        List<Class<?>> superInterfaces = new ArrayList<Class<?>>();
-        Converter<?> converterForInterface = null;
-        Class<?>[] interfaces = clazz.getInterfaces();
-        for (Class<?> interf : interfaces) {
-            Class<?>[] s = interf.getInterfaces();
-            superInterfaces.addAll(Arrays.asList(s));
-            converterForInterface = ConverterRegistry.getConverterForClass(interf);
-            if (converterForInterface != null) {
-                break;
-            }
-        }
-        if (converterForInterface == null) {
-            for (Class<?> supInterf : superInterfaces) {
-                converterForInterface = getConverterForInterface(supInterf);
-                if (converterForInterface != null) {
-                    break;
-                }
-            }
-        }
-        return converterForInterface;
+    protected void addCellContent(HtmlTag valueCell, Object cellValue) {
+        String valueToAdd = ElementConverterHelper.elementToString(cellValue);
+        valueCell.add(valueToAdd.trim());
     }
 }
