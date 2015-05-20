@@ -67,7 +67,25 @@ public class MapHelper {
             if (value instanceof String) {
                 cleanValue = htmlCleaner.cleanupValue((String) value);
             }
-            map.put(cleanName, cleanValue);
+            if (map.containsKey(cleanName)) {
+                // overwrite current value
+                map.put(cleanName, cleanValue);
+            } else {
+                String[] parts = name.split("\\.", 2);
+                if (parts.length > 1 && map.containsKey(parts[0])) {
+                    Object nested = map.get(parts[0]);
+                    if (nested instanceof Map) {
+                        Map<String, Object> nestedMap = (Map<String, Object>) nested;
+                        setValueForIn(cleanValue, parts[1], nestedMap);
+                    } else {
+                        map.put(cleanName, cleanValue);
+                    }
+                } else if (isListIndexExpr(name)) {
+                    setIndexedListValue(map, cleanName, cleanValue);
+                } else {
+                    map.put(cleanName, cleanValue);
+                }
+            }
         }
     }
 
@@ -85,7 +103,7 @@ public class MapHelper {
             String cleanValue = htmlCleaner.cleanupValue(valueArrays[i]);
             valueObjects.add(cleanValue);
         }
-        map.put(cleanName, valueObjects);
+        setValueForIn(valueObjects, cleanName, map);
     }
 
     /**
@@ -142,6 +160,22 @@ public class MapHelper {
             throw new SlimFixtureException(false, prop + " is not a list, but " + val);
         }
         return value;
+    }
+
+    protected void setIndexedListValue(Map<String, Object> map, String name, Object value) {
+        String prop = getListKeyName(name);
+        Object val = getValue(map, prop);
+        if (val instanceof List) {
+            List list = (List) val;
+            int index = getListIndex(name);
+            if (index < list.size()) {
+                list.set(index, value);
+            } else {
+                throw new SlimFixtureException(false, prop + " only has " + index + " elements");
+            }
+        } else {
+            throw new SlimFixtureException(false, prop + " is not a list, but " + val);
+        }
     }
 
     protected boolean isListName(String name) {
