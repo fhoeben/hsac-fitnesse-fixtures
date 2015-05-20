@@ -86,7 +86,22 @@ public class SlimFixture  implements InteractionAwareFixture {
 
     /**
      * Removes result of wiki formatting (for e.g. email addresses) if needed.
-     * @param rawValue value as received from Fitnesse.
+     * @param rawValue value as received from FitNesse.
+     * @return rawValue if it was just text or any object, cleaned version if it was not.
+     */
+    protected Object cleanupValue(Object rawValue) {
+        Object cleanValue;
+        if (rawValue instanceof String) {
+            cleanValue = cleanupValue((String) rawValue);
+        } else {
+            cleanValue = rawValue;
+        }
+        return cleanValue;
+    }
+
+    /**
+     * Removes result of wiki formatting (for e.g. email addresses) if needed.
+     * @param rawValue value as received from FitNesse.
      * @return rawValue if it was just text, cleaned version if it was not.
      */
     protected String cleanupValue(String rawValue) {
