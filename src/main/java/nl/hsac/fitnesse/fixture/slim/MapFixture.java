@@ -1,9 +1,5 @@
 package nl.hsac.fitnesse.fixture.slim;
 
-import fitnesse.slim.converters.ConverterRegistry;
-import nl.hsac.fitnesse.slim.converter.MapConverter;
-import nl.hsac.fitnesse.slim.converter.ObjectConverter;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,10 +11,6 @@ import java.util.Map;
  * This fixture can be used using Slim's dynamic decision tables or using scripts (and scenarios).
  */
 public class MapFixture extends SlimFixtureWithMap {
-    static {
-        ConverterRegistry.addConverter(Map.class, new MapConverter());
-        ConverterRegistry.addConverter(Object.class, new ObjectConverter());
-    }
     /**
      * Creates new, having an empty current values collection.
      */
