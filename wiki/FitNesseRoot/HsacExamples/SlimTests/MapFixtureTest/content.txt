@@ -30,30 +30,35 @@ The map to use is supplied using a constructor argument to the fixture. First we
 
 Values for lists can either be set using the 'set values' method or by specifying a key name ending on '[]'. (The '[]' will not be included in the key name. If you do want a key name ending on '[]' you have to specify '\[]', its content will not be seen as a list)
 
-|script     |map fixture|$hash3          |
-|check      |value      |c        |3     |
-|check      |size       |3               |
-|clear value|c                           |
-|check      |size       |2               |
-|check      |value      |c        |null  |
-|reject     |clear value|c               |
-|set value  |6          |for      |d     |
-|check      |size       |3               |
-|set values |7,8        |for      |e     |
-|set value  |9,asas     |for      |f[]   |
-|set value  |9,asas     |for      |g\[]  |
-|check      |value      |map.map.b|2     |
-|check      |value      |e[0]     |7     |
-|check      |value      |f[1]     |asas  |
-|check      |value      |g[]      |9,asas|
-|$hash4=    |value      |map.map         |
-|check      |size of    |map.map  |4     |
-|$allKeys2= |all keys                    |
-|show       |all values                  |
-|$hash5=    |copy map                    |
+|script     |map fixture        |$hash3                                   |
+|check      |value              |c         |3                             |
+|check      |size               |3                                        |
+|clear value|c                                                            |
+|check      |size               |2                                        |
+|check      |value              |c         |null                          |
+|reject     |clear value        |c                                        |
+|set value  |6                  |for       |d                             |
+|check      |size               |3                                        |
+|set values |7,8                |for       |e                             |
+|set value  |9,asas             |for       |f[]                           |
+|set value  |9,asas             |for       |g\[]                          |
+|check      |value              |map.map.b |2                             |
+|set value  |3                  |for       |map.map.b                     |
+|check      |value              |b         |in|$hash1|3                   |
+|check      |value              |aliases[1]|in|$hash1|!-FitNesse@hsac.nl-!|
+|set value  |!-github3@hsac.nl-!|for       |map.map.aliases[1]            |
+|check      |value              |aliases[1]|in|$hash1|!-github3@hsac.nl-! |
+|check      |value              |e[0]      |7                             |
+|check      |value              |f[1]      |asas                          |
+|check      |value              |g[]       |9,asas                        |
+|$hash4=    |value              |map.map                                  |
+|check      |size of            |map.map   |4                             |
+|$allKeys2= |all keys                                                     |
+|show       |all values                                                   |
+|$hash5=    |copy map                                                     |
 
 |script        |map fixture   |$hash4                       |
-|check         |value         |b         |2                 |
+|check         |value         |b         |3                 |
 |$aliases=     |value         |aliases                      |
 |$aliases2=    |value         |aliases[]                    |
 |check         |value         |aliases[0]|!-github@hsac.nl-!|
@@ -61,17 +66,16 @@ Values for lists can either be set using the 'set values' method or by specifyin
 |check         |size of       |aliases   |2                 |
 |check         |size of       |aliases[] |2                 |
 |content equals|$hash1                                      |
-|check         |copy map      |$hash1                       |
 |reject        |content equals|$hash2                       |
 
 !3 Map as Argument
 Here we supply no map to the constructor, but pass the one to use in each script row or use the newly (empty) implicitly created map.
 
 |script    |map fixture                                                                                |
-|check     |value                |b                |in           |$hash4      |2                       |
-|set value |3                    |for              |b            |in          |$hash4                  |
-|note      |'''the wiki does not show the updated value for $hash4.b, but it is set correctly!'''      |
 |check     |value                |b                |in           |$hash4      |3                       |
+|set value |4                    |for              |b            |in          |$hash4                  |
+|note      |'''the wiki does not show the updated value for $hash4.b, but it is set correctly!'''      |
+|check     |value                |b                |in           |$hash4      |4                       |
 |check     |value                |map.map.a        |in           |$hash3      |1                       |
 |check     |size of              |aliases          |in           |$hash1      |2                       |
 |set values|mytest@hsac.nl       |for              |aliases      |in          |$hash1                  |
