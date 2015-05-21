@@ -9,7 +9,7 @@ import java.util.List;
  * This fixture can be used using Slim's dynamic decision tables or using scripts (and scenarios).
  */
 public class ListFixture extends SlimFixture {
-    private final List<Object> list = new ArrayList<Object>();
+    private final ArrayList<Object> list = new ArrayList<Object>();
 
     /**
      * Adds new element to end of list.
@@ -42,7 +42,7 @@ public class ListFixture extends SlimFixture {
     /**
      * @return new list containing current values.
      */
-    public List<Object> copyList() {
+    public ArrayList<Object> copyList() {
         return copyList(list);
     }
 
@@ -97,7 +97,7 @@ public class ListFixture extends SlimFixture {
      * @param aList list to copy.
      * @return new list containing list's values.
      */
-    public List<Object> copyList(List aList) {
+    public ArrayList<Object> copyList(List aList) {
         return new ArrayList<Object>(aList);
     }
 
@@ -132,7 +132,7 @@ public class ListFixture extends SlimFixture {
      * @param headerName header of output column (without trailing '?').
      * @return new list containing current values.
      */
-    public List<Object> get(String headerName) {
+    public ArrayList<Object> get(String headerName) {
         return copyList();
     }
 

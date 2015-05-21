@@ -2,8 +2,11 @@ package nl.hsac.fitnesse.slim.interaction;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Map;
 
+import fitnesse.slim.Converter;
+import nl.hsac.fitnesse.slim.converter.ElementConverterHelper;
 import nl.hsac.fitnesse.slim.converter.MapConverter;
 import nl.hsac.fitnesse.slim.converter.ObjectConverter;
 import fitnesse.slim.converters.ConverterRegistry;
@@ -20,6 +23,8 @@ import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 public class InterceptingInteraction extends DefaultInteraction {
     static {
         ConverterRegistry.addConverter(Map.class, new MapConverter());
+        Converter<ArrayList> arrayListConverter = (Converter<ArrayList>) ElementConverterHelper.getConverter(ArrayList.class);
+        ConverterRegistry.addConverter(ArrayList.class, arrayListConverter);
         ConverterRegistry.addConverter(Object.class, new ObjectConverter());
     }
 

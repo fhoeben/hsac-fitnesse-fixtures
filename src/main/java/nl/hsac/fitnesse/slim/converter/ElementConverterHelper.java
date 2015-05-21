@@ -31,7 +31,8 @@ public class ElementConverterHelper {
     }
     return valueToAdd;
   }
-  protected static Converter<?> getConverter(Class<?> clazz) {
+
+  public static Converter<?> getConverter(Class<?> clazz) {
     //use converter set in registry
     Converter<?> converter = ConverterRegistry.getConverterForClass(clazz);
     if (converter instanceof DefaultConverter
