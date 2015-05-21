@@ -28,6 +28,21 @@ public class HtmlCleaner {
 
     /**
      * Removes result of wiki formatting (for e.g. email addresses) if needed.
+     * @param rawValue value as received from FitNesse.
+     * @return rawValue if it was just text or any object, cleaned version if it was not.
+     */
+    public <T> T cleanupValue(T rawValue) {
+        T cleanValue;
+        if (rawValue instanceof String) {
+            cleanValue = (T) cleanupValue((String) rawValue);
+        } else {
+            cleanValue = rawValue;
+        }
+        return cleanValue;
+    }
+
+    /**
+     * Removes result of wiki formatting (for e.g. email addresses) if needed.
      * @param rawValue value as received from Fitnesse.
      * @return rawValue if it was just text, cleaned version if it was not.
      */
