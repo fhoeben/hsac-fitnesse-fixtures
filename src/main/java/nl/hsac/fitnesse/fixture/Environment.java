@@ -30,8 +30,6 @@ public class Environment {
     private XMLFormatter xmlFormatter;
     private JsonFormatter jsonFormatter;
     private HtmlCleaner htmlCleaner;
-    private BsnUtil bsnUtil = new BsnUtil();
-    private RandomUtil randomUtil = new RandomUtil();
     private TimeoutHelper timeoutHelper = new TimeoutHelper();
     private ProgramHelper programHelper;
     private DatesHelper datesHelper = new DatesHelper();
@@ -363,21 +361,6 @@ public class Environment {
      */
     public HtmlCleaner getHtmlCleaner() {
         return htmlCleaner;
-    }
-
-    /**
-     * @return random BSN.
-     */
-    public String createRandomBsn() {
-        return bsnUtil.generateBsn();
-    }
-
-    /**
-     * @param length of string to create.
-     * @return lowercase string of specified length.
-     */
-    public String createRandomLowerCaseString(int length) {
-        return randomUtil.randomLower(length);
     }
 
     /**
