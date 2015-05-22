@@ -484,6 +484,11 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected boolean clickImpl(String place) {
+        WebElement element = getElementToClick(place);
+        return clickElement(element);
+    }
+
+    protected WebElement getElementToClick(String place) {
         WebElement element = getElement(place);
         if (element == null) {
             // find element with specified text and 'onclick' attribute
@@ -513,7 +518,7 @@ public class BrowserTest extends SlimFixture {
                 }
             }
         }
-        return clickElement(element);
+        return element;
     }
 
     protected boolean clickElement(WebElement element) {
