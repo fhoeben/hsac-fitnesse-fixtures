@@ -25,7 +25,7 @@ public class Environment {
     private ConcurrentHashMap<String, Template> templateCache;
     private ConcurrentHashMap<String, String> symbols;
     private HttpClient httpClient;
-    private long nextRelationNr = System.currentTimeMillis();
+    private long nextSequenceNr = System.currentTimeMillis();
     private NamespaceContextImpl nsContext;
     private XMLFormatter xmlFormatter;
     private JsonFormatter jsonFormatter;
@@ -118,10 +118,10 @@ public class Environment {
     }
 
     /**
-     * @return next unique nr
+     * @return next sequence nr
      */
     public long getNextNr() {
-        return nextRelationNr++;
+        return nextSequenceNr++;
     }
 
     /**
@@ -129,7 +129,7 @@ public class Environment {
      * @param value next number to provide
      */
     public void setNextNr(long value) {
-        nextRelationNr = value;
+        nextSequenceNr = value;
     }
 
     /**
