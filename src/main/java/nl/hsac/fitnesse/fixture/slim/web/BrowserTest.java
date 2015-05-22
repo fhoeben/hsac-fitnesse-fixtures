@@ -293,7 +293,7 @@ public class BrowserTest extends SlimFixture {
      * @return true, if element was found.
      */
     public boolean enterAs(String value, String place) {
-        final WebElement element = getElement(place);
+        WebElement element = getElementToSendValue(place);
         boolean result = waitUntilInteractable(element);
         if (result) {
             element.clear();
@@ -320,12 +320,16 @@ public class BrowserTest extends SlimFixture {
      */
     public boolean enterFor(String value, String place) {
         boolean result = false;
-        WebElement element = getElement(place);
+        WebElement element = getElementToSendValue(place);
         if (element != null) {
             sendValue(element, value);
             result = true;
         }
         return result;
+    }
+
+    protected WebElement getElementToSendValue(String place) {
+        return getElement(place);
     }
 
     /**
@@ -433,8 +437,12 @@ public class BrowserTest extends SlimFixture {
     }
 
     private boolean clickSelectOption(String selectPlace, String optionValue) {
-        WebElement element = getElement(selectPlace);
+        WebElement element = getElementToSelectFor(selectPlace);
         return clickSelectOption(element, optionValue);
+    }
+
+    protected WebElement getElementToSelectFor(String selectPlace) {
+        return getElement(selectPlace);
     }
 
     protected boolean clickSelectOption(WebElement element, String optionValue) {
@@ -668,8 +676,12 @@ public class BrowserTest extends SlimFixture {
     }
 
     private String valueForImpl(String place) {
-        WebElement element = getElement(place);
+        WebElement element = getElementToRetrieveValue(place);
         return valueFor(element);
+    }
+
+    protected WebElement getElementToRetrieveValue(String place) {
+        return getElement(place);
     }
 
     protected String valueFor(WebElement element) {
@@ -702,12 +714,16 @@ public class BrowserTest extends SlimFixture {
 
     public boolean clear(String place) {
         boolean result = false;
-        WebElement element = getElement(place);
+        WebElement element = getElementToClear(place);
         if (element != null) {
             element.clear();
             result = true;
         }
         return result;
+    }
+
+    protected WebElement getElementToClear(String place) {
+        return getElementToSendValue(place);
     }
 
     public boolean enterAsInRowWhereIs(String value, String requestedColumnName, String selectOnColumn, String selectOnValue) {
@@ -941,10 +957,14 @@ public class BrowserTest extends SlimFixture {
      * @param place element to scroll to.
      */
     public void scrollTo(String place) {
-        WebElement element = getElement(place);
+        WebElement element = getElementToScrollTo(place);
         if (place != null) {
             scrollTo(element);
         }
+    }
+
+    protected WebElement getElementToScrollTo(String place) {
+        return getElementToCheckVisibility(place);
     }
 
     /**
@@ -975,11 +995,15 @@ public class BrowserTest extends SlimFixture {
      */
     public boolean isVisible(String place) {
         boolean result = false;
-        WebElement element = getElement(place);
+        WebElement element = getElementToCheckVisibility(place);
         if (element != null) {
             result = element.isDisplayed() && isElementOnScreen(element);
         }
         return result;
+    }
+
+    protected WebElement getElementToCheckVisibility(String place) {
+        return getElement(place);
     }
 
     /**
@@ -1297,19 +1321,27 @@ public class BrowserTest extends SlimFixture {
     public boolean selectFileFor(String fileName, String place) {
         boolean result = false;
         if (fileName != null) {
-            WebElement element = getElement(place);
+            WebElement element = getElementToSelectFile(place);
             if (element != null) {
-                if ("input".equalsIgnoreCase(element.getTagName())
-                        && "file".equalsIgnoreCase(element.getAttribute("type"))) {
-                    String fullPath = getFilePathFromWikiUrl(fileName);
-                    if (new File(fullPath).exists()) {
-                        element.sendKeys(fullPath);
-                        result = true;
-                    } else {
-                        throw new SlimFixtureException(false, "Unable to find file: " + fullPath);
-                    }
+                String fullPath = getFilePathFromWikiUrl(fileName);
+                if (new File(fullPath).exists()) {
+                    element.sendKeys(fullPath);
+                    result = true;
+                } else {
+                    throw new SlimFixtureException(false, "Unable to find file: " + fullPath);
                 }
             }
+        }
+        return result;
+    }
+
+    protected WebElement getElementToSelectFile(String place) {
+        WebElement result = null;
+        WebElement element = getElement(place);
+        if (element != null
+                && "input".equalsIgnoreCase(element.getTagName())
+                && "file".equalsIgnoreCase(element.getAttribute("type"))) {
+            result = element;
         }
         return result;
     }
