@@ -37,6 +37,7 @@ public class Environment {
     private ProgramHelper programHelper;
     private DatesHelper datesHelper = new DatesHelper();
     private SeleniumHelper seleniumHelper;
+    private MapHelper mapHelper = new MapHelper();
 
     private Environment() {
         Configuration cfg = new Configuration();
@@ -447,4 +448,18 @@ public class Environment {
         this.fitNesseRoot = fitNesseRoot;
     }
 
+    /**
+     * @return default (global) map helper.
+     */
+    public MapHelper getMapHelper() {
+        return mapHelper;
+    }
+
+    /**
+     * Sets the default MapHelper.
+     * @param aMapHelper map helper to use.
+     */
+    public void setMapHelper(MapHelper aMapHelper) {
+        mapHelper = aMapHelper;
+    }
 }

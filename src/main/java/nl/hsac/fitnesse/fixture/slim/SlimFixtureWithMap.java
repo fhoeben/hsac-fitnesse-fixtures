@@ -25,7 +25,9 @@ public class SlimFixtureWithMap extends SlimFixture {
      */
     public SlimFixtureWithMap(Map<String, Object> map) {
         currentValues = map;
-        mapHelper = new MapHelper();
+        // default map helper
+        // (shared by all fixtures so default configuration can be changed by one call, if needed)
+        mapHelper = getEnvironment().getMapHelper();
     }
 
     /**
