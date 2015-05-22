@@ -12,7 +12,6 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import java.io.File;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
 
 /**
  * Holds overall environment settings. Expected to be set up before actual tests
