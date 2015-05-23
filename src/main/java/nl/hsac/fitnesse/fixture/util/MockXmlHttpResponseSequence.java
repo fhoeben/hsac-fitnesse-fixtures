@@ -1,14 +1,12 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
-import nl.hsac.fitnesse.fixture.util.HttpResponse;
-import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
-
-import org.apache.http.HttpStatus;
 
 /**
  * HttpResponse subclass intended to store a sequence of XmlHttpResponses which will be served (in sequence) to
@@ -37,6 +35,26 @@ public class MockXmlHttpResponseSequence extends HttpResponse {
 
     public List<XmlHttpResponse> getResponseList() {
         return responseList;
+    }
+
+    public List<String> getNotCalled() {
+        List<String> result = new ArrayList<String>(1);
+        for (XmlHttpResponse response : getResponseList()) {
+            if (StringUtils.isEmpty(response.getRequest())) {
+                result.add(response.getResponse());
+            }
+        }
+        return result;
+    }
+
+    public List<String> getNotExpected() {
+        List<String> result = new ArrayList<String>(1);
+        for (XmlHttpResponse response : getResponseList()) {
+            if (StringUtils.isEmpty(response.getResponse())) {
+                result.add(response.getRequest());
+            }
+        }
+        return result;
     }
 
     public void resetCurrentIndex() {

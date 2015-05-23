@@ -3,10 +3,8 @@ package nl.hsac.fitnesse.fixture.slim;
 import nl.hsac.fitnesse.fixture.util.HttpServer;
 import nl.hsac.fitnesse.fixture.util.MockXmlHttpResponseSequence;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,8 +75,7 @@ public class MockXmlServerSetup extends SlimFixture {
     }
 
     public boolean verifyAllResponsesServed() {
-        List<XmlHttpResponse> responses = getResponseList();
-        String not = getMissingRequestsMessage(responses);
+        String not = getMissingRequestsMessage();
         if (not != null) {
             throw new SlimFixtureException(false, not);
         }
@@ -86,8 +83,7 @@ public class MockXmlServerSetup extends SlimFixture {
     }
 
     public boolean verifyNoExtraRequests() {
-        List<XmlHttpResponse> responses = getResponseList();
-        String extra = getExtraRequestsMessage(responses);
+        String extra = getExtraRequestsMessage();
         if (extra != null) {
             throw new SlimFixtureException(false, extra);
         }
@@ -98,24 +94,14 @@ public class MockXmlServerSetup extends SlimFixture {
         removeMockServer(path);
     }
 
-    protected String getExtraRequestsMessage(List<XmlHttpResponse> responses) {
-        List<String> extraResponses = getNotExpected(responses);
+    protected String getExtraRequestsMessage() {
+        List<String> extraResponses = getResponse().getNotExpected();
         return createUnexpectedMessage("%s extra request(s) received: %s", extraResponses);
     }
 
-    protected String getMissingRequestsMessage(List<XmlHttpResponse> responses) {
-        List<String> extraResponses = getNotCalled(responses);
+    protected String getMissingRequestsMessage() {
+        List<String> extraResponses = getResponse().getNotCalled();
         return createUnexpectedMessage("%s response(s) not requested: %s", extraResponses);
-    }
-
-    protected List<String> getNotCalled(List<XmlHttpResponse> responses) {
-        List<String> result = new ArrayList<String>(1);
-        for (XmlHttpResponse response : responses) {
-            if (StringUtils.isEmpty(response.getRequest())) {
-                result.add(response.getResponse());
-            }
-        }
-        return result;
     }
 
     protected String createUnexpectedMessage(String messagePattern, List<String> extraResponses) {
@@ -135,16 +121,6 @@ public class MockXmlServerSetup extends SlimFixture {
         return msg;
     }
 
-    protected List<String> getNotExpected(List<XmlHttpResponse> responses) {
-        List<String> result = new ArrayList<String>(1);
-        for (XmlHttpResponse response : responses) {
-            if (StringUtils.isEmpty(response.getResponse())) {
-                result.add(response.getRequest());
-            }
-        }
-        return result;
-    }
-
     protected String formatValue(String value) {
         String result;
         try {
@@ -160,6 +136,10 @@ public class MockXmlServerSetup extends SlimFixture {
     }
 
     protected List<XmlHttpResponse> getResponseList() {
-        return mockServer.getResponse().getResponseList();
+        return getResponse().getResponseList();
+    }
+
+    protected MockXmlHttpResponseSequence getResponse() {
+        return mockServer.getResponse();
     }
 }
