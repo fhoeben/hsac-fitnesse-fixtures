@@ -75,7 +75,7 @@ public class MockXmlServerSetup extends SlimFixture {
     }
 
     public boolean verifyAllResponsesServed() {
-        String not = getMissingRequestsMessage();
+        String not = getResponse().getMissingRequestsMessage();
         if (not != null) {
             throw new SlimFixtureException(false, not);
         }
@@ -83,7 +83,7 @@ public class MockXmlServerSetup extends SlimFixture {
     }
 
     public boolean verifyNoExtraRequests() {
-        String extra = getExtraRequestsMessage();
+        String extra = getResponse().getExtraRequestsMessage();
         if (extra != null) {
             throw new SlimFixtureException(false, extra);
         }
@@ -92,43 +92,6 @@ public class MockXmlServerSetup extends SlimFixture {
 
     public void stop() {
         removeMockServer(path);
-    }
-
-    protected String getExtraRequestsMessage() {
-        List<String> extraResponses = getResponse().getNotExpected();
-        return createUnexpectedMessage("%s extra request(s) received: %s", extraResponses);
-    }
-
-    protected String getMissingRequestsMessage() {
-        List<String> extraResponses = getResponse().getNotCalled();
-        return createUnexpectedMessage("%s response(s) not requested: %s", extraResponses);
-    }
-
-    protected String createUnexpectedMessage(String messagePattern, List<String> extraResponses) {
-        String msg = null;
-        if (!extraResponses.isEmpty()) {
-            StringBuilder extraRequests = new StringBuilder("<ol>");
-            for (int i = 0; i < extraResponses.size(); i++) {
-                extraRequests.append("<li>");
-                String request = extraResponses.get(i);
-                extraRequests.append(formatValue(request));
-                extraRequests.append("</li>");
-            }
-            extraRequests.append("</ol>");
-            msg = String.format("<div>" + messagePattern + "</div>",
-                    extraResponses.size(), extraRequests);
-        }
-        return msg;
-    }
-
-    protected String formatValue(String value) {
-        String result;
-        try {
-            result = getEnvironment().getHtmlForXml(value);
-        } catch (Exception e) {
-            result = value;
-        }
-        return result;
     }
 
     protected void addResponse(XmlHttpResponse newResponse) {
