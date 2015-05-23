@@ -3,7 +3,6 @@ package nl.hsac.fitnesse.fixture.slim;
 import nl.hsac.fitnesse.fixture.util.HttpServer;
 import nl.hsac.fitnesse.fixture.util.MockXmlHttpResponseSequence;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
-import org.apache.http.HttpStatus;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,13 +17,13 @@ import java.util.Map;
  * Afterwards you can use this fixture to shut down the mock server.
  */
 public class MockXmlServerSetup extends SlimFixture {
-    private static final Map<String, HttpServer<MockXmlHttpResponseSequence>> SERVERS = new HashMap<String, HttpServer<MockXmlHttpResponseSequence>>();
+    private static final Map<String, HttpServer<? extends MockXmlHttpResponseSequence>> SERVERS = new HashMap<String, HttpServer<? extends MockXmlHttpResponseSequence>>();
     public static final String DEFAULT_PATH = "/FitNesseMock";
     private final String path;
-    private final HttpServer<MockXmlHttpResponseSequence> mockServer;
+    private final HttpServer<? extends MockXmlHttpResponseSequence> mockServer;
 
-    public static HttpServer<MockXmlHttpResponseSequence> getMockServer(String aPath) {
-        HttpServer<MockXmlHttpResponseSequence> server = SERVERS.get(aPath);
+    public static HttpServer<? extends MockXmlHttpResponseSequence> getMockServer(String aPath) {
+        HttpServer<? extends MockXmlHttpResponseSequence> server = SERVERS.get(aPath);
         if (server == null) {
             throw new SlimFixtureException(false, "No server created at path: " + aPath);
         }
@@ -32,13 +31,13 @@ public class MockXmlServerSetup extends SlimFixture {
     }
 
     public static void removeMockServer(String aPath) {
-        HttpServer<MockXmlHttpResponseSequence> server = SERVERS.remove(aPath);
+        HttpServer<? extends MockXmlHttpResponseSequence> server = SERVERS.remove(aPath);
         if (server != null) {
             server.stopServer();
         }
     }
 
-    public static List<XmlHttpResponse> getResponses(String aPath) {
+    public static List<? extends XmlHttpResponse> getResponses(String aPath) {
         return getMockServer(aPath).getResponse().getResponseList();
     }
 
@@ -51,16 +50,18 @@ public class MockXmlServerSetup extends SlimFixture {
         if (SERVERS.containsKey(path)) {
             mockServer = getMockServer(path);
         } else {
-            mockServer = new HttpServer<MockXmlHttpResponseSequence>(path, new MockXmlHttpResponseSequence());
+            mockServer = createMockServer(aPath);
             SERVERS.put(path, mockServer);
         }
     }
 
+    protected HttpServer<? extends MockXmlHttpResponseSequence> createMockServer(String aPath) {
+        return new HttpServer<MockXmlHttpResponseSequence>(aPath, new MockXmlHttpResponseSequence());
+    }
+
     public void addResponse(String aResponse) {
-        XmlHttpResponse newResponse = new XmlHttpResponse();
-        newResponse.setStatusCode(HttpStatus.SC_OK);
-        newResponse.setResponse(cleanupBody(aResponse));
-        addResponse(newResponse);
+        String responseBody = cleanupBody(aResponse);
+        getResponse().addResponse(responseBody);
     }
 
     protected String cleanupBody(String body) {
@@ -94,11 +95,7 @@ public class MockXmlServerSetup extends SlimFixture {
         removeMockServer(path);
     }
 
-    protected void addResponse(XmlHttpResponse newResponse) {
-        getResponseList().add(newResponse);
-    }
-
-    protected List<XmlHttpResponse> getResponseList() {
+    protected List<? extends XmlHttpResponse> getResponseList() {
         return getResponse().getResponseList();
     }
 

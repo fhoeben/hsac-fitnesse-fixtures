@@ -34,7 +34,15 @@ public class MockXmlHttpResponseSequence extends HttpResponse {
         resetCurrentIndex();
     }
 
-    public List<XmlHttpResponse> getResponseList() {
+    public XmlHttpResponse addResponse(String responseBody) {
+        XmlHttpResponse newResponse = new XmlHttpResponse();
+        newResponse.setStatusCode(HttpStatus.SC_OK);
+        newResponse.setResponse(responseBody);
+        responseList.add(newResponse);
+        return newResponse;
+    }
+
+    public List<? extends XmlHttpResponse> getResponseList() {
         return responseList;
     }
 
@@ -126,12 +134,10 @@ public class MockXmlHttpResponseSequence extends HttpResponse {
         }
         if (currentIndex == responseList.size()) {
             // we allow capturing of requests, so that we can debug what is received
-            XmlHttpResponse blankResponse = new XmlHttpResponse();
+            XmlHttpResponse blankResponse = addResponse("");
             // not found
             blankResponse.setStatusCode(HttpStatus.SC_NOT_FOUND);
-            blankResponse.setResponse("");
-            responseList.add(blankResponse);
         }
-        return responseList.get(currentIndex);
+        return getResponseList().get(currentIndex);
     }
 }
