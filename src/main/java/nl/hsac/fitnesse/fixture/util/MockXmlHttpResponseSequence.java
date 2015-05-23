@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import nl.hsac.fitnesse.fixture.Environment;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 
@@ -35,6 +36,43 @@ public class MockXmlHttpResponseSequence extends HttpResponse {
 
     public List<XmlHttpResponse> getResponseList() {
         return responseList;
+    }
+
+    public String getExtraRequestsMessage() {
+        List<String> extraResponses = getNotExpected();
+        return createUnexpectedMessage("%s extra request(s) received: %s", extraResponses);
+    }
+
+    public String getMissingRequestsMessage() {
+        List<String> extraResponses = getNotCalled();
+        return createUnexpectedMessage("%s response(s) not requested: %s", extraResponses);
+    }
+
+    protected String createUnexpectedMessage(String messagePattern, List<String> extraResponses) {
+        String msg = null;
+        if (!extraResponses.isEmpty()) {
+            StringBuilder extraRequests = new StringBuilder("<ol>");
+            for (int i = 0; i < extraResponses.size(); i++) {
+                extraRequests.append("<li>");
+                String request = extraResponses.get(i);
+                extraRequests.append(formatValue(request));
+                extraRequests.append("</li>");
+            }
+            extraRequests.append("</ol>");
+            msg = String.format("<div>" + messagePattern + "</div>",
+                    extraResponses.size(), extraRequests);
+        }
+        return msg;
+    }
+
+    protected String formatValue(String value) {
+        String result;
+        try {
+            result = Environment.getInstance().getHtmlForXml(value);
+        } catch (Exception e) {
+            result = value;
+        }
+        return result;
     }
 
     public List<String> getNotCalled() {
