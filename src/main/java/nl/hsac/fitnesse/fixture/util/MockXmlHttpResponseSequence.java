@@ -47,8 +47,8 @@ public class MockXmlHttpResponseSequence extends HttpResponse {
     }
 
     public String getExtraRequestsMessage() {
-        List<String> extraResponses = getNotExpected();
-        return createUnexpectedMessage("%s extra request(s) received: %s", extraResponses);
+        List<String> extraRequests = getNotExpected();
+        return createUnexpectedMessage("%s extra request(s) received: %s", extraRequests);
     }
 
     public String getMissingRequestsMessage() {
@@ -56,19 +56,19 @@ public class MockXmlHttpResponseSequence extends HttpResponse {
         return createUnexpectedMessage("%s response(s) not requested: %s", extraResponses);
     }
 
-    protected String createUnexpectedMessage(String messagePattern, List<String> extraResponses) {
+    protected String createUnexpectedMessage(String messagePattern, List<String> extraMessages) {
         String msg = null;
-        if (!extraResponses.isEmpty()) {
-            StringBuilder extraRequests = new StringBuilder("<ol>");
-            for (int i = 0; i < extraResponses.size(); i++) {
-                extraRequests.append("<li>");
-                String request = extraResponses.get(i);
-                extraRequests.append(formatValue(request));
-                extraRequests.append("</li>");
+        if (!extraMessages.isEmpty()) {
+            StringBuilder messageList = new StringBuilder("<ol>");
+            for (String message : extraMessages) {
+                messageList.append("<li>");
+                String formattedMsg = formatValue(message);
+                messageList.append(formattedMsg);
+                messageList.append("</li>");
             }
-            extraRequests.append("</ol>");
+            messageList.append("</ol>");
             msg = String.format("<div>" + messagePattern + "</div>",
-                    extraResponses.size(), extraRequests);
+                    extraMessages.size(), messageList);
         }
         return msg;
     }
