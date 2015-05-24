@@ -19,13 +19,32 @@ public class ListConverter extends fitnesse.slim.converters.GenericCollectionCon
         try {
             Class<? extends List<Object>> listObjectClass;
             listObjectClass = (Class<List<Object>>) ListConverter.class
-                                .getMethod("fromString", String.class).getReturnType();
+                                .getMethod("toString", List.class).getParameterTypes()[0];
             ListConverter converter = new ListConverter();
             ConverterRegistry.addConverter(listObjectClass, converter);
+            ConverterRegistry.addConverter(ArrayList.class, new ArrayListConverter(converter));
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static class ArrayListConverter implements Converter<ArrayList> {
+        private final ListConverter listConverter;
+
+        public ArrayListConverter(ListConverter aListConverter) {
+            listConverter = aListConverter;
+        }
+
+        @Override
+        public String toString(ArrayList o) {
+            return listConverter.toString(o);
+        }
+
+        @Override
+        public ArrayList fromString(String arg) {
+            return listConverter.fromString(arg);
         }
     }
 
@@ -51,8 +70,8 @@ public class ListConverter extends fitnesse.slim.converters.GenericCollectionCon
     }
 
     @Override
-    public List<Object> fromString(String arg) {
-        List<Object> result;
+    public ArrayList<Object> fromString(String arg) {
+        ArrayList<Object> result;
         Matcher matcher = LIST_PATTERN.matcher(arg);
         if (matcher.matches()) {
             result = new ArrayList<Object>();
@@ -64,7 +83,7 @@ public class ListConverter extends fitnesse.slim.converters.GenericCollectionCon
                 result.addAll(Arrays.asList(elements));
             }
         } else {
-            result = super.fromString(arg);
+            result = new ArrayList<Object>(super.fromString(arg));
         }
         return result;
     }
