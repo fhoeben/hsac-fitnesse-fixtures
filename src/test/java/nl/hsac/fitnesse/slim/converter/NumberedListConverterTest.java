@@ -8,8 +8,8 @@ import java.util.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-public class ListConverterTest {
-    private final ListConverter converter = new ListConverter();
+public class NumberedListConverterTest {
+    private final NumberedListConverter converter = new NumberedListConverter();
 
     @Test
     public void testToStringNull() {
@@ -46,7 +46,7 @@ public class ListConverterTest {
 
     @Test
     public void testViaRegistry() {
-        ListConverter.register();
+        NumberedListConverter.register();
         ConverterRegistry.addConverter(Map.class, new MapConverter());
 
         Map<String, List<String>> map = new HashMap<String, List<String>>();

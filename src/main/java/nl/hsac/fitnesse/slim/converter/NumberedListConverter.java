@@ -9,20 +9,27 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ListConverter extends fitnesse.slim.converters.GenericCollectionConverter<Object, List<Object>> {
+/**
+ * Slim Converter which works with HTML ordered lists (i.e. numbered lists) instead of the standard Java
+ * toString() representation for lists.
+ */
+public class NumberedListConverter extends fitnesse.slim.converters.GenericCollectionConverter<Object, List<Object>> {
     private static final Pattern LIST_PATTERN = Pattern.compile(
                                                             "<ol>\\s*((<li>\\s*.*?\\s*</li>\\s*)*)</ol>",
                                                             Pattern.DOTALL);
     private static final Converter<Object> OBJ_CONVERTER = new ObjectConverter();
 
+    /**
+     * Makes NumberedListConverter the Converter Slim will uses for (Array)Lists.
+     */
     public static void register() {
         try {
             Class<? extends List<Object>> listObjectClass;
-            listObjectClass = (Class<List<Object>>) ListConverter.class
+            listObjectClass = (Class<List<Object>>) NumberedListConverter.class
                                 .getMethod("toString", List.class).getParameterTypes()[0];
-            ListConverter converter = new ListConverter();
+            NumberedListConverter converter = new NumberedListConverter();
             ConverterRegistry.addConverter(listObjectClass, converter);
-            ConverterRegistry.addConverter(ArrayList.class, new ArrayListConverter(converter));
+            ConverterRegistry.addConverter(ArrayList.class, new NumberedArrayListConverter(converter));
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
@@ -30,25 +37,29 @@ public class ListConverter extends fitnesse.slim.converters.GenericCollectionCon
         }
     }
 
-    public static class ArrayListConverter implements Converter<ArrayList> {
-        private final ListConverter listConverter;
+    /**
+     * NumberedListConverter cannot implement Converter for List and ArrayList, therefore
+     * this inner class ensures we have an implementation of ArrayList also.
+     */
+    public static class NumberedArrayListConverter implements Converter<ArrayList> {
+        private final NumberedListConverter numberedListConverter;
 
-        public ArrayListConverter(ListConverter aListConverter) {
-            listConverter = aListConverter;
+        public NumberedArrayListConverter(NumberedListConverter aNumberedListConverter) {
+            numberedListConverter = aNumberedListConverter;
         }
 
         @Override
         public String toString(ArrayList o) {
-            return listConverter.toString(o);
+            return numberedListConverter.toString(o);
         }
 
         @Override
         public ArrayList fromString(String arg) {
-            return listConverter.fromString(arg);
+            return numberedListConverter.fromString(arg);
         }
     }
 
-    public ListConverter() {
+    public NumberedListConverter() {
         super(ArrayList.class, OBJ_CONVERTER);
     }
 
