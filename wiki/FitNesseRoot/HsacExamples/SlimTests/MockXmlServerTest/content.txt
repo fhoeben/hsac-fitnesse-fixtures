@@ -1,0 +1,60 @@
+Here we use !-FitNesse-! as a HTTP server so we can control which responses the application being tested receives.
+
+!2 No Messages
+
+!note The messages report table does not fail a test, it just shows the current status. It will be have an 'ignored' status when no messages were expected nor served.
+
+|table: Mock Server Message Report|
+
+!2 Too Few Messages
+
+|script      |mock xml server setup|
+|add response|{{{<dag/>}}}         |
+|add response|{{{<dag2/>}}}        |
+|$url=       |get mock server url  |
+
+|script|xml http test          |
+|post  |{{{<Hallo/>}}} |to|$url|
+|check |response status|200    |
+|show  |response               |
+
+!note The messages report table does not fail a test, it just shows the current status. It will show red lines for expected requests that never came, or extra requests received.
+
+|table: Mock Server Message Report|
+
+!2 Messages As Expected
+
+|script|xml http test          |
+|post  |{{{<Hallo2/>}}}|to|$url|
+|check |response status|200    |
+|show  |response               |
+
+!note The messages report table does not fail a test, it just shows the current status. It will show red lines for expected requests that never came, or extra requests received.
+
+|table: Mock Server Message Report|
+
+|script|mock xml server setup|
+|verify all responses served |
+|verify no extra requests    |
+|stop                        |
+
+!2 Extra Messages
+
+|script      |mock xml server setup|
+|add response|{{{<bye/>}}}         |
+|$url=       |get mock server url  |
+
+|script|xml http test                                                                                                                   |
+|post  |{{{<Hallo/>}}}                        |to                                   |$url                                               |
+|check |response status                       |200                                                                                      |
+|note  |Posting an extra message will cause a 404 response, normally this fails a test, but we prevent this by using a 'show' line below|
+|show  |post                                  |{{{<Hallo2/>}}}                      |to                      |$url                      |
+|check |response status                       |404                                                                                      |
+|show  |response                                                                                                                        |
+
+!note The messages report table does not fail a test, it just shows the current status. It will show red lines for expected requests that never came, or extra requests received.
+
+|table: Mock Server Message Report|
+
+|script|mock xml server setup|
+|stop                        |
