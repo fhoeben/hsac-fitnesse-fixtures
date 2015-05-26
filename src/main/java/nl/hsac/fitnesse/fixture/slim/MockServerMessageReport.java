@@ -7,7 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- *
+ * Slim table fixture to show messages received (and sent) by MockXmlServer. This fixture does not alter test outcome
+ * it just shows which messages have (not) been received.
  */
 public class MockServerMessageReport extends SlimFixture {
     private final String path;
