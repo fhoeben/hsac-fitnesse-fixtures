@@ -33,9 +33,7 @@ public class XMLFormatter implements Formatter {
             Transformer transformer = transformerFactory.newTransformer();
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            if (keepDeclaration) {
-                transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
-            }
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, keepDeclaration? "no" : "yes");
             transformer.transform(xmlInput, xmlOutput);
             return xmlOutput.getWriter().toString();
         } catch (Exception e) {
