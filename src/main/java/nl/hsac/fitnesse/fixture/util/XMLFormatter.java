@@ -25,7 +25,7 @@ public class XMLFormatter implements Formatter {
      */
     public String format(String xml) {
         try {
-            boolean keepDeclaration = DECL_PATTERN.matcher(xml).matches();
+            boolean keepDeclaration = DECL_PATTERN.matcher(xml).find();
 
             Source xmlInput = new StreamSource(new StringReader(xml));
             StreamResult xmlOutput = new StreamResult(new StringWriter());
