@@ -18,6 +18,8 @@ public class XMLFormatter implements Formatter {
     public static final Pattern DECL_PATTERN = Pattern.compile("^<\\?xml\\s.*?\\?>", Pattern.DOTALL);
     public static final Pattern ELEMENT_CONTENT_PATTERN = Pattern.compile(">\\s*(.*?)\\s*<", Pattern.DOTALL);
 
+    private boolean trimElements = true;
+
     /**
      * Creates formatted version of the supplied XML.
      * @param xml XML to format.
@@ -26,7 +28,9 @@ public class XMLFormatter implements Formatter {
     public String format(String xml) {
         try {
             boolean keepDeclaration = DECL_PATTERN.matcher(xml).find();
-
+            if (trimElements) {
+                xml = trimElements(xml);
+            }
             Source xmlInput = new StreamSource(new StringReader(xml));
             StreamResult xmlOutput = new StreamResult(new StringWriter());
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -39,6 +43,20 @@ public class XMLFormatter implements Formatter {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * @return whether elements are trimmed on format.
+     */
+    public boolean areElementsTrimmed() {
+        return trimElements;
+    }
+
+    /**
+     * @param trimElements whether elements should be trimmed on format.
+     */
+    public void setTrimElements(boolean trimElements) {
+        this.trimElements = trimElements;
     }
 
     /**
