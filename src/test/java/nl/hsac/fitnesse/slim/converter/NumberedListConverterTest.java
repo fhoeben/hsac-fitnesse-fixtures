@@ -58,28 +58,28 @@ public class NumberedListConverterTest {
                 "\t\t<td class=\"hash_value\"><ol><li>b</li><li>c</li><li>null</li></ol></td>\n" +
                 "\t</tr>\n" +
                 "</table>",
-                ConverterRegistry.getConverterForClass(Map.class).toString(map));
+                ConverterRegistry.getConverterForClass(Map.class).toString(map).replace("\r", ""));
 
-    Map<String, List<Integer>> map2 = new HashMap<String, List<Integer>>();
-    map2.put("test", new LinkedList<Integer>(Arrays.asList(1, null, 3)));
-    assertEquals(
-            "<table class=\"hash_table\">\n" +
-                    "\t<tr class=\"hash_row\">\n" +
-                    "\t\t<td class=\"hash_key\">test</td>\n" +
-                    "\t\t<td class=\"hash_value\"><ol><li>1</li><li>null</li><li>3</li></ol></td>\n" +
-                    "\t</tr>\n" +
-                    "</table>",
-            ConverterRegistry.getConverterForClass(Map.class).toString(map2));
+        Map<String, List<Integer>> map2 = new HashMap<String, List<Integer>>();
+        map2.put("test", new LinkedList<Integer>(Arrays.asList(1, null, 3)));
+        assertEquals(
+                "<table class=\"hash_table\">\n" +
+                        "\t<tr class=\"hash_row\">\n" +
+                        "\t\t<td class=\"hash_key\">test</td>\n" +
+                        "\t\t<td class=\"hash_value\"><ol><li>1</li><li>null</li><li>3</li></ol></td>\n" +
+                        "\t</tr>\n" +
+                        "</table>",
+                ConverterRegistry.getConverterForClass(Map.class).toString(map2).replace("\r", ""));
 
-    Map<String, ArrayList<Object>> map3 = new HashMap<String, ArrayList<Object>>();
-    map3.put("test", new ArrayList<Object>(Arrays.asList(1, null, "test")));
-    assertEquals(
-            "<table class=\"hash_table\">\n" +
-                    "\t<tr class=\"hash_row\">\n" +
-                    "\t\t<td class=\"hash_key\">test</td>\n" +
-                    "\t\t<td class=\"hash_value\"><ol><li>1</li><li>null</li><li>test</li></ol></td>\n" +
-                    "\t</tr>\n" +
-                    "</table>",
-            ConverterRegistry.getConverterForClass(Map.class).toString(map3));
+        Map<String, ArrayList<Object>> map3 = new HashMap<String, ArrayList<Object>>();
+        map3.put("test", new ArrayList<Object>(Arrays.asList(1, null, "test")));
+        assertEquals(
+                "<table class=\"hash_table\">\n" +
+                        "\t<tr class=\"hash_row\">\n" +
+                        "\t\t<td class=\"hash_key\">test</td>\n" +
+                        "\t\t<td class=\"hash_value\"><ol><li>1</li><li>null</li><li>test</li></ol></td>\n" +
+                        "\t</tr>\n" +
+                        "</table>",
+                ConverterRegistry.getConverterForClass(Map.class).toString(map3).replace("\r", ""));
     }
 }
