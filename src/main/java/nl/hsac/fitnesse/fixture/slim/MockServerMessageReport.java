@@ -96,7 +96,7 @@ public class MockServerMessageReport extends SlimFixture {
         if (requestBody == null) {
             builder.append("No request received");
         } else {
-            String reqTitle = "request";
+            String reqTitle = getRequestTitle(response);
             String req = formatBody(requestBody);
             builder.append(createCollapsible(!result, reqTitle, req));
         }
@@ -109,11 +109,19 @@ public class MockServerMessageReport extends SlimFixture {
         if (responseBody == null || "".equals(responseBody)) {
             builder.append("Unexpected request, no response set up");
         } else {
-            String respTitle = "response";
+            String respTitle = getResponseTitle(response);
             String resp = formatBody(responseBody);
             builder.append(createCollapsible(false, respTitle, resp));
         }
         builder.append("</td>");
+    }
+
+    protected String getRequestTitle(XmlHttpResponse response) {
+        return "request";
+    }
+
+    protected String getResponseTitle(XmlHttpResponse response) {
+        return "response";
     }
 
     protected String formatBody(String xml) {
