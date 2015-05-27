@@ -444,4 +444,18 @@ public class Environment {
     public void setMapHelper(MapHelper aMapHelper) {
         mapHelper = aMapHelper;
     }
+
+    /**
+     * @return XML formatter used.
+     */
+    public XMLFormatter getXmlFormatter() {
+        return xmlFormatter;
+    }
+
+    /**
+     * @return JSON formatter used.
+     */
+    public JsonFormatter getJsonFormatter() {
+        return jsonFormatter;
+    }
 }
