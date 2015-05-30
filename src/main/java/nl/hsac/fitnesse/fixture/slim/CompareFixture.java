@@ -20,12 +20,12 @@ public class CompareFixture {
                 String text = StringEscapeUtils.escapeHtml4(aDiff.text);
                 switch (aDiff.operation) {
                     case INSERT:
-                        text = replaceSpaceAtStartAndEnd(text);
+                        text = ensureWhitespaceVisible(text);
                         html.append("<ins class=\"collapse_rim\">").append(text)
                                 .append("</ins>");
                         break;
                     case DELETE:
-                        text = replaceSpaceAtStartAndEnd(text);
+                        text = ensureWhitespaceVisible(text);
                         html.append("<del class=\"collapse_rim\">").append(text)
                                 .append("</del>");
                         break;
@@ -38,9 +38,9 @@ public class CompareFixture {
         return html.toString();
     }
 
-    protected String replaceSpaceAtStartAndEnd(String text) {
-        return text.replaceFirst("^ ", "&nbsp;")
-                .replaceFirst(" $", "&nbsp;");
+    protected String ensureWhitespaceVisible(String text) {
+        return text.replaceAll(" ", "&nbsp;")
+                .replaceAll("\r?\n", "&nbsp;<br/>");
     }
 
     /**
