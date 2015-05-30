@@ -91,6 +91,11 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>com.sksamuel.diff</groupId>
+			<artifactId>diff</artifactId>
+			<version>1.1.11</version>
+		</dependency>
 		<!-- com.jayway.jsonpath uses slf4j for logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
