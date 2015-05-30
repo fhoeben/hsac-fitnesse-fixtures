@@ -1,5 +1,5 @@
 Compare Fixture helps to visualize the difference between strings. 
-It does not actually test anything, it is intended to be used in conjunction with other fixtures to highlight why two values are not the same.
+Showing differences does not actually test anything, it is intended to be used in conjunction with other tests to highlight why two values are not the same.
 
 |script|compare fixture                                          |
 |show  |difference between|Hello           |and|Hello sir        |
@@ -22,6 +22,16 @@ Greetings to you.
 
 -!|
 |show|difference between|!-ha	ha	-!|and|ha ha|
+
+To actually test something we can count the number of 'diffs' between two values
+|script|compare fixture                                                   |
+|check |count differences between|Hello           |and|Hello sir        |1|
+|check |count differences between|Hello madam     |and|Hello            |1|
+|check |count differences between|Hello madam     |and|Hello sir        |2|
+|check |count differences between|Hello dear madam|and|Hello madam      |1|
+|check |count differences between|Hello madam     |and|!-Hello   madam-!|1|
+
+
 
 Sometimes changes in whitespace are not interesting, these may be ignored when determining the difference.
 !note Whitespace added were there was none before, or all whitespace removed between characters, is still considered a difference.

@@ -27,10 +27,41 @@ public class CompareFixture {
         } else if (second == null) {
             second = "";
         }
-        LinkedList<DiffMatchPatch.Diff> diffs = diffMatchPatch.diff_main(first, second);
-        diffMatchPatch.diff_cleanupSemantic(diffs);
+        LinkedList<DiffMatchPatch.Diff> diffs = getDiffs(first, second);
         String diffPrettyHtml = diffToHtml(diffs);
         return diffPrettyHtml;
+    }
+
+    /**
+     * Determines number of differences (substrings that are not equal) between two strings.
+     * @param first first string to compare.
+     * @param second second string to compare.
+     * @return number of different substrings.
+     */
+    public int countDifferencesBetweenAnd(String first, String second) {
+        if (first == null) {
+            if (second == null) {
+                return 0;
+            } else {
+                first = "";
+            }
+        } else if (second == null) {
+            second = "";
+        }
+        LinkedList<DiffMatchPatch.Diff> diffs = getDiffs(first, second);
+        int diffCount = 0;
+        for (DiffMatchPatch.Diff diff : diffs) {
+            if (diff.operation != DiffMatchPatch.Operation.EQUAL) {
+                diffCount++;
+            }
+        }
+        return diffCount;
+    }
+
+    protected LinkedList<DiffMatchPatch.Diff> getDiffs(String first, String second) {
+        LinkedList<DiffMatchPatch.Diff> diffs = diffMatchPatch.diff_main(first, second);
+        diffMatchPatch.diff_cleanupSemantic(diffs);
+        return diffs;
     }
 
     /**
