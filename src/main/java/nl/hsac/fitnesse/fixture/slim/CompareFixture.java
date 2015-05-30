@@ -8,7 +8,7 @@ import java.util.LinkedList;
 /**
  * Fixture to determine and visualize differences between strings.
  */
-public class CompareFixture {
+public class CompareFixture extends SlimFixture {
     private final DiffMatchPatch diffMatchPatch = new DiffMatchPatch();
 
     /**
@@ -29,6 +29,9 @@ public class CompareFixture {
         }
         LinkedList<DiffMatchPatch.Diff> diffs = getDiffs(first, second);
         String diffPrettyHtml = diffToHtml(diffs);
+        if (first.startsWith("<pre>") && first.endsWith("</pre>")) {
+            diffPrettyHtml = diffPrettyHtml.replaceFirst("^<div>", "<pre>").replaceFirst("</div>$", "</pre>");
+        }
         return diffPrettyHtml;
     }
 
@@ -59,7 +62,7 @@ public class CompareFixture {
     }
 
     protected LinkedList<DiffMatchPatch.Diff> getDiffs(String first, String second) {
-        LinkedList<DiffMatchPatch.Diff> diffs = diffMatchPatch.diff_main(first, second);
+        LinkedList<DiffMatchPatch.Diff> diffs = diffMatchPatch.diff_main(cleanupValue(first), cleanupValue(second));
         diffMatchPatch.diff_cleanupSemantic(diffs);
         return diffs;
     }
@@ -74,9 +77,12 @@ public class CompareFixture {
         String cleanFirst = first != null ? first.replaceAll("\\s+", " ") : null;
         String cleanSecond = second != null ? second.replaceAll("\\s+", " ") : null;
         String cleanDiff = differenceBetweenAnd(cleanFirst, cleanSecond);
-        if (cleanDiff != null
-                && ("<div>"+ cleanFirst + "</div>").equals(cleanDiff)) {
-            cleanDiff = "<div>" + first + "</div>";
+        if (cleanDiff != null) {
+            if (("<div>"+ cleanFirst + "</div>").equals(cleanDiff)) {
+                cleanDiff = "<div>" + first + "</div>";
+            } else if (cleanFirst != null && cleanFirst.equals(cleanDiff)) {
+                cleanDiff = first;
+            }
         }
         return cleanDiff;
     }
