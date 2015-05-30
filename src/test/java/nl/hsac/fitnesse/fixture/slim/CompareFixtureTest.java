@@ -29,8 +29,8 @@ public class CompareFixtureTest {
                 "<div><span>Hello </span><ins class=\"collapse_rim\">&nbsp;</ins><span>sir</span></div>",
                 fixture.differenceBetweenAnd("Hello sir", "Hello  sir"));
         assertEquals("Different string extra spaces",
-                "<div><span>Hello </span><ins class=\"collapse_rim\">&nbsp;  &nbsp;</ins><span>sir</span></div>",
-                fixture.differenceBetweenAnd("Hello sir", "Hello     sir"));
+                "<div><span>Hello </span><ins class=\"collapse_rim\">&nbsp;&nbsp;&nbsp;&nbsp;</ins><span>sir </span></div>",
+                fixture.differenceBetweenAnd("Hello sir ", "Hello     sir "));
     }
 
     @Test
@@ -46,5 +46,13 @@ public class CompareFixtureTest {
         assertEquals("Different strings",
                 "<div><span>Hello </span><del class=\"collapse_rim\">&gt;</del><ins class=\"collapse_rim\">&lt;</ins></div>",
                 fixture.differenceBetweenAnd("Hello >", "Hello <"));
+    }
+
+    @Test
+    public void testShowDiffWithNewline() {
+        assertEquals("Same string", "<div>1 \n 3</div>", fixture.differenceBetweenAnd("1 \n 3", "1 \n 3"));
+        assertEquals("Different strings",
+                "<div><span>Hello \n</span><ins class=\"collapse_rim\">&nbsp;<br/></ins><span>sir</span><ins class=\"collapse_rim\">\t</ins><span>\nBye\r\nSee You tomorrow</span></div>",
+                fixture.differenceBetweenAnd("Hello \nsir\nBye\r\nSee You tomorrow", "Hello \n\nsir\t\nBye\r\nSee You tomorrow"));
     }
 }

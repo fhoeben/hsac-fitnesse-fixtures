@@ -10,4 +10,15 @@ It does not actually test anything, it is intended to be used in conjunction wit
 |show  |difference between|                |and|                 |
 |show  |difference between|!- -!           |and|                 |
 |show  |difference between|Bye             |and|                 |
+|show  |difference between                                       |!-Hello
+sir
 
+
+
+Greetings to you.
+-!|and|!-Hello
+madam 
+Greetings to you.
+
+-!|
+|show|difference between|!-ha	ha	-!|and|ha ha|
