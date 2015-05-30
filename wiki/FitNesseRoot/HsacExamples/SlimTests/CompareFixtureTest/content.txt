@@ -51,3 +51,13 @@ Greetings to you.
 
 -!|
 |show|difference between (ignore whitespace)|!-ha	ha	-!|and|ha ha|
+
+Counting the number of 'diffs' between two values can also ignore whitespace.
+
+|script|compare fixture                                                                       |
+|check |count differences between (ignore whitespace)|Hello           |and|Hello sir        |1|
+|check |count differences between (ignore whitespace)|Hello madam     |and|Hello            |1|
+|check |count differences between (ignore whitespace)|Hello madam     |and|Hello sir        |2|
+|check |count differences between (ignore whitespace)|Hello dear madam|and|Hello madam      |1|
+|check |count differences between (ignore whitespace)|Hello madam     |and|!-Hello   madam-!|0|
+
