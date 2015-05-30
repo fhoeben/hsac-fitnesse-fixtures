@@ -31,9 +31,20 @@ public class CompareFixtureTest {
         assertEquals("Different string extra spaces",
                 "<div><span>Hello </span><ins class=\"collapse_rim\">&nbsp;  &nbsp;</ins><span>sir</span></div>",
                 fixture.differenceBetweenAnd("Hello sir", "Hello     sir"));
+    }
 
+    @Test
+    public void testShowDiffWithNull() {
         assertEquals("Both null", null, fixture.differenceBetweenAnd(null, null));
         assertEquals("One null", "<div><ins class=\"collapse_rim\">Hello</ins></div>", fixture.differenceBetweenAnd(null, "Hello"));
         assertEquals("Two null", "<div><del class=\"collapse_rim\">Bye</del></div>", fixture.differenceBetweenAnd("Bye", null));
+    }
+
+    @Test
+    public void testShowDiffWithHtmlChars() {
+        assertEquals("Same string", "<div>1 &lt; 3</div>", fixture.differenceBetweenAnd("1 < 3", "1 < 3"));
+        assertEquals("Different strings",
+                "<div><span>Hello </span><del class=\"collapse_rim\">&gt;</del><ins class=\"collapse_rim\">&lt;</ins></div>",
+                fixture.differenceBetweenAnd("Hello >", "Hello <"));
     }
 }
