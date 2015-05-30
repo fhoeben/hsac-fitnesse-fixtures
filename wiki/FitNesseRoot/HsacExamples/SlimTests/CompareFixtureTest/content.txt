@@ -63,8 +63,12 @@ Counting the number of 'diffs' between two values can also ignore whitespace.
 
 Compare preformatted HTML
 
-|script|compare fixture                                                                                        |
-|show  |difference between                    |{{{Hello dear madam   Bye}}}     |and|{{{Hello dear madam Bye}}}|
-|show  |difference between                    |{{{Hello dear madam <p>Bye</p>}}}|and|{{{Hello dear madam Bye}}}|
-|show  |difference between (ignore whitespace)|{{{Hello dear madam   Bye}}}     |and|{{{Hello dear madam Bye}}}|
-|show  |difference between (ignore whitespace)|{{{Hello dear madam <p>Bye</p>}}}|and|{{{Hello dear madam Bye}}}|
+|script|compare fixture                                                                                                 |
+|show  |difference between                           |{{{Hello dear madam   Bye}}}     |and|{{{Hello dear madam Bye}}}  |
+|show  |difference between                           |{{{Hello dear madam <p>Bye</p>}}}|and|{{{Hello dear madam Bye}}}  |
+|show  |difference between (ignore whitespace)       |{{{Hello dear madam   Bye}}}     |and|{{{Hello dear madam Bye}}}  |
+|show  |difference between (ignore whitespace)       |{{{Hello dear madam <p>Bye</p>}}}|and|{{{Hello dear madam Bye}}}  |
+|check |count differences between                    |{{{Hello dear madam   Bye}}}     |and|{{{Hello dear madam Bye}}}|1|
+|check |count differences between                    |{{{Hello dear madam <p>Bye</p>}}}|and|{{{Hello dear madam Bye}}}|2|
+|check |count differences between (ignore whitespace)|{{{Hello dear madam   Bye}}}     |and|{{{Hello dear madam Bye}}}|0|
+|check |count differences between (ignore whitespace)|{{{Hello dear madam <p>Bye</p>}}}|and|{{{Hello dear madam Bye}}}|2|
