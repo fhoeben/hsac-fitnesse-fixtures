@@ -1,0 +1,13 @@
+Compare Fixture helps to visualize the difference between strings. 
+It does not actually test anything, it is intended to be used in conjunction with other fixtures to highlight why two values are not the same.
+
+|script|compare fixture                                          |
+|show  |difference between|Hello           |and|Hello sir        |
+|show  |difference between|Hello madam     |and|Hello            |
+|show  |difference between|Hello madam     |and|Hello sir        |
+|show  |difference between|Hello dear madam|and|Hello madam      |
+|show  |difference between|Hello madam     |and|!-Hello   madam-!|
+|show  |difference between|                |and|                 |
+|show  |difference between|!- -!           |and|                 |
+|show  |difference between|Bye             |and|                 |
+
