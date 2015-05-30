@@ -81,6 +81,19 @@ public class CompareFixture {
         return cleanDiff;
     }
 
+    /**
+     * Determines number of differences (substrings that are not equal) between two strings,
+     * ignoring differences in whitespace.
+     * @param first first string to compare.
+     * @param second second string to compare.
+     * @return number of different substrings.
+     */
+    public int countDifferencesBetweenIgnoreWhitespaceAnd(String first, String second) {
+        String cleanFirst = first != null ? first.replaceAll("\\s+", " ") : null;
+        String cleanSecond = second != null ? second.replaceAll("\\s+", " ") : null;
+        return countDifferencesBetweenAnd(cleanFirst, cleanSecond);
+    }
+
     protected String diffToHtml(LinkedList<DiffMatchPatch.Diff> diffs) {
         StringBuilder html = new StringBuilder("<div>");
         if (diffs.size() == 1 && diffs.get(0).operation == DiffMatchPatch.Operation.EQUAL) {
