@@ -72,3 +72,21 @@ Compare preformatted HTML
 |check |count differences between                    |{{{Hello dear madam <p>Bye</p>}}}|and|{{{Hello dear madam Bye}}}|2|
 |check |count differences between (ignore whitespace)|{{{Hello dear madam   Bye}}}     |and|{{{Hello dear madam Bye}}}|0|
 |check |count differences between (ignore whitespace)|{{{Hello dear madam <p>Bye</p>}}}|and|{{{Hello dear madam Bye}}}|2|
+
+Sometimes whitespace is very interesting and visualizing the various different forms of whitespace is desired.
+
+|script|compare fixture                                                                |
+|show  |difference between (explicit whitespace)|Hello dear madam|and|Hello madam      |
+|show  |difference between (explicit whitespace)|Hello madam     |and|!-Hello   madam-!|
+|show  |difference between (explicit whitespace)                                       |!-Hello
+sir
+
+
+
+Greetings to you.
+-!|and|!-Hello
+madam 
+Greetings to you.
+
+-!|
+|show|difference between (explicit whitespace)|!-ha	ha	-!|and|ha ha|

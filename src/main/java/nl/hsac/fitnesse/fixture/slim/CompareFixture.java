@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.slim;
 
 import com.sksamuel.diffpatch.DiffMatchPatch;
+import nl.hsac.fitnesse.fixture.util.Formatter;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.LinkedList;
@@ -18,6 +19,32 @@ public class CompareFixture extends SlimFixture {
      * @return HTML of difference between the two.
      */
     public String differenceBetweenAnd(String first, String second) {
+        Formatter whitespaceFormatter = new Formatter() {
+            @Override
+            public String format(String value) {
+                return ensureWhitespaceVisible(value);
+            }
+        };
+        return getDifferencesHtml(first, second, whitespaceFormatter);
+    }
+
+    /**
+     * Determines difference between two strings, visualizing various forms of whitespace.
+     * @param first first string to compare.
+     * @param second second string to compare.
+     * @return HTML of difference between the two.
+     */
+    public String differenceBetweenExplicitWhitespaceAnd(String first, String second) {
+        Formatter whitespaceFormatter = new Formatter() {
+            @Override
+            public String format(String value) {
+                return explicitWhitespace(value);
+            }
+        };
+        return getDifferencesHtml(first, second, whitespaceFormatter);
+    }
+
+    protected String getDifferencesHtml(String first, String second, Formatter whitespaceFormatter) {
         if (first == null) {
             if (second == null) {
                 return null;
@@ -28,7 +55,10 @@ public class CompareFixture extends SlimFixture {
             second = "";
         }
         LinkedList<DiffMatchPatch.Diff> diffs = getDiffs(first, second);
-        String diffPrettyHtml = diffToHtml(diffs);
+        String rootTag = first.startsWith("<pre>") && first.endsWith("</pre>")
+                            ? "pre"
+                            : "div";
+        String diffPrettyHtml = diffToHtml(rootTag, diffs, whitespaceFormatter);
         if (first.startsWith("<pre>") && first.endsWith("</pre>")) {
             diffPrettyHtml = diffPrettyHtml.replaceFirst("^<div>", "<pre>").replaceFirst("</div>$", "</pre>");
         }
@@ -100,8 +130,10 @@ public class CompareFixture extends SlimFixture {
         return countDifferencesBetweenAnd(cleanFirst, cleanSecond);
     }
 
-    protected String diffToHtml(LinkedList<DiffMatchPatch.Diff> diffs) {
-        StringBuilder html = new StringBuilder("<div>");
+    protected String diffToHtml(String rootTag, LinkedList<DiffMatchPatch.Diff> diffs, Formatter whitespaceFormatter) {
+        StringBuilder html = new StringBuilder("<");
+        html.append(rootTag);
+        html.append(">");
         if (diffs.size() == 1 && diffs.get(0).operation == DiffMatchPatch.Operation.EQUAL) {
             html.append(StringEscapeUtils.escapeHtml4(diffs.get(0).text));
         } else {
@@ -109,12 +141,12 @@ public class CompareFixture extends SlimFixture {
                 String text = StringEscapeUtils.escapeHtml4(aDiff.text);
                 switch (aDiff.operation) {
                     case INSERT:
-                        text = ensureWhitespaceVisible(text);
+                        text = whitespaceFormatter.format(text);
                         html.append("<ins class=\"collapse_rim\">").append(text)
                                 .append("</ins>");
                         break;
                     case DELETE:
-                        text = ensureWhitespaceVisible(text);
+                        text = whitespaceFormatter.format(text);
                         html.append("<del class=\"collapse_rim\">").append(text)
                                 .append("</del>");
                         break;
@@ -124,12 +156,22 @@ public class CompareFixture extends SlimFixture {
                 }
             }
         }
-        html.append("</div>");
+        html.append("</");
+        html.append(rootTag);
+        html.append(">");
         return html.toString();
     }
 
     protected String ensureWhitespaceVisible(String text) {
-        return text.replaceAll(" ", "&nbsp;")
+        return text.replace(" ", "&nbsp;")
                 .replaceAll("\r?\n", "&nbsp;<br/>");
+    }
+
+    protected String explicitWhitespace(String text) {
+        return text.replace(" ", "&middot;")
+                .replace("\r", "&#8629;")
+                .replace("\n", "&para;<br/>")
+                .replace("\t", "&rarr;")
+                .replace("&nbsp;", "&bull;");
     }
 }
