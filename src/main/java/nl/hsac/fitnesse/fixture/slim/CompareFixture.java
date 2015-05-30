@@ -11,8 +11,30 @@ import java.util.LinkedList;
 public class CompareFixture {
     private final DiffMatchPatch diffMatchPatch = new DiffMatchPatch();
 
-    public String diffToHtml(LinkedList<DiffMatchPatch.Diff> diffs) {
-        StringBuilder html = new StringBuilder();
+    /**
+     * Determines difference between two strings.
+     * @param first first string to compare.
+     * @param second second string to compare.
+     * @return HTML difference between the two.
+     */
+    public String differenceBetweenAnd(String first, String second) {
+        if (first == null) {
+            if (second == null) {
+                return null;
+            } else {
+                first = "";
+            }
+        } else if (second == null) {
+            second = "";
+        }
+        LinkedList<DiffMatchPatch.Diff> diffs = diffMatchPatch.diff_main(first, second);
+        diffMatchPatch.diff_cleanupSemantic(diffs);
+        String diffPrettyHtml = diffToHtml(diffs);
+        return diffPrettyHtml;
+    }
+
+    protected String diffToHtml(LinkedList<DiffMatchPatch.Diff> diffs) {
+        StringBuilder html = new StringBuilder("<div>");
         if (diffs.size() == 1 && diffs.get(0).operation == DiffMatchPatch.Operation.EQUAL) {
             html.append(StringEscapeUtils.escapeHtml4(diffs.get(0).text));
         } else {
@@ -35,33 +57,12 @@ public class CompareFixture {
                 }
             }
         }
+        html.append("</div>");
         return html.toString();
     }
 
     protected String ensureWhitespaceVisible(String text) {
         return text.replaceAll(" ", "&nbsp;")
                 .replaceAll("\r?\n", "&nbsp;<br/>");
-    }
-
-    /**
-     * Determines difference between two strings.
-     * @param first first string to compare.
-     * @param second second string to compare.
-     * @return HTML difference between the two.
-     */
-    public String differenceBetweenAnd(String first, String second) {
-        if (first == null) {
-            if (second == null) {
-                return null;
-            } else {
-                first = "";
-            }
-        } else if (second == null) {
-            second = "";
-        }
-        LinkedList<DiffMatchPatch.Diff> diffs = diffMatchPatch.diff_main(first, second);
-        diffMatchPatch.diff_cleanupSemantic(diffs);
-        String diffPrettyHtml = diffToHtml(diffs);
-        return "<div>" + diffPrettyHtml + "</div>";
     }
 }
