@@ -57,6 +57,17 @@ public class CompareFixtureTest {
     }
 
     @Test
+    public void testShowDiffWithExplicitWhitespace() {
+        assertEquals("Same string", "<div>1 \n 3</div>", fixture.differenceBetweenExplicitWhitespaceAnd("1 \n 3", "1 \n 3"));
+        assertEquals("Different strings",
+                "<div><span>Hello \n" +
+                        "</span><ins class=\"collapse_rim\">&para;<br/></ins><span>sir</span><ins class=\"collapse_rim\">&rarr;</ins><span>\n" +
+                        "Bye</span><del class=\"collapse_rim\">&#8629;</del><span>\n" +
+                        "See</span><del class=\"collapse_rim\">&bull;</del><ins class=\"collapse_rim\">&middot;</ins><span>You tomorrow</span></div>",
+                fixture.differenceBetweenExplicitWhitespaceAnd("Hello \nsir\nBye\r\nSee\u00A0You tomorrow", "Hello \n\nsir\t\nBye\nSee You tomorrow"));
+    }
+
+    @Test
     public void testShowDiffIgnoreWhitespace() {
         assertEquals("Same string", "<div>1 \n 3</div>", fixture.differenceBetweenIgnoreWhitespaceAnd("1 \n 3", "1 \n 3"));
         assertEquals("Different strings only different in whitespace",
