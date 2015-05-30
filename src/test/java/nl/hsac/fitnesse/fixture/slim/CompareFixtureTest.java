@@ -55,4 +55,21 @@ public class CompareFixtureTest {
                 "<div><span>Hello \n</span><ins class=\"collapse_rim\">&nbsp;<br/></ins><span>sir</span><ins class=\"collapse_rim\">\t</ins><span>\nBye\r\nSee You tomorrow</span></div>",
                 fixture.differenceBetweenAnd("Hello \nsir\nBye\r\nSee You tomorrow", "Hello \n\nsir\t\nBye\r\nSee You tomorrow"));
     }
+
+    @Test
+    public void testShowDiffIgnoreWhitespace() {
+        assertEquals("Same string", "<div>1 \n 3</div>", fixture.differenceBetweenIgnoreWhitespaceAnd("1 \n 3", "1 \n 3"));
+        assertEquals("Different strings only different in whitespace",
+                "<div>Hello \n" +
+                        "sir\n" +
+                        "Bye\r\n" +
+                        "See You tomorrow</div>",
+                fixture.differenceBetweenIgnoreWhitespaceAnd("Hello \nsir\nBye\r\nSee You tomorrow", "Hello \n\nsir\t\nBye\r\nSee You tomorrow"));
+        assertEquals("Different string 2nd shorter",
+                "<div><span>Hello</span><del class=\"collapse_rim\">&nbsp;sir</del></div>",
+                fixture.differenceBetweenIgnoreWhitespaceAnd("Hello sir", "Hello"));
+
+        assertEquals("Both null", null, fixture.differenceBetweenIgnoreWhitespaceAnd(null, null));
+        assertEquals("One null", "<div><ins class=\"collapse_rim\">Hello</ins></div>", fixture.differenceBetweenIgnoreWhitespaceAnd(null, "Hello"));
+    }
 }

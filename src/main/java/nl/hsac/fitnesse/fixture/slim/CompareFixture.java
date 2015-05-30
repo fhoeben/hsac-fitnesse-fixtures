@@ -15,7 +15,7 @@ public class CompareFixture {
      * Determines difference between two strings.
      * @param first first string to compare.
      * @param second second string to compare.
-     * @return HTML difference between the two.
+     * @return HTML of difference between the two.
      */
     public String differenceBetweenAnd(String first, String second) {
         if (first == null) {
@@ -31,6 +31,23 @@ public class CompareFixture {
         diffMatchPatch.diff_cleanupSemantic(diffs);
         String diffPrettyHtml = diffToHtml(diffs);
         return diffPrettyHtml;
+    }
+
+    /**
+     * Determines difference between two strings, ignoring whitespace changes.
+     * @param first first string to compare.
+     * @param second second string to compare.
+     * @return HTML of difference between the two.
+     */
+    public String differenceBetweenIgnoreWhitespaceAnd(String first, String second) {
+        String cleanFirst = first != null ? first.replaceAll("\\s+", " ") : null;
+        String cleanSecond = second != null ? second.replaceAll("\\s+", " ") : null;
+        String cleanDiff = differenceBetweenAnd(cleanFirst, cleanSecond);
+        if (cleanDiff != null
+                && ("<div>"+ cleanFirst + "</div>").equals(cleanDiff)) {
+            cleanDiff = "<div>" + first + "</div>";
+        }
+        return cleanDiff;
     }
 
     protected String diffToHtml(LinkedList<DiffMatchPatch.Diff> diffs) {

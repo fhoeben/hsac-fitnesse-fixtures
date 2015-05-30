@@ -22,3 +22,22 @@ Greetings to you.
 
 -!|
 |show|difference between|!-ha	ha	-!|and|ha ha|
+
+Sometimes changes in whitespace are not interesting, these may be ignored when determining the difference.
+!note Whitespace added were there was none before, or all whitespace removed between characters, is still considered a difference.
+
+|script|compare fixture                                                              |
+|show  |difference between (ignore whitespace)|Hello dear madam|and|Hello madam      |
+|show  |difference between (ignore whitespace)|Hello madam     |and|!-Hello   madam-!|
+|show  |difference between (ignore whitespace)                                       |!-Hello
+sir
+
+
+
+Greetings to you.
+-!|and|!-Hello
+madam 
+Greetings to you.
+
+-!|
+|show|difference between (ignore whitespace)|!-ha	ha	-!|and|ha ha|
