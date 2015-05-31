@@ -1,4 +1,5 @@
 !-List Fixture-! allows Lists to be defined and manipulated in the wiki. It is usable both in [[script tables][#scripts]] and [[dynamic decision tables][#ddt]].
+Furthermore it also allows us to ensure Slim show lists as numbered items, instead of comma separated between square brackets (i.e. '[' and ']'). 
 
 !anchor scripts
 
@@ -20,6 +21,19 @@ Here we manipulate lists using [[script tables][.FitNesse.UserGuide.WritingAccep
 |set value|Jan     |at|1                 |
 |check    |value at|1 |Jan               |
 |$list1=  |copy list                     |
+
+!3 Showing Lists as Numbered Items
+As seen in the table above Slim's default behavior is to show lists using Java's !style_code[toString()] notation, comma separated between square brackets.
+By invoking !-ListFixture-!'s ''display lists numbered'' method we instruct Slim to show lists as HTML ordered lists. 
+!note This could also be achieved directly in Java code by invoking !style_code[nl.hsac.fitnesse.slim.converter.NumberedListConverter.register()].
+
+|script   |list fixture|
+|display lists numbered|
+|add      |Fried       |
+|set value|Jan  |at |1 |
+|$list1=  |copy list   |
+
+
 
 !3 List may be nested
 

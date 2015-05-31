@@ -1,5 +1,7 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import nl.hsac.fitnesse.slim.converter.NumberedListConverter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +12,14 @@ import java.util.List;
  */
 public class ListFixture extends SlimFixture {
     private final ArrayList<Object> list = new ArrayList<Object>();
+
+    /**
+     * Configures Slim to show lists as HTML numbered list (instead of comma separated between square brackets
+     * (i.e. '[' and ']').
+     */
+    public void displayListsNumbered() {
+        NumberedListConverter.register();
+    }
 
     /**
      * Adds new element to end of list.
