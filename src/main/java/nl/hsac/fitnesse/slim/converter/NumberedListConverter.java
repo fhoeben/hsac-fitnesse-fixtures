@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  */
 public class NumberedListConverter extends fitnesse.slim.converters.GenericCollectionConverter<Object, List<Object>> {
     private static final Pattern LIST_PATTERN = Pattern.compile(
-                                                            "<ol>\\s*((<li>\\s*.*?\\s*</li>\\s*)*)</ol>",
+                                                            "<ol( start=\"\\d+\")?\\s*>\\s*((<li>\\s*.*?\\s*</li>\\s*)*)</ol>",
                                                             Pattern.DOTALL);
     private static final Converter<Object> OBJ_CONVERTER = new ObjectConverter();
 
@@ -69,7 +69,7 @@ public class NumberedListConverter extends fitnesse.slim.converters.GenericColle
             return super.toString(list);
         }
 
-        StringBuilder messageList = new StringBuilder("<ol>");
+        StringBuilder messageList = new StringBuilder("<ol start=\"0\">");
         for (Object element : list) {
             messageList.append("<li>");
             String formattedElement = ElementConverterHelper.elementToString(element);
@@ -86,7 +86,7 @@ public class NumberedListConverter extends fitnesse.slim.converters.GenericColle
         Matcher matcher = LIST_PATTERN.matcher(arg);
         if (matcher.matches()) {
             result = new ArrayList<Object>();
-            String items = matcher.group(1);
+            String items = matcher.group(2);
             if (!"".equals(items)) {
                 items = items.replaceFirst("^\\s*<li>\\s*", "");
                 items = items.replaceFirst("\\s*</li>\\s*$", "");
