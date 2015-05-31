@@ -18,13 +18,13 @@ public class NumberedListConverterTest {
 
     @Test
     public void testToStringEmpty() {
-        assertEquals("<ol></ol>", converter.toString(new ArrayList<Object>()));
+        assertEquals("<ol start=\"0\"></ol>", converter.toString(new ArrayList<Object>()));
     }
 
     @Test
     public void testToStringFilled() {
         ArrayList<Object> list = new ArrayList<Object>(Arrays.asList("b", "c", "d", null));
-        assertEquals("<ol><li>b</li><li>c</li><li>d</li><li>null</li></ol>", converter.toString(list));
+        assertEquals("<ol start=\"0\"><li>b</li><li>c</li><li>d</li><li>null</li></ol>", converter.toString(list));
     }
 
     @Test
@@ -35,6 +35,7 @@ public class NumberedListConverterTest {
     @Test
     public void testFromStringFilled() {
         List<String> expected = Arrays.asList("b", "c", "d");
+        assertEquals(expected, converter.fromString("<ol start=\"0\"> <li>   b </li> <li>   c </li><li>d</li></ol>"));
         assertEquals(expected, converter.fromString("<ol> <li>   b </li> <li>   c </li><li>d</li></ol>"));
     }
 
@@ -55,7 +56,7 @@ public class NumberedListConverterTest {
                 "<table class=\"hash_table\">\n" +
                 "\t<tr class=\"hash_row\">\n" +
                 "\t\t<td class=\"hash_key\">test</td>\n" +
-                "\t\t<td class=\"hash_value\"><ol><li>b</li><li>c</li><li>null</li></ol></td>\n" +
+                "\t\t<td class=\"hash_value\"><ol start=\"0\"><li>b</li><li>c</li><li>null</li></ol></td>\n" +
                 "\t</tr>\n" +
                 "</table>",
                 ConverterRegistry.getConverterForClass(Map.class).toString(map).replace("\r", ""));
@@ -66,7 +67,7 @@ public class NumberedListConverterTest {
                 "<table class=\"hash_table\">\n" +
                         "\t<tr class=\"hash_row\">\n" +
                         "\t\t<td class=\"hash_key\">test</td>\n" +
-                        "\t\t<td class=\"hash_value\"><ol><li>1</li><li>null</li><li>3</li></ol></td>\n" +
+                        "\t\t<td class=\"hash_value\"><ol start=\"0\"><li>1</li><li>null</li><li>3</li></ol></td>\n" +
                         "\t</tr>\n" +
                         "</table>",
                 ConverterRegistry.getConverterForClass(Map.class).toString(map2).replace("\r", ""));
@@ -77,7 +78,7 @@ public class NumberedListConverterTest {
                 "<table class=\"hash_table\">\n" +
                         "\t<tr class=\"hash_row\">\n" +
                         "\t\t<td class=\"hash_key\">test</td>\n" +
-                        "\t\t<td class=\"hash_value\"><ol><li>1</li><li>null</li><li>test</li></ol></td>\n" +
+                        "\t\t<td class=\"hash_value\"><ol start=\"0\"><li>1</li><li>null</li><li>test</li></ol></td>\n" +
                         "\t</tr>\n" +
                         "</table>",
                 ConverterRegistry.getConverterForClass(Map.class).toString(map3).replace("\r", ""));
