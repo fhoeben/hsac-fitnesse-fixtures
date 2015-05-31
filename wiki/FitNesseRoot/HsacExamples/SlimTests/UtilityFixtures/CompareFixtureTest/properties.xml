@@ -2,6 +2,7 @@
 <properties>
 <Edit>true</Edit>
 <Files>true</Files>
+<Help>Fixture to highlight differences between texts</Help>
 <Properties>true</Properties>
 <RecentChanges>true</RecentChanges>
 <Refactor>true</Refactor>

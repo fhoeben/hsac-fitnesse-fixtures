@@ -2,7 +2,7 @@
 <properties>
 <Edit>true</Edit>
 <Files>true</Files>
-<Help>Running a HTTP server inside the test process to mock a service used by the application being tested</Help>
+<Help>Fixture to define and manipulate lists in the wiki</Help>
 <Properties>true</Properties>
 <RecentChanges>true</RecentChanges>
 <Refactor>true</Refactor>
