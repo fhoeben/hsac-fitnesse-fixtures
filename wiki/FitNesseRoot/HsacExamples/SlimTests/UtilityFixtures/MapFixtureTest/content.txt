@@ -1,4 +1,4 @@
-!-Map Fixture-! allows Maps to be defined and manipulated in the wiki. It is usable both in [[script tables][#scripts]] and [[dynamic decision tables][#ddt]].
+Map Fixture allows Maps to be defined and manipulated in the wiki. It is usable both in [[script tables][#scripts]] and [[dynamic decision tables][#ddt]].
 
 !anchor ddt
 
@@ -23,7 +23,7 @@ Here we define a map with a nested map under the 'map' key.
 !anchor scripts
 
 !2 Maps in a Script
-Here we manipulate a map using [[script tables][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScriptTable]]. This can be done either with or without a script to manipulate in the script's first row.
+Here we manipulate a map using [[script tables][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScriptTable]]. This can be done either with or without a map to manipulate in the script's first row.
 
 !3 Map Supplied in Constructor
 The map to use is supplied using a constructor argument to the fixture. First we use 'hash3' defined above and then 'hash4', created by the first script.
