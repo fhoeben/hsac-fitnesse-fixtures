@@ -2,12 +2,12 @@
 <properties>
 <Edit>true</Edit>
 <Files>true</Files>
-<Help>Running a HTTP server inside the test process to mock a service used by the application being tested</Help>
+<Help>Fixtures to facilitate test definition</Help>
 <Properties>true</Properties>
 <RecentChanges>true</RecentChanges>
 <Refactor>true</Refactor>
 <Search>true</Search>
-<Test>true</Test>
+<Suite>true</Suite>
 <Versions>true</Versions>
 <WhereUsed>true</WhereUsed>
 </properties>
