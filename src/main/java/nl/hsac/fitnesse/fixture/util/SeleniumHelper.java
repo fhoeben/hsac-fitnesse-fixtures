@@ -13,6 +13,7 @@ import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.internal.Base64Encoder;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -424,6 +425,22 @@ public class SeleniumHelper {
             if (s != null) {
                 result = s.toString();
             }
+        }
+        return result;
+    }
+
+    /**
+     * @return true when current driver is connected to either a local or remote Internet Explorer.
+     */
+    public boolean connectedToInternetExplorer() {
+        boolean result = false;
+        WebDriver driver = driver();
+        if (driver instanceof InternetExplorerDriver) {
+            result = true;
+        } else if (driver instanceof RemoteWebDriver) {
+            RemoteWebDriver remoteWebDriver = (RemoteWebDriver) driver;
+            String browserName = remoteWebDriver.getCapabilities().getBrowserName();
+            result = "internet explorer".equalsIgnoreCase(browserName);
         }
         return result;
     }
