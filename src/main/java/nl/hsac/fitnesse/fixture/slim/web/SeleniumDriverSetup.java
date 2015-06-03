@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
+import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import nl.hsac.fitnesse.fixture.util.SauceLabsHelper;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
 import org.openqa.selenium.Capabilities;
@@ -11,11 +12,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.FileDetector;
-import org.openqa.selenium.remote.LocalFileDetector;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.remote.UselessFileDetector;
+import org.openqa.selenium.remote.*;
 import org.openqa.selenium.safari.SafariDriver;
 
 import java.io.File;
@@ -57,14 +54,25 @@ public class SeleniumDriverSetup extends SlimFixture {
             return true;
         }
 
-        boolean result = false;
-        Class<?> driverClass = Class.forName(driverClassName);
-        Object driver = driverClass.newInstance();
-        if (driver instanceof WebDriver) {
-            setDriver((WebDriver) driver);
-            result = true;
+        final Class<?> driverClass = Class.forName(driverClassName);
+        if (!WebDriver.class.isAssignableFrom(driverClass)) {
+            throw new SlimFixtureException(false, driverClassName + " does not implement " + WebDriver.class.getName());
         }
-        return result;
+        SeleniumHelper.DriverFactory driverFactory = new SeleniumHelper.DriverFactory() {
+            @Override
+            public void createDriver() {
+                try {
+                    Object driver = driverClass.newInstance();
+                    setDriver((WebDriver) driver);
+                } catch (RuntimeException e) {
+                    throw e;
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+        WebDriver driver = setAndUseDriverFactory(driverFactory);
+        return driver != null;
     }
 
     /**
@@ -256,22 +264,28 @@ public class SeleniumDriverSetup extends SlimFixture {
         return result;
     }
 
-    protected boolean createAndSetRemoteDriver(String url, DesiredCapabilities desiredCapabilities)
+    protected boolean createAndSetRemoteDriver(String url, final DesiredCapabilities desiredCapabilities)
             throws MalformedURLException {
         if (OVERRIDE_ACTIVE) {
             return true;
         }
 
         String cleanUrl = cleanupValue(url);
-        URL remoteUrl = new URL(cleanUrl);
-        RemoteWebDriver remoteWebDriver = new RemoteWebDriver(remoteUrl, desiredCapabilities);
-        FileDetector fd = remoteWebDriver.getFileDetector();
-        if (fd == null || fd instanceof UselessFileDetector) {
-            remoteWebDriver.setFileDetector(new LocalFileDetector());
-        }
-        setDriver(remoteWebDriver);
+        final URL remoteUrl = new URL(cleanUrl);
+        SeleniumHelper.DriverFactory driverFactory = new SeleniumHelper.DriverFactory() {
+            @Override
+            public void createDriver() {
+                RemoteWebDriver remoteWebDriver = new RemoteWebDriver(remoteUrl, desiredCapabilities);
+                FileDetector fd = remoteWebDriver.getFileDetector();
+                if (fd == null || fd instanceof UselessFileDetector) {
+                    remoteWebDriver.setFileDetector(new LocalFileDetector());
+                }
+                setDriver(remoteWebDriver);
+            }
+        };
+        WebDriver driver = setAndUseDriverFactory(driverFactory);
         getEnvironment().setSymbol(REMOTE_URL_KEY, cleanUrl);
-        return true;
+        return driver != null;
     }
 
     public static URL getLastRemoteUrl() {
@@ -285,6 +299,11 @@ public class SeleniumDriverSetup extends SlimFixture {
             }
         }
         return result;
+    }
+
+    protected WebDriver setAndUseDriverFactory(SeleniumHelper.DriverFactory driverFactory) {
+        getHelper().setDriverFactory(driverFactory);
+        return getHelper().driver();
     }
 
     private void setDriver(WebDriver webDriver) {
