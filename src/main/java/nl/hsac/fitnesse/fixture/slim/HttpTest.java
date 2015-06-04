@@ -166,7 +166,7 @@ public class HttpTest extends SlimFixtureWithMap {
         resetResponse();
         String url = createUrlWithParams(serviceUrl);
         try {
-            getEnvironment().doGet(url, response);
+            getEnvironment().doGet(url, response, headerValues);
         } catch (Throwable t) {
             throw new StopTestException("Unable to GET response from: " + url, t);
         }

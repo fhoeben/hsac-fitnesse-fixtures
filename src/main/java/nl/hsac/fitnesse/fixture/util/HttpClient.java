@@ -49,10 +49,11 @@ public class HttpClient {
     /**
      * @param url URL of service
      * @param response response to be filled.
+     * @param headers http headers to add
      */
-    public void get(String url, HttpResponse response) {
+    public void get(String url, HttpResponse response, Map<String, Object> headers) {
         HttpGet method = new HttpGet(url);
-        getResponse(url, response, method, null);
+        getResponse(url, response, method, headers);
     }
 
     /**
