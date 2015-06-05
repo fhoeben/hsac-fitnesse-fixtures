@@ -104,8 +104,8 @@ public class CompareFixture extends SlimFixture {
      * @return HTML of difference between the two.
      */
     public String differenceBetweenIgnoreWhitespaceAnd(String first, String second) {
-        String cleanFirst = first != null ? first.replaceAll("\\s+", " ") : null;
-        String cleanSecond = second != null ? second.replaceAll("\\s+", " ") : null;
+        String cleanFirst = allWhitespaceToSingleSpace(first);
+        String cleanSecond = allWhitespaceToSingleSpace(second);
         String cleanDiff = differenceBetweenAnd(cleanFirst, cleanSecond);
         if (cleanDiff != null) {
             if (("<div>"+ cleanFirst + "</div>").equals(cleanDiff)) {
@@ -125,9 +125,19 @@ public class CompareFixture extends SlimFixture {
      * @return number of different substrings.
      */
     public int countDifferencesBetweenIgnoreWhitespaceAnd(String first, String second) {
-        String cleanFirst = first != null ? first.replaceAll("\\s+", " ") : null;
-        String cleanSecond = second != null ? second.replaceAll("\\s+", " ") : null;
+        String cleanFirst = allWhitespaceToSingleSpace(first);
+        String cleanSecond = allWhitespaceToSingleSpace(second);
         return countDifferencesBetweenAnd(cleanFirst, cleanSecond);
+    }
+
+    protected String allWhitespaceToSingleSpace(String value) {
+        return value != null
+                ? value
+                    // unicode non breaking space to normal space
+                    .replace("\u00A0", " ")
+                    // all sequences of whitespace replaced by single space
+                    .replaceAll("\\s+", " ")
+                : null;
     }
 
     protected String diffToHtml(String rootTag, LinkedList<DiffMatchPatch.Diff> diffs, Formatter whitespaceFormatter) {

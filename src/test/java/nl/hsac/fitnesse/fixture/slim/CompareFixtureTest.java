@@ -70,6 +70,7 @@ public class CompareFixtureTest {
     @Test
     public void testShowDiffIgnoreWhitespace() {
         assertEquals("Same string", "<div>1 \n 3</div>", fixture.differenceBetweenIgnoreWhitespaceAnd("1 \n 3", "1 \n 3"));
+        assertEquals("Same string with &nbsp;", "<div>1 \n 3</div>", fixture.differenceBetweenIgnoreWhitespaceAnd("1 \n 3", "1 \u00A0 \n\u00A0 3"));
         assertEquals("Different strings only different in whitespace",
                 "<div>Hello \n" +
                         "sir\n" +
