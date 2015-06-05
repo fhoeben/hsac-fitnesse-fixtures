@@ -184,7 +184,7 @@ public class HttpTest extends SlimFixtureWithMap {
         resetResponse();
         String url = createUrlWithParams(serviceUrl);
         try {
-            getEnvironment().doDelete(url, response);
+            getEnvironment().doDelete(url, response, headerValues);
         } catch (Throwable t) {
             throw new StopTestException("Unable to DELETE: " + url, t);
         }

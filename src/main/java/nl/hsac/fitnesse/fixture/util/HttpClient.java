@@ -59,10 +59,11 @@ public class HttpClient {
     /**
      * @param url URL to send to DELETE to
      * @param response response to be filled.
+     * @param headers headers to add.
      */
-    public void delete(String url, HttpResponse response) {
+    public void delete(String url, HttpResponse response, Map<String, Object> headers) {
         HttpDelete method = new HttpDelete(url);
-        getResponse(url, response, method, null);
+        getResponse(url, response, method, headers);
     }
 
     protected void getResponse(String url, HttpResponse response, HttpRequestBase method, Map<String, Object> headers) {
