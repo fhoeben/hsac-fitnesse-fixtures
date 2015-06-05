@@ -274,7 +274,7 @@ public class Environment {
      * GETs content from URL.
      * @param url url to get from.
      * @param response response to store url and response value in.
-     * @param headers http headers to add
+     * @param headers http headers to add.
      */
     public void doGet(String url, HttpResponse response, Map<String, Object> headers) {
         response.setRequest(url);
@@ -294,10 +294,11 @@ public class Environment {
      * DELETEs content at URL.
      * @param url url to send delete to.
      * @param response response to store url and response value in.
+     * @param headers http headers to add.
      */
-    public void doDelete(String url, HttpResponse response) {
+    public void doDelete(String url, HttpResponse response, Map<String, Object> headers) {
         response.setRequest(url);
-        httpClient.delete(url, response);
+        httpClient.delete(url, response, headers);
     }
 
     private void setNamespaceContext(XmlHttpResponse response) {
