@@ -249,11 +249,12 @@ public class Environment {
     /**
      * GETs content from URL.
      * @param url url to get from.
+     * @param headers headers to add
      * @return response.
      */
-    public HttpResponse doHttpGet(String url) {
+    public HttpResponse doHttpGet(String url, Map<String, Object> headers) {
         HttpResponse response = new HttpResponse();
-        doGet(url, response);
+        doGet(url, response, headers);
         return response;
     }
 
@@ -273,10 +274,20 @@ public class Environment {
      * GETs content from URL.
      * @param url url to get from.
      * @param response response to store url and response value in.
+     * @param headers http headers to add
+     */
+    public void doGet(String url, HttpResponse response, Map<String, Object> headers) {
+        response.setRequest(url);
+        httpClient.get(url, response, headers);
+    }
+    
+    /**
+     * GETs content from URL.
+     * @param url url to get from.
+     * @param response response to store url and response value in.
      */
     public void doGet(String url, HttpResponse response) {
-        response.setRequest(url);
-        httpClient.get(url, response);
+        doGet(url, response, null);
     }
 
     /**
