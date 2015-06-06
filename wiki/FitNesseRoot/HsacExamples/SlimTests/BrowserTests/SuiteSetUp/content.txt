@@ -20,7 +20,7 @@ The latter allows tests to be executed on different operating systems. This is a
 
 !define GRID_HUB {http://remote-selenium.local:4444/wd/hub}
 
-!|script         |selenium driver setup                                                                                                       |
+|script          |selenium driver setup                                                                                                       |
 |start driver for|chrome                                                                                                                      |
 |note            |start driver for     |internet explorer                                                                                     |
 |note            |start driver for     |firefox                                                                                               |
