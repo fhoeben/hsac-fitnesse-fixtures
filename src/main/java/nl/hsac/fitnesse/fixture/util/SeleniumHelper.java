@@ -34,12 +34,14 @@ public class SeleniumHelper {
     private static final int DEFAULT_TIMEOUT_SECONDS = 10;
 
     private static final String ELEMENT_ON_SCREEN_JS =
-            "var rect = arguments[0].getBoundingClientRect();\n" +
+            "if (arguments[0].getBoundingClientRect) {\n" +
+                    "var rect = arguments[0].getBoundingClientRect();\n" +
                     "return (\n" +
                     "  rect.top >= 0 &&\n" +
                     "  rect.left >= 0 &&\n" +
                     "  rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&\n" +
-                    "  rect.right <= (window.innerWidth || document.documentElement.clientWidth));";
+                    "  rect.right <= (window.innerWidth || document.documentElement.clientWidth));\n" +
+            "} else { return true; }";
 
     private DriverFactory factory;
     private WebDriver webDriver;
