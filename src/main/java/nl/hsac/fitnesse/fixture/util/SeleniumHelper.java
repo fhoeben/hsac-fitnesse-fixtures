@@ -41,7 +41,7 @@ public class SeleniumHelper {
                     "  rect.left >= 0 &&\n" +
                     "  rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&\n" +
                     "  rect.right <= (window.innerWidth || document.documentElement.clientWidth));\n" +
-            "} else { return true; }";
+            "} else { return null; }";
 
     private DriverFactory factory;
     private WebDriver webDriver;
@@ -339,9 +339,9 @@ public class SeleniumHelper {
     /**
      * Checks whether element is in browser's viewport.
      * @param element element to check
-     * @return true if element is in browser's viewport.
+     * @return true if element is in browser's viewport, null if we could not determine whether it was in viewport.
      */
-    public boolean isElementOnScreen(WebElement element) {
+    public Boolean isElementOnScreen(WebElement element) {
         return (Boolean)executeJavascript(ELEMENT_ON_SCREEN_JS, element);
     }
 
