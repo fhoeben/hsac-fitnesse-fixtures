@@ -1012,7 +1012,8 @@ public class BrowserTest extends SlimFixture {
      * @return true if element is in browser's viewport.
      */
     protected boolean isElementOnScreen(WebElement element) {
-        return getSeleniumHelper().isElementOnScreen(element);
+        Boolean onScreen = getSeleniumHelper().isElementOnScreen(element);
+        return onScreen == null || onScreen.booleanValue();
     }
 
     /**
