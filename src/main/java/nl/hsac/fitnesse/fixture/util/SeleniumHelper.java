@@ -103,49 +103,49 @@ public class SeleniumHelper {
      */
     public WebElement getElement(String place) {
         WebElement element = null;
-        if (element == null) {
+        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
             element = getElementByLabelOccurrence(place, 1);
         }
-        if (element == null) {
+        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
             element = findElement(byCss("input[placeholder='%s']", place));
         }
-        if (element == null) {
+        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
             element = findElement(byCss("input[value='%s']:not([type='hidden'])", place));
         }
-        if (element == null) {
+        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
             element = findElement(byXpath("//button/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::button", place));
         }
-        if (element == null) {
+        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
             element = findElement(By.linkText(place));
         }
-        if (element == null) {
+        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
             element = findElement(byCss("textarea[placeholder='%s']", place));
         }
-        if (element == null) {
+        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
             element = findElement(byXpath("//th/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::th[1]/../td ", place));
         }
-        if (element == null) {
+        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
             element = findElement(By.name(place));
         }
-        if (element == null) {
+        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
             element = findElement(By.id(place));
         }
-        if (element == null) {
+        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
             element = getElementByPartialLabelOccurrence(place, 1);
         }
-        if (element == null) {
+        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
             element = findElement(byCss("input[placeholder~='%s']", place));
         }
-        if (element == null) {
+        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
             element = findElement(byCss("input[value~='%s']:not([type='hidden'])", place));
         }
-        if (element == null) {
+        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
             element = findElement(By.partialLinkText(place));
         }
-        if (element == null) {
+        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
             element = findElement(byCss("textarea[placeholder~='%s']", place));
         }
-        if (element == null) {
+        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
             element = findElement(byXpath("//th/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::th[1]/../td ", place));
         }
         return element;
