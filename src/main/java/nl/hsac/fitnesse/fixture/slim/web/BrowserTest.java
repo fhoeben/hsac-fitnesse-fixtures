@@ -468,7 +468,7 @@ public class BrowserTest extends SlimFixture {
         // we retry clicking the element a few times before giving up.
         boolean result = false;
         for (int i = 0;
-             !result;
+             !result && i <= secondsBeforeTimeout();
              i++) {
             try {
                 if (i > 0) {
