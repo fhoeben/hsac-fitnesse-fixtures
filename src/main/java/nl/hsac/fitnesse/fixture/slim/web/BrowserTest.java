@@ -498,25 +498,25 @@ public class BrowserTest extends SlimFixture {
 
     protected WebElement getElementToClick(String place) {
         WebElement element = getElement(place);
-        if (element == null) {
+        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
             // find element with specified text and 'onclick' attribute
             element = findByXPath("//*[@onclick and normalize-space(text())='%s']", place);
-            if (element == null) {
+            if (element == null || !(element.isDisplayed() && element.isEnabled())) {
                 element = findByXPath("//*[@onclick and contains(normalize-space(text()),'%s')]", place);
-                if (element == null) {
+                if (element == null || !(element.isDisplayed() && element.isEnabled())) {
                     // find element with child with specified text and 'onclick' attribute
                     element = findByXPath("//*[@onclick and normalize-space(descendant::text())='%s']", place);
-                    if (element == null) {
+                    if (element == null || !(element.isDisplayed() && element.isEnabled())) {
                         element = findByXPath("//*[@onclick and contains(normalize-space(descendant::text()),'%s')]", place);
-                        if (element == null) {
+                        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
                             // find element with specified text
                             element = findByXPath("//*[normalize-space(text())='%s']", place);
-                            if (element == null) {
+                            if (element == null || !(element.isDisplayed() && element.isEnabled())) {
                                 element = findByXPath("//*[contains(normalize-space(text()),'%s')]", place);
-                                if (element == null) {
+                                if (element == null || !(element.isDisplayed() && element.isEnabled())) {
                                     // find element with child with specified text
                                     element = findByXPath("//*[normalize-space(descendant::text())='%s']", place);
-                                    if (element == null) {
+                                    if (element == null || !(element.isDisplayed() && element.isEnabled())) {
                                         element = findByXPath("//*[contains(normalize-space(descendant::text()),'%s')]", place);
                                     }
                                 }
