@@ -99,56 +99,115 @@ public class SeleniumHelper {
     /**
      * Finds element, by searching in multiple locations.
      * @param place identifier for element.
-     * @return first element found, null if none could be found.
+     * @return first interactable element found,
+     *          first element found if no interactable element could be found,
+     *          null if none could be found.
      */
     public WebElement getElement(String place) {
         WebElement element = null;
-        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+        // first element found, even if it is not (yet) interactable.
+        WebElement firstElement = null;
+        if (!isInteractable(element)) {
             element = getElementByLabelOccurrence(place, 1);
+            if (firstElement == null) {
+                firstElement = element;
+            }
         }
-        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+        if (!isInteractable(element)) {
             element = findElement(byCss("input[placeholder='%s']", place));
+            if (firstElement == null) {
+                firstElement = element;
+            }
         }
-        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+        if (!isInteractable(element)) {
             element = findElement(byCss("input[value='%s']:not([type='hidden'])", place));
+            if (firstElement == null) {
+                firstElement = element;
+            }
         }
-        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+        if (!isInteractable(element)) {
             element = findElement(byXpath("//button/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::button", place));
+            if (firstElement == null) {
+                firstElement = element;
+            }
         }
-        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+        if (!isInteractable(element)) {
             element = findElement(By.linkText(place));
+            if (firstElement == null) {
+                firstElement = element;
+            }
         }
-        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+        if (!isInteractable(element)) {
             element = findElement(byCss("textarea[placeholder='%s']", place));
+            if (firstElement == null) {
+                firstElement = element;
+            }
         }
-        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+        if (!isInteractable(element)) {
             element = findElement(byXpath("//th/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::th[1]/../td ", place));
+            if (firstElement == null) {
+                firstElement = element;
+            }
         }
-        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+        if (!isInteractable(element)) {
             element = findElement(By.name(place));
+            if (firstElement == null) {
+                firstElement = element;
+            }
         }
-        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+        if (!isInteractable(element)) {
             element = findElement(By.id(place));
+            if (firstElement == null) {
+                firstElement = element;
+            }
         }
-        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+        if (!isInteractable(element)) {
             element = getElementByPartialLabelOccurrence(place, 1);
+            if (firstElement == null) {
+                firstElement = element;
+            }
         }
-        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+        if (!isInteractable(element)) {
             element = findElement(byCss("input[placeholder~='%s']", place));
+            if (firstElement == null) {
+                firstElement = element;
+            }
         }
-        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+        if (!isInteractable(element)) {
             element = findElement(byCss("input[value~='%s']:not([type='hidden'])", place));
+            if (firstElement == null) {
+                firstElement = element;
+            }
         }
-        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+        if (!isInteractable(element)) {
             element = findElement(By.partialLinkText(place));
+            if (firstElement == null) {
+                firstElement = element;
+            }
         }
-        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+        if (!isInteractable(element)) {
             element = findElement(byCss("textarea[placeholder~='%s']", place));
+            if (firstElement == null) {
+                firstElement = element;
+            }
         }
-        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+        if (!isInteractable(element)) {
             element = findElement(byXpath("//th/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::th[1]/../td ", place));
+            if (firstElement == null) {
+                firstElement = element;
+            }
         }
-        return element;
+        return isInteractable(element)
+                ? element
+                : firstElement;
+    }
+
+    /**
+     * @param element element to check.
+     * @return whether the element is displayed and enabled.
+     */
+    public boolean isInteractable(WebElement element) {
+        return element != null && element.isDisplayed() && element.isEnabled();
     }
 
     /**
