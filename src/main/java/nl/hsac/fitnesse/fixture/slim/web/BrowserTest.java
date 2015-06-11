@@ -357,6 +357,15 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
+     * Simulates typing a text to the current active element.
+     * @param text text to type.
+     * @return true, if an element was active the text could be sent to.
+     */
+    public boolean type(String text) {
+        return sendKeysToActiveElement(text);
+    }
+
+    /**
      * Simulates pressing a key (or a combination of keys).
      * (Unfortunately not all combinations seem to be accepted by all drivers, e.g.
      * Chrome on OSX seems to ignore Command+A or Command+T; https://code.google.com/p/selenium/issues/detail?id=5919).

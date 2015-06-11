@@ -1,5 +1,5 @@
 |storyboard|ng browser test                         |
 |open      |http://run.plnkr.co/plunks/jBJkDb/      |
 |click     |Select or search a person in the list...|
-|press     |Adam                                    |
+|type      |Adam                                    |
 |press enter                                        |
