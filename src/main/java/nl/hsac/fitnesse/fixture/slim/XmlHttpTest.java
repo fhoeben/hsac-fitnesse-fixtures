@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.slim;
 
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -87,6 +88,25 @@ public class XmlHttpTest extends HttpTest {
      */
     public Double xPathInt(String xPathExpr) {
         return getResponse().getXPathDouble(xPathExpr);
+    }
+
+    /**
+     * @param baseName base of filename to generate (a number might be added to the name to make it unique).
+     * @param xPath expression to evaluate.
+     * @return link to created file.
+     */
+    public String createFileFromBase64ContentOf(String baseName, String xPath) {
+        String base64Content = xPath(xPath);
+        if (StringUtils.isEmpty(base64Content)) {
+            throw new SlimFixtureException(false, "No content from xPath: " + xPath);
+        } else {
+            return createFileFromBase64(baseName, base64Content);
+        }
+    }
+
+    protected String createFileFromBase64(String baseName, String base64Content) {
+        Base64Fixture base64Fixture = new Base64Fixture();
+        return base64Fixture.createFrom(baseName, base64Content);
     }
 
     @Override
