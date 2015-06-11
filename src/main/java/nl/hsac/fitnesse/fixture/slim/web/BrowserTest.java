@@ -362,7 +362,8 @@ public class BrowserTest extends SlimFixture {
      * @return true, if an element was active the text could be sent to.
      */
     public boolean type(String text) {
-        return sendKeysToActiveElement(text);
+        String value = cleanupValue(text);
+        return sendKeysToActiveElement(value);
     }
 
     /**
