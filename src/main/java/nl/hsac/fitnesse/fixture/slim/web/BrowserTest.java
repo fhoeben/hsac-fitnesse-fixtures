@@ -307,7 +307,7 @@ public class BrowserTest extends SlimFixture {
                 && waitUntil(new ExpectedCondition<Boolean>() {
                     @Override
                     public Boolean apply(WebDriver webDriver) {
-                        return element.isDisplayed() && element.isEnabled();
+                        return isInteractable(element);
                     }
                 });
     }
@@ -498,26 +498,51 @@ public class BrowserTest extends SlimFixture {
 
     protected WebElement getElementToClick(String place) {
         WebElement element = getElement(place);
-        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+        WebElement firstFound = element;
+        if (!isInteractable(element)) {
             // find element with specified text and 'onclick' attribute
             element = findByXPath("//*[@onclick and normalize-space(text())='%s']", place);
-            if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+            if (firstFound == null) {
+                firstFound = element;
+            }
+            if (!isInteractable(element)) {
                 element = findByXPath("//*[@onclick and contains(normalize-space(text()),'%s')]", place);
-                if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+                if (firstFound == null) {
+                    firstFound = element;
+                }
+                if (!isInteractable(element)) {
                     // find element with child with specified text and 'onclick' attribute
                     element = findByXPath("//*[@onclick and normalize-space(descendant::text())='%s']", place);
-                    if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+                    if (firstFound == null) {
+                        firstFound = element;
+                    }
+                    if (!isInteractable(element)) {
                         element = findByXPath("//*[@onclick and contains(normalize-space(descendant::text()),'%s')]", place);
-                        if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+                        if (firstFound == null) {
+                            firstFound = element;
+                        }
+                        if (!isInteractable(element)) {
                             // find element with specified text
                             element = findByXPath("//*[normalize-space(text())='%s']", place);
-                            if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+                            if (firstFound == null) {
+                                firstFound = element;
+                            }
+                            if (!isInteractable(element)) {
                                 element = findByXPath("//*[contains(normalize-space(text()),'%s')]", place);
-                                if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+                                if (firstFound == null) {
+                                    firstFound = element;
+                                }
+                                if (!isInteractable(element)) {
                                     // find element with child with specified text
                                     element = findByXPath("//*[normalize-space(descendant::text())='%s']", place);
-                                    if (element == null || !(element.isDisplayed() && element.isEnabled())) {
+                                    if (firstFound == null) {
+                                        firstFound = element;
+                                    }
+                                    if (!isInteractable(element)) {
                                         element = findByXPath("//*[contains(normalize-space(descendant::text()),'%s')]", place);
+                                        if (firstFound == null) {
+                                            firstFound = element;
+                                        }
                                     }
                                 }
                             }
@@ -526,19 +551,25 @@ public class BrowserTest extends SlimFixture {
                 }
             }
         }
-        return element;
+        return isInteractable(element)
+                ? element
+                : firstFound;
     }
 
     protected boolean clickElement(WebElement element) {
         boolean result = false;
         if (element != null) {
             scrollIfNotOnScreen(element);
-            if (element.isDisplayed() && element.isEnabled()) {
+            if (isInteractable(element)) {
                 element.click();
                 result = true;
             }
         }
         return result;
+    }
+
+    protected boolean isInteractable(WebElement element) {
+        return getSeleniumHelper().isInteractable(element);
     }
 
     public boolean waitForPage(final String pageName) {
