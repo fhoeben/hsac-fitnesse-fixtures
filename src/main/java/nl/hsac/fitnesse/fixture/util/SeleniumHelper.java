@@ -219,6 +219,7 @@ public class SeleniumHelper {
     public WebElement getElementByLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText, index,
                                     "//label/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::label",
+                                    "//*[@aria-labelledby=//*[normalize-space(text()) = '%s']/@id]",
                                     "");
     }
 
@@ -231,6 +232,7 @@ public class SeleniumHelper {
     public WebElement getElementByStartLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText, index,
                 "//label/descendant-or-self::text()[starts-with(normalize-space(.), '%s')]/ancestor-or-self::label",
+                "//*[@aria-labelledby=//*[starts-with(normalize-space(text()), '%s')]/@id]",
                 "|");
     }
 
@@ -243,6 +245,7 @@ public class SeleniumHelper {
     public WebElement getElementByPartialLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText, index,
                 "//label/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::label",
+                "//*[@aria-labelledby=//*[contains(normalize-space(text()), '%s')]/@id]",
                 "~");
     }
 
@@ -250,9 +253,9 @@ public class SeleniumHelper {
         return String.format("(%s)[%s]", xpathBase, index);
     }
 
-    private WebElement getElementByLabel(String labelText, int index, String xPath, String cssSelectorModifier) {
+    private WebElement getElementByLabel(String labelText, int index, String labelXPath, String labelledByXPath, String cssSelectorModifier) {
         WebElement element = null;
-        String labelPattern = indexedXPath(xPath, index);
+        String labelPattern = indexedXPath(labelXPath, index);
         WebElement label = findElement(byXpath(labelPattern, labelText));
         if (label != null) {
             String forAttr = label.getAttribute("for");
@@ -267,6 +270,11 @@ public class SeleniumHelper {
             } else {
                 element = findElement(By.id(forAttr));
             }
+        }
+        if (element == null) {
+            // see if there is an element with labelText as text, whose id is referenced by an aria-labelledby attribute
+            String labelledByPattern = indexedXPath(labelledByXPath, index);
+            element = findElement(byXpath(labelledByPattern, labelText));
         }
         if (element == null) {
             element = findElement(byCss("[aria-label%s='%s']", cssSelectorModifier, labelText), index - 1);
