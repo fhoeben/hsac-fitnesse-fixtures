@@ -317,14 +317,13 @@ public class SeleniumHelper {
      */
     public boolean setHiddenInputValue(String idOrName, String value) {
         WebElement element = findElement(By.id(idOrName));
-        if (element != null) {
-            executeJavascript("document.getElementById('%s').value='%s'", idOrName, value);
-        }
         if (element == null) {
             element = findElement(By.name(idOrName));
             if (element != null) {
                 executeJavascript("document.getElementsByName('%s')[0].value='%s'", idOrName, value);
             }
+        } else {
+            executeJavascript("document.getElementById('%s').value='%s'", idOrName, value);
         }
         return element != null;
     }
