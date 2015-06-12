@@ -214,7 +214,9 @@ public class SeleniumHelper {
      * Finds element based on the exact (aria-)label text.
      * @param labelText text for label.
      * @param index occurrence of label (first is 1).
-     * @return element found if any, null otherwise.
+     * @return first interactable element found,
+     *          first element found if no interactable element could be found,
+     *          null if none could be found.
      */
     public WebElement getElementByLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText, index,
@@ -227,7 +229,9 @@ public class SeleniumHelper {
      * Finds element based on the start of the (aria-)label text.
      * @param labelText text for label.
      * @param index occurrence of label (first is 1).
-     * @return element found if any, null otherwise.
+     * @return first interactable element found,
+     *          first element found if no interactable element could be found,
+     *          null if none could be found.
      */
     public WebElement getElementByStartLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText, index,
@@ -240,7 +244,9 @@ public class SeleniumHelper {
      * Finds element based on part of the (aria-)label text.
      * @param labelText text for label.
      * @param index occurrence of label (first is 1).
-     * @return element found if any, null otherwise.
+     * @return first interactable element found,
+     *          first element found if no interactable element could be found,
+     *          null if none could be found.
      */
     public WebElement getElementByPartialLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText, index,
@@ -255,31 +261,52 @@ public class SeleniumHelper {
 
     private WebElement getElementByLabel(String labelText, int index, String labelXPath, String labelledByXPath, String cssSelectorModifier) {
         WebElement element = null;
+        WebElement firstFound = null;
         String labelPattern = indexedXPath(labelXPath, index);
         WebElement label = findElement(byXpath(labelPattern, labelText));
         if (label != null) {
             String forAttr = label.getAttribute("for");
             if (forAttr == null || "".equals(forAttr)) {
                 element = findElement(label, true, byCss("input"));
-                if (element == null) {
+                if (firstFound == null) {
+                    firstFound = element;
+                }
+                if (!isInteractable(element)) {
                     element = findElement(label, true, byCss("select"));
-                    if (element == null) {
+                    if (firstFound == null) {
+                        firstFound = element;
+                    }
+                    if (!isInteractable(element)) {
                         element = findElement(label, true, byCss("textarea"));
+                        if (firstFound == null) {
+                            firstFound = element;
+                        }
                     }
                 }
             } else {
                 element = findElement(By.id(forAttr));
+                if (firstFound == null) {
+                    firstFound = element;
+                }
             }
         }
-        if (element == null) {
+        if (!isInteractable(element)) {
             // see if there is an element with labelText as text, whose id is referenced by an aria-labelledby attribute
             String labelledByPattern = indexedXPath(labelledByXPath, index);
             element = findElement(byXpath(labelledByPattern, labelText));
+            if (firstFound == null) {
+                firstFound = element;
+            }
         }
-        if (element == null) {
+        if (!isInteractable(element)) {
             element = findElement(byCss("[aria-label%s='%s']", cssSelectorModifier, labelText), index - 1);
+            if (firstFound == null) {
+                firstFound = element;
+            }
         }
-        return element;
+        return isInteractable(element)
+                ? element
+                : firstFound;
     }
 
     /**
