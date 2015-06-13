@@ -221,7 +221,7 @@ public class SeleniumHelper {
     public WebElement getElementByLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText, index,
                                     "//label/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::label",
-                                    "//*[@aria-labelledby=//*/descendant-or-self::text()[normalize-space(.) = '%s']/ancestor-or-self::*/@id]",
+                                    "//*[@aria-labelledby and @aria-labelledby=//*/descendant-or-self::text()[normalize-space(.) = '%s']/ancestor-or-self::*/@id]",
                                     "");
     }
 
@@ -236,7 +236,7 @@ public class SeleniumHelper {
     public WebElement getElementByStartLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText, index,
                 "//label/descendant-or-self::text()[starts-with(normalize-space(.), '%s')]/ancestor-or-self::label",
-                "//*[@aria-labelledby=//*/descendant-or-self::text()[starts-with(normalize-space(.), '%s')]/ancestor-or-self::*/@id]",
+                "//*[@aria-labelledby and @aria-labelledby=//*/descendant-or-self::text()[starts-with(normalize-space(.), '%s')]/ancestor-or-self::*/@id]",
                 "|");
     }
 
@@ -251,7 +251,7 @@ public class SeleniumHelper {
     public WebElement getElementByPartialLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText, index,
                 "//label/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::label",
-                "//*[@aria-labelledby=//*/descendant-or-self::text()[contains(normalize-space(..), '%s')]/ancestor-or-self::*/@id]",
+                "//*[@aria-labelledby and @aria-labelledby=//*/descendant-or-self::text()[contains(normalize-space(..), '%s')]/ancestor-or-self::*/@id]",
                 "~");
     }
 
