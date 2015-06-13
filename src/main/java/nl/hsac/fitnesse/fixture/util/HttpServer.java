@@ -140,8 +140,13 @@ public class HttpServer <T extends HttpResponse> {
             synchronized (lock) {
                 OutputStream os = null;
                 try {
-                    InputStream is = he.getRequestBody();
-                    String request = FileUtil.streamToString(is, "http request");
+                    String request;
+                    if ("POST".equals(he.getRequestMethod())) {
+                        InputStream is = he.getRequestBody();
+                        request = FileUtil.streamToString(is, "http POST request");
+                    } else {
+                        request = String.format("%s: %s", he.getRequestMethod(), he.getRequestURI().toString());
+                    }
                     aResponse.setRequest(request);
 
                     ContentType contentType = XML_UTF8_TYPE;
