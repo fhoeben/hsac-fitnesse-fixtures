@@ -168,13 +168,13 @@ public class SeleniumHelper {
             }
         }
         if (!isInteractable(element)) {
-            element = findElement(byCss("input[placeholder~='%s']", place));
+            element = findElement(byCss("input[placeholder*='%s']", place));
             if (firstElement == null) {
                 firstElement = element;
             }
         }
         if (!isInteractable(element)) {
-            element = findElement(byCss("input[value~='%s']:not([type='hidden'])", place));
+            element = findElement(byCss("input[value*='%s']:not([type='hidden'])", place));
             if (firstElement == null) {
                 firstElement = element;
             }
@@ -186,7 +186,7 @@ public class SeleniumHelper {
             }
         }
         if (!isInteractable(element)) {
-            element = findElement(byCss("textarea[placeholder~='%s']", place));
+            element = findElement(byCss("textarea[placeholder*='%s']", place));
             if (firstElement == null) {
                 firstElement = element;
             }
@@ -237,7 +237,7 @@ public class SeleniumHelper {
         return getElementByLabel(labelText, index,
                 "//label/descendant-or-self::text()[starts-with(normalize-space(.), '%s')]/ancestor-or-self::label",
                 "//*[@aria-labelledby and @aria-labelledby=//*/descendant-or-self::text()[starts-with(normalize-space(.), '%s')]/ancestor-or-self::*/@id]",
-                "|");
+                "^");
     }
 
     /**
@@ -252,7 +252,7 @@ public class SeleniumHelper {
         return getElementByLabel(labelText, index,
                 "//label/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::label",
                 "//*[@aria-labelledby and @aria-labelledby=//*/descendant-or-self::text()[contains(normalize-space(..), '%s')]/ancestor-or-self::*/@id]",
-                "~");
+                "*");
     }
 
     private String indexedXPath(String xpathBase, int index) {
