@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 public abstract class SeleniumDriverFactoryFactoryBase implements SeleniumDriverFactoryFactory {
     public final static String SELENIUM_GRID_URL = "seleniumGridUrl";
     public final static String SELENIUM_BROWSER = "seleniumBrowser";
+    public final static String SELENIUM_DRIVER_CLASS = "seleniumDriverClass";
     public final static String SELENIUM_CAPABILITIES = "seleniumCapabilities";
 
     @Override

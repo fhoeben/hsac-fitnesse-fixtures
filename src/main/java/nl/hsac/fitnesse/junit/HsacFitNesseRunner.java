@@ -9,10 +9,7 @@ import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.slim.web.SeleniumDriverSetup;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
-import nl.hsac.fitnesse.junit.selenium.LocalSeleniumDriverFactoryFactory;
-import nl.hsac.fitnesse.junit.selenium.SeleniumDriverFactoryFactory;
-import nl.hsac.fitnesse.junit.selenium.SeleniumGridDriverFactoryFactory;
-import nl.hsac.fitnesse.junit.selenium.SimpleSeleniumGridDriverFactoryFactory;
+import nl.hsac.fitnesse.junit.selenium.*;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
@@ -47,6 +44,7 @@ public class HsacFitNesseRunner extends FitNesseRunner {
             factoryFactories.add(new SimpleSeleniumGridDriverFactoryFactory());
             factoryFactories.add(new SeleniumGridDriverFactoryFactory());
             factoryFactories.add(new LocalSeleniumDriverFactoryFactory());
+            factoryFactories.add(new LocalSeleniumDriverClassFactoryFactory());
 
             // we include images in output so build server will have single
             // directory containing both HTML results and the images created by the tests
