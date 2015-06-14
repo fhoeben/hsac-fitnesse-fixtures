@@ -21,7 +21,7 @@ public class SeleniumGridDriverFactoryFactory extends SeleniumDriverFactoryFacto
     @Override
     public SeleniumHelper.DriverFactory getDriverFactory() {
         final String gridUrl = getProperty(SELENIUM_GRID_URL);
-        final Map<String, String> capabilities = getCapabilities();
+        final Map<String, Object> capabilities = getCapabilities();
         return new SeleniumHelper.DriverFactory() {
             @Override
             public void createDriver() {
@@ -38,10 +38,10 @@ public class SeleniumGridDriverFactoryFactory extends SeleniumDriverFactoryFacto
         };
     }
 
-    protected Map<String, String> getCapabilities() {
+    protected Map<String, Object> getCapabilities() {
         String capabilitiesString = getProperty(SELENIUM_CAPABILITIES);
         try {
-            Map<String, String> result = new LinkedHashMap<String, String>();
+            Map<String, Object> result = new LinkedHashMap<String, Object>();
             String[] capas = capabilitiesString.split(",");
             for (String capa : capas) {
                 String[] kv = capa.split(":");
