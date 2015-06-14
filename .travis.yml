@@ -1,1 +1,2 @@
 language: java
+script: mvn test && mvn -DfitnesseSuiteToRun=HsacExamples -DseleniumBrowser=phantomjs failsafe:integration-test
