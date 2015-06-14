@@ -24,7 +24,7 @@ public class SeleniumGridDriverFactoryFactoryTest {
     @Test
     public void testCapabilitiesParseBasic() {
         setCapabilities("browser: chrome, platform: Windows 8.1");
-        Map<String, String> capa = factoryFactory.getCapabilities();
+        Map<String, Object> capa = factoryFactory.getCapabilities();
         assertEquals("chrome", capa.get("browser"));
         assertEquals("Windows 8.1", capa.get("platform"));
     }
@@ -32,7 +32,7 @@ public class SeleniumGridDriverFactoryFactoryTest {
     @Test
     public void testCapabilitiesParseWithQuotes() {
         setCapabilities("\"browser:chrome,platform:Windows 8.1\"");
-        Map<String, String> capa = factoryFactory.getCapabilities();
+        Map<String, Object> capa = factoryFactory.getCapabilities();
         assertEquals("chrome", capa.get("browser"));
         assertEquals("Windows 8.1", capa.get("platform"));
     }
@@ -40,7 +40,7 @@ public class SeleniumGridDriverFactoryFactoryTest {
     @Test
     public void testCapabilitiesParseWithColonInValue() {
         setCapabilities("\"browser:chrome,platform:Windows 8.1, location: D:\\Program Files\\Chromium\\chromium.exe\"");
-        Map<String, String> capa = factoryFactory.getCapabilities();
+        Map<String, Object> capa = factoryFactory.getCapabilities();
         assertEquals("chrome", capa.get("browser"));
         assertEquals("Windows 8.1", capa.get("platform"));
         assertEquals("D:\\Program Files\\Chromium\\chromium.exe", capa.get("location"));
