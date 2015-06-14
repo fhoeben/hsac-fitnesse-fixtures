@@ -1,5 +1,5 @@
 language: java
-script: mvn test && mvn -DfitnesseSuiteToRun=HsacExamples.SlimTests.BrowserTests.ScriptTest -DseleniumDriverClass=org.openqa.selenium.phantomjs.PhantomJSDriver failsafe:integration-test
+script: mvn test && mvn -DfitnesseSuiteToRun=HsacExamples.SlimTests -DseleniumDriverClass=org.openqa.selenium.phantomjs.PhantomJSDriver failsafe:integration-test
 
 after_success:
   - python addServer.py
