@@ -1,2 +1,2 @@
 language: java
-script: mvn test && mvn -DfitnesseSuiteToRun=HsacExamples -DseleniumDriverClass=org.openqa.selenium.phantomjs.PhantomJSDriver failsafe:integration-test
+script: mvn test && mvn -DfitnesseSuiteToRun=HsacExamples.SlimTests.BrowserTests.ScriptTest -DseleniumDriverClass=org.openqa.selenium.phantomjs.PhantomJSDriver failsafe:integration-test
