@@ -1,5 +1,5 @@
 language: java
-script: mvn test && mvn -DfitnesseSuiteToRun=HsacExamples.SlimTests -DseleniumDriverClass=org.openqa.selenium.phantomjs.PhantomJSDriver failsafe:integration-test
+script: mvn -DfitnesseSuiteToRun=HsacExamples.SlimTests -DseleniumDriverClass=org.openqa.selenium.phantomjs.PhantomJSDriver verify
 
 after_success:
   - "[[ $TRAVIS_BRANCH == \"master\" ]] && { python addServer.py; mvn -DskipTests deploy --settings ~/.m2/mySettings.xml; };"
