@@ -1,0 +1,7 @@
+!include -c .HsacExamples.SlimTests.SuiteSetUp
+
+|Import                           |
+|nl.hsac.fitnesse.fixture.slim.web|
+
+|script          |selenium driver setup|
+|start driver for|phantomjs            |

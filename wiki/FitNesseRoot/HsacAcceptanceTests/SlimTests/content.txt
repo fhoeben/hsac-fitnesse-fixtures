@@ -1,0 +1,6 @@
+!contents -R2 -g -p -f -h
+
+!define TEST_SYSTEM {slim} 
+
+!define slim.flags {-i nl.hsac.fitnesse.slim.interaction.InterceptingInteraction}
+!note This is a temporary solution. Once a FitNesse release with https://github.com/unclebob/fitnesse/pull/724 is used, we can use the !-InteractionAwareFixture-! interface present there.
