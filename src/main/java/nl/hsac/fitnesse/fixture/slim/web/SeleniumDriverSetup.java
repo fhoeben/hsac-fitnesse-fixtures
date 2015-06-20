@@ -210,7 +210,7 @@ public class SeleniumDriverSetup extends SlimFixture {
         return  outMap;
     }
 
-    public boolean connectToDriverAtWithCapabilities(String url, String capabilitiesInJson)
+    public boolean connectToDriverAtWithJsonCapabilities(String url, String capabilitiesInJson)
             throws MalformedURLException {
         JSONObject jsonObject;
         try {
