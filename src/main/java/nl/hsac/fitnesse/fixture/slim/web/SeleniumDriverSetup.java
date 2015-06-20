@@ -19,7 +19,10 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
-
+import java.util.HashMap;
+import java.util.Iterator;
+import org.json.JSONException;
+import org.json.JSONObject;
 /**
  * Script fixture to set up webdriver to be used by Selenium tests.
  */
@@ -193,6 +196,37 @@ public class SeleniumDriverSetup extends SlimFixture {
             desiredCapabilities.setCapability(capability.getKey(), capability.getValue());
         }
         return createAndSetRemoteDriver(url, desiredCapabilities);
+    }
+
+    private Map<String, Object> jsonObjectToMap(JSONObject jsonObject) throws JSONException {
+        // Assume you have a Map<String, String> in JSONObject
+        @SuppressWarnings("unchecked")
+        Iterator<String> nameItr = jsonObject.keys();
+        Map<String, Object> outMap = new HashMap<String, Object>();
+        while(nameItr.hasNext()) {
+            String name = nameItr.next();
+            outMap.put(name, jsonObject.get(name));
+        }
+        return  outMap;
+    }
+
+    public boolean connectToDriverAtWithCapabilities(String url, String capabilitiesInJson)
+            throws MalformedURLException {
+        JSONObject jsonObject;
+        try {
+            jsonObject = new JSONObject(capabilitiesInJson);
+        } catch (JSONException e) {
+            throw new RuntimeException("Unable to interpret capabilities", e);
+        }
+
+        Map<String, Object> desiredCapabilities;
+        try {
+            desiredCapabilities = jsonObjectToMap(jsonObject);
+        } catch (JSONException e) {
+            throw new RuntimeException("Unable to fetch required fields from json string", e);
+        }
+
+        return connectToDriverAtWithCapabilities (url, desiredCapabilities);
     }
 
     public String driverDescription() {
