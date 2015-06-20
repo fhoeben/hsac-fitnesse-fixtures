@@ -28,7 +28,7 @@ public class Environment {
     private long nextSequenceNr = System.currentTimeMillis();
     private NamespaceContextImpl nsContext;
     private XMLFormatter xmlFormatter;
-    private JsonFormatter jsonFormatter;
+    private JsonHelper jsonHelper;
     private HtmlCleaner htmlCleaner;
     private TimeoutHelper timeoutHelper = new TimeoutHelper();
     private ProgramHelper programHelper;
@@ -54,7 +54,7 @@ public class Environment {
         nsContext = new NamespaceContextImpl();
         fillNamespaceContext();
 
-        jsonFormatter = new JsonFormatter();
+        jsonHelper = new JsonHelper();
 
         htmlCleaner = new HtmlCleaner();
 
@@ -336,7 +336,7 @@ public class Environment {
      * @return HTML formatted version of jsonString
      */
     public String getHtmlForJson(String jsonString) {
-        return getHtml(jsonFormatter, jsonString);
+        return getHtml(jsonHelper, jsonString);
     }
 
     /**
@@ -465,9 +465,9 @@ public class Environment {
     }
 
     /**
-     * @return JSON formatter used.
+     * @return JSON helper/formatter used.
      */
-    public JsonFormatter getJsonFormatter() {
-        return jsonFormatter;
+    public JsonHelper getJsonHelper() {
+        return jsonHelper;
     }
 }

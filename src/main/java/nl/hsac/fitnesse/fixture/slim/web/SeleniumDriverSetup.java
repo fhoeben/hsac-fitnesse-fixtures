@@ -198,34 +198,9 @@ public class SeleniumDriverSetup extends SlimFixture {
         return createAndSetRemoteDriver(url, desiredCapabilities);
     }
 
-    private Map<String, Object> jsonObjectToMap(JSONObject jsonObject) throws JSONException {
-        // Assume you have a Map<String, String> in JSONObject
-        @SuppressWarnings("unchecked")
-        Iterator<String> nameItr = jsonObject.keys();
-        Map<String, Object> outMap = new HashMap<String, Object>();
-        while(nameItr.hasNext()) {
-            String name = nameItr.next();
-            outMap.put(name, jsonObject.get(name));
-        }
-        return  outMap;
-    }
-
     public boolean connectToDriverAtWithJsonCapabilities(String url, String capabilitiesInJson)
             throws MalformedURLException {
-        JSONObject jsonObject;
-        try {
-            jsonObject = new JSONObject(capabilitiesInJson);
-        } catch (JSONException e) {
-            throw new RuntimeException("Unable to interpret capabilities", e);
-        }
-
-        Map<String, Object> desiredCapabilities;
-        try {
-            desiredCapabilities = jsonObjectToMap(jsonObject);
-        } catch (JSONException e) {
-            throw new RuntimeException("Unable to fetch required fields from json string", e);
-        }
-
+        Map<String, Object> desiredCapabilities = getEnvironment().getJsonHelper().jsonStringToMap(capabilitiesInJson);
         return connectToDriverAtWithCapabilities (url, desiredCapabilities);
     }
 
