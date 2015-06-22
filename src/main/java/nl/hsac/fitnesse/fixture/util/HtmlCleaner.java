@@ -1,9 +1,9 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * Helper to remove wiki formatting from strings.
@@ -21,7 +21,9 @@ public class HtmlCleaner {
         String result = htmlLink;
         Matcher matcher = PATTERN.matcher(htmlLink);
         if (matcher.matches()) {
-            result = matcher.group(1) + matcher.group(3);
+            String href = matcher.group(1);
+            href = StringEscapeUtils.unescapeHtml4(href);
+            result = href + matcher.group(3);
         }
         return result;
     }
