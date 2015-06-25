@@ -492,8 +492,9 @@ public class BrowserTest extends SlimFixture {
                 // stale element we can retry the click
             } catch (WebDriverException e) {
                 String msg = e.getMessage();
-                if (!msg.contains("Other element would receive the click")
-                        || i == secondsBeforeTimeout()) {
+                if ((!msg.contains("Other element would receive the click")
+                        && !msg.contains("Element does not exist in cache"))
+                            || i == secondsBeforeTimeout()) {
                     // unexpected exception or too many tries: throw to wiki
                     String message = getSlimFixtureExceptionMessage("clickError", place, msg, e);
                     throw new SlimFixtureException(false, message, e);
@@ -594,6 +595,14 @@ public class BrowserTest extends SlimFixture {
                 } catch (StaleElementReferenceException e) {
                     // element detached from DOM
                     ok = false;
+                } catch (WebDriverException e) {
+                    String msg = e.getMessage();
+                    if (msg != null && msg.contains("Element does not exist in cache")) {
+                        // stale element Safari style
+                        ok = false;
+                    } else {
+                        throw e;
+                    }
                 }
                 return ok;
             }
@@ -630,6 +639,13 @@ public class BrowserTest extends SlimFixture {
                         }
                     } catch (StaleElementReferenceException e) {
                         // find elements again if still allowed
+                    } catch (WebDriverException e) {
+                        String msg = e.getMessage();
+                        if (msg != null && msg.contains("Element does not exist in cache")) {
+                            // stale element Safari style
+                        } else {
+                            throw e;
+                        }
                     }
                 }
                 return ok;
@@ -648,6 +664,14 @@ public class BrowserTest extends SlimFixture {
         } catch (StaleElementReferenceException e) {
             // element detached from DOM
             ok = false;
+        } catch (WebDriverException e) {
+            String msg = e.getMessage();
+            if (msg != null && msg.contains("Element does not exist in cache")) {
+                // stale element Safari style
+                ok = false;
+            } else {
+                throw e;
+            }
         }
         return ok;
     }
@@ -714,6 +738,14 @@ public class BrowserTest extends SlimFixture {
         } catch (StaleElementReferenceException e) {
             // sometimes ajax updates get in the way. In that case we try again
             result = valueForImpl(place);
+        } catch (WebDriverException e) {
+            String msg = e.getMessage();
+            if (msg != null && msg.contains("Element does not exist in cache")) {
+                // stale element Safari style
+                result = valueForImpl(place);
+            } else {
+                throw e;
+            }
         }
         return result;
     }
@@ -927,6 +959,15 @@ public class BrowserTest extends SlimFixture {
             // sometime we are troubled by ajax updates that cause 'stale state' let's try once more if that is the case
             WebElement element = findByXPath(xpathPattern, params);
             result = getElementText(element);
+        } catch (WebDriverException e) {
+            String msg = e.getMessage();
+            if (msg != null && msg.contains("Element does not exist in cache")) {
+                // stale element Safari style
+                WebElement element = findByXPath(xpathPattern, params);
+                result = getElementText(element);
+            } else {
+                throw e;
+            }
         }
         return result;
     }
@@ -944,6 +985,15 @@ public class BrowserTest extends SlimFixture {
             // sometime we are troubled by ajax updates that cause 'stale state' let's try once more if that is the case
             WebElement element = findByClassName(className);
             result = getElementText(element);
+        } catch (WebDriverException e) {
+            String msg = e.getMessage();
+            if (msg != null && msg.contains("Element does not exist in cache")) {
+                // stale element Safari style
+                WebElement element = findByClassName(className);
+                result = getElementText(element);
+            } else {
+                throw e;
+            }
         }
         return result;
     }
