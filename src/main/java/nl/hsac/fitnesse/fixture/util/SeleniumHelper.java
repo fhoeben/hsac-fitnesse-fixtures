@@ -141,6 +141,12 @@ public class SeleniumHelper {
             }
         }
         if (!isInteractable(element)) {
+            element = getElementByAriaLabel(place, 1);
+            if (firstElement == null) {
+                firstElement = element;
+            }
+        }
+        if (!isInteractable(element)) {
             element = findElement(By.name(place));
             if (firstElement == null) {
                 firstElement = element;
@@ -188,6 +194,12 @@ public class SeleniumHelper {
                 firstElement = element;
             }
         }
+        if (!isInteractable(element)) {
+            element = getElementByPartialAriaLabel(place, 1);
+            if (firstElement == null) {
+                firstElement = element;
+            }
+        }
         return isInteractable(element)
                 ? element
                 : firstElement;
@@ -211,9 +223,8 @@ public class SeleniumHelper {
      */
     public WebElement getElementByLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText, index,
-                                    "//label/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::label",
-                                    "//*[@aria-labelledby and @aria-labelledby=//*/descendant-or-self::text()[normalize-space(.) = '%s']/ancestor-or-self::*/@id]",
-                                    "");
+                                    "//label/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::label"
+        );
     }
 
     /**
@@ -226,9 +237,8 @@ public class SeleniumHelper {
      */
     public WebElement getElementByStartLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText, index,
-                "//label/descendant-or-self::text()[starts-with(normalize-space(.), '%s')]/ancestor-or-self::label",
-                "//*[@aria-labelledby and @aria-labelledby=//*/descendant-or-self::text()[starts-with(normalize-space(.), '%s')]/ancestor-or-self::*/@id]",
-                "^");
+                "//label/descendant-or-self::text()[starts-with(normalize-space(.), '%s')]/ancestor-or-self::label"
+        );
     }
 
     /**
@@ -241,16 +251,15 @@ public class SeleniumHelper {
      */
     public WebElement getElementByPartialLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText, index,
-                "//label/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::label",
-                "//*[@aria-labelledby and @aria-labelledby=//*/descendant-or-self::text()[contains(normalize-space(..), '%s')]/ancestor-or-self::*/@id]",
-                "*");
+                "//label/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::label"
+        );
     }
 
     private String indexedXPath(String xpathBase, int index) {
         return String.format("(%s)[%s]", xpathBase, index);
     }
 
-    private WebElement getElementByLabel(String labelText, int index, String labelXPath, String labelledByXPath, String cssSelectorModifier) {
+    private WebElement getElementByLabel(String labelText, int index, String labelXPath) {
         WebElement element = null;
         WebElement firstFound = null;
         String labelPattern = indexedXPath(labelXPath, index);
@@ -281,16 +290,45 @@ public class SeleniumHelper {
                 }
             }
         }
+        return isInteractable(element)
+                ? element
+                : firstFound;
+    }
+
+    public WebElement getElementByAriaLabel(String labelText, int index) {
+        WebElement element = null;
+        WebElement firstFound = null;
         if (!isInteractable(element)) {
             // see if there is an element with labelText as text, whose id is referenced by an aria-labelledby attribute
-            String labelledByPattern = indexedXPath(labelledByXPath, index);
+            String labelledByPattern = indexedXPath("//*[@aria-labelledby and @aria-labelledby=//*/descendant-or-self::text()[normalize-space(.) = '%s']/ancestor-or-self::*/@id]", index);
             element = findElement(byXpath(labelledByPattern, labelText));
             if (firstFound == null) {
                 firstFound = element;
             }
         }
         if (!isInteractable(element)) {
-            element = findElement(byCss("[aria-label%s='%s']", cssSelectorModifier, labelText), index - 1);
+            element = findElement(byCss("[aria-label='%s']", labelText), index - 1);
+            if (firstFound == null) {
+                firstFound = element;
+            }
+        }
+        return isInteractable(element)
+                ? element
+                : firstFound;
+    }
+
+    public WebElement getElementByPartialAriaLabel(String labelText, int index) {
+        WebElement element = null;
+        WebElement firstFound = null;
+        if (!isInteractable(element)) {
+            String labelledByPattern = indexedXPath("//*[@aria-labelledby and @aria-labelledby=//*/descendant-or-self::text()[contains(normalize-space(..), '%s')]/ancestor-or-self::*/@id]", index);
+            element = findElement(byXpath(labelledByPattern, labelText));
+            if (firstFound == null) {
+                firstFound = element;
+            }
+        }
+        if (!isInteractable(element)) {
+            element = findElement(byCss("[aria-label*='%s']", labelText), index - 1);
             if (firstFound == null) {
                 firstFound = element;
             }
