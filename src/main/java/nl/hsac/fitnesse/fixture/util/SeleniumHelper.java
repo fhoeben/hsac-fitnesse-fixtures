@@ -1,30 +1,21 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import nl.hsac.fitnesse.fixture.slim.StopTestException;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoAlertPresentException;
-import org.openqa.selenium.NoSuchWindowException;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.SearchContext;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.internal.Base64Encoder;
-import org.openqa.selenium.remote.Augmenter;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.remote.ScreenshotException;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
+import nl.hsac.fitnesse.fixture.slim.StopTestException;
+
+import org.openqa.selenium.*;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.internal.Base64Encoder;
+import org.openqa.selenium.remote.Augmenter;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.ScreenshotException;
+import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Helper to work with Selenium.
@@ -533,11 +524,29 @@ public class SeleniumHelper {
         if (driver instanceof InternetExplorerDriver) {
             result = true;
         } else if (driver instanceof RemoteWebDriver) {
-            RemoteWebDriver remoteWebDriver = (RemoteWebDriver) driver;
-            String browserName = remoteWebDriver.getCapabilities().getBrowserName();
-            result = "internet explorer".equalsIgnoreCase(browserName);
+            result = checkRemoteBrowserName(driver, "internet explorer");
         }
         return result;
+    }
+
+    /**
+     * @return true when current driver is connected to either a local or remote Safari.
+     */
+    public boolean connectedToSafari() {
+        boolean result = false;
+        WebDriver driver = driver();
+        if (driver instanceof SafariDriver) {
+            result = true;
+        } else if (driver instanceof RemoteWebDriver) {
+            result = checkRemoteBrowserName(driver, "safari");
+        }
+        return result;
+    }
+
+    protected boolean checkRemoteBrowserName(WebDriver driver, String expectedName) {
+        RemoteWebDriver remoteWebDriver = (RemoteWebDriver) driver;
+        String browserName = remoteWebDriver.getCapabilities().getBrowserName();
+        return expectedName.equalsIgnoreCase(browserName);
     }
 
     /**
