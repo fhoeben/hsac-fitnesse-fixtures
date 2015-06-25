@@ -488,6 +488,8 @@ public class BrowserTest extends SlimFixture {
             } catch (TimeoutException e) {
                 String message = getTimeoutMessage(e);
                 throw new SlimFixtureException(false, message, e);
+            } catch (StaleElementReferenceException e) {
+                // stale element we can retry the click
             } catch (WebDriverException e) {
                 String msg = e.getMessage();
                 if (!msg.contains("Other element would receive the click")
