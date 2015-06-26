@@ -7,10 +7,10 @@ First we do this with ''plain !-BrowserTest-!'', then with a ''custom subclass, 
 
 |script|browser test                                                                  |
 |open  |http://www.funda.nl                                                           |
-|enter |Maliebaan, Utrecht         |as                            |Locatie            |
 |select|€ 1.000.000                |for                           |Prijsklasse        |
 |select|€ 1.500.000                |for                           |tot                |
-|click |Zoeken                                                                        |
+|enter |Maliebaan, Utrecht         |as                            |Locatie            |
+|press |enter                                                                         |
 |click |Maliebaan 50 A                                                                |
 |click |Foto's                                                                        |
 |note  |Check any element's text based on an xPath, makes test fragile to HTML changes|
@@ -27,10 +27,10 @@ We need to indicate in which package our custom class can be found.
 
 |script|funda test                                                        |
 |open  |http://www.funda.nl                                               |
-|enter |Maliebaan, Utrecht           |as            |Locatie              |
 |select|€ 1.000.000                  |for           |Prijsklasse          |
 |select|€ 1.500.000                  |for           |tot                  |
-|click |Zoeken                                                            |
+|enter |Maliebaan, Utrecht           |as            |Locatie              |
+|press |enter                                                             |
 |click |Maliebaan 50 A                                                    |
 |click |Foto's                                                            |
 |note  |Use custom method to get number of photos                         |
