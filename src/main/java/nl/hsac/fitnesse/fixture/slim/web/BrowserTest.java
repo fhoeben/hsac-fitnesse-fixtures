@@ -516,13 +516,19 @@ public class BrowserTest extends SlimFixture {
         WebElement element = getSeleniumHelper().findElement(By.linkText(place));
         WebElement firstFound = element;
         if (!isInteractable(element)) {
+            element = getSeleniumHelper().getElementExact(place);
+            if (firstFound == null) {
+                firstFound = element;
+            }
+        }
+        if (!isInteractable(element)) {
             element = getSeleniumHelper().findElement(By.partialLinkText(place));
             if (firstFound == null) {
                 firstFound = element;
             }
         }
         if (!isInteractable(element)) {
-            element = getElement(place);
+            element = getSeleniumHelper().getElementPartial(place);
             if (firstFound == null) {
                 firstFound = element;
             }
