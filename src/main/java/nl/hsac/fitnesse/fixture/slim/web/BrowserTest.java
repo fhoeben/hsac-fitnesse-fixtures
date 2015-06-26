@@ -499,7 +499,8 @@ public class BrowserTest extends SlimFixture {
             public Boolean apply(WebDriver webDriver) {
                 boolean result = false;
                 try {
-                    result = clickImpl(place);
+                    WebElement element = getElementToClick(place);
+                    return clickElement(element);
                 } catch (WebDriverException e) {
                     String msg = e.getMessage();
                     if (msg == null || !msg.contains("Other element would receive the click")) {
@@ -509,11 +510,6 @@ public class BrowserTest extends SlimFixture {
                 return result;
             }
         });
-    }
-
-    protected boolean clickImpl(String place) {
-        WebElement element = getElementToClick(place);
-        return clickElement(element);
     }
 
     protected WebElement getElementToClick(String place) {
