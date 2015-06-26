@@ -1040,7 +1040,7 @@ public class BrowserTest extends SlimFixture {
             @Override
             public WebElement apply(WebDriver webDriver) {
                 WebElement element = getElementToScrollTo(place);
-                if (place != null) {
+                if (element != null) {
                     scrollTo(element);
                 }
                 return element;
@@ -1094,7 +1094,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected WebElement getElementToCheckVisibility(String place) {
-        return getElement(place);
+        return getElementToClick(place);
     }
 
     /**
