@@ -283,23 +283,7 @@ public class BrowserTest extends SlimFixture {
      * @return true, if element was found.
      */
     public boolean enterAs(String value, String place) {
-        WebElement element = getElementToSendValue(place);
-        boolean result = waitUntilInteractable(element);
-        if (result) {
-            element.clear();
-            sendValue(element, value);
-        }
-        return result;
-    }
-
-    protected boolean waitUntilInteractable(final WebElement element) {
-        return element != null
-                && waitUntil(new ExpectedCondition<Boolean>() {
-                    @Override
-                    public Boolean apply(WebDriver webDriver) {
-                        return isInteractable(element);
-                    }
-                });
+        return enter(value, place, true);
     }
 
     /**
@@ -309,13 +293,24 @@ public class BrowserTest extends SlimFixture {
      * @return true, if element was found.
      */
     public boolean enterFor(String value, String place) {
-        boolean result = false;
-        WebElement element = getElementToSendValue(place);
-        if (element != null) {
-            sendValue(element, value);
-            result = true;
-        }
-        return result;
+        return enter(value, place, false);
+    }
+
+    protected boolean enter(final String value, final String place, final boolean shouldClear) {
+        return waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                WebElement element = getElementToSendValue(place);
+                boolean result = element != null && isInteractable(element);
+                if (result) {
+                    if (shouldClear) {
+                        element.clear();
+                    }
+                    sendValue(element, value);
+                }
+                return result;
+            }
+        });
     }
 
     protected WebElement getElementToSendValue(String place) {
@@ -422,14 +417,19 @@ public class BrowserTest extends SlimFixture {
         return selectFor(value, place);
     }
 
-    public boolean selectFor(String value, String place) {
-        // choose option for select, if possible
-        boolean result = clickSelectOption(place, value);
-        if (!result) {
-            // try to click the first element with right value
-            result = click(value);
-        }
-        return result;
+    public boolean selectFor(final String value, final String place) {
+        return waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                // choose option for select, if possible
+                boolean result = clickSelectOption(place, value);
+                if (!result) {
+                    // try to click the first element with right value
+                    result = click(value);
+                }
+                return result;
+            }
+        });
     }
 
     public boolean enterForHidden(String value, String idOrName) {
@@ -463,35 +463,24 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
-    public boolean click(String place) {
+    public boolean click(final String place) {
         // if other element hides the element (in Chrome) an exception is thrown
         // we retry clicking the element a few times before giving up.
-        boolean result = false;
-        for (int i = 0;
-             !result && i <= secondsBeforeTimeout();
-             i++) {
-            try {
-                if (i > 0) {
-                    waitSeconds(1);
+        return waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                boolean result = false;
+                try {
+                    result = clickImpl(place);
+                } catch (WebDriverException e) {
+                    String msg = e.getMessage();
+                    if (msg == null || !msg.contains("Other element would receive the click")) {
+                        throw e;
+                    }
                 }
-                result = clickImpl(place);
-            } catch (TimeoutException e) {
-                String message = getTimeoutMessage(e);
-                throw new SlimFixtureException(false, message, e);
-            } catch (StaleElementReferenceException e) {
-                // stale element we can retry the click
-            } catch (WebDriverException e) {
-                String msg = e.getMessage();
-                if ((!msg.contains("Other element would receive the click")
-                        && !msg.contains("Element does not exist in cache"))
-                            || i == secondsBeforeTimeout()) {
-                    // unexpected exception or too many tries: throw to wiki
-                    String message = getSlimFixtureExceptionMessage("clickError", place, msg, e);
-                    throw new SlimFixtureException(false, message, e);
-                }
+                return result;
             }
-        }
-        return result;
+        });
     }
 
     protected boolean clickImpl(String place) {
@@ -576,7 +565,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     public boolean waitForPage(final String pageName) {
-        return waitUntil(new ExpectedCondition<Boolean>() {
+        return waitUntilOrStop(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver webDriver) {
                 return pageTitle().equals(pageName);
@@ -594,7 +583,7 @@ public class BrowserTest extends SlimFixture {
 
     protected boolean waitForElementWithText(final By by, String expectedText) {
         final String textToLookFor = cleanExpectedValue(expectedText);
-        return waitUntil(new ExpectedCondition<Boolean>() {
+        return waitUntilOrStop(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver webDriver) {
                 boolean ok = false;
@@ -656,7 +645,7 @@ public class BrowserTest extends SlimFixture {
 
     public boolean waitForClass(final String cssClassName) {
         boolean result;
-        result = waitUntil(new ExpectedCondition<Boolean>() {
+        result = waitUntilOrStop(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver webDriver) {
                 boolean ok = false;
@@ -677,7 +666,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected boolean waitForVisible(final By by) {
-        return waitUntil(new ExpectedCondition<Boolean>() {
+        return waitUntilOrStop(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver webDriver) {
                 Boolean result = Boolean.FALSE;
@@ -695,28 +684,14 @@ public class BrowserTest extends SlimFixture {
         return valueFor(place);
     }
 
-    public String valueFor(String place) {
-        String result;
-        try {
-            result = valueForImpl(place);
-        } catch (StaleElementReferenceException e) {
-            // sometimes ajax updates get in the way. In that case we try again
-            result = valueForImpl(place);
-        } catch (WebDriverException e) {
-            String msg = e.getMessage();
-            if (msg != null && msg.contains("Element does not exist in cache")) {
-                // stale element Safari style
-                result = valueForImpl(place);
-            } else {
-                throw e;
+    public String valueFor(final String place) {
+        return waitUntil(new ExpectedCondition<String>() {
+            @Override
+            public String apply(WebDriver webDriver) {
+                WebElement element = getElementToRetrieveValue(place);
+                return valueFor(element);
             }
-        }
-        return result;
-    }
-
-    private String valueForImpl(String place) {
-        WebElement element = getElementToRetrieveValue(place);
-        return valueFor(element);
+        });
     }
 
     protected WebElement getElementToRetrieveValue(String place) {
@@ -751,33 +726,43 @@ public class BrowserTest extends SlimFixture {
         return "select".equalsIgnoreCase(element.getTagName());
     }
 
-    public boolean clear(String place) {
-        boolean result = false;
-        WebElement element = getElementToClear(place);
-        if (element != null) {
-            element.clear();
-            result = true;
-        }
-        return result;
+    public boolean clear(final String place) {
+        return waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                boolean result = false;
+                WebElement element = getElementToClear(place);
+                if (element != null) {
+                    element.clear();
+                    result = true;
+                }
+                return result;
+            }
+        });
     }
 
     protected WebElement getElementToClear(String place) {
         return getElementToSendValue(place);
     }
 
-    public boolean enterAsInRowWhereIs(String value, String requestedColumnName, String selectOnColumn, String selectOnValue) {
-        String columnXPath = getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue);
-        String requestedIndex = getXPathForColumnIndex(requestedColumnName);
-        WebElement element = findByXPath("%s[%s]//input", columnXPath, requestedIndex);
-        if (element == null) {
-            element = findByXPath("%s[%s]//textarea", columnXPath, requestedIndex);
-        }
-        boolean result = waitUntilInteractable(element);
-        if (result) {
-            element.clear();
-            sendValue(element, value);
-        }
-        return result;
+    public boolean enterAsInRowWhereIs(final String value, final String requestedColumnName, final String selectOnColumn, final String selectOnValue) {
+        return waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                String columnXPath = getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue);
+                String requestedIndex = getXPathForColumnIndex(requestedColumnName);
+                WebElement element = findByXPath("%s[%s]//input", columnXPath, requestedIndex);
+                if (element == null) {
+                    element = findByXPath("%s[%s]//textarea", columnXPath, requestedIndex);
+                }
+                boolean result = element != null && isInteractable(element);
+                if (result) {
+                    element.clear();
+                    sendValue(element, value);
+                }
+                return result;
+            }
+        });
     }
 
     public String valueOfColumnNumberInRowNumber(int columnIndex, int rowIndex) {
@@ -815,22 +800,27 @@ public class BrowserTest extends SlimFixture {
         return clickInRow(columnXPath, place);
     }
 
-    protected boolean clickInRow(String columnXPath, String place) {
-        boolean result = false;
-        // find an input to click in the row
-        WebElement element = findByXPath("%s//input[contains(@value, '%s')]", columnXPath, place);
-        if (element == null) {
-            // see whether there is an element with the specified place as text() in the row
-            element = findByXPath("%s//*[contains(normalize-space(text()),'%s')]", columnXPath, place);
-            if (element == null) {
-                // find an element to click in the row by its title (aka tooltip)
-                element = findByXPath("%s//*[contains(@title, '%s')]", columnXPath, place);
+    protected boolean clickInRow(final String columnXPath, final String place) {
+        return waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                boolean result = false;
+                // find an input to click in the row
+                WebElement element = findByXPath("%s//input[contains(@value, '%s')]", columnXPath, place);
+                if (element == null) {
+                    // see whether there is an element with the specified place as text() in the row
+                    element = findByXPath("%s//*[contains(normalize-space(text()),'%s')]", columnXPath, place);
+                    if (element == null) {
+                        // find an element to click in the row by its title (aka tooltip)
+                        element = findByXPath("%s//*[contains(@title, '%s')]", columnXPath, place);
+                    }
+                }
+                if (element != null) {
+                    result = clickElement(element);
+                }
+                return result;
             }
-        }
-        if (element != null) {
-            result = clickElement(element);
-        }
-        return result;
+        });
     }
 
     /**
@@ -856,25 +846,30 @@ public class BrowserTest extends SlimFixture {
         return downloadFromRow(columnXPath, place);
     }
 
-    protected String downloadFromRow(String columnXPath, String place) {
-        String result = null;
-        // find an a to download from based on its text()
-        WebElement element = findByXPath("%s//a[contains(normalize-space(text()),'%s')]", columnXPath, place);
-        if (element == null) {
-            // find an a to download based on its column header
-            String requestedIndex = getXPathForColumnIndex(place);
-            element = findByXPath("%s[%s]//a", columnXPath, requestedIndex);
-            if (element == null) {
-                // find an a to download in the row by its title (aka tooltip)
-                element = findByXPath("%s//a[contains(@title, '%s')]", columnXPath, place);
+    protected String downloadFromRow(final String columnXPath, final String place) {
+        return waitUntil(new ExpectedCondition<String>() {
+            @Override
+            public String apply(WebDriver webDriver) {
+                String result = null;
+                // find an a to download from based on its text()
+                WebElement element = findByXPath("%s//a[contains(normalize-space(text()),'%s')]", columnXPath, place);
+                if (element == null) {
+                    // find an a to download based on its column header
+                    String requestedIndex = getXPathForColumnIndex(place);
+                    element = findByXPath("%s[%s]//a", columnXPath, requestedIndex);
+                    if (element == null) {
+                        // find an a to download in the row by its title (aka tooltip)
+                        element = findByXPath("%s//a[contains(@title, '%s')]", columnXPath, place);
+                    }
+                }
+                if (element == null) {
+                    throw new SlimFixtureException(false, "Unable to find link: " + place);
+                } else {
+                    result = downloadLinkTarget(element);
+                }
+                return result;
             }
-        }
-        if (element == null) {
-            throw new SlimFixtureException(false, "Unable to find link: " + place);
-        } else {
-            result = downloadLinkTarget(element);
-        }
-        return result;
+        });
     }
 
     /**
@@ -905,61 +900,42 @@ public class BrowserTest extends SlimFixture {
         return getSeleniumHelper().getElement(place);
     }
 
-    public boolean clickByXPath(String xPath) {
-        WebElement element = findByXPath(xPath);
-        return clickElement(element);
+    public boolean clickByXPath(final String xPath) {
+        return waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                WebElement element = findByXPath(xPath);
+                return clickElement(element);
+            }
+        });
     }
 
     public String textByXPath(String xPath) {
         return getTextByXPath(xPath);
     }
 
-    protected String getTextByXPath(String xpathPattern, String... params) {
-        String result;
-        try {
-            WebElement element = findByXPath(xpathPattern, params);
-            result = getElementText(element);
-        } catch (StaleElementReferenceException e) {
-            // sometime we are troubled by ajax updates that cause 'stale state' let's try once more if that is the case
-            WebElement element = findByXPath(xpathPattern, params);
-            result = getElementText(element);
-        } catch (WebDriverException e) {
-            String msg = e.getMessage();
-            if (msg != null && msg.contains("Element does not exist in cache")) {
-                // stale element Safari style
+    protected String getTextByXPath(final String xpathPattern, final String... params) {
+        return waitUntil(new ExpectedCondition<String>() {
+            @Override
+            public String apply(WebDriver webDriver) {
                 WebElement element = findByXPath(xpathPattern, params);
-                result = getElementText(element);
-            } else {
-                throw e;
+                return getElementText(element);
             }
-        }
-        return result;
+        });
     }
 
     public String textByClassName(String className) {
         return getTextByClassName(className);
     }
 
-    protected String getTextByClassName(String className) {
-        String result;
-        try {
-            WebElement element = findByClassName(className);
-            result = getElementText(element);
-        } catch (StaleElementReferenceException e) {
-            // sometime we are troubled by ajax updates that cause 'stale state' let's try once more if that is the case
-            WebElement element = findByClassName(className);
-            result = getElementText(element);
-        } catch (WebDriverException e) {
-            String msg = e.getMessage();
-            if (msg != null && msg.contains("Element does not exist in cache")) {
-                // stale element Safari style
+    protected String getTextByClassName(final String className) {
+        return waitUntil(new ExpectedCondition<String>() {
+            @Override
+            public String apply(WebDriver webDriver) {
                 WebElement element = findByClassName(className);
-                result = getElementText(element);
-            } else {
-                throw e;
+                return getElementText(element);
             }
-        }
-        return result;
+        });
     }
 
     protected WebElement findByClassName(String className) {
@@ -1013,11 +989,17 @@ public class BrowserTest extends SlimFixture {
      * Scrolls browser window so top of place becomes visible.
      * @param place element to scroll to.
      */
-    public void scrollTo(String place) {
-        WebElement element = getElementToScrollTo(place);
-        if (place != null) {
-            scrollTo(element);
-        }
+    public void scrollTo(final String place) {
+        waitUntil(new ExpectedCondition<WebElement>() {
+            @Override
+            public WebElement apply(WebDriver webDriver) {
+                WebElement element = getElementToScrollTo(place);
+                if (place != null) {
+                    scrollTo(element);
+                }
+                return element;
+            }
+        });
     }
 
     protected WebElement getElementToScrollTo(String place) {
@@ -1182,10 +1164,27 @@ public class BrowserTest extends SlimFixture {
      * false. Because of this contract, the return type must not be Void.
      * @param <T> the return type of the method, which must not be Void
      * @param condition condition to evaluate to determine whether waiting can be stopped.
-     * @throws org.openqa.selenium.TimeoutException if condition was not met before secondsBeforeTimeout.
+     * @throws SlimFixtureException if condition was not met before secondsBeforeTimeout.
      * @return result of condition.
      */
     protected <T> T waitUntil(final ExpectedCondition<T> condition) {
+        try {
+            return getSeleniumHelper().waitUntil(secondsBeforeTimeout(), condition);
+        } catch (TimeoutException e) {
+            String message = getTimeoutMessage(e);
+            throw new SlimFixtureException(false, message, e);
+        }
+    }
+
+    /**
+     * Implementations should wait until the condition evaluates to a value that is neither null nor
+     * false. Because of this contract, the return type must not be Void.
+     * @param <T> the return type of the method, which must not be Void
+     * @param condition condition to evaluate to determine whether waiting can be stopped.
+     * @throws TimeoutStopTestException if condition was not met before secondsBeforeTimeout.
+     * @return result of condition.
+     */
+    protected <T> T waitUntilOrStop(final ExpectedCondition<T> condition) {
         try {
             return getSeleniumHelper().waitUntil(secondsBeforeTimeout(), condition);
         } catch (TimeoutException e) {
@@ -1299,25 +1298,27 @@ public class BrowserTest extends SlimFixture {
      * @param place link to follow.
      * @return downloaded file if any, null otherwise.
      */
-    public String download(String place) {
-        By selector = By.linkText(place);
-        WebElement element = getSeleniumHelper().findElement(selector);
-        if (element == null) {
-            selector = By.partialLinkText(place);
-            element = getSeleniumHelper().findElement(selector);
-            if (element == null) {
-                selector = By.id(place);
-                element = getSeleniumHelper().findElement(selector);
+    public String download(final String place) {
+        return waitUntil(new ExpectedCondition<String>() {
+            @Override
+            public String apply(WebDriver webDriver) {
+                By selector = By.linkText(place);
+                WebElement element = getSeleniumHelper().findElement(selector);
                 if (element == null) {
-                    selector = By.name(place);
+                    selector = By.partialLinkText(place);
                     element = getSeleniumHelper().findElement(selector);
+                    if (element == null) {
+                        selector = By.id(place);
+                        element = getSeleniumHelper().findElement(selector);
+                        if (element == null) {
+                            selector = By.name(place);
+                            element = getSeleniumHelper().findElement(selector);
+                        }
+                    }
                 }
+                return downloadLinkTarget(element);
             }
-        }
-        if (element == null) {
-            throw new SlimFixtureException(false, "Unable to determine what to download for: " + place);
-        }
-        return downloadLinkTarget(element);
+        });
     }
 
     /**
@@ -1375,18 +1376,25 @@ public class BrowserTest extends SlimFixture {
      * @param place file input to select the file for
      * @return true, if place was a file input and file existed.
      */
-    public boolean selectFileFor(String fileName, String place) {
+    public boolean selectFileFor(String fileName, final String place) {
         boolean result = false;
         if (fileName != null) {
-            WebElement element = getElementToSelectFile(place);
-            if (element != null) {
-                String fullPath = getFilePathFromWikiUrl(fileName);
-                if (new File(fullPath).exists()) {
-                    element.sendKeys(fullPath);
-                    result = true;
-                } else {
-                    throw new SlimFixtureException(false, "Unable to find file: " + fullPath);
-                }
+            final String fullPath = getFilePathFromWikiUrl(fileName);
+            if (new File(fullPath).exists()) {
+                result = waitUntil(new ExpectedCondition<Boolean>() {
+                    @Override
+                    public Boolean apply(WebDriver webDriver) {
+                        boolean result = false;
+                        WebElement element = getElementToSelectFile(place);
+                        if (element != null) {
+                            element.sendKeys(fullPath);
+                            result = true;
+                        }
+                        return result;
+                    }
+                });
+            } else {
+                throw new SlimFixtureException(false, "Unable to find file: " + fullPath);
             }
         }
         return result;
