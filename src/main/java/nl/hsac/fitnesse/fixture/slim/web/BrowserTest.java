@@ -517,51 +517,65 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected WebElement getElementToClick(String place) {
-        WebElement element = getElement(place);
+        WebElement element = getSeleniumHelper().findElement(By.linkText(place));
         WebElement firstFound = element;
         if (!isInteractable(element)) {
-            // find element with specified text and 'onclick' attribute
-            element = findByXPath("//*[@onclick and normalize-space(text())='%s']", place);
-            if (firstFound == null) {
-                firstFound = element;
-            }
             if (!isInteractable(element)) {
-                element = findByXPath("//*[@onclick and contains(normalize-space(text()),'%s')]", place);
+                element = getSeleniumHelper().findElement(By.partialLinkText(place));
                 if (firstFound == null) {
                     firstFound = element;
                 }
                 if (!isInteractable(element)) {
-                    // find element with child with specified text and 'onclick' attribute
-                    element = findByXPath("//*[@onclick and normalize-space(descendant::text())='%s']", place);
+                    element = getElement(place);
                     if (firstFound == null) {
                         firstFound = element;
                     }
                     if (!isInteractable(element)) {
-                        element = findByXPath("//*[@onclick and contains(normalize-space(descendant::text()),'%s')]", place);
+                        // find element with specified text and 'onclick' attribute
+                        element = findByXPath("//*[@onclick and normalize-space(text())='%s']", place);
                         if (firstFound == null) {
                             firstFound = element;
                         }
                         if (!isInteractable(element)) {
-                            // find element with specified text
-                            element = findByXPath("//*[normalize-space(text())='%s']", place);
+                            element = findByXPath("//*[@onclick and contains(normalize-space(text()),'%s')]", place);
                             if (firstFound == null) {
                                 firstFound = element;
                             }
                             if (!isInteractable(element)) {
-                                element = findByXPath("//*[contains(normalize-space(text()),'%s')]", place);
+                                // find element with child with specified text and 'onclick' attribute
+                                element = findByXPath("//*[@onclick and normalize-space(descendant::text())='%s']", place);
                                 if (firstFound == null) {
                                     firstFound = element;
                                 }
                                 if (!isInteractable(element)) {
-                                    // find element with child with specified text
-                                    element = findByXPath("//*[normalize-space(descendant::text())='%s']", place);
+                                    element = findByXPath("//*[@onclick and contains(normalize-space(descendant::text()),'%s')]", place);
                                     if (firstFound == null) {
                                         firstFound = element;
                                     }
                                     if (!isInteractable(element)) {
-                                        element = findByXPath("//*[contains(normalize-space(descendant::text()),'%s')]", place);
+                                        // find element with specified text
+                                        element = findByXPath("//*[normalize-space(text())='%s']", place);
                                         if (firstFound == null) {
                                             firstFound = element;
+                                        }
+                                        if (!isInteractable(element)) {
+                                            element = findByXPath("//*[contains(normalize-space(text()),'%s')]", place);
+                                            if (firstFound == null) {
+                                                firstFound = element;
+                                            }
+                                            if (!isInteractable(element)) {
+                                                // find element with child with specified text
+                                                element = findByXPath("//*[normalize-space(descendant::text())='%s']", place);
+                                                if (firstFound == null) {
+                                                    firstFound = element;
+                                                }
+                                                if (!isInteractable(element)) {
+                                                    element = findByXPath("//*[contains(normalize-space(descendant::text()),'%s')]", place);
+                                                    if (firstFound == null) {
+                                                        firstFound = element;
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
