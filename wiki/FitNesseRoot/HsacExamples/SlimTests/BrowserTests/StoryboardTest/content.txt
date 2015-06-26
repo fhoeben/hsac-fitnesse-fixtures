@@ -13,7 +13,7 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |$price=   |text by XPath     |//div[@class='prijs']/strong              |
 |open      |http://www.funda.nl                                          |
 |enter     |Maliebaan, Utrecht|as        |Locatie                        |
-|click     |Zoeken                                                       |
+|press     |enter                                                        |
 |click     |Maliebaan 50 A                                               |
 |click     |Kenmerken                                                    |
 |check     |value of          |Vraagprijs|$price k.k.                    |

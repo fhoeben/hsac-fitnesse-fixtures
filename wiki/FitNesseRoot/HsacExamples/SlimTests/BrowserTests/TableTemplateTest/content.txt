@@ -8,10 +8,10 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |table template |check original price                                  |
 |open           |http://www.funda.nl                                   |
-|enter          |@{address}, @{city}|as             |Locatie           |
 |select         |€ 1.000.000        |for            |Prijsklasse       |
 |select         |€ 2.000.000        |for            |tot               |
-|click          |Zoeken                                                |
+|enter          |@{address}, @{city}|as             |Locatie           |
+|press          |enter                                                 |
 |click          |@{address}                                            |
 |click          |Kenmerken                                             |
 |$price=        |value of           |Vraagprijs                        |
