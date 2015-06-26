@@ -125,12 +125,6 @@ public class SeleniumHelper {
             }
         }
         if (!isInteractable(element)) {
-            element = findElement(By.linkText(place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
             element = findElement(byCss("textarea[placeholder='%s']", place));
             if (firstElement == null) {
                 firstElement = element;
@@ -174,12 +168,6 @@ public class SeleniumHelper {
         }
         if (!isInteractable(element)) {
             element = findElement(byCss("input[value*='%s']:not([type='hidden'])", place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findElement(By.partialLinkText(place));
             if (firstElement == null) {
                 firstElement = element;
             }
