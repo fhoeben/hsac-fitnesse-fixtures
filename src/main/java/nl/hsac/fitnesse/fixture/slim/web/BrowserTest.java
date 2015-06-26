@@ -132,28 +132,51 @@ public class BrowserTest extends SlimFixture {
     }
 
     public String alertText() {
-        Alert alert = getAlert();
-        return alert.getText();
+        return waitUntilOrNull(new ExpectedCondition<String>() {
+            @Override
+            public String apply(WebDriver webDriver) {
+                Alert alert = getAlert();
+                String text = null;
+                if (alert != null) {
+                    text = alert.getText();
+                }
+                return text;
+            }
+        });
     }
 
     public boolean confirmAlert() {
-        Alert alert = getAlert();
-        alert.accept();
-        return true;
+        return waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                Alert alert = getAlert();
+                boolean result = false;
+                if (alert != null) {
+                    alert.accept();
+                    result = true;
+                }
+                return result;
+            }
+        });
     }
 
     public boolean dismissAlert() {
-        Alert alert = getAlert();
-        alert.dismiss();
-        return true;
+        return waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                Alert alert = getAlert();
+                boolean result = false;
+                if (alert != null) {
+                    alert.dismiss();
+                    result = true;
+                }
+                return result;
+            }
+        });
     }
 
     protected Alert getAlert() {
-        Alert alert = getSeleniumHelper().getAlert();
-        if (alert == null) {
-            handleRequiredElementNotFound("alert");
-        }
-        return alert;
+        return getSeleniumHelper().getAlert();
     }
 
     public boolean openInNewTab(String url) {
@@ -432,8 +455,13 @@ public class BrowserTest extends SlimFixture {
         });
     }
 
-    public boolean enterForHidden(String value, String idOrName) {
-        return getSeleniumHelper().setHiddenInputValue(idOrName, value);
+    public boolean enterForHidden(final String value, final String idOrName) {
+        return waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                return getSeleniumHelper().setHiddenInputValue(idOrName, value);
+            }
+        });
     }
 
     private boolean clickSelectOption(String selectPlace, String optionValue) {
@@ -785,8 +813,13 @@ public class BrowserTest extends SlimFixture {
     }
 
     public boolean rowExistsWhereIs(String selectOnColumn, String selectOnValue) {
-        String columnXPath = getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue);
-        WebElement element = findByXPath(columnXPath);
+        final String columnXPath = getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue);
+        WebElement element = waitUntilOrNull(new ExpectedCondition<WebElement>() {
+            @Override
+            public WebElement apply(WebDriver webDriver) {
+                return findByXPath(columnXPath);
+            }
+        });
         return element != null;
     }
 
@@ -847,7 +880,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected String downloadFromRow(final String columnXPath, final String place) {
-        return waitUntil(new ExpectedCondition<String>() {
+        String result = waitUntil(new ExpectedCondition<String>() {
             @Override
             public String apply(WebDriver webDriver) {
                 String result = null;
@@ -862,14 +895,13 @@ public class BrowserTest extends SlimFixture {
                         element = findByXPath("%s//a[contains(@title, '%s')]", columnXPath, place);
                     }
                 }
-                if (element == null) {
-                    throw new SlimFixtureException(false, "Unable to find link: " + place);
-                } else {
+                if (element != null) {
                     result = downloadLinkTarget(element);
                 }
                 return result;
             }
         });
+        return result;
     }
 
     /**
@@ -1032,13 +1064,19 @@ public class BrowserTest extends SlimFixture {
      * @param place element to check.
      * @return true if element is displayed and in viewport.
      */
-    public boolean isVisible(String place) {
-        boolean result = false;
-        WebElement element = getElementToCheckVisibility(place);
-        if (element != null) {
-            result = element.isDisplayed() && isElementOnScreen(element);
-        }
-        return result;
+    public boolean isVisible(final String place) {
+        Boolean r = waitUntilOrNull(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                Boolean result = null;
+                WebElement element = getElementToCheckVisibility(place);
+                if (element != null) {
+                    result = element.isDisplayed() && isElementOnScreen(element);
+                }
+                return result;
+            }
+        });
+        return r != null && r.booleanValue();
     }
 
     protected WebElement getElementToCheckVisibility(String place) {
