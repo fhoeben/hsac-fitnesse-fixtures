@@ -500,7 +500,7 @@ public class BrowserTest extends SlimFixture {
                 boolean result = false;
                 try {
                     WebElement element = getElementToClick(place);
-                    return clickElement(element);
+                    result = clickElement(element);
                 } catch (WebDriverException e) {
                     String msg = e.getMessage();
                     if (msg == null || !msg.contains("Other element would receive the click")) {
