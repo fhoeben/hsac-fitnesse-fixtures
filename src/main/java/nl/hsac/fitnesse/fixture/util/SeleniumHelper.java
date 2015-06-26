@@ -1,13 +1,6 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
-
 import org.openqa.selenium.*;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.internal.Base64Encoder;
@@ -18,6 +11,12 @@ import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Helper to work with Selenium.
@@ -97,18 +96,39 @@ public class SeleniumHelper {
      *          null if none could be found.
      */
     public WebElement getElement(String place) {
-        WebElement element = getElementExact(place);
-        // first element found, even if it is not (yet) interactable.
-        WebElement firstElement = element;
-        if (!isInteractable(element)) {
-            element = getElementPartial(place);
-            if (firstElement == null) {
-                firstElement = element;
+        By by = placeToBy(place);
+        if (by != null) {
+            return findElement(by);
+        } else {
+            WebElement element = getElementExact(place);
+            // first element found, even if it is not (yet) interactable.
+            WebElement firstElement = element;
+            if (!isInteractable(element)) {
+                element = getElementPartial(place);
+                if (firstElement == null) {
+                    firstElement = element;
+                }
             }
+            return isInteractable(element)
+                    ? element
+                    : firstElement;
         }
-        return isInteractable(element)
-                ? element
-                : firstElement;
+    }
+
+    public By placeToBy(String place) {
+        By result = null;
+        if (place.startsWith("id=")) {
+            result = By.id(place.substring(3));
+        } else if (place.startsWith("css=")) {
+            result = By.cssSelector(place.substring(4));
+        } else if (place.startsWith("name=")) {
+            result = By.name(place.substring(5));
+        } else if (place.startsWith("link=")) {
+            result = By.linkText(place.substring(5));
+        } else if (place.startsWith("xpath=")) {
+            result = By.xpath(place.substring(6));
+        }
+        return result;
     }
 
     public WebElement getElementExact(String place) {
