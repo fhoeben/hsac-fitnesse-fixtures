@@ -97,6 +97,21 @@ public class SeleniumHelper {
      *          null if none could be found.
      */
     public WebElement getElement(String place) {
+        WebElement element = getElementExact(place);
+        // first element found, even if it is not (yet) interactable.
+        WebElement firstElement = element;
+        if (!isInteractable(element)) {
+            element = getElementPartial(place);
+            if (firstElement == null) {
+                firstElement = element;
+            }
+        }
+        return isInteractable(element)
+                ? element
+                : firstElement;
+    }
+
+    public WebElement getElementExact(String place) {
         WebElement element = null;
         // first element found, even if it is not (yet) interactable.
         WebElement firstElement = null;
@@ -154,6 +169,15 @@ public class SeleniumHelper {
                 firstElement = element;
             }
         }
+        return isInteractable(element)
+                ? element
+                : firstElement;
+    }
+
+    public WebElement getElementPartial(String place) {
+        WebElement element = null;
+        // first element found, even if it is not (yet) interactable.
+        WebElement firstElement = null;
         if (!isInteractable(element)) {
             element = getElementByPartialLabelOccurrence(place, 1);
             if (firstElement == null) {
