@@ -1,37 +1,27 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
+import java.io.File;
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Set;
+
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import nl.hsac.fitnesse.fixture.util.BinaryHttpResponse;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.io.File;
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 public class BrowserTest extends SlimFixture {
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
@@ -589,22 +579,7 @@ public class BrowserTest extends SlimFixture {
         return waitUntil(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver webDriver) {
-                boolean ok = false;
-                try {
-                    ok = pageTitle().equals(pageName);
-                } catch (StaleElementReferenceException e) {
-                    // element detached from DOM
-                    ok = false;
-                } catch (WebDriverException e) {
-                    String msg = e.getMessage();
-                    if (msg != null && msg.contains("Element does not exist in cache")) {
-                        // stale element Safari style
-                        ok = false;
-                    } else {
-                        throw e;
-                    }
-                }
-                return ok;
+                return pageTitle().equals(pageName);
             }
         });
     }
@@ -626,25 +601,14 @@ public class BrowserTest extends SlimFixture {
 
                 List<WebElement> elements = webDriver.findElements(by);
                 if (elements != null) {
-                    try {
-                        for (WebElement element : elements) {
-                            // we don't want stale elements to make single
-                            // element false, but instead we stop processing
-                            // current list and do a new findElements
-                            ok = hasTextUnsafe(element, textToLookFor);
-                            if (ok) {
-                                // no need to continue to check other elements
-                                break;
-                            }
-                        }
-                    } catch (StaleElementReferenceException e) {
-                        // find elements again if still allowed
-                    } catch (WebDriverException e) {
-                        String msg = e.getMessage();
-                        if (msg != null && msg.contains("Element does not exist in cache")) {
-                            // stale element Safari style
-                        } else {
-                            throw e;
+                    for (WebElement element : elements) {
+                        // we don't want stale elements to make single
+                        // element false, but instead we stop processing
+                        // current list and do a new findElements
+                        ok = hasTextUnsafe(element, textToLookFor);
+                        if (ok) {
+                            // no need to continue to check other elements
+                            break;
                         }
                     }
                 }
@@ -1221,10 +1185,9 @@ public class BrowserTest extends SlimFixture {
      * @throws org.openqa.selenium.TimeoutException if condition was not met before secondsBeforeTimeout.
      * @return result of condition.
      */
-    protected <T> T waitUntil(ExpectedCondition<T> condition) {
+    protected <T> T waitUntil(final ExpectedCondition<T> condition) {
         try {
-            FluentWait<WebDriver> wait = waitDriver().withTimeout(secondsBeforeTimeout(), TimeUnit.SECONDS);
-            return wait.until(condition);
+            return getSeleniumHelper().waitUntil(secondsBeforeTimeout(), condition);
         } catch (TimeoutException e) {
             return handleTimeoutException(e);
         }

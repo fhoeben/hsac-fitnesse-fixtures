@@ -15,6 +15,8 @@ import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.ScreenshotException;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -608,6 +610,50 @@ public class SeleniumHelper {
      */
     public WebDriverWait waitDriver() {
         return webDriverWait;
+    }
+
+    /**
+     * Executes condition until it returns a value other than null or false.
+     * It does not forward StaleElementReferenceExceptions, but keeps waiting.
+     * @param maxSecondsToWait number of seconds to wait at most.
+     * @param condition condition to check.
+     * @param <T> return type.
+     * @return result of condition (if not null).
+     * @throws TimeoutException when condition did not give a value to return after maxSecondsToWait.
+     */
+    public <T> T waitUntil(int maxSecondsToWait, ExpectedCondition<T> condition) {
+        ExpectedCondition<T> cHandlingStale = getConditionIgnoringStaleElement(condition);
+        FluentWait<WebDriver> wait = waitDriver().withTimeout(maxSecondsToWait, TimeUnit.SECONDS);
+        return wait.until(cHandlingStale);
+    }
+
+    /**
+     * Wraps the supplied condition so that StaleElementReferenceExceptions (and the Safari equivalent)
+     * are to thrown by waitUntil(), but just mean: try again.
+     * @param condition condition to wrap.
+     * @param <T> retrun type of condition
+     * @return wrapped condition.
+     */
+    public <T> ExpectedCondition<T> getConditionIgnoringStaleElement(final ExpectedCondition<T> condition) {
+        return new ExpectedCondition<T>() {
+            @Override
+            public T apply(WebDriver webDriver) {
+                try {
+                    return condition.apply(webDriver);
+                } catch (StaleElementReferenceException e) {
+                    // try again
+                    return null;
+                } catch (WebDriverException e) {
+                    String msg = e.getMessage();
+                    if (msg != null && msg.contains("Element does not exist in cache")) {
+                        // Safari stale element
+                        return null;
+                    } else {
+                        throw e;
+                    }
+                }
+            }
+        };
     }
 
     /**
