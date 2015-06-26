@@ -685,7 +685,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     public String valueFor(final String place) {
-        return waitUntil(new ExpectedCondition<String>() {
+        return waitUntilOrNull(new ExpectedCondition<String>() {
             @Override
             public String apply(WebDriver webDriver) {
                 WebElement element = getElementToRetrieveValue(place);
@@ -915,7 +915,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected String getTextByXPath(final String xpathPattern, final String... params) {
-        return waitUntil(new ExpectedCondition<String>() {
+        return waitUntilOrNull(new ExpectedCondition<String>() {
             @Override
             public String apply(WebDriver webDriver) {
                 WebElement element = findByXPath(xpathPattern, params);
@@ -929,7 +929,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected String getTextByClassName(final String className) {
-        return waitUntil(new ExpectedCondition<String>() {
+        return waitUntilOrNull(new ExpectedCondition<String>() {
             @Override
             public String apply(WebDriver webDriver) {
                 WebElement element = findByClassName(className);
@@ -1160,16 +1160,16 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
-     * Implementations should wait until the condition evaluates to a value that is neither null nor
+     * Waits until the condition evaluates to a value that is neither null nor
      * false. Because of this contract, the return type must not be Void.
      * @param <T> the return type of the method, which must not be Void
      * @param condition condition to evaluate to determine whether waiting can be stopped.
      * @throws SlimFixtureException if condition was not met before secondsBeforeTimeout.
      * @return result of condition.
      */
-    protected <T> T waitUntil(final ExpectedCondition<T> condition) {
+    protected <T> T waitUntil(ExpectedCondition<T> condition) {
         try {
-            return getSeleniumHelper().waitUntil(secondsBeforeTimeout(), condition);
+            return waitUntilImpl(condition);
         } catch (TimeoutException e) {
             String message = getTimeoutMessage(e);
             throw new SlimFixtureException(false, message, e);
@@ -1177,19 +1177,40 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
-     * Implementations should wait until the condition evaluates to a value that is neither null nor
-     * false. Because of this contract, the return type must not be Void.
+     * Waits until the condition evaluates to a value that is neither null nor
+     * false. If that does not occur the whole test is stopped.
+     * Because of this contract, the return type must not be Void.
      * @param <T> the return type of the method, which must not be Void
      * @param condition condition to evaluate to determine whether waiting can be stopped.
      * @throws TimeoutStopTestException if condition was not met before secondsBeforeTimeout.
      * @return result of condition.
      */
-    protected <T> T waitUntilOrStop(final ExpectedCondition<T> condition) {
+    protected <T> T waitUntilOrStop(ExpectedCondition<T> condition) {
         try {
-            return getSeleniumHelper().waitUntil(secondsBeforeTimeout(), condition);
+            return waitUntilImpl(condition);
         } catch (TimeoutException e) {
             return handleTimeoutException(e);
         }
+    }
+
+    /**
+     * Waits until the condition evaluates to a value that is neither null nor
+     * false. If that does not occur null is returned.
+     * Because of this contract, the return type must not be Void.
+     * @param <T> the return type of the method, which must not be Void
+     * @param condition condition to evaluate to determine whether waiting can be stopped.
+     * @return result of condition.
+     */
+    protected <T> T waitUntilOrNull(ExpectedCondition<T> condition) {
+        try {
+            return waitUntilImpl(condition);
+        } catch (TimeoutException e) {
+            return null;
+        }
+    }
+
+    protected <T> T waitUntilImpl(ExpectedCondition<T> condition) {
+        return getSeleniumHelper().waitUntil(secondsBeforeTimeout(), condition);
     }
 
     protected <T> T handleTimeoutException(TimeoutException e) {
