@@ -11,9 +11,9 @@ This test ensures we can wait for elements explicitly (which means test will sto
 <script type="text/javascript">
     window.onload = function() {
 		setTimeout(function() { document.title = "Changed Page Title"; }, 1000);
-		setTimeout(function() { document.getElementById("link").innerHTML = "Hallo link"; }, 1500);
+		setTimeout(function() { document.getElementById("link").innerHTML = "Hallo link\n"; }, 1500);
 		setTimeout(function() { document.getElementsByName("add")[0].setAttribute("value", "Add more"); }, 2000);
-		setTimeout(function() { document.getElementsByName("remove")[0].setAttribute("value", "\nRemove more"); }, 2500);
+		setTimeout(function() { document.getElementsByName("remove")[0].setAttribute("value", "Remove more"); }, 2500);
     }
 </script>
 </body>
@@ -39,7 +39,7 @@ This test ensures we can wait for elements explicitly (which means test will sto
 |check                           |value of                        |add       |Add more   |
 |note                            |non-existing item's value is null                      |
 |check                           |value of                        |delete    |null       |
-|note                            |text may be value of actual text                       |
+|note                            |text may be value or actual text, and will be trimmed  |
 |wait for tag                    |a                               |with text |Hallo link |
 |wait for tag                    |input                           |with text |Remove more|
 |wait for visible                |Add button                                             |
