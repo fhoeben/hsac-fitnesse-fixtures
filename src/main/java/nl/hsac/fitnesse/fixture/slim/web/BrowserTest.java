@@ -940,6 +940,9 @@ public class BrowserTest extends SlimFixture {
         return getSeleniumHelper().getElement(place);
     }
 
+    /**
+     * @deprecated use #click(xpath=) instead.
+     */
     @Deprecated
     public boolean clickByXPath(final String xPath) {
         return waitUntil(new ExpectedCondition<Boolean>() {
@@ -951,6 +954,9 @@ public class BrowserTest extends SlimFixture {
         });
     }
 
+    /**
+     * @deprecated use #valueOf(xpath=) instead.
+     */
     @Deprecated
     public String textByXPath(String xPath) {
         return getTextByXPath(xPath);
@@ -966,6 +972,9 @@ public class BrowserTest extends SlimFixture {
         });
     }
 
+    /**
+     * @deprecated use #valueOf(css=.) instead.
+     */
     @Deprecated
     public String textByClassName(String className) {
         return getTextByClassName(className);
