@@ -22,6 +22,7 @@ This test ensures we can find elements based on explicit technical instructions.
 
 |script    |browser test                          |
 |open      |$url                                  |
+|check     |location|$url                         |
 |check     |value of|id=a3 |And some more         |
 |check     |value of|name=f|Piet                  |
 |enter     |Hallo   |as    |css=input[value='Add']|

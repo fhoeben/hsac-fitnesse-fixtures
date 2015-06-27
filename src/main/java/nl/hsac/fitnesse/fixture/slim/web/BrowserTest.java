@@ -103,6 +103,10 @@ public class BrowserTest extends SlimFixture {
         return true;
     }
 
+    public String location() {
+        return getSeleniumHelper().driver().getCurrentUrl();
+    }
+
     public boolean back() {
         getNavigation().back();
 
