@@ -696,7 +696,27 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
-    public boolean waitForXPathVisible(final String xPath) {
+    public boolean waitForVisible(final String place) {
+        return waitUntilOrStop(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                Boolean result = Boolean.FALSE;
+                WebElement element = getElementToCheckVisibility(place);
+                if (element != null) {
+                    scrollIfNotOnScreen(element);
+                    result = element.isDisplayed();
+                }
+                return result;
+            }
+        });
+
+    }
+
+    /**
+     * @deprecated use #waitForVisible(xpath=) instead
+     */
+    @Deprecated
+    public boolean waitForXPathVisible(String xPath) {
         By by = By.xpath(xPath);
         return waitForVisible(by);
     }
