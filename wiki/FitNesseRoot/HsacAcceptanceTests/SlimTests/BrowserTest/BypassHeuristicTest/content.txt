@@ -5,11 +5,6 @@ This test ensures we can find elements based on explicit technical instructions.
 !define HTML { {{{
 <html>
 <body>
-<div id="a1">A</div>
-<div id="a2">
-    <div>A<span>KH<span>asdas<div>sadasd<p>jhsdhf</p> <strong>B </strong></div>dad</span>FGH</span></div>
-    asdasudia
-</div>
 <div id="a3">And some more</div>
 <button aria-labelledby="a1">Button 1</button>
 <input name="f" aria-labelledby="a2" value="Piet">
