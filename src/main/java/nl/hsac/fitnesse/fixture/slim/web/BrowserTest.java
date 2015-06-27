@@ -1205,6 +1205,14 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
+     * @return (escaped) HTML content of current page.
+     */
+    public String pageSource() {
+        String html = getSeleniumHelper().getHtml();
+        return "<pre>" + StringEscapeUtils.escapeHtml4(html) + "</pre>";
+    }
+
+    /**
      * Takes screenshot from current page
      * @param basename filename (below screenshot base directory).
      * @return location of screenshot.
