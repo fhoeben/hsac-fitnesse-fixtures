@@ -940,6 +940,7 @@ public class BrowserTest extends SlimFixture {
         return getSeleniumHelper().getElement(place);
     }
 
+    @Deprecated
     public boolean clickByXPath(final String xPath) {
         return waitUntil(new ExpectedCondition<Boolean>() {
             @Override
@@ -950,6 +951,7 @@ public class BrowserTest extends SlimFixture {
         });
     }
 
+    @Deprecated
     public String textByXPath(String xPath) {
         return getTextByXPath(xPath);
     }
@@ -964,6 +966,7 @@ public class BrowserTest extends SlimFixture {
         });
     }
 
+    @Deprecated
     public String textByClassName(String className) {
         return getTextByClassName(className);
     }

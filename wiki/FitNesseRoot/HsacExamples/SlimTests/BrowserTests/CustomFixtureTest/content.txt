@@ -7,14 +7,14 @@ First we do this with ''plain !-BrowserTest-!'', then with a ''custom subclass, 
 
 |script|browser test                                                                  |
 |open  |http://www.funda.nl                                                           |
-|select|€ 1.000.000                |for                           |Prijsklasse        |
-|select|€ 1.500.000                |for                           |tot                |
-|enter |Maliebaan, Utrecht         |as                            |Locatie            |
+|select|€ 1.000.000              |for                               |Prijsklasse      |
+|select|€ 1.500.000              |for                               |tot              |
+|enter |Maliebaan, Utrecht       |as                                |Locatie          |
 |press |enter                                                                         |
 |click |Maliebaan 50 A                                                                |
 |click |Foto's                                                                        |
 |note  |Check any element's text based on an xPath, makes test fragile to HTML changes|
-|check |text by xPath              |//span[@class='hits']         |(23)               |
+|check |value of                 |xpath=//span[@class='hits']       |(23)             |
 
 What can we do with a custom subclass...
 
