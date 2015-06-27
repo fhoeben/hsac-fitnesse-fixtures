@@ -10,7 +10,7 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |press enter                                                             |
 |click     |Maliebaan                                                    |
 |click     |Maliebaan 50 A                                               |
-|$price=   |text by XPath     |//div[@class='prijs']/strong              |
+|$price=   |value of          |xpath=//div[@class='prijs']/strong        |
 |open      |http://www.funda.nl                                          |
 |enter     |Maliebaan, Utrecht|as        |Locatie                        |
 |press     |enter                                                        |

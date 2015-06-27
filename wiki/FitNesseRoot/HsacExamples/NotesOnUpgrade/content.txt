@@ -8,7 +8,9 @@ The second major change in finding elements that the heuristics used by !-Browse
 !3 Wiki Impact
 * ''value of'' no longer looks at hyperlinks.
 * ''click'' and ''is visible'' prefers hyperlinks to above other elements (such as !style_code[input]s or !style_code[button]) when both match (this only impacts pages where there were multiple exact or multiple partial matches for the same ''<place>'').
+* All usage of ''|click by xPath|<xPathExpr>|'' should be replaced by a call to ''|click|xpath=<xPathExpr>|''. This could be done using a scenario called ''click by xPath'' so that individual pages need no change.
 * All usage of ''|text by xPath|<xPathExpr>|'' should be replaced by a call to ''|value of|xpath=<xPathExpr>|''. This could be done using a scenario called ''text by xPath'' so that individual pages need no change.
+* All usage of ''|text by class name|<className>|'' should be replaced by a call to ''|value of|css=.<className>|''. This could be done using a scenario called ''text by class name'' so that individual pages need no change.
 * A new command/method has been introduced ''seconds before page load timeout'', this controls (only) the time waited for a new page to be returned by the server. Previously this time out was set using ''seconds before timeout''. The latter still sets the maximum page load time (for backwards compatibility), but the new command allows specific control of the page load timeout separate from the timeout when looking for elements to interact with (which is controlled using ''seconds before timeout''). 
 
 !3 Fixture Subclass Impact
