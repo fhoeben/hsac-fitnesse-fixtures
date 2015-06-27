@@ -803,6 +803,13 @@ public class SeleniumHelper {
     }
 
     /**
+     * @return HTML content of current page.
+     */
+    public String getHtml() {
+        return (String) executeJavascript("return document.documentElement.outerHTML || document.documentElement.innerHTML;");
+    }
+
+    /**
      * @return current window's size.
      */
     public Dimension getWindowSize() {

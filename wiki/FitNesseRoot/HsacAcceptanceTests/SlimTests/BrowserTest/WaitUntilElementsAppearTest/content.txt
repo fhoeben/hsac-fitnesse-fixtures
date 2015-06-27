@@ -43,6 +43,7 @@ This test ensures we can wait for elements explicitly (which means test will sto
 |wait for tag                    |a                               |with text |Hallo link |
 |wait for tag                    |input                           |with text |Remove more|
 |wait for visible                |Add button                                             |
+|show                            |page source                                            |
 
 |script|mock xml server setup|
 |stop                        |
