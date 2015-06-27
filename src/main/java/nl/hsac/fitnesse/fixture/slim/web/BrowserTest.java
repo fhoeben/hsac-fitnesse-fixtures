@@ -642,7 +642,7 @@ public class BrowserTest extends SlimFixture {
                         // we don't want stale elements to make single
                         // element false, but instead we stop processing
                         // current list and do a new findElements
-                        ok = hasTextUnsafe(element, textToLookFor);
+                        ok = hasText(element, textToLookFor);
                         if (ok) {
                             // no need to continue to check other elements
                             break;
@@ -659,25 +659,6 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected boolean hasText(WebElement element, String textToLookFor) {
-        boolean ok;
-        try {
-            ok = hasTextUnsafe(element, textToLookFor);
-        } catch (StaleElementReferenceException e) {
-            // element detached from DOM
-            ok = false;
-        } catch (WebDriverException e) {
-            String msg = e.getMessage();
-            if (msg != null && msg.contains("Element does not exist in cache")) {
-                // stale element Safari style
-                ok = false;
-            } else {
-                throw e;
-            }
-        }
-        return ok;
-    }
-
-    protected boolean hasTextUnsafe(WebElement element, String textToLookFor) {
         boolean ok;
         String actual = getElementText(element);
         if (textToLookFor == null) {
