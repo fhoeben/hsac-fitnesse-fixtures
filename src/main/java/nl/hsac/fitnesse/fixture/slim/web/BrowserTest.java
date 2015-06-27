@@ -27,6 +27,7 @@ public class BrowserTest extends SlimFixture {
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
     private NgBrowserTest ngBrowserTest;
     private int secondsBeforeTimeout;
+    private int secondsBeforePageLoadTimeout;
     private int waitAfterScroll = 150;
     private String screenshotBase = new File(filesDir, "screenshots").getPath() + "/";
     private String screenshotHeight = "200";
@@ -1105,8 +1106,8 @@ public class BrowserTest extends SlimFixture {
      */
     public void secondsBeforeTimeout(int timeout) {
         secondsBeforeTimeout = timeout;
+        secondsBeforePageLoadTimeout(timeout);
         int timeoutInMs = timeout * 1000;
-        getSeleniumHelper().setPageLoadWait(timeoutInMs);
         getSeleniumHelper().setScriptWait(timeoutInMs);
     }
 
@@ -1115,6 +1116,22 @@ public class BrowserTest extends SlimFixture {
      */
     public int secondsBeforeTimeout() {
         return secondsBeforeTimeout;
+    }
+
+    /**
+     * @param timeout number of seconds before waiting for a new page to load will throw a TimeOutException.
+     */
+    public void secondsBeforePageLoadTimeout(int timeout) {
+        secondsBeforePageLoadTimeout = timeout;
+        int timeoutInMs = timeout * 1000;
+        getSeleniumHelper().setPageLoadWait(timeoutInMs);
+    }
+
+    /**
+     * @return number of seconds Selenium will wait at most for a request to load a page.
+     */
+    public int secondsBeforePageLoadTimeout() {
+        return secondsBeforePageLoadTimeout;
     }
 
     /**
