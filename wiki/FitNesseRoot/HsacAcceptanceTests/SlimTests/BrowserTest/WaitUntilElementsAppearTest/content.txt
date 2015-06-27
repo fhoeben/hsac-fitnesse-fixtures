@@ -10,10 +10,10 @@ This test ensures we can wait for elements explicitly (which means test will sto
 <a id="link" href="#">My link</a>
 <script type="text/javascript">
     window.onload = function() {
-		setTimeout(function() { document.title = "Changed Page Title"; }, 500);
-		setTimeout(function() { document.getElementById("link").innerHTML = "Hallo link"; }, 1000);
-		setTimeout(function() { document.getElementsByName("add")[0].setAttribute("value", "Add more"); }, 1500);
-		setTimeout(function() { document.getElementsByName("remove")[0].setAttribute("value", "\nRemove more"); }, 1600);
+		setTimeout(function() { document.title = "Changed Page Title"; }, 1000);
+		setTimeout(function() { document.getElementById("link").innerHTML = "Hallo link"; }, 1500);
+		setTimeout(function() { document.getElementsByName("add")[0].setAttribute("value", "Add more"); }, 2000);
+		setTimeout(function() { document.getElementsByName("remove")[0].setAttribute("value", "\nRemove more"); }, 2500);
     }
 </script>
 </body>
@@ -26,14 +26,14 @@ This test ensures we can wait for elements explicitly (which means test will sto
 
 |script                          |browser test                                           |
 |open                            |$url                                                   |
+|check                           |page title                      |Start Page Title      |
+|check                           |value of                        |Add button|Add        |
 |seconds before timeout          |1                                                      |
 |check                           |seconds before timeout          |1                     |
 |check                           |seconds before page load timeout|1                     |
 |seconds before page load timeout|4                                                      |
 |check                           |seconds before timeout          |1                     |
 |check                           |seconds before page load timeout|4                     |
-|check                           |page title                      |Start Page Title      |
-|check                           |value of                        |Add button|Add        |
 |wait for page                   |Changed Page Title                                     |
 |click                           |Hallo link                                             |
 |check                           |value of                        |add       |Add more   |
