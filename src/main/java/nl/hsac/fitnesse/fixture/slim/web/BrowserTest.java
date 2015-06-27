@@ -683,8 +683,14 @@ public class BrowserTest extends SlimFixture {
         if (textToLookFor == null) {
             ok = actual == null;
         } else {
-            if (actual == null) {
-                actual = element.getAttribute("value");
+            if (StringUtils.isEmpty(actual)) {
+                String value = element.getAttribute("value");
+                if (!StringUtils.isEmpty(value)) {
+                    actual = value;
+                }
+            }
+            if (actual != null) {
+                actual = actual.trim();
             }
             ok = textToLookFor.equals(actual);
         }

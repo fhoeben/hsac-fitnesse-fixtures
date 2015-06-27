@@ -1,0 +1,42 @@
+This test ensures we can wait for elements explicitly (which means test will stop on timeout), but also implicitly (which will cause exception).
+
+
+!define HTML { {{{
+<html>
+<title>Start Page Title</title>
+<body>
+<input name="remove" type="button" value="Remove">
+<label>Add button<input name="add" type="button" value="Add"></label>
+<a id="link" href="#">My link</a>
+<script type="text/javascript">
+    window.onload = function() {
+		setTimeout(function() { document.title = "Changed Page Title"; }, 500);
+		setTimeout(function() { document.getElementById("link").innerHTML = "Hallo link"; }, 1000);
+		setTimeout(function() { document.getElementsByName("add")[0].setAttribute("value", "Add more"); }, 1500);
+		setTimeout(function() { document.getElementsByName("remove")[0].setAttribute("value", "\nRemove more"); }, 1600);
+    }
+</script>
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script                |browser test                     |
+|open                  |$url                             |
+|seconds before timeout|1                                |
+|check                 |page title|Start Page Title      |
+|check                 |value of  |Add button|Add        |
+|wait for page         |Changed Page Title               |
+|click                 |Hallo link                       |
+|check                 |value of  |add       |Add more   |
+|note                  |non-existing item's value is null|
+|check                 |value of  |delete    |null       |
+|note                  |text may be value of actual text |
+|wait for tag          |a         |with text |Hallo link |
+|wait for tag          |input     |with text |Remove more|
+
+|script|mock xml server setup|
+|stop                        |
