@@ -1225,28 +1225,32 @@ public class BrowserTest extends SlimFixture {
      * @return hyperlink to the file containing the page source.
      */
     public String savePageSource() {
+        String fileName = "pageSource";
+        try {
+            String location = location();
+            URL u = new URL(location);
+            String file = FilenameUtils.getName(u.getPath());
+            file = file.replaceAll("^(.*?)(\\.html?)?$", "$1");
+            if (!"".equals(file)) {
+                fileName = file;
+            }
+        } catch (MalformedURLException e) {
+            // ignore
+        }
+
+        return savePageSource(fileName, fileName + ".html");
+    }
+
+    protected String savePageSource(String fileName, String linkText) {
         String result = null;
         String html = getSeleniumHelper().getHtml();
         if (html != null) {
             try {
-                String fileName = "pageSource";
-                try {
-                    String location = location();
-                    URL u = new URL(location);
-                    String file = FilenameUtils.getName(u.getPath());
-                    file = file.replaceAll("^(.*?)(\\.html?)?$", "$1");
-                    if (!"".equals(file)) {
-                        fileName = file;
-                    }
-                } catch (MalformedURLException e) {
-                    // ignore
-                }
-
                 String file = FileUtil.saveToFile(getPageSourceName(fileName), "html", html.getBytes("utf-8"));
                 String wikiUrl = getWikiUrl(file);
                 if (wikiUrl != null) {
                     // make href to file
-                    result = String.format("<a href=\"%s\">%s</a>", wikiUrl, fileName + ".html");
+                    result = String.format("<a href=\"%s\">%s</a>", wikiUrl, linkText);
                 } else {
                     result = file;
                 }
@@ -1410,10 +1414,24 @@ public class BrowserTest extends SlimFixture {
                 message = ExceptionUtils.getStackTrace(t);
             }
         }
+        String label = "Page content";
+        try {
+            String fileName;
+            if (t != null) {
+                fileName = t.getClass().getName();
+            } else if (screenshotBaseName != null) {
+                fileName = screenshotBaseName;
+            } else {
+                fileName = "exception";
+            }
+            label = savePageSource(fileName, label);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (screenShotFile != null) {
             String exceptionMsg = formatExceptionMsg(message);
-            message = String.format("<div><div>%s.</div><div>Page content:%s</div></div>",
-                    exceptionMsg, getScreenshotLink(screenShotFile));
+            message = String.format("<div><div>%s.</div><div>%s:%s</div></div>",
+                    exceptionMsg, label, getScreenshotLink(screenShotFile));
         }
         return message;
     }
