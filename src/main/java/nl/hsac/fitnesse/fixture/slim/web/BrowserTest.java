@@ -1,17 +1,11 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
-import java.io.File;
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Set;
-
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import nl.hsac.fitnesse.fixture.util.BinaryHttpResponse;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +17,14 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+import java.util.Set;
+
 public class BrowserTest extends SlimFixture {
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
     private NgBrowserTest ngBrowserTest;
@@ -32,6 +34,7 @@ public class BrowserTest extends SlimFixture {
     private String screenshotBase = new File(filesDir, "screenshots").getPath() + "/";
     private String screenshotHeight = "200";
     private String downloadBase = new File(filesDir, "downloads").getPath() + "/";
+    private String pageSourceBase = new File(filesDir, "pagesources").getPath() + "/";
 
     @Override
     protected void beforeInvoke(Method method, Object[] arguments) {
@@ -1214,6 +1217,48 @@ public class BrowserTest extends SlimFixture {
             result = "<pre>" + StringEscapeUtils.escapeHtml4(html) + "</pre>";
         }
         return result;
+    }
+
+    /**
+     * Saves current page's source to the wiki'f files section and returns a link to the
+     * created file.
+     * @return hyperlink to the file containing the page source.
+     */
+    public String savePageSource() {
+        String result = null;
+        String html = getSeleniumHelper().getHtml();
+        if (html != null) {
+            try {
+                String fileName = "pageSource";
+                try {
+                    String location = location();
+                    URL u = new URL(location);
+                    String file = FilenameUtils.getName(u.getPath());
+                    file = file.replaceAll("^(.*?)(\\.html?)?$", "$1");
+                    if (!"".equals(file)) {
+                        fileName = file;
+                    }
+                } catch (MalformedURLException e) {
+                    // ignore
+                }
+
+                String file = FileUtil.saveToFile(getPageSourceName(fileName), "html", html.getBytes("utf-8"));
+                String wikiUrl = getWikiUrl(file);
+                if (wikiUrl != null) {
+                    // make href to file
+                    result = String.format("<a href=\"%s\">%s</a>", wikiUrl, fileName + ".html");
+                } else {
+                    result = file;
+                }
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException("Unable to save source", e);
+            }
+        }
+        return result;
+    }
+
+    protected String getPageSourceName(String fileName) {
+        return pageSourceBase + fileName;
     }
 
     /**
