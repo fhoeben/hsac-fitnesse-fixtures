@@ -500,24 +500,37 @@ public class BrowserTest extends SlimFixture {
     }
 
     public boolean click(final String place) {
-        // if other element hides the element (in Chrome) an exception is thrown
-        // we retry clicking the element a few times before giving up.
         return waitUntil(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver webDriver) {
-                boolean result = false;
-                try {
-                    WebElement element = getElementToClick(place);
-                    result = clickElement(element);
-                } catch (WebDriverException e) {
-                    String msg = e.getMessage();
-                    if (msg == null || !msg.contains("Other element would receive the click")) {
-                        throw e;
-                    }
-                }
-                return result;
+                return clickImp(place);
             }
         });
+    }
+
+    public boolean clickIfAvailable(final String place) {
+        Boolean result = waitUntilOrNull(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                return clickImp(place);
+            }
+        });
+        return result != null && result.booleanValue();
+    }
+
+    protected boolean clickImp(String place) {
+        boolean result = false;
+        try {
+            WebElement element = getElementToClick(place);
+            result = clickElement(element);
+        } catch (WebDriverException e) {
+            // if other element hides the element (in Chrome) an exception is thrown
+            String msg = e.getMessage();
+            if (msg == null || !msg.contains("Other element would receive the click")) {
+                throw e;
+            }
+        }
+        return result;
     }
 
     protected WebElement getElementToClick(String place) {

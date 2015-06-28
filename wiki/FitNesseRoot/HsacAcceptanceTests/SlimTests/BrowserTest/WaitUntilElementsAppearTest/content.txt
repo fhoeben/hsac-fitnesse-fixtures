@@ -28,6 +28,7 @@ This test ensures we can wait for elements explicitly (which means test will sto
 |open                            |$url                                                   |
 |check                           |page title                      |Start Page Title      |
 |check                           |value of                        |Add button|Add        |
+|ensure                          |click if available              |My link               |
 |seconds before timeout          |1                                                      |
 |check                           |seconds before timeout          |1                     |
 |check                           |seconds before page load timeout|1                     |
@@ -43,6 +44,7 @@ This test ensures we can wait for elements explicitly (which means test will sto
 |wait for tag                    |a                               |with text |Hallo link |
 |wait for tag                    |input                           |with text |Remove more|
 |wait for visible                |Add button                                             |
+|reject                          |click if available              |My link               |
 
 |script|mock xml server setup|
 |stop                        |
