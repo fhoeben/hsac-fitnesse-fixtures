@@ -50,7 +50,7 @@ public class MockXmlServerSetup extends SlimFixture {
         if (SERVERS.containsKey(path)) {
             mockServer = getMockServer(path);
         } else {
-            mockServer = createMockServer(aPath);
+            mockServer = createMockServer(path);
             SERVERS.put(path, mockServer);
         }
     }
