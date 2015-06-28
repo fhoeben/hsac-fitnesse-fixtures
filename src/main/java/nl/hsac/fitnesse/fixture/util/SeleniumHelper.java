@@ -806,7 +806,20 @@ public class SeleniumHelper {
      * @return HTML content of current page.
      */
     public String getHtml() {
-        return (String) executeJavascript("return document.documentElement.outerHTML || document.documentElement.innerHTML;");
+        return (String) executeJavascript(
+                "var node = document.doctype;\n" +
+                "var docType = '';\n" +
+                "if (node) {\n" +
+                    "  docType = \"<!DOCTYPE \"\n" +
+                    "+ node.name\n" +
+                    "+ (node.publicId ? ' PUBLIC \"' + node.publicId + '\"' : '')\n" +
+                    "+ (!node.publicId && node.systemId ? ' SYSTEM' : '') \n" +
+                    "+ (node.systemId ? ' \"' + node.systemId + '\"' : '')\n" +
+                    "+ '>'; }\n" +
+                "var html = document.documentElement.outerHTML " +
+                    "|| '<html>' + document.documentElement.innerHTML + '</html>';\n" +
+                "return docType + html;"
+        );
     }
 
     /**
