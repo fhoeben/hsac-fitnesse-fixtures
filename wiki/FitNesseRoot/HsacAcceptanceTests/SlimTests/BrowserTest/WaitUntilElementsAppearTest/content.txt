@@ -1,7 +1,17 @@
 This test ensures we can wait for elements explicitly (which means test will stop on timeout), but also implicitly (which will cause exception).
 
 
-!define HTML { {{{
+!define HTML1 { {{{
+<html>
+<title>Start Page Title</title>
+<body>
+<input name="remove" type="button" value="Remove">
+<label>Add button<input name="add" type="button" value="Add"></label>
+<a id="link" href="#">My link</a>
+</body>
+</html>}}} }
+
+!define HTML2 { {{{
 <html>
 <title>Start Page Title</title>
 <body>
@@ -19,9 +29,9 @@ This test ensures we can wait for elements explicitly (which means test will sto
 </body>
 </html>}}} }
 
-
 |script      |mock xml server setup|
-|add response|${HTML}              |
+|add response|${HTML1}             |
+|add response|${HTML2}             |
 |$url=       |get mock server url  |
 
 |script                          |browser test                                           |
@@ -35,6 +45,7 @@ This test ensures we can wait for elements explicitly (which means test will sto
 |seconds before page load timeout|4                                                      |
 |check                           |seconds before timeout          |1                     |
 |check                           |seconds before page load timeout|4                     |
+|refresh                                                                                 |
 |wait for page                   |Changed Page Title                                     |
 |click                           |Hallo link                                             |
 |check                           |value of                        |add       |Add more   |
