@@ -403,15 +403,30 @@ public class SeleniumHelper {
     public Object executeJavascript(String statementPattern, Object... parameters) {
         Object result;
         String script = String.format(statementPattern, parameters);
-        JavascriptExecutor jse = (JavascriptExecutor) driver();
         if (statementPattern.contains("arguments")) {
-            result = jse.executeScript(script, parameters);
+            result = executeScript(script, parameters);
         } else {
-            result = jse.executeScript(script);
+            result = executeScript(script);
         }
         return result;
     }
 
+    protected Object executeScript(String script, Object... parameters) {
+        Object result;
+        JavascriptExecutor jse = (JavascriptExecutor) driver();
+        try {
+            result = jse.executeScript(script, parameters);
+        } catch (WebDriverException e) {
+            String msg = e.getMessage();
+            if (msg != null && msg.contains("Detected a page unload event; script execution does not work across page loads.")) {
+                // page reloaded while script ran, retry it once
+                result = jse.executeScript(script, parameters);
+            } else {
+                throw e;
+            }
+        }
+        return result;
+    }
 
     /**
      * Executes Javascript in browser and then waits for 'callback' to be invoked.
