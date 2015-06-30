@@ -334,7 +334,7 @@ public class SeleniumHelper {
         WebElement firstFound = null;
         if (!isInteractable(element)) {
             // see if there is an element with labelText as text, whose id is referenced by an aria-labelledby attribute
-            String labelledByPattern = indexedXPath("//*[@aria-labelledby and @aria-labelledby=//*/descendant-or-self::text()[normalize-space(.) = '%s']/ancestor-or-self::*/@id]", index);
+            String labelledByPattern = indexedXPath("//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[normalize-space(.) = '%s']/ancestor-or-self::*[@id]/@id]", index);
             element = findElement(byXpath(labelledByPattern, labelText));
             if (firstFound == null) {
                 firstFound = element;
@@ -355,7 +355,7 @@ public class SeleniumHelper {
         WebElement element = null;
         WebElement firstFound = null;
         if (!isInteractable(element)) {
-            String labelledByPattern = indexedXPath("//*[@aria-labelledby and @aria-labelledby=//*/descendant-or-self::text()[contains(normalize-space(..), '%s')]/ancestor-or-self::*/@id]", index);
+            String labelledByPattern = indexedXPath("//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[contains(normalize-space(..), '%s')]/ancestor-or-self::*[@id]/@id]", index);
             element = findElement(byXpath(labelledByPattern, labelText));
             if (firstFound == null) {
                 firstFound = element;
