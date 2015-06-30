@@ -35,6 +35,7 @@ public class Environment {
     private DatesHelper datesHelper = new DatesHelper();
     private SeleniumHelper seleniumHelper;
     private MapHelper mapHelper = new MapHelper();
+    private ReflectionHelper reflectionHelper = new ReflectionHelper();
 
     private Environment() {
         Configuration cfg = new Configuration();
@@ -469,5 +470,9 @@ public class Environment {
      */
     public JsonHelper getJsonHelper() {
         return jsonHelper;
+    }
+
+    public ReflectionHelper getReflectionHelper() {
+        return reflectionHelper;
     }
 }
