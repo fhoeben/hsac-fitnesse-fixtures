@@ -6,6 +6,7 @@ import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.TimeoutPolicy;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.WaitUntil;
 import nl.hsac.fitnesse.fixture.util.*;
+import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -50,7 +51,7 @@ public class BrowserTest extends SlimFixture {
         Object result;
         WaitUntil waitUntil = reflectionHelper.getAnnotation(WaitUntil.class, method);
         if (waitUntil == null) {
-            result = super.invoke(interaction, method, arguments);
+            result = superInvoke(interaction, method, arguments);
         } else {
             result = invokedWrappedInWaitUntil(waitUntil, interaction, method, arguments);
         }
@@ -62,9 +63,16 @@ public class BrowserTest extends SlimFixture {
             @Override
             public Object apply(WebDriver webDriver) {
                 try {
-                    return BrowserTest.super.invoke(interaction, method, arguments);
+                    return superInvoke(interaction, method, arguments);
                 } catch (InvocationTargetException e) {
-                    throw new RuntimeException(e);
+                    Throwable realEx = ExceptionHelper.stripReflectionException(e);
+                    if (realEx instanceof RuntimeException) {
+                        throw (RuntimeException) realEx;
+                    } else if (realEx instanceof Error) {
+                        throw (Error) realEx;
+                    } else {
+                        throw new RuntimeException(realEx);
+                    }
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
@@ -87,6 +95,10 @@ public class BrowserTest extends SlimFixture {
                 break;
         }
         return result;
+    }
+
+    protected Object superInvoke(FixtureInteraction interaction, Method method, Object[] arguments) throws InvocationTargetException, IllegalAccessException {
+        return super.invoke(interaction, method, arguments);
     }
 
     /**
