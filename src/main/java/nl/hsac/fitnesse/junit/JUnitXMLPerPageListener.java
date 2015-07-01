@@ -29,20 +29,28 @@ public class JUnitXMLPerPageListener extends RunListener {
 
     @Override
     public void testStarted(Description description) throws Exception {
-        super.testStarted(description);
         timeMeasurement = new TimeMeasurement().start();
+        super.testStarted(description);
     }
 
     @Override
     public void testFinished(Description description) throws Exception {
         super.testFinished(description);
-        recordTestResult(description, null, timeMeasurement.elapsedSeconds());
+        recordTestResult(description, null, getExecutionTime());
     }
 
     @Override
     public void testFailure(Failure failure) throws Exception {
         super.testFailure(failure);
-        recordTestResult(failure.getDescription(), failure.getException(), timeMeasurement.elapsedSeconds());
+        recordTestResult(failure.getDescription(), failure.getException(), getExecutionTime());
+    }
+
+    protected double getExecutionTime() {
+        double executionTime = 0;
+        if (timeMeasurement != null) {
+            timeMeasurement.elapsedSeconds();
+        }
+        return executionTime;
     }
 
     /**
