@@ -1,6 +1,8 @@
 package nl.hsac.fitnesse.sample;
 
 import nl.hsac.fitnesse.fixture.slim.web.BrowserTest;
+import nl.hsac.fitnesse.fixture.slim.web.annotation.TimeoutPolicy;
+import nl.hsac.fitnesse.fixture.slim.web.annotation.WaitUntil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,13 +12,17 @@ import java.util.regex.Pattern;
  */
 public class FundaTest extends BrowserTest {
     private static final Pattern COUNT_PATTERN = Pattern.compile("\\((\\d+)\\)");
-    public int numberOfPhotos() {
-        String countText = textByXPath("//span[@class='hits']");
-        Matcher m = COUNT_PATTERN.matcher(countText);
-        if (!m.matches()) {
-            throw new RuntimeException("Unable to determine photo count from: " + countText);
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public Integer numberOfPhotos() {
+        Integer count = null;
+        String countText = valueOf("xpath=//span[@class='hits']");
+        if (countText != null) {
+            Matcher m = COUNT_PATTERN.matcher(countText);
+            if (m.matches()) {
+                String counterStr = m.group(1);
+                count = Integer.valueOf(counterStr);
+            }
         }
-        String counterStr = m.group(1);
-        return Integer.parseInt(counterStr);
+        return count;
     }
 }
