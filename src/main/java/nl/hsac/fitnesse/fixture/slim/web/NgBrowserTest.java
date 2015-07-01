@@ -134,7 +134,6 @@ public class NgBrowserTest extends BrowserTest {
     }
 
     public int numberOf(String repeater) {
-        waitForAngularRequestsToFinish();
         return findRepeaterRows(repeater).size();
     }
 
