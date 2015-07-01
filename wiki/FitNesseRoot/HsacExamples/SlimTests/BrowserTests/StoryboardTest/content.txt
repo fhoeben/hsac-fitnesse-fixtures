@@ -9,6 +9,8 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |enter     |Maliebaan, Utrecht|for       |Plaats, postcode met straatnaam|
 |press enter                                                             |
 |click     |Maliebaan                                                    |
+|click     |Prijs                                                        |
+|click     |Prijs                                                        |
 |click     |Maliebaan 50 A                                               |
 |$price=   |value of          |xpath=//div[@class='prijs']/strong        |
 |open      |http://www.funda.nl                                          |
