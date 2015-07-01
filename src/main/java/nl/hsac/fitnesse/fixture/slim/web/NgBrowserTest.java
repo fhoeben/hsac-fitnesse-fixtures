@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
+import nl.hsac.fitnesse.fixture.slim.web.annotation.WaitUntil;
 import nl.hsac.fitnesse.fixture.util.NgClientSideScripts;
 import nl.hsac.fitnesse.slim.interaction.ReflectionHelper;
 import org.openqa.selenium.By;
@@ -137,15 +138,18 @@ public class NgBrowserTest extends BrowserTest {
         return findRepeaterRows(repeater).size();
     }
 
+    @WaitUntil
     public String valueOfColumnNumberInRowNumberOf(int columnIndex, int rowIndex, String repeater) {
         return getTextInRepeaterColumn(Integer.toString(columnIndex), rowIndex, repeater);
     }
 
+    @WaitUntil
     public String valueOfInRowNumberOf(String columnName, int rowIndex, String repeater) {
         String columnIndex = getXPathForColumnIndex(columnName);
         return getTextInRepeaterColumn(columnIndex, rowIndex, repeater);
     }
 
+    @WaitUntil
     public String valueOfInRowWhereIsOf(String requestedColumnName, String selectOnColumn, String selectOnValue, String repeater) {
         String result = null;
         String compareIndex = getXPathForColumnIndex(selectOnColumn);
