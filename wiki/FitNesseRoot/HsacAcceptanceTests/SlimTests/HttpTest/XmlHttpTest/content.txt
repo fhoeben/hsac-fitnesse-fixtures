@@ -26,20 +26,21 @@ Incomplete address: no zip code</PO:confirmation>
 </SOAP-ENV:Body></SOAP-ENV:Envelope>}}}|with status|500|
 |$url=|get mock server url|
 
-|script|xml http test                                                                                                                                      |
-|post  |{{{<Hallo/>}}}      |to                                          |$url                                                                             |
-|check |xPath               |count(/dag)                                 |1                                                                                |
-|post  |{{{<ClientFault/>}}}|to                                          |$url                                                                             |
-|show  |response                                                                                                                                           |
-|check |response status     |500                                                                                                                           |
-|check |raw xPath           |/env:Envelope/env:Body/env:Fault/faultstring|Message does not have necessary info                                             |
-|check |xPath               |/env:Envelope/env:Body/env:Fault/faultstring|Message does not have necessary info                                             |
-|reject|post                |{{{<ServerFault/>}}}                        |to                                          |$url                                |
-|show  |response                                                                                                                                           |
-|check |response status     |500                                                                                                                           |
-|check |raw xPath           |/env:Envelope/env:Body/env:Fault/faultstring|Message does not have necessary info                                             |
-|note  |next line is commented out so we won't have a real exception, uncomment to see that SOAP content is shown in exception                             |
-|note  |check               |xPath                                       |/env:Envelope/env:Body/env:Fault/faultstring|Message does not have necessary info|
+|script|xml http test                                                                                                                                 |
+|post  |{{{<Hallo/>}}} |to                                          |$url                                                                             |
+|check |xPath          |count(/dag)                                 |1                                                                                |
+|reject|post           |{{{<ClientFault/>}}}                        |to                                          |$url                                |
+|show  |response                                                                                                                                      |
+|check |response status|500                                                                                                                           |
+|check |raw xPath      |/env:Envelope/env:Body/env:Fault/faultstring|Message does not have necessary info                                             |
+|note  |next line is commented out so we won't have a real exception, uncomment to see that SOAP content is shown in exception                        |
+|note  |check          |xPath                                       |/env:Envelope/env:Body/env:Fault/faultstring|Message does not have necessary info|
+|reject|post           |{{{<ServerFault/>}}}                        |to                                          |$url                                |
+|show  |response                                                                                                                                      |
+|check |response status|500                                                                                                                           |
+|check |raw xPath      |/env:Envelope/env:Body/env:Fault/faultstring|Message does not have necessary info                                             |
+|note  |next line is commented out so we won't have a real exception, uncomment to see that SOAP content is shown in exception                        |
+|note  |check          |xPath                                       |/env:Envelope/env:Body/env:Fault/faultstring|Message does not have necessary info|
 
 
 |script|mock xml server setup|
