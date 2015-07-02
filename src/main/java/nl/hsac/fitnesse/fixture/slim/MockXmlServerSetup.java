@@ -60,8 +60,17 @@ public class MockXmlServerSetup extends SlimFixture {
     }
 
     public void addResponse(String aResponse) {
+        addResponseImpl(aResponse);
+    }
+
+    public void addResponseWithStatus(String aResponse, int aStatusCode) {
+        XmlHttpResponse response = addResponseImpl(aResponse);
+        response.setStatusCode(aStatusCode);
+    }
+
+    protected XmlHttpResponse addResponseImpl(String aResponse) {
         String responseBody = cleanupBody(aResponse);
-        getResponse().addResponse(responseBody);
+        return getResponse().addResponse(responseBody);
     }
 
     protected String cleanupBody(String body) {

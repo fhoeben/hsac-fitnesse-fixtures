@@ -8,10 +8,10 @@ Here we use !-FitNesse-! as a HTTP server so we can control which responses the 
 
 !2 Too Few Messages
 
-|script      |mock xml server setup|
-|add response|{{{<dag/>}}}         |
-|add response|{{{<dag2/>}}}        |
-|$url=       |get mock server url  |
+|script      |mock xml server setup        |
+|add response|{{{<dag/>}}}                 |
+|add response|{{{<dag2/>}}}|with status|201|
+|$url=       |get mock server url          |
 
 |script|xml http test          |
 |post  |{{{<Hallo/>}}} |to|$url|
@@ -26,7 +26,7 @@ Here we use !-FitNesse-! as a HTTP server so we can control which responses the 
 
 |script|xml http test          |
 |post  |{{{<Hallo2/>}}}|to|$url|
-|check |response status|200    |
+|check |response status|201    |
 |show  |response               |
 
 !note The messages report table does not fail a test, it just shows the current status. It will show red lines for expected requests that never came, or extra requests received.
