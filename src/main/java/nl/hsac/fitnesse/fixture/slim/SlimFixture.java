@@ -49,6 +49,11 @@ public class SlimFixture  implements InteractionAwareFixture {
     }
 
     protected Throwable handleException(Method method, Object[] arguments, Throwable t) {
+        // convert any Fit, non-stacktrace, exception to our Slim equivalent
+        if (t instanceof fit.exception.FitFailureException) {
+            String m = t.getMessage();
+            t = new SlimFixtureException(false, "<div>" + m + "</div>");
+        }
         return t;
     }
 
