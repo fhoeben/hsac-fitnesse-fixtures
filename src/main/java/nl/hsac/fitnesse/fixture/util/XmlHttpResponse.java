@@ -23,7 +23,7 @@ public class XmlHttpResponse extends HttpResponse {
         super.validResponse();
 
         String response = getResponse();
-        if (response != null && response.contains("<faultcode>soapenv:Server</faultcode>")) {
+        if (response != null && getRawXPath(response, "/env:Envelope/env:Body/env:Fault/faultcode") != null) {
             Environment.handleErrorResponse("SOAP fault received: ", response);
         }
     }
