@@ -366,7 +366,22 @@ public class Environment {
      * @throws FitFailureException always
      */
     public static void handleErrorResponse(String msg, String responseText) {
-        throw new FitFailureException(msg + getInstance().getHtmlForXml(responseText));
+        String responseHtml;
+        Environment instance = getInstance();
+        try {
+            responseHtml = instance.getHtmlForXml(responseText);
+        } catch (Exception e) {
+            responseHtml = instance.getHtml(
+                                        new Formatter() {
+                                            @Override
+                                            public String format(String value) {
+                                                return value;
+                                            }
+                                        },
+                                        responseText);
+        }
+
+        throw new FitFailureException(msg + responseHtml);
     }
 
     /**
