@@ -24,7 +24,8 @@ Quantity element does not have a value</PO:order>
 Incomplete address: no zip code</PO:confirmation>
 </detail></SOAP-ENV:Fault>
 </SOAP-ENV:Body></SOAP-ENV:Envelope>}}}|with status|500|
-|$url=|get mock server url|
+|add response|<no xml            |
+|$url=       |get mock server url|
 
 |script|xml http test                                                                                                                                 |
 |post  |{{{<Hallo/>}}} |to                                          |$url                                                                             |
@@ -41,7 +42,11 @@ Incomplete address: no zip code</PO:confirmation>
 |check |raw xPath      |/env:Envelope/env:Body/env:Fault/faultstring|Message does not have necessary info                                             |
 |note  |next line is commented out so we won't have a real exception, uncomment to see that SOAP content is shown in exception                        |
 |note  |check          |xPath                                       |/env:Envelope/env:Body/env:Fault/faultstring|Message does not have necessary info|
-
+|reject|post           |{{{<NoXml/>}}}                              |to                                          |$url                                |
+|check |response status|200                                                                                                                           |
+|check |response       |<no xml                                                                                                                       |
+|note  |next line is commented out so we won't have a real exception, uncomment to see that non-XML content is shown in exception                     |
+|note  |check          |xPath                                       |count(/*)                                   |0                                   |
 
 |script|mock xml server setup|
 |stop                        |

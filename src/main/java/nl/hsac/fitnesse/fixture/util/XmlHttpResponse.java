@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import fit.exception.FitFailureException;
 import nl.hsac.fitnesse.fixture.Environment;
 
 import javax.xml.namespace.NamespaceContext;
@@ -23,8 +24,21 @@ public class XmlHttpResponse extends HttpResponse {
         super.validResponse();
 
         String response = getResponse();
-        if (response != null && getRawXPath(response, "/env:Envelope/env:Body/env:Fault/faultcode") != null) {
-            Environment.handleErrorResponse("SOAP fault received: ", response);
+        if (response != null) {
+            boolean ableToXPath = false;
+            try {
+                String faultCode = getRawXPath(response, "/env:Envelope/env:Body/env:Fault/faultcode");
+                ableToXPath = true;
+                if (faultCode != null) {
+                    Environment.handleErrorResponse("SOAP fault received: ", response);
+                }
+            } catch (FitFailureException e) {
+                if (ableToXPath) {
+                    throw e;
+                } else {
+                    Environment.handleErrorResponse("Unable to check for SOAP fault, is the result XML? Response was:", response);
+                }
+            }
         }
     }
 
