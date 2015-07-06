@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.sf.cglib.proxy.*;
-import nl.hsac.fitnesse.slim.interaction.InteractionAwareFixture;
 import fitnesse.slim.fixtureInteraction.DefaultInteraction;
 import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 
