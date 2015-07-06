@@ -8,6 +8,7 @@ import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 import nl.hsac.fitnesse.slim.interaction.InteractionAwareFixture;
 import fitnesse.slim.fixtureInteraction.DefaultInteraction;
+import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 
 /**
  * Factory to create fixture instances that behave like the way they do when Slim invokes them.
@@ -15,6 +16,19 @@ import fitnesse.slim.fixtureInteraction.DefaultInteraction;
  * 'normal' Java classes and not just the wiki.
  */
 public class FixtureFactory {
+    private FixtureInteraction interaction = null;
+
+    public FixtureInteraction getInteraction() {
+        if (interaction == null) {
+            interaction = new DefaultInteraction();
+        }
+        return interaction;
+    }
+
+    public void setInteraction(FixtureInteraction interaction) {
+        this.interaction = interaction;
+    }
+
     public <T extends InteractionAwareFixture> T create(Class<T> clazz, int constructorArg) {
         return create(clazz, new Class<?>[] {int.class}, new Object[] {constructorArg});
     }
@@ -50,9 +64,11 @@ public class FixtureFactory {
     }
 
     public <T extends InteractionAwareFixture> T create(Class<T> clazz, Class<?>[] constructorTypes, Object[] constructorArgs) {
+        FixtureInteraction nestedInteraction = getInteraction();
+        LikeSlimInteraction callback = new LikeSlimInteraction(nestedInteraction);
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(clazz);
-        enhancer.setCallback(new LikeSlimInteraction());
+        enhancer.setCallback(callback);
         T result;
         if (constructorArgs != null && constructorArgs.length > 0) {
             result = (T) enhancer.create(constructorTypes, constructorArgs);
@@ -63,8 +79,12 @@ public class FixtureFactory {
     }
 
     private static class LikeSlimInteraction implements MethodInterceptor {
-        private static final DefaultInteraction INTERACTION = new DefaultInteraction();
+        private final FixtureInteraction interaction;
         private boolean aroundInvoked = false;
+
+        public LikeSlimInteraction(FixtureInteraction fixtureInteraction) {
+            interaction = fixtureInteraction;
+        }
 
         @Override
         public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
@@ -74,7 +94,7 @@ public class FixtureFactory {
                     && !"aroundSlimInvoke".equals(method.getName())) {
                 aroundInvoked = true;
                 try {
-                    return ((SlimFixture) obj).aroundSlimInvoke(INTERACTION, method, args);
+                    return ((SlimFixture) obj).aroundSlimInvoke(interaction, method, args);
                 } finally {
                     aroundInvoked = false;
                 }
