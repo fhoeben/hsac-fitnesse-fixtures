@@ -121,7 +121,7 @@ public class FixtureFactory {
                     && !"aroundSlimInvoke".equals(method.getName())) {
                 aroundInvoked = true;
                 try {
-                    return ((SlimFixture) obj).aroundSlimInvoke(interaction, method, args);
+                    return ((InteractionAwareFixture) obj).aroundSlimInvoke(interaction, method, args);
                 } finally {
                     aroundInvoked = false;
                 }
