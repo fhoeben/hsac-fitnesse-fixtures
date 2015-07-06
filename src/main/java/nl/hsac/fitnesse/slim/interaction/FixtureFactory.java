@@ -1,23 +1,28 @@
 package nl.hsac.fitnesse.slim.interaction;
 
+import fitnesse.slim.fixtureInteraction.DefaultInteraction;
+import fitnesse.slim.fixtureInteraction.FixtureInteraction;
+import net.sf.cglib.proxy.*;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.cglib.proxy.*;
-import fitnesse.slim.fixtureInteraction.DefaultInteraction;
-import fitnesse.slim.fixtureInteraction.FixtureInteraction;
-
 /**
  * Factory to create fixture instances that behave like the way they do when Slim invokes them.
  * This means #aroundSlimInvoke() is applied around their normal methods, so that they can be used by
  * 'normal' Java classes and not just the wiki.
+ * It is not exactly the same as Slim does, as instance created by this factory do not have #aroundSlimInvoke() applied
+ * to calls to 'final' methods. This is a limitation of the technology used.
  */
 public class FixtureFactory {
     private static final Map<Class<? extends InteractionAwareFixture>, Factory> FACTORIES = new HashMap<Class<? extends InteractionAwareFixture>, Factory>();
     private FixtureInteraction interaction = null;
 
+    /**
+     * @return interaction that will be passed to #aroundSlimInvoke().
+     */
     public FixtureInteraction getInteraction() {
         if (interaction == null) {
             interaction = new DefaultInteraction();
@@ -25,30 +30,74 @@ public class FixtureFactory {
         return interaction;
     }
 
+    /**
+     * @param interaction interaction to pass to #aroundSlimInvoke().
+     */
     public void setInteraction(FixtureInteraction interaction) {
         this.interaction = interaction;
     }
 
-    public <T extends InteractionAwareFixture> T create(Class<T> clazz, int constructorArg) {
-        return create(clazz, new Class<?>[] {int.class}, new Object[] {constructorArg});
-    }
-
+    /**
+     * Creates new instance of fixture.
+     * @param clazz class to instantiate.
+     * @param <T> type to create.
+     * @return instance of clazz (subclass, actually) that will have #aroundSlimInvoke() invoked on each method call.
+     */
     public <T extends InteractionAwareFixture> T create(Class<T> clazz) {
         return create(clazz, null, null);
     }
 
+    /**
+     * Creates new instance of fixture.
+     * @param clazz class to instantiate.
+     * @param constructorArg argument to pass to constructor of clazz.
+     * @param <T> type to create.
+     * @return instance of clazz (subclass, actually) that will have #aroundSlimInvoke() invoked on each method call.
+     */
+    public <T extends InteractionAwareFixture> T create(Class<T> clazz, int constructorArg) {
+        return create(clazz, new Class<?>[] {int.class}, new Object[] {constructorArg});
+    }
+
+    /**
+     * Creates new instance of fixture.
+     * @param clazz class to instantiate.
+     * @param constructorArg argument to pass to constructor of clazz.
+     * @param <T> type to create.
+     * @return instance of clazz (subclass, actually) that will have #aroundSlimInvoke() invoked on each method call.
+     */
     public <T extends InteractionAwareFixture> T create(Class<T> clazz, long constructorArg) {
         return create(clazz, new Class<?>[] {long.class}, new Object[] {constructorArg});
     }
 
+    /**
+     * Creates new instance of fixture.
+     * @param clazz class to instantiate.
+     * @param constructorArg argument to pass to constructor of clazz.
+     * @param <T> type to create.
+     * @return instance of clazz (subclass, actually) that will have #aroundSlimInvoke() invoked on each method call.
+     */
     public <T extends InteractionAwareFixture> T create(Class<T> clazz, double constructorArg) {
         return create(clazz, new Class<?>[] {double.class}, new Object[] {constructorArg});
     }
 
+    /**
+     * Creates new instance of fixture.
+     * @param clazz class to instantiate.
+     * @param constructorArg argument to pass to constructor of clazz.
+     * @param <T> type to create.
+     * @return instance of clazz (subclass, actually) that will have #aroundSlimInvoke() invoked on each method call.
+     */
     public <T extends InteractionAwareFixture> T create(Class<T> clazz, boolean constructorArg) {
         return create(clazz, new Class<?>[] {boolean.class}, new Object[] {constructorArg});
     }
 
+    /**
+     * Creates new instance of fixture.
+     * @param clazz class to instantiate.
+     * @param constructorArgs arguments to pass to constructor of clazz.
+     * @param <T> type to create.
+     * @return instance of clazz (subclass, actually) that will have #aroundSlimInvoke() invoked on each method call.
+     */
     public <T extends InteractionAwareFixture> T create(Class<T> clazz, Object... constructorArgs) {
         T result;
         if (constructorArgs != null && constructorArgs.length > 0) {
@@ -63,9 +112,16 @@ public class FixtureFactory {
         return result;
     }
 
+    /**
+     * Creates new instance of fixture.
+     * @param clazz class to instantiate.
+     * @param constructorTypes types of arguments used to determine which constructor to use.
+     * @param constructorArgs arguments to pass to constructor of clazz.
+     * @param <T> type to create.
+     * @return instance of clazz (subclass, actually) that will have #aroundSlimInvoke() invoked on each method call.
+     */
     public <T extends InteractionAwareFixture> T create(Class<T> clazz, Class<?>[] constructorTypes, Object[] constructorArgs) {
-        FixtureInteraction nestedInteraction = getInteraction();
-        LikeSlimInteraction callback = new LikeSlimInteraction(nestedInteraction);
+        MethodInterceptor callback = createCallback();
 
         T result;
         if (FACTORIES.containsKey(clazz)) {
@@ -104,7 +160,12 @@ public class FixtureFactory {
         return result;
     }
 
-    private static class LikeSlimInteraction implements MethodInterceptor {
+    protected MethodInterceptor createCallback() {
+        FixtureInteraction nestedInteraction = getInteraction();
+        return new LikeSlimInteraction(nestedInteraction);
+    }
+
+    protected static class LikeSlimInteraction implements MethodInterceptor {
         private final FixtureInteraction interaction;
         private boolean aroundInvoked = false;
 
