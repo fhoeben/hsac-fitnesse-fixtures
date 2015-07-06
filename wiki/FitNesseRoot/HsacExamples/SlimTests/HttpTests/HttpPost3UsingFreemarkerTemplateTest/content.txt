@@ -10,14 +10,15 @@ By using a Freemarker template we can have more dynamic body content.
 The Freemarker template will not send a cityName element if no value is supplied (the whole element will be omitted, as can be seen in the request below). The service will not like this.
 Omitting the element on a null value could not be done when the body was in the scenario content.
 
-|script          |xml http test                                               |
-|template        |${GLOBAL_WEATHER_TEMPLATE_NAME}                             |
-|set value       |http://www.webserviceX.NET/GetWeather|for header|SOAPAction |
-|set value       |Canada                               |for       |countryName|
-|post template to|${GLOBAL_WEATHER_URL}                                       |
-|check           |response status                      |500                   |
-|show            |request                                                     |
-|show            |response                                                    |
+|script   |xml http test                                                                                                |
+|template |${GLOBAL_WEATHER_TEMPLATE_NAME}                                                                              |
+|set value|http://www.webserviceX.NET/GetWeather                 |for header                |SOAPAction                 |
+|set value|Canada                                                |for                       |countryName                |
+|note     |the following 'post' is prefixed with 'reject' as the fixture will return false when a soap fault is returned|
+|reject   |post template to                                      |${GLOBAL_WEATHER_URL}                                 |
+|check    |response status                                       |500                                                   |
+|show     |request                                                                                                      |
+|show     |response                                                                                                     |
 
 !3 Send a cityName element: success
 
