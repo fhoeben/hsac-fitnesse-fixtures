@@ -1,4 +1,4 @@
-package nl.hsac.fitnesse.fixture.slim;
+package nl.hsac.fitnesse.slim.interaction;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
