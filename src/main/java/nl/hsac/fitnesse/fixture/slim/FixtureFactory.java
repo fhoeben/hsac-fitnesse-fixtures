@@ -1,12 +1,13 @@
 package nl.hsac.fitnesse.fixture.slim;
 
-import fitnesse.slim.fixtureInteraction.DefaultInteraction;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
-
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import nl.hsac.fitnesse.slim.interaction.InteractionAwareFixture;
+import fitnesse.slim.fixtureInteraction.DefaultInteraction;
 
 /**
  * Factory to create fixture instances that behave like the way they do when Slim invokes them.
@@ -14,27 +15,27 @@ import java.lang.reflect.Modifier;
  * 'normal' Java classes and not just the wiki.
  */
 public class FixtureFactory {
-    public <T extends SlimFixture> T create(Class<T> clazz) {
-        return create(clazz, null, null);
-    }
-
-    public <T extends SlimFixture> T create(Class<T> clazz, int constructorArg) {
+    public <T extends InteractionAwareFixture> T create(Class<T> clazz, int constructorArg) {
         return create(clazz, new Class<?>[] {int.class}, new Object[] {constructorArg});
     }
 
-    public <T extends SlimFixture> T create(Class<T> clazz, long constructorArg) {
+    public <T extends InteractionAwareFixture> T create(Class<T> clazz) {
+        return create(clazz, null, null);
+    }
+
+    public <T extends InteractionAwareFixture> T create(Class<T> clazz, long constructorArg) {
         return create(clazz, new Class<?>[] {long.class}, new Object[] {constructorArg});
     }
 
-    public <T extends SlimFixture> T create(Class<T> clazz, double constructorArg) {
+    public <T extends InteractionAwareFixture> T create(Class<T> clazz, double constructorArg) {
         return create(clazz, new Class<?>[] {double.class}, new Object[] {constructorArg});
     }
 
-    public <T extends SlimFixture> T create(Class<T> clazz, boolean constructorArg) {
+    public <T extends InteractionAwareFixture> T create(Class<T> clazz, boolean constructorArg) {
         return create(clazz, new Class<?>[] {boolean.class}, new Object[] {constructorArg});
     }
 
-    public <T extends SlimFixture> T create(Class<T> clazz, Object... constructorArgs) {
+    public <T extends InteractionAwareFixture> T create(Class<T> clazz, Object... constructorArgs) {
         T result;
         if (constructorArgs != null && constructorArgs.length > 0) {
             Class<?>[] types = new Class[constructorArgs.length];
@@ -48,7 +49,7 @@ public class FixtureFactory {
         return result;
     }
 
-    public <T extends SlimFixture> T create(Class<T> clazz, Class<?>[] constructorTypes, Object[] constructorArgs) {
+    public <T extends InteractionAwareFixture> T create(Class<T> clazz, Class<?>[] constructorTypes, Object[] constructorArgs) {
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(clazz);
         enhancer.setCallback(new LikeSlimInteraction());
