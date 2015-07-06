@@ -2,10 +2,10 @@ package nl.hsac.fitnesse.fixture.slim;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
 
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
+import net.sf.cglib.proxy.*;
 import nl.hsac.fitnesse.slim.interaction.InteractionAwareFixture;
 import fitnesse.slim.fixtureInteraction.DefaultInteraction;
 import fitnesse.slim.fixtureInteraction.FixtureInteraction;
@@ -16,6 +16,7 @@ import fitnesse.slim.fixtureInteraction.FixtureInteraction;
  * 'normal' Java classes and not just the wiki.
  */
 public class FixtureFactory {
+    private static final Map<Class<? extends InteractionAwareFixture>, Factory> FACTORIES = new HashMap<Class<? extends InteractionAwareFixture>, Factory>();
     private FixtureInteraction interaction = null;
 
     public FixtureInteraction getInteraction() {
@@ -66,9 +67,35 @@ public class FixtureFactory {
     public <T extends InteractionAwareFixture> T create(Class<T> clazz, Class<?>[] constructorTypes, Object[] constructorArgs) {
         FixtureInteraction nestedInteraction = getInteraction();
         LikeSlimInteraction callback = new LikeSlimInteraction(nestedInteraction);
+
+        T result;
+        if (FACTORIES.containsKey(clazz)) {
+            Factory factory = FACTORIES.get(clazz);
+            result = createUsingFactory(callback, factory, constructorTypes, constructorArgs);
+        } else {
+            result = createFirst(callback, clazz, constructorTypes, constructorArgs);
+            FACTORIES.put(clazz, (Factory) result);
+        }
+        return result;
+    }
+
+    protected <T extends InteractionAwareFixture> T createUsingFactory(Callback callback, Factory factory, Class<?>[] constructorTypes, Object[] constructorArgs) {
+        Callback[] callbacks = new Callback[] { callback };
+
+        T result;
+        if (constructorArgs != null && constructorArgs.length > 0) {
+            result = (T) factory.newInstance(constructorTypes, constructorArgs, callbacks);
+        } else {
+            result = (T) factory.newInstance(callbacks);
+        }
+        return result;
+    }
+
+    protected <T extends InteractionAwareFixture> T createFirst(Callback callback, Class<T> clazz, Class<?>[] constructorTypes, Object[] constructorArgs) {
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(clazz);
         enhancer.setCallback(callback);
+
         T result;
         if (constructorArgs != null && constructorArgs.length > 0) {
             result = (T) enhancer.create(constructorTypes, constructorArgs);
