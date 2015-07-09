@@ -16,5 +16,6 @@ Send a HTTP POST supplying the content to post in a variable so the script table
 |post           |${POST_BODY}   |to                   |${URL}                        |
 |check          |response status|200                                                 |
 |show           |response                                                            |
+|show           |response headers                                                    |
 |register prefix|weather        |for namespace        |http://ws.cdyne.com/WeatherWS/|
 |check          |xPath          |//weather:City/text()|Beverly Hills                 |
