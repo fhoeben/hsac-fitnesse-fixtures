@@ -327,6 +327,13 @@ public class HttpTest extends SlimFixtureWithMap {
         return response.getStatusCode();
     }
 
+    /**
+     * @return headers received with response to last request.
+     */
+    public Map<String, String> responseHeaders() {
+        return response.getResponseHeaders();
+    }
+
     protected HttpResponse getResponse() {
         return response;
     }
