@@ -754,6 +754,7 @@ public class BrowserTest extends SlimFixture {
         return waitForVisible(by);
     }
 
+    @Deprecated
     protected boolean waitForVisible(final By by) {
         return waitUntilOrStop(new ExpectedCondition<Boolean>() {
             @Override
