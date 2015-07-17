@@ -562,87 +562,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected WebElement getElementToClick(String place) {
-        SeleniumHelper seleniumHelper = getSeleniumHelper();
-        By by = seleniumHelper.placeToBy(place);
-        if (by != null) {
-            return seleniumHelper.findElement(by);
-        } else {
-            WebElement element = seleniumHelper.findElement(By.linkText(place));
-            WebElement firstFound = element;
-            if (!isInteractable(element)) {
-                element = seleniumHelper.getElementExact(place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = seleniumHelper.findElement(By.partialLinkText(place));
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = seleniumHelper.getElementPartial(place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                // find element with specified text and 'onclick' attribute
-                element = findByXPath("//*[@onclick and normalize-space(text())='%s']", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findByXPath("//*[@onclick and contains(normalize-space(text()),'%s')]", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                // find element with child with specified text and 'onclick' attribute
-                element = findByXPath("//*[@onclick and normalize-space(descendant::text())='%s']", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findByXPath("//*[@onclick and contains(normalize-space(descendant::text()),'%s')]", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                // find element with specified text
-                element = findByXPath("//*[normalize-space(text())='%s']", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findByXPath("//*[contains(normalize-space(text()),'%s')]", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                // find element with child with specified text
-                element = findByXPath("//*[normalize-space(descendant::text())='%s']", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findByXPath("//*[contains(normalize-space(descendant::text()),'%s')]", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            return isInteractable(element)
-                    ? element
-                    : firstFound;
-        }
+        return getSeleniumHelper().getElementToClick(place);
     }
 
     protected boolean clickElement(WebElement element) {
@@ -1018,8 +938,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected WebElement findByXPath(String xpathPattern, String... params) {
-        By by = getSeleniumHelper().byXpath(xpathPattern, params);
-        return getSeleniumHelper().findElement(by);
+        return getSeleniumHelper().findByXPath(xpathPattern, params);
     }
 
     protected WebElement findByJavascript(String script, Object... parameters) {

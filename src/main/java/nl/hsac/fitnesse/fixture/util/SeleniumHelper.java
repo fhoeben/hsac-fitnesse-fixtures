@@ -89,7 +89,97 @@ public class SeleniumHelper {
     }
 
     /**
-     * Finds element, by searching in multiple locations.
+     * Finds element to click, by searching in multiple locations.
+     * @param place identifier for element.
+     * @return first interactable element found,
+     *          first element found if no interactable element could be found,
+     *          null if none could be found.
+     */
+    public WebElement getElementToClick(String place) {
+        By by = placeToBy(place);
+        if (by != null) {
+            return findElement(by);
+        } else {
+            WebElement element = findElement(By.linkText(place));
+            WebElement firstFound = element;
+            if (!isInteractable(element)) {
+                element = getElementExact(place);
+                if (firstFound == null) {
+                    firstFound = element;
+                }
+            }
+            if (!isInteractable(element)) {
+                element = findElement(By.partialLinkText(place));
+                if (firstFound == null) {
+                    firstFound = element;
+                }
+            }
+            if (!isInteractable(element)) {
+                element = getElementPartial(place);
+                if (firstFound == null) {
+                    firstFound = element;
+                }
+            }
+            if (!isInteractable(element)) {
+                // find element with specified text and 'onclick' attribute
+                element = findByXPath("//*[@onclick and normalize-space(text())='%s']", place);
+                if (firstFound == null) {
+                    firstFound = element;
+                }
+            }
+            if (!isInteractable(element)) {
+                element = findByXPath("//*[@onclick and contains(normalize-space(text()),'%s')]", place);
+                if (firstFound == null) {
+                    firstFound = element;
+                }
+            }
+            if (!isInteractable(element)) {
+                // find element with child with specified text and 'onclick' attribute
+                element = findByXPath("//*[@onclick and normalize-space(descendant::text())='%s']", place);
+                if (firstFound == null) {
+                    firstFound = element;
+                }
+            }
+            if (!isInteractable(element)) {
+                element = findByXPath("//*[@onclick and contains(normalize-space(descendant::text()),'%s')]", place);
+                if (firstFound == null) {
+                    firstFound = element;
+                }
+            }
+            if (!isInteractable(element)) {
+                // find element with specified text
+                element = findByXPath("//*[normalize-space(text())='%s']", place);
+                if (firstFound == null) {
+                    firstFound = element;
+                }
+            }
+            if (!isInteractable(element)) {
+                element = findByXPath("//*[contains(normalize-space(text()),'%s')]", place);
+                if (firstFound == null) {
+                    firstFound = element;
+                }
+            }
+            if (!isInteractable(element)) {
+                // find element with child with specified text
+                element = findByXPath("//*[normalize-space(descendant::text())='%s']", place);
+                if (firstFound == null) {
+                    firstFound = element;
+                }
+            }
+            if (!isInteractable(element)) {
+                element = findByXPath("//*[contains(normalize-space(descendant::text()),'%s')]", place);
+                if (firstFound == null) {
+                    firstFound = element;
+                }
+            }
+            return isInteractable(element)
+                    ? element
+                    : firstFound;
+        }
+    }
+
+    /**
+     * Finds element to retrieve content from or enter content in, by searching in multiple locations.
      * @param place identifier for element.
      * @return first interactable element found,
      *          first element found if no interactable element could be found,
@@ -154,7 +244,7 @@ public class SeleniumHelper {
             }
         }
         if (!isInteractable(element)) {
-            element = findElement(byXpath("//button/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::button", place));
+            element = findByXPath("//button/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::button", place);
             if (firstElement == null) {
                 firstElement = element;
             }
@@ -166,7 +256,7 @@ public class SeleniumHelper {
             }
         }
         if (!isInteractable(element)) {
-            element = findElement(byXpath("//th/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::th[1]/../td ", place));
+            element = findByXPath("//th/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::th[1]/../td ", place);
             if (firstElement == null) {
                 firstElement = element;
             }
@@ -223,7 +313,7 @@ public class SeleniumHelper {
             }
         }
         if (!isInteractable(element)) {
-            element = findElement(byXpath("//th/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::th[1]/../td ", place));
+            element = findByXPath("//th/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::th[1]/../td ", place);
             if (firstElement == null) {
                 firstElement = element;
             }
@@ -297,7 +387,7 @@ public class SeleniumHelper {
         WebElement element = null;
         WebElement firstFound = null;
         String labelPattern = indexedXPath(labelXPath, index);
-        WebElement label = findElement(byXpath(labelPattern, labelText));
+        WebElement label = findByXPath(labelPattern, labelText);
         if (label != null) {
             String forAttr = label.getAttribute("for");
             if (forAttr == null || "".equals(forAttr)) {
@@ -335,7 +425,7 @@ public class SeleniumHelper {
         if (!isInteractable(element)) {
             // see if there is an element with labelText as text, whose id is referenced by an aria-labelledby attribute
             String labelledByPattern = indexedXPath("//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[normalize-space(.) = '%s']/ancestor-or-self::*[@id]/@id]", index);
-            element = findElement(byXpath(labelledByPattern, labelText));
+            element = findByXPath(labelledByPattern, labelText);
             if (firstFound == null) {
                 firstFound = element;
             }
@@ -356,7 +446,7 @@ public class SeleniumHelper {
         WebElement firstFound = null;
         if (!isInteractable(element)) {
             String labelledByPattern = indexedXPath("//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[contains(normalize-space(..), '%s')]/ancestor-or-self::*[@id]/@id]", index);
-            element = findElement(byXpath(labelledByPattern, labelText));
+            element = findByXPath(labelledByPattern, labelText);
             if (firstFound == null) {
                 firstFound = element;
             }
@@ -550,6 +640,17 @@ public class SeleniumHelper {
      */
     public WebElement getActiveElement() {
         return driver().switchTo().activeElement();
+    }
+
+    /**
+     * Finds element using xPath, supporting placeholder replacement.
+     * @param pattern basic XPATH, possibly with placeholders.
+     * @param parameters values for placeholders.
+     * @return element if found, null if none could be found.
+     */
+    public WebElement findByXPath(String pattern, String... parameters) {
+        By by = byXpath(pattern, parameters);
+        return findElement(by);
     }
 
     /**
