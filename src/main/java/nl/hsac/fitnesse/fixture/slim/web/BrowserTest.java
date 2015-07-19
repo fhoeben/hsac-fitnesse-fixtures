@@ -823,21 +823,12 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected boolean clickInRow(String columnXPath, String place) {
-        boolean result = false;
         // find an input to click in the row
-        WebElement element = findByXPath("%s//input[contains(@value, '%s')]", columnXPath, place);
-        if (element == null) {
-            // see whether there is an element with the specified place as text() in the row
-            element = findByXPath("%s//*[contains(normalize-space(text()),'%s')]", columnXPath, place);
-            if (element == null) {
-                // find an element to click in the row by its title (aka tooltip)
-                element = findByXPath("%s//*[contains(@title, '%s')]", columnXPath, place);
-            }
-        }
-        if (element != null) {
-            result = clickElement(element);
-        }
-        return result;
+        WebElement element = findByXPath("%s//input[contains(@value, '%s')]" +
+                                            "|%s//*[contains(normalize-space(text()),'%s') or contains(@title, '%s')]",
+                                            columnXPath, place,
+                                            columnXPath, place, place);
+        return clickElement(element);
     }
 
     /**
