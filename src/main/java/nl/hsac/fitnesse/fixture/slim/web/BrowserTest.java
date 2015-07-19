@@ -750,19 +750,23 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil
     public boolean enterAsInRowWhereIs(String value, String requestedColumnName, String selectOnColumn, String selectOnValue) {
+        boolean result = false;
         String columnXPath = getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue);
         String requestedIndex = getXPathForColumnIndex(requestedColumnName);
-        WebElement element = findByXPath("%s[%s]//input", columnXPath, requestedIndex);
-        if (element == null) {
-            element = findByXPath("%s[%s]//textarea", columnXPath, requestedIndex);
-        }
-        boolean result = element != null && isInteractable(element);
-        if (result) {
-            element.clear();
-            sendValue(element, value);
-        } else {
-            element = findByXPath("%s[%s]//select", columnXPath, requestedIndex);
-            result = clickSelectOption(element, value);
+        WebElement cell = findByXPath("%s[%s]", columnXPath, requestedIndex);
+        if (cell != null) {
+            SeleniumHelper helper = getSeleniumHelper();
+            By xpath = helper.byXpath(".//input|.//textarea");
+            WebElement element = helper.findElement(cell, true, xpath);
+            if (isInteractable(element)) {
+                result = true;
+                element.clear();
+                sendValue(element, value);
+            } else {
+                xpath = helper.byXpath(".//select");
+                element = helper.findElement(cell, true, xpath);
+                result = clickSelectOption(element, value);
+            }
         }
         return result;
     }
