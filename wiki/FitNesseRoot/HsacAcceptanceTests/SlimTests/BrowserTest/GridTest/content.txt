@@ -54,6 +54,8 @@ This test ensures we can find elements inside tables representing a grid where e
 |check                 |value of              |Name         |in row where |Owner       |is   |Owner name|John2     |
 |check                 |value of              |Color        |in row where |Owner       |is   |Owner name|true      |
 |check                 |value of              |Birth date   |in row where |Owner       |is   |Owner name|Mercedes  |
+|enter                 |Volvo                 |as           |Birth date   |in row where|Owner|is        |Owner name|
+|check                 |value of              |Birth date   |in row where |Owner       |is   |Owner name|Volvo     |
 
 
 |script|mock xml server setup|

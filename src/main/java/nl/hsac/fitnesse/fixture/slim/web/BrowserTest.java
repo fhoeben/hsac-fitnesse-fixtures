@@ -760,6 +760,9 @@ public class BrowserTest extends SlimFixture {
         if (result) {
             element.clear();
             sendValue(element, value);
+        } else {
+            element = findByXPath("%s[%s]//select", columnXPath, requestedIndex);
+            result = clickSelectOption(element, value);
         }
         return result;
     }
