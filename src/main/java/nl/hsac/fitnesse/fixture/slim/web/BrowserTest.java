@@ -766,7 +766,7 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOfColumnNumberInRowNumber(int columnIndex, int rowIndex) {
-        return getTextByXPath("(//tr[boolean(td)])[%s]/td[%s]", Integer.toString(rowIndex), Integer.toString(columnIndex));
+        return getValueByXPath("(//tr[boolean(td)])[%s]/td[%s]", Integer.toString(rowIndex), Integer.toString(columnIndex));
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
@@ -783,7 +783,18 @@ public class BrowserTest extends SlimFixture {
 
     protected String valueInRow(String columnXPath, String requestedColumnName) {
         String requestedIndex = getXPathForColumnIndex(requestedColumnName);
-        return getTextByXPath("%s[%s]", columnXPath, requestedIndex);
+        return getValueByXPath("%s[%s]", columnXPath, requestedIndex);
+    }
+
+    protected String getValueByXPath(String xpathPattern, String... params) {
+        WebElement element = findByXPath(xpathPattern, params);
+        if (element != null) {
+            WebElement nested = getSeleniumHelper().findElement(element, false, By.xpath(".//input|.//textarea|.//select"));
+            if (isInteractable(nested)) {
+                element = nested;
+            }
+        }
+        return valueFor(element);
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
