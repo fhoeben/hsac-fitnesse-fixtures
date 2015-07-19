@@ -756,16 +756,16 @@ public class BrowserTest extends SlimFixture {
         WebElement cell = findByXPath("%s[%s]", columnXPath, requestedIndex);
         if (cell != null) {
             SeleniumHelper helper = getSeleniumHelper();
-            By xpath = helper.byXpath(".//input|.//textarea");
+            By xpath = helper.byXpath(".//input|.//textarea|.//select");
             WebElement element = helper.findElement(cell, true, xpath);
-            if (isInteractable(element)) {
-                result = true;
-                element.clear();
-                sendValue(element, value);
-            } else {
-                xpath = helper.byXpath(".//select");
-                element = helper.findElement(cell, true, xpath);
+            if (isSelect(element)) {
                 result = clickSelectOption(element, value);
+            } else {
+                if (isInteractable(element)) {
+                    result = true;
+                    element.clear();
+                    sendValue(element, value);
+                }
             }
         }
         return result;
