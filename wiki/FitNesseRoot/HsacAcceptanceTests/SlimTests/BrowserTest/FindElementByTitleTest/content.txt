@@ -1,0 +1,24 @@
+This test ensures we can find elements based on (partial) title attribute.
+
+!define HTML { {{{
+<html>
+<body>
+<input name="first" title="Firstname" value="John">
+<textarea name="middle" title="Is not Last in its entirely">T.</textarea>
+<input name="last" title="Lastname" value="Doe">
+<img title="Edit"/>
+</body>
+</html>}}} }
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script|browser test         |
+|open  |$url                 |
+|check |value of|Lastname|Doe|
+|check |value of|Last    |T. |
+|click |Edit                 |
+
+|script|mock xml server setup|
+|stop                        |
