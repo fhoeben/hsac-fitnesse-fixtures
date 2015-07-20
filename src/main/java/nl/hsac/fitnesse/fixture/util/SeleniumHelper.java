@@ -263,6 +263,12 @@ public class SeleniumHelper {
             }
         }
         if (!isInteractable(element)) {
+            element = findElement(byCss("[title='%s']", place));
+            if (firstElement == null) {
+                firstElement = element;
+            }
+        }
+        if (!isInteractable(element)) {
             element = findElement(By.name(place));
             if (firstElement == null) {
                 firstElement = element;
@@ -310,6 +316,12 @@ public class SeleniumHelper {
         }
         if (!isInteractable(element)) {
             element = getElementByPartialAriaLabel(place, 1);
+            if (firstElement == null) {
+                firstElement = element;
+            }
+        }
+        if (!isInteractable(element)) {
+            element = findElement(byCss("[title*='%s']", place));
             if (firstElement == null) {
                 firstElement = element;
             }
