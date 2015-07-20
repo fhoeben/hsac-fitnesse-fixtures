@@ -445,7 +445,7 @@ public class SeleniumHelper {
         WebElement element = null;
         WebElement firstFound = null;
         if (!isInteractable(element)) {
-            String labelledByPattern = indexedXPath("//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[contains(normalize-space(..), '%s')]/ancestor-or-self::*[@id]/@id]", index);
+            String labelledByPattern = indexedXPath("//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::*[@id]/@id]", index);
             element = findByXPath(labelledByPattern, labelText);
             if (firstFound == null) {
                 firstFound = element;
