@@ -385,38 +385,17 @@ public class SeleniumHelper {
 
     private WebElement getElementByLabel(String labelText, int index, String labelXPath) {
         WebElement element = null;
-        WebElement firstFound = null;
         String labelPattern = indexedXPath(labelXPath, index);
         WebElement label = findByXPath(labelPattern, labelText);
         if (label != null) {
             String forAttr = label.getAttribute("for");
             if (forAttr == null || "".equals(forAttr)) {
-                element = findElement(label, false, byCss("input"));
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-                if (!isInteractable(element)) {
-                    element = findElement(label, false, byCss("select"));
-                    if (firstFound == null) {
-                        firstFound = element;
-                    }
-                    if (!isInteractable(element)) {
-                        element = findElement(label, false, byCss("textarea"));
-                        if (firstFound == null) {
-                            firstFound = element;
-                        }
-                    }
-                }
+                element = getNestedElementForValue(label);
             } else {
                 element = findElement(By.id(forAttr));
-                if (firstFound == null) {
-                    firstFound = element;
-                }
             }
         }
-        return isInteractable(element)
-                ? element
-                : firstFound;
+        return element;
     }
 
     public WebElement getElementByAriaLabel(String labelText, int index) {
@@ -460,6 +439,10 @@ public class SeleniumHelper {
         return isInteractable(element)
                 ? element
                 : firstFound;
+    }
+
+    public WebElement getNestedElementForValue(WebElement parent) {
+        return findElement(parent, false, By.xpath(".//input|.//select|.//textarea"));
     }
 
     /**
