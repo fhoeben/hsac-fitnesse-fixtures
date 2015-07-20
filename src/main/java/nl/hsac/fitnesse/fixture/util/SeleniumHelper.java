@@ -222,15 +222,10 @@ public class SeleniumHelper {
     }
 
     public WebElement getElementExact(String place) {
-        WebElement element = null;
+        WebElement element = getElementByLabelOccurrence(place, 1);
         // first element found, even if it is not (yet) interactable.
-        WebElement firstElement = null;
-        if (!isInteractable(element)) {
-            element = getElementByLabelOccurrence(place, 1);
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
+        WebElement firstElement = element;
+
         if (!isInteractable(element)) {
             element = findElement(byCss("input[placeholder='%s']", place));
             if (firstElement == null) {
@@ -285,15 +280,10 @@ public class SeleniumHelper {
     }
 
     public WebElement getElementPartial(String place) {
-        WebElement element = null;
+        WebElement element = getElementByPartialLabelOccurrence(place, 1);
         // first element found, even if it is not (yet) interactable.
-        WebElement firstElement = null;
-        if (!isInteractable(element)) {
-            element = getElementByPartialLabelOccurrence(place, 1);
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
+        WebElement firstElement = element;
+
         if (!isInteractable(element)) {
             element = findElement(byCss("input[placeholder*='%s']", place));
             if (firstElement == null) {
