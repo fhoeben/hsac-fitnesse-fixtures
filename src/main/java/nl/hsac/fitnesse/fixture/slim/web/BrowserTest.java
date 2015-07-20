@@ -755,9 +755,7 @@ public class BrowserTest extends SlimFixture {
         String requestedIndex = getXPathForColumnIndex(requestedColumnName);
         WebElement cell = findByXPath("%s[%s]", columnXPath, requestedIndex);
         if (cell != null) {
-            SeleniumHelper helper = getSeleniumHelper();
-            By xpath = helper.byXpath(".//input|.//textarea|.//select");
-            WebElement element = helper.findElement(cell, false, xpath);
+            WebElement element = getSeleniumHelper().getNestedElementForValue(cell);
             if (isSelect(element)) {
                 result = clickSelectOption(element, value);
             } else {
@@ -796,7 +794,7 @@ public class BrowserTest extends SlimFixture {
     protected String getValueByXPath(String xpathPattern, String... params) {
         WebElement element = findByXPath(xpathPattern, params);
         if (element != null) {
-            WebElement nested = getSeleniumHelper().findElement(element, false, By.xpath(".//input|.//textarea|.//select"));
+            WebElement nested = getSeleniumHelper().getNestedElementForValue(element);
             if (isInteractable(nested)) {
                 element = nested;
             }
