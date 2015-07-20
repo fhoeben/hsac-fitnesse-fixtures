@@ -391,17 +391,17 @@ public class SeleniumHelper {
         if (label != null) {
             String forAttr = label.getAttribute("for");
             if (forAttr == null || "".equals(forAttr)) {
-                element = findElement(label, true, byCss("input"));
+                element = findElement(label, false, byCss("input"));
                 if (firstFound == null) {
                     firstFound = element;
                 }
                 if (!isInteractable(element)) {
-                    element = findElement(label, true, byCss("select"));
+                    element = findElement(label, false, byCss("select"));
                     if (firstFound == null) {
                         firstFound = element;
                     }
                     if (!isInteractable(element)) {
-                        element = findElement(label, true, byCss("textarea"));
+                        element = findElement(label, false, byCss("textarea"));
                         if (firstFound == null) {
                             firstFound = element;
                         }

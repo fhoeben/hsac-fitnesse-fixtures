@@ -523,10 +523,10 @@ public class BrowserTest extends SlimFixture {
         if (element != null) {
             if (isSelect(element)) {
                 By xpath = getSeleniumHelper().byXpath(".//option[normalize-space(text()) = '%s']", optionValue);
-                WebElement option = getSeleniumHelper().findElement(element, true, xpath);
+                WebElement option = getSeleniumHelper().findElement(element, false, xpath);
                 if (option == null) {
                     xpath = getSeleniumHelper().byXpath(".//option[contains(normalize-space(text()), '%s')]", optionValue);
-                    option = getSeleniumHelper().findElement(element, true, xpath);
+                    option = getSeleniumHelper().findElement(element, false, xpath);
                 }
                 if (option != null) {
                     result = clickElement(option);
@@ -757,7 +757,7 @@ public class BrowserTest extends SlimFixture {
         if (cell != null) {
             SeleniumHelper helper = getSeleniumHelper();
             By xpath = helper.byXpath(".//input|.//textarea|.//select");
-            WebElement element = helper.findElement(cell, true, xpath);
+            WebElement element = helper.findElement(cell, false, xpath);
             if (isSelect(element)) {
                 result = clickSelectOption(element, value);
             } else {
