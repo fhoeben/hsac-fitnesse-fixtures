@@ -399,16 +399,11 @@ public class SeleniumHelper {
     }
 
     public WebElement getElementByAriaLabel(String labelText, int index) {
-        WebElement element = null;
-        WebElement firstFound = null;
-        if (!isInteractable(element)) {
-            // see if there is an element with labelText as text, whose id is referenced by an aria-labelledby attribute
-            String labelledByPattern = indexedXPath("//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[normalize-space(.) = '%s']/ancestor-or-self::*[@id]/@id]", index);
-            element = findByXPath(labelledByPattern, labelText);
-            if (firstFound == null) {
-                firstFound = element;
-            }
-        }
+        // see if there is an element with labelText as text, whose id is referenced by an aria-labelledby attribute
+        String labelledByPattern = indexedXPath("//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[normalize-space(.) = '%s']/ancestor-or-self::*[@id]/@id]", index);
+        WebElement element = findByXPath(labelledByPattern, labelText);
+        WebElement firstFound = element;
+
         if (!isInteractable(element)) {
             element = findElement(byCss("[aria-label='%s']", labelText), index - 1);
             if (firstFound == null) {
@@ -421,15 +416,10 @@ public class SeleniumHelper {
     }
 
     public WebElement getElementByPartialAriaLabel(String labelText, int index) {
-        WebElement element = null;
-        WebElement firstFound = null;
-        if (!isInteractable(element)) {
-            String labelledByPattern = indexedXPath("//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::*[@id]/@id]", index);
-            element = findByXPath(labelledByPattern, labelText);
-            if (firstFound == null) {
-                firstFound = element;
-            }
-        }
+        String labelledByPattern = indexedXPath("//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::*[@id]/@id]", index);
+        WebElement element = findByXPath(labelledByPattern, labelText);
+        WebElement firstFound = element;
+
         if (!isInteractable(element)) {
             element = findElement(byCss("[aria-label*='%s']", labelText), index - 1);
             if (firstFound == null) {
