@@ -1,9 +1,9 @@
 package nl.hsac.fitnesse.fixture.slim;
 
 import fitnesse.slim.fixtureInteraction.FixtureInteraction;
+import fitnesse.slim.fixtureInteraction.InteractionAwareFixture;
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
-import nl.hsac.fitnesse.slim.interaction.InteractionAwareFixture;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.File;
@@ -44,7 +44,7 @@ public class SlimFixture  implements InteractionAwareFixture {
     }
 
     protected Object invoke(FixtureInteraction interaction, Method method, Object[] arguments)
-            throws InvocationTargetException, IllegalAccessException {
+            throws Throwable {
         return interaction.methodInvoke(method, this, arguments);
     }
 

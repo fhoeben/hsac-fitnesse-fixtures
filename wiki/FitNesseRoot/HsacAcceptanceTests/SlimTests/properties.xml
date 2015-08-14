@@ -8,7 +8,6 @@
 <Refactor>true</Refactor>
 <Search>true</Search>
 <Suite>true</Suite>
-<Suites/>
 <SymbolicLinks>
 <MockXmlServerTest>.HsacExamples.SlimTests.MockXmlServerTest</MockXmlServerTest>
 <SuiteSetUp>.HsacExamples.SlimTests.SuiteSetUp</SuiteSetUp>
