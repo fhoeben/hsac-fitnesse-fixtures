@@ -10,7 +10,7 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |scenario       |check original price _|address, city, price, originalPrice|
 |open           |http://www.funda.nl                                       |
-|select         |€ 900.000           |for          |Prijsklasse          |
+|select         |€ 900.000             |for          |Prijsklasse          |
 |select         |€ 2.000.000           |for          |tot                  |
 |enter          |@{address}, @{city}   |as           |Locatie              |
 |press          |enter                                                     |
@@ -23,7 +23,7 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |check original price                                       |
 |address          |city   |price?          |original price? |
-|Maliebaan 50 A   |Utrecht|€ 1.295.000 k.k.|€ 1.395.000 k.k.|
+|Maliebaan 50 A   |Utrecht|€ 995.000 k.k.  |€ 1.395.000 k.k.|
 |Wilhelminapark 27|Utrecht|€ 1.350.000 k.k.|null            |
 
 

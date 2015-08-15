@@ -8,7 +8,7 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |table template |check original price                                  |
 |open           |http://www.funda.nl                                   |
-|select         |€ 900.000        |for            |Prijsklasse       |
+|select         |€ 900.000          |for            |Prijsklasse       |
 |select         |€ 2.000.000        |for            |tot               |
 |enter          |@{address}, @{city}|as             |Locatie           |
 |press          |enter                                                 |
@@ -25,7 +25,7 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |check original price                                                                         |
 |address          |city   |price?          |originalPrice?  |square meters|yearBuilt?|volume? |
-|Maliebaan 50 A   |Utrecht|€ 1.295.000 k.k.|€ 1.395.000 k.k.|300          |1930      |900 m³  |
+|Maliebaan 50 A   |Utrecht|€ 995.000 k.k.  |€ 1.395.000 k.k.|240          |1930      |900 m³  |
 |Wilhelminapark 27|Utrecht|€ 1.350.000 k.k.|null            |290          |1905      |1.000 m³|
 
 To make test more readable, maintainable and powerful we can also create custom subclasses of !-BrowserTest-!. This is shown in CustomFixtureTest.
