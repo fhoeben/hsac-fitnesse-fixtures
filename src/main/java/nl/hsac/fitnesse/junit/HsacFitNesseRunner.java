@@ -129,12 +129,6 @@ public class HsacFitNesseRunner extends FitNesseRunner {
 
     }
 
-    @Override
-    protected void addTestSystemListeners(RunNotifier notifier, MultipleTestsRunner testRunner, Class<?> suiteClass) {
-        // workaround for https://github.com/unclebob/fitnesse/issues/762
-        testRunner.addTestSystemListener(new HsacJUnitRunNotifierResultsListener(notifier, suiteClass));
-    }
-
     /**
      * Determines whether system properties should override Selenium configuration in wiki.
      * If so Selenium will be configured according to property values, and locked so that wiki pages
