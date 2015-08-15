@@ -11,10 +11,10 @@ First we do this with ''plain !-BrowserTest-!'', then with a ''custom subclass, 
 |select|€ 1.500.000              |for                               |tot              |
 |enter |Maliebaan, Utrecht       |as                                |Locatie          |
 |press |enter                                                                         |
-|click |Maliebaan 50 A                                                                |
+|click |Maliebaan 70 a                                                                |
 |click |Foto's                                                                        |
 |note  |Check any element's text based on an xPath, makes test fragile to HTML changes|
-|check |value of                 |xpath=//span[@class='hits']       |(23)             |
+|check |value of                 |xpath=//span[@class='hits']       |(11)             |
 
 What can we do with a custom subclass...
 
@@ -31,9 +31,9 @@ We need to indicate in which package our custom class can be found.
 |select|€ 1.500.000                  |for           |tot                  |
 |enter |Maliebaan, Utrecht           |as            |Locatie              |
 |press |enter                                                             |
-|click |Maliebaan 50 A                                                    |
+|click |Maliebaan 70 a                                                    |
 |click |Foto's                                                            |
 |note  |Use custom method to get number of photos                         |
-|check |number of photos             |23                                  |
+|check |number of photos             |11                                  |
 |note  |Since the custom method returns a number we can do relative checks|
 |check |number of photos             |>10                                 |
