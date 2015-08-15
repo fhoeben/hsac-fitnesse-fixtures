@@ -7,7 +7,7 @@ First we do this with ''plain !-BrowserTest-!'', then with a ''custom subclass, 
 
 |script|browser test                                                                  |
 |open  |http://www.funda.nl                                                           |
-|select|€ 1.000.000              |for                               |Prijsklasse      |
+|select|€ 900.000              |for                               |Prijsklasse      |
 |select|€ 1.500.000              |for                               |tot              |
 |enter |Maliebaan, Utrecht       |as                                |Locatie          |
 |press |enter                                                                         |
@@ -27,7 +27,7 @@ We need to indicate in which package our custom class can be found.
 
 |script|funda test                                                        |
 |open  |http://www.funda.nl                                               |
-|select|€ 1.000.000                  |for           |Prijsklasse          |
+|select|€ 900.000                  |for           |Prijsklasse          |
 |select|€ 1.500.000                  |for           |tot                  |
 |enter |Maliebaan, Utrecht           |as            |Locatie              |
 |press |enter                                                             |
