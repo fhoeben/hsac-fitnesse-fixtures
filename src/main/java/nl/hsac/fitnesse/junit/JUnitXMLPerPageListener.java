@@ -97,7 +97,7 @@ public class JUnitXMLPerPageListener extends RunListener {
 
     protected String getMessage(Throwable exception) {
         String errorMessage = exception.getMessage();
-        return StringEscapeUtils.escapeXml(errorMessage);
+        return StringEscapeUtils.escapeXml10(errorMessage);
     }
 
     /**

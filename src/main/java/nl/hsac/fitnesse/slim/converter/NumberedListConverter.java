@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.slim.converter;
 
 import fitnesse.slim.Converter;
 import fitnesse.slim.converters.ConverterRegistry;
+import fitnesse.slim.converters.ElementConverterHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;

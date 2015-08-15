@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.slim.interaction;
 
 import fitnesse.slim.fixtureInteraction.DefaultInteraction;
 import fitnesse.slim.fixtureInteraction.FixtureInteraction;
+import fitnesse.slim.fixtureInteraction.InteractionAwareFixture;
 import net.sf.cglib.proxy.*;
 
 import java.lang.reflect.Method;

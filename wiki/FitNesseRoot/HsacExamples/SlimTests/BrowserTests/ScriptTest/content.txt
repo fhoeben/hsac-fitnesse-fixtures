@@ -11,15 +11,15 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |script      |browser test                                                           |
 |open        |http://www.funda.nl                                                    |
-|select      |€ 1.000.000       |for                            |Prijsklasse         |
+|select      |€ 900.000         |for                            |Prijsklasse         |
 |select      |€ 1.500.000       |for                            |tot                 |
 |enter       |Maliebaan, Utrecht|as                             |Locatie             |
 |press       |enter                                                                  |
-|click       |Maliebaan 70 a                                                         |
-|check       |page title        |Huis te koop: Maliebaan 70 a 3581 CV Utrecht [funda]|
+|click       |Maliebaan 50 A                                                         |
+|check       |page title        |Huis te koop: Maliebaan 50 A 3581 CS Utrecht [funda]|
 |click       |Kenmerken                                                              |
-|check       |value of          |Oorspronkelijke vraagprijs     |€ 1.690.000 k.k.    |
-|check       |value of          |woonoppervlakte                |588 m²              |
+|check       |value of          |Oorspronkelijke vraagprijs     |€ 1.395.000 k.k.    |
+|check       |value of          |woonoppervlakte                |240 m²              |
 |click       |Foto's                                                                 |
 |note        |Check whether the page title matches the supplied regular expression   |
 |check       |page title        |=~/.*Foto's.*/                                      |
@@ -31,9 +31,6 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |click       |Volgende foto                                                          |
 |wait seconds|1                                                                      |
 |show        |take screenshot   |Foto_3                                              |
-|click       |Vergroten                                                              |
-|wait seconds|1                                                                      |
-|show        |take screenshot   |Foto_3_groot                                        |
 
 When multiple similar sequences of steps are needed a script can be generalized using a scenario, which is show in ScenarioTest. 
 To make test more readable, maintainable and powerful we can also create custom subclasses of !-BrowserTest-!. This is shown in CustomFixtureTest.
