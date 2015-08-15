@@ -15,11 +15,11 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |select      |€ 1.500.000       |for                            |tot                 |
 |enter       |Maliebaan, Utrecht|as                             |Locatie             |
 |press       |enter                                                                  |
-|click       |Maliebaan 50 A                                                         |
-|check       |page title        |Huis te koop: Maliebaan 50 A 3581 CS Utrecht [funda]|
+|click       |Maliebaan 70 a                                                         |
+|check       |page title        |Huis te koop: Maliebaan 70 a 3581 CV Utrecht [funda]|
 |click       |Kenmerken                                                              |
-|check       |value of          |Oorspronkelijke vraagprijs     |€ 1.395.000 k.k.    |
-|check       |value of          |woonoppervlakte                |300 m²              |
+|check       |value of          |Oorspronkelijke vraagprijs     |€ 1.690.000 k.k.    |
+|check       |value of          |woonoppervlakte                |588 m²              |
 |click       |Foto's                                                                 |
 |note        |Check whether the page title matches the supplied regular expression   |
 |check       |page title        |=~/.*Foto's.*/                                      |
