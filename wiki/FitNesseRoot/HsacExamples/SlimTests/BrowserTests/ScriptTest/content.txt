@@ -11,7 +11,7 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |script      |browser test                                                           |
 |open        |http://www.funda.nl                                                    |
-|select      |€ 1.000.000       |for                            |Prijsklasse         |
+|select      |€ 900.000       |for                            |Prijsklasse         |
 |select      |€ 1.500.000       |for                            |tot                 |
 |enter       |Maliebaan, Utrecht|as                             |Locatie             |
 |press       |enter                                                                  |
@@ -19,7 +19,7 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |check       |page title        |Huis te koop: Maliebaan 50 A 3581 CS Utrecht [funda]|
 |click       |Kenmerken                                                              |
 |check       |value of          |Oorspronkelijke vraagprijs     |€ 1.395.000 k.k.    |
-|check       |value of          |woonoppervlakte                |300 m²              |
+|check       |value of          |woonoppervlakte                |240 m²              |
 |click       |Foto's                                                                 |
 |note        |Check whether the page title matches the supplied regular expression   |
 |check       |page title        |=~/.*Foto's.*/                                      |
