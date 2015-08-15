@@ -2,9 +2,7 @@ package nl.hsac.fitnesse.fixture;
 
 import fit.exception.FitFailureException;
 import fitnesse.ContextConfigurator;
-import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapper;
-import freemarker.template.Template;
+import freemarker.template.*;
 import nl.hsac.fitnesse.fixture.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -38,12 +36,12 @@ public class Environment {
     private ReflectionHelper reflectionHelper = new ReflectionHelper();
 
     private Environment() {
-        Configuration cfg = new Configuration();
+        Configuration cfg = new Configuration(Configuration.VERSION_2_3_23);
         // Specify the data source where the template files come from.
         cfg.setClassForTemplateLoading(getClass(), "/templates/");
-        DefaultObjectWrapper wrapper = new DefaultObjectWrapper();
-        wrapper.setExposeFields(true);
-        cfg.setObjectWrapper(wrapper);
+        DefaultObjectWrapperBuilder builder = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_23);
+        builder.setExposeFields(true);
+        cfg.setObjectWrapper(builder.build());
         freemarkerConfig = cfg;
         
         fmHelper = new FreeMarkerHelper();

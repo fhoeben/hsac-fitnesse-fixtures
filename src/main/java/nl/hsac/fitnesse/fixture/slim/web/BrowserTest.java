@@ -47,7 +47,7 @@ public class BrowserTest extends SlimFixture {
 
     @Override
     protected Object invoke(final FixtureInteraction interaction, final Method method, final Object[] arguments)
-            throws InvocationTargetException, IllegalAccessException {
+            throws Throwable {
         Object result;
         WaitUntil waitUntil = reflectionHelper.getAnnotation(WaitUntil.class, method);
         if (waitUntil == null) {
@@ -64,7 +64,7 @@ public class BrowserTest extends SlimFixture {
             public Object apply(WebDriver webDriver) {
                 try {
                     return superInvoke(interaction, method, arguments);
-                } catch (InvocationTargetException e) {
+                } catch (Throwable e) {
                     Throwable realEx = ExceptionHelper.stripReflectionException(e);
                     if (realEx instanceof RuntimeException) {
                         throw (RuntimeException) realEx;
@@ -73,8 +73,6 @@ public class BrowserTest extends SlimFixture {
                     } else {
                         throw new RuntimeException(realEx);
                     }
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
                 }
             }
         };
@@ -97,7 +95,7 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
-    protected Object superInvoke(FixtureInteraction interaction, Method method, Object[] arguments) throws InvocationTargetException, IllegalAccessException {
+    protected Object superInvoke(FixtureInteraction interaction, Method method, Object[] arguments) throws Throwable {
         return super.invoke(interaction, method, arguments);
     }
 

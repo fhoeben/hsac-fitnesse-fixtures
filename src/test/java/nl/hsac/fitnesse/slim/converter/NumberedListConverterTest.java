@@ -48,7 +48,6 @@ public class NumberedListConverterTest {
     @Test
     public void testViaRegistry() {
         NumberedListConverter.register();
-        ConverterRegistry.addConverter(Map.class, new MapConverter());
 
         Map<String, List<String>> map = new HashMap<String, List<String>>();
         map.put("test", new LinkedList<String>(Arrays.asList("b", "c", null)));

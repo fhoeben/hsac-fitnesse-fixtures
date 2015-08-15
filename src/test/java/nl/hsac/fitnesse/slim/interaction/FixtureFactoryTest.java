@@ -114,7 +114,7 @@ public class FixtureFactoryTest {
         private final List<Method> calledMethods = new ArrayList<Method>();
 
         @Override
-        public Object methodInvoke(Method method, Object instance, Object... convertedArgs) throws InvocationTargetException, IllegalAccessException {
+        public Object methodInvoke(Method method, Object instance, Object... convertedArgs) throws Throwable {
             calledMethods.add(method);
             return super.methodInvoke(method, instance, convertedArgs);
         }
