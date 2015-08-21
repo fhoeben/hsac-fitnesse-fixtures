@@ -198,7 +198,8 @@ public class NgBrowserTest extends BrowserTest {
     }
 
     protected WebElement findSelect(String place) {
-        return findNgElementByJavascript(NgClientSideScripts.FindSelects, place);
+        // this script does not need angular root
+        return findByJavascript(NgClientSideScripts.FindSelects, place);
     }
 
     protected WebElement findElement(String place) {
@@ -206,7 +207,8 @@ public class NgBrowserTest extends BrowserTest {
     }
 
     protected List<WebElement> findRepeaterRows(String repeater) {
-        return findNgElementsByJavascript(NgClientSideScripts.FindAllRepeaterRows, repeater, true);
+        // this script does not need angular root
+        return findAllByJavascript(NgClientSideScripts.FindAllRepeaterRows, repeater, true);
     }
 
     protected List<WebElement> findNgElementsByJavascript(String script, Object... parameters) {
