@@ -105,11 +105,23 @@ public class BrowserTest extends SlimFixture {
      * @param method
      */
     protected void waitForAngularIfNeeded(Method method) {
-        if (ngBrowserTest == null) {
-            ngBrowserTest = new NgBrowserTest();
-        }
-        if (ngBrowserTest.requiresWaitForAngular(method) && currentSiteUsesAngular()) {
-            ngBrowserTest.waitForAngularRequestsToFinish();
+        try {
+            if (ngBrowserTest == null) {
+                ngBrowserTest = new NgBrowserTest();
+            }
+            if (ngBrowserTest.requiresWaitForAngular(method) && currentSiteUsesAngular()) {
+                try {
+                    ngBrowserTest.waitForAngularRequestsToFinish();
+                } catch (Exception e) {
+                    // if something goes wrong, just use normal behavior: continue to invoke()
+                    System.err.print("Found Angular, but encountered an error while waiting for it to be ready. ");
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            // if something goes wrong, just use normal behavior: continue to invoke()
+            System.err.print("Error while determining whether Angular is present. ");
+            e.printStackTrace();
         }
     }
 
