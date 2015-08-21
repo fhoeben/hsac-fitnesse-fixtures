@@ -18,7 +18,7 @@ import java.util.Set;
  */
 public class NgBrowserTest extends BrowserTest {
     private final static Set<String> METHODS_NO_WAIT;
-    private String angularRoot = null;
+    private String angularRoot = "[ng-app], [ng_app], [data-ng-app], [x-ng-app], [ng\\:app]";
 
     static {
         METHODS_NO_WAIT = ReflectionHelper.validateMethodNames(
