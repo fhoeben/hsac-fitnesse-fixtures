@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
+import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.WaitUntil;
 import nl.hsac.fitnesse.fixture.util.NgClientSideScripts;
@@ -88,6 +89,40 @@ public class NgBrowserTest extends BrowserTest {
         if (root == null) {
             root = "body";
         }
+        try {
+            waitForAngularRequestsToFinish(root);
+        } catch (RuntimeException e) {
+            handleExceptionWhileWaiting(root, e);
+        } finally {
+            // store root for future reference
+            setAngularRoot(root);
+        }
+    }
+
+    protected void handleExceptionWhileWaiting(String rootSelector, RuntimeException e) {
+        List<WebElement> roots;
+        try {
+            roots = findAllByCss(rootSelector);
+        } catch (RuntimeException ex) {
+            System.err.print("Problem using rootSelector: " + rootSelector);
+            ex.printStackTrace();
+            throw e;
+        }
+
+        if (roots.isEmpty()) {
+            System.err.println("Unable to locate Angular root element. Please configure it explicitly using setAngularRoot(selector)");
+        } else if (roots.size() == 1) {
+            System.err.println("Found Angular. Single root element found, but error while waiting for requests to finish.");
+        } else {
+            System.err.println("Found Angular. Multiple root elements seem to be present: "
+                    + roots.size()
+                    + " using root selector: " + rootSelector);
+        }
+        System.err.println("Retrying once");
+        waitForAngularRequestsToFinish(rootSelector);
+    }
+
+    protected void waitForAngularRequestsToFinish(String root) {
         Object result = waitForJavascriptCallback(NgClientSideScripts.WaitForAngular, root);
         if (result != null) {
             String msg = getSlimFixtureExceptionMessage("angular", result.toString(), null);
