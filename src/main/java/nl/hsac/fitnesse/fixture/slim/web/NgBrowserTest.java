@@ -228,10 +228,17 @@ public class NgBrowserTest extends BrowserTest {
         return params.toArray();
     }
 
+    /**
+     * @return CSS selector expression used to find root of application.
+     */
     public String getAngularRoot() {
         return angularRoot;
     }
 
+    /**
+     * Defines which CSS selector to use to find the application root.
+     * @param anAngularRoot CSS selector expression.
+     */
     public void setAngularRoot(String anAngularRoot) {
         angularRoot = anAngularRoot;
     }
