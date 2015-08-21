@@ -111,7 +111,21 @@ public class BrowserTest extends SlimFixture {
             }
             if (ngBrowserTest.requiresWaitForAngular(method) && currentSiteUsesAngular()) {
                 try {
-                    ngBrowserTest.waitForAngularRequestsToFinish();
+                    List<WebElement> roots = findAllByCss(ngBrowserTest.getAngularRoot());
+                    if (roots.isEmpty()) {
+                        System.err.print("Unable to locate Angular root element. If waiting is required please configure it explicitly using "
+                                + NgBrowserTest.class.getSimpleName());
+                    } else if (roots.size() == 1) {
+                        ngBrowserTest.waitForAngularRequestsToFinish();
+                    } else {
+                        // wait for all applications found
+                        String originalSelector = ngBrowserTest.getAngularRoot();
+                        try {
+                            waitForAllAngularApplications(roots);
+                        } finally {
+                            ngBrowserTest.setAngularRoot(originalSelector);
+                        }
+                    }
                 } catch (Exception e) {
                     // if something goes wrong, just use normal behavior: continue to invoke()
                     System.err.print("Found Angular, but encountered an error while waiting for it to be ready. ");
@@ -122,6 +136,25 @@ public class BrowserTest extends SlimFixture {
             // if something goes wrong, just use normal behavior: continue to invoke()
             System.err.print("Error while determining whether Angular is present. ");
             e.printStackTrace();
+        }
+    }
+
+    protected void waitForAllAngularApplications(List<WebElement> angularApplicationRoots) {
+        for (WebElement root : angularApplicationRoots) {
+            waitForAngularInRoot(root, "ng-app");
+            waitForAngularInRoot(root, "ng_app");
+            waitForAngularInRoot(root, "x-ng-app");
+            waitForAngularInRoot(root, "data-ng-app");
+            waitForAngularInRoot(root, "ng\\:app");
+        }
+    }
+
+    protected void waitForAngularInRoot(WebElement rootElement, String applicationAttribute) {
+        String appName = rootElement.getAttribute(applicationAttribute);
+        if (StringUtils.isNotEmpty(appName)) {
+            String selector = String.format("[%s=%s]", applicationAttribute, appName);
+            ngBrowserTest.setAngularRoot(selector);
+            ngBrowserTest.waitForAngularRequestsToFinish();
         }
     }
 
