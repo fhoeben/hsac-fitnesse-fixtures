@@ -52,6 +52,8 @@ public class NgBrowserTest extends BrowserTest {
                 "setBrowserHeight",
                 "setBrowserSizeToBy",
                 "setGlobalValueTo",
+                "isImplicitWaitForAngularEnabled",
+                "setImplicitWaitForAngularTo",
                 "globalValue",
                 "setAngularRoot",
                 "getAngularRoot");
@@ -78,7 +80,7 @@ public class NgBrowserTest extends BrowserTest {
     @Override
     public boolean open(String address) {
         boolean result = super.open(address);
-        if (result) {
+        if (result && isImplicitWaitForAngularEnabled()) {
             waitForAngularRequestsToFinish();
         }
         return result;
