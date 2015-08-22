@@ -61,7 +61,8 @@ public class NgBrowserTest extends BrowserTest {
 
     @Override
     protected void waitForAngularIfNeeded(Method method) {
-        if (requiresWaitForAngular(method)) {
+        if (isImplicitWaitForAngularEnabled()
+                && requiresWaitForAngular(method)) {
             waitForAngularRequestsToFinish();
         }
     }
