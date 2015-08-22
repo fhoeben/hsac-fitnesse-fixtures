@@ -73,7 +73,7 @@ The heuristic to find places tries a number of translations of end user terms to
 |current browser height                                                    |Retrieves the current height of the browser's window (in pixels).                                                                                                                                                                                   |
 |set browser height <newHeight>                                            |Sets the height of the browser's window to 'newHeight' (in pixels).                                                                                                                                                                                 |
 |set browser size to <newWidth> to <newHeight>                             |Sets the size of the browser's window to 'newWidth' by 'newHeight' (in pixels).                                                                                                                                                                     |
-|set implicit wait for angular to <true/false>                             |Controls whether !-BrowserTest-! should determine whether the site being tested uses !-AngularJs-! and if so, wait for Angular to finish rendering the page (default is 'true'.)                                                                    |
+|set implicit wait for angular to <true/false>                             |Controls whether !-BrowserTest-! should determine whether the site being tested uses !-AngularJs-! and if so, wait for Angular to finish rendering the page (default is 'true').                                                                    |
 
 !3 !-NgBrowserTest-!
 
