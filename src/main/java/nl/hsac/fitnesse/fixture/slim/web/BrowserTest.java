@@ -31,6 +31,7 @@ public class BrowserTest extends SlimFixture {
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
     private ReflectionHelper reflectionHelper = getEnvironment().getReflectionHelper();
     private NgBrowserTest ngBrowserTest;
+    private boolean implicitWaitForAngular = true;
     private int secondsBeforeTimeout;
     private int secondsBeforePageLoadTimeout;
     private int waitAfterScroll = 150;
@@ -105,23 +106,25 @@ public class BrowserTest extends SlimFixture {
      * @param method
      */
     protected void waitForAngularIfNeeded(Method method) {
-        try {
-            if (ngBrowserTest == null) {
-                ngBrowserTest = new NgBrowserTest();
-            }
-            if (ngBrowserTest.requiresWaitForAngular(method) && currentSiteUsesAngular()) {
-                try {
-                    ngBrowserTest.waitForAngularRequestsToFinish();
-                } catch (Exception e) {
-                    // if something goes wrong, just use normal behavior: continue to invoke()
-                    System.err.print("Found Angular, but encountered an error while waiting for it to be ready. ");
-                    e.printStackTrace();
+        if (isImplicitWaitForAngularEnabled()) {
+            try {
+                if (ngBrowserTest == null) {
+                    ngBrowserTest = new NgBrowserTest();
                 }
+                if (ngBrowserTest.requiresWaitForAngular(method) && currentSiteUsesAngular()) {
+                    try {
+                        ngBrowserTest.waitForAngularRequestsToFinish();
+                    } catch (Exception e) {
+                        // if something goes wrong, just use normal behavior: continue to invoke()
+                        System.err.print("Found Angular, but encountered an error while waiting for it to be ready. ");
+                        e.printStackTrace();
+                    }
+                }
+            } catch (Exception e) {
+                // if something goes wrong, just use normal behavior: continue to invoke()
+                System.err.print("Error while determining whether Angular is present. ");
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            // if something goes wrong, just use normal behavior: continue to invoke()
-            System.err.print("Error while determining whether Angular is present. ");
-            e.printStackTrace();
         }
     }
 
@@ -1569,5 +1572,13 @@ public class BrowserTest extends SlimFixture {
 
     public void setNgBrowserTest(NgBrowserTest ngBrowserTest) {
         this.ngBrowserTest = ngBrowserTest;
+    }
+
+    public boolean isImplicitWaitForAngularEnabled() {
+        return implicitWaitForAngular;
+    }
+
+    public void setImplicitWaitForAngularTo(boolean implicitWaitForAngular) {
+        this.implicitWaitForAngular = implicitWaitForAngular;
     }
 }
