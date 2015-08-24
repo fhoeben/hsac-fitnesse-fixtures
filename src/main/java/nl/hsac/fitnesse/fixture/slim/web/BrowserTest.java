@@ -3,6 +3,7 @@ package nl.hsac.fitnesse.fixture.slim.web;
 import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
+import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.TimeoutPolicy;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.WaitUntil;
 import nl.hsac.fitnesse.fixture.util.*;
@@ -20,7 +21,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -120,6 +120,8 @@ public class BrowserTest extends SlimFixture {
                         e.printStackTrace();
                     }
                 }
+            } catch (UnhandledAlertException e) {
+                System.err.println("Cannot determine whether Angular is present while alert is active.");
             } catch (Exception e) {
                 // if something goes wrong, just use normal behavior: continue to invoke()
                 System.err.print("Error while determining whether Angular is present. ");
@@ -136,11 +138,20 @@ public class BrowserTest extends SlimFixture {
     @Override
     protected Throwable handleException(Method method, Object[] arguments, Throwable t) {
         Throwable result;
-        if (!(t instanceof SlimFixtureException)) {
+        if (t instanceof UnhandledAlertException) {
+            UnhandledAlertException e = (UnhandledAlertException) t;
+            String alertText = e.getAlertText();
+            if (alertText == null) {
+                alertText = alertText();
+            }
+            String msgBase = "Unhandled alert: alert must be confirmed or dismissed before test can continue. Alert text: " + alertText;
+            String msg = getSlimFixtureExceptionMessage("alertException", msgBase, e);
+            result = new StopTestException(false, msg, t);
+        } else if (t instanceof SlimFixtureException) {
+            result = super.handleException(method, arguments, t);
+        } else {
             String msg = getSlimFixtureExceptionMessage("exception", null, t);
             result = new SlimFixtureException(false, msg, t);
-        } else {
-            result = super.handleException(method, arguments, t);
         }
         return result;
     }
@@ -1331,8 +1342,11 @@ public class BrowserTest extends SlimFixture {
         String screenShotFile = null;
         try {
             screenShotFile = createScreenshot(screenshotBaseName, t);
+        } catch (UnhandledAlertException e) {
+            // https://code.google.com/p/selenium/issues/detail?id=4412
+            System.err.println("Unable to take screenshot while alert is present for exception: " + messageBase);
         } catch (Exception sse) {
-            // unable to take screenshot
+            System.err.println("Unable to take screenshot for exception: " + messageBase);
             sse.printStackTrace();
         }
         String message = messageBase;
@@ -1343,21 +1357,26 @@ public class BrowserTest extends SlimFixture {
                 message = ExceptionUtils.getStackTrace(t);
             }
         }
-        String label = "Page content";
-        try {
-            String fileName;
-            if (t != null) {
-                fileName = t.getClass().getName();
-            } else if (screenshotBaseName != null) {
-                fileName = screenshotBaseName;
-            } else {
-                fileName = "exception";
-            }
-            label = savePageSource(fileName, label);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         if (screenShotFile != null) {
+            String label = "Page content";
+            try {
+                String fileName;
+                if (t != null) {
+                    fileName = t.getClass().getName();
+                } else if (screenshotBaseName != null) {
+                    fileName = screenshotBaseName;
+                } else {
+                    fileName = "exception";
+                }
+                label = savePageSource(fileName, label);
+            } catch (UnhandledAlertException e) {
+                // https://code.google.com/p/selenium/issues/detail?id=4412
+                System.err.println("Unable to capture page source while alert is present for exception: " + messageBase);
+            } catch (Exception e) {
+                System.err.println("Unable to capture page source for exception: " + messageBase);
+                e.printStackTrace();
+            }
+
             String exceptionMsg = formatExceptionMsg(message);
             message = String.format("<div><div>%s.</div><div>%s:%s</div></div>",
                     exceptionMsg, label, getScreenshotLink(screenShotFile));
