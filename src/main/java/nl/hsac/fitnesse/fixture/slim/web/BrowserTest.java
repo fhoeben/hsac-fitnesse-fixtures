@@ -272,6 +272,7 @@ public class BrowserTest extends SlimFixture {
         return switchToNextTab();
     }
 
+    @WaitUntil
     public boolean switchToNextTab() {
         boolean result = false;
         List<String> tabs = getTabHandles();
@@ -287,6 +288,7 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
+    @WaitUntil
     public boolean switchToPreviousTab() {
         boolean result = false;
         List<String> tabs = getTabHandles();
