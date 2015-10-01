@@ -21,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 public class MapColumnFixture extends OurColumnFixture {
     private final Map<String, Object> currentRowValues = new HashMap<String, Object>();
     public static final String DEFAULT_ARRAY_SEPARATOR = ",";
+    private static final String REGEX_STRING_WITH_SYMBOL = "(.*?)(\\$\\[)(.*?)(\\])(.*)"; // (Lazy) match randomText$[symbol]...
 
     @Override
     public void reset() {
@@ -118,7 +119,22 @@ public class MapColumnFixture extends OurColumnFixture {
      * @return value for specified column.
      */
     public Object get(String columnName) {
-        return getCurrentRowValues().get(columnName);
+        return get(columnName, null);
+    }
+
+    /**
+     * @param columnName
+     *            column to get current row's value of
+     * @param defaultValue
+     *            default value that must be returned if current row value is null
+     * @return value for specified column of specified default value.
+     */
+    public Object get(String columnName, Object defaultValue) {
+        Object result = getCurrentRowValues().get(columnName);
+        if (result == null) {
+            result = defaultValue;
+        }
+        return result;
     }
 
     /**
@@ -359,8 +375,11 @@ public class MapColumnFixture extends OurColumnFixture {
                         }
                         newText = newText.substring(0, newText.length() - 1);
                     } else {
-                        // single element, we assume the text is a symbol
-                        newText = getSymbolValue(originalCellText);
+                        newText = resolveStringWithSymbols(originalCellText);
+                        if (newText == null){
+                            // single element, we assume the text is a symbol
+                            newText = getSymbolValue(originalCellText);
+                        }
                     }
                     aCell.body = newText;
                     extraCellText = String.format(" (%s)", originalCellText);
@@ -374,6 +393,26 @@ public class MapColumnFixture extends OurColumnFixture {
             }
         }
 
+    }
+
+    /**
+     * Functionality to compare returning cell value with a dynamic (with symbols) text.
+     * See also HsacExamples.FitTests.ArraysAndSymbolsComparison#Compare result with string containing a symbol
+     * @param originalCellText, ie randomText$[symbol1]MoreText where symbol1=ValueOfSymbol1
+     * @return originalCellText with the symbols resolved to values, ie: randomTextValueOfSymbol1MoreText
+     *      or null if the originalCellText doesn't contains text with symbols
+     * @throws NoSuchSymbolException if the used symbol(s) don't exist
+     */
+    private String resolveStringWithSymbols(String originalCellText) throws NoSuchSymbolException {
+        Pattern p = Pattern.compile(REGEX_STRING_WITH_SYMBOL);
+        Matcher m = p.matcher(originalCellText);
+        String newText = null;
+        while (m.matches()) {
+            String symbolValue = getSymbolValue(m.group(3));
+            newText = m.group(1) + symbolValue + m.group(5);
+            m = p.matcher(newText);
+        }
+        return newText;
     }
 
     private String getSymbolValue(String originalSymbolName) throws NoSuchSymbolException {
