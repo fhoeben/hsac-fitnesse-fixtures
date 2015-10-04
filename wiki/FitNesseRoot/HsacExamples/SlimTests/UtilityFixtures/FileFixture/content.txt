@@ -1,0 +1,15 @@
+The !-CreateFileFixture-! allows files to be generated using Freemarker templates, or by copying files.
+
+#!define DIR {/Users/fried/dev/github-hsac-fitnesse-fixtures/wiki/FitNesseRoot/files}
+!define DIR {.}
+
+|script       |file fixture                                                            |
+|set directory|${DIR}                                                                  |
+|show         |create    |bye.txt                     |containing|Bye Bye              |
+|check        |content of|bye.txt                     |Bye Bye                         |
+|set value    |John      |for                         |name                            |
+|show         |create    |greeting.txt                |using     |greeting.ftl         |
+|check        |content of|greeting.txt                |Hello John                      |
+|show         |copy      |${DIR}/greeting.txt         |to        |copy/greetingCopy.txt|
+|check        |content of|${DIR}\copy\greetingCopy.txt|Hello John                      |
+
