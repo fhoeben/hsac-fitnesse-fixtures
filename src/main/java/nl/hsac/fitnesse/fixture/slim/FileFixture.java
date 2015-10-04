@@ -66,10 +66,17 @@ public class FileFixture extends SlimFixtureWithMap {
         if (filename.startsWith(File.separator)
                 || ":\\".equals(filename.substring(1, 3))) {
             name = filename;
+        } else if (isFilesUrl(filename)){
+            name = getFilePathFromWikiUrl(filename);
         } else {
             name = directory + filename;
         }
         return cleanupPath(name);
+    }
+
+    private boolean isFilesUrl(String filename) {
+        String url = getUrl(filename);
+        return !filename.equals(url) && url.startsWith("files/");
     }
 
     private String cleanupPath(String fullPath) {
