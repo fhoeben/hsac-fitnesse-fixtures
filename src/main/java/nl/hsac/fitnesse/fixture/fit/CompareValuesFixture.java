@@ -12,7 +12,14 @@ public class CompareValuesFixture extends MapColumnFixture {
     public boolean isMatch() {
         String value1 = value1();
         String value2 = value2();
-        return value1.equalsIgnoreCase(value2);
+
+        try {
+            Double doubleValue1 = Double.valueOf(value1);
+            Double doubleValue2 = Double.valueOf(value2);
+            return doubleValue1.equals(doubleValue2);
+        } catch (NumberFormatException e) {
+            return value1.equalsIgnoreCase(value2);
+        }
     }
 
     public boolean leftIsBiggerThanRight() {
@@ -20,9 +27,9 @@ public class CompareValuesFixture extends MapColumnFixture {
         String value2 = value2();
 
         try {
-            Integer value1Integer = Integer.valueOf(value1);
-            Integer value2Integer = Integer.valueOf(value2);
-            return value1Integer > value2Integer;
+            Double doubleValue1 = Double.valueOf(value1);
+            Double doubleValue2 = Double.valueOf(value2);
+            return doubleValue1 > doubleValue2;
         } catch (NumberFormatException e) {
             return value1.compareTo(value2) > 0;
         }
