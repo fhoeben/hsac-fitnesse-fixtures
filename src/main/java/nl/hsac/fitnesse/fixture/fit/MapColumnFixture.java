@@ -22,6 +22,7 @@ public class MapColumnFixture extends OurColumnFixture {
     private final Map<String, Object> currentRowValues = new HashMap<String, Object>();
     public static final String DEFAULT_ARRAY_SEPARATOR = ",";
     private static final String REGEX_STRING_WITH_SYMBOL = "(.*?)(\\$\\[)(.*?)(\\])(.*)"; // (Lazy) match randomText$[symbol]...
+    private static final Pattern STRING_WITH_SYMBOL_PATTERN = Pattern.compile(REGEX_STRING_WITH_SYMBOL);
 
     @Override
     public void reset() {
@@ -404,13 +405,12 @@ public class MapColumnFixture extends OurColumnFixture {
      * @throws NoSuchSymbolException if the used symbol(s) don't exist
      */
     private String resolveStringWithSymbols(String originalCellText) throws NoSuchSymbolException {
-        Pattern p = Pattern.compile(REGEX_STRING_WITH_SYMBOL);
-        Matcher m = p.matcher(originalCellText);
+        Matcher m = STRING_WITH_SYMBOL_PATTERN.matcher(originalCellText);
         String newText = null;
         while (m.matches()) {
             String symbolValue = getSymbolValue(m.group(3));
             newText = m.group(1) + symbolValue + m.group(5);
-            m = p.matcher(newText);
+            m = STRING_WITH_SYMBOL_PATTERN.matcher(newText);
         }
         return newText;
     }
