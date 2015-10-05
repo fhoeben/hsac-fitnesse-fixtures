@@ -55,6 +55,11 @@ public class FileFixture extends SlimFixtureWithMap {
         return linkToFile(destFile);
     }
 
+    public long sizeOf(String filename) {
+        String fullName = getFullName(filename);
+        return new File(fullName).length();
+    }
+
     protected void ensureParentExists(String fullName) {
         File f = new File(fullName);
         File parentFile = f.getParentFile();

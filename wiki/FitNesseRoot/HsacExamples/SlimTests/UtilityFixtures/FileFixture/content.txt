@@ -6,6 +6,7 @@ The !-CreateFileFixture-! allows files to be generated using Freemarker template
 |script       |file fixture                                                            |
 |set directory|${DIR}                                                                  |
 |show         |create    |bye.txt                     |containing|Bye Bye              |
+|check        |size of   |bye.txt                     |7                               |
 |check        |content of|bye.txt                     |Bye Bye                         |
 |set value    |John      |for                         |name                            |
 |show         |create    |greeting.txt                |using     |greeting.ftl         |
