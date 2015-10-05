@@ -44,10 +44,8 @@ public class FileFixture extends SlimFixtureWithMap {
 
     public String copyTo(String sourceName, String targetName) throws IOException {
         String fullSource = getFullName(sourceName);
-        File srcFile = new File(fullSource);
-        if (!srcFile.exists()) {
-            throw new SlimFixtureException(false, "Unable to find: " + srcFile.getAbsolutePath());
-        }
+        // ensure file exists
+        getFile(fullSource);
 
         String fullTarget = getFullName(targetName);
         ensureParentExists(fullTarget);
@@ -57,7 +55,16 @@ public class FileFixture extends SlimFixtureWithMap {
 
     public long sizeOf(String filename) {
         String fullName = getFullName(filename);
-        return new File(fullName).length();
+        File file = getFile(fullName);
+        return file.length();
+    }
+
+    protected File getFile(String fullName) {
+        File file = new File(fullName);
+        if (!file.exists()) {
+            throw new SlimFixtureException(false, "Unable to find: " + file.getAbsolutePath());
+        }
+        return file;
     }
 
     protected void ensureParentExists(String fullName) {
