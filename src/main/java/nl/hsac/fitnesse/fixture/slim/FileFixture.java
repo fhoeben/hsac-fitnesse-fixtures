@@ -55,13 +55,13 @@ public class FileFixture extends SlimFixtureWithMap {
         return linkToFile(destFile);
     }
 
-    private void ensureParentExists(String fullName) {
+    protected void ensureParentExists(String fullName) {
         File f = new File(fullName);
         File parentFile = f.getParentFile();
         parentFile.mkdirs();
     }
 
-    private String getFullName(String filename) {
+    protected String getFullName(String filename) {
         String name;
         if (filename.startsWith(File.separator)
                 || ":\\".equals(filename.substring(1, 3))) {
@@ -89,7 +89,7 @@ public class FileFixture extends SlimFixtureWithMap {
         return clean;
     }
 
-    private String linkToFile(File f) {
+    protected String linkToFile(File f) {
         String url = getWikiUrl(f.getAbsolutePath());
         if (url == null) {
             url = f.toURI().toString();
