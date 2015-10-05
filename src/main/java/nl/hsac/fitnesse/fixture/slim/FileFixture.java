@@ -11,7 +11,7 @@ import java.io.IOException;
  * Utility fixture to work with files.
  */
 public class FileFixture extends SlimFixtureWithMap {
-    private String directory;
+    private String directory = "";
 
     public void setDirectory(String directory) {
         if (!directory.endsWith(File.separator)) {
