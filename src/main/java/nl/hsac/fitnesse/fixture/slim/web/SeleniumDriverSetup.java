@@ -1,12 +1,9 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
-import nl.hsac.fitnesse.fixture.Environment;
-import nl.hsac.fitnesse.fixture.slim.SlimFixture;
-import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
-import nl.hsac.fitnesse.fixture.util.SauceLabsHelper;
-import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
-import nl.hsac.fitnesse.junit.selenium.LocalSeleniumDriverFactoryFactory;
-import nl.hsac.fitnesse.junit.selenium.SeleniumDriverFactoryFactoryBase;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.Capabilities;
@@ -17,13 +14,19 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.remote.*;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.FileDetector;
+import org.openqa.selenium.remote.LocalFileDetector;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.UselessFileDetector;
 import org.openqa.selenium.safari.SafariDriver;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Map;
+import nl.hsac.fitnesse.fixture.Environment;
+import nl.hsac.fitnesse.fixture.slim.SlimFixture;
+import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
+import nl.hsac.fitnesse.fixture.util.SauceLabsHelper;
+import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
+import nl.hsac.fitnesse.junit.selenium.LocalSeleniumDriverFactoryFactory;
 
 
 /**
@@ -32,6 +35,7 @@ import java.util.Map;
 public class SeleniumDriverSetup extends SlimFixture {
     public static final String REMOTE_URL_KEY = "SeleniumRemoteUrl";
     private static final String LAST_RUN_SUMMARY = "SeleniumLastRunSummary";
+    private static final String SELENIUM_DOWNLOAD_DIRECTORY = "seleniumDownloadDirectory";
     protected static boolean OVERRIDE_ACTIVE = false;
 
     /**
@@ -73,8 +77,7 @@ public class SeleniumDriverSetup extends SlimFixture {
                     if ("firefoxdriver".equalsIgnoreCase(driverClass.getSimpleName())) {
                         FirefoxProfile fxProfile = getFireFoxProfile(profile);
 
-                        final String downloadDir = new LocalSeleniumDriverFactoryFactory().getProperty(
-                                                    SeleniumDriverFactoryFactoryBase.SELENIUM_DOWNLOAD_DIRECTORY);
+                        final String downloadDir = new LocalSeleniumDriverFactoryFactory().getProperty(SELENIUM_DOWNLOAD_DIRECTORY);
                         if (StringUtils.isNotBlank(downloadDir)) {
                           fxProfile.setPreference("browser.download.dir", downloadDir);
                         }
