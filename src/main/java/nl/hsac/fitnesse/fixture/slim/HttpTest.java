@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  * Fixture to make HTTP requests using Slim scripts and/or scenarios.
  */
 public class HttpTest extends SlimFixtureWithMap {
-    /** Default content type for posts. */
+    /** Default content type for posts and puts. */
     public final static String DEFAULT_POST_CONTENT_TYPE = "application/x-www-form-urlencoded; charset=UTF-8";
 
     private final Map<String, Object> headerValues = new LinkedHashMap<String, Object>();
@@ -151,6 +151,63 @@ public class HttpTest extends SlimFixtureWithMap {
         result = postProcessResponse();
         return result;
     }
+    
+    /**
+     * Sends HTTP PUT template with current values to service endpoint.
+     * @param serviceUrl service endpoint to send request to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean putTemplateTo(String serviceUrl) {
+        boolean result;
+        resetResponse();
+        if (template == null) {
+            throw new StopTestException("No template available to use in put");
+        } else {
+            String url = getUrl(serviceUrl);
+            try {
+                getEnvironment().doHttpPut(url, template, getCurrentValues(), response, headerValues, getContentType());
+            } catch (Throwable t) {
+                throw new StopTestException("Unable to get response from PUT to: " + url, t);
+            }
+            result = putProcessResponse();
+        }
+        return result;
+    }
+
+    /**
+     * Sends HTTP PUT body to service endpoint.
+     * @param body content to put
+     * @param serviceUrl service endpoint to send body to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean putTo(String body, String serviceUrl) {
+        String cleanedBody = cleanupBody(body);
+        return putToImpl(cleanedBody, serviceUrl);
+    }
+
+    /**
+     * Sends all values (url encoded) using put.
+     * @param serviceUrl service endpoint to send values to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean putValuesTo(String serviceUrl) {
+        String body = urlEncodeCurrentValues();
+        return putToImpl(body, serviceUrl);
+    }
+
+    protected boolean putToImpl(String body, String serviceUrl) {
+        boolean result;
+        resetResponse();
+        response.setRequest(body);
+        String url = getUrl(serviceUrl);
+        try {
+            getEnvironment().doHttpPut(url, response, headerValues, getContentType());
+        } catch (Throwable t) {
+            throw new StopTestException("Unable to get response from PUT to: " + url, t);
+        }
+        result = putProcessResponse();
+        return result;
+    }
 
     protected String cleanupBody(String body) {
         return getEnvironment().getHtmlCleaner().cleanupPreFormatted(body);
@@ -255,6 +312,14 @@ public class HttpTest extends SlimFixtureWithMap {
      * @return true if all is well, false otherwise.
      */
     protected boolean postProcessResponse() {
+        return responseIsValid();
+    }
+    
+    /**
+     * Performs any put processing directly after retrieving response.
+     * @return true if all is well, false otherwise.
+     */
+    protected boolean putProcessResponse() {
         return responseIsValid();
     }
 
