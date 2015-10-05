@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import java.io.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -9,6 +10,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
+import java.nio.channels.FileChannel;
 
 /**
  * File utilities.
@@ -95,6 +97,31 @@ public final class FileUtil {
             }
         }
         return result;
+    }
+
+    /**
+     * Copies source file to target.
+     * @param source source file to copy.
+     * @param target destination to copy to.
+     * @return target as File.
+     * @throws IOException when unable to copy.
+     */
+    public static File copyFile(String source, String target) throws IOException {
+        FileChannel inputChannel = null;
+        FileChannel outputChannel = null;
+        try {
+            inputChannel = new FileInputStream(source).getChannel();
+            outputChannel = new FileOutputStream(target).getChannel();
+            outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
+        } finally {
+            if (inputChannel != null) {
+                inputChannel.close();
+            }
+            if (outputChannel != null) {
+                outputChannel.close();
+            }
+        }
+        return new File(target);
     }
 
     /**
