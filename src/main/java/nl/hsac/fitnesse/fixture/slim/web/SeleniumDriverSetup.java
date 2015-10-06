@@ -5,7 +5,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
@@ -26,7 +25,6 @@ import nl.hsac.fitnesse.fixture.slim.SlimFixture;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import nl.hsac.fitnesse.fixture.util.SauceLabsHelper;
 import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
-import nl.hsac.fitnesse.junit.selenium.LocalSeleniumDriverFactoryFactory;
 
 
 /**
@@ -35,7 +33,6 @@ import nl.hsac.fitnesse.junit.selenium.LocalSeleniumDriverFactoryFactory;
 public class SeleniumDriverSetup extends SlimFixture {
     public static final String REMOTE_URL_KEY = "SeleniumRemoteUrl";
     private static final String LAST_RUN_SUMMARY = "SeleniumLastRunSummary";
-    private static final String SELENIUM_DOWNLOAD_DIRECTORY = "seleniumDownloadDirectory";
     protected static boolean OVERRIDE_ACTIVE = false;
 
     /**
@@ -76,11 +73,6 @@ public class SeleniumDriverSetup extends SlimFixture {
 
                     if ("firefoxdriver".equalsIgnoreCase(driverClass.getSimpleName())) {
                         FirefoxProfile fxProfile = getFireFoxProfile(profile);
-
-                        final String downloadDir = new LocalSeleniumDriverFactoryFactory().getProperty(SELENIUM_DOWNLOAD_DIRECTORY);
-                        if (StringUtils.isNotBlank(downloadDir)) {
-                          fxProfile.setPreference("browser.download.dir", downloadDir);
-                        }
                         driver = new FirefoxDriver(fxProfile);
 
                     } else {
