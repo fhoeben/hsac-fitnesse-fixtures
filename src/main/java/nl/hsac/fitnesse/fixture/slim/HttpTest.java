@@ -205,7 +205,7 @@ public class HttpTest extends SlimFixtureWithMap {
         } catch (Throwable t) {
             throw new StopTestException("Unable to get response from PUT to: " + url, t);
         }
-        result = putProcessResponse();
+        result = postProcessResponse();
         return result;
     }
 
