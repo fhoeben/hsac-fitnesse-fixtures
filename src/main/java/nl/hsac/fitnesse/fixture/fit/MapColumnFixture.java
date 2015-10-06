@@ -120,22 +120,7 @@ public class MapColumnFixture extends OurColumnFixture {
      * @return value for specified column.
      */
     public Object get(String columnName) {
-        return get(columnName, null);
-    }
-
-    /**
-     * @param columnName
-     *            column to get current row's value of
-     * @param defaultValue
-     *            default value that must be returned if current row value is null
-     * @return value for specified column of specified default value.
-     */
-    public Object get(String columnName, Object defaultValue) {
-        Object result = getCurrentRowValues().get(columnName);
-        if (result == null) {
-            result = defaultValue;
-        }
-        return result;
+        return getCurrentRowValues().get(columnName);
     }
 
     /**
