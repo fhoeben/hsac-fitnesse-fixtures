@@ -169,7 +169,7 @@ public class HttpTest extends SlimFixtureWithMap {
             } catch (Throwable t) {
                 throw new StopTestException("Unable to get response from PUT to: " + url, t);
             }
-            result = putProcessResponse();
+            result = postProcessResponse();
         }
         return result;
     }
@@ -312,14 +312,6 @@ public class HttpTest extends SlimFixtureWithMap {
      * @return true if all is well, false otherwise.
      */
     protected boolean postProcessResponse() {
-        return responseIsValid();
-    }
-    
-    /**
-     * Performs any put processing directly after retrieving response.
-     * @return true if all is well, false otherwise.
-     */
-    protected boolean putProcessResponse() {
         return responseIsValid();
     }
 
