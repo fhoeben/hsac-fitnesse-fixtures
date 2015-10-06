@@ -6,7 +6,7 @@ The tests in this suite show example usage of this fixture:
 >HttpPost1Test sends a POST request to a SOAP service, also adding an HTTP header.
 The >HttpPost2UsingScenarioTest makes multiple SOAP calls to a service, where scenario parameters are used to change an input variable's value for each call.
 >HttpPost3UsingFreemarkerTemplateTest shows the usage of a [[Freemarker][http://freemarker.org]] template to define the content of a SOAP request. This allows for dynamic request structure.
->JsonHttpTest shows examples with both GET and POST, using [[!-JsonPath-!][http://goessner.net/articles/JsonPath/]] to perform checks on the response. 
+>JsonHttpTest shows examples with GET, POST, AND PUT, using [[!-JsonPath-!][http://goessner.net/articles/JsonPath/]] to perform checks on the response. 
 
 !2 Language
 
@@ -17,6 +17,8 @@ The main commands/keywords (i.e. public methods) offered by !-nl.hsac.fitnesse.f
 |get from <url>                     |Sends a GET to the specified url (parameters can be added using 'set value(s) for').                                                                                  |
 |post <body> to <url>               |Sends a POST containing the specified body to the url.                                                                                                                |
 |post template to <url>             |Sends a POST to the specified url, determining the body by combining the configured template and values (see 'set value for' and 'template')                          |
+|put <body> to <url>                |Sends a PUT containing the specified body to the url.                                                                                                                 |
+|put template to <url>              |Sends a PUT to the specified url, determining the body by combining the configured template and values (see 'set value for' and 'template')                           |
 |template <location>                |Configures the Freemarker template to use on next call using 'post template to'.                                                                                      |
 |set value <value> for <name>       |Stores the value for either a query or template parameter with the supplied name.                                                                                     |
 |set values <values> for <name>     |Stores the a list of values (comma separated) for either a query or template parameter with the supplied name.                                                        |

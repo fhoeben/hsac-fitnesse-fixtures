@@ -77,3 +77,18 @@ Next a POST/DELETE combination
 |check                 |response status|200                            |
 |show                  |response                                       |
 |check                 |json path      |success            |true       |
+
+Next a PUT example
+!define PUT_BODY { {{{
+json={"id": 1,
+    "title": "foo",
+    "body": "bar",
+    "userId": 1}
+}}} }
+
+|script|json http test                                              |
+|put   |${PUT_BODY}          |to      |http://jsonplaceholder.typicode.com/posts/1/|
+|show  |response                                                    |
+|check |json path            |id      |>0                           |
+|check |json path count      |$.*     |>=2                          |
+|show  |all json path matches|*                                     |
