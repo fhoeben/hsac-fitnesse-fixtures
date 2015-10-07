@@ -2,6 +2,8 @@ package nl.hsac.fitnesse.fixture.fit;
 
 import fit.ColumnFixture;
 import fit.Parse;
+import nl.hsac.fitnesse.fixture.Environment;
+import nl.hsac.fitnesse.fixture.util.WikiHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -10,6 +12,9 @@ import java.util.Calendar;
  * ColumnFixture with some enhancements.
  */
 public class OurColumnFixture extends ColumnFixture {
+    private Environment environment = Environment.getInstance();
+    protected final WikiHelper wikiHelper = getEnvironment().getWikiHelper();
+
     /** Prefix for method return String if value should not be HTML escaped (used to provide more detail in HTML format).*/
     public static final String NO_ESCAPE_PREFIX = "@@NO_ESCAPE@@";
 
@@ -110,4 +115,26 @@ public class OurColumnFixture extends ColumnFixture {
             super.wrong(cell, actual);
         }
     }
+
+    /**
+     * Convenience method, @see WikiHelper#getWikiUrl(String).
+     */
+    protected String getWikiUrl(String filePath) {
+        return wikiHelper.getWikiUrl(filePath);
+    }
+
+    /**
+     * Convenience method, @see WikiHelper#getFilePathFromWikiUrl(String).
+     */
+    protected String getFilePathFromWikiUrl(String wikiUrl) {
+        return wikiHelper.getFilePathFromWikiUrl(wikiUrl);
+    }
+
+    /**
+     * @return the environment
+     */
+    public Environment getEnvironment() {
+        return environment;
+    }
+
 }

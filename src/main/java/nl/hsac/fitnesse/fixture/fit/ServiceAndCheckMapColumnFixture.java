@@ -192,13 +192,6 @@ public abstract class ServiceAndCheckMapColumnFixture<Response, CheckResponse> e
      */
     protected abstract CheckResponse callCheckService();
 
-    /**
-     * @return the environment instance
-     */
-    protected Environment getEnvironment() {
-        return env;
-    }
-
     public int getWaitTime() {
         return waitTime;
     }
