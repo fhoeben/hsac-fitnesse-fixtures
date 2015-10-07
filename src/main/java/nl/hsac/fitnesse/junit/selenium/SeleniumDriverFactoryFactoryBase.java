@@ -23,7 +23,7 @@ public abstract class SeleniumDriverFactoryFactoryBase implements SeleniumDriver
         return !StringUtils.isEmpty(value);
     }
 
-    public String getProperty(String propertyName) {
+    protected String getProperty(String propertyName) {
         String value = System.getProperty(propertyName);
         if (value != null && value.startsWith("\"") && value.endsWith("\"")) {
             value = value.substring(1, value.length() - 1);
