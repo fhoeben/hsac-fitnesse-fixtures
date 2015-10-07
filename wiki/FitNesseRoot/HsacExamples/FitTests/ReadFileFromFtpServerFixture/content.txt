@@ -1,0 +1,10 @@
+!contents
+
+Example (non working):
+
+|!-ReadFileFromFtpServer-!                                                                                |
+|host           |port|userName|password|file                |nrOfLines|result?          |=fileSize?|error?|
+|ftp.example.com|    |username|password|example/dir/file.csv|1        |0000000;20140401;|67848     |blank |
+
+The port may be left empty (default value is 21). 
+The result contains the first nrOfLines (default value is 10) of the file, however newlines are removed to make it easier to compare with regex. The fileSize gives the result of the FTP command "SIZE".
