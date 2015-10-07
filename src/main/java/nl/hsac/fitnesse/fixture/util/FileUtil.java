@@ -1,6 +1,15 @@
 package nl.hsac.fitnesse.fixture.util;
 
 import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.Scanner;
 import java.nio.channels.FileChannel;
 
 /**
@@ -16,6 +25,7 @@ public final class FileUtil {
 
     /**
      * Reads content of UTF-8 file on classpath to String.
+     *
      * @param filename file to read.
      * @return file's content.
      * @throws IllegalArgumentException if file could not be found.
@@ -32,16 +42,49 @@ public final class FileUtil {
 
     /**
      * Copies UTF-8 input stream's content to a string (closes the stream).
+     *
      * @param is input stream (UTF-8) to read.
      * @param name description for stream in error messages.
      * @return content of stream
      * @throws RuntimeException if content could not be read.
      */
-    public static String streamToString(InputStream is, String name) {
+    public static String streamToString(InputStream inputStream, String fileName) {
+        return streamToString(inputStream, fileName, null);
+    }
+
+    /**
+     * Copies first <numberOfLines> or all lines from UTF-8 input stream's content to a
+     * string and closes the stream.
+     *
+     * @param is input stream (UTF-8) to read.
+     * @param name description for stream in error messages.
+     * @param numberOfLines number of lines to be read from input stream - if null, all lines are read
+     * @return content of stream
+     * @throws RuntimeException if content could not be read.
+     */
+    public static String streamToString(InputStream is, String name, Integer numberOfLines) {
         String result = null;
         try {
             try {
-                result = new java.util.Scanner(is, FILE_ENCODING).useDelimiter("\\A").next();
+                if (numberOfLines == null) {
+                    // read complete file into string
+                    result = new Scanner(is, FILE_ENCODING).useDelimiter("\\A").next();
+                } else {
+                    // read only given number of lines
+                    Scanner scanner = new Scanner(is, FILE_ENCODING);
+                    int resultNrOfLines = 1;
+                    result = "";
+                    while (scanner.hasNext()) {
+                        result = result + scanner.nextLine() + System.lineSeparator();
+                        if (++resultNrOfLines > numberOfLines) {
+                            break;
+                        }
+                    }
+                    scanner.close();
+                    if (result.isEmpty()) {
+                        result = null;
+                    }
+                }
             } catch (java.util.NoSuchElementException e) {
                 throw new IllegalStateException("Unable to read: " + name + ". Error: " + e.getMessage(), e);
             }
@@ -84,6 +127,7 @@ public final class FileUtil {
     /**
      * Copy the contents of the given InputStream to the given OutputStream.
      * Closes both streams when done.
+     *
      * @param in the stream to copy from
      * @param out the stream to copy to
      * @return the number of bytes copied
@@ -116,6 +160,7 @@ public final class FileUtil {
 
     /**
      * Writes content to file, in UTF-8 encoding.
+     *
      * @param filename file to create or overwrite.
      * @param content content to write.
      * @return file reference to file.
@@ -140,6 +185,7 @@ public final class FileUtil {
 
     /**
      * Saves byte[] to new file.
+     *
      * @param baseName name for file created (without extension),
      *                 if a file already exists with the supplied name an
      *                 '_index' will be added.

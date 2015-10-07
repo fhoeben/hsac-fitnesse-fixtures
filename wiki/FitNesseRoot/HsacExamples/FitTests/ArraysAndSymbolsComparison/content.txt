@@ -35,3 +35,14 @@ The default array separator is a comma. If you need another separator, ie // the
 |!-CompareValues-!|ARRAY_SEPARATOR=//                        |
 |value1           |value2|asDelimiterSepList?$               |
 |1                |2     |Array[$symbolValue1//$symbolValue2]|
+
+!2 Compare result with string containing a symbol
+This was added to be able to compare the returning value of a column fixture with a string that contains a symbol.
+The symbol in the string must be place in $[..].
+
+!3 Demonstration of comparing with text that contains one symbol:
+|!-CompareValues-!   |                                                                    |
+|value1              |value2|=value2?$   |value1?$                                        |
+|randomtext2         |2     |storedValue2|randomtext$[storedValue2]                       |
+|randomtext4moreText |4     |storedValue4|randomtext$[storedValue4]moreText               |
+|randomtext2moreText4|      |            |randomtext$[storedValue2]moreText$[storedValue4]|
