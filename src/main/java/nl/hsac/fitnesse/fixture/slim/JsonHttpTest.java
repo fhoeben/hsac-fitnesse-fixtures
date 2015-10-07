@@ -14,6 +14,10 @@ public class JsonHttpTest extends HttpTest {
     public boolean postValuesAsJsonTo(String serviceUrl) {
         return postToImpl(jsonEncodeCurrentValues(), serviceUrl);
     }
+    
+    public boolean putValuesAsJsonTo(String serviceUrl) {
+        return putToImpl(jsonEncodeCurrentValues(), serviceUrl);
+    }
 
     protected String jsonEncodeCurrentValues() {
         return new JSONObject(getCurrentValues()).toString();

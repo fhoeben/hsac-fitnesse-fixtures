@@ -19,6 +19,7 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.util.Map;
+import org.apache.http.client.methods.HttpPut;
 
 /**
  * Helper to make Http calls and get response.
@@ -44,6 +45,21 @@ public class HttpClient {
         HttpEntity ent = new StringEntity(response.getRequest(), contentType);
         methodPost.setEntity(ent);
         getResponse(url, response, methodPost, headers);
+    }
+    
+    /**
+     * @param url URL of service
+     * @param response response pre-populated with request to send. Response content and
+     *          statusCode will be filled.
+     * @param headers http headers to add
+     * @param type contentType for request.
+     */
+    public void put(String url, HttpResponse response, Map<String, Object> headers, String type) {
+        HttpPut methodPut = new HttpPut(url);
+        ContentType contentType = ContentType.parse(type);
+        HttpEntity ent = new StringEntity(response.getRequest(), contentType);
+        methodPut.setEntity(ent);
+        getResponse(url, response, methodPut, headers);
     }
 
     /**
