@@ -1,0 +1,6 @@
+Example fixture to see how a fixture extending the !-OurColumnFixture-!, can reference files from the wiki's files section (files/ prefix), or from the local file system.
+
+|!-FileFixture-!                                          |
+|filename                                       |fileSize?|
+|files/examples/file1.txt                       |18       |
+|C:\<ie: path to your download folder>\file1.txt|18       |

@@ -1,23 +1,21 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 import fitnesse.slim.fixtureInteraction.InteractionAwareFixture;
 import nl.hsac.fitnesse.fixture.Environment;
+import nl.hsac.fitnesse.fixture.util.WikiHelper;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
-import org.apache.commons.lang3.StringEscapeUtils;
 
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Base class for Slim fixtures.
  */
-public class SlimFixture  implements InteractionAwareFixture {
+public class SlimFixture implements InteractionAwareFixture {
     private Environment environment = Environment.getInstance();
-    protected final String filesDir = getEnvironment().getFitNesseFilesSectionDir();
+    protected final WikiHelper wikiHelper = getEnvironment().getWikiHelper();
 
     @Override
     public Object aroundSlimInvoke(FixtureInteraction interaction, Method method, Object... arguments)
@@ -114,37 +112,17 @@ public class SlimFixture  implements InteractionAwareFixture {
     }
 
     /**
-     * Converts a file path into a relative wiki path, if the path is insides the wiki's 'files' section.
-     * @param filePath path to file.
-     * @return relative URL pointing to the file (so a hyperlink to it can be created).
+     * Convenience method, @see WikiHelper#getWikiUrl(String).
      */
     protected String getWikiUrl(String filePath) {
-        String wikiUrl = null;
-        if (filePath.startsWith(filesDir)) {
-            String relativeFile = filePath.substring(filesDir.length());
-            relativeFile = relativeFile.replace('\\', '/');
-            wikiUrl = "files" + relativeFile;
-        }
-        return wikiUrl;
+        return wikiHelper.getWikiUrl(filePath);
     }
 
     /**
-     * Gets absolute path from wiki url, if file exists.
-     * @param wikiUrl a relative path that can be used in wiki page, or any file path.
-     * @return absolute path to the target of the url, if such a file exists; null if the target does not exist.
+     * Convenience method, @see WikiHelper#getFilePathFromWikiUrl(String).
      */
     protected String getFilePathFromWikiUrl(String wikiUrl) {
-        String url = getUrl(wikiUrl);
-        File file;
-        if (url.startsWith("files/")) {
-            String relativeFile = url.substring("files".length());
-            relativeFile = relativeFile.replace('/', File.separatorChar);
-            String pathname = filesDir + relativeFile;
-            file = new File(pathname);
-        } else {
-            file = new File(url);
-        }
-        return file.exists() ? file.getAbsolutePath() : url;
+        return wikiHelper.getFilePathFromWikiUrl(wikiUrl);
     }
 
 }

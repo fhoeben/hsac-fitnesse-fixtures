@@ -16,6 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * are performed.
  */
 public class Environment {
+    private final static String ADD_ROOT_BUILD_SERVER = "wiki";
+    private final static String FILES_DIR = "files";
     private final static Environment INSTANCE = new Environment();
     private String fitNesseRoot = ContextConfigurator.DEFAULT_ROOT;
     private Configuration freemarkerConfig;
@@ -34,6 +36,7 @@ public class Environment {
     private SeleniumHelper seleniumHelper;
     private MapHelper mapHelper = new MapHelper();
     private ReflectionHelper reflectionHelper = new ReflectionHelper();
+    private WikiHelper wikiHelper;
 
     private Environment() {
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_23);
@@ -43,7 +46,7 @@ public class Environment {
         builder.setExposeFields(true);
         cfg.setObjectWrapper(builder.build());
         freemarkerConfig = cfg;
-        
+
         fmHelper = new FreeMarkerHelper();
         templateCache = new ConcurrentHashMap<String, Template>();
 
@@ -64,6 +67,8 @@ public class Environment {
         configDatesHelper();
 
         seleniumHelper = new SeleniumHelper();
+
+        wikiHelper = new WikiHelper(getHtmlCleaner(), getFitNesseFilesSectionDir());
     }
 
     /**
@@ -279,7 +284,7 @@ public class Environment {
         response.setRequest(url);
         httpClient.get(url, response, headers);
     }
-    
+
     /**
      * GETs content from URL.
      * @param url url to get from.
@@ -442,7 +447,12 @@ public class Environment {
      * @return directory containing FitNesse's files section.
      */
     public String getFitNesseFilesSectionDir() {
-        return new File(fitNesseRoot, "files").getAbsolutePath();
+        File fileDir = new File(fitNesseRoot, FILES_DIR);
+        if (!fileDir.exists()) {
+            // Just assume we're run on a buildserver, run with mvn clean test-compile failsafe:integration-test has another root dir.
+            fileDir = new File(ADD_ROOT_BUILD_SERVER + File.separator + fitNesseRoot + File.separator + FILES_DIR);
+        }
+        return fileDir.getAbsolutePath();
     }
 
     /**
@@ -488,4 +498,12 @@ public class Environment {
     public ReflectionHelper getReflectionHelper() {
         return reflectionHelper;
     }
+
+    /**
+     * @return the wikiHelper
+     */
+    public WikiHelper getWikiHelper() {
+        return wikiHelper;
+    }
+
 }

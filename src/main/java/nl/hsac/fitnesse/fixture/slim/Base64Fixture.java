@@ -13,7 +13,7 @@ import org.apache.commons.io.IOUtils;
  * Fixture to deal with Base64 values.
  */
 public class Base64Fixture extends SlimFixture {
-    private String saveBase = new File(filesDir, "base64").getPath() + "/";
+    private String saveBase = new File(getEnvironment().getFitNesseFilesSectionDir(), "base64").getPath() + "/";
 
     /**
      * Gets the content of specified file base64 encoded.
