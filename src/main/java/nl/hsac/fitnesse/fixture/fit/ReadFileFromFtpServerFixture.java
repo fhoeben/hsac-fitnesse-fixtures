@@ -9,7 +9,7 @@ import nl.hsac.fitnesse.fixture.util.FtpFileUtil;
 
 
 public class ReadFileFromFtpServerFixture extends MapColumnFixture {
-    public static final int DEFAULT_NR_OF_LINES_TO_BE_READ = 10;
+    public static final String DEFAULT_NR_OF_LINES_TO_BE_READ = "10";
 
     private static final String HOST_NAME_KEY = "host";
     private static final String PORT_NUMBER_KEY = "port";
