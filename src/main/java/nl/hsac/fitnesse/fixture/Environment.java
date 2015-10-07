@@ -244,6 +244,43 @@ public class Environment {
     public void doHttpPost(String url, HttpResponse result, Map<String, Object> headers, String contentType) {
         httpClient.post(url, result, headers, contentType);
     }
+    
+    /**
+     * Performs PUT to supplied url of result of applying template with model.
+     * @param url url to put to.
+     * @param templateName name of template to use.
+     * @param model model for template.
+     * @param result result to populate with response.
+     */
+    public void doHttpPut(String url, String templateName, Object model, HttpResponse result) {
+        doHttpPut(url, templateName, model, result, null, XmlHttpResponse.CONTENT_TYPE_XML_TEXT_UTF8);
+    }
+
+    /**
+     * Performs PUT to supplied url of result of applying template with model.
+     * @param url url to put to.
+     * @param templateName name of template to use.
+     * @param model model for template.
+     * @param result result to populate with response.
+     * @param headers headers to add.
+     * @param contentType contentType for request.
+     */
+    public void doHttpPut(String url, String templateName, Object model, HttpResponse result, Map<String, Object> headers, String contentType) {
+        String request = processTemplate(templateName, model);
+        result.setRequest(request);
+        doHttpPut(url, result, headers, contentType);
+    }
+
+    /**
+     * Performs PUT to supplied url of result's request.
+     * @param url url to put to.
+     * @param result result containing request, its response will be filled.
+     * @param headers headers to add.
+     * @param contentType contentType for request.
+     */
+    public void doHttpPut(String url, HttpResponse result, Map<String, Object> headers, String contentType) {
+        httpClient.put(url, result, headers, contentType);
+    }
 
     /**
      * GETs content from URL.
