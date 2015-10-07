@@ -141,9 +141,9 @@ public class HttpServer <T extends HttpResponse> {
                 OutputStream os = null;
                 try {
                     String request;
-                    if ("POST".equals(he.getRequestMethod())) {
+                    if ("POST".equals(he.getRequestMethod()) || "PUT".equals(he.getRequestMethod())) {
                         InputStream is = he.getRequestBody();
-                        request = FileUtil.streamToString(is, "http POST request");
+                        request = FileUtil.streamToString(is, String.format("http %s request", he.getRequestMethod()));
                     } else {
                         request = String.format("%s: %s", he.getRequestMethod(), he.getRequestURI().toString());
                     }
