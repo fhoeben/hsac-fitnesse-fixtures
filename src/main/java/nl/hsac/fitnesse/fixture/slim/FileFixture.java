@@ -11,13 +11,20 @@ import java.io.IOException;
  * Utility fixture to work with files.
  */
 public class FileFixture extends SlimFixtureWithMap {
-    private String directory = "";
+    private String directory = new File(filesDir, "fileFixture").getPath() + File.separator;
 
-    public void setDirectory(String directory) {
+    public void setDirectory(String aDirectory) {
+        if (isFilesUrl(aDirectory)) {
+            String url = getUrl(aDirectory);
+            String relativeDir = url.substring("files".length());
+            relativeDir = relativeDir.replace('/', File.separatorChar);
+            directory = filesDir + relativeDir;
+        } else {
+            directory = aDirectory;
+        }
         if (!directory.endsWith(File.separator)) {
             directory += File.separator;
         }
-        this.directory = directory;
     }
 
     public String createContaining(String filename, String content) {

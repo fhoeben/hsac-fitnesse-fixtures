@@ -4,10 +4,15 @@ The !-CreateFileFixture-! allows files to be generated using Freemarker template
 !define DIR {.}
 
 |script       |file fixture                                                            |
+|$created=    |create    |bye1.txt                    |containing|Bye Bye 1            |
+|check        |text in   |$created                    |Bye Bye 1                       |
+|set directory|http://files/test                                                       |
+|$created2=   |create    |bye2.txt                    |containing|Bye Bye 2            |
+|check        |text in   |$created2                   |Bye Bye 2                       |
 |set directory|${DIR}                                                                  |
-|show         |create    |bye.txt                     |containing|Bye Bye              |
-|check        |size of   |bye.txt                     |7                               |
-|check        |text in   |bye.txt                     |Bye Bye                         |
+|show         |create    |bye.txt                     |containing|Bye Bye 3            |
+|check        |size of   |bye.txt                     |9                               |
+|check        |text in   |bye.txt                     |Bye Bye 3                       |
 |set value    |John      |for                         |name                            |
 |show         |create    |greeting.txt                |using     |greeting.ftl         |
 |check        |text in   |greeting.txt                |Hello John                      |
