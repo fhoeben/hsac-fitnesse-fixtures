@@ -28,13 +28,17 @@ public class FileFixture extends SlimFixtureWithMap {
     }
 
     public String textIn(String filename) throws IOException {
+        String text = "";
         String fullName = getFullName(filename);
-        try {
-            FileInputStream s = new FileInputStream(fullName);
-            return FileUtil.streamToString(s, fullName);
-        } catch (FileNotFoundException e) {
-            throw new SlimFixtureException(false, "Unable to find: " + fullName);
+        if (sizeOf(filename) > 0) {
+            try {
+                FileInputStream s = new FileInputStream(fullName);
+                text = FileUtil.streamToString(s, fullName);
+            } catch (FileNotFoundException e) {
+                throw new SlimFixtureException(false, "Unable to find: " + fullName);
+            }
         }
+        return text;
     }
 
     public String contentOf(String filename) throws IOException {
