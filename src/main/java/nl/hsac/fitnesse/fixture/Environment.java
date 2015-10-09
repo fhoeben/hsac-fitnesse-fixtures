@@ -25,6 +25,7 @@ public class Environment {
     private HttpClient httpClient;
     private long nextSequenceNr = System.currentTimeMillis();
     private NamespaceContextImpl nsContext;
+    private TextFormatter textFormatter;
     private XMLFormatter xmlFormatter;
     private JsonHelper jsonHelper;
     private HtmlCleaner htmlCleaner;
@@ -48,6 +49,8 @@ public class Environment {
         templateCache = new ConcurrentHashMap<String, Template>();
 
         symbols = new ConcurrentHashMap<String, String>();
+
+        textFormatter = new TextFormatter();
 
         xmlFormatter = new XMLFormatter();
         nsContext = new NamespaceContextImpl();
@@ -355,6 +358,15 @@ public class Environment {
      */
     public NamespaceContextImpl getNamespaceContext() {
         return nsContext;
+    }
+
+    /**
+     * Formats supplied text string for display as-is (including whitespace etc) in FitNesse page.
+     * @param content string to format.
+     * @return HTML formatted version of content
+     */
+    public String getHtml(String content) {
+        return getHtml(textFormatter, content);
     }
 
     /**

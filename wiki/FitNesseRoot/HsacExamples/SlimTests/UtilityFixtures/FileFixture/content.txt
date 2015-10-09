@@ -7,10 +7,14 @@ The !-CreateFileFixture-! allows files to be generated using Freemarker template
 |set directory|${DIR}                                                                  |
 |show         |create    |bye.txt                     |containing|Bye Bye              |
 |check        |size of   |bye.txt                     |7                               |
-|check        |content of|bye.txt                     |Bye Bye                         |
+|check        |text in   |bye.txt                     |Bye Bye                         |
 |set value    |John      |for                         |name                            |
 |show         |create    |greeting.txt                |using     |greeting.ftl         |
-|check        |content of|greeting.txt                |Hello John                      |
+|check        |text in   |greeting.txt                |Hello John                      |
+|set value    |John      |for                         |name                            |
+|show         |create    |greeting.html               |using     |greeting.ftl.html    |
+|show         |text in   |greeting.html                                                |
+|show         |content of|greeting.html                                                |
 |show         |copy      |${DIR}/greeting.txt         |to        |copy/greetingCopy.txt|
-|check        |content of|${DIR}\copy\greetingCopy.txt|Hello John                      |
+|check        |text in   |${DIR}\copy\greetingCopy.txt|Hello John                      |
 
