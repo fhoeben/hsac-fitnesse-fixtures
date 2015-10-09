@@ -15,7 +15,7 @@ public class HtmlFixture extends SlimFixture {
      * @return HTML tags that can be shown in wiki page.
      */
     public String htmlSource(String html) {
-        return "<pre>" + StringEscapeUtils.escapeHtml4(html) + "</pre>";
+        return getEnvironment().getHtml(html);
     }
 
     /**

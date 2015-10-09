@@ -27,7 +27,7 @@ public class FileFixture extends SlimFixtureWithMap {
         return linkToFile(f);
     }
 
-    public String contentOf(String filename) throws IOException {
+    public String textIn(String filename) throws IOException {
         String fullName = getFullName(filename);
         try {
             FileInputStream s = new FileInputStream(fullName);
@@ -35,6 +35,11 @@ public class FileFixture extends SlimFixtureWithMap {
         } catch (FileNotFoundException e) {
             throw new SlimFixtureException(false, "Unable to find: " + fullName);
         }
+    }
+
+    public String contentOf(String filename) throws IOException {
+        String content = textIn(filename);
+        return getEnvironment().getHtml(content);
     }
 
     public String createUsing(String filename, String templateName) {
