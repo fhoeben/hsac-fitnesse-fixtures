@@ -586,7 +586,12 @@ public class SeleniumHelper {
      * @param implicitWait time in milliseconds to wait.
      */
     public void setImplicitlyWait(int implicitWait) {
-        driver().manage().timeouts().implicitlyWait(implicitWait, TimeUnit.MILLISECONDS);
+        try {
+            driver().manage().timeouts().implicitlyWait(implicitWait, TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            // https://code.google.com/p/selenium/issues/detail?id=6015
+            System.err.println("Unable to set implicit timeout (known issue for Safari): " + e.getMessage());
+        }
     }
 
     /**
@@ -594,7 +599,12 @@ public class SeleniumHelper {
      * @param scriptTimeout time in milliseconds to wait.
      */
     public void setScriptWait(int scriptTimeout) {
-        driver().manage().timeouts().setScriptTimeout(scriptTimeout, TimeUnit.MILLISECONDS);
+        try {
+            driver().manage().timeouts().setScriptTimeout(scriptTimeout, TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            // https://code.google.com/p/selenium/issues/detail?id=6015
+            System.err.println("Unable to set script timeout (known issue for Safari): " + e.getMessage());
+        }
     }
 
     /**
