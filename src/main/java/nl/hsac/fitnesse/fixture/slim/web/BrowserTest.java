@@ -1511,6 +1511,15 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
+     * Selects a file using the first file upload control.
+     * @param fileName file to upload
+     * @return true, if a file input was found and file existed.
+     */
+    public boolean selectFile(String fileName) {
+        return selectFileFor(fileName, "css=input[type='file']");
+    }
+
+    /**
      * Selects a file using a file upload control.
      * @param fileName file to upload
      * @param place file input to select the file for
