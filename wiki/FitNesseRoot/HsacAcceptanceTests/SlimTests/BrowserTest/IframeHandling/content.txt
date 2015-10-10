@@ -17,6 +17,7 @@ This test ensures we can find elements inside iframes.
 <body>
 <input name="remove1" type="button" value="Remove1">
 <iframe id="iframe1_1" src="frame3.html"></iframe>
+<iframe id="iframe1_2" src="frame4.html"></iframe>
 <label>Add button1<input name="add" type="button" value="Add1"></label>
 </body>
 </html>}}} }
@@ -39,6 +40,15 @@ This test ensures we can find elements inside iframes.
 </body>
 </html>}}} }
 
+!define HTML_FRAME4 { {{{
+<html>
+<body>
+<input name="remove4" type="button" value="Remove4">
+<label>Add button4<input name="add" type="button" value="Add4"></label>
+</body>
+</html>}}} }
+
+
 
 
 
@@ -48,6 +58,7 @@ This test ensures we can find elements inside iframes.
 |add response|${HTML_FRAME1}       |
 |add response|${HTML_FRAME2}       |
 |add response|${HTML_FRAME3}       |
+|add response|${HTML_FRAME4}       |
 |$url=       |get mock server url  |
 
 |script|file fixture                          |
@@ -62,6 +73,10 @@ This test ensures we can find elements inside iframes.
 |check                 |value of  |Add button1|Add1           |
 |check                 |value of  |Add button2|Add2           |
 |check                 |value of  |Add button3|Add3           |
+|check                 |value of  |Add button4|Add4           |
+|click                 |Remove1                               |
+|click                 |Remove3                               |
+|click                 |Remove4                               |
 |click                 |Remove2                               |
 |click                 |Remove                                |
 |select file           |$file                                 |
