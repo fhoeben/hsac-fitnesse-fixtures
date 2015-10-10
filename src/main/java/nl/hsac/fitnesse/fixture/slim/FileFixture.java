@@ -110,9 +110,9 @@ public class FileFixture extends SlimFixtureWithMap {
     private String cleanupPath(String fullPath) {
         String clean;
         if ("\\".equals(File.separator)) {
-            clean = fullPath.replaceAll("/", "\\\\");
+            clean = fullPath.replace("/", File.separator);
         } else {
-            clean = fullPath.replaceAll("\\\\", File.separator);
+            clean = fullPath.replace("\\", File.separator);
         }
         return clean;
     }
