@@ -24,6 +24,8 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -1605,7 +1607,7 @@ public class BrowserTest extends SlimFixture {
             try {
                 Object result = superInvoke(interaction, method, arguments);
                 if (!waitUntilFinished(result)) {
-                    result = invokeInIFrames(webDriver);
+                    result = invokeInIFrames(webDriver, Collections.EMPTY_LIST);
                 }
                 return result;
             } catch (Throwable e) {
@@ -1620,7 +1622,7 @@ public class BrowserTest extends SlimFixture {
             }
         }
 
-        private Object invokeInIFrames(WebDriver webDriver) throws Throwable {
+        private Object invokeInIFrames(WebDriver webDriver, List<WebElement> parents) throws Throwable {
             Object result = null;
             List<WebElement> iframes = webDriver.findElements(By.tagName("iframe"));
             for (WebElement iframe : iframes) {
@@ -1630,13 +1632,21 @@ public class BrowserTest extends SlimFixture {
                     if (waitUntilFinished(result)) {
                         break;
                     } else {
-                        result = invokeInIFrames(webDriver);
+                        List<WebElement> newParents = new ArrayList<WebElement>(parents.size() + 1);
+                        newParents.addAll(parents);
+                        newParents.add(iframe);
+                        result = invokeInIFrames(webDriver, newParents);
                         if (waitUntilFinished(result)) {
                             break;
                         }
                     }
                 } finally {
-                    webDriver.switchTo().parentFrame();
+                    // Safari and PhantomJs don't support switchTo.parentFrame, so we do this
+                    // it works for Phantom, but is VERY slow there (other browsers are slow but ok)
+                    webDriver.switchTo().defaultContent();
+                    for (WebElement parent : parents) {
+                        webDriver.switchTo().frame(parent);
+                    }
                 }
             }
             return result;
