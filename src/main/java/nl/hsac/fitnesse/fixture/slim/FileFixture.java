@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.slim;
 
 import nl.hsac.fitnesse.fixture.util.FileUtil;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -73,6 +74,19 @@ public class FileFixture extends SlimFixtureWithMap {
         String fullName = getFullName(filename);
         File file = getFile(fullName);
         return file.length();
+    }
+
+    public String filenameOf(String filename) {
+        String fullName = getFullName(filename);
+        return getFile(fullName).getName();
+    }
+
+    public String baseNameOf(String filename) {
+        return FilenameUtils.getBaseName(filenameOf(filename));
+    }
+
+    public String extensionOf(String filename) {
+        return FilenameUtils.getExtension(filenameOf(filename));
     }
 
     protected File getFile(String fullName) {
