@@ -1,0 +1,68 @@
+This test ensures we can find elements inside iframes.
+
+!define HTML_MAIN { {{{
+<html>
+<title>Start Page Title</title>
+<body>
+<input name="remove" type="button" value="Remove">
+<iframe id="iframe1" src="frame1.html"></iframe>
+<iframe id="iframe2" src="frame2.html"></iframe>
+<label>Add button<input name="add" type="button" value="Add"></label>
+</body>
+</html>}}} }
+
+!define HTML_FRAME1 { {{{
+<html>
+<body>
+<input name="remove1" type="button" value="Remove1">
+<iframe id="iframe1_1" src="frame3.html"></iframe>
+<label>Add button1<input name="add" type="button" value="Add1"></label>
+</body>
+</html>}}} }
+
+!define HTML_FRAME2 { {{{
+<html>
+<body>
+<input name="remove2" type="button" value="Remove2">
+<label>Add button2<input name="add" type="button" value="Add2"></label>
+</body>
+</html>}}} }
+
+
+!define HTML_FRAME3 { {{{
+<html>
+<body>
+<input name="remove3" type="button" value="Remove3">
+<label>Add button3<input name="add" type="button" value="Add3"></label>
+</body>
+</html>}}} }
+
+
+
+
+
+|script      |mock xml server setup|
+|add response|${HTML_MAIN}         |
+|add response|${HTML_FRAME1}       |
+|add response|${HTML_FRAME2}       |
+|add response|${HTML_FRAME3}       |
+|$url=       |get mock server url  |
+
+|script                |browser test               |
+|open                  |$url/main                  |
+|seconds before timeout|1                          |
+|check                 |page title|Start Page Title|
+|check                 |value of  |Add button |Add |
+|check                 |value of  |Add button1|Add1|
+|check                 |value of  |Add button2|Add2|
+|check                 |value of  |Add button3|Add3|
+|click                 |Remove2                    |
+|click                 |Remove                     |
+
+
+
+
+
+|script|mock xml server setup|
+|stop                        |
+

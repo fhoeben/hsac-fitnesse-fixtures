@@ -60,23 +60,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected Object invokedWrappedInWaitUntil(WaitUntil waitUntil, final FixtureInteraction interaction, final Method method, final Object[] arguments) {
-        ExpectedCondition<Object> condition = new ExpectedCondition<Object>() {
-            @Override
-            public Object apply(WebDriver webDriver) {
-                try {
-                    return superInvoke(interaction, method, arguments);
-                } catch (Throwable e) {
-                    Throwable realEx = ExceptionHelper.stripReflectionException(e);
-                    if (realEx instanceof RuntimeException) {
-                        throw (RuntimeException) realEx;
-                    } else if (realEx instanceof Error) {
-                        throw (Error) realEx;
-                    } else {
-                        throw new RuntimeException(realEx);
-                    }
-                }
-            }
-        };
+        ExpectedCondition<Object> condition = new WaitUntilCondition(interaction, method, arguments);
         Object result;
         switch (waitUntil.value()) {
             case STOP_TEST:
@@ -1610,5 +1594,63 @@ public class BrowserTest extends SlimFixture {
 
     public void setImplicitWaitForAngularTo(boolean implicitWaitForAngular) {
         this.implicitWaitForAngular = implicitWaitForAngular;
+    }
+
+    private class WaitUntilCondition implements ExpectedCondition<Object> {
+        private final FixtureInteraction interaction;
+        private final Method method;
+        private final Object[] arguments;
+
+        public WaitUntilCondition(FixtureInteraction interaction, Method method, Object[] arguments) {
+            this.interaction = interaction;
+            this.method = method;
+            this.arguments = arguments;
+        }
+
+        @Override
+        public Object apply(WebDriver webDriver) {
+            try {
+                Object result = superInvoke(interaction, method, arguments);
+                if (!waitUntilFinished(result)) {
+                    result = invokeInIFrames(webDriver);
+                }
+                return result;
+            } catch (Throwable e) {
+                Throwable realEx = ExceptionHelper.stripReflectionException(e);
+                if (realEx instanceof RuntimeException) {
+                    throw (RuntimeException) realEx;
+                } else if (realEx instanceof Error) {
+                    throw (Error) realEx;
+                } else {
+                    throw new RuntimeException(realEx);
+                }
+            }
+        }
+
+        private Object invokeInIFrames(WebDriver webDriver) throws Throwable {
+            Object result = null;
+            List<WebElement> iframes = webDriver.findElements(By.tagName("iframe"));
+            for (WebElement iframe : iframes) {
+                webDriver.switchTo().frame(iframe);
+                try {
+                    result = superInvoke(interaction, method, arguments);
+                    if (waitUntilFinished(result)) {
+                        break;
+                    } else {
+                        result = invokeInIFrames(webDriver);
+                        if (waitUntilFinished(result)) {
+                            break;
+                        }
+                    }
+                } finally {
+                    webDriver.switchTo().parentFrame();
+                }
+            }
+            return result;
+        }
+
+        private boolean waitUntilFinished(Object result) {
+            return result != null && !Boolean.FALSE.equals(result);
+        }
     }
 }
