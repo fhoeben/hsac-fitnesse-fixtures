@@ -8,6 +8,7 @@ This test ensures we can find elements inside iframes.
 <iframe id="iframe1" src="frame1.html"></iframe>
 <iframe id="iframe2" src="frame2.html"></iframe>
 <label>Add button<input name="add" type="button" value="Add"></label>
+<label>Upload 1 button<input name="fileChooser1" type="file"></label>
 </body>
 </html>}}} }
 
@@ -34,6 +35,7 @@ This test ensures we can find elements inside iframes.
 <body>
 <input name="remove3" type="button" value="Remove3">
 <label>Add button3<input name="add" type="button" value="Add3"></label>
+<label>Upload button<input name="fileChooser" type="file"></label>
 </body>
 </html>}}} }
 
@@ -48,16 +50,28 @@ This test ensures we can find elements inside iframes.
 |add response|${HTML_FRAME3}       |
 |$url=       |get mock server url  |
 
-|script                |browser test               |
-|open                  |$url/main                  |
-|seconds before timeout|1                          |
-|check                 |page title|Start Page Title|
-|check                 |value of  |Add button |Add |
-|check                 |value of  |Add button1|Add1|
-|check                 |value of  |Add button2|Add2|
-|check                 |value of  |Add button3|Add3|
-|click                 |Remove2                    |
-|click                 |Remove                     |
+|script|file fixture                          |
+|$file=|create|testUpload.txt|containing|Hallo|
+
+
+|script                |browser test                          |
+|open                  |$url/main                             |
+|seconds before timeout|1                                     |
+|check                 |page title|Start Page Title           |
+|check                 |value of  |Add button |Add            |
+|check                 |value of  |Add button1|Add1           |
+|check                 |value of  |Add button2|Add2           |
+|check                 |value of  |Add button3|Add3           |
+|click                 |Remove2                               |
+|click                 |Remove                                |
+|select file           |$file                                 |
+|select file           |$file     |for        |Upload button  |
+|select file           |$file     |for        |Upload 1 button|
+|scroll to             |Add                                   |
+|scroll to             |Add3                                  |
+
+
+
 
 
 

@@ -999,17 +999,15 @@ public class BrowserTest extends SlimFixture {
      * Scrolls browser window so top of place becomes visible.
      * @param place element to scroll to.
      */
-    public void scrollTo(final String place) {
-        waitUntil(new ExpectedCondition<WebElement>() {
-            @Override
-            public WebElement apply(WebDriver webDriver) {
-                WebElement element = getElementToScrollTo(place);
-                if (element != null) {
-                    scrollTo(element);
-                }
-                return element;
-            }
-        });
+    @WaitUntil
+    public boolean scrollTo(String place) {
+        boolean result = false;
+        WebElement element = getElementToScrollTo(place);
+        if (element != null) {
+            scrollTo(element);
+            result = true;
+        }
+        return result;
     }
 
     protected WebElement getElementToScrollTo(String place) {
@@ -1499,6 +1497,7 @@ public class BrowserTest extends SlimFixture {
      * @param fileName file to upload
      * @return true, if a file input was found and file existed.
      */
+    @WaitUntil
     public boolean selectFile(String fileName) {
         return selectFileFor(fileName, "css=input[type='file']");
     }
@@ -1509,23 +1508,17 @@ public class BrowserTest extends SlimFixture {
      * @param place file input to select the file for
      * @return true, if place was a file input and file existed.
      */
-    public boolean selectFileFor(String fileName, final String place) {
+    @WaitUntil
+    public boolean selectFileFor(String fileName, String place) {
         boolean result = false;
         if (fileName != null) {
-            final String fullPath = getFilePathFromWikiUrl(fileName);
+            String fullPath = getFilePathFromWikiUrl(fileName);
             if (new File(fullPath).exists()) {
-                result = waitUntil(new ExpectedCondition<Boolean>() {
-                    @Override
-                    public Boolean apply(WebDriver webDriver) {
-                        boolean result = false;
-                        WebElement element = getElementToSelectFile(place);
-                        if (element != null) {
-                            element.sendKeys(fullPath);
-                            result = true;
-                        }
-                        return result;
-                    }
-                });
+                WebElement element = getElementToSelectFile(place);
+                if (element != null) {
+                    element.sendKeys(fullPath);
+                    result = true;
+                }
             } else {
                 throw new SlimFixtureException(false, "Unable to find file: " + fullPath);
             }
