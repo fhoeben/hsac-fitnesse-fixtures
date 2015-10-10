@@ -122,13 +122,7 @@ public class FileFixture extends SlimFixtureWithMap {
     }
 
     private String cleanupPath(String fullPath) {
-        String clean;
-        if ("\\".equals(File.separator)) {
-            clean = fullPath.replace("/", File.separator);
-        } else {
-            clean = fullPath.replace("\\", File.separator);
-        }
-        return clean;
+        return FilenameUtils.separatorsToSystem(fullPath);
     }
 
     protected String linkToFile(File f) {
