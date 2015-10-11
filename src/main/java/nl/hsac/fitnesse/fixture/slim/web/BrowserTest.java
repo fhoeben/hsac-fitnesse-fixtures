@@ -174,6 +174,8 @@ public class BrowserTest extends SlimFixture {
             getNavigation().to(url);
         } catch (TimeoutException e) {
             handleTimeoutException(e);
+        } finally {
+            switchToDefaultContent();
         }
         waitUntil(new ExpectedCondition<Boolean>() {
             @Override
@@ -197,6 +199,7 @@ public class BrowserTest extends SlimFixture {
 
     public boolean back() {
         getNavigation().back();
+        switchToDefaultContent();
 
         // firefox sometimes prevents immediate back, if previous page was reached via POST
         waitMilliseconds(500);
@@ -212,11 +215,13 @@ public class BrowserTest extends SlimFixture {
 
     public boolean forward() {
         getNavigation().forward();
+        switchToDefaultContent();
         return true;
     }
 
     public boolean refresh() {
         getNavigation().refresh();
+        switchToDefaultContent();
         return true;
     }
 
@@ -364,6 +369,36 @@ public class BrowserTest extends SlimFixture {
 
     protected List<String> getTabHandles() {
         return getSeleniumHelper().getTabHandles();
+    }
+
+    /**
+     * Activates main/top-level iframe (i.e. makes it the current frame).
+     */
+    public void switchToDefaultContent() {
+        getSeleniumHelper().switchToDefaultContent();
+    }
+
+    /**
+     * Activates specified child frame of current iframe.
+     * @param technicalSelector selector to find iframe.
+     * @return true if iframe was found.
+     */
+    public boolean switchToFrame(String technicalSelector) {
+        boolean result = false;
+        WebElement iframe = getElement(technicalSelector);
+        if (iframe != null) {
+            getSeleniumHelper().switchToFrame(iframe);
+            result = true;
+        }
+        return result;
+    }
+
+    /**
+     * Activates parent frame of current iframe.
+     * Does nothing if when current frame is the main/top-level one.
+     */
+    public void switchToParentFrame() {
+        getSeleniumHelper().switchToParentFrame();
     }
 
     public String pageTitle() {
