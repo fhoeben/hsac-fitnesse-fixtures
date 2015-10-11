@@ -14,6 +14,8 @@ import java.util.List;
  * inside the current page (or active iframe).
  */
 public class TryAllIFramesConditionDecorator implements ExpectedCondition<Object> {
+    private static final By BY_IFRAME = By.tagName("iframe");
+
     private final ExpectedCondition<Object> decorated;
     private final List<WebElement> rootPath;
 
@@ -46,7 +48,7 @@ public class TryAllIFramesConditionDecorator implements ExpectedCondition<Object
 
     private Object invokeInIFrames(WebDriver webDriver, List<WebElement> parents) {
         Object result = null;
-        List<WebElement> iframes = webDriver.findElements(By.tagName("iframe"));
+        List<WebElement> iframes = webDriver.findElements(BY_IFRAME);
         for (WebElement iframe : iframes) {
             webDriver.switchTo().frame(iframe);
             try {
