@@ -973,6 +973,7 @@ public class SeleniumHelper {
 
     public void goToTab(List<String> tabHandles, int indexToGoTo) {
         getTargetLocator().window(tabHandles.get(indexToGoTo));
+        switchToDefaultContent();
     }
 
     public List<String> getTabHandles() {
@@ -990,6 +991,7 @@ public class SeleniumHelper {
 
     /**
      * Activates specified child frame of current iframe.
+     * @param iframe frame to activate.
      */
     public void switchToFrame(WebElement iframe) {
         getTargetLocator().frame(iframe);
