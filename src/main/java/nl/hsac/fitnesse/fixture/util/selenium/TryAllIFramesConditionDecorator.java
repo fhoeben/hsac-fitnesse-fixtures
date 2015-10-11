@@ -12,78 +12,52 @@ import java.util.List;
 /**
  * Adds a decorator on top of a decorator such that it is applied to all iframes nested
  * inside the current page (or active iframe).
+ * @param <T> type of condition result.
  */
-public class TryAllIFramesConditionDecorator implements ExpectedCondition<Object> {
+class TryAllIFramesConditionDecorator<T> implements ExpectedCondition<T> {
     private static final By BY_IFRAME = By.tagName("iframe");
 
-    private final ExpectedCondition<Object> decorated;
-    private final List<WebElement> rootPath;
+    private final SeleniumHelper helper;
+    private final ExpectedCondition<T> decorated;
 
     /**
-     * Creates new, working on top-level page.
-     * @param nested condition to be applied for each iframe.
+     * Creates new, working inside the aHelper's current iframe.
+     * @param toBeDecorated condition to be applied for each iframe.
      */
-    public TryAllIFramesConditionDecorator(ExpectedCondition<Object> nested) {
-        this(Collections.EMPTY_LIST, nested);
-    }
-
-    /**
-     * Creates new, working inside a activated iframe.
-     * @param parents path of parent iframes to get to current iframe
-     * @param nested condition to be applied for each iframe.
-     */
-    public TryAllIFramesConditionDecorator(List<WebElement> parents, ExpectedCondition<Object> nested) {
-        decorated = nested;
-        rootPath = parents;
+    public TryAllIFramesConditionDecorator(SeleniumHelper aHelper, ExpectedCondition<T> toBeDecorated) {
+        helper = aHelper;
+        decorated = toBeDecorated;
     }
 
     @Override
-    public Object apply(WebDriver webDriver) {
-        Object result = decorated.apply(webDriver);
+    public T apply(WebDriver webDriver) {
+        T result = decorated.apply(webDriver);
         if (!waitUntilFinished(result)) {
-            result = invokeInIFrames(webDriver, rootPath);
+            result = invokeInIFrames(webDriver);
         }
         return result;
     }
 
-    private Object invokeInIFrames(WebDriver webDriver, List<WebElement> parents) {
-        Object result = null;
+    private T invokeInIFrames(WebDriver webDriver) {
+        T result = null;
         List<WebElement> iframes = webDriver.findElements(BY_IFRAME);
         for (WebElement iframe : iframes) {
-            webDriver.switchTo().frame(iframe);
+            helper.switchToFrame(iframe);
             try {
                 result = decorated.apply(webDriver);
                 if (waitUntilFinished(result)) {
                     break;
                 } else {
-                    List<WebElement> newParents = createChildPath(parents, iframe);
-                    result = invokeInIFrames(webDriver, newParents);
+                    result = invokeInIFrames(webDriver);
                     if (waitUntilFinished(result)) {
                         break;
                     }
                 }
             } finally {
-                switchToIFrame(webDriver, parents);
-
+                helper.switchToParentFrame();
             }
         }
         return result;
-    }
-
-    private List<WebElement> createChildPath(List<WebElement> parentPath, WebElement childIFrame) {
-        List<WebElement> newParents = new ArrayList<WebElement>(parentPath.size() + 1);
-        newParents.addAll(parentPath);
-        newParents.add(childIFrame);
-        return newParents;
-    }
-
-    private void switchToIFrame(WebDriver webDriver, List<WebElement> iframePath) {
-        // Safari and PhantomJs don't support switchTo.parentFrame, so we do this
-        // it works for Phantom, but is VERY slow there (other browsers are slow but ok)
-        webDriver.switchTo().defaultContent();
-        for (WebElement iframe : iframePath) {
-            webDriver.switchTo().frame(iframe);
-        }
     }
 
     private boolean waitUntilFinished(Object result) {

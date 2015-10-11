@@ -36,6 +36,7 @@ public class SeleniumHelper {
                     "  rect.right <= (window.innerWidth || document.documentElement.clientWidth));\n" +
             "} else { return null; }";
 
+    private final List<WebElement> currentIFramePath = new ArrayList<WebElement>(4);
     private DriverFactory factory;
     private WebDriver webDriver;
     private WebDriverWait webDriverWait;
@@ -625,7 +626,7 @@ public class SeleniumHelper {
      * @return currently active element.
      */
     public WebElement getActiveElement() {
-        return driver().switchTo().activeElement();
+        return getTargetLocator().activeElement();
     }
 
     /**
@@ -971,11 +972,50 @@ public class SeleniumHelper {
     }
 
     public void goToTab(List<String> tabHandles, int indexToGoTo) {
-        driver().switchTo().window(tabHandles.get(indexToGoTo));
+        getTargetLocator().window(tabHandles.get(indexToGoTo));
     }
 
     public List<String> getTabHandles() {
         return new ArrayList<String>(driver().getWindowHandles());
+    }
+
+    /**
+     * Activates main/top-level iframe (i.e. makes it the current frame).
+     */
+    public void switchToDefaultContent() {
+        currentIFramePath.clear();
+        getTargetLocator().defaultContent();
+    }
+
+
+    /**
+     * Activates specified child frame of current iframe.
+     */
+    public void switchToFrame(WebElement iframe) {
+        getTargetLocator().frame(iframe);
+        currentIFramePath.add(iframe);
+    }
+
+    /**
+     * Activates parent frame of current iframe.
+     * Does nothing if when current frame is the main/top-level one.
+     */
+    public void switchToParentFrame() {
+        if (!currentIFramePath.isEmpty()) {
+            // copy path since substring creates a view, not a deep copy
+            List<WebElement> newPath = currentIFramePath.subList(0, currentIFramePath.size() - 1);
+            newPath = new ArrayList<WebElement>(newPath);
+            // Safari and PhantomJs don't support switchTo.parentFrame, so we do this
+            // it works for Phantom, but is VERY slow there (other browsers are slow but ok)
+            switchToDefaultContent();
+            for (WebElement iframe : newPath) {
+                switchToFrame(iframe);
+            }
+        }
+    }
+
+    public <T> ExpectedCondition<T> conditionForAllIFrames(ExpectedCondition<T> nested) {
+        return new TryAllIFramesConditionDecorator(this, nested);
     }
 
     /**
@@ -984,11 +1024,15 @@ public class SeleniumHelper {
     public Alert getAlert() {
         Alert alert = null;
         try {
-            alert = driver().switchTo().alert();
+            alert = getTargetLocator().alert();
         } catch (NoAlertPresentException e) {
             // just leave alert null
         }
         return alert;
+    }
+
+    private WebDriver.TargetLocator getTargetLocator() {
+        return driver().switchTo();
     }
 
     /**

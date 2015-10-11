@@ -62,7 +62,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected Object invokedWrappedInWaitUntil(WaitUntil waitUntil, final FixtureInteraction interaction, final Method method, final Object[] arguments) {
-        ExpectedCondition<Object> condition = new TryAllIFramesConditionDecorator(new ExpectedCondition<Object>() {
+        ExpectedCondition<Object> condition = new ExpectedCondition<Object>() {
             @Override
             public Object apply(WebDriver webDriver) {
                 try {
@@ -78,7 +78,8 @@ public class BrowserTest extends SlimFixture {
                     }
                 }
             }
-        });
+        };
+        condition = getSeleniumHelper().conditionForAllIFrames(condition);
         Object result;
         switch (waitUntil.value()) {
             case STOP_TEST:
