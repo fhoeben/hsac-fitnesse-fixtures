@@ -25,5 +25,5 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |check original price                                                                          |
 |address          |city   |price?          |original price? |square meters|year built?|volume? |
-|Maliebaan 50 A   |Utrecht|€ 995.000 k.k.  |€ 1.395.000 k.k.|240          |1930       |900 m³  |
+|Maliebaan 70 a   |Utrecht|€ 1.395.000 k.k.|€ 1.690.000 k.k.|588          |Voor 1906  |1.250 m³|
 |Wilhelminapark 27|Utrecht|€ 1.350.000 k.k.|null            |290          |1905       |1.000 m³|

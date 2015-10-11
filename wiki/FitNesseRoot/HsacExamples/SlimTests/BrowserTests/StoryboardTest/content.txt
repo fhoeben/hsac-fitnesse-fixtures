@@ -11,11 +11,11 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |click     |Maliebaan                                                    |
 |click     |Prijs                                                        |
 |click     |Prijs                                                        |
-|click     |Maliebaan 70 A                                               |
+|click     |Maliebaan 3                                                  |
 |$price=   |value of          |xpath=//div[@class='prijs']/strong        |
 |open      |http://www.funda.nl                                          |
 |enter     |Maliebaan, Utrecht|as        |Locatie                        |
 |press     |enter                                                        |
-|click     |Maliebaan 70 a                                               |
+|click     |Maliebaan 3                                                  |
 |click     |Kenmerken                                                    |
 |check     |value of          |Vraagprijs|$price k.k.                    |
