@@ -54,24 +54,34 @@ public class TryAllIFramesConditionDecorator implements ExpectedCondition<Object
                 if (waitUntilFinished(result)) {
                     break;
                 } else {
-                    List<WebElement> newParents = new ArrayList<WebElement>(parents.size() + 1);
-                    newParents.addAll(parents);
-                    newParents.add(iframe);
+                    List<WebElement> newParents = createChildPath(parents, iframe);
                     result = invokeInIFrames(webDriver, newParents);
                     if (waitUntilFinished(result)) {
                         break;
                     }
                 }
             } finally {
-                // Safari and PhantomJs don't support switchTo.parentFrame, so we do this
-                // it works for Phantom, but is VERY slow there (other browsers are slow but ok)
-                webDriver.switchTo().defaultContent();
-                for (WebElement parent : parents) {
-                    webDriver.switchTo().frame(parent);
-                }
+                switchToIFrame(webDriver, parents);
+
             }
         }
         return result;
+    }
+
+    private List<WebElement> createChildPath(List<WebElement> parentPath, WebElement childIFrame) {
+        List<WebElement> newParents = new ArrayList<WebElement>(parentPath.size() + 1);
+        newParents.addAll(parentPath);
+        newParents.add(childIFrame);
+        return newParents;
+    }
+
+    private void switchToIFrame(WebDriver webDriver, List<WebElement> iframePath) {
+        // Safari and PhantomJs don't support switchTo.parentFrame, so we do this
+        // it works for Phantom, but is VERY slow there (other browsers are slow but ok)
+        webDriver.switchTo().defaultContent();
+        for (WebElement iframe : iframePath) {
+            webDriver.switchTo().frame(iframe);
+        }
     }
 
     private boolean waitUntilFinished(Object result) {
