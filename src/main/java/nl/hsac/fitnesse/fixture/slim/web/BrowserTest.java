@@ -62,7 +62,23 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected Object invokedWrappedInWaitUntil(WaitUntil waitUntil, final FixtureInteraction interaction, final Method method, final Object[] arguments) {
-        ExpectedCondition<Object> condition = new WaitUntilCondition(interaction, method, arguments);
+        ExpectedCondition<Object> condition = new TryAllIFramesConditionDecorator(new ExpectedCondition<Object>() {
+            @Override
+            public Object apply(WebDriver webDriver) {
+                try {
+                    return superInvoke(interaction, method, arguments);
+                } catch (Throwable e) {
+                    Throwable realEx = ExceptionHelper.stripReflectionException(e);
+                    if (realEx instanceof RuntimeException) {
+                        throw (RuntimeException) realEx;
+                    } else if (realEx instanceof Error) {
+                        throw (Error) realEx;
+                    } else {
+                        throw new RuntimeException(realEx);
+                    }
+                }
+            }
+        });
         Object result;
         switch (waitUntil.value()) {
             case STOP_TEST:
@@ -1591,44 +1607,39 @@ public class BrowserTest extends SlimFixture {
         this.implicitWaitForAngular = implicitWaitForAngular;
     }
 
-    private class WaitUntilCondition implements ExpectedCondition<Object> {
-        private final FixtureInteraction interaction;
-        private final Method method;
-        private final Object[] arguments;
+    /**
+     * Adds a decorator on top of a decorator such that it is applied to all iframes nested
+     * inside the current page (or active iframe).
+     */
+    private class TryAllIFramesConditionDecorator implements ExpectedCondition<Object> {
+        private final ExpectedCondition<Object> decorated;
+        private final List<WebElement> rootPath;
 
-        public WaitUntilCondition(FixtureInteraction interaction, Method method, Object[] arguments) {
-            this.interaction = interaction;
-            this.method = method;
-            this.arguments = arguments;
+        public TryAllIFramesConditionDecorator(ExpectedCondition<Object> nested) {
+            this(Collections.EMPTY_LIST, nested);
+        }
+
+        public TryAllIFramesConditionDecorator(List<WebElement> parents, ExpectedCondition<Object> nested) {
+            decorated = nested;
+            rootPath = parents;
         }
 
         @Override
         public Object apply(WebDriver webDriver) {
-            try {
-                Object result = superInvoke(interaction, method, arguments);
-                if (!waitUntilFinished(result)) {
-                    result = invokeInIFrames(webDriver, Collections.EMPTY_LIST);
-                }
-                return result;
-            } catch (Throwable e) {
-                Throwable realEx = ExceptionHelper.stripReflectionException(e);
-                if (realEx instanceof RuntimeException) {
-                    throw (RuntimeException) realEx;
-                } else if (realEx instanceof Error) {
-                    throw (Error) realEx;
-                } else {
-                    throw new RuntimeException(realEx);
-                }
+            Object result = decorated.apply(webDriver);
+            if (!waitUntilFinished(result)) {
+                result = invokeInIFrames(webDriver, rootPath);
             }
+            return result;
         }
 
-        private Object invokeInIFrames(WebDriver webDriver, List<WebElement> parents) throws Throwable {
+        private Object invokeInIFrames(WebDriver webDriver, List<WebElement> parents) {
             Object result = null;
             List<WebElement> iframes = webDriver.findElements(By.tagName("iframe"));
             for (WebElement iframe : iframes) {
                 webDriver.switchTo().frame(iframe);
                 try {
-                    result = superInvoke(interaction, method, arguments);
+                    result = decorated.apply(webDriver);
                     if (waitUntilFinished(result)) {
                         break;
                     } else {
