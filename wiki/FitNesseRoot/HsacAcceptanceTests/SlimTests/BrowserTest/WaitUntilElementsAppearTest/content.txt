@@ -21,7 +21,7 @@ This test ensures we can wait for elements explicitly (which means test will sto
 <a id="link" href="#">My link</a>
 <script type="text/javascript">
     window.onload = function() {
-		setTimeout(function() { document.title = "Changed Page Title"; }, 1000);
+		setTimeout(function() { document.title = "Changed Page Title"; }, 500);
 		setTimeout(function() { document.getElementById("link").innerHTML = "Hallo link\n"; }, 1500);
 		setTimeout(function() { document.getElementsByName("add")[0].setAttribute("value", "Add more"); }, 2000);
 		setTimeout(function() { document.getElementById("addL").innerHTML = "Button to add more"; }, 2500);
