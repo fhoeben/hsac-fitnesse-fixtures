@@ -8,6 +8,7 @@ import nl.hsac.fitnesse.fixture.slim.web.annotation.TimeoutPolicy;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.WaitUntil;
 import nl.hsac.fitnesse.fixture.util.*;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.TryAllIFramesConditionDecorator;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -25,8 +26,6 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -1608,64 +1607,4 @@ public class BrowserTest extends SlimFixture {
         this.implicitWaitForAngular = implicitWaitForAngular;
     }
 
-    /**
-     * Adds a decorator on top of a decorator such that it is applied to all iframes nested
-     * inside the current page (or active iframe).
-     */
-    private class TryAllIFramesConditionDecorator implements ExpectedCondition<Object> {
-        private final ExpectedCondition<Object> decorated;
-        private final List<WebElement> rootPath;
-
-        public TryAllIFramesConditionDecorator(ExpectedCondition<Object> nested) {
-            this(Collections.EMPTY_LIST, nested);
-        }
-
-        public TryAllIFramesConditionDecorator(List<WebElement> parents, ExpectedCondition<Object> nested) {
-            decorated = nested;
-            rootPath = parents;
-        }
-
-        @Override
-        public Object apply(WebDriver webDriver) {
-            Object result = decorated.apply(webDriver);
-            if (!waitUntilFinished(result)) {
-                result = invokeInIFrames(webDriver, rootPath);
-            }
-            return result;
-        }
-
-        private Object invokeInIFrames(WebDriver webDriver, List<WebElement> parents) {
-            Object result = null;
-            List<WebElement> iframes = webDriver.findElements(By.tagName("iframe"));
-            for (WebElement iframe : iframes) {
-                webDriver.switchTo().frame(iframe);
-                try {
-                    result = decorated.apply(webDriver);
-                    if (waitUntilFinished(result)) {
-                        break;
-                    } else {
-                        List<WebElement> newParents = new ArrayList<WebElement>(parents.size() + 1);
-                        newParents.addAll(parents);
-                        newParents.add(iframe);
-                        result = invokeInIFrames(webDriver, newParents);
-                        if (waitUntilFinished(result)) {
-                            break;
-                        }
-                    }
-                } finally {
-                    // Safari and PhantomJs don't support switchTo.parentFrame, so we do this
-                    // it works for Phantom, but is VERY slow there (other browsers are slow but ok)
-                    webDriver.switchTo().defaultContent();
-                    for (WebElement parent : parents) {
-                        webDriver.switchTo().frame(parent);
-                    }
-                }
-            }
-            return result;
-        }
-
-        private boolean waitUntilFinished(Object result) {
-            return result != null && !Boolean.FALSE.equals(result);
-        }
-    }
 }
