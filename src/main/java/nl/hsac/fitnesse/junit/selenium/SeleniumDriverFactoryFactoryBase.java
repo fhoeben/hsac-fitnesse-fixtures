@@ -1,6 +1,6 @@
 package nl.hsac.fitnesse.junit.selenium;
 
-import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import org.apache.commons.lang3.StringUtils;
 
 /**

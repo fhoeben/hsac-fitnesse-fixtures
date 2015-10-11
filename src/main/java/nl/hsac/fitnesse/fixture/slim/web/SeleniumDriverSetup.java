@@ -3,8 +3,8 @@ package nl.hsac.fitnesse.fixture.slim.web;
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
-import nl.hsac.fitnesse.fixture.util.SauceLabsHelper;
-import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.SauceLabsHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
@@ -19,10 +19,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.Iterator;
-import org.json.JSONException;
-import org.json.JSONObject;
+
 /**
  * Script fixture to set up webdriver to be used by Selenium tests.
  */

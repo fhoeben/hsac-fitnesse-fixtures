@@ -4,6 +4,7 @@ import fit.exception.FitFailureException;
 import fitnesse.ContextConfigurator;
 import freemarker.template.*;
 import nl.hsac.fitnesse.fixture.util.*;
+import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 

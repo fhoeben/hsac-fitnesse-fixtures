@@ -1,7 +1,7 @@
 package nl.hsac.fitnesse.junit.selenium;
 
 import nl.hsac.fitnesse.fixture.slim.web.SeleniumDriverSetup;
-import nl.hsac.fitnesse.fixture.util.SeleniumHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 
 import java.net.MalformedURLException;
 import java.util.LinkedHashMap;
