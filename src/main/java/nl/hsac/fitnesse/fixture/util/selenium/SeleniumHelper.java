@@ -1,6 +1,7 @@
-package nl.hsac.fitnesse.fixture.util;
+package nl.hsac.fitnesse.fixture.util.selenium;
 
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
+import nl.hsac.fitnesse.fixture.util.FileUtil;
 import org.openqa.selenium.*;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.internal.Base64Encoder;

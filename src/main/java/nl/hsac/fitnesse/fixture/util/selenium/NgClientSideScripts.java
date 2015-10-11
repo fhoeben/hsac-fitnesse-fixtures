@@ -1,4 +1,4 @@
-package nl.hsac.fitnesse.fixture.util;
+package nl.hsac.fitnesse.fixture.util.selenium;
 
 /**
  * Javascript scripts to perform against AngularJs sites when using Selenium

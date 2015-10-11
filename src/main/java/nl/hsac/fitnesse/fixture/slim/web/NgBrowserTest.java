@@ -1,9 +1,8 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
-import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.WaitUntil;
-import nl.hsac.fitnesse.fixture.util.NgClientSideScripts;
+import nl.hsac.fitnesse.fixture.util.selenium.NgClientSideScripts;
 import nl.hsac.fitnesse.slim.interaction.ReflectionHelper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;

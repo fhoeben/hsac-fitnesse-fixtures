@@ -1,4 +1,4 @@
-package nl.hsac.fitnesse.fixture.util;
+package nl.hsac.fitnesse.fixture.util.selenium;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
