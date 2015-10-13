@@ -4,10 +4,7 @@ import nl.hsac.fitnesse.fixture.Environment;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * HttpResponse subclass intended to store a sequence of XmlHttpResponses which will be served (in sequence) to
@@ -17,6 +14,7 @@ import java.util.List;
  */
 public class MockXmlHttpResponseSequence extends HttpResponse {
     private final List<XmlHttpResponse> responseList = new ArrayList<XmlHttpResponse>();
+    private final Map<String, XmlHttpResponse> responsesForRequests = new HashMap<String, XmlHttpResponse>();
     private int currentIndex;
 
     public <T extends XmlHttpResponse> MockXmlHttpResponseSequence(T... responses) {
@@ -34,11 +32,15 @@ public class MockXmlHttpResponseSequence extends HttpResponse {
         resetCurrentIndex();
     }
 
-    public XmlHttpResponse addResponse(String responseBody) {
+    public XmlHttpResponse addResponse(String responseBody, String request) {
         XmlHttpResponse newResponse = new XmlHttpResponse();
         newResponse.setStatusCode(HttpStatus.SC_OK);
         newResponse.setResponse(responseBody);
-        responseList.add(newResponse);
+        if (request == null) {
+            responseList.add(newResponse);
+        } else {
+            responsesForRequests.put(request, newResponse);
+        }
         return newResponse;
     }
 
@@ -90,6 +92,11 @@ public class MockXmlHttpResponseSequence extends HttpResponse {
                 result.add(response.getResponse());
             }
         }
+        for (XmlHttpResponse responseForRequest : responsesForRequests.values()) {
+            if (!getResponseList().contains(responseForRequest)) {
+                result.add(responseForRequest.getResponse());
+            }
+        }
         return result;
     }
 
@@ -125,6 +132,9 @@ public class MockXmlHttpResponseSequence extends HttpResponse {
     public void setRequest(String aRequest) {
         // when a new request is received we move to next element in list
         currentIndex++;
+        if (responsesForRequests.containsKey(aRequest)) {
+            responseList.add(currentIndex, responsesForRequests.get(aRequest));
+        }
         currentResponse().setRequest(aRequest);
     }
 
@@ -134,7 +144,7 @@ public class MockXmlHttpResponseSequence extends HttpResponse {
         }
         if (currentIndex == responseList.size()) {
             // we allow capturing of requests, so that we can debug what is received
-            XmlHttpResponse blankResponse = addResponse("");
+            XmlHttpResponse blankResponse = addResponse("", null);
             // not found
             blankResponse.setStatusCode(HttpStatus.SC_NOT_FOUND);
         }
