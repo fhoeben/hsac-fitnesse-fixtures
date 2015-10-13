@@ -53,13 +53,14 @@ This test ensures we can find elements inside iframes.
 
 
 
-|script      |mock xml server setup|
-|add response|${HTML_MAIN}         |
-|add response|${HTML_FRAME1}       |
-|add response|${HTML_FRAME2}       |
-|add response|${HTML_FRAME3}       |
-|add response|${HTML_FRAME4}       |
-|$url=       |get mock server url  |
+|script      |mock xml server setup                            |
+|add response|${HTML_MAIN}                                     |
+|add response|${HTML_FRAME1}|for|GET: /FitNesseMock/frame1.html|
+|add response|${HTML_FRAME2}|for|GET: /FitNesseMock/frame2.html|
+|add response|${HTML_FRAME3}|for|GET: /FitNesseMock/frame3.html|
+|add response|${HTML_FRAME4}|for|GET: /FitNesseMock/frame4.html|
+|$url=       |get mock server url                              |
+
 
 |script|file fixture                          |
 |$file=|create|testUpload.txt|containing|Hallo|
@@ -101,5 +102,6 @@ This test ensures we can find elements inside iframes.
 
 
 |script|mock xml server setup|
+|verify all responses served |
 |stop                        |
 
