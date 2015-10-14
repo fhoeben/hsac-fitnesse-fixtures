@@ -6,16 +6,15 @@ import java.lang.reflect.Method;
 import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 import fitnesse.slim.fixtureInteraction.InteractionAwareFixture;
 import nl.hsac.fitnesse.fixture.Environment;
-import nl.hsac.fitnesse.fixture.util.WikiHelper;
+import nl.hsac.fitnesse.fixture.util.FilesSectionsHelper;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
-
 
 /**
  * Base class for Slim fixtures.
  */
-public class SlimFixture implements InteractionAwareFixture {
+public class SlimFixture  implements InteractionAwareFixture {
     private Environment environment = Environment.getInstance();
-    protected final WikiHelper wikiHelper = getEnvironment().getWikiHelper();
+    protected final FilesSectionsHelper fileSectionsHelper = getEnvironment().getFileSectionsHelper();
 
     @Override
     public Object aroundSlimInvoke(FixtureInteraction interaction, Method method, Object... arguments)
@@ -112,17 +111,16 @@ public class SlimFixture implements InteractionAwareFixture {
     }
 
     /**
-     * Convenience method, @see WikiHelper#getWikiUrl(String).
-     */
-    protected String getWikiUrl(String filePath) {
-        return wikiHelper.getWikiUrl(filePath);
-    }
+    * Convenience method, @see FilesSectionsHelper#getWikiUrl(String).
+    */
+   protected String getWikiUrl(String filePath) {
+       return fileSectionsHelper.getWikiUrl(filePath);
+   }
 
-    /**
-     * Convenience method, @see WikiHelper#getFilePathFromWikiUrl(String).
-     */
-    protected String getFilePathFromWikiUrl(String wikiUrl) {
-        return wikiHelper.getFilePathFromWikiUrl(wikiUrl);
-    }
-
+   /**
+    * Convenience method, @see FilesSectionsHelper#getFilePathFromWikiUrl(String).
+    */
+   protected String getFilePathFromWikiUrl(String wikiUrl) {
+       return fileSectionsHelper.getFilePathFromWikiUrl(wikiUrl);
+   }
 }

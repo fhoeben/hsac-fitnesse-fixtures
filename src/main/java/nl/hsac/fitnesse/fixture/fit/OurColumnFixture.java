@@ -3,7 +3,7 @@ package nl.hsac.fitnesse.fixture.fit;
 import fit.ColumnFixture;
 import fit.Parse;
 import nl.hsac.fitnesse.fixture.Environment;
-import nl.hsac.fitnesse.fixture.util.WikiHelper;
+import nl.hsac.fitnesse.fixture.util.FilesSectionsHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -13,7 +13,7 @@ import java.util.Calendar;
  */
 public class OurColumnFixture extends ColumnFixture {
     private Environment environment = Environment.getInstance();
-    protected final WikiHelper wikiHelper = getEnvironment().getWikiHelper();
+    protected final FilesSectionsHelper fileSectionsHelper = getEnvironment().getFileSectionsHelper();
 
     /** Prefix for method return String if value should not be HTML escaped (used to provide more detail in HTML format).*/
     public static final String NO_ESCAPE_PREFIX = "@@NO_ESCAPE@@";
@@ -117,17 +117,17 @@ public class OurColumnFixture extends ColumnFixture {
     }
 
     /**
-     * Convenience method, @see WikiHelper#getWikiUrl(String).
+     * Convenience method, @see FilesSectionsHelper#getWikiUrl(String).
      */
     protected String getWikiUrl(String filePath) {
-        return wikiHelper.getWikiUrl(filePath);
+        return fileSectionsHelper.getWikiUrl(filePath);
     }
 
     /**
-     * Convenience method, @see WikiHelper#getFilePathFromWikiUrl(String).
+     * Convenience method, @see FilesSectionsHelper#getFilePathFromWikiUrl(String).
      */
     protected String getFilePathFromWikiUrl(String wikiUrl) {
-        return wikiHelper.getFilePathFromWikiUrl(wikiUrl);
+        return fileSectionsHelper.getFilePathFromWikiUrl(wikiUrl);
     }
 
     /**

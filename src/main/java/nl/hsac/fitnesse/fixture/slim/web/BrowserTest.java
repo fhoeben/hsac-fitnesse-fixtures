@@ -35,10 +35,10 @@ public class BrowserTest extends SlimFixture {
     private int secondsBeforeTimeout;
     private int secondsBeforePageLoadTimeout;
     private int waitAfterScroll = 150;
-    private String screenshotBase = new File(wikiHelper.getFilesDir(), "screenshots").getPath() + "/";
+    private String screenshotBase = new File(fileSectionsHelper.getFilesDir(), "screenshots").getPath() + "/";
     private String screenshotHeight = "200";
-    private String downloadBase = new File(wikiHelper.getFilesDir(), "downloads").getPath() + "/";
-    private String pageSourceBase = new File(wikiHelper.getFilesDir(), "pagesources").getPath() + "/";
+    private String downloadBase = new File(fileSectionsHelper.getFilesDir(), "downloads").getPath() + "/";
+    private String pageSourceBase = new File(fileSectionsHelper.getFilesDir(), "pagesources").getPath() + "/";
 
     @Override
     protected void beforeInvoke(Method method, Object[] arguments) {
@@ -1179,6 +1179,7 @@ public class BrowserTest extends SlimFixture {
         } catch (MalformedURLException e) {
             // ignore
         }
+
         return savePageSource(fileName, fileName + ".html");
     }
 

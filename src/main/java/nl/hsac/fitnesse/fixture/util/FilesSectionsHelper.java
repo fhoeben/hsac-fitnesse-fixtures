@@ -6,9 +6,9 @@ package nl.hsac.fitnesse.fixture.util;
 import java.io.File;
 
 /**
- * Helper for wiki stuff.
+ * Helper for wiki files section stuff.
  */
-public class WikiHelper {
+public class FilesSectionsHelper {
     private HtmlCleaner htmlCleaner;
     private String filesDir;
 
@@ -16,7 +16,7 @@ public class WikiHelper {
      * @param aHtmlCleaner
      * @param aFilesDir
      */
-    public WikiHelper(HtmlCleaner aHtmlCleaner, String aFilesDir) {
+    public FilesSectionsHelper(HtmlCleaner aHtmlCleaner, String aFilesDir) {
         super();
         htmlCleaner = aHtmlCleaner;
         filesDir = aFilesDir;

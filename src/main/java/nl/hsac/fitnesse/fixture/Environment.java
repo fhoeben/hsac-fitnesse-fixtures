@@ -36,7 +36,7 @@ public class Environment {
     private SeleniumHelper seleniumHelper;
     private MapHelper mapHelper = new MapHelper();
     private ReflectionHelper reflectionHelper = new ReflectionHelper();
-    private WikiHelper wikiHelper;
+    private FilesSectionsHelper fileSectionsHelper;
 
     private Environment() {
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_23);
@@ -68,7 +68,7 @@ public class Environment {
 
         seleniumHelper = new SeleniumHelper();
 
-        wikiHelper = new WikiHelper(getHtmlCleaner(), getFitNesseFilesSectionDir());
+        fileSectionsHelper = new FilesSectionsHelper(getHtmlCleaner(), getFitNesseFilesSectionDir());
     }
 
     /**
@@ -248,6 +248,43 @@ public class Environment {
      */
     public void doHttpPost(String url, HttpResponse result, Map<String, Object> headers, String contentType) {
         httpClient.post(url, result, headers, contentType);
+    }
+
+    /**
+     * Performs PUT to supplied url of result of applying template with model.
+     * @param url url to put to.
+     * @param templateName name of template to use.
+     * @param model model for template.
+     * @param result result to populate with response.
+     */
+    public void doHttpPut(String url, String templateName, Object model, HttpResponse result) {
+        doHttpPut(url, templateName, model, result, null, XmlHttpResponse.CONTENT_TYPE_XML_TEXT_UTF8);
+    }
+
+    /**
+     * Performs PUT to supplied url of result of applying template with model.
+     * @param url url to put to.
+     * @param templateName name of template to use.
+     * @param model model for template.
+     * @param result result to populate with response.
+     * @param headers headers to add.
+     * @param contentType contentType for request.
+     */
+    public void doHttpPut(String url, String templateName, Object model, HttpResponse result, Map<String, Object> headers, String contentType) {
+        String request = processTemplate(templateName, model);
+        result.setRequest(request);
+        doHttpPut(url, result, headers, contentType);
+    }
+
+    /**
+     * Performs PUT to supplied url of result's request.
+     * @param url url to put to.
+     * @param result result containing request, its response will be filled.
+     * @param headers headers to add.
+     * @param contentType contentType for request.
+     */
+    public void doHttpPut(String url, HttpResponse result, Map<String, Object> headers, String contentType) {
+        httpClient.put(url, result, headers, contentType);
     }
 
     /**
@@ -444,11 +481,13 @@ public class Environment {
     }
 
     /**
+     * Run from eclipse (Maven Build -> clean compile exec:exec), {FITNESSE_DIR}\wiki is current path
+     * Run from eclipse like buildserver (Maven Build -> clean test-compile failsafe:integration-test), {FITNESSE_DIR} is current path
      * @return directory containing FitNesse's files section.
      */
     public String getFitNesseFilesSectionDir() {
         File fileDir = new File(fitNesseRoot, FILES_DIR);
-        if (!fileDir.exists()) {
+         if (!fileDir.exists()) {
             // Just assume we're run on a buildserver, run with mvn clean test-compile failsafe:integration-test has another root dir.
             fileDir = new File(ADD_ROOT_BUILD_SERVER + File.separator + fitNesseRoot + File.separator + FILES_DIR);
         }
@@ -500,10 +539,9 @@ public class Environment {
     }
 
     /**
-     * @return the wikiHelper
+     * @return the filesSectionsHelper
      */
-    public WikiHelper getWikiHelper() {
-        return wikiHelper;
+    public FilesSectionsHelper getFileSectionsHelper() {
+        return fileSectionsHelper;
     }
-
 }
