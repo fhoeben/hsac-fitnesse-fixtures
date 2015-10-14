@@ -66,33 +66,38 @@ This test ensures we can find elements inside iframes.
 |$file=|create|testUpload.txt|containing|Hallo|
 
 
-|script                |browser test                               |
-|open                  |$url/main                                  |
-|seconds before timeout|1                                          |
-|check                 |page title     |Start Page Title           |
-|check                 |value of       |Add button |Add            |
-|check                 |value of       |Add button1|Add1           |
-|check                 |value of       |Add button2|Add2           |
-|check                 |value of       |Add button3|Add3           |
-|check                 |value of       |Add button4|Add4           |
-|click                 |Remove1                                    |
-|click                 |Remove3                                    |
-|click                 |Remove4                                    |
-|click                 |Remove2                                    |
-|click                 |Remove                                     |
-|select file           |$file                                      |
-|select file           |$file          |for        |Upload button  |
-|select file           |$file          |for        |Upload 1 button|
-|scroll to             |Add                                        |
-|scroll to             |Add3                                       |
-|switch to frame       |id=iframe2                                 |
-|switch to parent frame                                            |
-|switch to frame       |id=iframe1                                 |
-|switch to frame       |id=iframe1_2                               |
-|reject                |switch to frame|id=iframe2                 |
-|switch to default content                                         |
-|switch to frame       |id=iframe2                                 |
-|switch to default content                                         |
+|script                |browser test                                  |
+|open                  |$url/main                                     |
+|seconds before timeout|1                                             |
+|check                 |page title        |Start Page Title           |
+|check                 |value of          |Add button |Add            |
+|check                 |value of          |Add button1|Add1           |
+|check                 |value of          |Add button2|Add2           |
+|check                 |value of          |Add button3|Add3           |
+|check                 |value of          |Add button4|Add4           |
+|click                 |Remove1                                       |
+|click                 |Remove3                                       |
+|click                 |Remove4                                       |
+|click                 |Remove2                                       |
+|click                 |Remove                                        |
+|select file           |$file                                         |
+|select file           |$file             |for        |Upload button  |
+|select file           |$file             |for        |Upload 1 button|
+|scroll to             |Add                                           |
+|scroll to             |Add3                                          |
+|switch to frame       |id=iframe2                                    |
+|switch to parent frame                                               |
+|switch to frame       |id=iframe1                                    |
+|click                 |Add4                                          |
+|click                 |Add3                                          |
+|switch to frame       |id=iframe1_2                                  |
+|click                 |Add4                                          |
+|reject                |click if available|Add3                       |
+|reject                |switch to frame   |id=iframe2                 |
+|switch to default content                                            |
+|switch to frame       |id=iframe2                                    |
+|reject                |click if available|Add4                       |
+|switch to default content                                            |
 
 
 
