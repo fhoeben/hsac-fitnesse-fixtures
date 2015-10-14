@@ -31,7 +31,7 @@ public class MapHelper {
         } else {
             String[] parts = name.split("\\.", 2);
             if (parts.length > 1) {
-                Object nested = map.get(parts[0]);
+                Object nested = getValueImpl(map, parts[0]);
                 if (nested instanceof Map) {
                     Map<String, Object> nestedMap = (Map<String, Object>) nested;
                     value = getValueImpl(nestedMap, parts[1]);
