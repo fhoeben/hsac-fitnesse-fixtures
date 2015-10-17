@@ -1,11 +1,9 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import nl.hsac.fitnesse.fixture.slim.ListFixture;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,14 +69,16 @@ public class MapHelper {
                 // overwrite current value
                 map.put(cleanName, cleanValue);
             } else {
-                String[] parts = name.split("\\.", 2);
-                if (parts.length > 1 && map.containsKey(parts[0])) {
-                    Object nested = map.get(parts[0]);
+                int lastDot = cleanName.lastIndexOf(".");
+                if (lastDot > -1) {
+                    String key = cleanName.substring(0, lastDot);
+                    Object nested = getValue(map, key);
                     if (nested instanceof Map) {
                         Map<String, Object> nestedMap = (Map<String, Object>) nested;
-                        setValueForIn(cleanValue, parts[1], nestedMap);
+                        String lastPart = cleanName.substring(lastDot + 1);
+                        setValueForIn(cleanValue, lastPart, nestedMap);
                     } else {
-                        map.put(cleanName, cleanValue);
+                        throw new SlimFixtureException(false, key + " is not a map, but " + nested.getClass());
                     }
                 } else if (isListIndexExpr(name)) {
                     setIndexedListValue(map, cleanName, cleanValue);
@@ -165,14 +165,17 @@ public class MapHelper {
     protected void setIndexedListValue(Map<String, Object> map, String name, Object value) {
         String prop = getListKeyName(name);
         Object val = getValue(map, prop);
+        if (val == null) {
+            val = new ArrayList<Object>();
+            setValueForIn(val, prop, map);
+        }
         if (val instanceof List) {
             List list = (List) val;
             int index = getListIndex(name);
-            if (index < list.size()) {
-                list.set(index, value);
-            } else {
-                throw new SlimFixtureException(false, prop + " only has " + index + " elements");
+            while (list.size() <= index) {
+                list.add(null);
             }
+            list.set(index, value);
         } else {
             throw new SlimFixtureException(false, prop + " is not a list, but " + val);
         }
