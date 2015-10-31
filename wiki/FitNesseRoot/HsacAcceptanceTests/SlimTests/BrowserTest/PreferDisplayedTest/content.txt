@@ -1,0 +1,41 @@
+This test ensures that if multiple elements match our search criteria we select the first that is actually displayed. When none of the elements are visible we use the first found.
+
+We use a mock server running to serve the HTML defined in this page.
+!note The mock server serves the content as ''text/xml'', but the browser does not seem to mind.
+
+
+!define HTML { {{{
+<html>
+<body>
+<div id="a1">Button</div>
+<button aria-labelledby="a1" value="Hidden Button" style="display:none;">Button 1</button>
+<button aria-labelledby="a1" value="Visible Button">Button 2</button>
+<input name="f" aria-label="name" style="display:none" value="Piet">
+<input name="f2" aria-label="name" value="Jan">
+<div style="display:none">
+<label for="g1">Hello</label><input id="g1" value="Hoi">
+</div>
+<div>
+<label for="g2">Hello</label><input id="g2" value="Hi">
+</div>
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script|browser test                  |
+|open  |$url                          |
+|note  |exact match                   |
+|check |value of|Button|Visible Button|
+|check |value of|name  |Jan           |
+|check |value of|Hello |Hi            |
+|note  |partial match                 |
+|check |value of|Bu    |Visible Button|
+|check |value of|na    |Jan           |
+|check |value of|Hell  |Hi            |
+
+|script|mock xml server setup|
+|stop                        |

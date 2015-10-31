@@ -224,7 +224,7 @@ public class SeleniumHelper {
     }
 
     public WebElement getElementExact(String place) {
-        WebElement element = getElementByLabelOccurrence(place, 1);
+        WebElement element = getElementByLabelOccurrence(place, -1);
         // first element found, even if it is not (yet) interactable.
         WebElement firstElement = element;
 
@@ -259,7 +259,7 @@ public class SeleniumHelper {
             }
         }
         if (!isInteractable(element)) {
-            element = getElementByAriaLabel(place, 1);
+            element = getElementByAriaLabel(place, -1);
             if (firstElement == null) {
                 firstElement = element;
             }
@@ -288,7 +288,7 @@ public class SeleniumHelper {
     }
 
     public WebElement getElementPartial(String place) {
-        WebElement element = getElementByPartialLabelOccurrence(place, 1);
+        WebElement element = getElementByPartialLabelOccurrence(place, -1);
         // first element found, even if it is not (yet) interactable.
         WebElement firstElement = element;
 
@@ -317,7 +317,7 @@ public class SeleniumHelper {
             }
         }
         if (!isInteractable(element)) {
-            element = getElementByPartialAriaLabel(place, 1);
+            element = getElementByPartialAriaLabel(place, -1);
             if (firstElement == null) {
                 firstElement = element;
             }
@@ -384,7 +384,12 @@ public class SeleniumHelper {
     }
 
     private String indexedXPath(String xpathBase, int index) {
-        return String.format("(%s)[%s]", xpathBase, index);
+
+        String xPath = xpathBase;
+        if (index > 0) {
+            xPath = String.format("(%s)[%s]", xpathBase, index);
+        }
+        return xPath;
     }
 
     private WebElement getElementByLabel(String labelText, int index, String labelXPath) {
@@ -409,7 +414,12 @@ public class SeleniumHelper {
         WebElement firstFound = element;
 
         if (!isInteractable(element)) {
-            element = findElement(byCss("[aria-label='%s']", labelText), index - 1);
+            By by = byCss("[aria-label='%s']", labelText);
+            if (index > 0) {
+                element = findElement(by, index - 1);
+            } else {
+                element = findElement(by);
+            }
             if (firstFound == null) {
                 firstFound = element;
             }
@@ -425,7 +435,12 @@ public class SeleniumHelper {
         WebElement firstFound = element;
 
         if (!isInteractable(element)) {
-            element = findElement(byCss("[aria-label*='%s']", labelText), index - 1);
+            By by = byCss("[aria-label*='%s']", labelText);
+            if (index > 0) {
+                element = findElement(by, index - 1);
+            } else {
+                element = findElement(by);
+            }
             if (firstFound == null) {
                 firstFound = element;
             }
@@ -806,7 +821,7 @@ public class SeleniumHelper {
             element = elements.get(0);
         } else if (elements.size() > 1) {
             if (!atMostOne) {
-                element = elements.get(0);
+                element = selectBestElement(elements);
             } else {
                 elements = elementsWithId(elements);
                 if (elements.size() == 1) {
@@ -814,6 +829,21 @@ public class SeleniumHelper {
                 } else {
                     throw new RuntimeException("Multiple elements with id found for: " + by
                                                 + ":\n" + elementsAsString(elements));
+                }
+            }
+        }
+        return element;
+    }
+
+    private WebElement selectBestElement(List<WebElement> elements) {
+        // take the first displayed element, or if none are displayed: just take the first
+        WebElement element = elements.get(0);
+        if (!element.isDisplayed()) {
+            for (int i = 1; i < elements.size(); i++) {
+                WebElement otherElement = elements.get(i);
+                if (otherElement.isDisplayed()) {
+                    element = otherElement;
+                    break;
                 }
             }
         }
