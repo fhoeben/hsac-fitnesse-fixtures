@@ -778,8 +778,10 @@ public class BrowserTest extends SlimFixture {
                     result = getElementText(options.get(0));
                 }
             } else {
-                if ("checkbox".equals(element.getAttribute("type"))) {
-                    result = String.valueOf("true".equals(element.getAttribute("checked")));
+                String elementType = element.getAttribute("type");
+                if ("checkbox".equals(elementType)
+                        || "radio".equals(elementType)) {
+                    result = String.valueOf(element.isSelected());
                 } else {
                     result = element.getAttribute("value");
                     if (result == null) {
