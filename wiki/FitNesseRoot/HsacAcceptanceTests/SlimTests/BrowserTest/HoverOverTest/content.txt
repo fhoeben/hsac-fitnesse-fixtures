@@ -1,0 +1,36 @@
+This tests checks the ability to trigger a mouseover event, i.e. similate the mouse hovering over an element.
+
+We use a mock server running to serve the HTML defined in this page.
+!note The mock server serves the content as ''text/xml'', but the browser does not seem to mind.
+
+
+!define HTML { {{{
+<html>
+<body>
+<div id="container0" style="width: 80px; height: 20px; background-color: blue;">Dag</div>
+<div id="container1" style="width: 80px; height: 20px; background-color: red;"
+     onmouseover="document.getElementById('div1').style.display = 'block';"
+     onmouseout="document.getElementById('div1').style.display = 'none';">
+    <div id="div1" style="display:none">Hoi</div>
+</div>
+<div id="container2" style="width: 80px; height: 20px; background-color: yellow;"/>
+</body>
+</html>}}} }
+
+
+| script       | mock xml server setup |
+| add response | ${HTML}               |
+| $url=        | get mock server url   |
+
+| script                 | browser test                    |
+| open                   | $url                            |
+| seconds before timeout | 1                               |
+| check                  | value of | id=container0 | Dag  |
+| check                  | value of | id=div1       | !--! |
+| hover over             | id=container1                   |
+| check                  | value of | id=div1       | Hoi  |
+| hover over             | id=container2                   |
+| check                  | value of | id=div1       | !--! |
+
+| script | mock xml server setup |
+| stop                           |
