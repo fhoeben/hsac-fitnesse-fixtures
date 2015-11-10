@@ -16,6 +16,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -1117,6 +1118,20 @@ public class BrowserTest extends SlimFixture {
     protected boolean isElementOnScreen(WebElement element) {
         Boolean onScreen = getSeleniumHelper().isElementOnScreen(element);
         return onScreen == null || onScreen.booleanValue();
+    }
+
+    @WaitUntil
+    public boolean hoverOver(String place) {
+        boolean result = false;
+        WebElement element = getElementToClick(place);
+        if (element != null) {
+            scrollIfNotOnScreen(element);
+            if (element.isDisplayed()) {
+                new Actions(getSeleniumHelper().driver()).moveToElement(element).perform();
+                result = true;
+            }
+        }
+        return result;
     }
 
     /**
