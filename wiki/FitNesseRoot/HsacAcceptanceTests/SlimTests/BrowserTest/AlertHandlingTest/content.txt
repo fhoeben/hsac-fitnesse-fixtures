@@ -11,11 +11,19 @@ This test ensures we can deal with alerts.
 |add response|${HTML}              |
 |$url=       |get mock server url  |
 
-|script|browser test    |
-|open  |$url            |
-|click |Open alert      |
-|check |alert text|Hello|
-|dismiss alert          |
+|script                |browser test    |
+|open                  |$url            |
+|seconds before timeout|1               |
+|check                 |alert text|null |
+|click                 |Open alert      |
+|check                 |alert text|Hello|
+|dismiss alert                          |
+|click                 |Open alert      |
+|check                 |alert text|Hello|
+|confirm alert                          |
+|check                 |alert text|null |
+
+
 
 |script|mock xml server setup|
 |stop                        |
