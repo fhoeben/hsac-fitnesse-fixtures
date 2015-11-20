@@ -1,4 +1,4 @@
-!-BrowserTest-! defines a language (a DSL of sorts) to interact with a website via a browser. Normally a heuristic is used to find elements using end-user terms, leading to readable wiki pages describing tests, robust to technical changes in the site's HTML. But this heuristic may be bypassed in favor of [[technical selectors][>TechnicalSelectors]] to specify which element is meant. Furthermore !-BrowserTest-! retries finding elements (for a configurable time) if it cannot locate the immediately. This allows tests of dynamic web pages (where the page content is updated asynchronous using !-JavaScript-!) or using browsers where Selenium is not always able to determine whether a page load is complete (e.g. Safari).
+﻿!-BrowserTest-! defines a language (a DSL of sorts) to interact with a website via a browser. Normally a heuristic is used to find elements using end-user terms, leading to readable wiki pages describing tests, robust to technical changes in the site's HTML. But this heuristic may be bypassed in favor of [[technical selectors][>TechnicalSelectors]] to specify which element is meant. Furthermore !-BrowserTest-! retries finding elements (for a configurable time) if it cannot locate the immediately. This allows tests of dynamic web pages (where the page content is updated asynchronous using !-JavaScript-!) or using browsers where Selenium is not always able to determine whether a page load is complete (e.g. Safari).
 
 The language supported by !-BrowserTest-! is defined by its public methods, which can be used in combination with Slim's standard script verbs (e.g. check, ensure, reject, show).
 !-BrowserTest-!'s language will suffice for many tests, but can be extended by creating a custom subclass. 
@@ -11,6 +11,7 @@ The >TableTemplateTest simplifies the parameterization of the script.
 >CustomFixtureTest shows the usage of a custom subclass of !-BrowserTest-! to make test content more descriptive by encapsulating knowledge of the site's HTML in Java code.
 >StoryboardTest shows a test where a screenshot is taken after each action. This is then combined with a scenario in >TemplateStoryboardTest.
 >ResizeTest shows some manipulation of the browser window.
+>CheckboxRadiobuttonTest shows how to check values of radio buttons and checkboxes.
 >AngularJsTest shows usage of !-BrowserTest-! testing [[!-AngularJs-!][https://angularjs.org]] applications. >AngularJsCalculatorTest takes it one step further, using !-NgBrowserTest-! to select elements by model, binding and repeater. >AngularUiSelectTest show a test interacting with [[!-AngularJs-! ui-select][https://github.com/angular-ui/ui-select]].
 
 !2 Language
