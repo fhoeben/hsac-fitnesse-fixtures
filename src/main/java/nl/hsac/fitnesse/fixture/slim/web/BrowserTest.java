@@ -1122,12 +1122,16 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil
     public boolean hoverOver(String place) {
-        boolean result = false;
         WebElement element = getElementToClick(place);
+        return hoverOver(element);
+    }
+    
+    protected boolean hoverOver(WebElement element) {
+        boolean result = false;
         if (element != null) {
             scrollIfNotOnScreen(element);
             if (element.isDisplayed()) {
-                new Actions(getSeleniumHelper().driver()).moveToElement(element).perform();
+                getSeleniumHelper().hoverOver(element);
                 result = true;
             }
         }

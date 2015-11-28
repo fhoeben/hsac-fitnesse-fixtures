@@ -4,6 +4,7 @@ import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import org.openqa.selenium.*;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.internal.Base64Encoder;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -635,6 +636,14 @@ public class SeleniumHelper {
             // https://code.google.com/p/selenium/issues/detail?id=6015
             System.err.println("Unable to set page load timeout (known issue for Safari): " + e.getMessage());
         }
+    }
+
+    /**
+     * Simulates placing the mouse over the supplied element.
+     * @param element element to place mouse over.
+     */
+    public void hoverOver(WebElement element) {
+        new Actions(driver()).moveToElement(element).perform();
     }
 
     /**
