@@ -2,10 +2,13 @@
 <properties>
 <Edit>true</Edit>
 <Files>true</Files>
+<Help>Tests from frames and iframes</Help>
 <Properties>true</Properties>
 <RecentChanges>true</RecentChanges>
 <Refactor>true</Refactor>
 <Search>true</Search>
+<Suite>true</Suite>
+<Suites/>
 <Versions>true</Versions>
 <WhereUsed>true</WhereUsed>
 </properties>

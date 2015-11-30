@@ -5,8 +5,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -15,7 +13,7 @@ import java.util.List;
  * @param <T> type of condition result.
  */
 class TryAllIFramesConditionDecorator<T> implements ExpectedCondition<T> {
-    private static final By BY_IFRAME = By.tagName("iframe");
+    private static final By BY_FRAME = By.cssSelector("iframe,frame");
 
     private final SeleniumHelper helper;
     private final ExpectedCondition<T> decorated;
@@ -40,9 +38,9 @@ class TryAllIFramesConditionDecorator<T> implements ExpectedCondition<T> {
 
     private T invokeInIFrames(WebDriver webDriver) {
         T result = null;
-        List<WebElement> iframes = webDriver.findElements(BY_IFRAME);
-        for (WebElement iframe : iframes) {
-            helper.switchToFrame(iframe);
+        List<WebElement> frames = webDriver.findElements(BY_FRAME);
+        for (WebElement frame : frames) {
+            helper.switchToFrame(frame);
             try {
                 result = decorated.apply(webDriver);
                 if (waitUntilFinished(result)) {
