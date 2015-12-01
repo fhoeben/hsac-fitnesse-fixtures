@@ -80,6 +80,8 @@ The heuristic to find places tries a number of translations of end user terms to
 |switch to default content                                                 |Activates main/top-level (i)frame (i.e. makes it the current frame).                                                                                                                                                                                |
 |switch to frame <technical selector>                                      |Activates child frame of current (i)frame found using 'technical selector'.                                                                                                                                                                         |
 |switch to parent frame                                                    |Activates parent frame of current (i)frame. Does nothing if when current frame is the main/top-level one.                                                                                                                                           |
+|set implicit find in frames to <true/false>                               |Controls whether !-BrowserTest-! should look for elements inside nested (i)frames if they cannot be found in the current frame (default is 'true').                                                                                                 |
+
 
 !3 !-NgBrowserTest-!
 
