@@ -34,6 +34,7 @@ public class BrowserTest extends SlimFixture {
     private ReflectionHelper reflectionHelper = getEnvironment().getReflectionHelper();
     private NgBrowserTest ngBrowserTest;
     private boolean implicitWaitForAngular = true;
+    private boolean implicitFindInFrames = true;
     private int secondsBeforeTimeout;
     private int secondsBeforePageLoadTimeout;
     private int waitAfterScroll = 150;
@@ -79,7 +80,9 @@ public class BrowserTest extends SlimFixture {
                 }
             }
         };
-        condition = getSeleniumHelper().conditionForAllIFrames(condition);
+        if (implicitFindInFrames) {
+            condition = getSeleniumHelper().conditionForAllIFrames(condition);
+        }
         Object result;
         switch (waitUntil.value()) {
             case STOP_TEST:
@@ -1661,6 +1664,10 @@ public class BrowserTest extends SlimFixture {
 
     public void setImplicitWaitForAngularTo(boolean implicitWaitForAngular) {
         this.implicitWaitForAngular = implicitWaitForAngular;
+    }
+
+    public void setImplicitFindInFramesTo(boolean implicitFindInFrames) {
+        this.implicitFindInFrames = implicitFindInFrames;
     }
 
 }
