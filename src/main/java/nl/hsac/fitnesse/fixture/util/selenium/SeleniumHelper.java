@@ -1055,8 +1055,8 @@ public class SeleniumHelper {
         }
     }
 
-    public <T> ExpectedCondition<T> conditionForAllIFrames(ExpectedCondition<T> nested) {
-        return new TryAllIFramesConditionDecorator(this, nested);
+    public <T> ExpectedCondition<T> conditionForAllFrames(ExpectedCondition<T> nested) {
+        return new TryAllFramesConditionDecorator(this, nested);
     }
 
     /**

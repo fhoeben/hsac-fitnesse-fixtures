@@ -8,21 +8,21 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import java.util.List;
 
 /**
- * Adds a decorator on top of a decorator such that it is applied to all iframes nested
+ * Adds a decorator on top of a decorator such that it is applied to all frames and iframes nested
  * inside the current page (or active iframe).
  * @param <T> type of condition result.
  */
-class TryAllIFramesConditionDecorator<T> implements ExpectedCondition<T> {
+class TryAllFramesConditionDecorator<T> implements ExpectedCondition<T> {
     private static final By BY_FRAME = By.cssSelector("iframe,frame");
 
     private final SeleniumHelper helper;
     private final ExpectedCondition<T> decorated;
 
     /**
-     * Creates new, working inside the aHelper's current iframe.
-     * @param toBeDecorated condition to be applied for each iframe.
+     * Creates new, working inside the aHelper's current (i)frame.
+     * @param toBeDecorated condition to be applied for each (i)frame.
      */
-    public TryAllIFramesConditionDecorator(SeleniumHelper aHelper, ExpectedCondition<T> toBeDecorated) {
+    public TryAllFramesConditionDecorator(SeleniumHelper aHelper, ExpectedCondition<T> toBeDecorated) {
         helper = aHelper;
         decorated = toBeDecorated;
     }
@@ -30,24 +30,24 @@ class TryAllIFramesConditionDecorator<T> implements ExpectedCondition<T> {
     @Override
     public T apply(WebDriver webDriver) {
         T result = decorated.apply(webDriver);
-        if (!waitUntilFinished(result)) {
-            result = invokeInIFrames(webDriver);
+        if (!isFinished(result)) {
+            result = invokeInFrames(webDriver);
         }
         return result;
     }
 
-    private T invokeInIFrames(WebDriver webDriver) {
+    private T invokeInFrames(WebDriver webDriver) {
         T result = null;
         List<WebElement> frames = webDriver.findElements(BY_FRAME);
         for (WebElement frame : frames) {
             helper.switchToFrame(frame);
             try {
                 result = decorated.apply(webDriver);
-                if (waitUntilFinished(result)) {
+                if (isFinished(result)) {
                     break;
                 } else {
-                    result = invokeInIFrames(webDriver);
-                    if (waitUntilFinished(result)) {
+                    result = invokeInFrames(webDriver);
+                    if (isFinished(result)) {
                         break;
                     }
                 }
@@ -58,7 +58,7 @@ class TryAllIFramesConditionDecorator<T> implements ExpectedCondition<T> {
         return result;
     }
 
-    private boolean waitUntilFinished(Object result) {
+    private boolean isFinished(Object result) {
         return result != null && !Boolean.FALSE.equals(result);
     }
 }
