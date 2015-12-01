@@ -16,7 +16,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -81,7 +80,7 @@ public class BrowserTest extends SlimFixture {
             }
         };
         if (implicitFindInFrames) {
-            condition = getSeleniumHelper().conditionForAllIFrames(condition);
+            condition = getSeleniumHelper().conditionForAllFrames(condition);
         }
         Object result;
         switch (waitUntil.value()) {
