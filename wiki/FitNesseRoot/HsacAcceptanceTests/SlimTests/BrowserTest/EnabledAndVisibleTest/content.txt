@@ -8,8 +8,6 @@ This test ensures we can check whether elements are enabled and visible on a pag
 <input name="c" style="display:none" type="submit">
 <button name="d" disabled>Ok</button>
 <button name="e">Cancel</button>
-<input name="y" type="reset" value="Herstel">
-<button name="z" type="reset">
 </body>
 </html>}}} }
 
@@ -33,9 +31,6 @@ This test ensures we can check whether elements are enabled and visible on a pag
 |reject                |is enabled|Ok    |
 |is enabled            |name=e           |
 |is enabled            |Cancel           |
-|is enabled            |name=y           |
-|is enabled            |Herstel          |
-|is enabled            |Reset            |
 
 |script|mock xml server setup|
 |stop                        |
