@@ -111,6 +111,13 @@ public class SeleniumHelper {
                     firstFound = element;
                 }
             }
+            if (("Submit".equals(place) || "Reset".equals(place))
+                    && !isInteractable(element)) {
+                element = findElement(byCss("input[type='%s']:not([value])", place.toLowerCase()));
+                if (firstFound == null) {
+                    firstFound = element;
+                }
+            }
             if (!isInteractable(element)) {
                 element = findElement(By.partialLinkText(place));
                 if (firstFound == null) {
