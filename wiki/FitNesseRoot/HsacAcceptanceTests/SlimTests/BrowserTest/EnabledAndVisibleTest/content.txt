@@ -4,10 +4,12 @@ This test ensures we can check whether elements are enabled and visible on a pag
 <html>
 <body>
 <input name="a" disabled type="submit">
-<input name="b" type="submit">
+<input name="b" type="submit" value="Reload">
 <input name="c" style="display:none" type="submit">
 <button name="d" disabled>Ok</button>
 <button name="e">Cancel</button>
+<input name="y" type="reset" value="Herstel">
+<button name="z" type="reset">
 </body>
 </html>}}} }
 
@@ -20,14 +22,20 @@ This test ensures we can check whether elements are enabled and visible on a pag
 |open                  |$url             |
 |seconds before timeout|1                |
 |reject                |is enabled|name=a|
+|ensure                |is visible|name=a|
+|ensure                |is visible|Submit|
 |ensure                |is enabled|name=b|
 |ensure                |is visible|name=b|
+|ensure                |is enabled|Reload|
+|ensure                |is visible|Reload|
 |reject                |is visible|name=c|
 |reject                |is enabled|name=d|
 |reject                |is enabled|Ok    |
 |is enabled            |name=e           |
 |is enabled            |Cancel           |
-
+|is enabled            |name=y           |
+|is enabled            |Herstel          |
+|is enabled            |Reset            |
 
 |script|mock xml server setup|
 |stop                        |
