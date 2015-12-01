@@ -12,6 +12,10 @@
             <useDefaultExcludes>true</useDefaultExcludes>
             <outputDirectory></outputDirectory>
             <excludes>
+                <exclude>copy/**</exclude>
+                <exclude>files/**</exclude>
+                <exclude>bye.txt</exclude>
+                <exclude>greeting.*</exclude>
                 <exclude>FitNesseRoot/**/*.zip</exclude>
                 <exclude>FitNesseRoot/files/**</exclude>
                 <exclude>FitNesseRoot/FitNesse/**</exclude>
