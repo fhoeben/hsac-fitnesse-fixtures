@@ -1094,6 +1094,21 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
+     * Determines whether element is enabled (i.e. can be clicked).
+     * @param place element to check.
+     * @return true if element is enabled.
+     */
+    @WaitUntil(TimeoutPolicy.RETURN_FALSE)
+    public boolean isEnabled(String place) {
+        boolean result = false;
+        WebElement element = getElementToCheckVisibility(place);
+        if (element != null) {
+            result = element.isEnabled();
+        }
+        return result;
+    }
+
+    /**
      * Determines whether element can be see in browser's window.
      * @param place element to check.
      * @return true if element is displayed and in viewport.
