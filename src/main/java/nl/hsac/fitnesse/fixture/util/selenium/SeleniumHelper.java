@@ -278,18 +278,6 @@ public class SeleniumHelper {
                 firstElement = element;
             }
         }
-        if (!isInteractable(element)) {
-            element = findElement(By.name(place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findElement(By.id(place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
         return isInteractable(element)
                 ? element
                 : firstElement;
