@@ -9,6 +9,7 @@ import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
@@ -119,6 +120,10 @@ public class SeleniumDriverSetup extends SlimFixture {
             String driverPath = getExecutable("chromedriver");
             setPropertyValue("webdriver.chrome.driver", driverPath);
             result = startDriver(ChromeDriver.class.getName());
+        } else if ("edge".equals(browserName)) {
+            String driverPath = getExecutable("MicrosoftWebDriver");
+            setPropertyValue("webdriver.edge.driver", driverPath);
+            result = startDriver(EdgeDriver.class.getName());
         } else if ("internet explorer".equals(browserName)) {
             String driverPath = getExecutable("IEDriverServer");
             setPropertyValue("webdriver.ie.driver", driverPath);
