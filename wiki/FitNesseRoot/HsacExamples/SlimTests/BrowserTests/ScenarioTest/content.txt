@@ -10,10 +10,11 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |scenario|check original price _|address, city, price, originalPrice|
 |open    |http://www.funda.nl                                       |
-|select  |€ 900.000             |for          |Prijsklasse          |
-|select  |€ 2.000.000           |for          |tot                  |
-|enter   |@{address}, @{city}   |as           |Locatie              |
+|enter   |@{address}, @{city}   |as             |Locatie            |
+|note    |select option from autocomplete                           |
+|press   |down                                                      |
 |press   |enter                                                     |
+|click   |Zoek                                                      |
 |click   |@{address}                                                |
 |click   |Kenmerken                                                 |
 |$price= |value of              |Vraagprijs                         |
@@ -25,6 +26,7 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |address          |city   |price?          |state?     |
 |Maliebaan 3      |Utrecht|€ 1.690.000 k.k.|Beschikbaar|
 |Wilhelminapark 27|Utrecht|€ 1.350.000 k.k.|Beschikbaar|
+
 
 
 Writing the scenario like this can become a bit cumbersome when many parameters are needed. They are repeated in: the scenario's first row, the scenario rows where they are used and the table headers where the scenario is invoked.
