@@ -1,0 +1,48 @@
+This test ensures we can find 'dd' elements inside a dl-list based on (partial) dt element text.
+
+!define HTML { {{{
+<html>
+<body>
+<dl class="object-kenmerken-list">
+<dt>Soort woonhuis</dt>
+<dt>Type woonhuis</dt>
+<dd>Herenhuis</dd>
+<dd>2-onder-1-kapwoning</dd>
+<dt>Soort bouw</dt>
+<dd>Bestaande bouw
+</dd>
+<dt>Bouwjaar</dt>
+<dd>1870
+</dd>
+<dt>Specifiek</dt>
+<dd>Monumentaal pand en monument
+</dd>
+<dt><span>More</span> Extra</dt>
+<dd>Monument
+</dd>
+<dt><span>More or less</span> Extra</dt>
+<dd>pand
+</dd>
+<dt>Soort dak</dt>
+<dd>Samengesteld dak bedekt met pannen en metaal
+</dd>
+</dl></body>
+</html>}}} }
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script                |browser test                                                        |
+|open                  |$url                                                                |
+|seconds before timeout|1                                                                   |
+|check                 |value of|Soort woonhuis|Herenhuis                                   |
+|check                 |value of|Type woonhuis |Herenhuis                                   |
+|check                 |value of|Bouwjaar      |1870                                        |
+|check                 |value of|More          |Monument                                    |
+|check                 |value of|dak           |Samengesteld dak bedekt met pannen en metaal|
+|check                 |value of|less          |pand                                        |
+
+|script|mock xml server setup|
+|stop                        |
+

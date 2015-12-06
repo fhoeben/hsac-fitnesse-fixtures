@@ -267,6 +267,12 @@ public class SeleniumHelper {
             }
         }
         if (!isInteractable(element)) {
+            element = findByXPath("//dt/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::dt[1]/following-sibling::dd[1] ", place);
+            if (firstElement == null) {
+                firstElement = element;
+            }
+        }
+        if (!isInteractable(element)) {
             element = getElementByAriaLabel(place, -1);
             if (firstElement == null) {
                 firstElement = element;
@@ -320,6 +326,12 @@ public class SeleniumHelper {
         }
         if (!isInteractable(element)) {
             element = findByXPath("//th/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::th[1]/../td ", place);
+            if (firstElement == null) {
+                firstElement = element;
+            }
+        }
+        if (!isInteractable(element)) {
+            element = findByXPath("//dt/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::dt[1]/following-sibling::dd[1] ", place);
             if (firstElement == null) {
                 firstElement = element;
             }
