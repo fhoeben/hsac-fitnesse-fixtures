@@ -6,7 +6,7 @@ matrix:
     - env: TEST_TYPE=examples MVN_GOAL=failsafe:integration-test
 
 env:
-  - TEST_TYPE=acceptance-test MVN_GOAL=test CAPA="browserName:firefox,tunnel-identifier:$TRAVIS_JOB_NUMBER"
+  - TEST_TYPE=acceptance-test MVN_GOAL=test CAPA="browserName:chrome,tunnel-identifier:$TRAVIS_JOB_NUMBER"
   - TEST_TYPE=examples MVN_GOAL=failsafe:integration-test SUITE="-DfitnesseSuiteToRun=HsacExamples" CAPA="browserName:chrome,platform:Windows 8.1,screenResolution:1280x1024"
 
 cache:
