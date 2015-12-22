@@ -23,4 +23,4 @@ after_success:
   - "[[ $TRAVIS_BRANCH == \"master\" -a $TEST_TYPE == \"acceptance-test\" ]] && { python addServer.py; mvn -DskipTests deploy --settings ~/.m2/mySettings.xml; };"
 
 after_script:
-  - ./publish_test_results.sh $TEST_TYPE
+  - ./publish_test_results.sh target/fitnesse-results $TEST_TYPE-results
