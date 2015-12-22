@@ -1,11 +1,11 @@
 matrix:
   fast_finish: true
   allow_failures:
-    - env: TEST_TYPE=test-compile failsafe:integration-test
+    - env: TEST_TYPE=examples MVN_GOAL=failsafe:integration-test
 
 env:
-  - TEST_TYPE=test
-  - TEST_TYPE=test-compile failsafe:integration-test
+  - TEST_TYPE=acceptance-test MVN_GOAL=test
+  - TEST_TYPE=examples MVN_GOAL=failsafe:integration-test
 
 cache:
   directories:
@@ -15,10 +15,10 @@ addons:
   sauce_connect: true
 
 language: java
-script: mvn -DseleniumGridUrl=http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com:80/wd/hub -DseleniumCapabilities="browserName:chrome,tunnel-identifier:$TRAVIS_JOB_NUMBER,name:Travis $TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER,build:$TRAVIS_BUILD_NUMBER" $TEST_TYPE
+script: mvn -DseleniumGridUrl=http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com:80/wd/hub -DseleniumCapabilities="browserName:chrome,tunnel-identifier:$TRAVIS_JOB_NUMBER,name:Travis $TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER,build:$TRAVIS_BUILD_NUMBER" test-compile $MVN_GOAL
 
 after_success:
-  - "[[ $TRAVIS_BRANCH == \"master\" -a \"$TEST_TYPE\" == \"test\" ]] && { python addServer.py; mvn -DskipTests deploy --settings ~/.m2/mySettings.xml; };"
+  - "[[ $TRAVIS_BRANCH == \"master\" -a $TEST_TYPE == \"acceptance-test\" ]] && { python addServer.py; mvn -DskipTests deploy --settings ~/.m2/mySettings.xml; };"
 
 after_script:
   - ./publish_test_results.sh $TEST_TYPE
