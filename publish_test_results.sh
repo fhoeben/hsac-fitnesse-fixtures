@@ -2,6 +2,8 @@
 if [ "${TRAVIS_PULL_REQUEST}" == "false" ]; then
   echo -e "Starting to update gh-pages\n"
 
+  #store current dir
+  pushd .
   #copy data we're interested in to other place
   cp -R $1 ${HOME}/$2
 
@@ -23,5 +25,7 @@ if [ "${TRAVIS_PULL_REQUEST}" == "false" ]; then
   git commit -m "Travis build ${TRAVIS_BUILD_NUMBER} $2 pushed to gh-pages"
   git push -fq origin gh-pages > /dev/null
 
+  #go back to original dir
+  popd
   echo -e "Done magic with results\n"
 fi
