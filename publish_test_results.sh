@@ -3,7 +3,7 @@ if [ "${TRAVIS_PULL_REQUEST}" == "false" ]; then
   echo -e "Starting to update gh-pages\n"
 
   #copy data we're interested in to other place
-  cp -R target/fitnesse-results ${HOME}/acceptance-test-results
+  cp -R target/fitnesse-results ${HOME}/$1-results
 
   #go to home and setup git
   cd $HOME
@@ -15,12 +15,12 @@ if [ "${TRAVIS_PULL_REQUEST}" == "false" ]; then
 
   #go into directory, remove files from previous build and copy data we're interested in to that directory
   cd gh-pages
-  rm -r *
-  cp -Rf ${HOME}/acceptance-test-results acceptance-test-results
+  rm -r $1-results
+  cp -Rf ${HOME}/$1-results $1-results
 
   #add, commit and push files
   git add -A -f .
-  git commit -m "Travis build ${TRAVIS_BUILD_NUMBER} pushed to gh-pages"
+  git commit -m "Travis build ${TRAVIS_BUILD_NUMBER} $1 pushed to gh-pages"
   git push -fq origin gh-pages > /dev/null
 
   echo -e "Done magic with results\n"
