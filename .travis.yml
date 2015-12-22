@@ -5,7 +5,7 @@ matrix:
 
 env:
   - TEST_TYPE=acceptance-test MVN_GOAL=test CAPA="browserName:chrome,tunnel-identifier:$TRAVIS_JOB_NUMBER,name:Travis $TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER-$TEST_TYPE,build:$TRAVIS_BUILD_NUMBER"
-  - TEST_TYPE=examples MVN_GOAL=failsafe:integration-test SUITE="-DfitnesseSuiteToRun=HsacExamples" CAPA="browserName:chrome,platform=Windows 10,screenResolution:1280x1024,name:Travis $TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER-$TEST_TYPE,build:$TRAVIS_BUILD_NUMBER"
+  - TEST_TYPE=examples MVN_GOAL=failsafe:integration-test SUITE="-DfitnesseSuiteToRun=HsacExamples" CAPA="browserName:chrome,platform=Windows 8.1,screenResolution:1280x1024,name:Travis $TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER-$TEST_TYPE,build:$TRAVIS_BUILD_NUMBER"
 
 cache:
   directories:
