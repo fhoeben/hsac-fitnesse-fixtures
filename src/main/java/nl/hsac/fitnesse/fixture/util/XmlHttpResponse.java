@@ -4,7 +4,6 @@ import fit.exception.FitFailureException;
 import nl.hsac.fitnesse.fixture.Environment;
 
 import javax.xml.namespace.NamespaceContext;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;

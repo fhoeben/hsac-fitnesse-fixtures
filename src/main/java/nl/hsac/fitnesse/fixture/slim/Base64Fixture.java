@@ -1,13 +1,12 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import nl.hsac.fitnesse.fixture.util.FileUtil;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-
-import nl.hsac.fitnesse.fixture.util.FileUtil;
-
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 
 /**
  * Fixture to deal with Base64 values.

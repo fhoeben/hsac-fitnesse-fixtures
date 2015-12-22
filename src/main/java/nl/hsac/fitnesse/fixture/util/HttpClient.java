@@ -8,6 +8,7 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
@@ -19,7 +20,6 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.util.Map;
-import org.apache.http.client.methods.HttpPut;
 
 /**
  * Helper to make Http calls and get response.

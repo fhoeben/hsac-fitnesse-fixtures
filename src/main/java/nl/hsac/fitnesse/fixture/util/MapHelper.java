@@ -1,9 +1,11 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import nl.hsac.fitnesse.fixture.slim.ListFixture;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
