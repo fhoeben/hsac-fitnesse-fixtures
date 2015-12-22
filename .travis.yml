@@ -16,7 +16,7 @@ cache:
 addons:
   sauce_connect: true
 
-script: mvn -DseleniumGridUrl=http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com:80/wd/hub -DseleniumCapabilities=$CAPA $SUITE test-compile $MVN_GOAL
+script: mvn -DseleniumGridUrl=http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com:80/wd/hub -DseleniumCapabilities="$CAPA" $SUITE test-compile $MVN_GOAL
 
 after_success:
   - "[[ $TRAVIS_BRANCH == \"master\" -a $TEST_TYPE == \"acceptance-test\" ]] && { python addServer.py; mvn -DskipTests deploy --settings ~/.m2/mySettings.xml; };"
