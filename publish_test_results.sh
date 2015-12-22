@@ -13,9 +13,10 @@ if [ "${TRAVIS_PULL_REQUEST}" == "false" ]; then
   #using token clone gh-pages branch
   git clone --quiet --branch=gh-pages https://${GIT_HUB_TOKEN}@github.com/fhoeben/hsac-fitnesse-fixtures.git  gh-pages > /dev/null
 
-  #go into diractory and copy data we're interested in to that directory
+  #go into directory, remove files from previous build and copy data we're interested in to that directory
   cd gh-pages
-  cp -Rf ${HOME}/acceptance-test-results/* .
+  rm -r *
+  cp -Rf ${HOME}/acceptance-test-results acceptance-test-results
 
   #add, commit and push files
   git add -f .
