@@ -5,6 +5,7 @@ import fit.Fixture;
 import fit.Parse;
 import fit.exception.FitFailureException;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Base class for Fixtures that use a Map to store the set column values,

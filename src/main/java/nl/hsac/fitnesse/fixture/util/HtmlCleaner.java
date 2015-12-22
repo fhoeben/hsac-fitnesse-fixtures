@@ -1,9 +1,9 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * Helper to remove wiki formatting from strings.

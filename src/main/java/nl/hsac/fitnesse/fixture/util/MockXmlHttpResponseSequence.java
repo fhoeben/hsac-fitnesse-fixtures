@@ -4,7 +4,12 @@ import nl.hsac.fitnesse.fixture.Environment;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * HttpResponse subclass intended to store a sequence of XmlHttpResponses which will be served (in sequence) to

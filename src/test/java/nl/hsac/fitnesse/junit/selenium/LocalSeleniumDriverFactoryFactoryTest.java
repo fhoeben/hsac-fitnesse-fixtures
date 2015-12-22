@@ -3,7 +3,8 @@ package nl.hsac.fitnesse.junit.selenium;
 import org.junit.AfterClass;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class LocalSeleniumDriverFactoryFactoryTest {
     private static final String ORIGINAL_PROP_VALUE = System.getProperty(SeleniumDriverFactoryFactoryBase.SELENIUM_BROWSER);

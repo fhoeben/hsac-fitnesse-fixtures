@@ -1,11 +1,9 @@
 package nl.hsac.fitnesse.fixture.fit;
 
-import java.util.Map;
-
+import nl.hsac.fitnesse.fixture.util.FtpFileUtil;
 import org.apache.commons.lang3.StringUtils;
 
-import nl.hsac.fitnesse.fixture.fit.MapColumnFixture;
-import nl.hsac.fitnesse.fixture.util.FtpFileUtil;
+import java.util.Map;
 
 
 public class ReadFileFromFtpServerFixture extends MapColumnFixture {
