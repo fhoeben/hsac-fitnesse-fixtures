@@ -5,5 +5,7 @@ language: java
 script: mvn -DseleniumGridUrl=http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com:80/wd/hub -DseleniumCapabilities="browserName:chrome,tunnel-identifier:$TRAVIS_JOB_NUMBER,name:Travis $TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER,build:$TRAVIS_BUILD_NUMBER" test
 
 after_success:
-  - ./publish_test_results.sh
   - "[[ $TRAVIS_BRANCH == \"master\" ]] && { python addServer.py; mvn -DskipTests deploy --settings ~/.m2/mySettings.xml; };"
+
+after_script:
+  - ./publish_test_results.sh
