@@ -17,6 +17,7 @@ addons:
   sauce_connect: true
 
 script:
+  - "[[ $TEST_TYPE == \"acceptance-test\" ]] && { mvn compile dependency:copy-dependencies assembly:single; ./publish_test_results.sh target/*.zip hsac-fitnesse-fixtures-snapshot-standalone.zip };"
   - mvn -DseleniumGridUrl=http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com:80/wd/hub -DseleniumCapabilities="$CAPA,name:Travis $TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER-$TEST_TYPE,build:$TRAVIS_BUILD_NUMBER" $SUITE test-compile $MVN_GOAL
 
 after_success:
