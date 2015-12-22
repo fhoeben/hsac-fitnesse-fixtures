@@ -34,8 +34,8 @@ public class SauceLabsHelper {
     }
 
     public static String getTagToEmbedVideoOfRun(URL remoteUrl, String jobId) {
-        return String.format("<div style=\"width:%s; height:%s;\"><script src=\"https://saucelabs.com/video-embed/%s.js?auth=%s\"></script></div>",
-                "600px", "450px", jobId, getAuthToken(remoteUrl, jobId));
+        return String.format("<div><script src=\"https://saucelabs.com/video-embed/%s.js?auth=%s\"></script></div>",
+                jobId, getAuthToken(remoteUrl, jobId));
     }
 
     public static String getAuthToken(URL remoteUrl, String jobId) {
