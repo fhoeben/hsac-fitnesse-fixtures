@@ -20,6 +20,8 @@ This standalone installation can be started using 'java -jar fitnesse-standalone
 where the 'standalone.zip' was extracted).
 
 A zip file containing the latest release version of this project can be downloaded from the Releases (https://github.com/fhoeben/hsac-fitnesse-fixtures/releases).
+A similar zip file containing the latest 'snapshot' (i.e. not released but based on the most recent code) version is
+published as part of the automated build of this project at http://fhoeben.github.io/hsac-fitnesse-fixtures/hsac-fitnesse-fixtures-snapshot-standalone.zip.
 
 2. To run the tests on a build server:
 Have the build server checkout the project and execute 'mvn clean test-compile failsafe:integration-test'.
@@ -34,9 +36,9 @@ system properties (i.e. seleniumGridUrl and either seleniumBrowser or seleniumCa
 This allows different configurations on the build server to test with different browsers, without requiring different
 Wiki content, but only requiring a different build configuration.
 
-Example reports for Windows (https://github.com/fhoeben/hsac-fitnesse-fixtures/releases/download/v1.6.1/sample-results-chrome-windows.zip)
-and OSX (https://github.com/fhoeben/hsac-fitnesse-fixtures/releases/download/v1.6.1/sample-results-chrome-osx.zip) have
-been included in the 1.6.1 release showing the output of a run using a Sauce Labs selenium driver generates.
+Example reports for Windows (http://fhoeben.github.io/hsac-fitnesse-fixtures/examples-results/)
+and OSX (http://fhoeben.github.io/hsac-fitnesse-fixtures/acceptance-test-results/) are included
+in the automated build process of this project, showing the output of a run using a Sauce Labs selenium driver generates.
 
 3. Fixture developer installation:
 Import this project in your favorite Java IDE (with Maven support).
