@@ -21,6 +21,3 @@ script:
 
 after_success:
   - "[[ \"${TRAVIS_PULL_REQUEST}\" == \"false\" -a \"${TRAVIS_BRANCH}\" == \"master\" -a \"${TEST_TYPE}\" == \"acceptance-test\" ]] && { ./travis_publish_results.sh target/*.zip hsac-fitnesse-fixtures-snapshot-standalone.zip; python travis_add_server.py; mvn -DskipTests deploy --settings ~/.m2/mySettings.xml; };"
-
-after_script:
-  - ./travis_publish_results.sh target/fitnesse-results $TEST_TYPE-results
