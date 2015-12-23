@@ -36,9 +36,9 @@ system properties (i.e. seleniumGridUrl and either seleniumBrowser or seleniumCa
 This allows different configurations on the build server to test with different browsers, without requiring different
 Wiki content, but only requiring a different build configuration.
 
-Example reports for Windows (http://fhoeben.github.io/hsac-fitnesse-fixtures/examples-results/)
-and OSX (http://fhoeben.github.io/hsac-fitnesse-fixtures/acceptance-test-results/) are included
-in the automated build process of this project, showing the output of a run using a Sauce Labs selenium driver generates.
+Example reports for Windows using a Sauce Labs Selenium driver (http://fhoeben.github.io/hsac-fitnesse-fixtures/examples-results/)
+and Linux with PhantomJs (http://fhoeben.github.io/hsac-fitnesse-fixtures/acceptance-test-results/) are generated in the
+automated build process of this project.
 
 3. Fixture developer installation:
 Import this project in your favorite Java IDE (with Maven support).
