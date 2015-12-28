@@ -19,11 +19,13 @@ public class HtmlCleaner {
      */
     public String getUrl(String htmlLink) {
         String result = htmlLink;
-        Matcher matcher = PATTERN.matcher(htmlLink);
-        if (matcher.matches()) {
-            String href = matcher.group(1);
-            href = StringEscapeUtils.unescapeHtml4(href);
-            result = href + matcher.group(3);
+        if (htmlLink != null) {
+            Matcher matcher = PATTERN.matcher(htmlLink);
+            if (matcher.matches()) {
+                String href = matcher.group(1);
+                href = StringEscapeUtils.unescapeHtml4(href);
+                result = href + matcher.group(3);
+            }
         }
         return result;
     }
