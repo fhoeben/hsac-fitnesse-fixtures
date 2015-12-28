@@ -1,5 +1,7 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import fit.exception.FitFailureException;
+
 import javax.xml.namespace.NamespaceContext;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +28,7 @@ public class NamespaceContextImpl implements NamespaceContext {
             } else {
                 String currentUri = namespaces.get(prefix);
                 if (!currentUri.equals(uri)) {
-                    throw new IllegalStateException(
+                    throw new FitFailureException(
                                 String.format("The prefix %s is already mapped to %s",
                                                 prefix, currentUri));
                 }

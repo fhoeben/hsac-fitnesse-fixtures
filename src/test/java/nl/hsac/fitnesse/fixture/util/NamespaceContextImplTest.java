@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import fit.exception.FitFailureException;
 import org.junit.Test;
 
 import java.util.Iterator;
@@ -68,7 +69,7 @@ public class NamespaceContextImplTest {
         try {
             impl.add(prefix, uri2);
             fail("expected exception");
-        } catch (IllegalStateException e) {
+        } catch (FitFailureException e) {
             String message = e.getMessage();
             assertTrue(message.contains(uri));
             assertTrue(message.contains(prefix));
