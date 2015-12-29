@@ -93,4 +93,16 @@ public class NamespaceContextImplTest {
         
         assertNull(impl.getNamespaceURI(prefix));
     }
+
+    @Test
+    public void addDuplicatePrefixNullUriFirst() {
+        String prefix = "p2";
+        String uri = "aadsad2";
+
+        impl.add(prefix, null);
+        assertNull(impl.getNamespaceURI(prefix));
+
+        impl.add(prefix, uri);
+        assertEquals(uri, impl.getNamespaceURI(prefix));
+    }
 }
