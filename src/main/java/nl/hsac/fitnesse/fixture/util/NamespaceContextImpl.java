@@ -19,22 +19,20 @@ public class NamespaceContextImpl implements NamespaceContext {
      * Adds registration for prefix.
      * @param prefix prefix to register.
      * @param uri namespace the prefix should map to.
-     * @throws IllegalStateException if another uri is already registered for this prefix.
+     * @throws FitFailureException if another uri is already registered for this prefix.
      */
     public void add(String prefix, String uri) {
-        if (namespaces.containsKey(prefix)) {
-            if (uri == null) {
-                namespaces.remove(prefix);
-            } else {
+        if (uri == null) {
+            namespaces.remove(prefix);
+        } else {
+            if (namespaces.containsKey(prefix)) {
                 String currentUri = namespaces.get(prefix);
                 if (!currentUri.equals(uri)) {
                     throw new FitFailureException(
                                 String.format("The prefix %s is already mapped to %s",
                                                 prefix, currentUri));
                 }
-            }
-        } else {
-            if (uri != null) {
+            } else {
                 namespaces.put(prefix, uri);
             }
         }
