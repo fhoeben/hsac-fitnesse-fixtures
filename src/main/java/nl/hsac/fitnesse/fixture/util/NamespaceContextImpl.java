@@ -34,7 +34,9 @@ public class NamespaceContextImpl implements NamespaceContext {
                 }
             }
         } else {
-            namespaces.put(prefix, uri);
+            if (uri != null) {
+                namespaces.put(prefix, uri);
+            }
         }
     }
 
