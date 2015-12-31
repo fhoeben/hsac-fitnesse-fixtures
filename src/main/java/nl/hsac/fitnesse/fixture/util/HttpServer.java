@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -93,43 +92,26 @@ public class HttpServer <T extends HttpResponse> {
         }
     }
 
-    private void bind(com.sun.net.httpserver.HttpServer server) {
+    /**
+     * Finds free port number and binds the server to it.
+     */
+    protected void bind(com.sun.net.httpserver.HttpServer server) {
         try {
+            int port = 0;
             InetAddress address = InetAddress.getLocalHost();
-            int port = getFreePort();
-            InetSocketAddress isa = new InetSocketAddress(address, port);
-            server.bind(isa, 1);
+            for (int possiblePort = 8000; port == 0; possiblePort++) {
+                try {
+                    InetSocketAddress s = new InetSocketAddress(address, possiblePort);
+                    server.bind(s, 1);
+                    port = possiblePort;
+                } catch (IOException e) {
+                    // try next number
+                    continue;
+                }
+            }
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
-    }
-
-    /**
-     * Finds free port number.
-     * @return first available port number above 8000.
-     */
-    protected int getFreePort() {
-        int port = 0;
-        for (int possiblePort = 8000; port == 0; possiblePort++) {
-            ServerSocket s = null;
-            try {
-                s = new ServerSocket(possiblePort);
-                port = s.getLocalPort();
-            } catch (IOException e) {
-                // try next number
-                continue;
-            } finally {
-                if (s != null) {
-                    try {
-                        s.close();
-                    } catch (IOException e) {
-                        // why would this happen?
-                        throw new IllegalStateException("Unable to close port: " + possiblePort, e);
-                    }
-                }
-            }
-        }
-        return port;
     }
 
     protected HttpHandler getHandler(final T aResponse) {
