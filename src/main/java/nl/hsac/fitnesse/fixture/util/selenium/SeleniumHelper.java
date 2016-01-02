@@ -827,8 +827,12 @@ public class SeleniumHelper {
                     return null;
                 } catch (WebDriverException e) {
                     String msg = e.getMessage();
-                    if (msg != null && msg.contains("Element does not exist in cache")) {
-                        // Safari stale element
+                    if (msg != null
+                            && (msg.contains("Element does not exist in cache")
+                                // Safari stale element
+                                || msg.contains("Error: element is not attached to the page document")
+                                // Alternate Chrome stale element
+                            )) {
                         return null;
                     } else {
                         throw e;
