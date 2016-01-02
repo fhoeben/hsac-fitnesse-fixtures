@@ -30,6 +30,7 @@ This test ensures we can find elements based on explicit technical instructions.
 |check     |value of|Add   |Hallo                 |
 |clear     |css=input[value='Add']                |
 |click     |link=My link                          |
+|click     |partialLink=link                      |
 |is visible|xpath=//div[@aria-labelledby="a3"]    |
 
 |script|mock xml server setup|
