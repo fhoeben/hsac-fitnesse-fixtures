@@ -56,7 +56,7 @@ This test ensures we can click on links based on their text content.
 
 *!
 
-|storyboard            |browser test                                                                             |
+|script                |browser test                                                                             |
 |open                  |$url                                                                                     |
 |seconds before timeout|1                                                                                        |
 |click                 |Second Link                                                                              |
