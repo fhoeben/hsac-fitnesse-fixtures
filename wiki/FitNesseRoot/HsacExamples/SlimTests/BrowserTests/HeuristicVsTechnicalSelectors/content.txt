@@ -5,10 +5,10 @@ We believe this comparisson will highlight why the heuristics are a good idea: a
 The heuristics based test is something you can create based on a ''functional'' understanding of the application (e.g. the wireframes of an application). This can be done before, or in parallel with, implementation of the application. Furthermore this also makes for more robust tests: only changes the affect the customer's journey will impact the tests, most technical changes will not require maintenance re-work on the test set.
 The test using technical selectors require knowledge on the various way an element can be selected using Selenium and can only be created after implementation, because only then will implementation details like ids and classes be known. Writing it takes quite a bit of puzzeling through the site's HTML and therefore creation of a test using this approach takes more time. Furthermore technical changes, without real end-user impact, will probably require maintenance effort to ensure the test keeps working. On the other: hand the execution time of this type of test will be a bit shorter than for the heuristics one (especially in other browsers than Chrome). !-BrowserTest-! does not have to try various options to locate elements, the test's authors have done that work. 
 !*> Some common setup
-|scenario|open Expedia.com                                               |
-|open    |http://expedia.com                                             |
-|note    |!note Expedia might route us to a localized version of the site|
-|show    |click if available  |Continue to the U.S. site at Expedia.com  |
+|scenario|open Expedia.com                                                |
+|open    |http://expedia.com                                              |
+|note    |!note Expedia might route us to a localized version of the site |
+|show    |click if available|link=Continue to the U.S. site at Expedia.com|
 
 |scenario|cleanup for next test                     |
 |note    |!note Cleanup for fresh start of next test|
