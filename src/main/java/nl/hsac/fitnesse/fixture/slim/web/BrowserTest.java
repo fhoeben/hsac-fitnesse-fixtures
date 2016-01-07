@@ -1659,6 +1659,20 @@ public class BrowserTest extends SlimFixture {
         return cookie;
     }
 
+    /**
+     * Gets the value of the cookie with the supplied name.
+     * @param cookieName name of cookie to get value from.
+     * @return cookie's value if any.
+     */
+    public String cookieValue(String cookieName) {
+        String result = null;
+        Cookie cookie = getSeleniumHelper().getCookie(cookieName);
+        if (cookie != null) {
+            result = cookie.getValue();
+        }
+        return result;
+    }
+
     protected Object waitForJavascriptCallback(String statement, Object... parameters) {
         try {
             return getSeleniumHelper().waitForJavascriptCallback(statement, parameters);
