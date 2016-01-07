@@ -1104,6 +1104,23 @@ public class SeleniumHelper {
     }
 
     /**
+     * Gets current browser's cookie with supplied name.
+     * @param cookieName name of cookie to return.
+     * @return cookie, if present, null otherwise.
+     */
+    public Cookie getCookie(String cookieName) {
+        Cookie result = null;
+        Set<Cookie> browserCookies = getCookies();
+        for (Cookie cookie : browserCookies) {
+            if (cookieName.equals(cookie.getName())) {
+                result = cookie;
+                break;
+            }
+        }
+        return result;
+    }
+
+    /**
      * @return current browser's cookies.
      */
     public Set<Cookie> getCookies() {
