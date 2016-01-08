@@ -1109,15 +1109,7 @@ public class SeleniumHelper {
      * @return cookie, if present, null otherwise.
      */
     public Cookie getCookie(String cookieName) {
-        Cookie result = null;
-        Set<Cookie> browserCookies = getCookies();
-        for (Cookie cookie : browserCookies) {
-            if (cookieName.equals(cookie.getName())) {
-                result = cookie;
-                break;
-            }
-        }
-        return result;
+        return driver().manage().getCookieNamed(cookieName);
     }
 
     /**
