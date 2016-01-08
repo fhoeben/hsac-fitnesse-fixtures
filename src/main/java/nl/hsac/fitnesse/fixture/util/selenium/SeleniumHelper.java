@@ -1144,7 +1144,7 @@ public class SeleniumHelper {
         return defaultTimeoutSeconds;
     }
 
-    public static interface DriverFactory {
-        public void createDriver();
+    public interface DriverFactory {
+        void createDriver();
     }
 }

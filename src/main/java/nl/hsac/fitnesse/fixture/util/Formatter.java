@@ -9,5 +9,5 @@ public interface Formatter {
      * @param value value to format.
      * @return formatted version.
      */
-    public String format(String value);
+    String format(String value);
 }
