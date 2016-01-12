@@ -788,11 +788,12 @@ public class BrowserTest extends SlimFixture {
                 if ("checkbox".equals(elementType)
                         || "radio".equals(elementType)) {
                     result = String.valueOf(element.isSelected());
+                } else if ("li".equalsIgnoreCase(element.getTagName())) {
+                    result = getElementText(element);
                 } else {
                     result = element.getAttribute("value");
                     if (result == null) {
-                        scrollIfNotOnScreen(element);
-                        result = element.getText();
+                        result = getElementText(element);
                     }
                 }
             }
