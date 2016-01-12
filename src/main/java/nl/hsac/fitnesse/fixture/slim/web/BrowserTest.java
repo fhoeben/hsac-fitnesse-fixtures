@@ -28,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -803,6 +804,39 @@ public class BrowserTest extends SlimFixture {
 
     private boolean isSelect(WebElement element) {
         return "select".equalsIgnoreCase(element.getTagName());
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public ArrayList<String> valuesOf(String place) {
+        return valuesFor(place);
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public ArrayList<String> valuesFor(String place) {
+        ArrayList<String> values = null;
+        WebElement element = getElementToRetrieveValue(place);
+        if (element != null) {
+            values = new ArrayList<String>();
+            String tagName = element.getTagName();
+            if ("ul".equalsIgnoreCase(tagName)
+                    || "ol".equalsIgnoreCase(tagName)) {
+                List<WebElement> items = element.findElements(By.tagName("li"));
+                for (WebElement item : items) {
+                    if (item.isDisplayed()) {
+                        values.add(getElementText(item));
+                    }
+                }
+            } else if (isSelect(element)) {
+                Select s = new Select(element);
+                List<WebElement> options = s.getAllSelectedOptions();
+                for (WebElement item : options) {
+                    values.add(getElementText(item));
+                }
+            } else {
+                values.add(valueFor(element));
+            }
+        }
+        return values;
     }
 
     @WaitUntil
