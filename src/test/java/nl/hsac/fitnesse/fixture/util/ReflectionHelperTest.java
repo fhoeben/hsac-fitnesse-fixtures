@@ -58,7 +58,7 @@ public class ReflectionHelperTest {
         }
     }
 
-    private static interface AnnotatedInterface {
+    private interface AnnotatedInterface {
         @Deprecated
         void annotatedInterfaceMethod(ReflectionHelperTest test);
         void nonAnnotatedInterfaceMethod(ReflectionHelperTest test);
