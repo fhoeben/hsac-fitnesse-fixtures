@@ -1,6 +1,5 @@
 This test ensures we can work with lists and select boxes. We use a mock server running to serve the HTML defined in this page.
 
-
 !define HTML { {{{
 <!DOCTYPE html>
 <html>
@@ -35,25 +34,39 @@ This test ensures we can work with lists and select boxes. We use a mock server 
 </body>
 </html>}}} }
 
-
 |script      |mock xml server setup|
 |add response|${HTML}              |
 |$url=       |get mock server url  |
 
-|script                |browser test                                             |
-|open                  |$url                                                     |
-|seconds before timeout|1                                                        |
-|check                 |value of          |Option to choose |Option 3            |
-|select                |Option 1          |for              |Option to choose    |
-|click if available    |Option 4                                                 |
-|reject                |click if available|Option 2                              |
-|check                 |value of          |xpath=//ul/li[2] |2nd                 |
-|check                 |value of          |xpath=//ol/li[4] |4th                 |
-|check                 |values of         |xpath=//ul       |[1st, 2nd, 4th]     |
-|check                 |values of         |xpath=//ol[1]    |[1st, 3rd, 4th]     |
-|check                 |values of         |Options to choose|[Option 6, Option 7]|
+Ensure we use our custom list formatting.
 
+|script    |list fixture|
+|display lists numbered |
+|add       |1st         |
+|add       |2nd         |
+|add       |4th         |
+|$ul=      |copy list   |
+|set value |3rd  |at |1 |
+|$ol=      |copy list   |
+|reset                  |
+|add       |Option 6    |
+|add       |Option 7    |
+|$selected=|copy list   |
+
+
+
+|script                |browser test                                         |
+|open                  |$url                                                 |
+|seconds before timeout|1                                                    |
+|check                 |value of          |Option to choose |Option 3        |
+|select                |Option 1          |for              |Option to choose|
+|click if available    |Option 4                                             |
+|reject                |click if available|Option 2                          |
+|check                 |value of          |xpath=//ul/li[2] |2nd             |
+|check                 |value of          |xpath=//ol/li[4] |4th             |
+|check                 |values of         |xpath=//ul       |$ul             |
+|check                 |values of         |xpath=//ol[1]    |$ol             |
+|check                 |values of         |Options to choose|$selected       |
 
 |script|mock xml server setup|
 |stop                        |
-
