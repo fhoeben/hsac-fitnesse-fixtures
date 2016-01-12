@@ -24,6 +24,14 @@ This test ensures we can work with lists and select boxes. We use a mock server 
     <option value="3" selected>Option 3</option>
     <option value="4">Option 4</option>
 </select>
+<label for="s2">Options to choose</label>
+<select id="s2" multiple>
+    <option value="1">Option 5</option>
+    <option value="2" selected>Option 6</option>
+    <option value="3" selected>Option 7</option>
+    <option value="4">Option 8</option>
+</select>
+
 </body>
 </html>}}} }
 
@@ -32,16 +40,18 @@ This test ensures we can work with lists and select boxes. We use a mock server 
 |add response|${HTML}              |
 |$url=       |get mock server url  |
 
-|script                |browser test                                        |
-|open                  |$url                                                |
-|seconds before timeout|1                                                   |
-|check                 |value of          |Option to choose|Option 3        |
-|select                |Option 1          |for             |Option to choose|
-|click if available    |Option 4                                            |
-|reject                |click if available|Option 2                         |
-|check                 |value of          |xpath=//ul/li[2]|2nd             |
-|check                 |value of          |xpath=//ol/li[4]|4th             |
-
+|script                |browser test                                             |
+|open                  |$url                                                     |
+|seconds before timeout|1                                                        |
+|check                 |value of          |Option to choose |Option 3            |
+|select                |Option 1          |for              |Option to choose    |
+|click if available    |Option 4                                                 |
+|reject                |click if available|Option 2                              |
+|check                 |value of          |xpath=//ul/li[2] |2nd                 |
+|check                 |value of          |xpath=//ol/li[4] |4th                 |
+|check                 |values of         |xpath=//ul       |[1st, 2nd, 4th]     |
+|check                 |values of         |xpath=//ol[1]    |[1st, 3rd, 4th]     |
+|check                 |values of         |Options to choose|[Option 6, Option 7]|
 
 
 |script|mock xml server setup|
