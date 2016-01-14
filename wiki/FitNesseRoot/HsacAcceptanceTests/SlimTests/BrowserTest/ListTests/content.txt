@@ -18,11 +18,12 @@ This test ensures we can work with lists and select boxes. We use a mock server 
 </ol>
 <ol>
     <li>5th</li>
-    <li>6th</li>
+    <li><p>6th</p></li>
 </ol>
 <ol start="10">
     <li>7th</li>
     <li>8th</li>
+    <li><span>9th</span></li>
 </ol>
 <label for="s">Option to choose</label>
 <select id="s">
@@ -79,6 +80,8 @@ Ensure we use our custom list formatting.
 |check                 |number for        |6th              |2               |
 |check                 |number for        |5t               |1               |
 |check                 |number for        |8th              |11              |
+|check                 |number for        |9t               |12              |
+
 
 
 |script|mock xml server setup|

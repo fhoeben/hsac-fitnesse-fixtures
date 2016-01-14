@@ -842,9 +842,9 @@ public class BrowserTest extends SlimFixture {
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public Integer numberFor(String place) {
         Integer number = null;
-        WebElement element = findByXPath("//ol/li[normalize-space(text())='%s']", place);
+        WebElement element = findByXPath("//ol/li/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::li", place);
         if (element == null) {
-            element = findByXPath("//ol/li[contains(normalize-space(text()), '%s')]", place);
+            element = findByXPath("//ol/li/descendant-or-self::text()[contains(normalize-space(.),'%s')]/ancestor-or-self::li", place);
         }
         if (element != null) {
             scrollIfNotOnScreen(element);
