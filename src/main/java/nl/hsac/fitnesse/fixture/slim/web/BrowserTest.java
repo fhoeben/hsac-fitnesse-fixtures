@@ -839,6 +839,57 @@ public class BrowserTest extends SlimFixture {
         return values;
     }
 
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public Integer numberFor(String place) {
+        Integer number = null;
+        WebElement element = findByXPath("//ol/li[normalize-space(text())='%s']", place);
+        if (element == null) {
+            element = findByXPath("//ol/li[contains(normalize-space(text()), '%s')]", place);
+        }
+        if (element != null) {
+            scrollIfNotOnScreen(element);
+            if (element.isDisplayed()) {
+                int num;
+                String ownVal = element.getAttribute("value");
+                if (ownVal != null && !"0".equals(ownVal)) {
+                    num = toInt(ownVal, 0);
+                } else {
+                    String start = element.findElement(By.xpath("ancestor::ol")).getAttribute("start");
+                    num = toInt(start, 1);
+
+                    List<WebElement> allItems = element.findElements(By.xpath("ancestor::ol/li"));
+                    int index = allItems.indexOf(element);
+                    for (int i = 0; i < index; i++) {
+                        WebElement item = allItems.get(i);
+                        scrollIfNotOnScreen(item);
+                        if (item.isDisplayed()) {
+                            num++;
+                            String val = item.getAttribute("value");
+                            int valNum = toInt(val, num);
+                            if (valNum != 0) {
+                                num = valNum + 1;
+                            }
+                        }
+                    }
+                }
+                number = num;
+            }
+        }
+        return number;
+    }
+
+    private int toInt(String attributeValue, int defaultVal) {
+        int result = defaultVal;
+        if (attributeValue != null) {
+            try {
+                result = Integer.parseInt(attributeValue);
+            } catch (NumberFormatException e) {
+                throw new SlimFixtureException(false, "Unable to parse value: " + attributeValue, e);
+            }
+        }
+        return result;
+    }
+
     @WaitUntil
     public boolean clear(final String place) {
         boolean result = false;
