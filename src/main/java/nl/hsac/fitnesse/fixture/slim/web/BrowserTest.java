@@ -839,6 +839,20 @@ public class BrowserTest extends SlimFixture {
         return values;
     }
 
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public Integer numberFor(String place) {
+        Integer number = null;
+        WebElement element = findByXPath("//ol/li/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::li", place);
+        if (element == null) {
+            element = findByXPath("//ol/li/descendant-or-self::text()[contains(normalize-space(.),'%s')]/ancestor-or-self::li", place);
+        }
+        if (element != null) {
+            scrollIfNotOnScreen(element);
+            number = getSeleniumHelper().getNumberFor(element);
+        }
+        return number;
+    }
+
     @WaitUntil
     public boolean clear(final String place) {
         boolean result = false;

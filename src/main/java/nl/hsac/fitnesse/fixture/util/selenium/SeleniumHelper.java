@@ -479,6 +479,54 @@ public class SeleniumHelper {
     }
 
     /**
+     * Determines number displayed for item in ordered list.
+     * @param element ordered list item.
+     * @return number, if one could be determined.
+     */
+    public Integer getNumberFor(WebElement element) {
+        Integer number = null;
+        if ("li".equalsIgnoreCase(element.getTagName())
+                && element.isDisplayed()) {
+            int num;
+            String ownVal = element.getAttribute("value");
+            if (ownVal != null && !"0".equals(ownVal)) {
+                num = toInt(ownVal, 0);
+            } else {
+                String start = element.findElement(By.xpath("ancestor::ol")).getAttribute("start");
+                num = toInt(start, 1);
+
+                List<WebElement> allItems = element.findElements(By.xpath("ancestor::ol/li"));
+                int index = allItems.indexOf(element);
+                for (int i = 0; i < index; i++) {
+                    WebElement item = allItems.get(i);
+                    if (item.isDisplayed()) {
+                        num++;
+                        String val = item.getAttribute("value");
+                        int valNum = toInt(val, num);
+                        if (valNum != 0) {
+                            num = valNum + 1;
+                        }
+                    }
+                }
+            }
+            number = num;
+        }
+        return number;
+    }
+
+    private int toInt(String attributeValue, int defaultVal) {
+        int result = defaultVal;
+        if (attributeValue != null) {
+            try {
+                result = Integer.parseInt(attributeValue);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Unable to parse value: " + attributeValue, e);
+            }
+        }
+        return result;
+    }
+
+    /**
      * Sets value of hidden input field.
      * @param idOrName id or name of input field to set.
      * @param value value to set.
