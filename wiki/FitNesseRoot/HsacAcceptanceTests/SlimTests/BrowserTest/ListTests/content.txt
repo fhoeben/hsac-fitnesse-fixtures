@@ -12,9 +12,17 @@ This test ensures we can work with lists and select boxes. We use a mock server 
 </ul>
 <ol>
     <li value="5">1st</li>
-    <li style="display: none">2nd</li>
+    <li style="display: none" value="4">2nd</li>
     <li>3rd</li>
     <li>4th</li>
+</ol>
+<ol>
+    <li>5th</li>
+    <li>6th</li>
+</ol>
+<ol start="10">
+    <li>7th</li>
+    <li>8th</li>
 </ol>
 <label for="s">Option to choose</label>
 <select id="s">
@@ -53,8 +61,6 @@ Ensure we use our custom list formatting.
 |add       |Option 7    |
 |$selected=|copy list   |
 
-
-
 |script                |browser test                                         |
 |open                  |$url                                                 |
 |seconds before timeout|1                                                    |
@@ -67,6 +73,13 @@ Ensure we use our custom list formatting.
 |check                 |values of         |xpath=//ul       |$ul             |
 |check                 |values of         |xpath=//ol[1]    |$ol             |
 |check                 |values of         |Options to choose|$selected       |
+|check                 |number for        |1st              |5               |
+|check                 |number for        |2nd              |null            |
+|check                 |number for        |4th              |7               |
+|check                 |number for        |6th              |2               |
+|check                 |number for        |5t               |1               |
+|check                 |number for        |8th              |11              |
+
 
 |script|mock xml server setup|
 |stop                        |
