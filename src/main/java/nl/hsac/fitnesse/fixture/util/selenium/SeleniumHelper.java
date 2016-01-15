@@ -527,6 +527,26 @@ public class SeleniumHelper {
     }
 
     /**
+     * Returns the texts of all available options for the supplied select element.
+     * @param element select element to find options for.
+     * @return text per option.
+     */
+    public ArrayList<String> getAvailableOptions(WebElement element) {
+        ArrayList<String> result = null;
+        if (isInteractable(element)
+                && "select".equalsIgnoreCase(element.getTagName())) {
+            result = new ArrayList<String>();
+            List<WebElement> options = element.findElements(By.tagName("option"));
+            for (WebElement option : options) {
+                if (option.isEnabled()) {
+                    result.add(option.getText());
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
      * Sets value of hidden input field.
      * @param idOrName id or name of input field to set.
      * @param value value to set.

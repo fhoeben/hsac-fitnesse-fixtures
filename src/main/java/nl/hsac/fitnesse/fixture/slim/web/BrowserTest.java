@@ -853,6 +853,16 @@ public class BrowserTest extends SlimFixture {
         return number;
     }
 
+    public ArrayList<String> availableOptionsFor(String place) {
+        ArrayList<String> result = null;
+        WebElement element = getElementToSelectFor(place);
+        if (element != null) {
+            scrollIfNotOnScreen(element);
+            result = getSeleniumHelper().getAvailableOptions(element);
+        }
+        return result;
+    }
+
     @WaitUntil
     public boolean clear(final String place) {
         boolean result = false;
