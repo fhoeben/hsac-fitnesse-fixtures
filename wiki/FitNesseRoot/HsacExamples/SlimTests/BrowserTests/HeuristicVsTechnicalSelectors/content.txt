@@ -30,7 +30,7 @@ This version shows a test can be understood, and even written, by people without
 |enter                 |!monthsFromToday (MM/15/yyyy) +10                     |as                    |Returning                      |
 |select                |2                                                     |as                    |Adults                         |
 |note                  |!note Searching may take a while so we set a longer timeout                                                  |
-|seconds before timeout|30                                                                                                           |
+|seconds before timeout|40                                                                                                           |
 |click                 |Search                                                                                                       |
 |click                 |Broadway - Times Square                                                                                      |
 |click                 |Star Rating                                                                                                  |
@@ -55,7 +55,7 @@ Although the identifiers used inside Expedia's HTML are quite descriptive, this 
 |enter                 |!monthsFromToday (MM/8/yyyy) +10          |as        |id=package-departing          |
 |enter                 |!monthsFromToday (MM/15/yyyy) +10         |as        |id=package-returning          |
 |select                |2                                         |as        |id=package-1-adults           |
-|seconds before timeout|30                                                                                  |
+|seconds before timeout|40                                                                                  |
 |click                 |id=search-button                                                                    |
 |click                 |id=id_NeighborhoodRegionName800077                                                  |
 |click                 |link=Star Rating                                                                    |
