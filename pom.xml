@@ -42,6 +42,16 @@
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
 		<fitnesse.port>9090</fitnesse.port>
 	</properties>
+	<dependencyManagement>
+		<dependencies>
+			<!-- commons collections with important security fix (to overwrite Velocity's) -->
+			<dependency>
+				<groupId>commons-collections</groupId>
+				<artifactId>commons-collections</artifactId>
+				<version>3.2.2</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>org.fitnesse</groupId>
