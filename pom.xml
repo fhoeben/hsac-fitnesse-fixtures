@@ -38,6 +38,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<slf4j.version>1.7.13</slf4j.version>
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
 		<fitnesse.port>9090</fitnesse.port>
@@ -64,6 +65,12 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>[4.3.6,4.4-alpha1)</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.freemarker</groupId>
@@ -119,11 +126,16 @@
 			<artifactId>diff</artifactId>
 			<version>1.1.11</version>
 		</dependency>
-		<!-- com.jayway.jsonpath uses slf4j for logging -->
+		<!-- com.jayway.jsonpath uses slf4j for logging, apache http client redirect to slf4j -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-jdk14</artifactId>
-			<version>1.7.13</version>
+			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>
