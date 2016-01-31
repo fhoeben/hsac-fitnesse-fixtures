@@ -12,11 +12,10 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |click     |Maliebaan 3                                                  |
 |$price=   |value of          |xpath=//div[@class='prijs']/strong        |
 |open      |http://www.funda.nl                                          |
-|enter     |Maliebaan, Utrecht|as        |Locatie                        |
+|enter     |Maliebaan, Utrecht|as        |Plaats, buurt, adres etc                        |
 |note      |select option from autocomplete                              |
 |press     |down                                                         |
 |press     |enter                                                        |
 |click     |Zoek                                                         |
 |click     |Maliebaan 3                                                  |
-|click     |Kenmerken                                                    |
 |check     |value of          |Vraagprijs|$price k.k.                    |

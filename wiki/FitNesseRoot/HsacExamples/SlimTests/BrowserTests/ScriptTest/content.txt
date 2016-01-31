@@ -11,9 +11,9 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |script           |browser test                                                        |
 |open             |http://www.funda.nl                                                 |
-|select           |€ 1.000.000       |for                       |van                   |
-|select           |€ 2.000.000       |for                       |tot                   |
-|enter            |Maliebaan, Utrecht|as                        |Locatie               |
+|select           |€ 1.000.000       |for                 |van                         |
+|select           |€ 2.000.000       |for                 |tot                         |
+|enter            |Maliebaan, Utrecht|as                  |Plaats, buurt, adres etc    |
 |note             |select option from autocomplete                                     |
 |wait             |1                 |seconds                                          |
 |press            |down                                                                |
@@ -21,9 +21,8 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |click            |Zoek                                                                |
 |click            |Maliebaan 3                                                         |
 |check            |page title        |Huis te koop: Maliebaan 3 3581 CA Utrecht [funda]|
-|click            |Kenmerken                                                           |
-|check            |value of          |Status                    |Beschikbaar           |
-|check            |value of          |Woonoppervlakte           |418 m²                |
+|check            |value of          |Status              |Beschikbaar                 |
+|check            |value of          |Woonoppervlakte     |418 m²                      |
 |note             |set width so we see button to go to next photo                      |
 |set browser width|1200                                                                |
 |click            |Foto's                                                              |
