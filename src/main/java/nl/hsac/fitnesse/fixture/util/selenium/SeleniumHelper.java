@@ -37,6 +37,14 @@ public class SeleniumHelper {
                     "  rect.right <= (window.innerWidth || document.documentElement.clientWidth));\n" +
             "} else { return null; }";
 
+    private static final String TOP_ELEMENT_AT =
+            "if (arguments[0].getBoundingClientRect) {\n" +
+                    "  var rect = arguments[0].getBoundingClientRect();\n" +
+                    "  var x = (rect.left + rect.right)/2;\n" +
+                    "  var y = (rect.top + rect.bottom)/2;\n" +
+                    "  return document.elementFromPoint(x,y);\n" +
+                    "} else { return null; }";
+
     private final List<WebElement> currentIFramePath = new ArrayList<WebElement>(4);
     private DriverFactory factory;
     private WebDriver webDriver;
@@ -942,16 +950,21 @@ public class SeleniumHelper {
     private WebElement selectBestElement(List<WebElement> elements) {
         // take the first displayed element, or if none are displayed: just take the first
         WebElement element = elements.get(0);
-        if (!element.isDisplayed()) {
+        if (!element.isDisplayed() || !isOnTop(element)) {
             for (int i = 1; i < elements.size(); i++) {
                 WebElement otherElement = elements.get(i);
-                if (otherElement.isDisplayed()) {
+                if (otherElement.isDisplayed() && isOnTop(otherElement)) {
                     element = otherElement;
                     break;
                 }
             }
         }
         return element;
+    }
+
+    private boolean isOnTop(WebElement element) {
+        WebElement e = (WebElement) executeJavascript(TOP_ELEMENT_AT, element);
+        return element.equals(e);
     }
 
     private List<WebElement> elementsWithId(List<WebElement> elements) {
