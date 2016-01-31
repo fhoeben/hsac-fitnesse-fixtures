@@ -8,13 +8,12 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |table template|check original price                                  |
 |open          |http://www.funda.nl                                   |
-|enter         |@{address}, @{city}|as             |Locatie           |
+|enter         |@{address}, @{city}|as             |Plaats, buurt, adres etc           |
 |note          |select option from autocomplete                       |
 |press         |down                                                  |
 |press         |enter                                                 |
 |click         |Zoek                                                  |
 |click         |@{address}                                            |
-|click         |Kenmerken                                             |
 |$price=       |value of           |Vraagprijs                        |
 |$state=       |value of           |Status                            |
 |$volume=      |value of           |Inhoud                            |
