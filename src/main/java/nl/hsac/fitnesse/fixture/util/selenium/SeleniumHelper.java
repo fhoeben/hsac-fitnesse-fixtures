@@ -948,15 +948,32 @@ public class SeleniumHelper {
     }
 
     private WebElement selectBestElement(List<WebElement> elements) {
-        // take the first displayed element, or if none are displayed: just take the first
+        // take the first displayed element without any elements on top of it,
+        // if none: take first displayed
+        // or if none are displayed: just take the first
         WebElement element = elements.get(0);
+        WebElement firstDisplayed = null;
+        WebElement firstOnTop = null;
         if (!element.isDisplayed() || !isOnTop(element)) {
             for (int i = 1; i < elements.size(); i++) {
                 WebElement otherElement = elements.get(i);
-                if (otherElement.isDisplayed() && isOnTop(otherElement)) {
-                    element = otherElement;
-                    break;
+                if (otherElement.isDisplayed()) {
+                    if (firstDisplayed == null) {
+                        firstDisplayed = otherElement;
+                    }
+                    if (isOnTop(otherElement)) {
+                        firstOnTop = otherElement;
+                        element = otherElement;
+                        break;
+                    }
                 }
+            }
+            if (firstOnTop == null
+                    && firstDisplayed != null
+                    && !element.isDisplayed()) {
+                // none displayed and on top
+                // first was not displayed, but another was
+                element = firstDisplayed;
             }
         }
         return element;
