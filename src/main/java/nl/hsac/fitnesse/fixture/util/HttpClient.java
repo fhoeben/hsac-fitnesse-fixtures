@@ -1,35 +1,73 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import org.apache.http.Header;
-import org.apache.http.HeaderElement;
-import org.apache.http.HttpEntity;
-import org.apache.http.NameValuePair;
+import org.apache.http.*;
 import org.apache.http.client.CookieStore;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.*;
 import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.apache.http.util.TextUtils;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Locale;
 import java.util.Map;
-
 /**
  * Helper to make Http calls and get response.
  */
 public class HttpClient {
     private final static org.apache.http.client.HttpClient HTTP_CLIENT;
 
+    public static boolean followRedirect;
+
     static {
-        HTTP_CLIENT = HttpClients.custom().useSystemProperties().disableContentCompression()
-                .setUserAgent(HttpClient.class.getName()).build();
+
+        HTTP_CLIENT = HttpClients.custom()
+                .useSystemProperties()
+                .disableContentCompression()
+                .setUserAgent(HttpClient.class.getName())
+                .setRedirectStrategy(new DefaultRedirectStrategy() {
+                    @Override public boolean isRedirected(HttpRequest request, org.apache.http.HttpResponse response, HttpContext context) throws ProtocolException {
+                        boolean isRedirect = super.isRedirected(request, response, context);
+                        if(isRedirect && !followRedirect) {
+                            return false;
+                        }
+                        if (!isRedirect && followRedirect) {
+                            int responseCode = response.getStatusLine().getStatusCode();
+                            if (responseCode == HttpStatus.SC_MOVED_PERMANENTLY || responseCode == HttpStatus.SC_MOVED_TEMPORARILY) {
+                                return true;
+                            }
+                        }
+                        return isRedirect;
+                    }
+
+
+                })
+                .build();
+    }
+
+    public URI createLocationURI(final String location) throws ProtocolException {
+        try {
+            final URIBuilder b = new URIBuilder(new URI(location).normalize());
+            final String host = b.getHost();
+            if (host != null) {
+                b.setHost(host.toLowerCase(Locale.ENGLISH));
+            }
+            final String path = b.getPath();
+            if (TextUtils.isEmpty(path)) {
+                b.setPath("/");
+            }
+            return b.build();
+        } catch (final URISyntaxException ex) {
+            throw new ProtocolException("Invalid redirect URI: " + location, ex);
+        }
     }
 
     /**
@@ -67,7 +105,7 @@ public class HttpClient {
      * @param response response to be filled.
      * @param headers http headers to add
      */
-    public void get(String url, HttpResponse response, Map<String, Object> headers) {
+    public void get(String url, HttpResponse response, Map<String, Object> headers, boolean followRedirect) {
         HttpGet method = new HttpGet(url);
         getResponse(url, response, method, headers);
     }
