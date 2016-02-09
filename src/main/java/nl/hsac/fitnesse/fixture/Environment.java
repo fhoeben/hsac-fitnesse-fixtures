@@ -294,9 +294,9 @@ public class Environment {
      * @param headers headers to add
      * @return response.
      */
-    public HttpResponse doHttpGet(String url, Map<String, Object> headers) {
+    public HttpResponse doHttpGet(String url, Map<String, Object> headers, boolean followRedirect) {
         HttpResponse response = new HttpResponse();
-        doGet(url, response, headers);
+        doGet(url, response, headers, followRedirect);
         return response;
     }
 
@@ -318,18 +318,37 @@ public class Environment {
      * @param response response to store url and response value in.
      * @param headers http headers to add.
      */
-    public void doGet(String url, HttpResponse response, Map<String, Object> headers) {
+    public void doGet(String url, HttpResponse response, Map<String, Object> headers, boolean followRedirect) {
         response.setRequest(url);
-        httpClient.get(url, response, headers);
+        httpClient.followRedirect = followRedirect;
+        httpClient.get(url, response, headers, followRedirect);
     }
-    
+
+    /**
+     * GETs content from URL.
+     * @param url url to get from.
+     * @param response response to store url and response value in.
+     */
+    public void doGet(String url, HttpResponse response, Map<String, Object> headers) {
+        doGet(url, response, headers, true);
+    }
+
     /**
      * GETs content from URL.
      * @param url url to get from.
      * @param response response to store url and response value in.
      */
     public void doGet(String url, HttpResponse response) {
-        doGet(url, response, null);
+        doGet(url, response, null, true);
+    }
+
+    /**
+     * GETs content from URL.
+     * @param url url to get from.
+     * @param response response to store url and response value in.
+     */
+    public void doGet(String url, HttpResponse response, boolean followRedirect) {
+        doGet(url, response, null, followRedirect);
     }
 
     /**
