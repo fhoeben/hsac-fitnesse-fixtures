@@ -4,7 +4,6 @@ import org.apache.http.*;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
@@ -12,12 +11,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
-import org.apache.http.util.TextUtils;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Locale;
 import java.util.Map;
 /**
  * Helper to make Http calls and get response.
@@ -25,49 +20,30 @@ import java.util.Map;
 public class HttpClient {
     private final static org.apache.http.client.HttpClient HTTP_CLIENT;
 
-    public static boolean followRedirect;
+    public static boolean followRedirect;   // Does the (fitnesse) user   wants to follow the redirect (if it's an redirect)  or wants the user to stop the redirect
 
     static {
-
         HTTP_CLIENT = HttpClients.custom()
                 .useSystemProperties()
                 .disableContentCompression()
                 .setUserAgent(HttpClient.class.getName())
                 .setRedirectStrategy(new DefaultRedirectStrategy() {
                     @Override public boolean isRedirected(HttpRequest request, org.apache.http.HttpResponse response, HttpContext context) throws ProtocolException {
-                        boolean isRedirect = super.isRedirected(request, response, context);
-                        if(isRedirect && !followRedirect) {
-                            return false;
+                        boolean urlIsAnRedirectUrl = super.isRedirected(request, response, context); // is the site realy an redirect url (301) ?  Answer = Yes then we can stop or follow the redirect
+                        boolean doWeFollowTheRedirectUrl = true;
+                        if(urlIsAnRedirectUrl && !followRedirect) { // if the url  is an  redirect url  and  the user  does't want to follow the url  then we return false
+                            doWeFollowTheRedirectUrl = false;
+                        } else if (!urlIsAnRedirectUrl) { // when the url  returns  statuscode = 200   then we can never follow an redirect
+                            doWeFollowTheRedirectUrl = false;
+                        } else {
+                            doWeFollowTheRedirectUrl = true;
                         }
-                        if (!isRedirect && followRedirect) {
-                            int responseCode = response.getStatusLine().getStatusCode();
-                            if (responseCode == HttpStatus.SC_MOVED_PERMANENTLY || responseCode == HttpStatus.SC_MOVED_TEMPORARILY) {
-                                return true;
-                            }
-                        }
-                        return isRedirect;
+                        return doWeFollowTheRedirectUrl;
                     }
 
 
                 })
                 .build();
-    }
-
-    public URI createLocationURI(final String location) throws ProtocolException {
-        try {
-            final URIBuilder b = new URIBuilder(new URI(location).normalize());
-            final String host = b.getHost();
-            if (host != null) {
-                b.setHost(host.toLowerCase(Locale.ENGLISH));
-            }
-            final String path = b.getPath();
-            if (TextUtils.isEmpty(path)) {
-                b.setPath("/");
-            }
-            return b.build();
-        } catch (final URISyntaxException ex) {
-            throw new ProtocolException("Invalid redirect URI: " + location, ex);
-        }
     }
 
     /**

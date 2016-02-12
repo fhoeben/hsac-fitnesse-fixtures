@@ -3,7 +3,7 @@
 Performs HTTP GET adding values as parameters in the query string.
 
 |script         |xml http test                                                       |
-|get from       |${URL}         | with redirect       | false        |
+|get from       |http://www.hotmail.com         | follow redirect       | false      |
 |check          |response status|301                                                 |
 |show           |request                                                             |
 |show           |response                                                            |

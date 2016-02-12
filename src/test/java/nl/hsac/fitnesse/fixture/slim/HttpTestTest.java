@@ -1,8 +1,12 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+
 import org.junit.Test;
 
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests HttpTest.
@@ -90,5 +94,31 @@ public class HttpTestTest {
                 " </pre>");
 
         assertEquals("<MyContent>\n  <content a='c'/>\n</MyContent>", cleaned);
+    }
+
+
+    /*
+        Test url redirects with follow redirects (default setting)
+     */
+    @Test public void testGetFromFollowRedirect() throws Exception {
+        String serviceUrl = "http://www.hotmail.com"; // Site that redircts
+        HttpTest httpTest = new HttpTest();
+        boolean result = httpTest.getFrom(serviceUrl);
+        String resp = httpTest.htmlResponse();
+        assertNotNull(resp);
+        assertEquals(200, httpTest.getResponse().getStatusCode());
+        assertTrue(result);
+    }
+
+
+
+    @Test public void testGetFrom() throws Exception {
+        String serviceUrl = "http://www.hotmail.com"; // Site that redircts
+        HttpTest httpTest = new HttpTest();
+        boolean result = httpTest.getFromFollowRedirect(serviceUrl, false);
+        String resp = httpTest.htmlResponse();
+        assertNotNull(resp);
+        assertEquals(301, httpTest.getResponse().getStatusCode());
+        assertTrue(result);
     }
 }
