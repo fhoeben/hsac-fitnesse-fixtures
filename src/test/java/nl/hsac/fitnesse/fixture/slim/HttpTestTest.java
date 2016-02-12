@@ -12,6 +12,8 @@ import static org.junit.Assert.assertTrue;
  * Tests HttpTest.
  */
 public class HttpTestTest {
+    // site that redirects
+    private static final String URL_WITH_REDIRECT = "http://www.hotmail.com";
     private final HttpTest client = new XmlHttpTest();
 
     @Test
@@ -97,25 +99,26 @@ public class HttpTestTest {
     }
 
 
-    /*
-        Test url redirects with follow redirects (default setting)
+    /**
+     * Tests url redirects with follow redirects (default setting)
      */
-    @Test public void testGetFromFollowRedirect() throws Exception {
-        String serviceUrl = "http://www.hotmail.com"; // Site that redircts
+    @Test
+    public void testGetFromFollowRedirect() throws Exception {
         HttpTest httpTest = new HttpTest();
-        boolean result = httpTest.getFrom(serviceUrl);
+        boolean result = httpTest.getFrom(URL_WITH_REDIRECT);
         String resp = httpTest.htmlResponse();
         assertNotNull(resp);
         assertEquals(200, httpTest.getResponse().getStatusCode());
         assertTrue(result);
     }
 
-
-
-    @Test public void testGetFrom() throws Exception {
-        String serviceUrl = "http://www.hotmail.com"; // Site that redircts
+    /**
+     * Test url redirects without following redirectØ
+     */
+    @Test
+    public void testGetFromNoRedirect() throws Exception {
         HttpTest httpTest = new HttpTest();
-        boolean result = httpTest.getFromFollowRedirect(serviceUrl, false);
+        boolean result = httpTest.getFromNoRedirect(URL_WITH_REDIRECT);
         String resp = httpTest.htmlResponse();
         assertNotNull(resp);
         assertEquals(301, httpTest.getResponse().getStatusCode());
