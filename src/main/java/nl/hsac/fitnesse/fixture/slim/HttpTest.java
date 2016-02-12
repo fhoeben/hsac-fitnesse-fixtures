@@ -219,15 +219,19 @@ public class HttpTest extends SlimFixtureWithMap {
      * @return true if call could be made and response did not indicate error.
      */
     public boolean getFrom(String serviceUrl) {
-        return getFromFollowRedirect(serviceUrl, true);
+        return getImpl(serviceUrl, true);
     }
 
     /**
-     * Sends HTTP GET to service endpoint to retrieve content.
+     * Sends HTTP GET to service endpoint to retrieve content, not following a redirect if sent.
      * @param serviceUrl service endpoint to get content from.
      * @return true if call could be made and response did not indicate error.
      */
-    public boolean getFromFollowRedirect(String serviceUrl, boolean followRedirect) {
+    public boolean getFromNoRedirect(String serviceUrl) {
+        return getImpl(serviceUrl, false);
+    }
+
+    protected boolean getImpl(String serviceUrl, boolean followRedirect) {
         boolean result;
         resetResponse();
         String url = createUrlWithParams(serviceUrl);
@@ -239,7 +243,6 @@ public class HttpTest extends SlimFixtureWithMap {
         result = postProcessResponse();
         return result;
     }
-
 
 
     /**
