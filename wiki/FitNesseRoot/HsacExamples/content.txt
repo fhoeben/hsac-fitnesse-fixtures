@@ -23,6 +23,7 @@ The standalone installation is present in the wiki directory and as '...-standal
 This standalone installation can be started using {{{ java -jar fitnesse-standalone.jar }}} from the wiki directory (or directory where the 'standalone.zip' was extracted).
 
 A zip file containing the standalone version of the latest version of this project can be downloaded from the [[!-GitHub-! releases][https://github.com/fhoeben/hsac-fitnesse-fixtures/releases]].
+A similar [[zip file containing the latest 'snapshot' (i.e. not released but based on the most recent code) version][http://fhoeben.github.io/hsac-fitnesse-fixtures/hsac-fitnesse-fixtures-snapshot-standalone.zip]] is published as part of the automated build of this project.
 
 
 !3 2. Run on build server
@@ -35,7 +36,7 @@ or (preferably) by adding a system property, called !style_code[fitnesseSuiteToR
 
 The Selenium configuration (e.g. what browser on what platform) to use when testing websites can be overridden by using system properties. This allows different configurations on the build server to test with different browsers, without requiring different Wiki content, but only requiring a different build configuration. More details can be found in >SlimTests.BrowserTests.OverridingSeleniumSetup
 
-Example reports for [[Windows][https://github.com/fhoeben/hsac-fitnesse-fixtures/releases/download/v1.6.1/sample-results-chrome-windows.zip]] and [[OSX][https://github.com/fhoeben/hsac-fitnesse-fixtures/releases/download/v1.6.1/sample-results-chrome-osx.zip]] have been included in the 1.6.1 release showing the output of a run using a Sauce Labs selenium driver generates.
+Example reports for [[Windows using a Sauce Labs Selenium driver][http://fhoeben.github.io/hsac-fitnesse-fixtures/examples-results/]] and [[Linux with !-PhantomJs-!][http://fhoeben.github.io/hsac-fitnesse-fixtures/acceptance-test-results/]] are generated in the automated build process of this project.
 
 !3 3. Fixture developer installation
 Import this project in your favorite Java IDE (with Maven support).

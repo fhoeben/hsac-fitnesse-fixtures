@@ -4,6 +4,7 @@ import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import org.openqa.selenium.*;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.internal.Base64Encoder;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -35,6 +36,14 @@ public class SeleniumHelper {
                     "  rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&\n" +
                     "  rect.right <= (window.innerWidth || document.documentElement.clientWidth));\n" +
             "} else { return null; }";
+
+    private static final String TOP_ELEMENT_AT =
+            "if (arguments[0].getBoundingClientRect) {\n" +
+                    "  var rect = arguments[0].getBoundingClientRect();\n" +
+                    "  var x = (rect.left + rect.right)/2;\n" +
+                    "  var y = (rect.top + rect.bottom)/2;\n" +
+                    "  return document.elementFromPoint(x,y);\n" +
+                    "} else { return null; }";
 
     private final List<WebElement> currentIFramePath = new ArrayList<WebElement>(4);
     private DriverFactory factory;
@@ -105,13 +114,34 @@ public class SeleniumHelper {
             WebElement element = findElement(By.linkText(place));
             WebElement firstFound = element;
             if (!isInteractable(element)) {
+                // finding by linkText does not find actual text if css text-transform is in place
+                element = findByXPath("//*[normalize-space(descendant::text())='%s']/ancestor-or-self::a", place);
+                if (firstFound == null) {
+                    firstFound = element;
+                }
+            }
+            if (!isInteractable(element)) {
                 element = getElementExact(place);
+                if (firstFound == null) {
+                    firstFound = element;
+                }
+            }
+            if (("Submit".equals(place) || "Reset".equals(place))
+                    && !isInteractable(element)) {
+                element = findElement(byCss("input[type='%s']:not([value])", place.toLowerCase()));
                 if (firstFound == null) {
                     firstFound = element;
                 }
             }
             if (!isInteractable(element)) {
                 element = findElement(By.partialLinkText(place));
+                if (firstFound == null) {
+                    firstFound = element;
+                }
+            }
+            if (!isInteractable(element)) {
+                // finding by linkText does not find actual text if css text-transform is in place
+                element = findByXPath("//*[contains(normalize-space(descendant::text()),'%s')]/ancestor-or-self::a", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
@@ -217,6 +247,8 @@ public class SeleniumHelper {
             result = By.name(place.substring(5));
         } else if (place.startsWith("link=")) {
             result = By.linkText(place.substring(5));
+        } else if (place.startsWith("partialLink=")) {
+            result = By.partialLinkText(place.substring(12));
         } else if (place.startsWith("xpath=")) {
             result = By.xpath(place.substring(6));
         }
@@ -259,6 +291,12 @@ public class SeleniumHelper {
             }
         }
         if (!isInteractable(element)) {
+            element = findByXPath("//dt/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::dt[1]/following-sibling::dd[1] ", place);
+            if (firstElement == null) {
+                firstElement = element;
+            }
+        }
+        if (!isInteractable(element)) {
             element = getElementByAriaLabel(place, -1);
             if (firstElement == null) {
                 firstElement = element;
@@ -266,18 +304,6 @@ public class SeleniumHelper {
         }
         if (!isInteractable(element)) {
             element = findElement(byCss("[title='%s']", place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findElement(By.name(place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findElement(By.id(place));
             if (firstElement == null) {
                 firstElement = element;
             }
@@ -312,6 +338,12 @@ public class SeleniumHelper {
         }
         if (!isInteractable(element)) {
             element = findByXPath("//th/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::th[1]/../td ", place);
+            if (firstElement == null) {
+                firstElement = element;
+            }
+        }
+        if (!isInteractable(element)) {
+            element = findByXPath("//dt/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::dt[1]/following-sibling::dd[1] ", place);
             if (firstElement == null) {
                 firstElement = element;
             }
@@ -452,6 +484,74 @@ public class SeleniumHelper {
 
     public WebElement getNestedElementForValue(WebElement parent) {
         return findElement(parent, false, By.xpath(".//input|.//select|.//textarea"));
+    }
+
+    /**
+     * Determines number displayed for item in ordered list.
+     * @param element ordered list item.
+     * @return number, if one could be determined.
+     */
+    public Integer getNumberFor(WebElement element) {
+        Integer number = null;
+        if ("li".equalsIgnoreCase(element.getTagName())
+                && element.isDisplayed()) {
+            int num;
+            String ownVal = element.getAttribute("value");
+            if (ownVal != null && !"0".equals(ownVal)) {
+                num = toInt(ownVal, 0);
+            } else {
+                String start = element.findElement(By.xpath("ancestor::ol")).getAttribute("start");
+                num = toInt(start, 1);
+
+                List<WebElement> allItems = element.findElements(By.xpath("ancestor::ol/li"));
+                int index = allItems.indexOf(element);
+                for (int i = 0; i < index; i++) {
+                    WebElement item = allItems.get(i);
+                    if (item.isDisplayed()) {
+                        num++;
+                        String val = item.getAttribute("value");
+                        int valNum = toInt(val, num);
+                        if (valNum != 0) {
+                            num = valNum + 1;
+                        }
+                    }
+                }
+            }
+            number = num;
+        }
+        return number;
+    }
+
+    private int toInt(String attributeValue, int defaultVal) {
+        int result = defaultVal;
+        if (attributeValue != null) {
+            try {
+                result = Integer.parseInt(attributeValue);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Unable to parse value: " + attributeValue, e);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Returns the texts of all available options for the supplied select element.
+     * @param element select element to find options for.
+     * @return text per option.
+     */
+    public ArrayList<String> getAvailableOptions(WebElement element) {
+        ArrayList<String> result = null;
+        if (isInteractable(element)
+                && "select".equalsIgnoreCase(element.getTagName())) {
+            result = new ArrayList<String>();
+            List<WebElement> options = element.findElements(By.tagName("option"));
+            for (WebElement option : options) {
+                if (option.isEnabled()) {
+                    result.add(option.getText());
+                }
+            }
+        }
+        return result;
     }
 
     /**
@@ -638,6 +738,14 @@ public class SeleniumHelper {
     }
 
     /**
+     * Simulates placing the mouse over the supplied element.
+     * @param element element to place mouse over.
+     */
+    public void hoverOver(WebElement element) {
+        new Actions(driver()).moveToElement(element).perform();
+    }
+
+    /**
      * @return currently active element.
      */
     public WebElement getActiveElement() {
@@ -795,8 +903,12 @@ public class SeleniumHelper {
                     return null;
                 } catch (WebDriverException e) {
                     String msg = e.getMessage();
-                    if (msg != null && msg.contains("Element does not exist in cache")) {
-                        // Safari stale element
+                    if (msg != null
+                            && (msg.contains("Element does not exist in cache")
+                                // Safari stale element
+                                || msg.contains("Error: element is not attached to the page document")
+                                // Alternate Chrome stale element
+                            )) {
                         return null;
                     } else {
                         throw e;
@@ -836,18 +948,40 @@ public class SeleniumHelper {
     }
 
     private WebElement selectBestElement(List<WebElement> elements) {
-        // take the first displayed element, or if none are displayed: just take the first
+        // take the first displayed element without any elements on top of it,
+        // if none: take first displayed
+        // or if none are displayed: just take the first
         WebElement element = elements.get(0);
-        if (!element.isDisplayed()) {
+        WebElement firstDisplayed = null;
+        WebElement firstOnTop = null;
+        if (!element.isDisplayed() || !isOnTop(element)) {
             for (int i = 1; i < elements.size(); i++) {
                 WebElement otherElement = elements.get(i);
                 if (otherElement.isDisplayed()) {
-                    element = otherElement;
-                    break;
+                    if (firstDisplayed == null) {
+                        firstDisplayed = otherElement;
+                    }
+                    if (isOnTop(otherElement)) {
+                        firstOnTop = otherElement;
+                        element = otherElement;
+                        break;
+                    }
                 }
+            }
+            if (firstOnTop == null
+                    && firstDisplayed != null
+                    && !element.isDisplayed()) {
+                // none displayed and on top
+                // first was not displayed, but another was
+                element = firstDisplayed;
             }
         }
         return element;
+    }
+
+    private boolean isOnTop(WebElement element) {
+        WebElement e = (WebElement) executeJavascript(TOP_ELEMENT_AT, element);
+        return element.equals(e);
     }
 
     private List<WebElement> elementsWithId(List<WebElement> elements) {
@@ -1046,8 +1180,8 @@ public class SeleniumHelper {
         }
     }
 
-    public <T> ExpectedCondition<T> conditionForAllIFrames(ExpectedCondition<T> nested) {
-        return new TryAllIFramesConditionDecorator(this, nested);
+    public <T> ExpectedCondition<T> conditionForAllFrames(ExpectedCondition<T> nested) {
+        return new TryAllFramesConditionDecorator(this, nested);
     }
 
     /**
@@ -1065,6 +1199,15 @@ public class SeleniumHelper {
 
     private WebDriver.TargetLocator getTargetLocator() {
         return driver().switchTo();
+    }
+
+    /**
+     * Gets current browser's cookie with supplied name.
+     * @param cookieName name of cookie to return.
+     * @return cookie, if present, null otherwise.
+     */
+    public Cookie getCookie(String cookieName) {
+        return driver().manage().getCookieNamed(cookieName);
     }
 
     /**
@@ -1099,7 +1242,7 @@ public class SeleniumHelper {
         return defaultTimeoutSeconds;
     }
 
-    public static interface DriverFactory {
-        public void createDriver();
+    public interface DriverFactory {
+        void createDriver();
     }
 }

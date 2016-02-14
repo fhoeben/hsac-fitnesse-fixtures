@@ -2,7 +2,6 @@ package nl.hsac.fitnesse.fixture.util;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -59,7 +58,7 @@ public class ReflectionHelperTest {
         }
     }
 
-    private static interface AnnotatedInterface {
+    private interface AnnotatedInterface {
         @Deprecated
         void annotatedInterfaceMethod(ReflectionHelperTest test);
         void nonAnnotatedInterfaceMethod(ReflectionHelperTest test);

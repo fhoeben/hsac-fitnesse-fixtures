@@ -2,7 +2,11 @@ package nl.hsac.fitnesse.fixture.util;
 
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 

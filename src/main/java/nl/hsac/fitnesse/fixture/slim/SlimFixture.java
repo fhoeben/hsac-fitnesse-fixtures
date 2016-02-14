@@ -4,13 +4,10 @@ import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 import fitnesse.slim.fixtureInteraction.InteractionAwareFixture;
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
-import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Base class for Slim fixtures.

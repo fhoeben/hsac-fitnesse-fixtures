@@ -2,7 +2,9 @@ package nl.hsac.fitnesse.fixture;
 
 import fit.exception.FitFailureException;
 import fitnesse.ContextConfigurator;
-import freemarker.template.*;
+import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapperBuilder;
+import freemarker.template.Template;
 import nl.hsac.fitnesse.fixture.util.*;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import org.apache.commons.lang.StringUtils;

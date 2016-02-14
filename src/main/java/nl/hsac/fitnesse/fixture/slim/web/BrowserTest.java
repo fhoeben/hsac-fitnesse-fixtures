@@ -6,7 +6,10 @@ import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.TimeoutPolicy;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.WaitUntil;
-import nl.hsac.fitnesse.fixture.util.*;
+import nl.hsac.fitnesse.fixture.util.BinaryHttpResponse;
+import nl.hsac.fitnesse.fixture.util.FileUtil;
+import nl.hsac.fitnesse.fixture.util.HttpResponse;
+import nl.hsac.fitnesse.fixture.util.ReflectionHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
 import org.apache.commons.io.FilenameUtils;
@@ -16,7 +19,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -26,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -34,6 +37,7 @@ public class BrowserTest extends SlimFixture {
     private ReflectionHelper reflectionHelper = getEnvironment().getReflectionHelper();
     private NgBrowserTest ngBrowserTest;
     private boolean implicitWaitForAngular = true;
+    private boolean implicitFindInFrames = true;
     private int secondsBeforeTimeout;
     private int secondsBeforePageLoadTimeout;
     private int waitAfterScroll = 150;
@@ -79,7 +83,9 @@ public class BrowserTest extends SlimFixture {
                 }
             }
         };
-        condition = getSeleniumHelper().conditionForAllIFrames(condition);
+        if (implicitFindInFrames) {
+            condition = getSeleniumHelper().conditionForAllFrames(condition);
+        }
         Object result;
         switch (waitUntil.value()) {
             case STOP_TEST:
@@ -783,11 +789,12 @@ public class BrowserTest extends SlimFixture {
                 if ("checkbox".equals(elementType)
                         || "radio".equals(elementType)) {
                     result = String.valueOf(element.isSelected());
+                } else if ("li".equalsIgnoreCase(element.getTagName())) {
+                    result = getElementText(element);
                 } else {
                     result = element.getAttribute("value");
                     if (result == null) {
-                        scrollIfNotOnScreen(element);
-                        result = element.getText();
+                        result = getElementText(element);
                     }
                 }
             }
@@ -797,6 +804,63 @@ public class BrowserTest extends SlimFixture {
 
     private boolean isSelect(WebElement element) {
         return "select".equalsIgnoreCase(element.getTagName());
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public ArrayList<String> valuesOf(String place) {
+        return valuesFor(place);
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public ArrayList<String> valuesFor(String place) {
+        ArrayList<String> values = null;
+        WebElement element = getElementToRetrieveValue(place);
+        if (element != null) {
+            values = new ArrayList<String>();
+            String tagName = element.getTagName();
+            if ("ul".equalsIgnoreCase(tagName)
+                    || "ol".equalsIgnoreCase(tagName)) {
+                List<WebElement> items = element.findElements(By.tagName("li"));
+                for (WebElement item : items) {
+                    if (item.isDisplayed()) {
+                        values.add(getElementText(item));
+                    }
+                }
+            } else if (isSelect(element)) {
+                Select s = new Select(element);
+                List<WebElement> options = s.getAllSelectedOptions();
+                for (WebElement item : options) {
+                    values.add(getElementText(item));
+                }
+            } else {
+                values.add(valueFor(element));
+            }
+        }
+        return values;
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public Integer numberFor(String place) {
+        Integer number = null;
+        WebElement element = findByXPath("//ol/li/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::li", place);
+        if (element == null) {
+            element = findByXPath("//ol/li/descendant-or-self::text()[contains(normalize-space(.),'%s')]/ancestor-or-self::li", place);
+        }
+        if (element != null) {
+            scrollIfNotOnScreen(element);
+            number = getSeleniumHelper().getNumberFor(element);
+        }
+        return number;
+    }
+
+    public ArrayList<String> availableOptionsFor(String place) {
+        ArrayList<String> result = null;
+        WebElement element = getElementToSelectFor(place);
+        if (element != null) {
+            scrollIfNotOnScreen(element);
+            result = getSeleniumHelper().getAvailableOptions(element);
+        }
+        return result;
     }
 
     @WaitUntil
@@ -1092,6 +1156,21 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
+     * Determines whether element is enabled (i.e. can be clicked).
+     * @param place element to check.
+     * @return true if element is enabled.
+     */
+    @WaitUntil(TimeoutPolicy.RETURN_FALSE)
+    public boolean isEnabled(String place) {
+        boolean result = false;
+        WebElement element = getElementToCheckVisibility(place);
+        if (element != null) {
+            result = element.isEnabled();
+        }
+        return result;
+    }
+
+    /**
      * Determines whether element can be see in browser's window.
      * @param place element to check.
      * @return true if element is displayed and in viewport.
@@ -1122,12 +1201,16 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil
     public boolean hoverOver(String place) {
-        boolean result = false;
         WebElement element = getElementToClick(place);
+        return hoverOver(element);
+    }
+    
+    protected boolean hoverOver(WebElement element) {
+        boolean result = false;
         if (element != null) {
             scrollIfNotOnScreen(element);
             if (element.isDisplayed()) {
-                new Actions(getSeleniumHelper().driver()).moveToElement(element).perform();
+                getSeleniumHelper().hoverOver(element);
                 result = true;
             }
         }
@@ -1635,6 +1718,20 @@ public class BrowserTest extends SlimFixture {
         return cookie;
     }
 
+    /**
+     * Gets the value of the cookie with the supplied name.
+     * @param cookieName name of cookie to get value from.
+     * @return cookie's value if any.
+     */
+    public String cookieValue(String cookieName) {
+        String result = null;
+        Cookie cookie = getSeleniumHelper().getCookie(cookieName);
+        if (cookie != null) {
+            result = cookie.getValue();
+        }
+        return result;
+    }
+
     protected Object waitForJavascriptCallback(String statement, Object... parameters) {
         try {
             return getSeleniumHelper().waitForJavascriptCallback(statement, parameters);
@@ -1657,6 +1754,10 @@ public class BrowserTest extends SlimFixture {
 
     public void setImplicitWaitForAngularTo(boolean implicitWaitForAngular) {
         this.implicitWaitForAngular = implicitWaitForAngular;
+    }
+
+    public void setImplicitFindInFramesTo(boolean implicitFindInFrames) {
+        this.implicitFindInFrames = implicitFindInFrames;
     }
 
 }

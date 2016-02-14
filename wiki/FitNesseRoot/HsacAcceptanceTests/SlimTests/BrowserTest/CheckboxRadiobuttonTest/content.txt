@@ -1,0 +1,36 @@
+This test ensure we can check values of radiobuttons and checkboxes.
+
+
+!define HTML { {{{
+<html><body>
+<input id="rdoPblc" type="radio" name="trusted" value="0" class="rdo radio" checked>
+<label for="rdoPblc">Dit is een openbare of gedeelde computer</label>
+<input id="rdoPrvt" type="radio" name="trusted" value="4" class="rdo radio">
+<label for="rdoPrvt">Dit is een particuliere computer</label>
+<input id="chpwd" name="chpwd" type="checkbox" class="rdo checkbox">
+<label for="chpwd">Ik wil mijn wachtwoord wijzigen nadat ik ben aangemeld</label>
+</body></html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script|browser test                                                         |
+|open  |$url                                                                 |
+|check |value of|Dit is een openbare of gedeelde computer              |true |
+|ensure|value of|Dit is een openbare of gedeelde computer                    |
+|check |value of|Dit is een particuliere computer                      |false|
+|check |value of|Ik wil mijn wachtwoord wijzigen nadat ik ben aangemeld|false|
+|click |Dit is een particuliere computer                                     |
+|check |value of|Dit is een particuliere computer                      |true |
+|reject|value of|Dit is een openbare of gedeelde computer                    |
+|reject|value of|Ik wil mijn wachtwoord wijzigen nadat ik ben aangemeld      |
+|click |Dit is een openbare of gedeelde computer                             |
+|check |value of|Dit is een openbare of gedeelde computer              |true |
+|click |Ik wil mijn wachtwoord wijzigen nadat ik ben aangemeld               |
+|check |value of|Ik wil mijn wachtwoord wijzigen nadat ik ben aangemeld|true |
+
+
+|script|mock xml server setup|
+|stop                        |

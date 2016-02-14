@@ -58,10 +58,10 @@ In the example below we call a service offered by the Bank of Lithuania to check
 |conversionUrl    |http://www.webservicex.net/CurrencyConvertor.asmx            |
 |lbExchangeRateUrl|http://www.lb.lt/webservices/ExchangeRates/ExchangeRates.asmx|
 
-|To Lithuanian Lita                                |
-|from|conversionRate?|exchangeRate?|margin?        |
-|USD |               |             |0.90 < _ < 1.10|
-|EUR |               |             |0.8 < _ < 1.01 |
+|To Lithuanian Lita                                 |
+|from|conversionRate?|exchangeRate?|margin?         |
+|USD |               |             |-0.50 < _ < 1.10|
+|EUR |               |             |-0.5 < _ < 1.01 |
 
 The Java code for the 'To Lithuanian Lita' fixture is another single class: {{{
 public class ToLithuanianLitaFixture extends SoapCallMapColumnFixture<XmlHttpResponse> {

@@ -7,14 +7,17 @@ First we do this with ''plain !-BrowserTest-!'', then with a ''custom subclass, 
 
 |script|browser test                                                                  |
 |open  |http://www.funda.nl                                                           |
-|select|€ 900.000              |for                               |Prijsklasse      |
-|select|€ 1.500.000              |for                               |tot              |
-|enter |Maliebaan, Utrecht       |as                                |Locatie          |
+|select|€ 1.000.000        |for                                              |van     |
+|select|€ 2.000.000        |for                                              |tot     |
+|enter |Maliebaan, Utrecht |as                                               |Plaats, buurt, adres etc |
+|wait  |1                  |seconds                                                   |
+|note  |select option from autocomplete                                               |
+|press |down                                                                          |
 |press |enter                                                                         |
-|click |Maliebaan 70 a                                                                |
-|click |Foto's                                                                        |
+|click |Zoek                                                                          |
+|click |Maliebaan 3                                                                   |
 |note  |Check any element's text based on an xPath, makes test fragile to HTML changes|
-|check |value of                 |xpath=//span[@class='hits']       |(11)             |
+|check |value of           |xpath=//span[@class='object-media-teaser-count'] |65      |
 
 What can we do with a custom subclass...
 
@@ -27,13 +30,16 @@ We need to indicate in which package our custom class can be found.
 
 |script|funda test                                                        |
 |open  |http://www.funda.nl                                               |
-|select|€ 900.000                  |for           |Prijsklasse          |
-|select|€ 1.500.000                  |for           |tot                  |
-|enter |Maliebaan, Utrecht           |as            |Locatie              |
+|select|€ 1.000.000                   |for            |van                |
+|select|€ 2.000.000                   |for            |tot                |
+|enter |Maliebaan, Utrecht            |as             |Plaats, buurt, adres etc            |
+|note  |select option from autocomplete                                   |
+|wait  |1                             |seconds                            |
+|press |down                                                              |
 |press |enter                                                             |
-|click |Maliebaan 70 a                                                    |
-|click |Foto's                                                            |
+|click |Zoek                                                              |
+|click |Maliebaan 3                                                       |
 |note  |Use custom method to get number of photos                         |
-|check |number of photos             |11                                  |
+|check |number of photos              |65                                 |
 |note  |Since the custom method returns a number we can do relative checks|
-|check |number of photos             |>10                                 |
+|check |number of photos              |>10                                |

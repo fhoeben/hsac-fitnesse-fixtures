@@ -15,7 +15,7 @@ public class ClearStoredVariablesFixture extends ColumnFixture {
         String methodName = "clearInstances";
         Class<?> clazz = Class.forName(className);
         if (clazz != null) {
-            Method method = clazz.getMethod(methodName, new Class[0]);
+            Method method = clazz.getMethod(methodName);
             if (method != null) {
                 method.invoke(null);
                 result = "OK";

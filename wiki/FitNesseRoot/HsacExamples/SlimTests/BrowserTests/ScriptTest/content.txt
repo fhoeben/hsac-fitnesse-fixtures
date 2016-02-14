@@ -9,28 +9,31 @@ This class allows us to specify what we want to do using a web browser, by the (
 
 The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
 
-|script      |browser test                                                           |
-|open        |http://www.funda.nl                                                    |
-|select      |€ 1.000.000       |for                            |Prijsklasse         |
-|select      |€ 2.000.000       |for                            |tot                 |
-|enter       |Maliebaan, Utrecht|as                             |Locatie             |
-|press       |enter                                                                  |
-|click       |Maliebaan 70 a                                                         |
-|check       |page title        |Huis te koop: Maliebaan 70 a 3581 CV Utrecht [funda]|
-|click       |Kenmerken                                                              |
-|check       |value of          |Oorspronkelijke vraagprijs     |€ 1.690.000 k.k.    |
-|check       |value of          |woonoppervlakte                |588 m²              |
-|click       |Foto's                                                                 |
-|note        |Check whether the page title matches the supplied regular expression   |
-|check       |page title        |=~/.*Foto's.*/                                      |
-|show        |take screenshot   |Foto_1                                              |
-|click       |Volgende foto                                                          |
-|note        |Wait for the loading of the next photo to complete                     |
-|wait seconds|1                                                                      |
-|show        |take screenshot   |Foto_2                                              |
-|click       |Volgende foto                                                          |
-|wait seconds|1                                                                      |
-|show        |take screenshot   |Foto_3                                              |
+|script           |browser test                                                        |
+|open             |http://www.funda.nl                                                 |
+|select           |€ 1.000.000       |for                 |van                         |
+|select           |€ 2.000.000       |for                 |tot                         |
+|enter            |Maliebaan, Utrecht|as                  |Plaats, buurt, adres etc    |
+|note             |select option from autocomplete                                     |
+|wait             |1                 |seconds                                          |
+|press            |down                                                                |
+|press            |enter                                                               |
+|click            |Zoek                                                                |
+|click            |Maliebaan 3                                                         |
+|check            |page title        |Huis te koop: Maliebaan 3 3581 CA Utrecht [funda]|
+|check            |value of          |Status              |Beschikbaar                 |
+|check            |value of          |Woonoppervlakte     |418 m²                      |
+|note             |set width so we see button to go to next photo                      |
+|set browser width|1200                                                                |
+|click            |Foto's                                                              |
+|show             |take screenshot   |Foto_1                                           |
+|click            |Volgende foto                                                       |
+|note             |Wait for the loading of the next photo to complete                  |
+|wait seconds     |1                                                                   |
+|show             |take screenshot   |Foto_2                                           |
+|click            |Volgende foto                                                       |
+|wait seconds     |1                                                                   |
+|show             |take screenshot   |Foto_3                                           |
 
 When multiple similar sequences of steps are needed a script can be generalized using a scenario, which is show in ScenarioTest. 
 To make test more readable, maintainable and powerful we can also create custom subclasses of !-BrowserTest-!. This is shown in CustomFixtureTest.

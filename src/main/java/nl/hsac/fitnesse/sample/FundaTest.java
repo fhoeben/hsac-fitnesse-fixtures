@@ -11,11 +11,11 @@ import java.util.regex.Pattern;
  * Fixture class customized to test funda.nl.
  */
 public class FundaTest extends BrowserTest {
-    private static final Pattern COUNT_PATTERN = Pattern.compile("\\((\\d+)\\)");
+    private static final Pattern COUNT_PATTERN = Pattern.compile("(\\d+)");
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public Integer numberOfPhotos() {
         Integer count = null;
-        String countText = valueOf("xpath=//span[@class='hits']");
+        String countText = valueOf("xpath=//span[@class='object-media-teaser-count']");
         if (countText != null) {
             Matcher m = COUNT_PATTERN.matcher(countText);
             if (m.matches()) {

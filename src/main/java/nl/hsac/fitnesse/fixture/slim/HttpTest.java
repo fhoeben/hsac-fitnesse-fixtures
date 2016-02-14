@@ -391,6 +391,14 @@ public class HttpTest extends SlimFixtureWithMap {
         return response.getResponseHeaders();
     }
 
+    /**
+     * @param headerName name of response header.
+     * @return value of header in last response.
+     */
+    public String responseHeader(String headerName) {
+        return responseHeaders().get(headerName);
+    }
+
     protected HttpResponse getResponse() {
         return response;
     }

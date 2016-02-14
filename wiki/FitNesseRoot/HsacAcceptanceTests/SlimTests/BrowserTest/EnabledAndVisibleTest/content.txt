@@ -1,0 +1,37 @@
+This test ensures we can check whether elements are enabled and visible on a page.
+
+!define HTML { {{{
+<html>
+<body>
+<input name="a" disabled type="submit">
+<input name="b" type="submit" value="Reload">
+<input name="c" style="display:none" type="submit">
+<button name="d" disabled>Ok</button>
+<button name="e">Cancel</button>
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script                |browser test     |
+|open                  |$url             |
+|seconds before timeout|1                |
+|reject                |is enabled|name=a|
+|ensure                |is visible|name=a|
+|ensure                |is visible|Submit|
+|ensure                |is enabled|name=b|
+|ensure                |is visible|name=b|
+|ensure                |is enabled|Reload|
+|ensure                |is visible|Reload|
+|reject                |is visible|name=c|
+|reject                |is enabled|name=d|
+|reject                |is enabled|Ok    |
+|is enabled            |name=e           |
+|is enabled            |Cancel           |
+
+|script|mock xml server setup|
+|stop                        |
+
