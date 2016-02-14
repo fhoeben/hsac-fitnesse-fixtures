@@ -1,20 +1,20 @@
 package nl.hsac.fitnesse.slim.interaction;
 
-import static org.junit.Assert.*;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-
+import fitnesse.slim.fixtureInteraction.DefaultInteraction;
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
 import nl.hsac.fitnesse.fixture.util.HtmlCleaner;
-
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
-import fitnesse.slim.fixtureInteraction.DefaultInteraction;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 public class FixtureFactoryTest {
     private static final List<Class<?>> classes = new ArrayList<Class<?>>();

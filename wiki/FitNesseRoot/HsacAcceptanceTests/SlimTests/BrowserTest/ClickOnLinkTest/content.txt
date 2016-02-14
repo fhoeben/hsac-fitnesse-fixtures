@@ -1,0 +1,98 @@
+This test ensures we can click on links based on their text content.
+
+!define HTML { {{{
+<html>
+<body>
+<a href="">First Link</a> 
+<a href="">Second Link</a> 
+<a href="">Third Link</a> 
+<a href=""><span>4th Link</span></a> 
+<a href=""><span class="btn-label"><span aria-hidden="true">Select</span><span style="position: absolute !important;width: 1px;height: 1px;margin: -1px;padding: 0;clip: rect(0 0 0 0);border: 0;overflow: hidden;" class="visuallyhidden">5th Link</span></span></a> 
+<a href="" style="text-transform:uppercase"><span class="btn-label"><span aria-hidden="true">Select</span><span style="position: absolute !important;width: 1px;height: 1px;margin: -1px;padding: 0;clip: rect(0 0 0 0);border: 0;overflow: hidden;" class="visuallyhidden">6th Link</span></span></a> 
+<a href="" style="text-transform:lowercase">7TH Link</a> 
+<a href="" style="text-transform:uppercase">8th Link</a> 
+<a href="" style="text-transform:lowercase"><span class="btn-label"><span aria-hidden="true">Select</span><span style="position: absolute !important;width: 1px;height: 1px;margin: -1px;padding: 0;clip: rect(0 0 0 0);border: 0;overflow: hidden;" class="visuallyhidden">9TH Link</span></span></a> 
+
+
+
+
+
+
+</body>
+</html>}}} }
+
+!*> Mock server
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+*!
+
+|script                |browser test                                                                             |
+|open                  |$url                                                                                     |
+|seconds before timeout|1                                                                                        |
+|click                 |Second Link                                                                              |
+|click                 |hird                                                                                     |
+|click                 |4th Link                                                                                 |
+|click                 |4th                                                                                      |
+|click                 |5th Link                                                                                 |
+|click                 |5th                                                                                      |
+|note                  |text-transform to uppercase means standard selenium By.link only finds all uppercase text|
+|click                 |6TH LINK                                                                                 |
+|click                 |6TH                                                                                      |
+|click                 |6th Link                                                                                 |
+|click                 |6th                                                                                      |
+|click                 |7th link                                                                                 |
+|click                 |7th                                                                                      |
+|click                 |7TH Link                                                                                 |
+|click                 |7TH                                                                                      |
+|click                 |8th Link                                                                                 |
+|click                 |8th                                                                                      |
+|click                 |8TH LINK                                                                                 |
+|click                 |8TH                                                                                      |
+|note                  |text-transform to lowercase means standard selenium By.link only finds all lowercase text|
+|click                 |9th link                                                                                 |
+|click                 |9th                                                                                      |
+|click                 |9TH Link                                                                                 |
+|click                 |9TH                                                                                      |
+
+
+
+
+|comment|
+
+
+
+
+
+|script|mock xml server setup|
+|stop                        |
+

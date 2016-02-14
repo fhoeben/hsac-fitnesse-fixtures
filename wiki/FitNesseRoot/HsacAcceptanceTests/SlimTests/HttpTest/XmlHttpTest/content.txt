@@ -34,6 +34,8 @@ Incomplete address: no zip code</PO:confirmation>
 |show  |response                                                                                                                                      |
 |check |response status|500                                                                                                                           |
 |check |raw xPath      |/env:Envelope/env:Body/env:Fault/faultstring|Message does not have necessary info                                             |
+|show  |response headers                                                                                                                              |
+|check |response header|Content-length                              |556                                                                              |
 |note  |next line is commented out so we won't have a real exception, uncomment to see that SOAP content is shown in exception                        |
 |note  |check          |xPath                                       |/env:Envelope/env:Body/env:Fault/faultstring|Message does not have necessary info|
 |reject|post           |{{{<ServerFault/>}}}                        |to                                          |$url                                |

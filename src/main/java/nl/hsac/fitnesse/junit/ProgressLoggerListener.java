@@ -1,13 +1,13 @@
 package nl.hsac.fitnesse.junit;
 
-import java.io.PrintStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
+
+import java.io.PrintStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * JUnit RunListener so that build log is updated with progress info while tests run.

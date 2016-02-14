@@ -1,14 +1,21 @@
-This test shows how to check values of radiobuttons and checkboxes.
+This test shows how to manipulate and check values of radiobuttons and checkboxes.
 
 |script|browser test                                                         |
 |open  |http://toolsentesters.nl/seleniumdemo/sel.html                       |
 |check |value of|Dit is een openbare of gedeelde computer              |true |
+|ensure|value of|Dit is een openbare of gedeelde computer                    |
 |check |value of|Dit is een particuliere computer                      |false|
+|reject|value of|Dit is een particuliere computer                            |
 |check |value of|Ik wil mijn wachtwoord wijzigen nadat ik ben aangemeld|false|
+|reject|value of|Ik wil mijn wachtwoord wijzigen nadat ik ben aangemeld      |
 |click |Dit is een particuliere computer                                     |
 |check |value of|Dit is een particuliere computer                      |true |
+|ensure|value of|Dit is een particuliere computer                            |
+|reject|value of|Dit is een openbare of gedeelde computer                    |
 |click |Dit is een openbare of gedeelde computer                             |
 |check |value of|Dit is een openbare of gedeelde computer              |true |
 |click |Ik wil mijn wachtwoord wijzigen nadat ik ben aangemeld               |
 |check |value of|Ik wil mijn wachtwoord wijzigen nadat ik ben aangemeld|true |
+|ensure|value of|Ik wil mijn wachtwoord wijzigen nadat ik ben aangemeld      |
+
 

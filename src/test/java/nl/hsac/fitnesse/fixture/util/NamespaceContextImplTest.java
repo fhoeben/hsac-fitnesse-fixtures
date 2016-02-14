@@ -1,10 +1,14 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import static org.junit.Assert.*;
+import fit.exception.FitFailureException;
+import org.junit.Test;
 
 import java.util.Iterator;
- 
-import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Tests NamespaceContextImpl.
@@ -65,7 +69,7 @@ public class NamespaceContextImplTest {
         try {
             impl.add(prefix, uri2);
             fail("expected exception");
-        } catch (IllegalStateException e) {
+        } catch (FitFailureException e) {
             String message = e.getMessage();
             assertTrue(message.contains(uri));
             assertTrue(message.contains(prefix));
@@ -88,5 +92,17 @@ public class NamespaceContextImplTest {
         impl.add(prefix, null);
         
         assertNull(impl.getNamespaceURI(prefix));
+    }
+
+    @Test
+    public void addDuplicatePrefixNullUriFirst() {
+        String prefix = "p2";
+        String uri = "aadsad2";
+
+        impl.add(prefix, null);
+        assertNull(impl.getNamespaceURI(prefix));
+
+        impl.add(prefix, uri);
+        assertEquals(uri, impl.getNamespaceURI(prefix));
     }
 }
