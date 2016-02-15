@@ -320,7 +320,6 @@ public class Environment {
      */
     public void doGet(String url, HttpResponse response, Map<String, Object> headers, boolean followRedirect) {
         response.setRequest(url);
-        httpClient.followRedirect = followRedirect;
         httpClient.get(url, response, headers, followRedirect);
     }
 

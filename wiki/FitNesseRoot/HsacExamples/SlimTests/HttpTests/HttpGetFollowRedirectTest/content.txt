@@ -1,9 +1,15 @@
-!2 Http GET without follow redirect
+!define REDIRECT_URL {http://www.hotmail.com}
 
-Performs HTTP GET adding values as parameters in the query string.
+First we do a 'normal' GET to ${REDIRECT_URL}, which will redirect us.
 
-|script         |xml http test                                                       |
-|get from       |http://www.hotmail.com         | follow redirect       | false      |
-|check          |response status|301                                                 |
-|show           |request                                                             |
-|show           |response                                                            |
+|script  |http test          |
+|get from|${REDIRECT_URL}    |
+|check   |response status|200|
+
+Then we do the same call without following the redirect, allowing us to inspect that a redirect is sent and what the redirect location is.
+
+|script  |http test                                                      |
+|get from|${REDIRECT_URL}|no redirect                                    |
+|check   |response status|301                                            |
+|check   |response header|Location|!-https://mail.live.com/default.aspx-!|
+|show    |response                                                       |
