@@ -1,12 +1,19 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import org.apache.http.*;
+import org.apache.http.Header;
+import org.apache.http.HeaderElement;
+import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -20,29 +27,11 @@ import java.util.Map;
 public class HttpClient {
     private final static org.apache.http.client.HttpClient HTTP_CLIENT;
 
-    public static boolean followRedirect;   // Does the (fitnesse) user   wants to follow the redirect (if it's an redirect)  or wants the user to stop the redirect
-
     static {
         HTTP_CLIENT = HttpClients.custom()
                 .useSystemProperties()
                 .disableContentCompression()
                 .setUserAgent(HttpClient.class.getName())
-                .setRedirectStrategy(new DefaultRedirectStrategy() {
-                    @Override public boolean isRedirected(HttpRequest request, org.apache.http.HttpResponse response, HttpContext context) throws ProtocolException {
-                        boolean urlIsAnRedirectUrl = super.isRedirected(request, response, context); // is the site realy an redirect url (301) ?  Answer = Yes then we can stop or follow the redirect
-                        boolean doWeFollowTheRedirectUrl = true;
-                        if(urlIsAnRedirectUrl && !followRedirect) { // if the url  is an  redirect url  and  the user  does't want to follow the url  then we return false
-                            doWeFollowTheRedirectUrl = false;
-                        } else if (!urlIsAnRedirectUrl) { // when the url  returns  statuscode = 200   then we can never follow an redirect
-                            doWeFollowTheRedirectUrl = false;
-                        } else {
-                            doWeFollowTheRedirectUrl = true;
-                        }
-                        return doWeFollowTheRedirectUrl;
-                    }
-
-
-                })
                 .build();
     }
 
@@ -83,6 +72,12 @@ public class HttpClient {
      */
     public void get(String url, HttpResponse response, Map<String, Object> headers, boolean followRedirect) {
         HttpGet method = new HttpGet(url);
+        if (!followRedirect) {
+            RequestConfig r = RequestConfig.copy(RequestConfig.DEFAULT)
+                                .setRedirectsEnabled(false)
+                                .build();
+            method.setConfig(r);
+        }
         getResponse(url, response, method, headers);
     }
 
