@@ -5,6 +5,7 @@ import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -20,7 +21,6 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.util.Map;
-
 /**
  * Helper to make Http calls and get response.
  */
@@ -28,8 +28,11 @@ public class HttpClient {
     private final static org.apache.http.client.HttpClient HTTP_CLIENT;
 
     static {
-        HTTP_CLIENT = HttpClients.custom().useSystemProperties().disableContentCompression()
-                .setUserAgent(HttpClient.class.getName()).build();
+        HTTP_CLIENT = HttpClients.custom()
+                .useSystemProperties()
+                .disableContentCompression()
+                .setUserAgent(HttpClient.class.getName())
+                .build();
     }
 
     /**
@@ -67,8 +70,14 @@ public class HttpClient {
      * @param response response to be filled.
      * @param headers http headers to add
      */
-    public void get(String url, HttpResponse response, Map<String, Object> headers) {
+    public void get(String url, HttpResponse response, Map<String, Object> headers, boolean followRedirect) {
         HttpGet method = new HttpGet(url);
+        if (!followRedirect) {
+            RequestConfig r = RequestConfig.copy(RequestConfig.DEFAULT)
+                                .setRedirectsEnabled(false)
+                                .build();
+            method.setConfig(r);
+        }
         getResponse(url, response, method, headers);
     }
 
