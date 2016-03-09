@@ -1,13 +1,19 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+
 import org.junit.Test;
 
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests HttpTest.
  */
 public class HttpTestTest {
+    // site that redirects
+    private static final String URL_WITH_REDIRECT = "http://www.hotmail.com";
     private final HttpTest client = new XmlHttpTest();
 
     @Test
@@ -90,5 +96,32 @@ public class HttpTestTest {
                 " </pre>");
 
         assertEquals("<MyContent>\n  <content a='c'/>\n</MyContent>", cleaned);
+    }
+
+
+    /**
+     * Tests url redirects with follow redirects (default setting)
+     */
+    @Test
+    public void testGetFromFollowRedirect() throws Exception {
+        HttpTest httpTest = new HttpTest();
+        boolean result = httpTest.getFrom(URL_WITH_REDIRECT);
+        String resp = httpTest.htmlResponse();
+        assertNotNull(resp);
+        assertEquals(200, httpTest.getResponse().getStatusCode());
+        assertTrue(result);
+    }
+
+    /**
+     * Test url redirects without following redirectØ
+     */
+    @Test
+    public void testGetFromNoRedirect() throws Exception {
+        HttpTest httpTest = new HttpTest();
+        boolean result = httpTest.getFromNoRedirect(URL_WITH_REDIRECT);
+        String resp = httpTest.htmlResponse();
+        assertNotNull(resp);
+        assertEquals(301, httpTest.getResponse().getStatusCode());
+        assertTrue(result);
     }
 }

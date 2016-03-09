@@ -219,17 +219,31 @@ public class HttpTest extends SlimFixtureWithMap {
      * @return true if call could be made and response did not indicate error.
      */
     public boolean getFrom(String serviceUrl) {
+        return getImpl(serviceUrl, true);
+    }
+
+    /**
+     * Sends HTTP GET to service endpoint to retrieve content, not following a redirect if sent.
+     * @param serviceUrl service endpoint to get content from.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean getFromNoRedirect(String serviceUrl) {
+        return getImpl(serviceUrl, false);
+    }
+
+    protected boolean getImpl(String serviceUrl, boolean followRedirect) {
         boolean result;
         resetResponse();
         String url = createUrlWithParams(serviceUrl);
         try {
-            getEnvironment().doGet(url, response, headerValues);
+            getEnvironment().doGet(url, response, headerValues, followRedirect);
         } catch (Throwable t) {
             throw new StopTestException("Unable to GET response from: " + url, t);
         }
         result = postProcessResponse();
         return result;
     }
+
 
     /**
      * Sends HTTP DELETE to service endpoint.
