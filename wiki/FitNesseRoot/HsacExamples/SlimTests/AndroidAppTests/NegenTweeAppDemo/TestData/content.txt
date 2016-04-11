@@ -1,0 +1,23 @@
+!contents -R2 -g -p -f -h
+
+
+|ddt: map fixture                                                                                                       |
+|van               |naar            |datum                             |tijd |tijdtype|vertrektijd|hash?                |
+|Utrecht Centraal  |Amsterdam Amstel|!weekDaysFromToday (dd-MM-YYYY) +1|17:00|Vertrek |17:10      |$DemoTestCase001Data=|
+|Amsterdam Centraal|Utrecht Centraal|!weekDaysFromToday (dd-MM-YYYY) +2|15:25|Aankomst|14:38      |$DemoTestCase002Data=|
+
+
+
+!note Get testdata necessary for current test
+
+!|script      |map fixture|$${RUNNING_PAGE_NAME}Data|
+|$van=        |value      |van                      |
+|$naar=       |value      |naar                     |
+|$datum=      |value      |datum                    |
+|$tijd=       |value      |tijd                     |
+|$tijdtype=   |value      |tijdtype                 |
+|$vertrektijd=|value      |vertrektijd              |
+
+
+
+*!

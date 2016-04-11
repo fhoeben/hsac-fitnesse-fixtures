@@ -1,0 +1,5 @@
+!|script                             |android app test                  |
+|given i see the restaurantfinder                                       |
+|when i search for restaurants around|1322CK                            |
+|when i select                       |Domino's Pizza|by searching for|Do|
+|then i see my favorite pizza        |Perfect Pepperoni                 |
