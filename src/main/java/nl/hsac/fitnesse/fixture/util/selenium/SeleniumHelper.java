@@ -1,6 +1,9 @@
 package nl.hsac.fitnesse.fixture.util.selenium;
 
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.AndroidDriver;
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
+import nl.hsac.fitnesse.fixture.slim.web.BrowserTest;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import org.openqa.selenium.*;
 import org.openqa.selenium.ie.InternetExplorerDriver;
@@ -37,17 +40,10 @@ public class SeleniumHelper {
                     "  rect.right <= (window.innerWidth || document.documentElement.clientWidth));\n" +
             "} else { return null; }";
 
-    private static final String TOP_ELEMENT_AT =
-            "if (arguments[0].getBoundingClientRect) {\n" +
-                    "  var rect = arguments[0].getBoundingClientRect();\n" +
-                    "  var x = (rect.left + rect.right)/2;\n" +
-                    "  var y = (rect.top + rect.bottom)/2;\n" +
-                    "  return document.elementFromPoint(x,y);\n" +
-                    "} else { return null; }";
-
     private final List<WebElement> currentIFramePath = new ArrayList<WebElement>(4);
     private DriverFactory factory;
     private WebDriver webDriver;
+    private AndroidDriver<MobileElement> androidDriver;
     private WebDriverWait webDriverWait;
     private boolean shutdownHookEnabled = false;
     private int defaultTimeoutSeconds = DEFAULT_TIMEOUT_SECONDS;
@@ -79,10 +75,43 @@ public class SeleniumHelper {
     }
 
     /**
+     * Sets up androidDriver to be used.
+     * @param anAndroidDriver web driver to use.
+     */
+    public void setAndroidDriver(AndroidDriver<MobileElement> anAndroidDriver) {
+        if (androidDriver != null && !androidDriver.equals(anAndroidDriver)) {
+            androidDriver.quit();
+        }
+        androidDriver = anAndroidDriver;
+
+        if (anAndroidDriver == null) {
+            webDriverWait = null;
+        } else {
+            webDriverWait = new WebDriverWait(androidDriver, getDefaultTimeoutSeconds());
+        }
+
+        if (!shutdownHookEnabled) {
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                public void run() {
+                    close();
+                }
+            });
+            shutdownHookEnabled = true;
+        }
+    }
+
+    /**
      * Shuts down selenium web driver.
      */
     public void close() {
         setWebDriver(null);
+    }
+
+    /**
+     * Shuts down android driver.
+     */
+    public void closeAndroid() {
+        androidDriver.quit();
     }
 
     /**
@@ -862,6 +891,17 @@ public class SeleniumHelper {
         return webDriver;
     }
 
+    public AndroidDriver<MobileElement> androidDriver() {
+        if (androidDriver == null) {
+            if (factory == null) {
+                throw new StopTestException("Cannot use Selenium before a driver is started (for instance using SeleniumDriverSetup)");
+            } else {
+                factory.createDriver();
+            }
+        }
+        return androidDriver;
+    }
+
     /**
      * Allows clients to wait until a certain condition is true.
      * @return wait using the driver in this helper.
@@ -947,41 +987,20 @@ public class SeleniumHelper {
         return element;
     }
 
+
     private WebElement selectBestElement(List<WebElement> elements) {
-        // take the first displayed element without any elements on top of it,
-        // if none: take first displayed
-        // or if none are displayed: just take the first
+        // take the first displayed element, or if none are displayed: just take the first
         WebElement element = elements.get(0);
-        WebElement firstDisplayed = null;
-        WebElement firstOnTop = null;
-        if (!element.isDisplayed() || !isOnTop(element)) {
+        if (!element.isDisplayed()) {
             for (int i = 1; i < elements.size(); i++) {
                 WebElement otherElement = elements.get(i);
                 if (otherElement.isDisplayed()) {
-                    if (firstDisplayed == null) {
-                        firstDisplayed = otherElement;
-                    }
-                    if (isOnTop(otherElement)) {
-                        firstOnTop = otherElement;
-                        element = otherElement;
-                        break;
-                    }
+                    element = otherElement;
+                    break;
                 }
-            }
-            if (firstOnTop == null
-                    && firstDisplayed != null
-                    && !element.isDisplayed()) {
-                // none displayed and on top
-                // first was not displayed, but another was
-                element = firstDisplayed;
             }
         }
         return element;
-    }
-
-    private boolean isOnTop(WebElement element) {
-        WebElement e = (WebElement) executeJavascript(TOP_ELEMENT_AT, element);
-        return element.equals(e);
     }
 
     private List<WebElement> elementsWithId(List<WebElement> elements) {
@@ -1028,7 +1047,11 @@ public class SeleniumHelper {
      */
     public String takeScreenshot(String baseName) {
         String result = null;
-        WebDriver d = driver();
+
+        //Now it gets dirty
+        String calledBy = new Exception().getStackTrace()[2].getClassName();
+        WebDriver d = calledBy.contains("AndroidAppTest") ? androidDriver() : driver();
+
         if (!(d instanceof TakesScreenshot)) {
             d = new Augmenter().augment(d);
         }
@@ -1039,6 +1062,8 @@ public class SeleniumHelper {
         }
         return result;
     }
+
+
 
     /**
      * Finds screenshot embedded in throwable, if any.

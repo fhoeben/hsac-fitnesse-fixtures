@@ -1,0 +1,43 @@
+!2 How to run
+ * Download !-NegenTwee-! apk: [[Download link][https://drive.google.com/file/d/0B5SroQw8KB3QM0F4TmwyVUpmYzA/view?usp=sharing]]
+ * Connect device via USB (usb debugging enabled)
+ * Make sure appium is connected.
+ * Configure correct appium URL and platform version in [[SetUp][http://localhost:9090/HsacExamples.SlimTests.AndroidAppTests.ThuisBezorgdDemo.SetUp]] (i.e. 22 is android lollipop 5.x, 23 is marshmallow 6.x)
+
+!note Run the test
+!note Eerst stellen we van en naar locaties in
+!| script | android app test |
+| tap | Huidige locatie |
+| enter | ce | as | Van |
+| wait seconds | 1 |
+| swipe up |
+| tap | Lelystad Centrum |
+| tap | Naar |
+| enter | Transist | as | Naar |
+| wait seconds | 1 |
+| tap | Transistorstraat |
+
+!note Vervolgens een aankomsttijd
+!| script | android app test |
+| tap | Vertrek |
+| tap | Aankomst |
+| tap | Kies |
+
+!note Geen bus graag!
+!| script | android app test |
+| tap | extra reisopties |
+| tap | Bus |
+| tap | Plan je reis |
+| wait seconds | 1 |
+| check | value of | resourceId=nl.negentwee:id/error_text | Er konden geen reizen worden gevonden. |
+| show | take screenshot | resultaat_1 |
+
+!note Geen reizen mogelijk dus... terug en opnieuw proberen, incl bus
+!| script | android app test |
+| press back button |
+| tap | Bus |
+| tap | Plan je reis |
+| wait seconds | 1 |
+| ensure | element displayed | Toon eerdere reisopties |
+| show | take screenshot | resultaat_2 |
+| wait seconds | 2 |

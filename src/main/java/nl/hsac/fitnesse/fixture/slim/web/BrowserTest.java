@@ -175,6 +175,11 @@ public class BrowserTest extends SlimFixture {
         ensureActiveTabIsNotClosed();
     }
 
+    public BrowserTest(String appium){
+
+    }
+
+
     public boolean open(String address) {
         final String url = getUrl(address);
         try {
@@ -1357,7 +1362,7 @@ public class BrowserTest extends SlimFixture {
         return screenshotFile;
     }
 
-    private String getScreenshotLink(String screenshotFile) {
+    public String getScreenshotLink(String screenshotFile) {
         String wikiUrl = getWikiUrl(screenshotFile);
         if (wikiUrl != null) {
             // make href to screenshot
@@ -1374,7 +1379,7 @@ public class BrowserTest extends SlimFixture {
         return screenshotFile;
     }
 
-    private String createScreenshot(String basename) {
+    public String createScreenshot(String basename) {
         String name = getScreenshotBasename(basename);
         return getSeleniumHelper().takeScreenshot(name);
     }
