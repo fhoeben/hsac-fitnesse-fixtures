@@ -3,19 +3,12 @@ package nl.hsac.fitnesse.fixture.slim.mobile;
 import io.appium.java_client.*;
 
 import io.appium.java_client.android.AndroidDriver;
-import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import io.appium.java_client.remote.MobileCapabilityType;
-import io.appium.java_client.remote.MobilePlatform;
 
 import nl.hsac.fitnesse.fixture.slim.web.BrowserTest;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.TimeoutPolicy;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.WaitUntil;
 
-import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -23,8 +16,8 @@ import java.util.concurrent.TimeUnit;
  */
 
 public class AndroidAppTest extends BrowserTest {
-    private int SWIPESPEED = 1000;
-    private int WAITAFTERSWIPE = 0;
+    private int swipeSpeed = 1000;
+    private int waitAfterSwipe = 0;
 
     public AndroidAppTest() {
         super("X");
@@ -36,11 +29,11 @@ public class AndroidAppTest extends BrowserTest {
     }
 
     public void setSwipeSpeedInMilliseconds(int swipeSpeed){
-        this.SWIPESPEED = swipeSpeed;
+        this.swipeSpeed = swipeSpeed;
     }
 
     public void setWaitAfterSwipe(int waitAfterSwipe){
-        this.WAITAFTERSWIPE = waitAfterSwipe;
+        this.waitAfterSwipe = waitAfterSwipe;
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
@@ -91,7 +84,7 @@ public class AndroidAppTest extends BrowserTest {
         int startY = (int) (size.height * 0.8);
         int endY = (int) (size.height * 0.2);
 
-        swipe(startX, startY, startX, endY, SWIPESPEED, WAITAFTERSWIPE);
+        swipe(startX, startY, startX, endY, swipeSpeed, waitAfterSwipe);
     }
 
     public void swipeDown() {
@@ -101,7 +94,7 @@ public class AndroidAppTest extends BrowserTest {
         int startY = (int) (size.height * 0.2);
         int endY = (int) (size.height * 0.8);
 
-        swipe(startX, startY, startX, endY, SWIPESPEED, WAITAFTERSWIPE);
+        swipe(startX, startY, startX, endY, swipeSpeed, waitAfterSwipe);
     }
 
     public void swipeLeft() {
@@ -111,7 +104,7 @@ public class AndroidAppTest extends BrowserTest {
         int endX = (int) (size.width * 0.2);
         int startY = size.height / 2;
 
-        swipe(startX, startY, endX, startY, SWIPESPEED, WAITAFTERSWIPE);
+        swipe(startX, startY, endX, startY, swipeSpeed, waitAfterSwipe);
     }
 
     public void swipeRight() {
@@ -121,7 +114,7 @@ public class AndroidAppTest extends BrowserTest {
         int endX = (int) (size.width * 0.8);
         int startY = size.height / 2;
 
-        swipe(startX, startY, endX, startY, SWIPESPEED, WAITAFTERSWIPE);
+        swipe(startX, startY, endX, startY, swipeSpeed, waitAfterSwipe);
     }
 
     public boolean swipeFrom(String direction, String locator){
@@ -159,7 +152,7 @@ public class AndroidAppTest extends BrowserTest {
                    System.err.print("ERROR: " + direction + " is not a valid swipe direction.");
                    return false;
             }
-            swipe(startX, startY, endX, endY, SWIPESPEED, WAITAFTERSWIPE);
+            swipe(startX, startY, endX, endY, swipeSpeed, waitAfterSwipe);
             result = true;
         }
         else{
