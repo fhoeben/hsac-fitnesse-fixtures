@@ -1362,7 +1362,7 @@ public class BrowserTest extends SlimFixture {
         return screenshotFile;
     }
 
-    public String getScreenshotLink(String screenshotFile) {
+    private String getScreenshotLink(String screenshotFile) {
         String wikiUrl = getWikiUrl(screenshotFile);
         if (wikiUrl != null) {
             // make href to screenshot
@@ -1379,7 +1379,7 @@ public class BrowserTest extends SlimFixture {
         return screenshotFile;
     }
 
-    public String createScreenshot(String basename) {
+    private String createScreenshot(String basename) {
         String name = getScreenshotBasename(basename);
         return getSeleniumHelper().takeScreenshot(name);
     }

@@ -40,6 +40,14 @@ public class SeleniumHelper {
                     "  rect.right <= (window.innerWidth || document.documentElement.clientWidth));\n" +
             "} else { return null; }";
 
+    private static final String TOP_ELEMENT_AT =
+            "if (arguments[0].getBoundingClientRect) {\n" +
+                    "  var rect = arguments[0].getBoundingClientRect();\n" +
+                    "  var x = (rect.left + rect.right)/2;\n" +
+                    "  var y = (rect.top + rect.bottom)/2;\n" +
+                    "  return document.elementFromPoint(x,y);\n" +
+                    "} else { return null; }";
+
     private final List<WebElement> currentIFramePath = new ArrayList<WebElement>(4);
     private DriverFactory factory;
     private WebDriver webDriver;
@@ -987,20 +995,41 @@ public class SeleniumHelper {
         return element;
     }
 
-
     private WebElement selectBestElement(List<WebElement> elements) {
-        // take the first displayed element, or if none are displayed: just take the first
+        // take the first displayed element without any elements on top of it,
+        // if none: take first displayed
+        // or if none are displayed: just take the first
         WebElement element = elements.get(0);
-        if (!element.isDisplayed()) {
+        WebElement firstDisplayed = null;
+        WebElement firstOnTop = null;
+        if (!element.isDisplayed() || !isOnTop(element)) {
             for (int i = 1; i < elements.size(); i++) {
                 WebElement otherElement = elements.get(i);
                 if (otherElement.isDisplayed()) {
-                    element = otherElement;
-                    break;
+                    if (firstDisplayed == null) {
+                        firstDisplayed = otherElement;
+                    }
+                    if (isOnTop(otherElement)) {
+                        firstOnTop = otherElement;
+                        element = otherElement;
+                        break;
+                    }
                 }
+            }
+            if (firstOnTop == null
+                    && firstDisplayed != null
+                    && !element.isDisplayed()) {
+                // none displayed and on top
+                // first was not displayed, but another was
+                element = firstDisplayed;
             }
         }
         return element;
+    }
+
+    private boolean isOnTop(WebElement element) {
+        WebElement e = (WebElement) executeJavascript(TOP_ELEMENT_AT, element);
+        return element.equals(e);
     }
 
     private List<WebElement> elementsWithId(List<WebElement> elements) {
@@ -1062,9 +1091,7 @@ public class SeleniumHelper {
         }
         return result;
     }
-
-
-
+    
     /**
      * Finds screenshot embedded in throwable, if any.
      * @param t exception to search in.
