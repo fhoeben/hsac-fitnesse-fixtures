@@ -28,11 +28,7 @@ public class AndroidAppTest extends BrowserTest {
 
     public AndroidAppTest() {
         super("X");
-    }
-
-    @Override
-    protected void beforeInvoke(Method method, Object[] arguments) {
-        //intentionally left empty..
+        setImplicitWaitForAngularTo(false);
     }
 
     public void setImplicitWaitInSeconds(long stepDelay){
@@ -201,17 +197,6 @@ public class AndroidAppTest extends BrowserTest {
 
         return driver.findElementByAndroidUIAutomator("new UiSelector()." + lookFor + "(\"" + content + "\")");
 
-    }
-
-    @Override
-    public String takeScreenshot(String basename) {
-        String screenshotFile = createScreenshot(basename);
-        if (screenshotFile == null) {
-            throw new SlimFixtureException(false, "Unable to take screenshot: does the webdriver support it?");
-        } else {
-            screenshotFile = getScreenshotLink(screenshotFile);
-        }
-        return screenshotFile;
     }
 }
 
