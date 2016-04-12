@@ -1078,7 +1078,7 @@ public class SeleniumHelper {
         String result = null;
 
         //Now it gets dirty
-        String calledBy = new Exception().getStackTrace()[2].getClassName();
+        String calledBy = new Exception().getStackTrace()[3].getClassName();
         WebDriver d = calledBy.contains("AndroidAppTest") ? androidDriver() : driver();
 
         if (!(d instanceof TakesScreenshot)) {
@@ -1091,7 +1091,7 @@ public class SeleniumHelper {
         }
         return result;
     }
-    
+
     /**
      * Finds screenshot embedded in throwable, if any.
      * @param t exception to search in.

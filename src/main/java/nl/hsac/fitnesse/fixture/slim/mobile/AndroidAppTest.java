@@ -184,6 +184,11 @@ public class AndroidAppTest extends BrowserTest {
         return getAndroidDriver().findElementByAndroidUIAutomator(using);
     }
 
+    @Override
+    public String takeScreenshot(String basename) {
+        return super.takeScreenshot(basename);
+    }
+
     protected Dimension getWindowSize() {
         return getAndroidDriver().manage().window().getSize();
     }
