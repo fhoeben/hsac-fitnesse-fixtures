@@ -250,6 +250,20 @@ public class Environment {
     public void doHttpPost(String url, HttpResponse result, Map<String, Object> headers, String contentType) {
         httpClient.post(url, result, headers, contentType);
     }
+
+    /**
+     * Performs POST to supplied url of result's request.
+     * @param url url to post to.
+     * @param result result containing request, its response will be filled.
+     * @param headers headers to add.
+     * @param contentType contentType for request.
+     */
+    public void doHttpFilePost(String url, HttpResponse result, Map<String, Object> headers, String contentType, String fileName) {
+        String filesDir = getFitNesseFilesSectionDir();
+        String filePath = filesDir + "/" + fileName;
+
+        httpClient.post(url, result, headers, contentType, fileName, filePath);
+    }
     
     /**
      * Performs PUT to supplied url of result of applying template with model.

@@ -14,11 +14,13 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 /**
@@ -49,6 +51,25 @@ public class HttpClient {
         methodPost.setEntity(ent);
         getResponse(url, response, methodPost, headers);
     }
+
+    public void post(String url, HttpResponse response, Map<String, Object> headers, String type, String fileName, String filePath) {
+        HttpPost methodPost = new HttpPost(url);
+
+
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.addBinaryBody(fileName, new File(filePath),
+                ContentType.APPLICATION_OCTET_STREAM, fileName);
+        HttpEntity multipart = builder.build();
+
+        methodPost.setEntity(multipart);
+
+        //ContentType contentType = ContentType.parse(type);
+        //HttpEntity ent = new StringEntity(response.getRequest(), contentType);
+        //methodPost.setEntity(ent);
+        getResponse(url, response, methodPost, headers);
+    }
+
+
     
     /**
      * @param url URL of service
@@ -101,6 +122,7 @@ public class HttpClient {
                     }
                 }
             }
+
             org.apache.http.HttpResponse resp;
             CookieStore store = response.getCookieStore();
             if (store == null) {
