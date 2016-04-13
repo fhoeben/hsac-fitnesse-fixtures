@@ -129,6 +129,17 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     /**
+     * Sends a file by HTTP POST body to service endpoint.
+     * @param fileName fileName to post
+     * @param serviceUrl service endpoint to send body to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean postFileTo(String fileName, String serviceUrl) {
+
+        return postFileToImpl(fileName, serviceUrl);
+    }
+
+    /**
      * Sends all values (url encoded) using post.
      * @param serviceUrl service endpoint to send values to.
      * @return true if call could be made and response did not indicate error.
@@ -145,6 +156,19 @@ public class HttpTest extends SlimFixtureWithMap {
         String url = getUrl(serviceUrl);
         try {
             getEnvironment().doHttpPost(url, response, headerValues, getContentType());
+        } catch (Throwable t) {
+            throw new StopTestException("Unable to get response from POST to: " + url, t);
+        }
+        result = postProcessResponse();
+        return result;
+    }
+
+    protected boolean postFileToImpl(String fileName, String serviceUrl) {
+        boolean result;
+        resetResponse();
+        String url = getUrl(serviceUrl);
+        try {
+            getEnvironment().doHttpFilePost(url, response, headerValues, getContentType(), fileName);
         } catch (Throwable t) {
             throw new StopTestException("Unable to get response from POST to: " + url, t);
         }
