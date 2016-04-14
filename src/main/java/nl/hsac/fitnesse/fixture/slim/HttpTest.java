@@ -3,6 +3,7 @@ package nl.hsac.fitnesse.fixture.slim;
 import freemarker.template.Template;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.LinkedHashMap;
@@ -167,8 +168,14 @@ public class HttpTest extends SlimFixtureWithMap {
         boolean result;
         resetResponse();
         String url = getUrl(serviceUrl);
+        String fitnesseFilesDir;
+        String filePath;
+
         try {
-            getEnvironment().doHttpFilePost(url, response, headerValues, getContentType(), fileName);
+            fitnesseFilesDir  = getEnvironment().getFitNesseFilesSectionDir();
+            filePath = String.format("%s/%s", fitnesseFilesDir, fileName);
+            File file = new File(filePath);
+            getEnvironment().doHttpFilePost(url, response, headerValues, file);
         } catch (Throwable t) {
             throw new StopTestException("Unable to get response from POST to: " + url, t);
         }

@@ -1,0 +1,22 @@
+!contents -R2 -g -p -f -h
+
+!note We start a mock server to receive the binary file and display the request later
+
+|script      |mock xml server setup    |
+|add response|{{{<status>OK</status>}}}|
+|$mockUrl=   |get mock server url      |
+
+!note Now we post the file to the service
+
+|script   |http test           |
+|post file|test.png|to|$mockUrl|
+|show     |response            |
+
+!note The Message report will show the received request
+
+|table: Mock Server Message Report|
+
+!note Stop the mock server
+
+|script|mock xml server setup|
+|stop                        |

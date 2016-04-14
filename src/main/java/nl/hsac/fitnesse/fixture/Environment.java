@@ -258,11 +258,8 @@ public class Environment {
      * @param headers headers to add.
      * @param contentType contentType for request.
      */
-    public void doHttpFilePost(String url, HttpResponse result, Map<String, Object> headers, String contentType, String fileName) {
-        String filesDir = getFitNesseFilesSectionDir();
-        String filePath = filesDir + "/" + fileName;
-
-        httpClient.post(url, result, headers, contentType, fileName, filePath);
+    public void doHttpFilePost(String url, HttpResponse result, Map<String, Object> headers, File file) {
+        httpClient.post(url, result, headers, file);
     }
     
     /**

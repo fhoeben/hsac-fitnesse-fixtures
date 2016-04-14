@@ -52,20 +52,17 @@ public class HttpClient {
         getResponse(url, response, methodPost, headers);
     }
 
-    public void post(String url, HttpResponse response, Map<String, Object> headers, String type, String fileName, String filePath) {
+    public void post(String url, HttpResponse response, Map<String, Object> headers, File file) {
         HttpPost methodPost = new HttpPost(url);
 
 
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        builder.addBinaryBody(fileName, new File(filePath),
-                ContentType.APPLICATION_OCTET_STREAM, fileName);
+        builder.addBinaryBody(file.getName(), new File(file.getAbsolutePath()),
+                ContentType.APPLICATION_OCTET_STREAM, file.getName());
         HttpEntity multipart = builder.build();
 
         methodPost.setEntity(multipart);
 
-        //ContentType contentType = ContentType.parse(type);
-        //HttpEntity ent = new StringEntity(response.getRequest(), contentType);
-        //methodPost.setEntity(ent);
         getResponse(url, response, methodPost, headers);
     }
 
