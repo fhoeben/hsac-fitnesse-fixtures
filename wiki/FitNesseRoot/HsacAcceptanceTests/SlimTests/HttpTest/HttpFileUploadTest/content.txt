@@ -1,0 +1,15 @@
+|script       |file fixture                                                       |
+|$createdFile=|create|upload.txt|containing|This is a file to test the file upload|
+
+|script      |mock xml server setup|
+|add response|{{{<binary/>}}}      |
+|$url=       |get mock server url  |
+
+|script   |http test           |
+|post file|$createdFile|to|$url|
+
+|table: Mock Server Message Report|
+
+|script|mock xml server setup|
+|stop                        |
+

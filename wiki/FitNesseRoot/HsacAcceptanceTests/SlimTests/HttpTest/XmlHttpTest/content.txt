@@ -50,14 +50,8 @@ Incomplete address: no zip code</PO:confirmation>
 |check    |response       |<no xml                                                                                                                       |
 |note     |next line is commented out so we won't have a real exception, uncomment to see that non-XML content is shown in exception                     |
 |note     |check          |xPath                                       |count(/*)                                   |0                                   |
-|post file|test.png       |to                                          |$url                                                                             |
-|check    |xPath          |count(/binary)                              |1                                                                                |
 
 |table: Mock Server Message Report|
-
-|script|mock xml server setup|
-|stop                        |
-
 
 |script|mock xml server setup|
 |stop                        |
