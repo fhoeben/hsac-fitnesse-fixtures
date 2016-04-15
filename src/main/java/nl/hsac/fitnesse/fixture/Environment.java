@@ -252,11 +252,11 @@ public class Environment {
     }
 
     /**
-     * Performs POST to supplied url of result's request.
+     * Performs POST to supplied url of a file as binary data.
      * @param url url to post to.
      * @param result result containing request, its response will be filled.
      * @param headers headers to add.
-     * @param contentType contentType for request.
+     * @param file file containing binary data to post.
      */
     public void doHttpFilePost(String url, HttpResponse result, Map<String, Object> headers, File file) {
         httpClient.post(url, result, headers, file);
