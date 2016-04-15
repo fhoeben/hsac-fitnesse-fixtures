@@ -169,15 +169,14 @@ public class HttpTest extends SlimFixtureWithMap {
         resetResponse();
         String url = getUrl(serviceUrl);
 
+        String filePath = getFilePathFromWikiUrl(fileName);
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new StopTestException(false, "File " + fileName + " not found. Resolved to: " + file.getAbsolutePath());
+        }
+
         try {
-            String filePath = getFilePathFromWikiUrl(fileName);
-            File file = new File(filePath);
-            if(!isFile(file)) {
-                throw new Exception("File " + fileName + " not found.");
-            }
-
             getEnvironment().doHttpFilePost(url, response, headerValues, file);
-
         } catch (Throwable t) {
             throw new StopTestException("Unable to get response from POST to: " + url, t);
         }
@@ -185,10 +184,6 @@ public class HttpTest extends SlimFixtureWithMap {
         return result;
     }
 
-    private boolean isFile(File file){
-        return (file.exists() && !file.isDirectory());
-    }
-    
     /**
      * Sends HTTP PUT template with current values to service endpoint.
      * @param serviceUrl service endpoint to send request to.

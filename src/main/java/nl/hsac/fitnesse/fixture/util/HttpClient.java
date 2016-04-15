@@ -52,9 +52,16 @@ public class HttpClient {
         getResponse(url, response, methodPost, headers);
     }
 
+    /**
+     * Posts file as 'application/octet-stream'.
+     * @param url URL of service
+     * @param response response pre-populated with request to send. Response content and
+     *          statusCode will be filled.
+     * @param headers http headers to add
+     * @param file file containing binary data to post.
+     */
     public void post(String url, HttpResponse response, Map<String, Object> headers, File file) {
         HttpPost methodPost = new HttpPost(url);
-
 
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.addBinaryBody(file.getName(), file,
