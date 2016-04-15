@@ -168,19 +168,25 @@ public class HttpTest extends SlimFixtureWithMap {
         boolean result;
         resetResponse();
         String url = getUrl(serviceUrl);
-        String fitnesseFilesDir;
-        String filePath;
 
         try {
-            fitnesseFilesDir  = getEnvironment().getFitNesseFilesSectionDir();
-            filePath = String.format("%s/%s", fitnesseFilesDir, fileName);
+            String filePath = getFilePathFromWikiUrl(fileName);
             File file = new File(filePath);
+            if(!isFile(file)) {
+                throw new Exception("File " + fileName + " not found.");
+            }
+
             getEnvironment().doHttpFilePost(url, response, headerValues, file);
+
         } catch (Throwable t) {
             throw new StopTestException("Unable to get response from POST to: " + url, t);
         }
         result = postProcessResponse();
         return result;
+    }
+
+    private boolean isFile(File file){
+        return (file.exists() && !file.isDirectory());
     }
     
     /**

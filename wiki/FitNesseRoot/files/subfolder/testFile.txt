@@ -1,0 +1,1 @@
+This file is used to test the posting of a binary data file to a webservice using HttpTest

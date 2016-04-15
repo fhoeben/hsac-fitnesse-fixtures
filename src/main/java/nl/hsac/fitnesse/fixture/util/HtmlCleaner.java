@@ -9,7 +9,8 @@ import java.util.regex.Pattern;
  * Helper to remove wiki formatting from strings.
  */
 public class HtmlCleaner {
-    private static final Pattern PATTERN = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>(.*)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern LINKPATTERN = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>(.*)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern IMAGEPATTERN = Pattern.compile("<img src=\"(.*?)\"/>", Pattern.CASE_INSENSITIVE);
     private static final Pattern PRE_FORMATTED_PATTERN = Pattern.compile("<pre>\\s*(.*?)\\s*</pre>", Pattern.DOTALL);
 
     /**
@@ -20,11 +21,15 @@ public class HtmlCleaner {
     public String getUrl(String htmlLink) {
         String result = htmlLink;
         if (htmlLink != null) {
-            Matcher matcher = PATTERN.matcher(htmlLink);
-            if (matcher.matches()) {
-                String href = matcher.group(1);
+            Matcher linkMatcher = LINKPATTERN.matcher(htmlLink);
+            Matcher imgMatcher = IMAGEPATTERN.matcher(htmlLink);
+            if (linkMatcher.matches()) {
+                String href = linkMatcher.group(1);
                 href = StringEscapeUtils.unescapeHtml4(href);
-                result = href + matcher.group(3);
+                result = href + linkMatcher.group(3);
+            } else if (imgMatcher.matches()) {
+                String src = imgMatcher.group(1);
+                result = StringEscapeUtils.unescapeHtml4(src);
             }
         }
         return result;
@@ -53,7 +58,7 @@ public class HtmlCleaner {
     public String cleanupValue(String rawValue) {
         String result = null;
         if (rawValue != null) {
-            Matcher matcher = PATTERN.matcher(rawValue);
+            Matcher matcher = LINKPATTERN.matcher(rawValue);
             if (matcher.matches()) {
                 result = matcher.group(2) + matcher.group(3);
             } else {
