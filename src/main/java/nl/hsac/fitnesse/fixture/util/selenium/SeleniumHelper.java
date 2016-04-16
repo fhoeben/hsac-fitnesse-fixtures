@@ -1,9 +1,6 @@
 package nl.hsac.fitnesse.fixture.util.selenium;
 
-import io.appium.java_client.MobileElement;
-import io.appium.java_client.android.AndroidDriver;
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
-import nl.hsac.fitnesse.fixture.slim.web.BrowserTest;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import org.openqa.selenium.*;
 import org.openqa.selenium.ie.InternetExplorerDriver;
@@ -51,7 +48,6 @@ public class SeleniumHelper {
     private final List<WebElement> currentIFramePath = new ArrayList<WebElement>(4);
     private DriverFactory factory;
     private WebDriver webDriver;
-    private AndroidDriver<MobileElement> androidDriver;
     private WebDriverWait webDriverWait;
     private boolean shutdownHookEnabled = false;
     private int defaultTimeoutSeconds = DEFAULT_TIMEOUT_SECONDS;
@@ -83,43 +79,10 @@ public class SeleniumHelper {
     }
 
     /**
-     * Sets up androidDriver to be used.
-     * @param anAndroidDriver web driver to use.
-     */
-    public void setAndroidDriver(AndroidDriver<MobileElement> anAndroidDriver) {
-        if (androidDriver != null && !androidDriver.equals(anAndroidDriver)) {
-            androidDriver.quit();
-        }
-        androidDriver = anAndroidDriver;
-
-        if (anAndroidDriver == null) {
-            webDriverWait = null;
-        } else {
-            webDriverWait = new WebDriverWait(androidDriver, getDefaultTimeoutSeconds());
-        }
-
-        if (!shutdownHookEnabled) {
-            Runtime.getRuntime().addShutdownHook(new Thread() {
-                public void run() {
-                    close();
-                }
-            });
-            shutdownHookEnabled = true;
-        }
-    }
-
-    /**
      * Shuts down selenium web driver.
      */
     public void close() {
         setWebDriver(null);
-    }
-
-    /**
-     * Shuts down android driver.
-     */
-    public void closeAndroid() {
-        androidDriver.quit();
     }
 
     /**
@@ -899,17 +862,6 @@ public class SeleniumHelper {
         return webDriver;
     }
 
-    public AndroidDriver<MobileElement> androidDriver() {
-        if (androidDriver == null) {
-            if (factory == null) {
-                throw new StopTestException("Cannot use Selenium before a driver is started (for instance using SeleniumDriverSetup)");
-            } else {
-                factory.createDriver();
-            }
-        }
-        return androidDriver;
-    }
-
     /**
      * Allows clients to wait until a certain condition is true.
      * @return wait using the driver in this helper.
@@ -1077,9 +1029,7 @@ public class SeleniumHelper {
     public String takeScreenshot(String baseName) {
         String result = null;
 
-        //Now it gets dirty
-        String calledBy = new Exception().getStackTrace()[3].getClassName();
-        WebDriver d = calledBy.contains("AndroidAppTest") ? androidDriver() : driver();
+        WebDriver d = driver();
 
         if (!(d instanceof TakesScreenshot)) {
             d = new Augmenter().augment(d);
