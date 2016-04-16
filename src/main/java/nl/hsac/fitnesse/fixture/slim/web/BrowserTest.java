@@ -175,11 +175,6 @@ public class BrowserTest extends SlimFixture {
         ensureActiveTabIsNotClosed();
     }
 
-    public BrowserTest(String appium){
-
-    }
-
-
     public boolean open(String address) {
         final String url = getUrl(address);
         try {

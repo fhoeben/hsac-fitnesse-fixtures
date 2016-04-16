@@ -1,8 +1,5 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.MobileElement;
-import io.appium.java_client.android.AndroidDriver;
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
@@ -232,15 +229,6 @@ public class SeleniumDriverSetup extends SlimFixture {
         return createAndSetRemoteDriver(url, desiredCapabilities);
     }
 
-    public boolean connectToAndroidDriverAtWithCapabilities(String url, Map<String, Object> capabilities)
-            throws MalformedURLException {
-        DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
-        for (Map.Entry<String, Object> capability : capabilities.entrySet()) {
-            desiredCapabilities.setCapability(capability.getKey(), capability.getValue());
-        }
-        return createAndSetRemoteAndroidDriver(url, desiredCapabilities);
-    }
-
     public boolean connectToFirefoxDriverAtWithProfile(String url, Map<String, String> profile)
             throws MalformedURLException {
         FirefoxProfile fxProfile = getFirefoxProfile(profile);
@@ -366,30 +354,6 @@ public class SeleniumDriverSetup extends SlimFixture {
         return driver != null;
     }
 
-    protected boolean createAndSetRemoteAndroidDriver(String url, final DesiredCapabilities desiredCapabilities)
-            throws MalformedURLException {
-            //if (OVERRIDE_ACTIVE) {
-            //    return true;
-            //}
-
-        String cleanUrl = cleanupValue(url);
-        final URL remoteUrl = new URL(cleanUrl);
-        SeleniumHelper.DriverFactory androidDriverFactory = new SeleniumHelper.DriverFactory() {
-            @Override
-            public void createDriver() {
-                AndroidDriver<MobileElement> remoteWebDriver = new AndroidDriver<MobileElement>(remoteUrl, desiredCapabilities);
-                FileDetector fd = remoteWebDriver.getFileDetector();
-                if (fd == null || fd instanceof UselessFileDetector) {
-                    remoteWebDriver.setFileDetector(new LocalFileDetector());
-                }
-                setAndroidDriver(remoteWebDriver);
-            }
-        };
-        AndroidDriver<MobileElement> driver = setAndUseAndroidDriverFactory(androidDriverFactory);
-        getEnvironment().setSymbol(REMOTE_URL_KEY, cleanUrl);
-        return driver != null;
-    }
-
     public static URL getLastRemoteUrl() {
         URL result = null;
         String urlValue = Environment.getInstance().getSymbol(REMOTE_URL_KEY);
@@ -408,22 +372,10 @@ public class SeleniumDriverSetup extends SlimFixture {
         return getHelper().driver();
     }
 
-    protected AndroidDriver setAndUseAndroidDriverFactory(SeleniumHelper.DriverFactory driverFactory) {
-        getHelper().setDriverFactory(driverFactory);
-        return getHelper().androidDriver();
-    }
-
     private void setDriver(WebDriver webDriver) {
         SeleniumHelper helper = getHelper();
         helper.setWebDriver(webDriver);
     }
-
-    private void setAndroidDriver(AndroidDriver androidDriver) {
-        SeleniumHelper helper = getHelper();
-        helper.setAndroidDriver(androidDriver);
-    }
-
-
 
     /**
      * Stops the current driver registered in the SeleniumHelper.
@@ -437,21 +389,6 @@ public class SeleniumDriverSetup extends SlimFixture {
         // ensure we store summary
         runSummary();
         getHelper().close();
-        return true;
-    }
-
-    /**
-     * Stops the current driver registered in the SeleniumHelper.
-     * @return true.
-     */
-    public boolean stopAndroidDriver() {
-        if (OVERRIDE_ACTIVE) {
-            return true;
-        }
-
-        // ensure we store summary
-        //runSummary();
-        getHelper().closeAndroid();
         return true;
     }
 
