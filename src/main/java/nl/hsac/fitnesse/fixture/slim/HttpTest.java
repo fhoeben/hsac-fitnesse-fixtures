@@ -3,6 +3,7 @@ package nl.hsac.fitnesse.fixture.slim;
 import freemarker.template.Template;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.LinkedHashMap;
@@ -129,6 +130,17 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     /**
+     * Sends a file by HTTP POST body to service endpoint.
+     * @param fileName fileName to post
+     * @param serviceUrl service endpoint to send body to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean postFileTo(String fileName, String serviceUrl) {
+
+        return postFileToImpl(fileName, serviceUrl);
+    }
+
+    /**
      * Sends all values (url encoded) using post.
      * @param serviceUrl service endpoint to send values to.
      * @return true if call could be made and response did not indicate error.
@@ -151,7 +163,27 @@ public class HttpTest extends SlimFixtureWithMap {
         result = postProcessResponse();
         return result;
     }
-    
+
+    protected boolean postFileToImpl(String fileName, String serviceUrl) {
+        boolean result;
+        resetResponse();
+        String url = getUrl(serviceUrl);
+
+        String filePath = getFilePathFromWikiUrl(fileName);
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new StopTestException(false, "File " + fileName + " not found. Resolved to: " + file.getAbsolutePath());
+        }
+
+        try {
+            getEnvironment().doHttpFilePost(url, response, headerValues, file);
+        } catch (Throwable t) {
+            throw new StopTestException("Unable to get response from POST to: " + url, t);
+        }
+        result = postProcessResponse();
+        return result;
+    }
+
     /**
      * Sends HTTP PUT template with current values to service endpoint.
      * @param serviceUrl service endpoint to send request to.

@@ -14,11 +14,13 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 /**
@@ -49,6 +51,29 @@ public class HttpClient {
         methodPost.setEntity(ent);
         getResponse(url, response, methodPost, headers);
     }
+
+    /**
+     * Posts file as 'application/octet-stream'.
+     * @param url URL of service
+     * @param response response pre-populated with request to send. Response content and
+     *          statusCode will be filled.
+     * @param headers http headers to add
+     * @param file file containing binary data to post.
+     */
+    public void post(String url, HttpResponse response, Map<String, Object> headers, File file) {
+        HttpPost methodPost = new HttpPost(url);
+
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.addBinaryBody(file.getName(), file,
+                ContentType.APPLICATION_OCTET_STREAM, file.getName());
+        HttpEntity multipart = builder.build();
+
+        methodPost.setEntity(multipart);
+
+        getResponse(url, response, methodPost, headers);
+    }
+
+
     
     /**
      * @param url URL of service
@@ -101,6 +126,7 @@ public class HttpClient {
                     }
                 }
             }
+
             org.apache.http.HttpResponse resp;
             CookieStore store = response.getCookieStore();
             if (store == null) {
