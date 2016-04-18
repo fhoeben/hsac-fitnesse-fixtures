@@ -1028,7 +1028,9 @@ public class SeleniumHelper {
      */
     public String takeScreenshot(String baseName) {
         String result = null;
+
         WebDriver d = driver();
+
         if (!(d instanceof TakesScreenshot)) {
             d = new Augmenter().augment(d);
         }
