@@ -6,26 +6,26 @@ This test continues where ScenarioTest left of. It uses 'table template', a cust
 
 The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
 
-|table template|check original price                                  |
-|open          |http://www.funda.nl                                   |
-|enter         |@{address}, @{city}|as             |Plaats, buurt, adres etc           |
-|note          |select option from autocomplete                       |
-|press         |down                                                  |
-|press         |enter                                                 |
-|click         |Zoek                                                  |
-|click         |@{address}                                            |
-|$price=       |value of           |Vraagprijs                        |
-|$state=       |value of           |Status                            |
-|$volume=      |value of           |Inhoud                            |
-|check         |value of           |Woonoppervlakte|@{squareMeters} m²|
-|$yearBuilt=   |value of           |Bouwjaar                          |
+|table template|check original price                                        |
+|open          |http://www.funda.nl                                         |
+|enter         |@{address}, @{city}|as             |Plaats, buurt, adres etc|
+|note          |select option from autocomplete                             |
+|press         |down                                                        |
+|press         |enter                                                       |
+|click         |Zoek                                                        |
+|click         |@{address}                                                  |
+|$price=       |value of           |Vraagprijs                              |
+|$state=       |value of           |Status                                  |
+|$volume=      |value of           |Inhoud                                  |
+|check         |value of           |Woonoppervlakte|@{squareMeters} m²      |
+|$yearBuilt=   |value of           |Bouwjaar                                |
 
 
 |script|browser test|
 
-|check original price                                                                    |
-|address          |city   |price?          |state?     |square meters|yearBuilt?|volume? |
-|Maliebaan 3      |Utrecht|€ 1.690.000 k.k.|Beschikbaar|418          |1870      |1.680 m³|
-|Wilhelminapark 27|Utrecht|€ 1.175.000 k.k.|Beschikbaar|290          |1905      |1.000 m³|
+|check original price                                                                                  |
+|address          |city   |price?          |state?                   |square meters|yearBuilt?|volume? |
+|Gageldijk 104    |Utrecht|€ 900.000 k.k.  |Beschikbaar              |270          |1906      |1.270 m³|
+|Wilhelminapark 27|Utrecht|€ 1.175.000 k.k.|Verkocht onder voorbehoud|290          |1905      |1.000 m³|
 
 To make test more readable, maintainable and powerful we can also create custom subclasses of !-BrowserTest-!. This is shown in CustomFixtureTest.

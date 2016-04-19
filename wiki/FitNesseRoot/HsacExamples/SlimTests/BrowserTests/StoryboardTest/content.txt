@@ -6,16 +6,15 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |storyboard|browser test                                                 |
 |open      |http://www.huizenzoeker.nl                                   |
-|enter     |Maliebaan, Utrecht|for       |Plaats, postcode met straatnaam|
+|enter     |Gageldijk, Utrecht|for       |Plaats, postcode met straatnaam|
 |press enter                                                             |
-|click     |Maliebaan                                                    |
-|click     |Maliebaan 3                                                  |
+|click     |Gageldijk 104                                                |
 |$price=   |value of          |xpath=//div[@class='prijs']/strong        |
 |open      |http://www.funda.nl                                          |
-|enter     |Maliebaan, Utrecht|as        |Plaats, buurt, adres etc                        |
+|enter     |Gageldijk, Utrecht|as        |Plaats, buurt, adres etc       |
 |note      |select option from autocomplete                              |
 |press     |down                                                         |
 |press     |enter                                                        |
 |click     |Zoek                                                         |
-|click     |Maliebaan 3                                                  |
+|click     |Gageldijk 104                                                |
 |check     |value of          |Vraagprijs|$price k.k.                    |
