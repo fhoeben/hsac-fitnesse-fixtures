@@ -8,6 +8,8 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |table template|check original price                                        |
 |open          |http://www.funda.nl                                         |
+|select        |€ 900.000          |for            |van                     |
+|select        |€ 2.000.000        |for            |tot                     |
 |enter         |@{address}, @{city}|as             |Plaats, buurt, adres etc|
 |note          |select option from autocomplete                             |
 |press         |down                                                        |
