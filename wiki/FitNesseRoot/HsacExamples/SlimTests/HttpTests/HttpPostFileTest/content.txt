@@ -14,11 +14,11 @@ Now we post files to the service. Note the different notation options. We can:
  * Use wiki-urls pointing to files in the files folder or below
  * Use relative paths (non links) from files folder (include files folder)
 
-|script   |http test                                      |
-|post file|http://files/subfolder/testFile.txt|to|$mockUrl|
-|post file|files/subfolder/testFile.txt       |to|$mockUrl|
-|post file|http://files/test.png              |to|$mockUrl|
-|post file|files/test.png                     |to|$mockUrl|
+|script   |http test                                             |
+|post file|http://files/httpPostExamples/testFile.txt|to|$mockUrl|
+|post file|files/httpPostExamples/testFile.txt       |to|$mockUrl|
+|post file|http://files/httpPostExamples/test.png    |to|$mockUrl|
+|post file|files/httpPostExamples/test.png           |to|$mockUrl|
 
 The Message report will show the received request:
 

@@ -172,7 +172,7 @@ public class HttpTest extends SlimFixtureWithMap {
         String filePath = getFilePathFromWikiUrl(fileName);
         File file = new File(filePath);
         if (!file.exists()) {
-            throw new StopTestException(false, "File " + fileName + " not found. Resolved to: " + file.getAbsolutePath());
+            throw new StopTestException(false, "File " + filePath + " not found.");
         }
 
         try {
