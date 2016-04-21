@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.util.selenium;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -52,7 +53,17 @@ class TryAllFramesConditionDecorator<T> implements ExpectedCondition<T> {
                     }
                 }
             } finally {
-                helper.switchToParentFrame();
+                // if we already had a problem with alerts at lower level, no need to try to go up again
+                if (helper.getFrameDepthOnLastAlertError() > 0) {
+                    try {
+                        helper.switchToParentFrame();
+                    } catch (UnhandledAlertException e) {
+                        // we can't go up if there is an alert open.
+                        // we store the current depth so we might go back up when the alert is handled
+                        helper.storeFrameDepthOnAlertError();
+                        break;
+                    }
+                }
             }
         }
         return result;
