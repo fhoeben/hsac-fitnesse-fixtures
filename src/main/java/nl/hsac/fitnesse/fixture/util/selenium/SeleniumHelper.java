@@ -46,6 +46,7 @@ public class SeleniumHelper {
                     "} else { return null; }";
 
     private final List<WebElement> currentIFramePath = new ArrayList<WebElement>(4);
+    private int frameDepthOnLastAlertError;
     private DriverFactory factory;
     private WebDriver webDriver;
     private WebDriverWait webDriverWait;
@@ -1242,6 +1243,38 @@ public class SeleniumHelper {
      */
     public int getDefaultTimeoutSeconds() {
         return defaultTimeoutSeconds;
+    }
+
+    /**
+     * @return return current iframe size.
+     */
+    public int getCurrentFrameDepth() {
+        return currentIFramePath.size();
+    }
+
+    /**
+     * Store current frame depth in case of alert error
+     */
+    public void storeFrameDepthOnAlertError() {
+        frameDepthOnLastAlertError = getCurrentFrameDepth();
+    }
+
+    /**
+     * Reset current frame depth in case of alert error
+     */
+    public void resetFrameDepthOnAlertError() {
+        int depthOnLastAlertError = getFrameDepthOnLastAlertError();
+        for (int i = 0; i < depthOnLastAlertError; i++) {
+            switchToParentFrame();
+        }
+        frameDepthOnLastAlertError = 0;
+    }
+
+    /**
+     * @return frame depth on last alert error
+     */
+    public int getFrameDepthOnLastAlertError() {
+        return frameDepthOnLastAlertError;
     }
 
     public interface DriverFactory {
