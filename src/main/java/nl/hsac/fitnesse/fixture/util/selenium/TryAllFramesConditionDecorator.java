@@ -18,6 +18,7 @@ class TryAllFramesConditionDecorator<T> implements ExpectedCondition<T> {
 
     private final SeleniumHelper helper;
     private final ExpectedCondition<T> decorated;
+    private int frameDepthOnStart;
 
     /**
      * Creates new, working inside the aHelper's current (i)frame.
@@ -32,6 +33,7 @@ class TryAllFramesConditionDecorator<T> implements ExpectedCondition<T> {
     public T apply(WebDriver webDriver) {
         T result = decorated.apply(webDriver);
         if (!isFinished(result)) {
+            frameDepthOnStart = helper.getCurrentFrameDepth();
             result = invokeInFrames(webDriver);
         }
         return result;
@@ -54,13 +56,14 @@ class TryAllFramesConditionDecorator<T> implements ExpectedCondition<T> {
                 }
             } finally {
                 // if we already had a problem with alerts at lower level, no need to try to go up again
-                if (helper.getFrameDepthOnLastAlertError() > 0) {
+                if (helper.getFrameDepthOnLastAlertError() == 0) {
+                    int depthOnAlert = helper.getCurrentFrameDepth();
                     try {
                         helper.switchToParentFrame();
                     } catch (UnhandledAlertException e) {
                         // we can't go up if there is an alert open.
                         // we store the current depth so we might go back up when the alert is handled
-                        helper.storeFrameDepthOnAlertError();
+                        helper.storeFrameDepthOnAlertError(depthOnAlert - frameDepthOnStart);
                         break;
                     }
                 }

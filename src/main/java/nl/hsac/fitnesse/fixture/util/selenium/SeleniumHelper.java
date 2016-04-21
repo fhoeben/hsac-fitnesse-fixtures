@@ -1151,8 +1151,8 @@ public class SeleniumHelper {
      * Activates main/top-level iframe (i.e. makes it the current frame).
      */
     public void switchToDefaultContent() {
-        currentIFramePath.clear();
         getTargetLocator().defaultContent();
+        currentIFramePath.clear();
     }
 
 
@@ -1246,7 +1246,7 @@ public class SeleniumHelper {
     }
 
     /**
-     * @return return current iframe size.
+     * @return return current depth of (i)frames.
      */
     public int getCurrentFrameDepth() {
         return currentIFramePath.size();
@@ -1254,24 +1254,27 @@ public class SeleniumHelper {
 
     /**
      * Store current frame depth in case of alert error
+     * @param frameDepthOnAlert frames added searching in nested frames started, this is the number of levels that
+     *                          should be removed after the alert is handled.
      */
-    public void storeFrameDepthOnAlertError() {
-        frameDepthOnLastAlertError = getCurrentFrameDepth();
+    public void storeFrameDepthOnAlertError(int frameDepthOnAlert) {
+        frameDepthOnLastAlertError = frameDepthOnAlert;
     }
 
     /**
-     * Reset current frame depth in case of alert error
+     * Reactivate (i)frame that was active before we encountered an alert searching in nested (i)frames.
      */
     public void resetFrameDepthOnAlertError() {
         int depthOnLastAlertError = getFrameDepthOnLastAlertError();
         for (int i = 0; i < depthOnLastAlertError; i++) {
             switchToParentFrame();
+            frameDepthOnLastAlertError--;
         }
-        frameDepthOnLastAlertError = 0;
     }
 
     /**
-     * @return frame depth on last alert error
+     * @return number of (i)frame levels that need to be removed to get back to right frame after encountering an alert
+     *         in a nested (i)frame.
      */
     public int getFrameDepthOnLastAlertError() {
         return frameDepthOnLastAlertError;
