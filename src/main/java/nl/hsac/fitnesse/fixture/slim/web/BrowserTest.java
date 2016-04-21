@@ -252,6 +252,7 @@ public class BrowserTest extends SlimFixture {
         boolean result = false;
         if (alert != null) {
             alert.accept();
+            onAlertHandled(true);
             result = true;
         }
         return result;
@@ -263,9 +264,20 @@ public class BrowserTest extends SlimFixture {
         boolean result = false;
         if (alert != null) {
             alert.dismiss();
+            onAlertHandled(false);
             result = true;
         }
         return result;
+    }
+
+    /**
+     * Called when an alert is either dismissed or accepted.
+     * @param accepted true if the alert was accepted, false if dismissed.
+     */
+    protected void onAlertHandled(boolean accepted) {
+        // if we were looking in nested frames, we could not go back to original frame
+        // because of the alert. Ensure we do so now the alert is handled.
+        getSeleniumHelper().resetFrameDepthOnAlertError();
     }
 
     protected Alert getAlert() {
