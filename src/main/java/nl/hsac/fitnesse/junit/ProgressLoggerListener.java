@@ -57,7 +57,13 @@ public class ProgressLoggerListener extends RunListener {
             report("testSuite Started '%s'", testClassName);
             currentTestClassName = testClassName;
         }
-        currentChild++;
+        if (testName == null
+                || !(testName.endsWith(".SuiteSetUp")
+                    || testName.endsWith(".SuiteTearDown"))) {
+            // incrementing on setup/teardown causes current to become larger than total
+            // that looks strangs
+            currentChild++;
+        }
         report("test Started '%s' (%s / %s)", testName, currentChild, totalChildCount);
     }
 
