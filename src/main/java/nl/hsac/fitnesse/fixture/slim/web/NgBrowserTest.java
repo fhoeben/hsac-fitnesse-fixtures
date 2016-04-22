@@ -68,6 +68,13 @@ public class NgBrowserTest extends BrowserTest {
                 "getAngularRoot");
     }
 
+    /**
+     * Creates new.
+     */
+    public NgBrowserTest() {
+        setImplicitWaitForAngularTo(true);
+    }
+
     @Override
     protected void waitForAngularIfNeeded(Method method) {
         if (isImplicitWaitForAngularEnabled()
