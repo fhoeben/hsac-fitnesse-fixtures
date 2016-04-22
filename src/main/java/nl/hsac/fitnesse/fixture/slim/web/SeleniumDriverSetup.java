@@ -124,7 +124,7 @@ public class SeleniumDriverSetup extends SlimFixture {
             String driverPath = getExecutable("chromedriver");
             setPropertyValue("webdriver.chrome.driver", driverPath);
             result = startDriver(ChromeDriver.class.getName());
-        } else if ("edge".equals(browserName)) {
+        } else if ("MicrosoftEdge".equals(browserName) || "edge".equals(browserName)) {
             String driverPath = getExecutable("MicrosoftWebDriver");
             setPropertyValue("webdriver.edge.driver", driverPath);
             result = startDriver(EdgeDriver.class.getName());
