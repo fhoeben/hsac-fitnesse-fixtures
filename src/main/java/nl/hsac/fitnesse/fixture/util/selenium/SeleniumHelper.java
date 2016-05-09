@@ -122,13 +122,13 @@ public class SeleniumHelper {
                 }
             }
             if (!isInteractable(element)) {
-                element = findByXPath("//button/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::button", place);
+                element = findByXPath("//button[normalize-space(descendant-or-self::text())='%s']", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
             }
             if (!isInteractable(element)) {
-                element = findByXPath("//label/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::label", place);
+                element = findByXPath("//label[normalize-space(descendant-or-self::text())='%s']", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
@@ -160,13 +160,13 @@ public class SeleniumHelper {
                 }
             }
             if (!isInteractable(element)) {
-                element = findByXPath("//button/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::button", place);
+                element = findByXPath("//button[contains(normalize-space(descendant-or-self::text()), '%s')]", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
             }
             if (!isInteractable(element)) {
-                element = findByXPath("//label/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::label", place);
+                element = findByXPath("//label[contains(normalize-space(descendant-or-self::text()), '%s')]", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
