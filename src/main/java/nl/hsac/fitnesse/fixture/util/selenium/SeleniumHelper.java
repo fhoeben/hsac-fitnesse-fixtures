@@ -122,6 +122,18 @@ public class SeleniumHelper {
                 }
             }
             if (!isInteractable(element)) {
+                element = findByXPath("//button/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::button", place);
+                if (firstFound == null) {
+                    firstFound = element;
+                }
+            }
+            if (!isInteractable(element)) {
+                element = findByXPath("//label/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::label", place);
+                if (firstFound == null) {
+                    firstFound = element;
+                }
+            }
+            if (!isInteractable(element)) {
                 element = getElementExact(place);
                 if (firstFound == null) {
                     firstFound = element;
@@ -143,6 +155,18 @@ public class SeleniumHelper {
             if (!isInteractable(element)) {
                 // finding by linkText does not find actual text if css text-transform is in place
                 element = findByXPath("//*[contains(normalize-space(descendant::text()),'%s')]/ancestor-or-self::a", place);
+                if (firstFound == null) {
+                    firstFound = element;
+                }
+            }
+            if (!isInteractable(element)) {
+                element = findByXPath("//button/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::button", place);
+                if (firstFound == null) {
+                    firstFound = element;
+                }
+            }
+            if (!isInteractable(element)) {
+                element = findByXPath("//label/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::label", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
@@ -269,12 +293,6 @@ public class SeleniumHelper {
         }
         if (!isInteractable(element)) {
             element = findElement(byCss("input[value='%s']:not([type='hidden'])", place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findByXPath("//button/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::button", place);
             if (firstElement == null) {
                 firstElement = element;
             }

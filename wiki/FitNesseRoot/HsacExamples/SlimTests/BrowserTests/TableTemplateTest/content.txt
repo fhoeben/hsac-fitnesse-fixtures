@@ -25,9 +25,9 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |script|browser test|
 
-|check original price                                                                                  |
-|address          |city   |price?          |state?                   |square meters|yearBuilt?|volume? |
-|Gageldijk 104    |Utrecht|€ 900.000 k.k.  |Beschikbaar              |270          |1906      |1.270 m³|
-|Wilhelminapark 27|Utrecht|€ 1.175.000 k.k.|Verkocht onder voorbehoud|290          |1905      |1.000 m³|
+|check original price                                                                    |
+|address          |city   |price?          |state?     |square meters|yearBuilt?|volume? |
+|Gageldijk 104    |Utrecht|€ 900.000 k.k.  |Beschikbaar|270          |1906      |1.270 m³|
+|Wilhelminapark 46|Utrecht|€ 1.295.000 k.k.|Beschikbaar|312          |Voor 1906 |1.370 m³|
 
 To make test more readable, maintainable and powerful we can also create custom subclasses of !-BrowserTest-!. This is shown in CustomFixtureTest.
