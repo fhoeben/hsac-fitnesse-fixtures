@@ -185,6 +185,11 @@
 							<directory>wiki/FitNesseRoot/files/screenshots/</directory>
 							<followSymlinks>false</followSymlinks>
 						</fileset>
+						<fileset>
+							<!-- On clean throw away plugins to prevent multiple version being present after update -->
+							<directory>wiki/plugins</directory>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
 					</filesets>
 				</configuration>
 			</plugin>
@@ -294,6 +299,52 @@
 					<excludeArtifactIds>fitnesse,junit</excludeArtifactIds>
 					<outputDirectory>${standalone.classpath}</outputDirectory>
 				</configuration>
+				<executions>
+					<execution>
+						<id>copy-fitnesse-standalone</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.fitnesse</groupId>
+									<artifactId>fitnesse</artifactId>
+									<classifier>standalone</classifier>
+									<overWrite>true</overWrite>
+								</artifactItem>
+							</artifactItems>
+							<stripVersion>true</stripVersion>
+							<outputDirectory>${project.basedir}/wiki</outputDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-plugins</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>nl.hsac</groupId>
+									<artifactId>hsac-fitnesse-plugin</artifactId>
+									<version>1.13.0</version>
+									<overWrite>true</overWrite>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.fitnesse.plugins</groupId>
+									<artifactId>maven-classpath-plugin</artifactId>
+									<version>1.9</version>
+									<classifier>jar-with-dependencies</classifier>
+									<overWrite>true</overWrite>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${project.basedir}/wiki/plugins</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
