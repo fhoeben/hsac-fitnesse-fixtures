@@ -38,6 +38,10 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<hsac-fitnesse-plugin.version>1.13.0</hsac-fitnesse-plugin.version>
+		<maven-classpath-plugin.version>1.9</maven-classpath-plugin.version>
+		<fitnesse.version>20160515</fitnesse.version>
+		<selenium.version>2.53.0</selenium.version>
 		<slf4j.version>1.7.21</slf4j.version>
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
@@ -57,7 +61,7 @@
 		<dependency>
 			<groupId>org.fitnesse</groupId>
 			<artifactId>fitnesse</artifactId>
-			<version>20160515</version>
+			<version>${fitnesse.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -95,7 +99,7 @@
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
-			<version>2.53.0</version>
+			<version>${selenium.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.seleniumhq.selenium</groupId>
@@ -330,13 +334,13 @@
 								<artifactItem>
 									<groupId>nl.hsac</groupId>
 									<artifactId>hsac-fitnesse-plugin</artifactId>
-									<version>1.13.0</version>
+									<version>${hsac-fitnesse-plugin.version}</version>
 									<overWrite>true</overWrite>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.fitnesse.plugins</groupId>
 									<artifactId>maven-classpath-plugin</artifactId>
-									<version>1.9</version>
+									<version>${maven-classpath-plugin.version}</version>
 									<classifier>jar-with-dependencies</classifier>
 									<overWrite>true</overWrite>
 								</artifactItem>
