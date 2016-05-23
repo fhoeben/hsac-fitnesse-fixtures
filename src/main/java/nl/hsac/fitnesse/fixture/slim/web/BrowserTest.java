@@ -1189,7 +1189,7 @@ public class BrowserTest extends SlimFixture {
      */
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
     public boolean isVisible(String place) {
-        return getisvisible(place, true);
+        return isVisibleImpl(place, true);
     }
 
     /**
@@ -1199,18 +1199,18 @@ public class BrowserTest extends SlimFixture {
      */
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
     public boolean isVisibleOnPage(String place) {
-        return getisvisible(place, false);
+        return isVisibleImpl(place, false);
     }
 
-    protected boolean getisvisible(String place, boolean checkOnScreen)    {
+    protected boolean isVisibleImpl(String place, boolean checkOnScreen)    {
         boolean result = false;
         WebElement element = getElementToCheckVisibility(place);
-        if (element != null) {
+        if (element != null && element.isDisplayed()) {
             if(checkOnScreen) {
-                result = element.isDisplayed() && isElementOnScreen(element);
+                result = isElementOnScreen(element);
             }
             else {
-                result = element.isDisplayed();
+                result = true;
             }
         }
         return result;
