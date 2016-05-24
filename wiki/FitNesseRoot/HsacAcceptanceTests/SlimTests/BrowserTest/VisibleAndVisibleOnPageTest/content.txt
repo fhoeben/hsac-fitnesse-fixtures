@@ -1,0 +1,36 @@
+This test ensures that is Visible and is Visible On Page are working correctly
+
+We use a mock server running to serve the HTML defined in this page.
+
+
+!define HTML { {{{
+<html>
+<head>
+<style>
+p {
+    min-height: 5000px;
+}
+</style>
+</head>
+<body>
+<div>A</div>
+<p>&nbsp</p>
+<div>B</div>
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script                |browser test        |
+|seconds before timeout|1                   |
+|open                  |$url                |
+|ensure                |is Visible        |A|
+|reject                |is Visible        |B|
+|ensure                |is Visible On Page|A|
+|ensure                |is Visible On Page|B|
+
+|script|mock xml server setup|
+|stop                        |
