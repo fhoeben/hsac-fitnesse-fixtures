@@ -56,7 +56,7 @@ public class JsonPathHelper {
         if(null != getJsonPath(json, jsonPath)) {
             return CONTEXT.parse(json).set(jsonPath, value).jsonString();
         } else {
-            throw new InvalidPathException("No result for: " + jsonPath + " IN: " + json);
+            throw new PathNotFoundException("No result for: " + jsonPath + " IN: " + json);
         }
     }
 }
