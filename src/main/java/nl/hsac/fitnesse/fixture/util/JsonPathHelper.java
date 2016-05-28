@@ -54,4 +54,13 @@ public class JsonPathHelper {
         }
         return result;
     }
+
+    public String updateJsonPathWithValue(String json, String jsonPath, String value){
+        if(null != getJsonPath(json, jsonPath)) {
+            return CONTEXT.parse(json).set(jsonPath, value).jsonString();
+        } else {
+            System.err.println("No result for: " + jsonPath + " IN: " + json);
+            return null;
+        }
+    }
 }
