@@ -58,3 +58,28 @@ Here we use !-FitNesse-! as a HTTP server so we can control which responses the 
 
 |script|mock xml server setup|
 |stop                        |
+
+!2 Use a file as the response
+
+|script        |file fixture                                          |
+|set directory |http://files/test                                     |
+|$responseFile=|create|response.xml|containing|!-<responseFromFile/>-!|
+
+|script           |mock xml server setup        |
+|add response file|$responseFile                |
+|add response file|$responseFile|with status|201|
+|$url=            |get mock server url          |
+
+|script  |xml http test      |
+|get from|$url               |
+|check   |response status|200|
+|show    |response           |
+|get from|$url               |
+|check   |response status|201|
+|show    |response           |
+
+
+|table: Mock Server Message Report|
+
+|script|mock xml server setup|
+|stop                        |

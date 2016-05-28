@@ -1,0 +1,30 @@
+!define jsonToTest {!-{
+	"airplanes": [{
+		"id": "001",
+		"type": "747",
+		"brand": "Boeing",
+		"seats": "400",
+		"airline": "KLM"
+	}, {
+		"id": "002",
+		"type": "737",
+		"brand": "Boeing",
+		"seats": "400",
+		"airline": "Virgin"
+	}]
+}-!}
+
+|script      |mock xml server setup|
+|add response|${jsonToTest}        |
+|$url=       |get mock server url  |
+
+|script   |json http test                                     |
+|get from |$url                                               |
+|$newJson=|set json path|airplanes[0].seats|to|300|in|response|
+
+|script      |mock xml server setup|
+|add response|$newJson             |
+
+|script  |json http test                  |
+|get from|$url                            |
+|check   |json path|airplanes[0].seats|300|
