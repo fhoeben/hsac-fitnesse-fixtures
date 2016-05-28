@@ -1,9 +1,6 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.Option;
-import com.jayway.jsonpath.ParseContext;
+import com.jayway.jsonpath.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -55,12 +52,11 @@ public class JsonPathHelper {
         return result;
     }
 
-    public String updateJsonPathWithValue(String json, String jsonPath, String value){
+    public String updateJsonPathWithValue(String json, String jsonPath, String value) {
         if(null != getJsonPath(json, jsonPath)) {
             return CONTEXT.parse(json).set(jsonPath, value).jsonString();
         } else {
-            System.err.println("No result for: " + jsonPath + " IN: " + json);
-            return null;
+            throw new InvalidPathException("No result for: " + jsonPath + " IN: " + json);
         }
     }
 }
