@@ -44,10 +44,11 @@ The main commands/keywords (i.e. public methods) offered by !-nl.hsac.fitnesse.f
 The commands/keywords (i.e. public methods) added by !-nl.hsac.fitnesse.fixture.slim.JsonHttpTest-! are listed below.
 
 -|Comment|
-|post values as json to <url>      |Sends a POST containing all values (as JSON properties) to the url.                                                          |
-|json path <expression>            |Evaluates the (definite) expression against the last response received.                                                      |
-|json path count <expression>      |Evaluates the (indefinite) expression against the last response received, counting the number of results.                    |
-|all json path matches <expression>|Evaluates the expression against the last response received and returns all results. Intended to be used with 'show' command.|
+|post values as json to <url>                   |Sends a POST containing all values (as JSON properties) to the url.                                                                            |
+|json path <expression>                         |Evaluates the (definite) expression against the last response received.                                                                        |
+|json path count <expression>                   |Evaluates the (indefinite) expression against the last response received, counting the number of results.                                      |
+|all json path matches <expression>             |Evaluates the expression against the last response received and returns all results. Intended to be used with 'show' command.                  |
+|set json path <expression> to <value> in <json>|Evaluates the expression against the provided json and -if exactly one key is found- replaces that key's existing value with the provided value|
 
 !3 !-XmlHttpTest-!
 The commands/keywords (i.e. public methods) added to those of !-HttpTest-! by !-nl.hsac.fitnesse.fixture.slim.XmlHttpTest-! are listed below.
