@@ -74,7 +74,8 @@ public class JsonHttpTest extends HttpTest {
     public void setJsonPathTo(String path, String value){
         String jsonStr = getResponse().getResponse();
         String jsonPath = getPathExpr(path);
-        getResponse().setResponse(pathHelper.updateJsonPathWithValue(jsonStr, jsonPath, value));
+        String newResponse = pathHelper.updateJsonPathWithValue(jsonStr, jsonPath, value);
+        getResponse().setResponse(newResponse);
     }
 
     protected String getPathExpr(String path) {
