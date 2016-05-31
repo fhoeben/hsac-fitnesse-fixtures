@@ -67,17 +67,14 @@ public class JsonHttpTest extends HttpTest {
     }
 
     /**
-     * Update a value in a supplied json string by supplied jsonPath
+     * Update a value in a the response by supplied jsonPath
      * @param path the jsonPath to locate the key whose value needs changing
      * @param value the new value to set
-     * @param jsonStr the json to update (this may be set to 'response' to use jsonHttpTest's last reponse body
      */
-    public String setJsonPathToIn(String path, String value, String jsonStr){
-        if(jsonStr.equalsIgnoreCase("response")){
-            jsonStr = getResponse().getResponse();
-        }
+    public void setJsonPathTo(String path, String value){
+        String jsonStr = getResponse().getResponse();
         String jsonPath = getPathExpr(path);
-        return pathHelper.updateJsonPathWithValue(jsonStr, jsonPath, value);
+        getResponse().setResponse(pathHelper.updateJsonPathWithValue(jsonStr, jsonPath, value));
     }
 
     protected String getPathExpr(String path) {
