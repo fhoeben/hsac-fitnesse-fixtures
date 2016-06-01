@@ -78,22 +78,24 @@ public class MockXmlServerSetup extends SlimFixture {
     }
 
     public void addResponseFile(String aResponseFile) {
-        String filePath = getFilePathFromWikiUrl(aResponseFile);
-        try{
-            addResponseImpl(readFile(filePath, StandardCharsets.UTF_8), null);
-        } catch(IOException e){
-            addResponseImpl("Response file not found for: " + aResponseFile, null);
-        }
+        String fileContent = loadResponseFromFile(aResponseFile);
+        addResponse(fileContent);
     }
 
     public void addResponseFileWithStatus(String aResponseFile, int aStatusCode) {
+        String fileContent = loadResponseFromFile(aResponseFile);
+        addResponseWithStatus(fileContent, aStatusCode);
+    }
+
+    protected String loadResponseFromFile(String aResponseFile) {
+        String fileContent;
         String filePath = getFilePathFromWikiUrl(aResponseFile);
-        try{
-            XmlHttpResponse response = addResponseImpl(readFile(filePath, StandardCharsets.UTF_8), null);
-            response.setStatusCode(aStatusCode);
-        } catch(IOException e){
-            addResponseImpl("Response file not found for: " + aResponseFile, null);
+        try {
+            fileContent = readFile(filePath, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            fileContent = "Response file not found for: " + aResponseFile;
         }
+        return fileContent;
     }
 
     protected XmlHttpResponse addResponseImpl(String aResponse, String aRequest) {
