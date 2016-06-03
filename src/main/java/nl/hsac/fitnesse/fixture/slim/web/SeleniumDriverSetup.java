@@ -9,6 +9,7 @@ import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
@@ -24,6 +25,7 @@ import org.openqa.selenium.safari.SafariDriver;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -74,6 +76,10 @@ public class SeleniumDriverSetup extends SlimFixture {
                     if ("firefoxdriver".equalsIgnoreCase(driverClass.getSimpleName())) {
                         FirefoxProfile fxProfile = getFirefoxProfile(profile);
                         driver = new FirefoxDriver(fxProfile);
+                    }
+                    else if("chromedriver".equalsIgnoreCase(driverClass.getSimpleName())) {
+                        DesiredCapabilities chProfile = getChromeProfile(profile);
+                        driver = new ChromeDriver(chProfile);
                     } else {
                         driver = driverClass.newInstance();
                     }
@@ -123,7 +129,7 @@ public class SeleniumDriverSetup extends SlimFixture {
         } else if ("chrome".equals(browserName)) {
             String driverPath = getExecutable("chromedriver");
             setPropertyValue("webdriver.chrome.driver", driverPath);
-            result = startDriver(ChromeDriver.class.getName());
+            result = startDriver(ChromeDriver.class.getName(), profile);
         } else if ("MicrosoftEdge".equals(browserName) || "edge".equals(browserName)) {
             String driverPath = getExecutable("MicrosoftWebDriver");
             setPropertyValue("webdriver.edge.driver", driverPath);
@@ -253,6 +259,16 @@ public class SeleniumDriverSetup extends SlimFixture {
             }
         }
         return fxProfile;
+    }
+
+    private DesiredCapabilities getChromeProfile(Map<String, String> profile) {
+        DesiredCapabilities chProfile = DesiredCapabilities.chrome();
+        if (profile != null) {
+            Map<String, Object> chromeOptions = new HashMap<String, Object>();
+            chromeOptions.put("mobileEmulation", profile);
+            chProfile.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
+        }
+        return chProfile;
     }
 
     public boolean connectToDriverAtWithJsonCapabilities(String url, String capabilitiesInJson)

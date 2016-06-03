@@ -7,8 +7,9 @@ Stopping the browser is done in SuiteTearDown, which is done after all tests in 
 !***> Fixture code locations
 !include -c .HsacExamples.SlimTests.SuiteSetUp
 
-|Import                           |
-|nl.hsac.fitnesse.fixture.slim.web|
+|Import                                   |
+|nl.hsac.fitnesse.fixture.slim.web        |
+|nl.hsac.fitnesse.fixture.FixtureDebugTest|
 
 *!
 
@@ -27,6 +28,7 @@ The latter allows tests to be executed on different operating systems. This is a
 |note            |start driver for     |firefox                                                                                                    |
 |note            |start driver for     |safari                                                                                                     |
 |note            |start driver for     |phantomjs                                                                                                  |
+|note            |start driver for     |chrome           |with profile          |!{deviceName:Apple iPhone 6}                                      |
 |note            |connect to driver for|chrome           |at                    |${GRID_HUB}                                                       |
 |note            |connect to driver for|!-MicrosoftEdge-!|at                    |${GRID_HUB}                                                       |
 |note            |connect to driver for|internet explorer|at                    |${GRID_HUB}                                                       |
