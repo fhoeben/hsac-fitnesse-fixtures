@@ -1142,7 +1142,6 @@ public class SeleniumHelper {
 
     /**
      * Sets current window to maximum size.
-     *
      */
 
     public void setWindowSizeToMaximum() {
