@@ -1306,8 +1306,6 @@ public class SeleniumHelper {
         return frameDepthOnLastAlertError;
     }
 
-
-
     public interface DriverFactory {
         void createDriver();
     }
