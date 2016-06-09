@@ -1603,6 +1603,10 @@ public class BrowserTest extends SlimFixture {
         }
     }
 
+    public void setBrowserSizeToMaximum() {
+        getSeleniumHelper().setWindowSizeToMaximum();
+    }
+
     /**
      * Downloads the target of the supplied link.
      * @param place link to follow.
