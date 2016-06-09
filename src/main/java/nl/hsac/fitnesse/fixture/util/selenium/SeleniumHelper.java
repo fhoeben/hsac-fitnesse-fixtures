@@ -1141,6 +1141,15 @@ public class SeleniumHelper {
     }
 
     /**
+     * Sets current window to maximum size.
+     *
+     */
+
+    public void setWindowSizeToMaximum() {
+        getWindow().maximize();
+    }
+
+    /**
      * @return current browser window.
      */
     public WebDriver.Window getWindow() {
@@ -1297,6 +1306,8 @@ public class SeleniumHelper {
     public int getFrameDepthOnLastAlertError() {
         return frameDepthOnLastAlertError;
     }
+
+
 
     public interface DriverFactory {
         void createDriver();
