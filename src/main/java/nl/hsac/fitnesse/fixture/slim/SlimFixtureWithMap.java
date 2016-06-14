@@ -31,6 +31,24 @@ public class SlimFixtureWithMap extends SlimFixture {
     }
 
     /**
+     * Stores integer value.
+     * @param value value to be passed.
+     * @param name name to use this value for.
+     */
+    public void setIntValueFor(int value, String name) {
+        setValueFor(Integer.valueOf(value), name);
+    }
+
+    /**
+     * Stores double value.
+     * @param value value to be passed.
+     * @param name name to use this value for.
+     */
+    public void setDoubleValueFor(double value, String name) {
+        setValueFor(Double.valueOf(value), name);
+    }
+
+    /**
      * Stores value to be passed to template, or GET.
      * @param value value to be passed.
      * @param name name to use this value for.
