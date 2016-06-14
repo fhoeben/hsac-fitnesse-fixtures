@@ -47,6 +47,26 @@ public class MapFixture extends SlimFixtureWithMap {
     }
 
     /**
+     * Stores integer value in map.
+     * @param value value to be passed.
+     * @param name name to use this value for.
+     * @param map map to store value in.
+     */
+    public void setIntValueForIn(int value, String name, Map<String, Object> map) {
+        setValueForIn(Integer.valueOf(value), name, map);
+    }
+
+    /**
+     * Stores double value in map.
+     * @param value value to be passed.
+     * @param name name to use this value for.
+     * @param map map to store value in.
+     */
+    public void setDoubleValueForIn(double value, String name, Map<String, Object> map) {
+        setValueForIn(Double.valueOf(value), name, map);
+    }
+
+    /**
      * Stores value in map.
      * @param value value to be passed.
      * @param name name to use this value for.
