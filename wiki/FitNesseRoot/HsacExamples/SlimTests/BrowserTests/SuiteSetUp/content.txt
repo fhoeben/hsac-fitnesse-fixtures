@@ -22,16 +22,13 @@ The latter allows tests to be executed on different operating systems. This is a
 !define GRID_HUB {http://remote-selenium.local:4444/wd/hub}
 
 !*> Define $mobileEmulation device attributes
-|script          |map fixture       |
-|set int value   |360|for|width     |
-|set int value   |640|for|height    |
-|set double value|3.0|for|pixelRatio|
-|$deviceMetrics= |copy map          |
 
-|script           |map fixture                                                                                                                                                           |
-|set value        |!-Mozilla/5.0 (Linux; Android 4.2.1; en-us; Nexus 5 Build/JOP40D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19-!|for|userAgent    |
-|set value        |$deviceMetrics                                                                                                                                      |for|deviceMetrics|
-|$mobileEmulation=|copy map                                                                                                                                                              |
+|script           |map fixture                                                                                                                                                                      |
+|set value        |!-Mozilla/5.0 (Linux; Android 4.2.1; en-us; Nexus 5 Build/JOP40D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19-!|for|userAgent               |
+|set int value    |360                                                                                                                                                 |for|deviceMetrics.width     |
+|set int value    |640                                                                                                                                                 |for|deviceMetrics.height    |
+|set double value |3.0                                                                                                                                                 |for|deviceMetrics.pixelRatio|
+|$mobileEmulation=|copy map                                                                                                                                                                         |
 *!
 
 |script          |selenium driver setup                                                                                                                    |

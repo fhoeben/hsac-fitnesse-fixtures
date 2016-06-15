@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests MapHelper.
@@ -40,6 +41,8 @@ public class MapHelperTest {
         nestedMap.put("nestedList", Arrays.asList("", nestedNestedMap));
         nestedNestedMap.put("node", 12);
 
+        helper.setValueForIn(11, "intNode", map);
+        assertEquals(11, map.get("intNode"));
         helper.setValueForIn("13", "node", map);
         assertEquals("13", map.get("node"));
         helper.setValueForIn("13", "list[0].nestedList[1].node", map);;
@@ -63,5 +66,10 @@ public class MapHelperTest {
         map.put("map", nested2);
         helper.setValueForIn("Joe", "map.aliases[1]", map);
         assertEquals("Joe", aliases.get(1));
+
+        helper.setValueForIn("NewNestedMapKey", "nested3.a", map);
+        Object nested3 = map.get("nested3");
+        assertNotNull(nested3);
+        assertEquals("NewNestedMapKey", ((Map<String, Object>)nested3).get("a"));
     }
 }
