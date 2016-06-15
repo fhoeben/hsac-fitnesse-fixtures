@@ -1141,6 +1141,14 @@ public class SeleniumHelper {
     }
 
     /**
+     * Sets current window to maximum size.
+     */
+
+    public void setWindowSizeToMaximum() {
+        getWindow().maximize();
+    }
+
+    /**
      * @return current browser window.
      */
     public WebDriver.Window getWindow() {
