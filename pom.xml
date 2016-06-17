@@ -40,13 +40,22 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<hsac-fitnesse-plugin.version>1.13.0</hsac-fitnesse-plugin.version>
 		<maven-classpath-plugin.version>1.9</maven-classpath-plugin.version>
-		<fitnesse.version>20160515</fitnesse.version>
+		<fitnesse.version>20160616-SNAPSHOT</fitnesse.version>
 		<selenium.version>2.53.0</selenium.version>
 		<slf4j.version>1.7.21</slf4j.version>
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
 		<fitnesse.port>9090</fitnesse.port>
 	</properties>
+	<repositories>
+		<repository>
+			<id>snapshots-repo</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<releases><enabled>false</enabled></releases>
+			<snapshots><enabled>true</enabled></snapshots>
+		</repository>
+	</repositories>
+
 	<dependencyManagement>
 		<dependencies>
 			<!-- commons collections with important security fix (to overwrite Velocity's) -->
