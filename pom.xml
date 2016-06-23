@@ -349,6 +349,13 @@
 							<outputDirectory>${project.basedir}/wiki/plugins</outputDirectory>
 						</configuration>
 					</execution>
+					<execution>
+						<id>copy-dependencies-to-wiki-fixtures</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+					</execution>
 				</executions>
 			</plugin>
 			<plugin>
@@ -361,6 +368,8 @@
 				</configuration>
 				<executions>
 					<execution>
+						<id>create-standalone-zip</id>
+						<phase>package</phase>
 						<goals>
 							<goal>single</goal>
 						</goals>

@@ -13,7 +13,7 @@ The baseline Fitnesse installation offers the following features:
     - easy fixture debugging,
 
 1. To create the standalone Fitnesse installation:
-Execute 'mvn clean compile dependency:copy-dependencies assembly:single', the standalone installation is present in the wiki
+Execute 'mvn clean package -DskipTests', the standalone installation is present in the wiki
 directory and as '...-standalone.zip' file in the target directory. It can be distributed by just copying the wiki directory
 or by copying and extracting the zip file to a location without spaces in its own name, or in its parent's names).
 This standalone installation can be started using 'java -jar fitnesse-standalone.jar' from the wiki directory (or directory
