@@ -19,6 +19,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -623,9 +624,19 @@ public class BrowserTest extends SlimFixture {
         return clickImp(place);
     }
 
+    @WaitUntil
+    public boolean doubleClick(final String place) {
+        return doubleClickImp(place);
+    }
+
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
     public boolean clickIfAvailable(final String place) {
         return clickImp(place);
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_FALSE)
+    public boolean doubleClickIfAvailable(final String place) {
+        return doubleClickImp(place);
     }
 
     protected boolean clickImp(String place) {
@@ -643,6 +654,21 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
+    protected boolean doubleClickImp(String place) {
+        boolean result = false;
+        try {
+            WebElement element = getElementToClick(place);
+            result = doubleClickElement(element);
+        } catch (WebDriverException e) {
+            // if other element hides the element (in Chrome) an exception is thrown
+            String msg = e.getMessage();
+            if (msg == null || !msg.contains("Other element would receive the double click")) {
+                throw e;
+            }
+        }
+        return result;
+    }
+
     protected WebElement getElementToClick(String place) {
         return getSeleniumHelper().getElementToClick(place);
     }
@@ -653,6 +679,20 @@ public class BrowserTest extends SlimFixture {
             scrollIfNotOnScreen(element);
             if (isInteractable(element)) {
                 element.click();
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    protected boolean doubleClickElement(WebElement element) {
+        boolean result = false;
+        if (element != null) {
+            scrollIfNotOnScreen(element);
+            if (isInteractable(element)) {
+                WebDriver driver = getSeleniumHelper().driver();
+                Actions action = new Actions(driver);
+                action.doubleClick(element).perform();
                 result = true;
             }
         }
