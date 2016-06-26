@@ -624,19 +624,9 @@ public class BrowserTest extends SlimFixture {
         return clickImp(place);
     }
 
-    @WaitUntil
-    public boolean doubleClick(final String place) {
-        return doubleClickImp(place);
-    }
-
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
     public boolean clickIfAvailable(final String place) {
         return clickImp(place);
-    }
-
-    @WaitUntil(TimeoutPolicy.RETURN_FALSE)
-    public boolean doubleClickIfAvailable(final String place) {
-        return doubleClickImp(place);
     }
 
     protected boolean clickImp(String place) {
@@ -654,7 +644,8 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
-    protected boolean doubleClickImp(String place) {
+    @WaitUntil
+    public boolean doubleClick(final String place) {
         boolean result = false;
         try {
             WebElement element = getElementToClick(place);
@@ -1275,7 +1266,7 @@ public class BrowserTest extends SlimFixture {
         WebElement element = getElementToClick(place);
         return hoverOver(element);
     }
-    
+
     protected boolean hoverOver(WebElement element) {
         boolean result = false;
         if (element != null) {
