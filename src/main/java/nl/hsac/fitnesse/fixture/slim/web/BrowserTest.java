@@ -646,15 +646,15 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil
     public boolean doubleClick(final String place) {
+        WebElement element = getElementToClick(place);
         boolean result = false;
-        try {
-            WebElement element = getElementToClick(place);
-            result = doubleClickElement(element);
-        } catch (WebDriverException e) {
-            // if other element hides the element (in Chrome) an exception is thrown
-            String msg = e.getMessage();
-            if (msg == null || !msg.contains("Other element would receive the double click")) {
-                throw e;
+        if (element != null) {
+            scrollIfNotOnScreen(element);
+            if (isInteractable(element)) {
+                WebDriver driver = getSeleniumHelper().driver();
+                Actions action = new Actions(driver);
+                action.doubleClick(element).perform();
+                result = true;
             }
         }
         return result;
@@ -670,20 +670,6 @@ public class BrowserTest extends SlimFixture {
             scrollIfNotOnScreen(element);
             if (isInteractable(element)) {
                 element.click();
-                result = true;
-            }
-        }
-        return result;
-    }
-
-    protected boolean doubleClickElement(WebElement element) {
-        boolean result = false;
-        if (element != null) {
-            scrollIfNotOnScreen(element);
-            if (isInteractable(element)) {
-                WebDriver driver = getSeleniumHelper().driver();
-                Actions action = new Actions(driver);
-                action.doubleClick(element).perform();
                 result = true;
             }
         }
