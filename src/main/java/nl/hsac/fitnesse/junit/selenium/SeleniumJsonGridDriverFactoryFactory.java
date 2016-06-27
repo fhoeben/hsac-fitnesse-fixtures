@@ -1,16 +1,16 @@
 package nl.hsac.fitnesse.junit.selenium;
 
+import com.google.gson.Gson;
 import nl.hsac.fitnesse.fixture.slim.web.SeleniumDriverSetup;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
-import nl.hsac.fitnesse.fixture.Environment;
 
 import java.net.MalformedURLException;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Creates a Selenium driver factory to override the configuration in the wiki.
- * This factory is configured by setting the system property 'seleniumGridUrl' AND 'seleniumCapabilities'.
+ * This factory is configured by setting the system property 'seleniumGridUrl' AND 'seleniumJsonCapabilities'.
  */
 public class SeleniumJsonGridDriverFactoryFactory extends SeleniumDriverFactoryFactoryBase {
     @Override
@@ -43,11 +43,13 @@ public class SeleniumJsonGridDriverFactoryFactory extends SeleniumDriverFactoryF
     protected Map<String, Object> getCapabilities() {
         String capabilitiesString = getProperty(SELENIUM_JSONCAPABILITIES);
         try {
-            Map<String, Object> result = Environment.getInstance().getJsonHelper().jsonStringToMap(capabilitiesString);
+            Map<String, Object> result = new HashMap<String, Object>();
+            Gson gson = new Gson();
+            result = (Map<String, Object>)gson.fromJson(capabilitiesString, result.getClass());
             return result;
         } catch (Exception e) {
             throw new RuntimeException("Unable to parse Selenium capabilities: " + capabilitiesString
-                    + "\nExpected format: key:value(, key:value)*", e);
+                    + "\n*", e);
         }
     }
 }
