@@ -257,6 +257,7 @@
 						<seleniumBrowser>${seleniumBrowser}</seleniumBrowser>
 						<seleniumDriverClass>${seleniumDriverClass}</seleniumDriverClass>
 						<seleniumCapabilities>${seleniumCapabilities}</seleniumCapabilities>
+						<seleniumJsonCapabilities>${seleniumJsonCapabilities}</seleniumJsonCapabilities>
 					</systemPropertyVariables>
 					<properties>
 						<property>
