@@ -202,7 +202,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     public String location() {
-        return getSeleniumHelper().driver().getCurrentUrl();
+        return driver().getCurrentUrl();
     }
 
     public boolean back() {
@@ -344,7 +344,7 @@ public class BrowserTest extends SlimFixture {
             }
         }
         if (tabToGoTo > -1) {
-            WebDriver driver = getSeleniumHelper().driver();
+            WebDriver driver = driver();
             driver.close();
             goToTab(tabs, tabToGoTo);
             result = true;
@@ -647,17 +647,25 @@ public class BrowserTest extends SlimFixture {
     @WaitUntil
     public boolean doubleClick(final String place) {
         WebElement element = getElementToClick(place);
+        return doubleClick(element);
+    }
+
+    protected boolean doubleClick(WebElement element) {
         boolean result = false;
         if (element != null) {
             scrollIfNotOnScreen(element);
             if (isInteractable(element)) {
-                WebDriver driver = getSeleniumHelper().driver();
-                Actions action = new Actions(driver);
-                action.doubleClick(element).perform();
+                Actions actions = getActions();
+                actions.doubleClick(element).perform();
                 result = true;
             }
         }
         return result;
+    }
+
+    protected Actions getActions() {
+        WebDriver driver = driver();
+        return new Actions(driver);
     }
 
     protected WebElement getElementToClick(String place) {
@@ -1128,7 +1136,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected List<WebElement> findElements(By by) {
-        return getSeleniumHelper().driver().findElements(by);
+        return driver().findElements(by);
     }
 
     public void waitMilliSecondAfterScroll(int msToWait) {
@@ -1571,6 +1579,10 @@ public class BrowserTest extends SlimFixture {
 
     protected String formatExceptionMsg(String value) {
         return StringEscapeUtils.escapeHtml4(value);
+    }
+
+    private WebDriver driver() {
+        return getSeleniumHelper().driver();
     }
 
     private WebDriverWait waitDriver() {
