@@ -1605,31 +1605,35 @@ public class BrowserTest extends SlimFixture {
     }
 
     public int currentBrowserWidth() {
-        return getSeleniumHelper().getWindowSize().getWidth();
+        return getWindowSize().getWidth();
     }
 
     public int currentBrowserHeight() {
-        return getSeleniumHelper().getWindowSize().getHeight();
+        return getWindowSize().getHeight();
     }
 
     public void setBrowserWidth(int newWidth) {
-        int currentHeight = getSeleniumHelper().getWindowSize().getHeight();
+        int currentHeight = currentBrowserHeight();
         setBrowserSizeToBy(newWidth, currentHeight);
     }
 
     public void setBrowserHeight(int newHeight) {
-        int currentWidth = getSeleniumHelper().getWindowSize().getWidth();
+        int currentWidth = currentBrowserWidth();
         setBrowserSizeToBy(currentWidth, newHeight);
     }
 
     public void setBrowserSizeToBy(int newWidth, int newHeight) {
         getSeleniumHelper().setWindowSize(newWidth, newHeight);
-        Dimension actualSize = getSeleniumHelper().getWindowSize();
+        Dimension actualSize = getWindowSize();
         if (actualSize.getHeight() != newHeight || actualSize.getWidth() != newWidth) {
             String message = String.format("Unable to change size to: %s x %s; size is: %s x %s",
                                 newWidth, newHeight, actualSize.getWidth(), actualSize.getHeight());
             throw new SlimFixtureException(false, message);
         }
+    }
+
+    protected Dimension getWindowSize() {
+        return getSeleniumHelper().getWindowSize();
     }
 
     public void setBrowserSizeToMaximum() {
