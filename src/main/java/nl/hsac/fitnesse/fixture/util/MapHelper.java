@@ -72,9 +72,9 @@ public class MapHelper {
                 // overwrite current value
                 map.put(cleanName, cleanValue);
             } else {
-                int lastDot = cleanName.lastIndexOf(".");
-                if (lastDot > -1) {
-                    String key = cleanName.substring(0, lastDot);
+                int firstDot = cleanName.indexOf(".");
+                if (firstDot > -1) {
+                    String key = cleanName.substring(0, firstDot);
                     Object nested = getValue(map, key);
                     if (nested == null) {
                         nested = new LinkedHashMap<String, Object>();
@@ -82,7 +82,7 @@ public class MapHelper {
                     }
                     if (nested instanceof Map) {
                         Map<String, Object> nestedMap = (Map<String, Object>) nested;
-                        String lastPart = cleanName.substring(lastDot + 1);
+                        String lastPart = cleanName.substring(firstDot + 1);
                         setValueForIn(cleanValue, lastPart, nestedMap);
                     } else {
                         throw new SlimFixtureException(false, key + " is not a map, but " + nested.getClass());
