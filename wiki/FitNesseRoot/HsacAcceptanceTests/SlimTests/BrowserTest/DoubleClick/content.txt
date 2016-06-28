@@ -1,4 +1,4 @@
-This test ensures that we can double click on buttons, based on their displayed text, and on labels, even if the associated input is invisible.
+This test ensures that we can double click on an element.
 
 We use a mock server running to serve the HTML defined in this page.
 
@@ -6,7 +6,7 @@ We use a mock server running to serve the HTML defined in this page.
 !define HTML { {{{
 <html>
 <body>
-<input type='text' name='set-me' id='set-me'/>
+<input type='text' id='set-me' value='Bob'/>
 <button ondblclick='setValue()'>Double Click Me</button>
 <script>
 function setValue() {
@@ -21,11 +21,12 @@ function setValue() {
 |add response|${HTML}              |
 |$url=       |get mock server url  |
 
-|script                |browser test   |
-|seconds before timeout|1              |
-|open                  |$url           |
-|double click          |Double Click Me|
-|check|value of        |id=set-me      |Robert C. Martin|
+|script                |browser test                       |
+|seconds before timeout|1                                  |
+|open                  |$url                               |
+|check                 |value of|id=set-me|Bob             |
+|double click          |Double Click Me                    |
+|check                 |value of|id=set-me|Robert C. Martin|
 
 |script|mock xml server setup|
 |stop                        |
