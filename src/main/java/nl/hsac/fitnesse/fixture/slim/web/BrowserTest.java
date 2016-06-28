@@ -211,7 +211,7 @@ public class BrowserTest extends SlimFixture {
 
         // firefox sometimes prevents immediate back, if previous page was reached via POST
         waitMilliseconds(500);
-        WebElement element = getSeleniumHelper().findElement(By.id("errorTryAgain"));
+        WebElement element = findElement(By.id("errorTryAgain"));
         if (element != null) {
             element.click();
             // don't use confirmAlert as this may be overridden in subclass and to get rid of the
@@ -754,7 +754,7 @@ public class BrowserTest extends SlimFixture {
     public boolean waitForClass(String cssClassName) {
         boolean ok = false;
 
-        WebElement element = getSeleniumHelper().findElement(By.className(cssClassName));
+        WebElement element = findElement(By.className(cssClassName));
         if (element != null) {
             ok = true;
         }
@@ -787,7 +787,7 @@ public class BrowserTest extends SlimFixture {
             @Override
             public Boolean apply(WebDriver webDriver) {
                 Boolean result = Boolean.FALSE;
-                WebElement element = getSeleniumHelper().findElement(by);
+                WebElement element = findElement(by);
                 if (element != null) {
                     scrollIfNotOnScreen(element);
                     result = element.isDisplayed();
@@ -1108,7 +1108,7 @@ public class BrowserTest extends SlimFixture {
 
     protected WebElement findByClassName(String className) {
         By by = By.className(className);
-        return getSeleniumHelper().findElement(by);
+        return findElement(by);
     }
 
     protected WebElement findByXPath(String xpathPattern, String... params) {
@@ -1117,7 +1117,7 @@ public class BrowserTest extends SlimFixture {
 
     protected WebElement findByJavascript(String script, Object... parameters) {
         By by = getSeleniumHelper().byJavascript(script, parameters);
-        return getSeleniumHelper().findElement(by);
+        return findElement(by);
     }
 
     protected List<WebElement> findAllByXPath(String xpathPattern, String... params) {
@@ -1648,20 +1648,24 @@ public class BrowserTest extends SlimFixture {
     @WaitUntil
     public String download(String place) {
         By selector = By.linkText(place);
-        WebElement element = getSeleniumHelper().findElement(selector);
+        WebElement element = findElement(selector);
         if (element == null) {
             selector = By.partialLinkText(place);
-            element = getSeleniumHelper().findElement(selector);
+            element = findElement(selector);
             if (element == null) {
                 selector = By.id(place);
-                element = getSeleniumHelper().findElement(selector);
+                element = findElement(selector);
                 if (element == null) {
                     selector = By.name(place);
-                    element = getSeleniumHelper().findElement(selector);
+                    element = findElement(selector);
                 }
             }
         }
         return downloadLinkTarget(element);
+    }
+
+    protected WebElement findElement(By selector) {
+        return getSeleniumHelper().findElement(selector);
     }
 
     /**
