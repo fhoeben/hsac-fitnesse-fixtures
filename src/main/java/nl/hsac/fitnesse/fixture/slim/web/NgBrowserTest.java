@@ -60,6 +60,7 @@ public class NgBrowserTest extends BrowserTest {
                 "setBrowserWidth",
                 "setBrowserHeight",
                 "setBrowserSizeToBy",
+                "setBrowserSizeToMaximum",
                 "setGlobalValueTo",
                 "isImplicitWaitForAngularEnabled",
                 "setImplicitWaitForAngularTo",
