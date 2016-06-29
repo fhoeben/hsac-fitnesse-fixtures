@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.util;
 
 import com.google.gson.Gson;
+import org.json.JSONObject;
 import com.google.gson.JsonParseException;
 import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
@@ -18,7 +19,7 @@ public class JsonHelper implements Formatter {
     public String format(String json) {
         String result = null;
         if (json != null){
-            result = new Gson().toJson(json);
+            result = new JSONObject(json).toString(4);
         }
         return result;
     }
