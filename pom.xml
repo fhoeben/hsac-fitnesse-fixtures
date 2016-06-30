@@ -46,6 +46,8 @@
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
 		<fitnesse.port>9090</fitnesse.port>
+        <aspectj.version>1.8.9</aspectj.version>
+        <allure.version>1.4.23</allure.version>
 	</properties>
 
 	<dependencyManagement>
@@ -164,11 +166,24 @@
 			<version>4.12</version>
 			<scope>provided</scope>
 		</dependency>
+        <dependency>
+            <groupId>ru.yandex.qatools.allure</groupId>
+            <artifactId>allure-junit-adaptor</artifactId>
+            <version>${allure.version}</version>
+        </dependency>
 	</dependencies>
 
 	<build>
 		<outputDirectory>${standalone.classpath}</outputDirectory>
 		<plugins>
+                <plugin>
+                    <groupId>ru.yandex.qatools.allure</groupId>
+                    <artifactId>allure-maven-plugin</artifactId>
+                    <configuration>
+                        <resultsDirectory>allure-results</resultsDirectory>
+                        <reportDirectory>allure-report</reportDirectory>
+                    </configuration>
+                </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -249,6 +264,9 @@
 				</executions>
 				<configuration>
 					<!-- this test actually runs fitnesse tests-->
+                    <argLine>
+                        -javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar
+                    </argLine>
 					<test>FixtureDebugTest</test>
 					<systemPropertyVariables>
 						<fitnesseSuiteToRun>${fitnesseSuiteToRun}</fitnesseSuiteToRun>
@@ -261,12 +279,20 @@
 					<properties>
 						<property>
 							<name>listener</name>
-							<value>nl.hsac.fitnesse.junit.JUnitXMLPerPageListener,nl.hsac.fitnesse.junit.ProgressLoggerListener</value>
+							<value>nl.hsac.fitnesse.junit.JUnitXMLPerPageListener,nl.hsac.fitnesse.junit.ProgressLoggerListener,nl.hsac.fitnesse.junit.JUnitAllureFrameworkListener</value>
 						</property>
 					</properties>
 					<!-- Our listener will create XML failsafe should not, or all tests are reported twice -->
 					<disableXmlReport>true</disableXmlReport>
 				</configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjweaver</artifactId>
+                        <version>${aspectj.version}</version>
+                    </dependency>
+                </dependencies>
+
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -440,6 +466,7 @@
 			</build>
 		</profile>
 	</profiles>
+
 
 	<distributionManagement>
 		<snapshotRepository>
