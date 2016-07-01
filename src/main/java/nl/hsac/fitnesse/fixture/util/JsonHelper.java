@@ -1,10 +1,10 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import com.google.gson.Gson;
-import org.json.JSONObject;
-import com.google.gson.JsonParseException;
 import org.apache.commons.lang3.StringUtils;
-import java.util.HashMap;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -33,12 +33,25 @@ public class JsonHelper implements Formatter {
         if (StringUtils.isEmpty(jsonString)) {
             return null;
         }
+        JSONObject jsonObject;
         try {
-            Map<String, Object> result = new HashMap<String, Object>();
-            result = (Map<String, Object>)new Gson().fromJson(jsonString, result.getClass());
-            return result;
-        } catch (JsonParseException e) {
+            jsonObject = new JSONObject(jsonString);
+            return jsonObjectToMap(jsonObject);
+        } catch (JSONException e) {
             throw new RuntimeException("Unable to convert string to map: " + jsonString, e);
         }
+    }
+
+    private Map<String, Object> jsonObjectToMap(JSONObject jsonObject) throws JSONException {
+        Map<String, Object> result = new LinkedHashMap<String, Object>();
+        for (Object key : jsonObject.keySet()) {
+            String stringKey = String.valueOf(key);
+            Object value = jsonObject.get(stringKey);
+            if (value instanceof JSONObject) {
+                value = jsonObjectToMap((JSONObject) value);
+            }
+            result.put(stringKey, value);
+        }
+        return  result;
     }
 }
