@@ -13,6 +13,7 @@ import nl.hsac.fitnesse.junit.selenium.LocalSeleniumDriverClassFactoryFactory;
 import nl.hsac.fitnesse.junit.selenium.LocalSeleniumDriverFactoryFactory;
 import nl.hsac.fitnesse.junit.selenium.SeleniumDriverFactoryFactory;
 import nl.hsac.fitnesse.junit.selenium.SeleniumGridDriverFactoryFactory;
+import nl.hsac.fitnesse.junit.selenium.SeleniumJsonGridDriverFactoryFactory;
 import nl.hsac.fitnesse.junit.selenium.SimpleSeleniumGridDriverFactoryFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.runner.notification.RunNotifier;
@@ -47,6 +48,7 @@ public class HsacFitNesseRunner extends FitNesseRunner {
         try {
             factoryFactories.add(new SimpleSeleniumGridDriverFactoryFactory());
             factoryFactories.add(new SeleniumGridDriverFactoryFactory());
+            factoryFactories.add(new SeleniumJsonGridDriverFactoryFactory());
             factoryFactories.add(new LocalSeleniumDriverFactoryFactory());
             factoryFactories.add(new LocalSeleniumDriverClassFactoryFactory());
 
