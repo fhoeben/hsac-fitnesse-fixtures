@@ -43,7 +43,7 @@ public class JsonHelper implements Formatter {
     }
 
     private Map<String, Object> jsonObjectToMap(JSONObject jsonObject) throws JSONException {
-        Map<String, Object> result = new LinkedHashMap<String, Object>();
+        Map<String, Object> result = new LinkedHashMap<>();
         for (Object key : jsonObject.keySet()) {
             String stringKey = String.valueOf(key);
             Object value = jsonObject.get(stringKey);
