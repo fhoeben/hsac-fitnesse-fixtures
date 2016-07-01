@@ -42,13 +42,13 @@ public class JsonHelperTest {
 
     @Test
     public void testComplexMap() {
-        Map<String, Object> mobileEmulation = new LinkedHashMap<String, Object>();
+        Map<String, Object> mobileEmulation = new LinkedHashMap<>();
         mobileEmulation.put("deviceName", "Google Nexus 5");
 
-        Map<String, Object> chromeOptions = new LinkedHashMap<String, Object>();
+        Map<String, Object> chromeOptions = new LinkedHashMap<>();
         chromeOptions.put("mobileEmulation", mobileEmulation);
 
-        Map<String, Object> expected = new LinkedHashMap<String, Object>();
+        Map<String, Object> expected = new LinkedHashMap<>();
         expected.put("browserName", "chrome");
         expected.put("chromeOptions", chromeOptions);
 
