@@ -176,14 +176,14 @@
 	<build>
 		<outputDirectory>${standalone.classpath}</outputDirectory>
 		<plugins>
-                <plugin>
-                    <groupId>ru.yandex.qatools.allure</groupId>
-                    <artifactId>allure-maven-plugin</artifactId>
-                    <configuration>
-                        <resultsDirectory>allure-results</resultsDirectory>
-                        <reportDirectory>allure-report</reportDirectory>
-                    </configuration>
-                </plugin>
+            <plugin>
+                <groupId>ru.yandex.qatools.allure</groupId>
+                <artifactId>allure-maven-plugin</artifactId>
+                <configuration>
+                    <resultsDirectory>allure-results</resultsDirectory>
+                    <reportDirectory>${project.build.directory}/../allure-report</reportDirectory>
+                </configuration>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
