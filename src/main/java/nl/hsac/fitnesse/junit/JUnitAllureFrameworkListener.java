@@ -42,11 +42,11 @@ public class JUnitAllureFrameworkListener extends RunListener {
     }
 
     public void testSuiteStarted(Description description) {
-       String suiteName = System.getProperty("fitnesseSuiteToRun");
+        String uid = this.generateSuiteUid(description.getDisplayName());
+        String suiteName = System.getProperty("fitnesseSuiteToRun");
         if(null == suiteName) {
             suiteName = description.getDisplayName();
             }
-        String uid = this.generateSuiteUid(suiteName);
 
         TestSuiteStartedEvent event = new TestSuiteStartedEvent(uid, suiteName);
         AnnotationManager am = new AnnotationManager(description.getAnnotations());
