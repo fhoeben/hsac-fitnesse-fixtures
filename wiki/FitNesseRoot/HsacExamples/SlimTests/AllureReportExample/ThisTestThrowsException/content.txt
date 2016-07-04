@@ -1,0 +1,5 @@
+|script                |browser test            |
+|open                  |http://www.funda.nl/    |
+|set browser size to maximum                    |
+|seconds before timeout|1                       |
+|click                 |this link does not exist|

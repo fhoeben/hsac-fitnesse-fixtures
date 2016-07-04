@@ -40,6 +40,7 @@ import java.util.List;
  */
 public class HsacFitNesseRunner extends FitNesseRunner {
     private final static String suiteOverrideVariableName = "fitnesseSuiteToRun";
+    private final static String allureEnablerVariableName = "createAllureResults";
     private final static String SELENIUM_DEFAULT_TIMEOUT_PROP = "seleniumDefaultTimeout";
     protected final List<SeleniumDriverFactoryFactory> factoryFactories = new ArrayList<SeleniumDriverFactoryFactory>();
 
@@ -103,6 +104,9 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     protected void runPages(List<WikiPage> pages, RunNotifier notifier) {
         boolean seleniumConfigOverridden = configureSeleniumIfNeeded();
         try {
+            if ("true".equalsIgnoreCase(System.getProperty(allureEnablerVariableName))){
+                notifier.addListener(new JUnitAllureFrameworkListener(pages));
+            }
             super.runPages(pages, notifier);
         } finally {
             if (seleniumConfigOverridden) {

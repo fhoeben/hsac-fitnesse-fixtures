@@ -48,6 +48,7 @@
 		<fitnesse.port>9090</fitnesse.port>
         <aspectj.version>1.8.9</aspectj.version>
         <allure.version>1.4.23</allure.version>
+		<allure.report.directory>${project.build.directory}/allure-report</allure.report.directory>
 	</properties>
 
 	<dependencyManagement>
@@ -176,14 +177,6 @@
 	<build>
 		<outputDirectory>${standalone.classpath}</outputDirectory>
 		<plugins>
-            <plugin>
-                <groupId>ru.yandex.qatools.allure</groupId>
-                <artifactId>allure-maven-plugin</artifactId>
-                <configuration>
-                    <resultsDirectory>allure-results</resultsDirectory>
-                    <reportDirectory>${project.build.directory}/allure-report</reportDirectory>
-                </configuration>
-            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -237,7 +230,30 @@
 							</resources>
 						</configuration>
 					</execution>
+					<execution>
+						<id>copy-resources</id>
+						<phase>site</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${allure.report.directory}/fitnesseResults</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.build.directory}/fitnesse-results</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
 				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.shared</groupId>
+						<artifactId>maven-filtering</artifactId>
+						<version>1.3</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -280,7 +296,7 @@
 					<properties>
 						<property>
 							<name>listener</name>
-							<value>nl.hsac.fitnesse.junit.JUnitXMLPerPageListener,nl.hsac.fitnesse.junit.ProgressLoggerListener,nl.hsac.fitnesse.junit.JUnitAllureFrameworkListener</value>
+							<value>nl.hsac.fitnesse.junit.JUnitXMLPerPageListener,nl.hsac.fitnesse.junit.ProgressLoggerListener</value>
 						</property>
 					</properties>
 					<!-- Our listener will create XML failsafe should not, or all tests are reported twice -->
@@ -468,6 +484,19 @@
 		</profile>
 	</profiles>
 
+	<reporting>
+		<excludeDefaults>true</excludeDefaults>
+		<plugins>
+			<plugin>
+				<groupId>ru.yandex.qatools.allure</groupId>
+				<artifactId>allure-maven-plugin</artifactId>
+				<configuration>
+					<resultsDirectory>allure-results</resultsDirectory>
+					<reportDirectory>${allure.report.directory}</reportDirectory>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 
 	<distributionManagement>
 		<snapshotRepository>

@@ -1,0 +1,16 @@
+!1 Report your run using Allure Framework
+When running from a CI server we can ask for Allure results by setting ''createAllureResults'' to ''true''
+For example, run suite using: ''!-mvn clean test-compile failsafe:integration-test -DfitnesseSuiteToRun=HsacExamples.SlimTests.BrowserTests.AllureReportExample -DcreateAllureResults=true-!''
+
+After this run, we can execute mvn site to now create a dashboard using Allure.
+
+This example suite contains tags, has a passing, failing and broken testcase to demonstrate the visual features.
+
+'''Features:'''
+
+ * The dashboard shows an aggregate of all runs in target/allure-results (so running multiple suites and generating one report is possible - don't clean between runs!)
+ * If tags are provided on the test pages, these are visible as functional 'stories' in the report
+ * HSAC's fitnesse eport is copied and integrated as an attachment per test case
+ * If exceptions were thrown, screenshot and pagesource are attached separately
+
+!contents -R2 -g -p -f -h

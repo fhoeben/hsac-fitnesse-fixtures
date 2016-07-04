@@ -6,6 +6,7 @@
 package nl.hsac.fitnesse.junit;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,6 +14,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import fitnesse.junit.FitNesseRunner;
+import fitnesse.wiki.WikiPage;
 import org.apache.commons.io.FilenameUtils;
 import org.junit.Ignore;
 import org.junit.runner.Description;
@@ -23,9 +26,10 @@ import ru.yandex.qatools.allure.Allure;
 import ru.yandex.qatools.allure.annotations.Attachment;
 import ru.yandex.qatools.allure.config.AllureModelUtils;
 import ru.yandex.qatools.allure.events.*;
+import ru.yandex.qatools.allure.model.Label;
 import ru.yandex.qatools.allure.model.Status;
 import ru.yandex.qatools.allure.utils.AnnotationManager;
-
+import nl.hsac.fitnesse.junit.allure.AllureSetLabelsEvent;
 
 public class JUnitAllureFrameworkListener extends RunListener {
     private Allure lifecycle;
@@ -35,17 +39,24 @@ public class JUnitAllureFrameworkListener extends RunListener {
     private static final Pattern SCREENSHOT_PATTERN = Pattern.compile("href=\"([^\"]*." + SCREENSHOT_EXT + ")\"");
     private static final Pattern PAGESOURCE_PATTERN = Pattern.compile("href=\"([^\"]*." + PAGESOURCE_EXT + ")\"");
     private final HashMap suites;
+    private List<WikiPage> pages;
 
     public JUnitAllureFrameworkListener() {
         this.lifecycle = Allure.LIFECYCLE;
         this.suites = new HashMap();
     }
 
+    public JUnitAllureFrameworkListener(List<WikiPage> pages) {
+        this.lifecycle = Allure.LIFECYCLE;
+        this.suites = new HashMap();
+        this.pages = pages;
+    }
+
     public void testSuiteStarted(Description description) {
         String uid = this.generateSuiteUid(description.getDisplayName());
         String suiteName = System.getProperty("fitnesseSuiteToRun");
         if(null == suiteName) {
-            suiteName = description.getDisplayName();
+            suiteName = description.getAnnotation(FitNesseRunner.Suite.class).value();
             }
 
         TestSuiteStartedEvent event = new TestSuiteStartedEvent(uid, suiteName);
@@ -61,12 +72,24 @@ public class JUnitAllureFrameworkListener extends RunListener {
         am.update(event);
         this.fireClearStepStorage();
         this.getLifecycle().fire(event);
+
+        String fullTestName = description.getMethodName();
+        String nameParts[] = fullTestName.split("\\.");
+        String testName = nameParts[nameParts.length-1];
+        String tagInfo = null;
+        for(WikiPage page : pages){
+            if(testName.equalsIgnoreCase(page.getName())){
+                tagInfo = page.getData().getProperties().get("Suites");
+            }
+        }
+        if(tagInfo != null) {
+            createStories(tagInfo);
+        }
     }
 
     public void testFailure(Failure failure) {
         if(failure.getDescription().isTest()) {
             Throwable exception = failure.getException();
-
             List<Pattern> patterns = new ArrayList<>();
             patterns.add(SCREENSHOT_PATTERN);
             patterns.add(PAGESOURCE_PATTERN);
@@ -75,13 +98,11 @@ public class JUnitAllureFrameworkListener extends RunListener {
             this.fireTestCaseFailure(exception);
             this.recordTestResult(failure.getDescription());
 
-
         } else {
             this.startFakeTestCase(failure.getDescription());
             this.fireTestCaseFailure(failure.getException());
             this.finishFakeTestCase();
         }
-
     }
 
     public void testAssumptionFailure(Failure failure) {
@@ -95,6 +116,7 @@ public class JUnitAllureFrameworkListener extends RunListener {
     }
 
     public void testFinished(Description description) {
+        fitnesseResult(description.getMethodName());
         this.getLifecycle().fire(new TestCaseFinishedEvent());
     }
 
@@ -151,7 +173,6 @@ public class JUnitAllureFrameworkListener extends RunListener {
         this.getLifecycle().fire((new TestCaseFailureEvent()).withThrowable(throwable));
         Status status = throwable instanceof AssertionError?Status.FAILED:Status.BROKEN;
         String statusStr = status.value();
-        System.out.println("TC failed! Status: " + statusStr);
     }
 
     public void fireClearStepStorage() {
@@ -189,16 +210,9 @@ public class JUnitAllureFrameworkListener extends RunListener {
                 } else{
                     attName = "Attachment";
                 }
-                System.out.println("Attachment found at: " + filePath);
                 attachFile(filePath, attName);
-                //MakeAttachmentEvent event = new MakeAttachmentEvent(fileToAttach(filePath),"Attachment", "image/png");
-                //this.getLifecycle().fire(event);
-            } else {
-                System.out.println("No match for " + pattern.toString() + " in " + ex.getMessage());
             }
         }
-
-
     }
 
     @Attachment(value = "{1}")
@@ -212,7 +226,41 @@ public class JUnitAllureFrameworkListener extends RunListener {
             System.err.println(attName + " not found: " + path.toString());
             data = null;
         }
-
         return data;
+    }
+
+    @Attachment(value = "FitNesse Result", type = "text/html")
+    protected String fitnesseResult(String test){
+        String style = "width: 99%; height: 99%; overflow: auto; border: 0px;";
+        String iFrame = String.format("<iframe src=\"/fitnesseResults/%s.html\" style=\"%s\">", test, style);
+        String content = String.format("<html><head><title>FitNesse Report</title></head><body>%s</body>", iFrame);
+        return content;
+    }
+
+    protected void createStories(String tagInfo){
+        List<Label> labels = new ArrayList<>();
+        String[] tags = tagInfo.split(",");
+        for (String tag : tags) {
+            tag = tag.trim();
+            Label storyLabel = new Label();
+            storyLabel.setName("story");
+            storyLabel.setValue(tag);
+            labels.add(storyLabel);
+        }
+
+        //For some reason, the host label no longer gets set when applying story labels..
+        String hostName = null;
+        try {
+            hostName = InetAddress.getLocalHost().getHostName();
+            Label hostLabel = new Label();
+            hostLabel.setName("host");
+            hostLabel.setValue(hostName);
+            labels.add(hostLabel);
+        }
+        catch(Exception ex) {
+            System.err.println("Cannot determine hostname: " + ex);
+        }
+        AllureSetLabelsEvent event = new AllureSetLabelsEvent(labels);
+        this.getLifecycle().fire(event);
     }
 }
