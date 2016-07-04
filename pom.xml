@@ -181,7 +181,7 @@
                 <artifactId>allure-maven-plugin</artifactId>
                 <configuration>
                     <resultsDirectory>allure-results</resultsDirectory>
-                    <reportDirectory>${project.build.directory}/../allure-report</reportDirectory>
+                    <reportDirectory>${project.build.directory}/allure-report</reportDirectory>
                 </configuration>
             </plugin>
 			<plugin>
