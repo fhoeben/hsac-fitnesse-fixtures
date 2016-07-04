@@ -12,9 +12,11 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -22,6 +24,7 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 /**
  * Helper to make Http calls and get response.
@@ -130,17 +133,36 @@ public class HttpClient {
             org.apache.http.HttpResponse resp;
             CookieStore store = response.getCookieStore();
             if (store == null) {
-                resp = getHttpResponse(url, method);
-            } else {
-                resp = getHttpResponse(store, url, method);
+            	store = new BasicCookieStore();
+//                resp = getHttpResponse(url, method);
             }
+            resp = getHttpResponse(store, url, method);
+//            } else {
+//                resp = getHttpResponse(store, url, method);
+//            }
             int returnCode = resp.getStatusLine().getStatusCode();
             response.setStatusCode(returnCode);
             HttpEntity entity = resp.getEntity();
 
             Map<String, String> responseHeaders = response.getResponseHeaders();
             for (Header h : resp.getAllHeaders()) {
+            	if(h.getName().equalsIgnoreCase("Set-Cookie"))
+                {
+                	StringBuilder cookieHeader = new StringBuilder();
+                	List<Cookie> cookies = store.getCookies();
+            		
+            		for(Cookie cookie : cookies)
+            		{
+            			cookieHeader.append(cookie.getName() + "=" + cookie.getValue());
+            			cookieHeader.append(";");
+            		}
+            		
+                	responseHeaders.put(h.getName(), cookieHeader.toString());
+                }
+                else
+                {
                 responseHeaders.put(h.getName(), h.getValue());
+                }
             }
 
             if (entity == null) {
