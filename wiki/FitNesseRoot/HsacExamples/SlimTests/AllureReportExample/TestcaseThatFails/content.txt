@@ -1,0 +1,4 @@
+|script           |browser test                                                                           |
+|open             |http://www.funda.nl/                                                                   |
+|set browser width|480                                                                                    |
+|check            |values of|css=.search-block-navigation-items|[Koop, Huur, Nieuwbouw, Recreatie, Europa]|
