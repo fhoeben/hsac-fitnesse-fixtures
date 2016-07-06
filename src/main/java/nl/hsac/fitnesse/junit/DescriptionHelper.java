@@ -27,13 +27,26 @@ public class DescriptionHelper {
 
     /**
      * @param description description of current test.
+     * @return current wiki page (null if no wiki page was found in description)
+     */
+    public static WikiPage getWikiPage(Description description) {
+        WikiPage result = null;
+        FitNesseWikiPageAnnotation pageAnn = description.getAnnotation(FitNesseWikiPageAnnotation.class);
+        if (pageAnn != null) {
+            result = pageAnn.getWikiPage();
+        }
+        return result;
+    }
+
+    /**
+     * @param description description of current test.
      * @return tags for current wiki page (empty list if none)
      */
     public static List<String> getPageTags(Description description) {
         List<String> result = Collections.emptyList();
-        FitNesseWikiPageAnnotation pageAnn = description.getAnnotation(FitNesseWikiPageAnnotation.class);
-        if (pageAnn != null) {
-            result = getPageTags(pageAnn.getWikiPage());
+        WikiPage wikiPage = getWikiPage(description);
+        if (wikiPage != null) {
+            result = getPageTags(wikiPage);
         }
         return result;
     }
