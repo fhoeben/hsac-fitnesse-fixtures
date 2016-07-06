@@ -13,6 +13,9 @@ import java.util.List;
  * Helper to deal with jUnit descriptions.
  */
 public class DescriptionHelper {
+    // private constructor to  prevent instances from being made
+    private DescriptionHelper() {}
+
     /**
      * Creates description for a wiki page being run from a jUnit class.
      * @param clazz class triggering page.
