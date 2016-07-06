@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.junit;
 
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import org.apache.commons.lang.StringUtils;
 import org.junit.runner.Description;
 
 import java.util.Arrays;
@@ -44,9 +45,9 @@ public class DescriptionHelper {
     public static List<String> getPageTags(WikiPage page) {
         List<String> result = Collections.emptyList();
 
-        String suitesValue = page.getData().getProperties().get(PageData.PropertySUITES);
+        String suitesValue = StringUtils.stripToNull(page.getData().getProperties().get(PageData.PropertySUITES));
         if (suitesValue != null) {
-            result = Arrays.asList(suitesValue.trim().split("\\s*,\\s*"));
+            result = Arrays.asList(suitesValue.split("\\s*,\\s*"));
         }
         return result;
     }
