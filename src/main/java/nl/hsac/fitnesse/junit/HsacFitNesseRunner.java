@@ -16,6 +16,7 @@ import nl.hsac.fitnesse.junit.selenium.SeleniumGridDriverFactoryFactory;
 import nl.hsac.fitnesse.junit.selenium.SeleniumJsonGridDriverFactoryFactory;
 import nl.hsac.fitnesse.junit.selenium.SimpleSeleniumGridDriverFactoryFactory;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 
@@ -42,9 +43,11 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     private final static String suiteOverrideVariableName = "fitnesseSuiteToRun";
     private final static String SELENIUM_DEFAULT_TIMEOUT_PROP = "seleniumDefaultTimeout";
     protected final List<SeleniumDriverFactoryFactory> factoryFactories = new ArrayList<SeleniumDriverFactoryFactory>();
+    protected final Class<?> suiteClass;
 
     public HsacFitNesseRunner(Class<?> suiteClass) throws InitializationError {
         super(suiteClass);
+        this.suiteClass = suiteClass;
         try {
             factoryFactories.add(new SimpleSeleniumGridDriverFactoryFactory());
             factoryFactories.add(new SeleniumGridDriverFactoryFactory());
@@ -97,6 +100,13 @@ public class HsacFitNesseRunner extends FitNesseRunner {
         new PluginsClassLoader(getFitNesseDir(suiteClass)).addPluginsToClassLoader();
 
         return super.createContext(suiteClass);
+    }
+
+    @Override
+    protected Description describeChild(WikiPage child) {
+        String name = child.getPageCrawler().getFullPath().toString();
+        FitNesseWikiPageAnnotation wikiPageAnnotation = new FitNesseWikiPageAnnotation(child);
+        return Description.createTestDescription(suiteClass, name, wikiPageAnnotation);
     }
 
     @Override
