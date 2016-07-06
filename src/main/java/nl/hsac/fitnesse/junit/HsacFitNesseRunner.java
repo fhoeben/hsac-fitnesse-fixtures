@@ -43,11 +43,9 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     private final static String suiteOverrideVariableName = "fitnesseSuiteToRun";
     private final static String SELENIUM_DEFAULT_TIMEOUT_PROP = "seleniumDefaultTimeout";
     protected final List<SeleniumDriverFactoryFactory> factoryFactories = new ArrayList<SeleniumDriverFactoryFactory>();
-    protected final Class<?> suiteClass;
 
     public HsacFitNesseRunner(Class<?> suiteClass) throws InitializationError {
         super(suiteClass);
-        this.suiteClass = suiteClass;
         try {
             factoryFactories.add(new SimpleSeleniumGridDriverFactoryFactory());
             factoryFactories.add(new SeleniumGridDriverFactoryFactory());
@@ -104,9 +102,8 @@ public class HsacFitNesseRunner extends FitNesseRunner {
 
     @Override
     protected Description describeChild(WikiPage child) {
-        String name = child.getPageCrawler().getFullPath().toString();
-        FitNesseWikiPageAnnotation wikiPageAnnotation = new FitNesseWikiPageAnnotation(child);
-        return Description.createTestDescription(suiteClass, name, wikiPageAnnotation);
+        Class<?> suiteClass = super.describeChild(child).getTestClass();
+        return DescriptionHelper.createDescription(suiteClass, child);
     }
 
     @Override
