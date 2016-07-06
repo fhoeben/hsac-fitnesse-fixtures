@@ -4,6 +4,8 @@ import fitnesse.ContextConfigurator;
 import fitnesse.FitNesseContext;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.junit.FitNesseRunner;
+import fitnesse.junit.JUnitRunNotifierResultsListener;
+import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.wiki.WikiPage;
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.slim.web.SeleniumDriverSetup;
@@ -138,6 +140,11 @@ public class HsacFitNesseRunner extends FitNesseRunner {
             }
         }
 
+    }
+
+    @Override
+    protected void addTestSystemListeners(RunNotifier notifier, MultipleTestsRunner testRunner, Class<?> suiteClass) {
+        testRunner.addTestSystemListener(new RunNotifierResultsListener(notifier, suiteClass));
     }
 
     /**
