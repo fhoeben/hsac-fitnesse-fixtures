@@ -145,22 +145,24 @@ public class HttpClient {
 
             Map<String, String> responseHeaders = response.getResponseHeaders();
             for (Header h : resp.getAllHeaders()) {
+            	if(h.getName().equalsIgnoreCase("Set-Cookie"))
+                {
+                	StringBuilder cookieHeader = new StringBuilder();
+                	List<Cookie> cookies = store.getCookies();
+            		
+            		for(Cookie cookie : cookies)
+            		{
+            			cookieHeader.append(cookie.getName() + "=" + cookie.getValue());
+            			cookieHeader.append(";");
+            		}
+            		
+                	responseHeaders.put(h.getName(), cookieHeader.toString());
+                }
+                else
+                {
                 responseHeaders.put(h.getName(), h.getValue());
+                }
             }
-        	if(responseHeaders.containsKey("Set-Cookie"))
-            {
-            	StringBuilder cookieHeader = new StringBuilder();
-            	List<Cookie> cookies = store.getCookies();
-        		
-        		for(Cookie cookie : cookies)
-        		{
-        			cookieHeader.append(cookie.getName() + "=" + cookie.getValue());
-        			cookieHeader.append(";");
-        		}
-        		
-            	responseHeaders.put("Set-Cookie", cookieHeader.toString());
-            }
-            
 
             if (entity == null) {
                 response.setResponse(null);
