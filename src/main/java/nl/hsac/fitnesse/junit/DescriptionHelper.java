@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.junit;
 
+import fitnesse.testsystems.TestPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import org.apache.commons.lang.StringUtils;
@@ -24,8 +25,24 @@ public class DescriptionHelper {
      */
     public static Description createDescription(Class<?> clazz, WikiPage page) {
         String name = page.getPageCrawler().getFullPath().toString();
-        FitNesseWikiPageAnnotation wikiPageAnnotation = new FitNesseWikiPageAnnotation(page);
-        return Description.createTestDescription(clazz, name, wikiPageAnnotation);
+        FitNessePageAnnotation wikiPageAnnotation = new FitNessePageAnnotation(page);
+        return createDescription(clazz, name, wikiPageAnnotation);
+    }
+
+    /**
+     * Creates description for a wiki page being run from a jUnit class.
+     * @param clazz class triggering page.
+     * @param page page to be executed.
+     * @return description.
+     */
+    public static Description createDescription(Class<?> clazz, TestPage page) {
+        String name = page.getFullPath();
+        FitNessePageAnnotation wikiPageAnnotation = new FitNessePageAnnotation(page);
+        return createDescription(clazz, name, wikiPageAnnotation);
+    }
+
+    private static Description createDescription(Class<?> clazz, String name, FitNessePageAnnotation annotation) {
+        return Description.createTestDescription(clazz, name, annotation);
     }
 
     /**
@@ -34,9 +51,22 @@ public class DescriptionHelper {
      */
     public static WikiPage getWikiPage(Description description) {
         WikiPage result = null;
-        FitNesseWikiPageAnnotation pageAnn = description.getAnnotation(FitNesseWikiPageAnnotation.class);
+        FitNessePageAnnotation pageAnn = description.getAnnotation(FitNessePageAnnotation.class);
         if (pageAnn != null) {
             result = pageAnn.getWikiPage();
+        }
+        return result;
+    }
+
+    /**
+     * @param description description of current test.
+     * @return current test page (null if no test page was found in description)
+     */
+    public static TestPage getTestPage(Description description) {
+        TestPage result = null;
+        FitNessePageAnnotation pageAnn = description.getAnnotation(FitNessePageAnnotation.class);
+        if (pageAnn != null) {
+            result = pageAnn.getTestPage();
         }
         return result;
     }

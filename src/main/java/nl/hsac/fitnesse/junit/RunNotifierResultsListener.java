@@ -1,7 +1,6 @@
 package nl.hsac.fitnesse.junit;
 
 import fitnesse.junit.JUnitRunNotifierResultsListener;
-import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import org.junit.runner.Description;
@@ -41,12 +40,6 @@ public class RunNotifierResultsListener extends JUnitRunNotifierResultsListener 
     }
 
     protected Description descriptionFor(TestPage test) {
-        Description description;
-        if (test instanceof WikiTestPage) {
-            description = DescriptionHelper.createDescription(getMainClass(), ((WikiTestPage) test).getSourcePage());
-        } else {
-            description = Description.createTestDescription(getMainClass(), test.getFullPath());
-        }
-        return description;
+        return DescriptionHelper.createDescription(getMainClass(), test);
     }
 }
