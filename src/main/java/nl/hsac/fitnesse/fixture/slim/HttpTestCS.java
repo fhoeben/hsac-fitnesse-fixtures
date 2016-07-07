@@ -29,16 +29,17 @@ public class HttpTestCS extends HttpTest {
     	StringBuilder sb = new StringBuilder();
     	CookieStore store = response.getCookieStore();
     	
-    	if(store!=null)
+    	if(responseHeaders.containsKey("Set-Cookie") && store!=null)
     	{
 	    	for(Cookie cookie : store.getCookies())
 	    	{
 	    		sb.append(cookie.getName() + "=" + cookie.getValue());
 	    		sb.append(";");
 	    	}
+	    	responseHeaders.put("Set-Cookie", sb.toString());
     	}
     	
-    	responseHeaders.put("Set-Cookie", sb.toString());
+    	
     	return responseHeaders;
         
     }
