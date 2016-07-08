@@ -1,6 +1,5 @@
 //
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
+// JUnit listener for Allure Framework. Based on default ru.yandex.qatools.allure.junit.AllureRunListener
 //
 
 package nl.hsac.fitnesse.junit;
@@ -13,7 +12,6 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import fitnesse.junit.FitNesseRunner;
 import fitnesse.wiki.WikiPage;
 import org.apache.commons.io.FilenameUtils;
@@ -27,7 +25,6 @@ import ru.yandex.qatools.allure.annotations.Attachment;
 import ru.yandex.qatools.allure.config.AllureModelUtils;
 import ru.yandex.qatools.allure.events.*;
 import ru.yandex.qatools.allure.model.Label;
-import ru.yandex.qatools.allure.model.Status;
 import ru.yandex.qatools.allure.utils.AnnotationManager;
 import nl.hsac.fitnesse.junit.allure.AllureSetLabelsEvent;
 
@@ -62,7 +59,7 @@ public class JUnitAllureFrameworkListener extends RunListener {
         TestSuiteStartedEvent event = new TestSuiteStartedEvent(uid, suiteName);
         AnnotationManager am = new AnnotationManager(description.getAnnotations());
         am.update(event);
-        event.withLabels(AllureModelUtils.createTestFrameworkLabel("JUnit"));
+        event.withLabels(AllureModelUtils.createTestFrameworkLabel("FitNesse"));
         this.getLifecycle().fire(event);
     }
 
@@ -107,12 +104,6 @@ public class JUnitAllureFrameworkListener extends RunListener {
 
     public void testAssumptionFailure(Failure failure) {
         this.testFailure(failure);
-    }
-
-    public void testIgnored(Description description) {
-        this.startFakeTestCase(description);
-        this.getLifecycle().fire((new TestCasePendingEvent()).withMessage(this.getIgnoredMessage(description)));
-        this.finishFakeTestCase();
     }
 
     public void testFinished(Description description) {
@@ -171,8 +162,6 @@ public class JUnitAllureFrameworkListener extends RunListener {
 
     public void fireTestCaseFailure(Throwable throwable) {
         this.getLifecycle().fire((new TestCaseFailureEvent()).withThrowable(throwable));
-        Status status = throwable instanceof AssertionError?Status.FAILED:Status.BROKEN;
-        String statusStr = status.value();
     }
 
     public void fireClearStepStorage() {
@@ -249,7 +238,7 @@ public class JUnitAllureFrameworkListener extends RunListener {
         }
 
         //For some reason, the host label no longer gets set when applying story labels..
-        String hostName = null;
+        String hostName;
         try {
             hostName = InetAddress.getLocalHost().getHostName();
             Label hostLabel = new Label();
