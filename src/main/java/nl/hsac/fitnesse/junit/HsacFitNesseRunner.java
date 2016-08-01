@@ -113,9 +113,9 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     protected void runPages(List<WikiPage> pages, RunNotifier notifier) {
         boolean seleniumConfigOverridden = configureSeleniumIfNeeded();
         try {
-            if ("true".equalsIgnoreCase(System.getProperty(allureEnablerVariableName))){
-                notifier.addListener(new JUnitAllureFrameworkListener(pages));
-            }
+           if ("true".equalsIgnoreCase(System.getProperty(allureEnablerVariableName))){
+                notifier.addListener(new JUnitAllureFrameworkListener());
+           }
             super.runPages(pages, notifier);
         } finally {
             if (seleniumConfigOverridden) {

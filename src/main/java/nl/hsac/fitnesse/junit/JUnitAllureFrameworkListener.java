@@ -15,13 +15,11 @@ import java.util.regex.Pattern;
 import fitnesse.junit.FitNesseRunner;
 import fitnesse.wiki.WikiPage;
 import org.apache.commons.io.FilenameUtils;
-import org.junit.Ignore;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import ru.yandex.qatools.allure.Allure;
-import ru.yandex.qatools.allure.annotations.Attachment;
 import ru.yandex.qatools.allure.config.AllureModelUtils;
 import ru.yandex.qatools.allure.events.*;
 import ru.yandex.qatools.allure.model.Label;
@@ -43,11 +41,6 @@ public class JUnitAllureFrameworkListener extends RunListener {
         this.suites = new HashMap();
     }
 
-    public JUnitAllureFrameworkListener(List<WikiPage> pages) {
-        this.lifecycle = Allure.LIFECYCLE;
-        this.suites = new HashMap();
-        this.pages = pages;
-    }
 
     public void testSuiteStarted(Description description) {
         String uid = this.generateSuiteUid(description.getDisplayName());
@@ -70,17 +63,14 @@ public class JUnitAllureFrameworkListener extends RunListener {
         this.fireClearStepStorage();
         this.getLifecycle().fire(event);
 
-        String fullTestName = description.getMethodName();
-        String nameParts[] = fullTestName.split("\\.");
-        String testName = nameParts[nameParts.length-1];
-        String tagInfo = null;
-        for(WikiPage page : pages){
-            if(testName.equalsIgnoreCase(page.getName())){
-                tagInfo = page.getData().getProperties().get("Suites");
+        FitNessePageAnnotation pageAnn = description.getAnnotation(FitNessePageAnnotation.class);
+        if(pageAnn != null) {
+            WikiPage page = pageAnn.getWikiPage();
+            page.getData().getProperties().get("Suites");
+            String tagInfo = page.getData().getProperties().get("Suites");
+            if(tagInfo != null) {
+                createStories(tagInfo);
             }
-        }
-        if(tagInfo != null) {
-            createStories(tagInfo);
         }
     }
 
@@ -107,7 +97,8 @@ public class JUnitAllureFrameworkListener extends RunListener {
     }
 
     public void testFinished(Description description) {
-        fitnesseResult(description.getMethodName());
+        String methodName = description.getMethodName();
+        makeAttachment(fitnesseResult(methodName).getBytes(), "FitNesse Result page", "text/html");
         this.getLifecycle().fire(new TestCaseFinishedEvent());
     }
 
@@ -141,10 +132,6 @@ public class JUnitAllureFrameworkListener extends RunListener {
         return this.getSuites().get(suiteName);
     }
 
-    public String getIgnoredMessage(Description description) {
-        Ignore ignore = description.getAnnotation(Ignore.class);
-        return ignore != null && !ignore.value().isEmpty()?ignore.value():"Test ignored (without reason)!";
-    }
 
     public void startFakeTestCase(Description description) {
         String uid = this.getSuiteUid(description);
@@ -191,34 +178,40 @@ public class JUnitAllureFrameworkListener extends RunListener {
             if(patternMatcher.find()) {
                 String filePath = FITNESSE_RESULTS_PATH + patternMatcher.group(1);
                 String attName;
+                String type;
                 String ext = FilenameUtils.getExtension(Paths.get(filePath).toString());
                 if(ext.equalsIgnoreCase(SCREENSHOT_EXT)){
                     attName = "Page Screenshot";
+                    type = "image/png";
                 } else if(ext.equalsIgnoreCase(PAGESOURCE_EXT)){
                     attName = "Page Source";
+                    type = "text/html";
                 } else{
                     attName = "Attachment";
+                    type = "text/html";
                 }
-                attachFile(filePath, attName);
+                makeAttachment(fileToAttach(filePath), attName, type);
             }
         }
     }
 
-    @Attachment(value = "{1}")
-    protected byte[] attachFile(String filePath, String attName) {
-        Path path = Paths.get(filePath);
+    protected void makeAttachment(byte[] file, String attName, String type){
+        MakeAttachmentEvent ev = new MakeAttachmentEvent(file, attName, type);
+        this.getLifecycle().fire(ev);
+    }
 
+    protected byte[] fileToAttach(String filePath) {
+        Path path = Paths.get(filePath);
         byte[] data;
         try {
             data = Files.readAllBytes(path);
         } catch (IOException var5) {
-            System.err.println(attName + " not found: " + path.toString());
+            System.err.println("file not found: " + path.toString());
             data = null;
         }
         return data;
     }
 
-    @Attachment(value = "FitNesse Result", type = "text/html")
     protected String fitnesseResult(String test){
         String style = "width: 99%; height: 99%; overflow: auto; border: 0px;";
         String iFrame = String.format("<iframe src=\"/fitnesseResults/%s.html\" style=\"%s\">", test, style);
