@@ -4,6 +4,8 @@ import fitnesse.ContextConfigurator;
 import fitnesse.FitNesseContext;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.junit.FitNesseRunner;
+import fitnesse.junit.JUnitRunNotifierResultsListener;
+import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.wiki.WikiPage;
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.slim.web.SeleniumDriverSetup;
@@ -16,6 +18,7 @@ import nl.hsac.fitnesse.junit.selenium.SeleniumGridDriverFactoryFactory;
 import nl.hsac.fitnesse.junit.selenium.SeleniumJsonGridDriverFactoryFactory;
 import nl.hsac.fitnesse.junit.selenium.SimpleSeleniumGridDriverFactoryFactory;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 
@@ -101,6 +104,12 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     }
 
     @Override
+    protected Description describeChild(WikiPage child) {
+        Class<?> suiteClass = super.describeChild(child).getTestClass();
+        return DescriptionHelper.createDescription(suiteClass, child);
+    }
+
+    @Override
     protected void runPages(List<WikiPage> pages, RunNotifier notifier) {
         boolean seleniumConfigOverridden = configureSeleniumIfNeeded();
         try {
@@ -135,6 +144,11 @@ public class HsacFitNesseRunner extends FitNesseRunner {
             }
         }
 
+    }
+
+    @Override
+    protected void addTestSystemListeners(RunNotifier notifier, MultipleTestsRunner testRunner, Class<?> suiteClass) {
+        testRunner.addTestSystemListener(new RunNotifierResultsListener(notifier, suiteClass));
     }
 
     /**
