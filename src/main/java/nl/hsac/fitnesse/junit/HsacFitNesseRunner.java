@@ -4,7 +4,6 @@ import fitnesse.ContextConfigurator;
 import fitnesse.FitNesseContext;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.junit.FitNesseRunner;
-import fitnesse.junit.JUnitRunNotifierResultsListener;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.wiki.WikiPage;
 import nl.hsac.fitnesse.fixture.Environment;
@@ -113,10 +112,7 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     protected void runPages(List<WikiPage> pages, RunNotifier notifier) {
         boolean seleniumConfigOverridden = configureSeleniumIfNeeded();
         try {
-           if ("true".equalsIgnoreCase(System.getProperty(allureEnablerVariableName))){
-                notifier.addListener(new JUnitAllureFrameworkListener());
-           }
-            super.runPages(pages, notifier);
+           super.runPages(pages, notifier);
         } finally {
             if (seleniumConfigOverridden) {
                 try {

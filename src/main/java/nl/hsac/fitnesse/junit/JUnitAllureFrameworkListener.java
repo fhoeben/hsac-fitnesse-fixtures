@@ -34,20 +34,18 @@ public class JUnitAllureFrameworkListener extends RunListener {
     private static final Pattern SCREENSHOT_PATTERN = Pattern.compile("href=\"([^\"]*." + SCREENSHOT_EXT + ")\"");
     private static final Pattern PAGESOURCE_PATTERN = Pattern.compile("href=\"([^\"]*." + PAGESOURCE_EXT + ")\"");
     private final HashMap suites;
-    private List<WikiPage> pages;
 
-    public JUnitAllureFrameworkListener() {
+    JUnitAllureFrameworkListener() {
         this.lifecycle = Allure.LIFECYCLE;
         this.suites = new HashMap();
     }
 
-
-    public void testSuiteStarted(Description description) {
+    private void testSuiteStarted(Description description) {
         String uid = this.generateSuiteUid(description.getDisplayName());
         String suiteName = System.getProperty("fitnesseSuiteToRun");
         if(null == suiteName) {
             suiteName = description.getAnnotation(FitNesseRunner.Suite.class).value();
-            }
+        }
 
         TestSuiteStartedEvent event = new TestSuiteStartedEvent(uid, suiteName);
         AnnotationManager am = new AnnotationManager(description.getAnnotations());
@@ -56,21 +54,22 @@ public class JUnitAllureFrameworkListener extends RunListener {
         this.getLifecycle().fire(event);
     }
 
-    public void testStarted(Description description) {
-        TestCaseStartedEvent event = new TestCaseStartedEvent(this.getSuiteUid(description), description.getMethodName());
-        AnnotationManager am = new AnnotationManager(description.getAnnotations());
-        am.update(event);
-        this.fireClearStepStorage();
-        this.getLifecycle().fire(event);
 
+    public void testStarted(Description description) {
         FitNessePageAnnotation pageAnn = description.getAnnotation(FitNessePageAnnotation.class);
         if(pageAnn != null) {
             WikiPage page = pageAnn.getWikiPage();
-            page.getData().getProperties().get("Suites");
+            String suiteName = page.getParent().getName();
+
+            TestCaseStartedEvent event = new TestCaseStartedEvent(this.getSuiteUid(description), description.getMethodName());
+            AnnotationManager am = new AnnotationManager(description.getAnnotations());
+            am.update(event);
+
+            this.fireClearStepStorage();
+            this.getLifecycle().fire(event);
+
             String tagInfo = page.getData().getProperties().get("Suites");
-            if(tagInfo != null) {
-                createStories(tagInfo);
-            }
+            createStories(suiteName, tagInfo);
         }
     }
 
@@ -102,7 +101,7 @@ public class JUnitAllureFrameworkListener extends RunListener {
         this.getLifecycle().fire(new TestCaseFinishedEvent());
     }
 
-    public void testSuiteFinished(String uid) {
+    private void testSuiteFinished(String uid) {
         this.getLifecycle().fire(new TestSuiteFinishedEvent(uid));
     }
 
@@ -114,7 +113,7 @@ public class JUnitAllureFrameworkListener extends RunListener {
 
     }
 
-    public String generateSuiteUid(String suiteName) {
+    private String generateSuiteUid(String suiteName) {
         String uid = UUID.randomUUID().toString();
         synchronized(this.getSuites()) {
             this.getSuites().put(suiteName, uid);
@@ -122,7 +121,8 @@ public class JUnitAllureFrameworkListener extends RunListener {
         }
     }
 
-    public String getSuiteUid(Description description) {
+
+    private String getSuiteUid(Description description) {
         String suiteName = description.getClassName();
         if(!this.getSuites().containsKey(suiteName)) {
             Description suiteDescription = Description.createSuiteDescription(description.getTestClass());
@@ -132,8 +132,7 @@ public class JUnitAllureFrameworkListener extends RunListener {
         return this.getSuites().get(suiteName);
     }
 
-
-    public void startFakeTestCase(Description description) {
+    private void startFakeTestCase(Description description) {
         String uid = this.getSuiteUid(description);
         String name = description.isTest()?description.getMethodName():description.getClassName();
         TestCaseStartedEvent event = new TestCaseStartedEvent(uid, name);
@@ -143,35 +142,31 @@ public class JUnitAllureFrameworkListener extends RunListener {
         this.getLifecycle().fire(event);
     }
 
-    public void finishFakeTestCase() {
+    private void finishFakeTestCase() {
         this.getLifecycle().fire(new TestCaseFinishedEvent());
     }
 
-    public void fireTestCaseFailure(Throwable throwable) {
+    private void fireTestCaseFailure(Throwable throwable) {
         this.getLifecycle().fire((new TestCaseFailureEvent()).withThrowable(throwable));
     }
 
-    public void fireClearStepStorage() {
+    private void fireClearStepStorage() {
         this.getLifecycle().fire(new ClearStepStorageEvent());
     }
 
-    public Allure getLifecycle() {
+    private Allure getLifecycle() {
         return this.lifecycle;
-    }
-
-    public void setLifecycle(Allure lifecycle) {
-        this.lifecycle = lifecycle;
     }
 
     public Map<String, String> getSuites() {
         return this.suites;
     }
 
-    protected void recordTestResult(Description description) {
+    private void recordTestResult(Description description) {
         this.testFinished(description);
     }
 
-    protected void processAttachments(Throwable ex, List<Pattern> patterns){
+    private void processAttachments(Throwable ex, List<Pattern> patterns){
 
         for(Pattern pattern : patterns){
             Matcher patternMatcher = pattern.matcher(ex.getMessage());
@@ -195,12 +190,12 @@ public class JUnitAllureFrameworkListener extends RunListener {
         }
     }
 
-    protected void makeAttachment(byte[] file, String attName, String type){
+    private void makeAttachment(byte[] file, String attName, String type){
         MakeAttachmentEvent ev = new MakeAttachmentEvent(file, attName, type);
         this.getLifecycle().fire(ev);
     }
 
-    protected byte[] fileToAttach(String filePath) {
+    private byte[] fileToAttach(String filePath) {
         Path path = Paths.get(filePath);
         byte[] data;
         try {
@@ -212,22 +207,28 @@ public class JUnitAllureFrameworkListener extends RunListener {
         return data;
     }
 
-    protected String fitnesseResult(String test){
+    private String fitnesseResult(String test){
         String style = "width: 99%; height: 99%; overflow: auto; border: 0px;";
         String iFrame = String.format("<iframe src=\"/fitnesseResults/%s.html\" style=\"%s\">", test, style);
-        String content = String.format("<html><head><title>FitNesse Report</title></head><body>%s</body>", iFrame);
-        return content;
+        return String.format("<html><head><title>FitNesse Report</title></head><body>%s</body>", iFrame);
     }
 
-    protected void createStories(String tagInfo){
+    private void createStories(String suite, String tagInfo){
         List<Label> labels = new ArrayList<>();
-        String[] tags = tagInfo.split(",");
-        for (String tag : tags) {
-            tag = tag.trim();
-            Label storyLabel = new Label();
-            storyLabel.setName("story");
-            storyLabel.setValue(tag);
-            labels.add(storyLabel);
+
+        Label featureLabel = new Label();
+        featureLabel.setName("feature");
+        featureLabel.setValue(suite);
+        labels.add(featureLabel);
+        if (null != tagInfo) {
+            String[] tags = tagInfo.split(",");
+            for (String tag : tags) {
+                tag = tag.trim();
+                Label storyLabel = new Label();
+                storyLabel.setName("story");
+                storyLabel.setValue(tag);
+                labels.add(storyLabel);
+            }
         }
 
         //For some reason, the host label no longer gets set when applying story labels..
