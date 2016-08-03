@@ -46,7 +46,6 @@
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
 		<fitnesse.port>9090</fitnesse.port>
-        <aspectj.version>1.8.9</aspectj.version>
         <allure.version>1.4.23</allure.version>
 		<allure.report.directory>${project.build.directory}/allure-report</allure.report.directory>
 	</properties>
@@ -296,7 +295,7 @@
 					<properties>
 						<property>
 							<name>listener</name>
-							<value>nl.hsac.fitnesse.junit.JUnitXMLPerPageListener,nl.hsac.fitnesse.junit.ProgressLoggerListener</value>
+							<value>nl.hsac.fitnesse.junit.JUnitXMLPerPageListener,nl.hsac.fitnesse.junit.ProgressLoggerListener,nl.hsac.fitnesse.junit.JUnitAllureFrameworkListener</value>
 						</property>
 					</properties>
 					<!-- Our listener will create XML failsafe should not, or all tests are reported twice -->
@@ -490,6 +489,7 @@
 			<plugin>
 				<groupId>ru.yandex.qatools.allure</groupId>
 				<artifactId>allure-maven-plugin</artifactId>
+				<version>2.5</version>
 				<configuration>
 					<resultsDirectory>allure-results</resultsDirectory>
 					<reportDirectory>${allure.report.directory}</reportDirectory>
