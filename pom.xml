@@ -279,9 +279,6 @@
 				</executions>
 				<configuration>
 					<!-- this test actually runs fitnesse tests-->
-                    <argLine>
-                        -javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar
-                    </argLine>
 					<test>FixtureDebugTest</test>
 					<systemPropertyVariables>
 						<fitnesseSuiteToRun>${fitnesseSuiteToRun}</fitnesseSuiteToRun>
@@ -301,13 +298,6 @@
 					<!-- Our listener will create XML failsafe should not, or all tests are reported twice -->
 					<disableXmlReport>true</disableXmlReport>
 				</configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.aspectj</groupId>
-                        <artifactId>aspectjweaver</artifactId>
-                        <version>${aspectj.version}</version>
-                    </dependency>
-                </dependencies>
 
 			</plugin>
 			<plugin>

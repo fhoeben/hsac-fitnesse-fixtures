@@ -35,7 +35,7 @@ public class JUnitAllureFrameworkListener extends RunListener {
     private static final Pattern PAGESOURCE_PATTERN = Pattern.compile("href=\"([^\"]*." + PAGESOURCE_EXT + ")\"");
     private final HashMap suites;
 
-    JUnitAllureFrameworkListener() {
+    public JUnitAllureFrameworkListener() {
         this.lifecycle = Allure.LIFECYCLE;
         this.suites = new HashMap();
     }
