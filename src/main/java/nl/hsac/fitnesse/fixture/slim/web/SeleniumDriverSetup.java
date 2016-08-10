@@ -25,7 +25,9 @@ import org.openqa.selenium.safari.SafariDriver;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -78,7 +80,7 @@ public class SeleniumDriverSetup extends SlimFixture {
                         driver = new FirefoxDriver(fxProfile);
                     }
                     else if("chromedriver".equalsIgnoreCase(driverClass.getSimpleName())) {
-                        DesiredCapabilities capabilities = getChromeMobileCapabilities(profile);
+                        DesiredCapabilities capabilities = getChromeCapabilities(profile);
                         driver = new ChromeDriver(capabilities);
                     } else {
                         driver = driverClass.newInstance();
@@ -281,12 +283,36 @@ public class SeleniumDriverSetup extends SlimFixture {
         return fxProfile;
     }
 
-    private DesiredCapabilities getChromeMobileCapabilities(Map<String, Object> profile) {
+    /**
+     * if a profile is given when starting chrome, the profile is a map of chromeOptions.
+     * @param profile a map of chromeoptions to be set
+     * @return DesiredCapabilities including the specified options
+     */
+    private DesiredCapabilities getChromeCapabilities(Map<String, Object> profile) {
         DesiredCapabilities capabilities = DesiredCapabilities.chrome();
         if (profile != null) {
+            profile = setStringArraysAsLists(profile);
             capabilities.setCapability(ChromeOptions.CAPABILITY, profile);
         }
         return capabilities;
+    }
+
+    /**
+     * @param map desired map to iterate through
+     * @return map where strings formatted as json list i.e. ['foo', 'bar'] are returned as List{String> instead of the original String
+     */
+    private Map<String, Object> setStringArraysAsLists(Map<String, Object> map){
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            Object value = entry.getValue();
+            String strValue = value.toString();
+            if(strValue.startsWith("[")){
+                strValue = strValue.replace("[", "");
+                strValue = strValue.replace("]", "");
+                List<String> items = Arrays.asList(strValue.split("\\s*,\\s*"));
+                entry.setValue(items);
+            }
+        }
+        return map;
     }
 
     public boolean connectToDriverAtWithJsonCapabilities(String url, String capabilitiesInJson)
