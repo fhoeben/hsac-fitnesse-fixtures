@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <properties>
-<Edit>true</Edit>
-<Files>true</Files>
+<Edit/>
+<Files/>
 <Help>Tests on working with tables representing a grid</Help>
-<Properties>true</Properties>
-<RecentChanges>true</RecentChanges>
-<Refactor>true</Refactor>
-<Search>true</Search>
-<Test>true</Test>
-<Versions>true</Versions>
-<WhereUsed>true</WhereUsed>
+<Properties/>
+<Prune/>
+<RecentChanges/>
+<Refactor/>
+<Search/>
+<Test/>
+<Versions/>
+<WhereUsed/>
 </properties>
