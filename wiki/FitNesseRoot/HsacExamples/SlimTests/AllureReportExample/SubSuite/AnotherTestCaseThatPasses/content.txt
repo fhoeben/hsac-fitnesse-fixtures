@@ -1,0 +1,3 @@
+|script                |browser test            |
+|open                  |http://www.funda.nl/    |
+
