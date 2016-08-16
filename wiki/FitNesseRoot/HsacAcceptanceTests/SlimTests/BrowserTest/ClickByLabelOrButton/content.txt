@@ -39,7 +39,7 @@ We use a mock server running to serve the HTML defined in this page.
 |seconds before timeout|1                                     |
 |open                  |$url                                  |
 |note                  |button: exact and partial             |
-|click                 |Button 2FOUT                              |
+|click                 |Button 2                              |
 |click                 |3                                     |
 |note                  |label: exact hidden, exact visible    |
 |click                 |Ja, ik heb producten                  |

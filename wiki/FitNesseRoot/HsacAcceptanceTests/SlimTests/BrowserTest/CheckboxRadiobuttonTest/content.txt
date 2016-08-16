@@ -20,7 +20,7 @@ This test ensure we can check values of radiobuttons and checkboxes.
 |open  |$url                                                                 |
 |check |value of|Dit is een openbare of gedeelde computer              |true |
 |ensure|value of|Dit is een openbare of gedeelde computer                    |
-|check |value of|Dit is een particuliere computer                      |true|
+|check |value of|Dit is een particuliere computer                      |false|
 |check |value of|Ik wil mijn wachtwoord wijzigen nadat ik ben aangemeld|false|
 |click |Dit is een particuliere computer                                     |
 |check |value of|Dit is een particuliere computer                      |true |
