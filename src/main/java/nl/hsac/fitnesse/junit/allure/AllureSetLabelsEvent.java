@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * Created by Tom on 4-7-2016.
+ * Custom event to explicitly add labels to allure result xml from the run listener
  */
 
 public class AllureSetLabelsEvent implements TestCaseEvent {
