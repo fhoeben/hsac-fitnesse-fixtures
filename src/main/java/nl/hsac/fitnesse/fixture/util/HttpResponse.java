@@ -11,9 +11,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * Wrapper around HTTP response (and request).
  */
 public class HttpResponse {
-    private final static Map<String, HttpResponse> INSTANCES = new ConcurrentHashMap<String, HttpResponse>();
+    private final static Map<String, HttpResponse> INSTANCES = new ConcurrentHashMap<>();
 
-    private Map<String, String> responseHeaders = new HashMap<String, String>();
+    private Map<String, String> responseHeaders = new HashMap<>();
     private String request;
     protected String response;
     private int statusCode;
