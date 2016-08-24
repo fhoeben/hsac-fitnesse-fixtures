@@ -424,6 +424,13 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     /**
+     * @return response time in ms for call to service.
+     */
+    public long responseTime() {
+        return getResponse().getResponseTime();
+    }
+
+    /**
      * @return http status received in response to last request.
      */
     public int responseStatus() {
