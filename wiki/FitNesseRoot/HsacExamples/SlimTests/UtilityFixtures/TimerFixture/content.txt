@@ -17,7 +17,7 @@ We can start and use a timer with a name.
 |script     |timer fixture                |
 |start timer|test                         |
 |wait       |1            |seconds        |
-|check      |time on timer|test|> 1000    |
+|check      |time on timer|test|>= 1000   |
 |$elapsed=  |time on timer|test           |
 |check      |stop timer   |test|>=$elapsed|
 |start timer|test2                        |
