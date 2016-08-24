@@ -18,6 +18,7 @@ public class HttpResponse {
     protected String response;
     private int statusCode;
     private CookieStore cookieStore;
+    private long responseTime = -1;
 
     /**
      * @throws RuntimeException if no valid response is available
@@ -93,6 +94,21 @@ public class HttpResponse {
      */
     public void setCookieStore(CookieStore cookieStore) {
         this.cookieStore = cookieStore;
+    }
+
+    /**
+     * @return response time in ms for call.
+     */
+    public long getResponseTime() {
+        return responseTime;
+    }
+
+    /**
+     * Sets response time for obtaining this response.
+     * @param responseTime response time in ms for call.
+     */
+    public void setResponseTime(long responseTime) {
+        this.responseTime = responseTime;
     }
 
     @Override
