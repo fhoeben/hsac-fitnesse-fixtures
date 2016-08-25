@@ -51,3 +51,13 @@ We can get information on all timers.
 |start timer|test 9         |
 |show       |all timer times|
 |show       |stop all timers|
+
+We can get the current system time, possibly specifying a format (the format is the format string used by [[Java's !-SimpleDateFormat-!][http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html]], also used by '!-!today-!') to use.
+The difference between these methods and !-!today-! is that the latter is evaluated when the test is started, these methods return the time at the moment the test executes them.
+
+|script|timer fixture                                                         |
+|show  |current system time                                                   |
+|show  |current system time as|HH:MM:ss.SSS                                   |
+|show  |current system time as|E dd-MMM-yy HH:mm:ss.SSS                       |
+|show  |current system time as|E dd-MMM-yy HH:mm:ss.SSS|in|ja-JP-x-lvariant-JP|
+

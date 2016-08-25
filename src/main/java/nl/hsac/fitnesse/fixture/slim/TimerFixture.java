@@ -2,7 +2,10 @@ package nl.hsac.fitnesse.fixture.slim;
 
 import org.apache.commons.lang3.time.StopWatch;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -128,5 +131,40 @@ public class TimerFixture extends SlimFixture {
             throw new SlimFixtureException(false, "No timer found with name: " + name);
         }
         return stopWatch;
+    }
+
+    /**
+     * @return current system time.
+     */
+    public String currentSystemTime() {
+        return currentSystemTimeAs("HH:mm:ss.SSS");
+    }
+
+    /**
+     * @param format to return time (and possibly date) in.
+     * @return current system time formatted according to format.
+     */
+    public String currentSystemTimeAs(String format) {
+        Locale locale = Locale.getDefault();
+        return formatCurrentSystemTime(format, locale);
+    }
+
+    /**
+     * @param format to return time (and possibly date) in.
+     * @param languageTag language to use when formatting.
+     * @return current system time formatted according to format.
+     */
+    public String currentSystemTimeAsIn(String format, String languageTag) {
+        Locale locale = Locale.forLanguageTag(languageTag);
+        return formatCurrentSystemTime(format, locale);
+    }
+
+    private String formatCurrentSystemTime(String format, Locale locale) {
+        Date now = new Date();
+        try {
+            return new SimpleDateFormat(format, locale).format(now);
+        } catch (IllegalArgumentException e) {
+            throw new SlimFixtureException(false, "Bad date format: " + format);
+        }
     }
 }
