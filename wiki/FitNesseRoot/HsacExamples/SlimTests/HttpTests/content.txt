@@ -35,6 +35,7 @@ The main commands/keywords (i.e. public methods) offered by !-nl.hsac.fitnesse.f
 |response                           |Returns the last response body returned. Intended to be used in combination with the 'show' or 'check' commands.                                                      |
 |html response                      |Returns the last response body returned as HTML to be embedded in the test result table (in combination with the 'show' command).                                     |
 |response status                    |HTTP status code of last response received.                                                                                                                           |
+|response time                      |Time (in milliseconds) it took to send the last request and receive its response.                                                                                     |
 |response headers                   |HTTP headers received with last response.                                                                                                                             |
 |response header <name>             |Value of HTTP header 'name' in last response received.                                                                                                                |
 |response is valid                  |Whether the last request was successful, or an error.                                                                                                                 |

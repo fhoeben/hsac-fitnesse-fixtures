@@ -19,7 +19,7 @@ public class HttpTest extends SlimFixtureWithMap {
     /** Default content type for posts and puts. */
     public final static String DEFAULT_POST_CONTENT_TYPE = "application/x-www-form-urlencoded; charset=UTF-8";
 
-    private final Map<String, Object> headerValues = new LinkedHashMap<String, Object>();
+    private final Map<String, Object> headerValues = new LinkedHashMap<>();
     private HttpResponse response = createResponse();
     private String template;
     private String contentType = DEFAULT_POST_CONTENT_TYPE;
@@ -421,6 +421,13 @@ public class HttpTest extends SlimFixtureWithMap {
         String content = response.getResponse();
         content = "<div>" + content + "</div>";
         return content;
+    }
+
+    /**
+     * @return response time in ms for call to service.
+     */
+    public long responseTime() {
+        return getResponse().getResponseTime();
     }
 
     /**

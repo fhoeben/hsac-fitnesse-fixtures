@@ -117,6 +117,8 @@ public class HttpClient {
     }
 
     protected void getResponse(String url, HttpResponse response, HttpRequestBase method, Map<String, Object> headers) {
+        long startTime = 0;
+        long endTime = -1;
         try {
             if (headers != null) {
                 for (String key : headers.keySet()) {
@@ -129,11 +131,15 @@ public class HttpClient {
 
             org.apache.http.HttpResponse resp;
             CookieStore store = response.getCookieStore();
+
+            startTime = currentTimeMillis();
             if (store == null) {
                 resp = getHttpResponse(url, method);
             } else {
                 resp = getHttpResponse(store, url, method);
             }
+            endTime = currentTimeMillis();
+
             int returnCode = resp.getStatusLine().getStatusCode();
             response.setStatusCode(returnCode);
             HttpEntity entity = resp.getEntity();
@@ -162,6 +168,12 @@ public class HttpClient {
         } catch (Exception e) {
             throw new RuntimeException("Unable to get response from: " + url, e);
         } finally {
+            if (startTime > 0) {
+                if (endTime < 0) {
+                    endTime = currentTimeMillis();
+                }
+            }
+            response.setResponseTime(endTime - startTime);
             method.reset();
         }
     }
@@ -194,5 +206,9 @@ public class HttpClient {
 
     protected org.apache.http.HttpResponse getHttpResponse(String url, HttpRequestBase method) throws IOException {
         return HTTP_CLIENT.execute(method);
+    }
+
+    protected long currentTimeMillis() {
+        return System.currentTimeMillis();
     }
 }
