@@ -25,7 +25,7 @@ A similar zip file containing the latest *snapshot* (i.e. not released but based
 
 ## To run the tests on a build server:
 Have the build server checkout the project and execute `mvn clean test-compile failsafe:integration-test`.
-The result in JUnit XML results can be found in: target/failsafe-reports (most build servers will pick these up automatically)
+The result in JUnit XML results can be found in: `target/failsafe-reports` (most build servers will pick these up automatically)
 The HTML results can be found in: `target/fitnesse-results/index.html`
 
 The Fitnesse suite to run can be specified by changing the value of the `@Suite` annotation in `nl.hsac.fitnesse.fixture.FixtureDebugTest`, or (preferably) by adding a system property, called `fitnesseSuiteToRun`, specifying the suite to run to the build server's mvn execution.
