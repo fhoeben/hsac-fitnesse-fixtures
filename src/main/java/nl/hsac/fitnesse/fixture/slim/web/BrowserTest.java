@@ -605,10 +605,10 @@ public class BrowserTest extends SlimFixture {
         boolean result = false;
         if (element != null) {
             if (isSelect(element)) {
-                By xpath = getSeleniumHelper().byXpath(".//option[normalize-space(text()) = '%s']", optionValue);
+                By xpath = getSeleniumHelper().byXpath(".//option[normalize-space(translate(text(), '\u00a0', ' ')) = '%s']", optionValue);
                 WebElement option = getSeleniumHelper().findElement(element, false, xpath);
                 if (option == null) {
-                    xpath = getSeleniumHelper().byXpath(".//option[contains(normalize-space(text()), '%s')]", optionValue);
+                    xpath = getSeleniumHelper().byXpath(".//option[contains(normalize-space(translate(text(), '\u00a0', ' ')), '%s')]", optionValue);
                     option = getSeleniumHelper().findElement(element, false, xpath);
                 }
                 if (option != null) {
@@ -879,9 +879,9 @@ public class BrowserTest extends SlimFixture {
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public Integer numberFor(String place) {
         Integer number = null;
-        WebElement element = findByXPath("//ol/li/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::li", place);
+        WebElement element = findByXPath("//ol/li/descendant-or-self::text()[normalize-space(translate(., '\u00a0', ' '))='%s']/ancestor-or-self::li", place);
         if (element == null) {
-            element = findByXPath("//ol/li/descendant-or-self::text()[contains(normalize-space(.),'%s')]/ancestor-or-self::li", place);
+            element = findByXPath("//ol/li/descendant-or-self::text()[contains(normalize-space(translate(., '\u00a0', ' ')),'%s')]/ancestor-or-self::li", place);
         }
         if (element != null) {
             scrollIfNotOnScreen(element);
@@ -990,7 +990,7 @@ public class BrowserTest extends SlimFixture {
     protected boolean clickInRow(String columnXPath, String place) {
         // find an input to click in the row
         WebElement element = findByXPath("%s//*[(local-name()='input' and contains(@value, '%s'))" +
-                                            " or contains(normalize-space(text()),'%s') or contains(@title, '%s')]",
+                                            " or contains(normalize-space(translate(text(), '\u00a0', ' ')),'%s') or contains(@title, '%s')]",
                                             columnXPath, place,
                                             place, place);
         return clickElement(element);
@@ -1024,7 +1024,7 @@ public class BrowserTest extends SlimFixture {
     protected String downloadFromRow(String columnXPath, String place) {
         String result = null;
         // find an a to download from based on its text()
-        WebElement element = findByXPath("%s//a[contains(normalize-space(text()),'%s')]", columnXPath, place);
+        WebElement element = findByXPath("%s//a[contains(normalize-space(translate(text(), '\u00a0', ' ')),'%s')]", columnXPath, place);
         if (element == null) {
             // find an a to download based on its column header
             String requestedIndex = getXPathForColumnIndex(place);
@@ -1049,7 +1049,7 @@ public class BrowserTest extends SlimFixture {
      */
     protected String getXPathForColumnInRowByValueInOtherColumn(String columnName, String value) {
         String selectIndex = getXPathForColumnIndex(columnName);
-        return String.format("//tr[td[%s]/descendant-or-self::text()[normalize-space(.)='%s']]/td", selectIndex, value);
+        return String.format("//tr[td[%s]/descendant-or-self::text()[normalize-space(translate(., '\u00a0', ' '))='%s']]/td", selectIndex, value);
     }
 
     /**
@@ -1061,7 +1061,7 @@ public class BrowserTest extends SlimFixture {
     protected String getXPathForColumnIndex(String columnName) {
         // determine how many columns are before the column with the requested name
         // the column with the requested name will have an index of the value +1 (since XPath indexes are 1 based)
-        return String.format("count(ancestor::table[1]//tr/th/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::th[1]/preceding-sibling::th)+1", columnName);
+        return String.format("count(ancestor::table[1]//tr/th/descendant-or-self::text()[normalize-space(translate(., '\u00a0', ' '))='%s']/ancestor-or-self::th[1]/preceding-sibling::th)+1", columnName);
     }
 
     protected WebElement getElement(String place) {
