@@ -12,7 +12,7 @@ The >TableTemplateTest simplifies the parameterization of the script.
 >StoryboardTest shows a test where a screenshot is taken after each action. This is then combined with a scenario in >TemplateStoryboardTest.
 >ResizeTest shows some manipulation of the browser window.
 >CheckboxRadiobuttonTest shows how to check values of radio buttons and checkboxes.
->AngularJsTest shows usage of !-BrowserTest-! testing [[!-AngularJs-!][https://angularjs.org]] applications. >AngularJsCalculatorTest takes it one step further, using !-NgBrowserTest-! to select elements by model, binding and repeater. >AngularUiSelectTest show a test interacting with [[!-AngularJs-! ui-select][https://github.com/angular-ui/ui-select]].
+>AngularJsCalculatorTest test an [[!-AngularJs-!][https://angularjs.org]] application using !-NgBrowserTest-! to select elements by model, binding and repeater. >AngularUiSelectTest show a test interacting with [[!-AngularJs-! ui-select][https://github.com/angular-ui/ui-select]].
 >HeuristicVsTechnicalSelectors contains a single test in two versions: using the heuristics and using technical selectors to give some more understanding of the difference between the two.
 
 !2 Language
