@@ -51,32 +51,13 @@ Next another POST, posting of url-enoded values defined in the wiki.
 Next another POST, posting of url-enoded array of values defined in the wiki.
 !note We have to specify 'products\[]' as value name since the service requires a value called 'products[]' and the fixture interprets a value name ending on '[]' as an indicator the value is an array, and will normally not include that postfix in the name of the value sent to the service. By specifying '\[]' we indicate we ''don't'' want the brackets removed from the name.
 
-|script        |json http test                                                                                   |
-|set values    |televisie-start, internet-fiber-start|for                                          |products\[]  |
-|post values to|https://thuisbestellen.vodafone.nl/api/shoppingcart                                              |
-|show          |response                                                                                         |
-|check         |json path                            |error                                        |0            |
-|check         |json path                            |$.fields.order.basic_products[0].product_name|Internet 50Mb|
-|check         |json path                            |$.fields.order.basic_products[1].product_name|TV Start     |
-
-Next a POST/DELETE combination
-
-|script                |json http test                                 |
-|set value             |dsfsdf         |for                |name       |
-|set value             |2010           |for                |year_formed|
-|set value             |1              |for                |genre_id   |
-|set value             |Afghanistan    |for                |country    |
-|post values as json to|http://rest.kabasakalis.tk/api/artist          |
-|show                  |request                                        |
-|check                 |response status|200                            |
-|show                  |response                                       |
-|$id=                  |json path      |data.artist.id                 |
-|check                 |json path      |data.artist.name   |dsfsdf     |
-|check                 |json path      |data.artist.country|Afghanistan|
-|delete                |http://rest.kabasakalis.tk/api/artist/$id      |
-|check                 |response status|200                            |
-|show                  |response                                       |
-|check                 |json path      |success            |true       |
+|script        |json http test                                                                                             |
+|set values    |televisie-start, internet-fiber-start|for                                               |products\[]       |
+|post values to|https://thuisbestellen.vodafone.nl/api/shoppingcart                                                        |
+|show          |response                                                                                                   |
+|check         |json path                            |error                                             |0                 |
+|check         |json path                            |$.fields.pricing_info.initial_onetime.pricing_info|Eenmalig betaal je|
+|check         |json path                            |$.fields.pricing_info.initial_monthly.pricing_info|Maandelijks       |
 
 Next a PUT example
 !define PUT_BODY { {{{
@@ -86,9 +67,9 @@ json={"id": 1,
     "userId": 1}
 }}} }
 
-|script|json http test                                              |
-|put   |${PUT_BODY}          |to      |http://jsonplaceholder.typicode.com/posts/1/|
-|show  |response                                                    |
-|check |json path            |id      |>0                           |
-|check |json path count      |$.*     |>=2                          |
-|show  |all json path matches|*                                     |
+|script|json http test                                                        |
+|put   |${PUT_BODY}          |to |http://jsonplaceholder.typicode.com/posts/1/|
+|show  |response                                                              |
+|check |json path            |id |>0                                          |
+|check |json path count      |$.*|>=2                                         |
+|show  |all json path matches|*                                               |
