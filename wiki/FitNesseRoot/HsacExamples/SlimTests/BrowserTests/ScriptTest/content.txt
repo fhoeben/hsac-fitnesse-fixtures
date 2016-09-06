@@ -11,9 +11,9 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |script           |browser test                                                          |
 |open             |http://www.funda.nl                                                   |
-|select           |€ 800.000         |for                  |van                          |
-|select           |€ 1.000.000       |for                  |tot                          |
-|enter            |Gageldijk, Utrecht|as                   |Plaats, buurt, adres etc     |
+|select           |€ 800.000         |for                 |van                           |
+|select           |€ 1.000.000       |for                 |tot                           |
+|enter            |Gageldijk, Utrecht|as                  |Plaats, buurt, adres etc      |
 |note             |select option from autocomplete                                       |
 |wait             |1                 |seconds                                            |
 |press            |down                                                                  |
@@ -21,8 +21,8 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |click            |Zoek                                                                  |
 |click            |Gageldijk 104                                                         |
 |check            |page title        |Huis te koop: Gageldijk 104 3566 MH Utrecht [funda]|
-|check            |value of          |Status               |Beschikbaar                  |
-|check            |value of          |Woonoppervlakte      |270 m²                       |
+|check            |value of          |Status              |Verkocht onder voorbehoud     |
+|check            |value of          |Woonoppervlakte     |270 m²                        |
 |note             |set width so we see button to go to next photo                        |
 |set browser width|1200                                                                  |
 |click            |Foto's                                                                |
