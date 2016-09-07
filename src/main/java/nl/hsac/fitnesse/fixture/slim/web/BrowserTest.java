@@ -445,7 +445,19 @@ public class BrowserTest extends SlimFixture {
      */
     @WaitUntil
     public boolean enterAs(String value, String place) {
-        return enter(value, place, true);
+        return enterAsIn(value, place, null);
+    }
+
+    /**
+     * Replaces content at place by value.
+     * @param value value to set.
+     * @param place element to set value on.
+     * @param container element containing place.
+     * @return true, if element was found.
+     */
+    @WaitUntil
+    public boolean enterAsIn(String value, String place, String container) {
+        return enter(value, place, container, true);
     }
 
     /**
@@ -456,11 +468,27 @@ public class BrowserTest extends SlimFixture {
      */
     @WaitUntil
     public boolean enterFor(String value, String place) {
-        return enter(value, place, false);
+        return enterForIn(value, place, null);
+    }
+
+    /**
+     * Adds content to place.
+     * @param value value to add.
+     * @param place element to add value to.
+     * @param container element containing place.
+     * @return true, if element was found.
+     */
+    @WaitUntil
+    public boolean enterForIn(String value, String place, String container) {
+        return enter(value, place, container, false);
     }
 
     protected boolean enter(String value, String place, boolean shouldClear) {
-        WebElement element = getElementToSendValue(place);
+        return enter(value, place, null, shouldClear);
+    }
+
+    protected boolean enter(String value, String place, String container, boolean shouldClear) {
+        WebElement element = getElementToSendValue(container, place);
         boolean result = element != null && isInteractable(element);
         if (result) {
             if (shouldClear) {
@@ -472,7 +500,11 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected WebElement getElementToSendValue(String place) {
-        return getElement(place);
+        return getElementToSendValue(null, place);
+    }
+
+    protected WebElement getElementToSendValue(String container, String place) {
+        return getElement(place, container);
     }
 
     /**
@@ -621,18 +653,23 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil
     public boolean click(final String place) {
-        return clickImp(place);
+        return clickImp(place, null);
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
     public boolean clickIfAvailable(final String place) {
-        return clickImp(place);
+        return clickImp(place, null);
     }
 
-    protected boolean clickImp(String place) {
+    @WaitUntil
+    public boolean clickIn(String place, String container) {
+        return clickImp(place, container);
+    }
+
+    protected boolean clickImp(String place, String container) {
         boolean result = false;
         try {
-            WebElement element = getElementToClick(place);
+            WebElement element = getElementToClick(container, place);
             result = clickElement(element);
         } catch (WebDriverException e) {
             // if other element hides the element (in Chrome) an exception is thrown
@@ -669,7 +706,48 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected WebElement getElementToClick(String place) {
-        return getSeleniumHelper().getElementToClick(place);
+        return getElementToClick(null, place);
+    }
+
+    protected WebElement getElementToClick(String container, String place) {
+        SearchContext currentSearchContext = setContextToContainer(container);
+        try {
+            return getSeleniumHelper().getElementToClick(place);
+        } finally {
+            resetSearchContext(currentSearchContext);
+        }
+    }
+
+    protected SearchContext setContextToContainer(String container) {
+        SearchContext currentSearchContext = null;
+        if (container != null) {
+            WebElement containerElement = findContainer(container);
+            if (containerElement != null) {
+                currentSearchContext = getSeleniumHelper().getCurrentContext();
+                getSeleniumHelper().setCurrentContext(containerElement);
+            }
+        }
+        return currentSearchContext;
+    }
+
+    protected void resetSearchContext(SearchContext currentSearchContext) {
+        if (currentSearchContext != null) {
+            getSeleniumHelper().setCurrentContext(currentSearchContext);
+        }
+    }
+
+    private WebElement findContainer(String container) {
+        WebElement containerElement = null;
+        By by = getSeleniumHelper().placeToBy(container);
+        if (by != null) {
+            containerElement = findElement(by);
+        } else {
+            containerElement = findByXPath(".//fieldset[.//legend/text()[normalized(.) = '%s']]", container);
+            if (containerElement == null) {
+                containerElement = findByXPath(".//fieldset[.//legend/text()[contains(normalized(.), '%s')]]", container);
+            }
+        }
+        return containerElement;
     }
 
     protected boolean clickElement(WebElement element) {
@@ -804,12 +882,22 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueFor(String place) {
-        WebElement element = getElementToRetrieveValue(place);
+        return valueForIn(place, null);
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public String valueOfIn(String place, String container) {
+        return valueForIn(place, container);
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public String valueForIn(String place, String container) {
+        WebElement element = getElementToRetrieveValue(place, container);
         return valueFor(element);
     }
 
-    protected WebElement getElementToRetrieveValue(String place) {
-        return getElement(place);
+    protected WebElement getElementToRetrieveValue(String place, String container) {
+        return getElement(place, container);
     }
 
     protected String valueFor(WebElement element) {
@@ -849,9 +937,19 @@ public class BrowserTest extends SlimFixture {
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public ArrayList<String> valuesOfIn(String place, String container) {
+        return valuesForIn(place, container);
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public ArrayList<String> valuesFor(String place) {
+        return valuesForIn(place, null);
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public ArrayList<String> valuesForIn(String place, String container) {
         ArrayList<String> values = null;
-        WebElement element = getElementToRetrieveValue(place);
+        WebElement element = getElementToRetrieveValue(place, container);
         if (element != null) {
             values = new ArrayList<String>();
             String tagName = element.getTagName();
@@ -878,16 +976,26 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public Integer numberFor(String place) {
-        Integer number = null;
-        WebElement element = findByXPath("//ol/li/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::li", place);
-        if (element == null) {
-            element = findByXPath("//ol/li/descendant-or-self::text()[contains(normalized(.),'%s')]/ancestor-or-self::li", place);
+        return numberForIn(place, null);
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public Integer numberForIn(String place, String container) {
+        SearchContext searchContext = setContextToContainer(container);
+        try {
+            Integer number = null;
+            WebElement element = findByXPath(".//ol/li/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::li", place);
+            if (element == null) {
+                element = findByXPath(".//ol/li/descendant-or-self::text()[contains(normalized(.),'%s')]/ancestor-or-self::li", place);
+            }
+            if (element != null) {
+                scrollIfNotOnScreen(element);
+                number = getSeleniumHelper().getNumberFor(element);
+            }
+            return number;
+        } finally {
+            resetSearchContext(searchContext);
         }
-        if (element != null) {
-            scrollIfNotOnScreen(element);
-            number = getSeleniumHelper().getNumberFor(element);
-        }
-        return number;
     }
 
     public ArrayList<String> availableOptionsFor(String place) {
@@ -1049,7 +1157,7 @@ public class BrowserTest extends SlimFixture {
      */
     protected String getXPathForColumnInRowByValueInOtherColumn(String columnName, String value) {
         String selectIndex = getXPathForColumnIndex(columnName);
-        return String.format("//tr[td[%s]/descendant-or-self::text()[normalized(.)='%s']]/td", selectIndex, value);
+        return String.format(".//tr[td[%s]/descendant-or-self::text()[normalized(.)='%s']]/td", selectIndex, value);
     }
 
     /**
@@ -1065,7 +1173,16 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected WebElement getElement(String place) {
-        return getSeleniumHelper().getElement(place);
+        return getElement(place, null);
+    }
+
+    protected WebElement getElement(String place, String container) {
+        SearchContext currentSearchContext = setContextToContainer(container);
+        try {
+            return getSeleniumHelper().getElement(place);
+        } finally {
+            resetSearchContext(currentSearchContext);
+        }
     }
 
     /**
