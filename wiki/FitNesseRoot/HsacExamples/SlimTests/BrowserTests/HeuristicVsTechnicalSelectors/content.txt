@@ -33,6 +33,7 @@ This version shows a test can be understood, and even written, by people without
 |note                  |!note Searching may take a while so we set a longer timeout                                                  |
 |seconds before timeout|40                                                                                                           |
 |click                 |Search                                                                                                       |
+|wait for visible      |Start by choosing your hotel                                                                                 |
 |click                 |Broadway - Times Square                                                                                      |
 |click                 |Star Rating                                                                                                  |
 |click                 |The Peninsula New York                                                                                       |
@@ -59,6 +60,7 @@ Although the identifiers used inside Expedia's HTML are quite descriptive, this 
 |select                |2                                |as|id=package-1-adults   |
 |seconds before timeout|40                                                         |
 |click                 |id=search-button                                           |
+|wait for visible      |id=packageSearchTitle                                      |
 |click                 |id=id_NeighborhoodRegionName800077                         |
 |click                 |link=Star Rating                                           |
 |click                 |partialLink=The Peninsula New York                         |
