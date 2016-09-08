@@ -14,9 +14,15 @@ We use a mock server running to serve the HTML defined in this page.
 <label>Hello4<input value="Hallo"></label>
 <label for="list1">Lijstje</label><ul id="list1"><li>one</li><li>two</li></ul>
 <ol><li>Least favorite</li><li>Favorite Todo </li></ol>
-
-
+<label for="select1">Cars</label>
+<select id="select1">
+  <option value="volvo">Volvo</option>
+  <option value="saab">Saab</option>
+  <option value="mercedes">Mercedes</option>
+  <option value="audi">Audi</option>
+</select>
 <fieldset>
+
 <legend>Special</legend>
 <button onclick='document.getElementById("lastButton").innerHTML = "Special Button";'>Button</button>
 <div>
@@ -25,6 +31,13 @@ We use a mock server running to serve the HTML defined in this page.
 <label>Hello4<input value="Hallo2"></label>
 <label for="list2">Lijstje</label><ul id="list2"><li>three</li><li>4</li></ul>
 <ol><li>NOOOO</li><li>Least favorite</li><li>Favorite Todo </li></ol>
+<label for="select2">Cars</label>
+<select id="select2">
+  <option value="volvo">Volvo</option>
+  <option value="saab">Saab</option>
+  <option value="mercedes">Mercedes</option>
+  <option value="audi">Audi</option>
+</select>
 </fieldset>
 
 <div id="extraOptions">
@@ -62,6 +75,8 @@ We use a mock server running to serve the HTML defined in this page.
 |check                 |value of  |Hello4       |Hallo1                           |
 |check                 |values of |Lijstje      |[one, two]                       |
 |check                 |number for|Favorite Todo|2                                |
+|select                |Saab      |for          |Cars                             |
+|check                 |value for |Cars         |Saab                             |
 |click                 |Button    |in           |Special                          |
 |check                 |value of  |id=lastButton|Special Button                   |
 |check                 |value of  |Hello2       |in    |Special        |Hi2       |
@@ -72,6 +87,8 @@ We use a mock server running to serve the HTML defined in this page.
 |check                 |value of  |Hello4       |in    |Special        |Hallo5    |
 |check                 |values of |Lijstje      |in    |Special        |[three, 4]|
 |check                 |number for|Todo         |in    |Special        |3         |
+|select                |Audi      |for          |Cars  |in             |Special | |
+|check                 |value for |Cars         |in    |Special        |Audi      |
 |click                 |Button    |in           |xpath=//h2[text()='Extras']/..   |
 |check                 |value of  |id=lastButton|Extra Special Button             |
 |check                 |value of  |Hello2       |in    |id=extraOptions|Hi4       |
@@ -79,6 +96,7 @@ We use a mock server running to serve the HTML defined in this page.
 |check                 |values of |Lijstje      |in    |id=extraOptions|[5, 6]    |
 |check                 |number for|Todo         |in    |id=extraOptions|1         |
 |check                 |value of  |Hello2       |Hi1                              |
+|check                 |value for |Cars         |Saab                             |
 
 
 

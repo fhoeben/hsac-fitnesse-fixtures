@@ -610,13 +610,23 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil
     public boolean selectFor(String value, String place) {
-        // choose option for select, if possible
-        boolean result = clickSelectOption(place, value);
-        if (!result) {
-            // try to click the first element with right value
-            result = click(value);
+        return selectForIn(value, place, null);
+    }
+
+    @WaitUntil
+    public boolean selectForIn(String value, String place, String container) {
+        SearchContext searchContext = setContextToContainer(container);
+        try {
+            // choose option for select, if possible
+            boolean result = clickSelectOption(place, value);
+            if (!result) {
+                // try to click the first element with right value
+                result = click(value);
+            }
+            return result;
+        } finally {
+            resetSearchContext(searchContext);
         }
-        return result;
     }
 
     @WaitUntil
