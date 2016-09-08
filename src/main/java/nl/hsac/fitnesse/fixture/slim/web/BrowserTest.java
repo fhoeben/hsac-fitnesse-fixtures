@@ -773,9 +773,9 @@ public class BrowserTest extends SlimFixture {
         } else {
             containerElement = findByXPath(".//fieldset[.//legend/text()[normalized(.) = '%s']]", container);
             if (containerElement == null) {
-                containerElement = findByXPath(".//fieldset[.//legend/text()[contains(normalized(.), '%s')]]", container);
+                containerElement = getSeleniumHelper().getElementByAriaLabel(container, -1);
                 if (containerElement == null) {
-                    containerElement = getSeleniumHelper().getElementByAriaLabel(container, -1);
+                    containerElement = findByXPath(".//fieldset[.//legend/text()[contains(normalized(.), '%s')]]", container);
                     if (containerElement == null) {
                         containerElement = getSeleniumHelper().getElementByPartialAriaLabel(container, -1);
                     }
