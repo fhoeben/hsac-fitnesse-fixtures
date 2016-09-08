@@ -1,4 +1,11 @@
-When the same label or link occurs on a page multiple times, and fieldsets with legends are defined, we can use those fieldset legends to indicate which we want to use.
+When the same label or link occurs on a page multiple times we can indicate which one to use by specifiying a 'search context'.
+A search context can be provided inline (using the 'in <container>') versions of methods, or be configured for all subsequent commands, until a reset.
+
+By default container found are:
+ * fieldsets with legends are defined. We use those fieldset's legend to indicate which we want to use.
+ * aria labels on those containers.
+ * technical selectors
+
 
 We use a mock server running to serve the HTML defined in this page.
 
