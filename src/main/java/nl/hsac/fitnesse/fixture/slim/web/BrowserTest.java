@@ -1964,7 +1964,7 @@ public class BrowserTest extends SlimFixture {
      */
     @WaitUntil
     public boolean selectFileFor(String fileName, String place) {
-        return selectForIn(fileName, place, null);
+        return selectFileForIn(fileName, place, null);
     }
 
     /**
