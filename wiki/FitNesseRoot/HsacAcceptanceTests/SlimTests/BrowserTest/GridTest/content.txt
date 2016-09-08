@@ -17,10 +17,11 @@ This test ensures we can find elements inside tables representing a grid where e
 </table>
 <table>
     <thead>
-    <tr><th>Kind</th><th>Name</th><th>Color</th><th><a><img /><strong>Owner</strong></a></th><th>Birth date</th><th>Buttons</th></tr>
+    <tr><th>Kind</th><th>Name</th><th>Color</th><th><a><img /><strong>Owner</strong></a></th><th>Birth&nbsp;date</th><th>Buttons</th></tr>
     </thead>
     <tbody>
     <tr><td>Dog</td><td>Joey</td><td>Black</td><td>Unknown</td><td>11-01-1975</td><td><button>Edit</button><button>Delete</button></td></tr>
+    <tr><td>Cat&nbsp;&nbsp; Food</td><td>Pamelasi</td><td>White</td><td>Jack</td><td>02-12-1978</td><td><button title="Edit Pam's data">Edit</button><button>Delete</button></td></tr>
     <tr><td>Cat</td><td>Pam</td><td>White</td><td>Jack</td><td>02-12-1978</td><td><button title="Edit Pam's data">Edit</button><button>Delete</button></td></tr>
     <tr><td>Chicken</td><td>Tweety</td><td>Brown</td><td>Jill</td><td>12-01-1980</td><td><input value="Delete This"><button>Edit</button></td></tr>
     <tr><td><input name="newKind"/></td><td><textarea name="newName" rows="4" cols="50"></textarea></td><td><input name="newColor" type="checkbox" checked="true"/></td><td>Owner name</td><td><select name="newBirthDate"><option value="volvo">Volvo</option><option value="mercedes" selected>Mercedes</option><option value="audi">Audi</option></select></td><td><button>Add</button></td></tr>
@@ -42,6 +43,7 @@ This test ensures we can find elements inside tables representing a grid where e
 |row exists where      |Birth date            |is           |02-12-1978                                            |
 |reject                |row exists where      |Birth date   |is           |03-12-1978                              |
 |check                 |value of              |Kind         |in row where |Name        |is   |Joey      |Dog       |
+|check                 |value of              |Name         |in row where |Kind        |is   |Cat Food  |Pamelasi  |
 |check                 |value of              |Birth date   |in row where |Name        |is   |Joey      |11-01-1975|
 |check                 |value of              |Firstname    |in row where |Lastname    |is   |Rogers    |Jack      |
 |check                 |value of              |Birth date   |in row where |Lastname    |is   |Rogers    |10-01-1980|

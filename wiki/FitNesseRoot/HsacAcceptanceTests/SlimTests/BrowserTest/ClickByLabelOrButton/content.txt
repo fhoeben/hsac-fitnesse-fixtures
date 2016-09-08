@@ -7,7 +7,7 @@ We use a mock server running to serve the HTML defined in this page.
 <html>
 <body>
 <button value="b2">Button 2</button>
-<button value="b3">Button 3</button>
+<button value="b3">Button&nbsp;3</button>
 <div>
 <label for="g2">Hello2</label><input id="g2" value="Hi">
 </div>
@@ -41,6 +41,7 @@ We use a mock server running to serve the HTML defined in this page.
 |note                  |button: exact and partial             |
 |click                 |Button 2                              |
 |click                 |3                                     |
+|click                 |Button 3                              |
 |note                  |label: exact hidden, exact visible    |
 |click                 |Ja, ik heb producten                  |
 |click                 |Hello2                                |
