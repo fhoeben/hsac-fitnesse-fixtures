@@ -1345,8 +1345,19 @@ public class BrowserTest extends SlimFixture {
      */
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
     public boolean isEnabled(String place) {
+        return isEnabledIn(place, null);
+    }
+
+    /**
+     * Determines whether element is enabled (i.e. can be clicked).
+     * @param place element to check.
+     * @param container parent of place.
+     * @return true if element is enabled.
+     */
+    @WaitUntil(TimeoutPolicy.RETURN_FALSE)
+    public boolean isEnabledIn(String place, String container) {
         boolean result = false;
-        WebElement element = getElementToCheckVisibility(place);
+        WebElement element = getElementToCheckVisibility(place, container);
         if (element != null) {
             result = element.isEnabled();
         }
@@ -1360,7 +1371,18 @@ public class BrowserTest extends SlimFixture {
      */
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
     public boolean isVisible(String place) {
-        return isVisibleImpl(place, true);
+        return isVisibleIn(place, null);
+    }
+
+    /**
+     * Determines whether element can be see in browser's window.
+     * @param place element to check.
+     * @param container parent of place.
+     * @return true if element is displayed and in viewport.
+     */
+    @WaitUntil(TimeoutPolicy.RETURN_FALSE)
+    public boolean isVisibleIn(String place, String container) {
+        return isVisibleImpl(place, container, true);
     }
 
     /**
@@ -1370,12 +1392,23 @@ public class BrowserTest extends SlimFixture {
      */
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
     public boolean isVisibleOnPage(String place) {
-        return isVisibleImpl(place, false);
+        return isVisibleOnPageIn(place, null);
     }
 
-    protected boolean isVisibleImpl(String place, boolean checkOnScreen) {
+    /**
+     * Determines whether element is somewhere in browser's window.
+     * @param place element to check.
+     * @param container parent of place.
+     * @return true if element is displayed.
+     */
+    @WaitUntil(TimeoutPolicy.RETURN_FALSE)
+    public boolean isVisibleOnPageIn(String place, String container) {
+        return isVisibleImpl(place, container, false);
+    }
+
+    protected boolean isVisibleImpl(String place, String container, boolean checkOnScreen) {
         boolean result = false;
-        WebElement element = getElementToCheckVisibility(place);
+        WebElement element = getElementToCheckVisibility(place, container);
         if (element != null && element.isDisplayed()) {
             if (checkOnScreen) {
                 result = isElementOnScreen(element);
@@ -1386,9 +1419,17 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
-
     protected WebElement getElementToCheckVisibility(String place) {
-        return getElementToClick(place);
+        return getElementToCheckVisibility(place, null);
+    }
+
+    protected WebElement getElementToCheckVisibility(String place, String container) {
+        SearchContext currentSearchContext = setSearchContextToContainer(container);
+        try {
+            return getElementToClick(place);
+        } finally {
+            resetSearchContext(currentSearchContext);
+        }
     }
 
     /**
