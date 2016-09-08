@@ -679,7 +679,7 @@ public class BrowserTest extends SlimFixture {
     protected boolean clickImp(String place, String container) {
         boolean result = false;
         try {
-            WebElement element = getElementToClick(container, place);
+            WebElement element = getElementToClick(place, container);
             result = clickElement(element);
         } catch (WebDriverException e) {
             // if other element hides the element (in Chrome) an exception is thrown
@@ -716,10 +716,10 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected WebElement getElementToClick(String place) {
-        return getElementToClick(null, place);
+        return getElementToClick(place, null);
     }
 
-    protected WebElement getElementToClick(String container, String place) {
+    protected WebElement getElementToClick(String place, String container) {
         SearchContext currentSearchContext = setContextToContainer(container);
         try {
             return getSeleniumHelper().getElementToClick(place);
@@ -1389,7 +1389,7 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil
     public boolean hoverOverIn(String place, String container) {
-        WebElement element = getElementToClick(container, place);
+        WebElement element = getElementToClick(place, container);
         return hoverOver(element);
     }
 
