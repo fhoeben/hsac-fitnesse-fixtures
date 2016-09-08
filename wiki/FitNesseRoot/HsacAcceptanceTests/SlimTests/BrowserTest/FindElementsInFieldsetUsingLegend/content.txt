@@ -93,6 +93,7 @@ We use a mock server running to serve the HTML defined in this page.
 |ensure                |is enabled        |Hello hidden |in    |Special                   |
 |ensure                |is visible        |Hello hidden |in    |Special                   |
 |ensure                |is visible on page|Hello hidden |in    |Special                   |
+|wait for visible      |Hello hidden      |in           |Special                          |
 |click if available    |Button            |in           |xpath=//h2[text()='Extras']/..   |
 |check                 |value of          |id=lastButton|Extra Special Button             |
 |check                 |value of          |Hello2       |in    |id=extraOptions|Hi4       |

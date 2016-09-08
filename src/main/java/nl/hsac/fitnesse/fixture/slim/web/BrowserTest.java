@@ -870,8 +870,14 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil(TimeoutPolicy.STOP_TEST)
     public boolean waitForVisible(String place) {
+        return waitForVisibleIn(place, null);
+    }
+
+
+    @WaitUntil(TimeoutPolicy.STOP_TEST)
+    public boolean waitForVisibleIn(String place, String container) {
         Boolean result = Boolean.FALSE;
-        WebElement element = getElementToCheckVisibility(place);
+        WebElement element = getElementToCheckVisibility(place, container);
         if (element != null) {
             scrollIfNotOnScreen(element);
             result = element.isDisplayed();
