@@ -1315,8 +1315,18 @@ public class BrowserTest extends SlimFixture {
      */
     @WaitUntil
     public boolean scrollTo(String place) {
+        return scrollToIn(place, null);
+    }
+
+    /**
+     * Scrolls browser window so top of place becomes visible.
+     * @param place element to scroll to.
+     * @param container parent of place.
+     */
+    @WaitUntil
+    public boolean scrollToIn(String place, String container) {
         boolean result = false;
-        WebElement element = getElementToScrollTo(place);
+        WebElement element = getElementToScrollTo(place, container);
         if (element != null) {
             scrollTo(element);
             result = true;
@@ -1324,8 +1334,8 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
-    protected WebElement getElementToScrollTo(String place) {
-        return getElementToCheckVisibility(place);
+    protected WebElement getElementToScrollTo(String place, String container) {
+        return getElementToCheckVisibility(place, container);
     }
 
     /**

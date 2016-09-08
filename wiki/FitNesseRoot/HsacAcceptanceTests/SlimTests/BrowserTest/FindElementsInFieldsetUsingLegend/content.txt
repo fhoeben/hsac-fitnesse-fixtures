@@ -111,7 +111,7 @@ We use a mock server running to serve the HTML defined in this page.
 |check                 |value for         |Cars         |Saab                             |
 |clear                 |Hello2            |in           |Special                          |
 |check                 |value of          |Hello2       |in    |Special        |!--!      |
-
+|scroll to             |Hello2            |in           |Special                          |
 
 
 
