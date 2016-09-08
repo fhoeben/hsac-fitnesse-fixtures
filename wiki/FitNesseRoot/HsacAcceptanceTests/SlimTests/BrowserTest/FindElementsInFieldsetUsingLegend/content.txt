@@ -89,7 +89,7 @@ We use a mock server running to serve the HTML defined in this page.
 |check                 |number for|Todo         |in    |Special        |3         |
 |select                |Audi      |for          |Cars  |in             |Special | |
 |check                 |value for |Cars         |in    |Special        |Audi      |
-|click                 |Button    |in           |xpath=//h2[text()='Extras']/..   |
+|click if available    |Button    |in           |xpath=//h2[text()='Extras']/..   |
 |check                 |value of  |id=lastButton|Extra Special Button             |
 |check                 |value of  |Hello2       |in    |id=extraOptions|Hi4       |
 |check                 |value of  |Hello4       |in    |id=extraOptions|Hallo4    |

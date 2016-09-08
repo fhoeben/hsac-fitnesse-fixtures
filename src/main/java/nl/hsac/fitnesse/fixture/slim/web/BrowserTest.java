@@ -667,8 +667,13 @@ public class BrowserTest extends SlimFixture {
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
-    public boolean clickIfAvailable(final String place) {
-        return clickImp(place, null);
+    public boolean clickIfAvailable(String place) {
+        return clickIfAvailableIn(place, null);
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_FALSE)
+    public boolean clickIfAvailableIn(String place, String container) {
+        return clickImp(place, container);
     }
 
     @WaitUntil
