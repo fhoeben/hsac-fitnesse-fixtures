@@ -97,6 +97,12 @@ We use a mock server running to serve the HTML defined in this page.
 |check                 |number for|Todo         |in    |id=extraOptions|1         |
 |check                 |value of  |Hello2       |Hi1                              |
 |check                 |value for |Cars         |Saab                             |
+|set search context to |Special                                                   |
+|check                 |value of  |Hello2       |Hi23                             |
+|check                 |value for |Cars         |Audi                             |
+|clear search context                                                             |
+|check                 |value of  |Hello2       |Hi1                              |
+|check                 |value for |Cars         |Saab                             |
 
 
 
