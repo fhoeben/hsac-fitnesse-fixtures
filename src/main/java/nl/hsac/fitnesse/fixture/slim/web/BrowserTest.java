@@ -1056,12 +1056,12 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOfColumnNumberInRowNumber(int columnIndex, int rowIndex) {
-        return getValueByXPath("(//tr[boolean(td)])[%s]/td[%s]", Integer.toString(rowIndex), Integer.toString(columnIndex));
+        return getValueByXPath("(.//tr[boolean(td)])[%s]/td[%s]", Integer.toString(rowIndex), Integer.toString(columnIndex));
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOfInRowNumber(String requestedColumnName, int rowIndex) {
-        String columnXPath = String.format("(//tr[boolean(td)])[%s]/td", rowIndex);
+        String columnXPath = String.format("(.//tr[boolean(td)])[%s]/td", rowIndex);
         return valueInRow(columnXPath, requestedColumnName);
     }
 
@@ -1095,7 +1095,7 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil
     public boolean clickInRowNumber(String place, int rowIndex) {
-        String columnXPath = String.format("(//tr[boolean(td)])[%s]/td", rowIndex);
+        String columnXPath = String.format("(.//tr[boolean(td)])[%s]/td", rowIndex);
         return clickInRow(columnXPath, place);
     }
 
@@ -1122,7 +1122,7 @@ public class BrowserTest extends SlimFixture {
      */
     @WaitUntil
     public String downloadFromRowNumber(String place, int rowNumber) {
-        String columnXPath = String.format("(//tr[boolean(td)])[%s]/td", rowNumber);
+        String columnXPath = String.format("(.//tr[boolean(td)])[%s]/td", rowNumber);
         return downloadFromRow(columnXPath, place);
     }
 
