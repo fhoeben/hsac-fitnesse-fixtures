@@ -774,6 +774,12 @@ public class BrowserTest extends SlimFixture {
             containerElement = findByXPath(".//fieldset[.//legend/text()[normalized(.) = '%s']]", container);
             if (containerElement == null) {
                 containerElement = findByXPath(".//fieldset[.//legend/text()[contains(normalized(.), '%s')]]", container);
+                if (containerElement == null) {
+                    containerElement = getSeleniumHelper().getElementByAriaLabel(container, -1);
+                    if (containerElement == null) {
+                        containerElement = getSeleniumHelper().getElementByPartialAriaLabel(container, -1);
+                    }
+                }
             }
         }
         return containerElement;

@@ -21,7 +21,7 @@ We use a mock server running to serve the HTML defined in this page.
   <option value="mercedes">Mercedes</option>
   <option value="audi">Audi</option>
 </select>
-<fieldset>
+<fieldset aria-label="My fieldset">
 
 <legend>Special</legend>
 <button onclick='document.getElementById("lastButton").innerHTML = "Special Button";'>Button</button>
@@ -41,8 +41,8 @@ We use a mock server running to serve the HTML defined in this page.
 </select>
 </fieldset>
 
-<div id="extraOptions">
-<h2>Extras</h2>
+<div id="extraOptions" aria-labelledby="extraOptionsLabel">
+<h2 id="extraOptionsLabel">Extras</h2>
 <button onclick='document.getElementById("lastButton").innerHTML = "Extra Special Button";'>Button</button>
 <div>
 <label for="g10">Hello2</label><input id="g10" value="Hi4">
@@ -81,7 +81,7 @@ We use a mock server running to serve the HTML defined in this page.
 |click                 |Button            |in           |Special                          |
 |check                 |value of          |id=lastButton|Special Button                   |
 |check                 |value of          |Hello2       |in    |Special        |Hi2       |
-|check                 |value of          |Hello4       |in    |Special        |Hallo2    |
+|check                 |value of          |Hello4       |in    |My fieldset    |Hallo2    |
 |enter                 |3                 |for          |Hello2|in             |Special   |
 |check                 |value of          |Hello2       |in    |Special        |Hi23      |
 |enter                 |Hallo5            |as           |Hello4|in             |Special   |
@@ -100,7 +100,7 @@ We use a mock server running to serve the HTML defined in this page.
 |check                 |value of          |Hello4       |in    |id=extraOptions|Hallo4    |
 |check                 |values of         |Lijstje      |in    |id=extraOptions|[5, 6]    |
 |check                 |number for        |Todo         |in    |id=extraOptions|1         |
-|check                 |value of          |Hello2       |in    |id=extraOptions|Hi4       |
+|check                 |value of          |Hello2       |in    |Extras         |Hi4       |
 |check                 |value of          |Hello2       |Hi1                              |
 |check                 |value for         |Cars         |Saab                             |
 |set search context to |Special                                                           |
