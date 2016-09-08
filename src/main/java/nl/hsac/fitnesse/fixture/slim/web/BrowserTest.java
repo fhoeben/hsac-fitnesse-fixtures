@@ -1774,21 +1774,37 @@ public class BrowserTest extends SlimFixture {
      */
     @WaitUntil
     public String download(String place) {
-        By selector = By.linkText(place);
-        WebElement element = findElement(selector);
-        if (element == null) {
-            selector = By.partialLinkText(place);
-            element = findElement(selector);
+        return downloadIn(place, null);
+    }
+
+    /**
+     * Downloads the target of the supplied link.
+     * @param place link to follow.
+     * @param container part of screen containing link.
+     * @return downloaded file if any, null otherwise.
+     */
+    @WaitUntil
+    public String downloadIn(String place, String container) {
+        SearchContext currentSearchContext = setContextToContainer(container);
+        try {
+            By selector = By.linkText(place);
+            WebElement element = findElement(selector);
             if (element == null) {
-                selector = By.id(place);
+                selector = By.partialLinkText(place);
                 element = findElement(selector);
                 if (element == null) {
-                    selector = By.name(place);
+                    selector = By.id(place);
                     element = findElement(selector);
+                    if (element == null) {
+                        selector = By.name(place);
+                        element = findElement(selector);
+                    }
                 }
             }
+            return downloadLinkTarget(element);
+        } finally {
+            resetSearchContext(currentSearchContext);
         }
-        return downloadLinkTarget(element);
     }
 
     protected WebElement findElement(By selector) {
@@ -1862,11 +1878,23 @@ public class BrowserTest extends SlimFixture {
      */
     @WaitUntil
     public boolean selectFileFor(String fileName, String place) {
+        return selectForIn(fileName, place, null);
+    }
+
+    /**
+     * Selects a file using a file upload control.
+     * @param fileName file to upload
+     * @param place file input to select the file for
+     * @param container part of screen containing place
+     * @return true, if place was a file input and file existed.
+     */
+    @WaitUntil
+    public boolean selectFileForIn(String fileName, String place, String container) {
         boolean result = false;
         if (fileName != null) {
             String fullPath = getFilePathFromWikiUrl(fileName);
             if (new File(fullPath).exists()) {
-                WebElement element = getElementToSelectFile(place);
+                WebElement element = getElementToSelectFile(place, container);
                 if (element != null) {
                     element.sendKeys(fullPath);
                     result = true;
@@ -1878,9 +1906,9 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
-    protected WebElement getElementToSelectFile(String place) {
+    protected WebElement getElementToSelectFile(String place, String container) {
         WebElement result = null;
-        WebElement element = getElement(place);
+        WebElement element = getElement(place, container);
         if (element != null
                 && "input".equalsIgnoreCase(element.getTagName())
                 && "file".equalsIgnoreCase(element.getAttribute("type"))) {
