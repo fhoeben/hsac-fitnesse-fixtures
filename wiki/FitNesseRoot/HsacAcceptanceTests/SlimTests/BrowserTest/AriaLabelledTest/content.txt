@@ -10,7 +10,7 @@ This test ensures we can find elements based on their aria-labelledby or aria-la
     <div>A<span>KH<span>asdas<div>sadasd<p>jhsdhf</p> <strong>B </strong></div>dad</span>FGH</span></div>
     asdasudia
 </div>
-<div id="a3">And some more</div>
+<div id="a3">And some&nbsp;more</div>
 <button aria-labelledby="a1">Button 1</button>
 <input name="f" aria-labelledby="a2" value="Piet">
 <div aria-labelledby="a3" value="Jan">
@@ -27,13 +27,14 @@ This test ensures we can find elements based on their aria-labelledby or aria-la
 |script|browser test                     |
 |open  |$url                             |
 |note  |exact match of aria-labelledby   |
-|check |value of   |B           |Piet    |
+|check |value of  |B             |Piet   |
+|check |value of  |And some more |Jan    |
 |note  |contains match of aria-labelledby|
-|check |value of   |more        |Jan     |
+|check |value of  |more          |Jan    |
 |note  |exact match of aria-label        |
-|check |value of   |The button  |Add     |
+|check |value of  |The button    |Add    |
 |note  |contains match of aria-label     |
-|check |value of   |red button  |Remove  |
+|check |value of  |red button    |Remove |
 
 |script|mock xml server setup|
 |stop                        |
