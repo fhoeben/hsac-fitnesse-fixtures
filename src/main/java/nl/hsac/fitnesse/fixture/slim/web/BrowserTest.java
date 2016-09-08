@@ -488,7 +488,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected boolean enter(String value, String place, String container, boolean shouldClear) {
-        WebElement element = getElementToSendValue(container, place);
+        WebElement element = getElementToSendValue(place, container);
         boolean result = element != null && isInteractable(element);
         if (result) {
             if (shouldClear) {
@@ -500,10 +500,10 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected WebElement getElementToSendValue(String place) {
-        return getElementToSendValue(null, place);
+        return getElementToSendValue(place, null);
     }
 
-    protected WebElement getElementToSendValue(String container, String place) {
+    protected WebElement getElementToSendValue(String place, String container) {
         return getElement(place, container);
     }
 
@@ -1044,9 +1044,14 @@ public class BrowserTest extends SlimFixture {
     }
 
     @WaitUntil
-    public boolean clear(final String place) {
+    public boolean clear(String place) {
+        return clearIn(place, null);
+    }
+
+    @WaitUntil
+    public boolean clearIn(String place, String container) {
         boolean result = false;
-        WebElement element = getElementToClear(place);
+        WebElement element = getElementToClear(place, container);
         if (element != null) {
             element.clear();
             result = true;
@@ -1054,8 +1059,8 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
-    protected WebElement getElementToClear(String place) {
-        return getElementToSendValue(place);
+    protected WebElement getElementToClear(String place, String container) {
+        return getElementToSendValue(place, container);
     }
 
     @WaitUntil
