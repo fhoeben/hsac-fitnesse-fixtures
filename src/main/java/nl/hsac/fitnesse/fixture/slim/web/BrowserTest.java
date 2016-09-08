@@ -1384,7 +1384,12 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil
     public boolean hoverOver(String place) {
-        WebElement element = getElementToClick(place);
+        return hoverOverIn(place, null);
+    }
+
+    @WaitUntil
+    public boolean hoverOverIn(String place, String container) {
+        WebElement element = getElementToClick(container, place);
         return hoverOver(element);
     }
 
