@@ -615,7 +615,7 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil
     public boolean selectForIn(String value, String place, String container) {
-        SearchContext searchContext = setContextToContainer(container);
+        SearchContext searchContext = setSearchContextToContainer(container);
         try {
             // choose option for select, if possible
             boolean result = clickSelectOption(place, value);
@@ -720,7 +720,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected WebElement getElementToClick(String place, String container) {
-        SearchContext currentSearchContext = setContextToContainer(container);
+        SearchContext currentSearchContext = setSearchContextToContainer(container);
         try {
             return getSeleniumHelper().getElementToClick(place);
         } finally {
@@ -728,7 +728,7 @@ public class BrowserTest extends SlimFixture {
         }
     }
 
-    protected SearchContext setContextToContainer(String container) {
+    protected SearchContext setSearchContextToContainer(String container) {
         SearchContext currentSearchContext = null;
         if (container != null) {
             WebElement containerElement = findContainer(container);
@@ -991,7 +991,7 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public Integer numberForIn(String place, String container) {
-        SearchContext searchContext = setContextToContainer(container);
+        SearchContext searchContext = setSearchContextToContainer(container);
         try {
             Integer number = null;
             WebElement element = findByXPath(".//ol/li/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::li", place);
@@ -1187,7 +1187,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected WebElement getElement(String place, String container) {
-        SearchContext currentSearchContext = setContextToContainer(container);
+        SearchContext currentSearchContext = setSearchContextToContainer(container);
         try {
             return getSeleniumHelper().getElement(place);
         } finally {
@@ -1790,7 +1790,7 @@ public class BrowserTest extends SlimFixture {
      */
     @WaitUntil
     public String downloadIn(String place, String container) {
-        SearchContext currentSearchContext = setContextToContainer(container);
+        SearchContext currentSearchContext = setSearchContextToContainer(container);
         try {
             By selector = By.linkText(place);
             WebElement element = findElement(selector);
