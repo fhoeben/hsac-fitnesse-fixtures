@@ -736,7 +736,7 @@ public class BrowserTest extends SlimFixture {
     @WaitUntil
     public boolean setSearchContextTo(String container) {
         boolean result = false;
-        WebElement containerElement = findContainer(container);
+        WebElement containerElement = getContainerElement(container);
         if (containerElement != null) {
             getSeleniumHelper().setCurrentContext(containerElement);
             result = true;
@@ -765,7 +765,7 @@ public class BrowserTest extends SlimFixture {
         }
     }
 
-    private WebElement findContainer(String container) {
+    protected WebElement getContainerElement(String container) {
         WebElement containerElement = null;
         By by = getSeleniumHelper().placeToBy(container);
         if (by != null) {
