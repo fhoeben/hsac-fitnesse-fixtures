@@ -728,16 +728,30 @@ public class BrowserTest extends SlimFixture {
         }
     }
 
+    @WaitUntil
+    public boolean setSearchContextTo(String container) {
+        boolean result = false;
+        WebElement containerElement = findContainer(container);
+        if (containerElement != null) {
+            getSeleniumHelper().setCurrentContext(containerElement);
+            result = true;
+        }
+        return result;
+    }
+
     protected SearchContext setSearchContextToContainer(String container) {
-        SearchContext currentSearchContext = null;
+        SearchContext result = null;
         if (container != null) {
-            WebElement containerElement = findContainer(container);
-            if (containerElement != null) {
-                currentSearchContext = getSeleniumHelper().getCurrentContext();
-                getSeleniumHelper().setCurrentContext(containerElement);
+            SearchContext currentSearchContext = getSeleniumHelper().getCurrentContext();
+            if (setSearchContextTo(container)) {
+                result = currentSearchContext;
             }
         }
-        return currentSearchContext;
+        return result;
+    }
+
+    public void clearSearchContext() {
+        getSeleniumHelper().setCurrentContext(null);
     }
 
     protected void resetSearchContext(SearchContext currentSearchContext) {

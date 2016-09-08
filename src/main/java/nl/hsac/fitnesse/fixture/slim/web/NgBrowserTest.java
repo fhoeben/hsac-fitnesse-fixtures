@@ -65,6 +65,7 @@ public class NgBrowserTest extends BrowserTest {
                 "isImplicitWaitForAngularEnabled",
                 "setImplicitWaitForAngularTo",
                 "globalValue",
+                "clearSearchContext",
                 "setAngularRoot",
                 "getAngularRoot");
     }
