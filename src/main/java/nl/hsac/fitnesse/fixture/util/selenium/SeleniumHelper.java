@@ -47,6 +47,9 @@ public class SeleniumHelper {
                     "  return document.elementFromPoint(x,y);\n" +
                     "} else { return null; }";
 
+    // Regex to find our own 'fake xpath function' in xpath 'By' content
+    private final static Pattern X_PATH_NORMALIZED = Pattern.compile("normalized\\((.+?(\\(\\))?)\\)");
+
     private final List<WebElement> currentIFramePath = new ArrayList<WebElement>(4);
     private int frameDepthOnLastAlertError;
     private DriverFactory factory;
@@ -666,8 +669,6 @@ public class SeleniumHelper {
         String selector = fillPattern(pattern, parameters);
         return By.cssSelector(selector);
     }
-
-    private final static Pattern X_PATH_NORMALIZED = Pattern.compile("normalized\\((.+?(\\(\\))?)\\)");
 
     /**
      * Creates By based on xPath, supporting placeholder replacement.
