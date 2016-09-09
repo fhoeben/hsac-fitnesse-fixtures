@@ -67,6 +67,10 @@ We use a mock server running to serve the HTML defined in this page.
 |add response|${HTML}              |
 |$url=       |get mock server url  |
 
+|script  |list fixture |
+|display lists standard|
+
+
 |script                |browser test                                                      |
 |seconds before timeout|1                                                                 |
 |open                  |$url                                                              |

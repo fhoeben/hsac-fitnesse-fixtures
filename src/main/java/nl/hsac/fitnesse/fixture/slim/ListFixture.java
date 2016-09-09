@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import fitnesse.slim.converters.ConverterRegistry;
 import nl.hsac.fitnesse.slim.converter.NumberedListConverter;
 
 import java.util.ArrayList;
@@ -19,6 +20,13 @@ public class ListFixture extends SlimFixture {
      */
     public void displayListsNumbered() {
         NumberedListConverter.register();
+    }
+
+    /**
+     * Configures Slim to use standard coverters, i.e. go back to comma separated.
+     */
+    public void displayListsStandard() {
+        ConverterRegistry.resetToStandardConverters();
     }
 
     /**
