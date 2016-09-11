@@ -167,11 +167,13 @@ public class BrowserTest extends SlimFixture {
     }
 
     public BrowserTest() {
+        clearSearchContext();
         secondsBeforeTimeout(seleniumHelper.getDefaultTimeoutSeconds());
         ensureActiveTabIsNotClosed();
     }
 
     public BrowserTest(int secondsBeforeTimeout) {
+        clearSearchContext();
         secondsBeforeTimeout(secondsBeforeTimeout);
         ensureActiveTabIsNotClosed();
     }
@@ -183,6 +185,7 @@ public class BrowserTest extends SlimFixture {
         } catch (TimeoutException e) {
             handleTimeoutException(e);
         } finally {
+            clearSearchContext();
             switchToDefaultContent();
         }
         waitUntil(new ExpectedCondition<Boolean>() {
@@ -229,6 +232,7 @@ public class BrowserTest extends SlimFixture {
 
     public boolean refresh() {
         getNavigation().refresh();
+        clearSearchContext();
         switchToDefaultContent();
         return true;
     }

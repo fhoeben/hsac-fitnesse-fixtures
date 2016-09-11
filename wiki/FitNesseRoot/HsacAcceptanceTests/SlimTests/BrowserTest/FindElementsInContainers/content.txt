@@ -65,6 +65,8 @@ We use a mock server running to serve the HTML defined in this page.
 
 |script      |mock xml server setup|
 |add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
 |$url=       |get mock server url  |
 
 |script  |list fixture |
@@ -123,6 +125,26 @@ We use a mock server running to serve the HTML defined in this page.
 |clear                 |Hello2            |in           |Special                          |
 |check                 |value of          |Hello2       |in    |Special        |!--!      |
 |scroll to             |Hello2            |in           |Special                          |
+|note                  |set context to see that open clears context                       |
+|set search context to |Extras                                                            |
+|check                 |value of          |Hello2       |Hi4                              |
+|open                  |$url                                                              |
+|check                 |value of          |Hello2       |Hi                               |
+|note                  |set context to see that new browsertest tables don't reuse        |
+|set search context to |Extras                                                            |
+|check                 |value of          |Hello2       |Hi4                              |
+
+
+
+|script               |browser test                 |
+|check                |value of    |Hello2   |Hi    |
+|note                 |ensure refresh clears context|
+|set search context to|Extras                       |
+|check                |value of    |Hello2   |Hi4   |
+|refresh                                            |
+|check                |value of    |Hello2   |Hi    |
+
+
 
 
 
