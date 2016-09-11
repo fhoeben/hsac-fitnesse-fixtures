@@ -1,5 +1,5 @@
 # hsac-fitnesse-fixtures
-[![Build Status](https://travis-ci.org/fhoeben/hsac-fitnesse-fixtures.svg?branch=master)](https://travis-ci.org/fhoeben/hsac-fitnesse-fixtures) [![Maven Central](https://img.shields.io/maven-central/v/nl.hsac/hsac-fitnesse-fixtures.svg?maxAge=2592000)](https://mvnrepository.com/artifact/nl.hsac/hsac-fitnesse-fixtures)
+[![Build Status](https://travis-ci.org/fhoeben/hsac-fitnesse-fixtures.svg?branch=master)](https://travis-ci.org/fhoeben/hsac-fitnesse-fixtures) [![Maven Central](https://img.shields.io/maven-central/v/nl.hsac/hsac-fitnesse-fixtures.svg?maxAge=86400)](https://mvnrepository.com/artifact/nl.hsac/hsac-fitnesse-fixtures)
 
 This project assists in testing (SOAP) web services and web applications by providing an application to define and run tests. To this end it contains a baseline installation of FitNesse (an acceptance testing wiki framework) and some FitNesse fixture (base) classes.
 
