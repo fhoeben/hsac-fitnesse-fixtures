@@ -20,7 +20,7 @@ Execute `mvn clean package -DskipTests`, the standalone installation is present 
 directory and as `...-standalone.zip` file in the target directory. It can be distributed by just copying the wiki directory or by copying and extracting the zip file to a location without spaces in its own name, or in its parent's names).
 This standalone installation can be started using `java -jar fitnesse-standalone.jar` from the wiki directory (or directory where the _standalone.zip_ was extracted).
 
-A zip file containing the latest release version of this project can be downloaded from the [Releases](https://github.com/fhoeben/hsac-fitnesse-fixtures/releases).
+A zip file containing released versions of this project can be downloaded from the [Releases](https://github.com/fhoeben/hsac-fitnesse-fixtures/releases) or [Maven Central](http://central.maven.org/maven2/nl/hsac/hsac-fitnesse-fixtures/).
 A similar zip file containing the latest *snapshot* (i.e. not released but based on the most recent code) version is published as part of the automated build of this project at http://fhoeben.github.io/hsac-fitnesse-fixtures/hsac-fitnesse-fixtures-snapshot-standalone.zip.
 
 ## To run the tests on a build server:
