@@ -3,11 +3,12 @@ This page shows the same test twice: once using the heuristics in !-BrowserTest-
 We believe this comparison will highlight the benefits of using the heuristics over technical selectors. The result is a more readable (and maintainable) test without the need for custom code (like 'page objects') or extensive 'scenario libraries' just to make test scripts readable. Tests using the heuristics are easier to write, to understand, ''and'' do not require a completed implementation before they can be written. 
 
 !*> Some common setup
-|scenario         |open Expedia.com                                                |
-|open             |http://expedia.com                                              |
-|set browser width|1200                                                            |
-|note             |!note Expedia might route us to a localized version of the site |
-|show             |click if available|link=Continue to the U.S. site at Expedia.com|
+|scenario              |open Expedia.com                                                |
+|seconds before timeout|20                                                              |
+|open                  |http://expedia.com                                              |
+|set browser width     |1200                                                            |
+|note                  |!note Expedia might route us to a localized version of the site |
+|show                  |click if available|link=Continue to the U.S. site at Expedia.com|
 
 |scenario|cleanup for next test                     |
 |note    |!note Cleanup for fresh start of next test|
