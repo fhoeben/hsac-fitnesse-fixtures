@@ -8,7 +8,7 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |open      |http://www.huizenzoeker.nl                                   |
 |enter     |Gageldijk, Utrecht|for       |Plaats, postcode met straatnaam|
 |press enter                                                             |
-|click     |Gageldijk 104                                                |
+|click     |Gageldijk 87                                                 |
 |$price=   |value of          |xpath=//div[@class='prijs']/strong        |
 |open      |http://www.funda.nl                                          |
 |enter     |Gageldijk, Utrecht|as        |Plaats, buurt, adres etc       |
@@ -16,5 +16,5 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |press     |down                                                         |
 |press     |enter                                                        |
 |click     |Zoek                                                         |
-|click     |Gageldijk 104                                                |
+|click     |Gageldijk 87                                                 |
 |check     |value of          |Vraagprijs|$price k.k.                    |
