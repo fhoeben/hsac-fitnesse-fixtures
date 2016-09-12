@@ -1201,6 +1201,7 @@ public class SeleniumHelper {
     public void goToTab(List<String> tabHandles, int indexToGoTo) {
         getTargetLocator().window(tabHandles.get(indexToGoTo));
         switchToDefaultContent();
+        setCurrentContext(null);
     }
 
     public List<String> getTabHandles() {
