@@ -4,21 +4,25 @@ This test ensures we can find elements inside iframes.
 <html>
 <title>Start Page Title</title>
 <body>
+<div id="container_top">
 <input name="remove" type="button" value="Remove">
 <iframe id="iframe1" src="frame1.html"></iframe>
 <iframe id="iframe2" src="frame2.html"></iframe>
 <label>Add button<input name="add" type="button" value="Add"></label>
 <label>Upload 1 button<input name="fileChooser1" type="file"></label>
+</div>
 </body>
 </html>}}} }
 
 !define HTML_FRAME1 { {{{
 <html>
 <body>
+<div id="container1">
 <input name="remove1" type="button" value="Remove1">
 <iframe id="iframe1_1" src="frame3.html"></iframe>
 <iframe id="iframe1_2" src="frame4.html"></iframe>
 <label>Add button1<input name="add" type="button" value="Add1"></label>
+</div>
 </body>
 </html>}}} }
 
@@ -26,8 +30,10 @@ This test ensures we can find elements inside iframes.
 !define HTML_FRAME2 { {{{
 <html>
 <body>
+<div id="container2">
 <input name="remove2" type="button" value="Remove2">
 <label>Add button2<input name="add" type="button" value="Add2"></label>
+</div>
 </body>
 </html>}}} }
 
@@ -35,17 +41,21 @@ This test ensures we can find elements inside iframes.
 !define HTML_FRAME3 { {{{
 <html>
 <body>
+<div id="container3">
 <input name="remove3" type="button" value="Remove3">
 <label>Add button3<input name="add" type="button" value="Add3"></label>
 <label>Upload button<input name="fileChooser" type="file"></label>
+</div>
 </body>
 </html>}}} }
 
 !define HTML_FRAME4 { {{{
 <html>
 <body>
+<div id="container4">
 <input name="remove4" type="button" value="Remove4">
 <label>Add button4<input name="add" type="button" value="Add4"></label>
+</div>
 </body>
 </html>}}} }
 
@@ -86,12 +96,22 @@ This test ensures we can find elements inside iframes.
 |select file           |$file             |for        |Upload 1 button|
 |scroll to             |Add                                           |
 |scroll to             |Add3                                          |
+|set search context to |id=container_top                              |
+|click                 |Add                                           |
 |switch to frame       |id=iframe2                                    |
+|set search context to |id=container2                                 |
+|click                 |Add                                           |
 |switch to parent frame                                               |
+|set search context to |id=container_top                              |
+|click                 |Add                                           |
 |switch to frame       |id=iframe1                                    |
 |click                 |Add4                                          |
 |click                 |Add3                                          |
+|set search context to |id=container1                                 |
+|click                 |Add                                           |
 |switch to frame       |id=iframe1_2                                  |
+|set search context to |id=container4                                 |
+|click                 |Add                                           |
 |click                 |Add4                                          |
 |reject                |click if available|Add3                       |
 |reject                |switch to frame   |id=iframe2                 |
@@ -99,7 +119,9 @@ This test ensures we can find elements inside iframes.
 |switch to frame       |id=iframe2                                    |
 |reject                |click if available|Add4                       |
 |switch to default content                                            |
-
+|set search context to |id=container4                                 |
+|click                 |Add4                                          |
+|clear search context                                                 |
 
 |script|mock xml server setup|
 |verify all responses served |
