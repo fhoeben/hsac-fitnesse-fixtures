@@ -167,13 +167,11 @@ public class BrowserTest extends SlimFixture {
     }
 
     public BrowserTest() {
-        clearSearchContext();
         secondsBeforeTimeout(seleniumHelper.getDefaultTimeoutSeconds());
         ensureActiveTabIsNotClosed();
     }
 
     public BrowserTest(int secondsBeforeTimeout) {
-        clearSearchContext();
         secondsBeforeTimeout(secondsBeforeTimeout);
         ensureActiveTabIsNotClosed();
     }

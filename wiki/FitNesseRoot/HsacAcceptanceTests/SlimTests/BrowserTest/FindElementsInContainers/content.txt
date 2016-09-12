@@ -130,19 +130,17 @@ We use a mock server running to serve the HTML defined in this page.
 |check                 |value of          |Hello2       |Hi4                              |
 |open                  |$url                                                              |
 |check                 |value of          |Hello2       |Hi                               |
-|note                  |set context to see that new browsertest tables don't reuse        |
+|note                  |set context to see that new browsertest tables don't change       |
 |set search context to |Extras                                                            |
 |check                 |value of          |Hello2       |Hi4                              |
 
 
 
-|script               |browser test                 |
-|check                |value of    |Hello2   |Hi    |
-|note                 |ensure refresh clears context|
-|set search context to|Extras                       |
-|check                |value of    |Hello2   |Hi4   |
-|refresh                                            |
-|check                |value of    |Hello2   |Hi    |
+|script|browser test                 |
+|check |value of    |Hello2   |Hi4   |
+|note  |ensure refresh clears context|
+|refresh                             |
+|check |value of    |Hello2   |Hi    |
 
 
 
