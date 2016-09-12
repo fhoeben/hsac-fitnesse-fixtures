@@ -22,7 +22,7 @@ if [ "${TRAVIS_PULL_REQUEST}" == "false" ]; then
 
   #add, commit and push files
   git add -A -f .
-  git commit -m "Travis build ${TRAVIS_BUILD_NUMBER} $2 pushed to gh-pages"
+  git commit -m "Travis build ${TRAVIS_BUILD_NUMBER} $2"
   git pull
   git push -fq origin gh-pages > /dev/null
 
