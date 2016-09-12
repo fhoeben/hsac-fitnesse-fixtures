@@ -67,6 +67,7 @@ We use a mock server running to serve the HTML defined in this page.
 |add response|${HTML}              |
 |add response|${HTML}              |
 |add response|${HTML}              |
+|add response|${HTML}              |
 |$url=       |get mock server url  |
 
 |script  |list fixture |
@@ -124,23 +125,56 @@ We use a mock server running to serve the HTML defined in this page.
 |check                 |value for         |Cars         |Saab                             |
 |clear                 |Hello2            |in           |Special                          |
 |check                 |value of          |Hello2       |in    |Special        |!--!      |
-|scroll to             |Hello2            |in           |Special                          |
-|note                  |set context to see that open clears context                       |
-|set search context to |Extras                                                            |
-|check                 |value of          |Hello2       |Hi4                              |
-|open                  |$url                                                              |
-|check                 |value of          |Hello2       |Hi                               |
-|note                  |set context to see that new browsertest tables don't change       |
-|set search context to |Extras                                                            |
-|check                 |value of          |Hello2       |Hi4                              |
+
+!2 Implicit Reset of Search Context
+
+|script               |browser test                                               |
+|note                 |set context to see that open clears context                |
+|set search context to|Extras                                                     |
+|check                |value of              |Hello2             |Hi4             |
+|open                 |$url                                                       |
+|check                |value of              |Hello2             |Hi              |
+|set search context to|Extras                                                     |
+|check                |value of              |Hello2             |Hi4             |
+|note                 |ensure refresh clears context                              |
+|refresh                                                                          |
+|check                |value of              |Hello2             |Hi              |
+|note                 |set context to see that new browsertest tables don't change|
+|set search context to|Extras                                                     |
+|check                |value of              |Hello2             |Hi4             |
+
+
+|script|browser test       |
+|check |value of|Hello2|Hi4|
+
+
+!2 Tab Switch Resets Context
+
+|script               |browser test                        |
+|open                 |$url          |in new tab           |
+|check                |value of      |Hello2      |Hi      |
+|note                 |ensure switching tabs clears context|
+|set search context to|Extras                              |
+|check                |value of      |Hello2      |Hi4     |
+|switch to previous tab                                    |
+|check                |value of      |Hello2      |Hi      |
+|set search context to|Extras                              |
+|check                |value of      |Hello2      |Hi4     |
+|switch to next tab                                        |
+|check                |value of      |Hello2      |Hi      |
+|set search context to|Extras                              |
+|check                |value of      |Hello2      |Hi4     |
+|close tab                                                 |
+|check                |value of      |Hello2      |Hi      |
 
 
 
-|script|browser test                 |
-|check |value of    |Hello2   |Hi4   |
-|note  |ensure refresh clears context|
-|refresh                             |
-|check |value of    |Hello2   |Hi    |
+
+
+
+
+
+
 
 
 
