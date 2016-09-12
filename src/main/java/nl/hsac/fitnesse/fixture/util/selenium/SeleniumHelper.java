@@ -1213,7 +1213,10 @@ public class SeleniumHelper {
      */
     public void switchToDefaultContent() {
         getTargetLocator().defaultContent();
-        currentIFramePath.clear();
+        if (!currentIFramePath.isEmpty()) {
+            setCurrentContext(null);
+            currentIFramePath.clear();
+        }
     }
 
 
@@ -1223,6 +1226,7 @@ public class SeleniumHelper {
      */
     public void switchToFrame(WebElement iframe) {
         getTargetLocator().frame(iframe);
+        setCurrentContext(null);
         currentIFramePath.add(iframe);
     }
 
