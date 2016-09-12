@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ "${TRAVIS_PULL_REQUEST}" == "false" ]; then
+if [ "${TRAVIS_PULL_REQUEST}" == "false" -a "${TRAVIS_BRANCH}" == "master" ]; then
   echo -e "Starting to update gh-pages\n"
 
   #store current dir
