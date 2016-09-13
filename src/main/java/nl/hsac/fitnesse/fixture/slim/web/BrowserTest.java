@@ -183,7 +183,6 @@ public class BrowserTest extends SlimFixture {
         } catch (TimeoutException e) {
             handleTimeoutException(e);
         } finally {
-            clearSearchContext();
             switchToDefaultContent();
         }
         waitUntil(new ExpectedCondition<Boolean>() {
@@ -230,7 +229,6 @@ public class BrowserTest extends SlimFixture {
 
     public boolean refresh() {
         getNavigation().refresh();
-        clearSearchContext();
         switchToDefaultContent();
         return true;
     }
@@ -398,6 +396,7 @@ public class BrowserTest extends SlimFixture {
      */
     public void switchToDefaultContent() {
         getSeleniumHelper().switchToDefaultContent();
+        clearSearchContext();
     }
 
     /**
