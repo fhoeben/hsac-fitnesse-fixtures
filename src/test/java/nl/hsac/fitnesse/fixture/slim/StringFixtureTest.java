@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Tests StringFixture.
@@ -24,6 +25,55 @@ public class StringFixtureTest {
         assertEquals("null", null, fixture.valueOf(null));
         assertEquals("hello", "hello", fixture.valueOf("hello"));
     }
+
+    @Test
+    public void testStopTestIfValueOfIs() {
+        assertTrue(fixture.stopTestIfValueOfIs("Hallo", "Bye"));
+        assertTrue(fixture.stopTestIfValueOfIs(null, "Bye"));
+        assertTrue(fixture.stopTestIfValueOfIs("Hallo", null));
+
+        try {
+            fixture.stopTestIfValueOfIs("Hallo", "Hallo");
+            fail();
+        } catch (StopTestException e) {
+            assertTrue(e.getMessage().contains(" Hallo"));
+        }
+
+        try {
+            fixture.stopTestIfValueOfIs(null, null);
+            fail();
+        } catch (StopTestException e) {
+            assertTrue(e.getMessage().contains(" null"));
+        }
+    }
+
+    @Test
+    public void testStopTestIfValueOfIsNot() {
+        assertTrue(fixture.stopTestIfValueOfIsNot("Hallo", "Hallo"));
+        assertTrue(fixture.stopTestIfValueOfIsNot(null, null));
+
+        try {
+            fixture.stopTestIfValueOfIsNot("Hallo", "Bye");
+            fail();
+        } catch (StopTestException e) {
+            assertTrue(e.getMessage().contains(" Hallo"));
+        }
+
+        try {
+            fixture.stopTestIfValueOfIsNot(null, "Bye");
+            fail();
+        } catch (StopTestException e) {
+            assertTrue(e.getMessage().contains(" null"));
+        }
+
+        try {
+            fixture.stopTestIfValueOfIsNot("Hallo", null);
+            fail();
+        } catch (StopTestException e) {
+            assertTrue(e.getMessage().contains(" Hallo"));
+        }
+    }
+
 
     @Test
     public void testValueDiffersFrom() {
