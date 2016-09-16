@@ -16,31 +16,30 @@ The >HttpPost2UsingScenarioTest makes multiple SOAP calls to a service, where sc
 The main commands/keywords (i.e. public methods) offered by !-nl.hsac.fitnesse.fixture.slim.HttpTest-! are listed below.
 
 -|Comment|
-|get from <url>                                |Sends a GET to the specified url (parameters can be added using 'set value(s) for').                                                                                  |
-|get from <url> no redirect                    |Sends a GET to the specified url not following redirects sent by the server.                                                                                          |
-|post <body> to <url>                          |Sends a POST containing the specified body to the url.                                                                                                                |
-|post template to <url>                        |Sends a POST to the specified url, determining the body by combining the configured template and values (see 'set value for' and 'template')                          |
-|post file <file> to <url>                     |Sends a POST containing the specified file as multipart binary data to the url                                                                                        |
-|put <body> to <url>                           |Sends a PUT containing the specified body to the url.                                                                                                                 |
-|put template to <url>                         |Sends a PUT to the specified url, determining the body by combining the configured template and values (see 'set value for' and 'template')                           |
-|template <location>                           |Configures the Freemarker template to use on next call using 'post template to'.                                                                                      |
-|set value <value> for <name>                  |Stores the value for either a query or template parameter with the supplied name.                                                                                     |
-|set values <values> for <name>                |Stores the a list of values (comma separated) for either a query or template parameter with the supplied name.                                                        |
-|post values to <url>                          |Sends a POST containing all (url-encoded) values to the url.                                                                                                          |
-|set value <value> for header <name>           |Stores the value for an HTTP header to add to subsequent requests.                                                                                                    |
-|delete <url>                                  |Sends a DELETE to the specified url (parameters can be added using 'set value(s) for').                                                                               |
-|clear values                                  |Clears the list of name/value pairs to be added to GET requests or template evaluation.                                                                               |
-|clear header values                           |Clears the list of HTTP headers to be sent with requests.                                                                                                             |
-|request                                       |Returns the last url (including parameters) used for 'get from' or the body used for 'post (template) to'. Intended to be used in combination with the 'show' command.|
-|response                                      |Returns the last response body returned. Intended to be used in combination with the 'show' or 'check' commands.                                                      |
-|html response                                 |Returns the last response body returned as HTML to be embedded in the test result table (in combination with the 'show' command).                                     |
-|response status                               |HTTP status code of last response received.                                                                                                                           |
-|stop test if response status is [not] <status>|Stops test execution (next steps on page will be skipped) if the last response's status is (not) 'status'.                                                            |
-|response time                                 |Time (in milliseconds) it took to send the last request and receive its response.                                                                                     |
-|response headers                              |HTTP headers received with last response.                                                                                                                             |
-|response header <name>                        |Value of HTTP header 'name' in last response received.                                                                                                                |
-|response is valid                             |Whether the last request was successful, or an error.                                                                                                                 |
-|set content type <content-type>               |Sets the content type to use when posting.                                                                                                                            |
+|get from <url>                     |Sends a GET to the specified url (parameters can be added using 'set value(s) for').                                                                                  |
+|get from <url> no redirect         |Sends a GET to the specified url not following redirects sent by the server.                                                                                          |
+|post <body> to <url>               |Sends a POST containing the specified body to the url.                                                                                                                |
+|post template to <url>             |Sends a POST to the specified url, determining the body by combining the configured template and values (see 'set value for' and 'template')                          |
+|post file <file> to <url>          |Sends a POST containing the specified file as multipart binary data to the url                                                                                        |
+|put <body> to <url>                |Sends a PUT containing the specified body to the url.                                                                                                                 |
+|put template to <url>              |Sends a PUT to the specified url, determining the body by combining the configured template and values (see 'set value for' and 'template')                           |
+|template <location>                |Configures the Freemarker template to use on next call using 'post template to'.                                                                                      |
+|set value <value> for <name>       |Stores the value for either a query or template parameter with the supplied name.                                                                                     |
+|set values <values> for <name>     |Stores the a list of values (comma separated) for either a query or template parameter with the supplied name.                                                        |
+|post values to <url>               |Sends a POST containing all (url-encoded) values to the url.                                                                                                          |
+|set value <value> for header <name>|Stores the value for an HTTP header to add to subsequent requests.                                                                                                    |
+|delete <url>                       |Sends a DELETE to the specified url (parameters can be added using 'set value(s) for').                                                                               |
+|clear values                       |Clears the list of name/value pairs to be added to GET requests or template evaluation.                                                                               |
+|clear header values                |Clears the list of HTTP headers to be sent with requests.                                                                                                             |
+|request                            |Returns the last url (including parameters) used for 'get from' or the body used for 'post (template) to'. Intended to be used in combination with the 'show' command.|
+|response                           |Returns the last response body returned. Intended to be used in combination with the 'show' or 'check' commands.                                                      |
+|html response                      |Returns the last response body returned as HTML to be embedded in the test result table (in combination with the 'show' command).                                     |
+|response status                    |HTTP status code of last response received.                                                                                                                           |
+|response time                      |Time (in milliseconds) it took to send the last request and receive its response.                                                                                     |
+|response headers                   |HTTP headers received with last response.                                                                                                                             |
+|response header <name>             |Value of HTTP header 'name' in last response received.                                                                                                                |
+|response is valid                  |Whether the last request was successful, or an error.                                                                                                                 |
+|set content type <content-type>    |Sets the content type to use when posting.                                                                                                                            |
 
 !3 !-JsonHttpTest-!
 The commands/keywords (i.e. public methods) added by !-nl.hsac.fitnesse.fixture.slim.JsonHttpTest-! are listed below.

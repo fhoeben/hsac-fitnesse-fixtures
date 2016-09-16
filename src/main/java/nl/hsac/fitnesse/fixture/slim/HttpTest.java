@@ -438,32 +438,6 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     /**
-     * @param expectedResponseStatus http status we don't expect.
-     * @return true if last request did not have the requested status.
-     * @throws StopTestException if expectedResponse status was received.
-     */
-    public boolean stopTestIfResponseStatusIs(int expectedResponseStatus) {
-        int actualStatus = responseStatus();
-        if (actualStatus == expectedResponseStatus) {
-            throw new StopTestException(false, "Stopping test. Response status was: " + actualStatus);
-        }
-        return true;
-    }
-
-    /**
-     * @param expectedResponseStatus http status we expect.
-     * @return true if last request had requested status.
-     * @throws StopTestException if expectedResponse status was not received.
-     */
-    public boolean stopTestIfResponseStatusIsNot(int expectedResponseStatus) {
-        int actualStatus = responseStatus();
-        if (actualStatus != expectedResponseStatus) {
-            throw new StopTestException(false, "Stopping test. Actual response status was: " + actualStatus);
-        }
-        return true;
-    }
-
-    /**
      * @return headers received with response to last request.
      */
     public Map<String, String> responseHeaders() {

@@ -12,7 +12,8 @@ public class StopTestFixture {
      */
     public boolean stopTestIfIs(Object actual, Object expected) {
         if ((expected == null && actual == null)
-                || (expected != null &&  expected.equals(actual))) {
+                || (expected != null &&  expected.equals(actual))
+                || areEqualAsString(actual, expected)) {
             throw new StopTestException(false, "Stopping test. Value is: " + actual);
         }
         return true;
@@ -27,8 +28,17 @@ public class StopTestFixture {
     public boolean stopTestIfIsNot(Object actual, Object notExpected) {
         if ((notExpected == null && actual != null)
                 || (notExpected != null && !notExpected.equals(actual))) {
-            throw new StopTestException(false, "Stopping test. Value is: " + actual);
+            // see whether they are the same in String format
+            if (!areEqualAsString(actual, notExpected)) {
+                throw new StopTestException(false, "Stopping test. Value is: " + actual);
+            }
         }
         return true;
+    }
+
+    private boolean areEqualAsString(Object left, Object right) {
+        String rightAsString = String.valueOf(right);
+        String leftAsString = String.valueOf(left);
+        return rightAsString.equals(leftAsString);
     }
 }
