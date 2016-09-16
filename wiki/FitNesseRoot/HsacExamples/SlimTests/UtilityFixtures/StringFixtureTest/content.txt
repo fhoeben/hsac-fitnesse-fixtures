@@ -3,18 +3,20 @@ It is intended to be used is as a [[library][.FitNesse.UserGuide.WritingAcceptan
 
 This page demonstrates the features of the class (!-nl.hsac.fitnesse.fixture.slim.StringFixture-!) and therefore uses it on its own in a script table (instead of inside a script using a different fixture).
 
-|script|string fixture                                                                                    |
-|check |value of             |Hello                      |Hello                                           |
-|check |length of            |Hello                      |5                                               |
-|ensure|text                 |Hello world!               |contains    |world                              |
-|reject|text                 |Hello world!               |contains    |moon                               |
-|ensure|value                |Hello                      |differs from|Hell                               |
-|ensure|value                |Hello                      |equals      |Hello                              |
-|check |convert to upper case|Bye                        |BYE                                             |
-|check |convert to lower case|Bye                        |bye                                             |
-|check |normalize whitespace |!-   Hello    World    -!  |Hello World                                     |
-|check |replace all          |Hello ([A-Za-z]+)          |in          |Hello World|with|$1      |World    |
-|check |replace all          |(\d{4})-(\d{1,2})-(\d{1,2})|in          |1975-12-3  |with|$3-$2-$1|3-12-1975|
+|script               |string fixture                                                                                    |
+|check                |value of             |Hello                      |Hello                                           |
+|stop test if value of|Bye                  |is                         |Hello                                           |
+|stop test if value of|Hello                |is not                     |Hello                                           |
+|check                |length of            |Hello                      |5                                               |
+|ensure               |text                 |Hello world!               |contains    |world                              |
+|reject               |text                 |Hello world!               |contains    |moon                               |
+|ensure               |value                |Hello                      |differs from|Hell                               |
+|ensure               |value                |Hello                      |equals      |Hello                              |
+|check                |convert to upper case|Bye                        |BYE                                             |
+|check                |convert to lower case|Bye                        |bye                                             |
+|check                |normalize whitespace |!-   Hello    World    -!  |Hello World                                     |
+|check                |replace all          |Hello ([A-Za-z]+)          |in          |Hello World|with|$1      |World    |
+|check                |replace all          |(\d{4})-(\d{1,2})-(\d{1,2})|in          |1975-12-3  |with|$3-$2-$1|3-12-1975|
 
 
 Conversions to numbers (so that [[relative checks][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ValueComparisons]] can be done).
