@@ -183,20 +183,4 @@ public class StringFixture extends SlimFixture {
     protected Matcher getMatcher(String regEx, String value) {
         return Pattern.compile(regEx, Pattern.DOTALL).matcher(value);
     }
-
-    public boolean stopTestIfValueOfIs(Object actual, Object expected) {
-        if ((expected == null && actual == null)
-            || (expected != null &&  expected.equals(actual))) {
-            throw new StopTestException(false, "Stopping test. Value is: " + actual);
-        }
-        return true;
-    }
-
-    public boolean stopTestIfValueOfIsNot(Object actual, Object notExpected) {
-        if ((notExpected == null && actual != null)
-                || (notExpected != null && !notExpected.equals(actual))) {
-            throw new StopTestException(false, "Stopping test. Value is: " + actual);
-        }
-        return true;
-    }
 }
