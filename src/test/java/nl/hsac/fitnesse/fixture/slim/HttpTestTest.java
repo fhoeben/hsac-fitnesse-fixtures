@@ -7,6 +7,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Tests HttpTest.
@@ -98,6 +99,33 @@ public class HttpTestTest {
         assertEquals("<MyContent>\n  <content a='c'/>\n</MyContent>", cleaned);
     }
 
+    @Test
+    public void testStopTestIfResponseStatusIs() {
+        HttpTest httpTest = new HttpTest();
+
+        httpTest.getResponse().setStatusCode(300);
+        assertTrue(httpTest.stopTestIfResponseStatusIs(200));
+        try {
+            httpTest.stopTestIfResponseStatusIs(300);
+            fail();
+        } catch (StopTestException e) {
+            assertTrue(e.getMessage().contains(" 300"));
+        }
+    }
+
+    @Test
+    public void testStopTestIfResponseStatusIsNot() {
+        HttpTest httpTest = new HttpTest();
+
+        httpTest.getResponse().setStatusCode(200);
+        assertTrue(httpTest.stopTestIfResponseStatusIsNot(200));
+        try {
+            httpTest.stopTestIfResponseStatusIsNot(500);
+            fail();
+        } catch (StopTestException e) {
+            assertTrue(e.getMessage().contains(" 200"));
+        }
+    }
 
     /**
      * Tests url redirects with follow redirects (default setting)
