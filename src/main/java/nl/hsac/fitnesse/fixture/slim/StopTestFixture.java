@@ -12,7 +12,7 @@ public class StopTestFixture {
      */
     public boolean stopTestIfIs(Object actual, Object expected) {
         if ((expected == null && actual == null)
-                || (expected != null &&  expected.equals(actual))
+                || (expected != null && expected.equals(actual))
                 || areEqualAsString(actual, expected)) {
             throw new StopTestException(false, "Stopping test. Value is: " + actual);
         }
