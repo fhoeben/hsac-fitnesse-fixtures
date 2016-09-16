@@ -111,7 +111,7 @@ public class HttpTestTest {
     }
 
     /**
-     * Test url redirects without following redirectØ
+     * Test url redirects without following redirect
      */
     @Test
     public void testGetFromNoRedirect() throws Exception {
