@@ -3,7 +3,6 @@ package nl.hsac.fitnesse.fixture.slim;
 
 import org.junit.Test;
 
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -97,7 +96,6 @@ public class HttpTestTest {
 
         assertEquals("<MyContent>\n  <content a='c'/>\n</MyContent>", cleaned);
     }
-
 
     /**
      * Tests url redirects with follow redirects (default setting)
