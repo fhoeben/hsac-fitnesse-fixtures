@@ -39,7 +39,10 @@ import java.util.List;
  * The HTML generated for each page is saved in target/fitnesse-results
  */
 public class HsacFitNesseRunner extends PatchedFitNesseRunner {
-    private final static String suiteOverrideVariableName = "fitnesseSuiteToRun";
+    /** Output path for HTML results */
+    public final static String FITNESSE_RESULTS_PATH = "target/fitnesse-results";
+    /** Property to override suite to run */
+    public final static String SUITE_OVERRIDE_VARIABLE_NAME = "fitnesseSuiteToRun";
     private final static String SELENIUM_DEFAULT_TIMEOUT_PROP = "seleniumDefaultTimeout";
     protected final List<SeleniumDriverFactoryFactory> factoryFactories = new ArrayList<SeleniumDriverFactoryFactory>();
 
@@ -64,7 +67,7 @@ public class HsacFitNesseRunner extends PatchedFitNesseRunner {
 
     @Override
     protected String getSuiteName(Class<?> klass) throws InitializationError {
-        String name = System.getProperty(suiteOverrideVariableName);
+        String name = System.getProperty(SUITE_OVERRIDE_VARIABLE_NAME);
         if (StringUtils.isEmpty(name)) {
             Suite nameAnnotation = klass.getAnnotation(Suite.class);
             if (nameAnnotation == null) {
@@ -82,7 +85,7 @@ public class HsacFitNesseRunner extends PatchedFitNesseRunner {
 
     @Override
     protected String getOutputDir(Class<?> klass) throws InitializationError {
-        return "target/fitnesse-results";
+        return FITNESSE_RESULTS_PATH;
     }
 
     @Override
