@@ -1,0 +1,18 @@
+!1 Report your run using Allure Framework
+
+When running from a CI server and JUnitAllureFrameworkListener is enabled in POM, allure-results will be generated.
+For example, run suite using: ''!-mvn clean test-compile failsafe:integration-test -DfitnesseSuiteToRun=HsacExamples.SlimTests.BrowserTests.AllureReportExample-!''
+
+After this run, we can execute mvn site to now create a dashboard using Allure. Expose the allure-report folder via a web server to see the dashboard.
+
+This example suite contains tags, has a passing, failing and broken testcase to demonstrate the visual features.
+
+'''Features:'''
+
+ * The dashboard shows an aggregate of all runs in target/allure-results (running multiple suites and generating one report is possible if you don't clean between runs.)
+ * If multiple (sub) suites are run, they will be reported as features.
+ * If tags are provided on the test pages, these are visible as functional 'stories' in the report
+ * HSAC's fitnesse report is copied and integrated as an attachment per test case
+ * If exceptions were thrown, screenshot and pagesource are attached separately
+
+!contents -R2 -g -p -f -h
