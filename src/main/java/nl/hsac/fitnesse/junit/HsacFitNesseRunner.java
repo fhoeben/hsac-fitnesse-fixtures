@@ -44,7 +44,7 @@ public class HsacFitNesseRunner extends PatchedFitNesseRunner {
     /** Property to override suite to run */
     public final static String SUITE_OVERRIDE_VARIABLE_NAME = "fitnesseSuiteToRun";
     private final static String SELENIUM_DEFAULT_TIMEOUT_PROP = "seleniumDefaultTimeout";
-    protected final List<SeleniumDriverFactoryFactory> factoryFactories = new ArrayList<SeleniumDriverFactoryFactory>();
+    protected final List<SeleniumDriverFactoryFactory> factoryFactories = new ArrayList<>();
 
     public HsacFitNesseRunner(Class<?> suiteClass) throws InitializationError {
         super(suiteClass);
