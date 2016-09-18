@@ -1684,14 +1684,7 @@ public class BrowserTest extends SlimFixture {
             return waitUntilImpl(condition);
         } catch (TimeoutException e) {
             String message = getTimeoutMessage(e);
-            try {
-                // last attempt to ensure condition has not been met
-                // this to prevent messages that show no problem
-                return condition.apply(getSeleniumHelper().driver());
-            } catch (Throwable t) {
-                // ignore
-            }
-            throw new SlimFixtureException(false, message, e);
+            return lastAttemptBeforeThrow(condition, new SlimFixtureException(false, message, e));
         }
     }
 
@@ -1711,16 +1704,34 @@ public class BrowserTest extends SlimFixture {
             try {
                 return handleTimeoutException(e);
             } catch (TimeoutStopTestException tste) {
-                try {
-                    // last attempt to ensure condition has not been met
-                    // this to prevent messages that show no problem
-                    return condition.apply(getSeleniumHelper().driver());
-                } catch (Throwable t) {
-                    // ignore
-                }
-                throw tste;
+                return lastAttemptBeforeThrow(condition, tste);
             }
         }
+    }
+
+    /**
+     * Tries the condition one last time before throwing an exception.
+     * This to prevent exception messages in the wiki that show no problem, which could happen if the browser's
+     * window content has changed between last (failing) try at condition and generation of the exception.
+     * @param <T> the return type of the method, which must not be Void
+     * @param condition condition that caused exception.
+     * @param e exception that will be thrown if condition does not return a result.
+     * @return last attempt results, if not null.
+     * @throws SlimFixtureException throws e if last attempt returns null.
+     */
+    protected <T> T lastAttemptBeforeThrow(ExpectedCondition<T> condition, SlimFixtureException e) {
+        T lastAttemptResult = null;
+        try {
+            // last attempt to ensure condition has not been met
+            // this to prevent messages that show no problem
+            lastAttemptResult = condition.apply(getSeleniumHelper().driver());
+        } catch (Throwable t) {
+            // ignore
+        }
+        if (lastAttemptResult != null) {
+            return lastAttemptResult;
+        }
+        throw e;
     }
 
     /**
