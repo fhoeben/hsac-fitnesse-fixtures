@@ -3,12 +3,12 @@ package nl.hsac.fitnesse.junit;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesseContext;
 import fitnesse.components.PluginsClassLoader;
-import fitnesse.junit.FitNesseRunner;
 import fitnesse.wiki.WikiPage;
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.slim.web.SeleniumDriverSetup;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
+import nl.hsac.fitnesse.junit.patch948.PatchedFitNesseRunner;
 import nl.hsac.fitnesse.junit.selenium.LocalSeleniumDriverClassFactoryFactory;
 import nl.hsac.fitnesse.junit.selenium.LocalSeleniumDriverFactoryFactory;
 import nl.hsac.fitnesse.junit.selenium.SeleniumDriverFactoryFactory;
@@ -38,10 +38,13 @@ import java.util.List;
  *
  * The HTML generated for each page is saved in target/fitnesse-results
  */
-public class HsacFitNesseRunner extends FitNesseRunner {
-    private final static String suiteOverrideVariableName = "fitnesseSuiteToRun";
+public class HsacFitNesseRunner extends PatchedFitNesseRunner {
+    /** Output path for HTML results */
+    public final static String FITNESSE_RESULTS_PATH = "target/fitnesse-results";
+    /** Property to override suite to run */
+    public final static String SUITE_OVERRIDE_VARIABLE_NAME = "fitnesseSuiteToRun";
     private final static String SELENIUM_DEFAULT_TIMEOUT_PROP = "seleniumDefaultTimeout";
-    protected final List<SeleniumDriverFactoryFactory> factoryFactories = new ArrayList<SeleniumDriverFactoryFactory>();
+    protected final List<SeleniumDriverFactoryFactory> factoryFactories = new ArrayList<>();
 
     public HsacFitNesseRunner(Class<?> suiteClass) throws InitializationError {
         super(suiteClass);
@@ -64,7 +67,7 @@ public class HsacFitNesseRunner extends FitNesseRunner {
 
     @Override
     protected String getSuiteName(Class<?> klass) throws InitializationError {
-        String name = System.getProperty(suiteOverrideVariableName);
+        String name = System.getProperty(SUITE_OVERRIDE_VARIABLE_NAME);
         if (StringUtils.isEmpty(name)) {
             Suite nameAnnotation = klass.getAnnotation(Suite.class);
             if (nameAnnotation == null) {
@@ -82,7 +85,7 @@ public class HsacFitNesseRunner extends FitNesseRunner {
 
     @Override
     protected String getOutputDir(Class<?> klass) throws InitializationError {
-        return "target/fitnesse-results";
+        return FITNESSE_RESULTS_PATH;
     }
 
     @Override
