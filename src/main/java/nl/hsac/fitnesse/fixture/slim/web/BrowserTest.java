@@ -1708,7 +1708,18 @@ public class BrowserTest extends SlimFixture {
         try {
             return waitUntilImpl(condition);
         } catch (TimeoutException e) {
-            return handleTimeoutException(e);
+            try {
+                return handleTimeoutException(e);
+            } catch (TimeoutStopTestException tste) {
+                try {
+                    // last attempt to ensure condition has not been met
+                    // this to prevent messages that show no problem
+                    return condition.apply(getSeleniumHelper().driver());
+                } catch (Throwable t) {
+                    // ignore
+                }
+                throw tste;
+            }
         }
     }
 
