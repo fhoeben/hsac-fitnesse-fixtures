@@ -46,6 +46,7 @@
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
 		<fitnesse.port>9090</fitnesse.port>
+		<extraFailsafeListeners></extraFailsafeListeners>
 	</properties>
 
 	<dependencyManagement>
@@ -262,7 +263,7 @@
 					<properties>
 						<property>
 							<name>listener</name>
-							<value>nl.hsac.fitnesse.junit.JUnitXMLPerPageListener,nl.hsac.fitnesse.junit.ProgressLoggerListener</value>
+							<value>nl.hsac.fitnesse.junit.JUnitXMLPerPageListener,nl.hsac.fitnesse.junit.ProgressLoggerListener${extraFailsafeListeners}</value>
 						</property>
 					</properties>
 					<!-- Our listener will create XML failsafe should not, or all tests are reported twice -->
@@ -392,6 +393,12 @@
 	</build>
 
 	<profiles>
+		<profile>
+			<id>teamCity</id>
+			<properties>
+				<extraFailsafeListeners>,nl.hsac.fitnesse.junit.JUnitTeamcityReporter</extraFailsafeListeners>
+			</properties>
+		</profile>
 		<!-- all plugins below are usually only required for release builds -->
 		<profile>
 			<id>release</id>
