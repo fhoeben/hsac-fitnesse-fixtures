@@ -393,6 +393,12 @@
 	</build>
 
 	<profiles>
+		<profile>
+			<id>teamCity</id>
+			<properties>
+				<extraFailsafeListeners>,nl.hsac.fitnesse.junit.JUnitTeamcityReporter</extraFailsafeListeners>
+			</properties>
+		</profile>
 		<!-- all plugins below are usually only required for release builds -->
 		<profile>
 			<id>release</id>
