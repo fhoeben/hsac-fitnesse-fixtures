@@ -1,14 +1,14 @@
 !1 Website testing using ''table template'' and !-BrowserTest-!
 
 
-On this page we test whether we check the prices of a couple of houses for sale in Utrecht, The Netherlands. 
-This test continues where ScenarioTest left of. It uses 'table template', a custom extension of [[Slim's scenario][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScenarioTable]], to define a parameterized script. This is then invoked multiple times from a [[Decision table][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.DecisionTable]], once for each row. The advantage of this custom extension is that the scenario's parameters do not have to be listed in its first row (but only in the rows where they are used and in the decision table). This is, of course, especially convenient when there are many parameters. 'Table template' supports both input and output parameters, just like regular scenarios. Output parameters are indicated in the decision table by the fact that their column header ends with '?'. 
+On this page we test whether we check the prices of a couple of houses for sale in Utrecht, The Netherlands.
+This test continues where ScenarioTest left of. It uses 'table template', a custom extension of [[Slim's scenario][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScenarioTable]], to define a parameterized script. This is then invoked multiple times from a [[Decision table][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.DecisionTable]], once for each row. The advantage of this custom extension is that the scenario's parameters do not have to be listed in its first row (but only in the rows where they are used and in the decision table). This is, of course, especially convenient when there are many parameters. 'Table template' supports both input and output parameters, just like regular scenarios. Output parameters are indicated in the decision table by the fact that their column header ends with '?'.
 
 The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
 
 |table template|check original price                                        |
 |open          |http://www.funda.nl                                         |
-|select        |€ 900.000          |for            |van                     |
+|select        |€ 1.000.000        |for            |van                     |
 |select        |€ 2.000.000        |for            |tot                     |
 |enter         |@{address}, @{city}|as             |Plaats, buurt, adres etc|
 |note          |select option from autocomplete                             |
@@ -25,9 +25,9 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |script|browser test|
 
-|check original price                                                                    |
-|address          |city   |price?          |state?     |square meters|yearBuilt?|volume? |
-|Gageldijk 104    |Utrecht|€ 900.000 k.k.  |Beschikbaar|270          |1906      |1.270 m³|
-|Wilhelminapark 46|Utrecht|€ 1.295.000 k.k.|Beschikbaar|312          |Voor 1906 |1.370 m³|
+|check original price                                                                       |
+|address             |city   |price?          |state?     |square meters|yearBuilt?|volume? |
+|Gageldijk 87        |Utrecht|€ 1.750.000 k.k.|Beschikbaar|392          |1910      |1.881 m³|
+|Lange Nieuwstraat 72|Utrecht|€ 1.942.500 k.k.|Beschikbaar|820          |Voor 1906 |3.190 m³|
 
 To make test more readable, maintainable and powerful we can also create custom subclasses of !-BrowserTest-!. This is shown in CustomFixtureTest.

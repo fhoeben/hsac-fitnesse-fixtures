@@ -41,7 +41,9 @@ public class JUnitXMLPerPageListener extends RunListener {
     @Override
     public void testFinished(Description description) throws Exception {
         super.testFinished(description);
-        recordTestResult(description, null, getExecutionTime());
+        if (!timeMeasurement.isStopped()) {
+            recordTestResult(description, null, getExecutionTime());
+        }
     }
 
     @Override
@@ -54,6 +56,9 @@ public class JUnitXMLPerPageListener extends RunListener {
         double executionTime = 0;
         if (timeMeasurement != null) {
             executionTime = timeMeasurement.elapsedSeconds();
+            if (!timeMeasurement.isStopped()) {
+                timeMeasurement.stop();
+            }
         }
         return executionTime;
     }

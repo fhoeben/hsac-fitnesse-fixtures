@@ -7,7 +7,7 @@ First we do this with ''plain !-BrowserTest-!'', then with a ''custom subclass, 
 
 |script|browser test                                                                                |
 |open  |http://www.funda.nl                                                                         |
-|select|€ 900.000         |for                                             |van                     |
+|select|€ 1.000.000       |for                                             |van                     |
 |select|€ 2.000.000       |for                                             |tot                     |
 |enter |Gageldijk, Utrecht|as                                              |Plaats, buurt, adres etc|
 |wait  |1                 |seconds                                                                  |
@@ -15,9 +15,9 @@ First we do this with ''plain !-BrowserTest-!'', then with a ''custom subclass, 
 |press |down                                                                                        |
 |press |enter                                                                                       |
 |click |Zoek                                                                                        |
-|click |Gageldijk 104                                                                               |
+|click |Gageldijk 87                                                                                |
 |note  |Check any element's text based on an xPath, makes test fragile to HTML changes              |
-|check |value of          |xpath=//span[@class='object-media-teaser-count']|30                      |
+|check |value of          |xpath=//span[@class='object-media-teaser-count']|56                      |
 
 What can we do with a custom subclass...
 
@@ -30,7 +30,7 @@ We need to indicate in which package our custom class can be found.
 
 |script|funda test                                                        |
 |open  |http://www.funda.nl                                               |
-|select|€ 900.000                |for      |van                           |
+|select|€ 1.000.000              |for      |van                           |
 |select|€ 2.000.000              |for      |tot                           |
 |enter |Gageldijk, Utrecht       |as       |Plaats, buurt, adres etc      |
 |note  |select option from autocomplete                                   |
@@ -38,8 +38,8 @@ We need to indicate in which package our custom class can be found.
 |press |down                                                              |
 |press |enter                                                             |
 |click |Zoek                                                              |
-|click |Gageldijk 104                                                     |
+|click |Gageldijk 87                                                      |
 |note  |Use custom method to get number of photos                         |
-|check |number of photos         |30                                      |
+|check |number of photos         |56                                      |
 |note  |Since the custom method returns a number we can do relative checks|
 |check |number of photos         |>10                                     |

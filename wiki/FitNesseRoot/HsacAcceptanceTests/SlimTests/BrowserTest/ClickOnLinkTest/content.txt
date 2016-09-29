@@ -11,7 +11,7 @@ This test ensures we can click on links based on their text content.
 <a href="" style="text-transform:uppercase"><span class="btn-label"><span aria-hidden="true">Select</span><span style="position: absolute !important;width: 1px;height: 1px;margin: -1px;padding: 0;clip: rect(0 0 0 0);border: 0;overflow: hidden;" class="visuallyhidden">6th Link</span></span></a> 
 <a href="" style="text-transform:lowercase">7TH Link</a> 
 <a href="" style="text-transform:uppercase">8th Link</a> 
-<a href="" style="text-transform:lowercase"><span class="btn-label"><span aria-hidden="true">Select</span><span style="position: absolute !important;width: 1px;height: 1px;margin: -1px;padding: 0;clip: rect(0 0 0 0);border: 0;overflow: hidden;" class="visuallyhidden">9TH Link</span></span></a> 
+<a href="" style="text-transform:lowercase"><span class="btn-label"><span aria-hidden="true">Select</span><span style="position: absolute !important;width: 1px;height: 1px;margin: -1px;padding: 0;clip: rect(0 0 0 0);border: 0;overflow: hidden;" class="visuallyhidden">9TH&nbsp;Link</span></span></a> 
 
 
 

@@ -9,6 +9,7 @@ import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
@@ -24,6 +25,7 @@ import org.openqa.selenium.safari.SafariDriver;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -56,7 +58,7 @@ public class SeleniumDriverSetup extends SlimFixture {
      * @return true if instance was created and injected into SeleniumHelper.
      * @throws Exception if no instance could be created.
      */
-    public boolean startDriver(String driverClassName, final Map<String, String> profile) throws Exception {
+    public boolean startDriver(String driverClassName, final Map<String, Object> profile) throws Exception {
         if (OVERRIDE_ACTIVE) {
             return true;
         }
@@ -74,6 +76,10 @@ public class SeleniumDriverSetup extends SlimFixture {
                     if ("firefoxdriver".equalsIgnoreCase(driverClass.getSimpleName())) {
                         FirefoxProfile fxProfile = getFirefoxProfile(profile);
                         driver = new FirefoxDriver(fxProfile);
+                    }
+                    else if("chromedriver".equalsIgnoreCase(driverClass.getSimpleName())) {
+                        DesiredCapabilities capabilities = getChromeMobileCapabilities(profile);
+                        driver = new ChromeDriver(capabilities);
                     } else {
                         driver = driverClass.newInstance();
                     }
@@ -109,35 +115,53 @@ public class SeleniumDriverSetup extends SlimFixture {
      * @return true if instance was created and injected into SeleniumHelper.
      * @throws Exception if no instance could be created.
      */
-    public boolean startDriverForWithProfile(String browser, Map<String, String> profile) throws Exception {
+    public boolean startDriverForWithProfile(String browser, Map<String, Object> profile) throws Exception {
         if (OVERRIDE_ACTIVE) {
             return true;
         }
 
-        boolean result = false;
+        boolean result;
         String browserName = browser.toLowerCase();
-        if ("firefox".equals(browserName)) {
-            result = startDriver(FirefoxDriver.class.getName(), profile);
-        } else if ("safari".equals(browserName)) {
-            result = startDriver(SafariDriver.class.getName());
-        } else if ("chrome".equals(browserName)) {
-            String driverPath = getExecutable("chromedriver");
-            setPropertyValue("webdriver.chrome.driver", driverPath);
-            result = startDriver(ChromeDriver.class.getName());
-        } else if ("MicrosoftEdge".equals(browserName) || "edge".equals(browserName)) {
-            String driverPath = getExecutable("MicrosoftWebDriver");
-            setPropertyValue("webdriver.edge.driver", driverPath);
-            result = startDriver(EdgeDriver.class.getName());
-        } else if ("internet explorer".equals(browserName)) {
-            String driverPath = getExecutable("IEDriverServer");
-            setPropertyValue("webdriver.ie.driver", driverPath);
-            result = startDriver(InternetExplorerDriver.class.getName());
-        } else if ("phantomjs".equals(browserName)) {
-            String driverPath = getExecutable("phantomjs");
-            setPropertyValue("phantomjs.binary.path", driverPath);
-            result = startDriver(PhantomJSDriver.class.getName());
-        } else {
-            throw new IllegalArgumentException("No defaults known for: " + browser);
+        switch (browserName) {
+            case "firefox": {
+                result = startDriver(FirefoxDriver.class.getName(), profile);
+                break;
+            }
+            case "safari": {
+                result = startDriver(SafariDriver.class.getName(), profile);
+                break;
+            }
+            case "chrome mobile emulation":
+                Map<String, Object> chromeOptions = new HashMap<>();
+                chromeOptions.put("mobileEmulation", profile);
+                profile = chromeOptions;
+            case "chrome": {
+                String driverPath = getExecutable("chromedriver");
+                setPropertyValue("webdriver.chrome.driver", driverPath);
+                result = startDriver(ChromeDriver.class.getName(), profile);
+                break;
+            }
+            case "microsoftedge":
+            case "edge": {
+                String driverPath = getExecutable("MicrosoftWebDriver");
+                setPropertyValue("webdriver.edge.driver", driverPath);
+                result = startDriver(EdgeDriver.class.getName(), profile);
+                break;
+            }
+            case "internet explorer": {
+                String driverPath = getExecutable("IEDriverServer");
+                setPropertyValue("webdriver.ie.driver", driverPath);
+                result = startDriver(InternetExplorerDriver.class.getName(), profile);
+                break;
+            }
+            case "phantomjs": {
+                String driverPath = getExecutable("phantomjs");
+                setPropertyValue("phantomjs.binary.path", driverPath);
+                result = startDriver(PhantomJSDriver.class.getName(), profile);
+                break;
+            }
+            default:
+                throw new IllegalArgumentException("No defaults known for: " + browser);
         }
         return result;
     }
@@ -229,7 +253,7 @@ public class SeleniumDriverSetup extends SlimFixture {
         return createAndSetRemoteDriver(url, desiredCapabilities);
     }
 
-    public boolean connectToFirefoxDriverAtWithProfile(String url, Map<String, String> profile)
+    public boolean connectToFirefoxDriverAtWithProfile(String url, Map<String, Object> profile)
             throws MalformedURLException {
         FirefoxProfile fxProfile = getFirefoxProfile(profile);
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
@@ -245,14 +269,24 @@ public class SeleniumDriverSetup extends SlimFixture {
      * @param profile setting from subtable
      * @return firefox profile with specified settings
      */
-    private FirefoxProfile getFirefoxProfile(Map<String, String> profile) {
+    private FirefoxProfile getFirefoxProfile(Map<String, Object> profile) {
         FirefoxProfile fxProfile = new FirefoxProfile();
         if (profile != null) {
-            for (Map.Entry<String, String> profileEntry : profile.entrySet()) {
-                fxProfile.setPreference(profileEntry.getKey(), profileEntry.getValue());
+            for (Map.Entry<String, Object> profileEntry : profile.entrySet()) {
+                Object value = profileEntry.getValue();
+                String valueStr = value == null ? null : value.toString();
+                fxProfile.setPreference(profileEntry.getKey(), valueStr);
             }
         }
         return fxProfile;
+    }
+
+    private DesiredCapabilities getChromeMobileCapabilities(Map<String, Object> profile) {
+        DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+        if (profile != null) {
+            capabilities.setCapability(ChromeOptions.CAPABILITY, profile);
+        }
+        return capabilities;
     }
 
     public boolean connectToDriverAtWithJsonCapabilities(String url, String capabilitiesInJson)

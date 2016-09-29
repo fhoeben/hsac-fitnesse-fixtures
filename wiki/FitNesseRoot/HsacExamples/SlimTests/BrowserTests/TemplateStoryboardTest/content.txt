@@ -8,8 +8,8 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |table template|check original price                                        |
 |open          |http://www.funda.nl                                         |
-|select        |€ 900.000          |for            |van                     |
-|select        |€ 1.500.000        |for            |tot                     |
+|select        |€ 1.000.000        |for            |van                     |
+|select        |€ 2.000.000        |for            |tot                     |
 |enter         |@{address}, @{city}|as             |Plaats, buurt, adres etc|
 |note          |select option from autocomplete                             |
 |press         |down                                                        |
@@ -24,8 +24,9 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |storyboard|browser test|
 
-|check original price                                                         |
-|address          |city   |price?          |square meters|year built?|volume? |
-|Gageldijk 104    |Utrecht|€ 900.000 k.k.  |270          |1906       |1.270 m³|
-|Wilhelminapark 46|Utrecht|€ 1.295.000 k.k.|312          |Voor 1906  |1.370 m³|
+|check original price                                                            |
+|address             |city   |price?          |square meters|year built?|volume? |
+|Gageldijk 87        |Utrecht|€ 1.750.000 k.k.|392          |1910       |1.881 m³|
+|Lange Nieuwstraat 72|Utrecht|€ 1.942.500 k.k.|820          |Voor 1906  |3.190 m³|
+
 

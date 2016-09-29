@@ -19,6 +19,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Helper to work with Selenium.
@@ -44,6 +46,9 @@ public class SeleniumHelper {
                     "  var y = (rect.top + rect.bottom)/2;\n" +
                     "  return document.elementFromPoint(x,y);\n" +
                     "} else { return null; }";
+
+    // Regex to find our own 'fake xpath function' in xpath 'By' content
+    private final static Pattern X_PATH_NORMALIZED = Pattern.compile("normalized\\((.+?(\\(\\))?)\\)");
 
     private final List<WebElement> currentIFramePath = new ArrayList<WebElement>(4);
     private int frameDepthOnLastAlertError;
@@ -116,19 +121,19 @@ public class SeleniumHelper {
             WebElement firstFound = element;
             if (!isInteractable(element)) {
                 // finding by linkText does not find actual text if css text-transform is in place
-                element = findByXPath("//*[normalize-space(descendant::text())='%s']/ancestor-or-self::a", place);
+                element = findByXPath(".//*[normalized(descendant::text())='%s']/ancestor-or-self::a", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
             }
             if (!isInteractable(element)) {
-                element = findByXPath("//button/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::button", place);
+                element = findByXPath(".//button/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::button", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
             }
             if (!isInteractable(element)) {
-                element = findByXPath("//label/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::label", place);
+                element = findByXPath(".//label/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::label", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
@@ -154,19 +159,19 @@ public class SeleniumHelper {
             }
             if (!isInteractable(element)) {
                 // finding by linkText does not find actual text if css text-transform is in place
-                element = findByXPath("//*[contains(normalize-space(descendant::text()),'%s')]/ancestor-or-self::a", place);
+                element = findByXPath(".//*[contains(normalized(descendant::text()),'%s')]/ancestor-or-self::a", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
             }
             if (!isInteractable(element)) {
-                element = findByXPath("//button/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::button", place);
+                element = findByXPath(".//button/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::button", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
             }
             if (!isInteractable(element)) {
-                element = findByXPath("//label/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::label", place);
+                element = findByXPath(".//label/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::label", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
@@ -179,52 +184,52 @@ public class SeleniumHelper {
             }
             if (!isInteractable(element)) {
                 // find element with specified text and 'onclick' attribute
-                element = findByXPath("//*[@onclick and normalize-space(text())='%s']", place);
+                element = findByXPath(".//*[@onclick and normalized(text())='%s']", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
             }
             if (!isInteractable(element)) {
-                element = findByXPath("//*[@onclick and contains(normalize-space(text()),'%s')]", place);
+                element = findByXPath(".//*[@onclick and contains(normalized(text()),'%s')]", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
             }
             if (!isInteractable(element)) {
                 // find element with child with specified text and 'onclick' attribute
-                element = findByXPath("//*[@onclick and normalize-space(descendant::text())='%s']", place);
+                element = findByXPath(".//*[@onclick and normalized(descendant::text())='%s']", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
             }
             if (!isInteractable(element)) {
-                element = findByXPath("//*[@onclick and contains(normalize-space(descendant::text()),'%s')]", place);
+                element = findByXPath(".//*[@onclick and contains(normalized(descendant::text()),'%s')]", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
             }
             if (!isInteractable(element)) {
                 // find element with specified text
-                element = findByXPath("//*[normalize-space(text())='%s']", place);
+                element = findByXPath(".//*[normalized(text())='%s']", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
             }
             if (!isInteractable(element)) {
-                element = findByXPath("//*[contains(normalize-space(text()),'%s')]", place);
+                element = findByXPath(".//*[contains(normalized(text()),'%s')]", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
             }
             if (!isInteractable(element)) {
                 // find element with child with specified text
-                element = findByXPath("//*[normalize-space(descendant::text())='%s']", place);
+                element = findByXPath(".//*[normalized(descendant::text())='%s']", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
             }
             if (!isInteractable(element)) {
-                element = findByXPath("//*[contains(normalize-space(descendant::text()),'%s')]", place);
+                element = findByXPath(".//*[contains(normalized(descendant::text()),'%s')]", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
@@ -304,13 +309,13 @@ public class SeleniumHelper {
             }
         }
         if (!isInteractable(element)) {
-            element = findByXPath("//th/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::th[1]/../td ", place);
+            element = findByXPath(".//th/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::th[1]/../td ", place);
             if (firstElement == null) {
                 firstElement = element;
             }
         }
         if (!isInteractable(element)) {
-            element = findByXPath("//dt/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::dt[1]/following-sibling::dd[1] ", place);
+            element = findByXPath(".//dt/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::dt[1]/following-sibling::dd[1] ", place);
             if (firstElement == null) {
                 firstElement = element;
             }
@@ -356,13 +361,13 @@ public class SeleniumHelper {
             }
         }
         if (!isInteractable(element)) {
-            element = findByXPath("//th/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::th[1]/../td ", place);
+            element = findByXPath(".//th/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::th[1]/../td ", place);
             if (firstElement == null) {
                 firstElement = element;
             }
         }
         if (!isInteractable(element)) {
-            element = findByXPath("//dt/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::dt[1]/following-sibling::dd[1] ", place);
+            element = findByXPath(".//dt/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::dt[1]/following-sibling::dd[1] ", place);
             if (firstElement == null) {
                 firstElement = element;
             }
@@ -402,7 +407,7 @@ public class SeleniumHelper {
      */
     public WebElement getElementByLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText, index,
-                                    "//label/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::label"
+                                    ".//label/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::label"
         );
     }
 
@@ -416,7 +421,7 @@ public class SeleniumHelper {
      */
     public WebElement getElementByStartLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText, index,
-                "//label/descendant-or-self::text()[starts-with(normalize-space(.), '%s')]/ancestor-or-self::label"
+                ".//label/descendant-or-self::text()[starts-with(normalized(.), '%s')]/ancestor-or-self::label"
         );
     }
 
@@ -430,7 +435,7 @@ public class SeleniumHelper {
      */
     public WebElement getElementByPartialLabelOccurrence(String labelText, int index) {
         return getElementByLabel(labelText, index,
-                "//label/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::label"
+                ".//label/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::label"
         );
     }
 
@@ -460,7 +465,7 @@ public class SeleniumHelper {
 
     public WebElement getElementByAriaLabel(String labelText, int index) {
         // see if there is an element with labelText as text, whose id is referenced by an aria-labelledby attribute
-        String labelledByPattern = indexedXPath("//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[normalize-space(.) = '%s']/ancestor-or-self::*[@id]/@id]", index);
+        String labelledByPattern = indexedXPath(".//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[normalized(.) = '%s']/ancestor-or-self::*[@id]/@id]", index);
         WebElement element = findByXPath(labelledByPattern, labelText);
         WebElement firstFound = element;
 
@@ -481,7 +486,7 @@ public class SeleniumHelper {
     }
 
     public WebElement getElementByPartialAriaLabel(String labelText, int index) {
-        String labelledByPattern = indexedXPath("//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::*[@id]/@id]", index);
+        String labelledByPattern = indexedXPath(".//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::*[@id]/@id]", index);
         WebElement element = findByXPath(labelledByPattern, labelText);
         WebElement firstFound = element;
 
@@ -667,13 +672,32 @@ public class SeleniumHelper {
 
     /**
      * Creates By based on xPath, supporting placeholder replacement.
+     * It also supports the fictional 'normalized()' function that does whitespace normalization, that also
+     * considers a '&nbsp;' whitespace.
      * @param pattern basic XPATH, possibly with placeholders.
      * @param parameters values for placeholders.
      * @return ByXPath.
      */
     public By byXpath(String pattern, String... parameters) {
+        pattern = replaceNormalizedFunction(pattern);
+        for (int i = 0; i < parameters.length; i++) {
+            parameters[i] = replaceNormalizedFunction(parameters[i]);
+        }
         String xpath = fillPattern(pattern, parameters);
         return By.xpath(xpath);
+    }
+
+    private String replaceNormalizedFunction(String xPath) {
+        if (xPath.contains("normalized(")) {
+            /*
+                we first check whether the pattern contains the function name, to not have the overhead of
+                regex replacement when it is not needed.
+            */
+            Matcher m = X_PATH_NORMALIZED.matcher(xPath);
+            String updatedPattern = m.replaceAll("normalize-space(translate($1, '\u00a0', ' '))");
+            xPath = updatedPattern;
+        }
+        return xPath;
     }
 
     public By byJavascript(String pattern, Object... arguments) {
@@ -799,7 +823,17 @@ public class SeleniumHelper {
      * @throws RuntimeException if atMostOne is true and multiple elements match by.
      */
     public WebElement findElement(boolean atMostOne, By by) {
-        return findElement(driver(), atMostOne, by);
+        return findElement(getCurrentContext(), atMostOne, by);
+    }
+
+    private SearchContext currentContext;
+
+    public void setCurrentContext(SearchContext currentContext) {
+        this.currentContext = currentContext;
+    }
+
+    public SearchContext getCurrentContext() {
+        return currentContext != null? currentContext : driver();
     }
 
     /**
@@ -810,7 +844,7 @@ public class SeleniumHelper {
      */
     public WebElement findElement(By by, int index) {
         WebElement element = null;
-        List<WebElement> elements = driver().findElements(by);
+        List<WebElement> elements = getCurrentContext().findElements(by);
         if (elements.size() > index) {
             element = elements.get(index);
         }
@@ -1141,6 +1175,14 @@ public class SeleniumHelper {
     }
 
     /**
+     * Sets current window to maximum size.
+     */
+
+    public void setWindowSizeToMaximum() {
+        getWindow().maximize();
+    }
+
+    /**
      * @return current browser window.
      */
     public WebDriver.Window getWindow() {
@@ -1159,6 +1201,7 @@ public class SeleniumHelper {
     public void goToTab(List<String> tabHandles, int indexToGoTo) {
         getTargetLocator().window(tabHandles.get(indexToGoTo));
         switchToDefaultContent();
+        setCurrentContext(null);
     }
 
     public List<String> getTabHandles() {
@@ -1170,7 +1213,10 @@ public class SeleniumHelper {
      */
     public void switchToDefaultContent() {
         getTargetLocator().defaultContent();
-        currentIFramePath.clear();
+        if (!currentIFramePath.isEmpty()) {
+            setCurrentContext(null);
+            currentIFramePath.clear();
+        }
     }
 
 
@@ -1180,6 +1226,7 @@ public class SeleniumHelper {
      */
     public void switchToFrame(WebElement iframe) {
         getTargetLocator().frame(iframe);
+        setCurrentContext(null);
         currentIFramePath.add(iframe);
     }
 

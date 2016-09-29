@@ -3,11 +3,11 @@ language: java
 matrix:
   fast_finish: true
   allow_failures:
-    - env: TEST_TYPE=examples CAPA="browserName:chrome,platform:Windows 7,screenResolution:1400x1050"
+    - env: TEST_TYPE=examples CAPA="browserName:chrome,platform:Windows 7,screenResolution:1680x1050"
 
 env:
   - TEST_TYPE=acceptance-test
-  - TEST_TYPE=examples CAPA="browserName:chrome,platform:Windows 7,screenResolution:1400x1050"
+  - TEST_TYPE=examples CAPA="browserName:chrome,platform:Windows 7,screenResolution:1680x1050"
 
 cache:
   directories:

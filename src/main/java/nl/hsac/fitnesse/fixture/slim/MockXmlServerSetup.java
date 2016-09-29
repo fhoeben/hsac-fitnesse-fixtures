@@ -4,6 +4,11 @@ import nl.hsac.fitnesse.fixture.util.HttpServer;
 import nl.hsac.fitnesse.fixture.util.MockXmlHttpResponseSequence;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +77,27 @@ public class MockXmlServerSetup extends SlimFixture {
         response.setStatusCode(aStatusCode);
     }
 
+    public void addResponseFile(String aResponseFile) {
+        String fileContent = loadResponseFromFile(aResponseFile);
+        addResponse(fileContent);
+    }
+
+    public void addResponseFileWithStatus(String aResponseFile, int aStatusCode) {
+        String fileContent = loadResponseFromFile(aResponseFile);
+        addResponseWithStatus(fileContent, aStatusCode);
+    }
+
+    protected String loadResponseFromFile(String aResponseFile) {
+        String fileContent;
+        String filePath = getFilePathFromWikiUrl(aResponseFile);
+        try {
+            fileContent = readFile(filePath, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            fileContent = "Response file not found for: " + aResponseFile;
+        }
+        return fileContent;
+    }
+
     protected XmlHttpResponse addResponseImpl(String aResponse, String aRequest) {
         String responseBody = cleanupBody(aResponse);
         String request = cleanupValue(aRequest);
@@ -115,5 +141,11 @@ public class MockXmlServerSetup extends SlimFixture {
 
     protected MockXmlHttpResponseSequence getResponse() {
         return mockServer.getResponse();
+    }
+
+    protected static String readFile(String path, Charset encoding)throws IOException
+    {
+        byte[] encoded = Files.readAllBytes(Paths.get(path));
+        return new String(encoded, encoding);
     }
 }

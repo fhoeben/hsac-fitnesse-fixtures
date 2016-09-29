@@ -11,13 +11,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * Wrapper around HTTP response (and request).
  */
 public class HttpResponse {
-    private final static Map<String, HttpResponse> INSTANCES = new ConcurrentHashMap<String, HttpResponse>();
+    private final static Map<String, HttpResponse> INSTANCES = new ConcurrentHashMap<>();
 
-    private Map<String, String> responseHeaders = new HashMap<String, String>();
+    private Map<String, String> responseHeaders = new HashMap<>();
     private String request;
     protected String response;
     private int statusCode;
     private CookieStore cookieStore;
+    private long responseTime = -1;
 
     /**
      * @throws RuntimeException if no valid response is available
@@ -93,6 +94,21 @@ public class HttpResponse {
      */
     public void setCookieStore(CookieStore cookieStore) {
         this.cookieStore = cookieStore;
+    }
+
+    /**
+     * @return response time in ms for call.
+     */
+    public long getResponseTime() {
+        return responseTime;
+    }
+
+    /**
+     * Sets response time for obtaining this response.
+     * @param responseTime response time in ms for call.
+     */
+    public void setResponseTime(long responseTime) {
+        this.responseTime = responseTime;
     }
 
     @Override

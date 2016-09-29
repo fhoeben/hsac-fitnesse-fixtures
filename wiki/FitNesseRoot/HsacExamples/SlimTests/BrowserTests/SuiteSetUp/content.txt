@@ -7,8 +7,9 @@ Stopping the browser is done in SuiteTearDown, which is done after all tests in 
 !***> Fixture code locations
 !include -c .HsacExamples.SlimTests.SuiteSetUp
 
-|Import                           |
-|nl.hsac.fitnesse.fixture.slim.web|
+|Import                                   |
+|nl.hsac.fitnesse.fixture.slim.web        |
+|nl.hsac.fitnesse.fixture.FixtureDebugTest|
 
 *!
 
@@ -20,17 +21,29 @@ The latter allows tests to be executed on different operating systems. This is a
 
 !define GRID_HUB {http://remote-selenium.local:4444/wd/hub}
 
-|script          |selenium driver setup                                                                                                            |
-|start driver for|chrome                                                                                                                           |
-|note            |start driver for     |!-MicrosoftEdge-!                                                                                          |
-|note            |start driver for     |internet explorer                                                                                          |
-|note            |start driver for     |firefox                                                                                                    |
-|note            |start driver for     |safari                                                                                                     |
-|note            |start driver for     |phantomjs                                                                                                  |
-|note            |connect to driver for|chrome           |at                    |${GRID_HUB}                                                       |
-|note            |connect to driver for|!-MicrosoftEdge-!|at                    |${GRID_HUB}                                                       |
-|note            |connect to driver for|internet explorer|at                    |${GRID_HUB}                                                       |
-|note            |connect to driver for|firefox          |at                    |${GRID_HUB}                                                       |
-|note            |connect to driver at |${GRID_HUB}      |with capabilities     |!{browserName:internet explorer, platform:Windows 8.1, version:11}|
-|note            |connect to driver at |${GRID_HUB}      |with json capabilities|{aut:"io.selendroid.testapp", emulator: true}                     |
-|show            |driver description                                                                                                               |
+!*> Define $mobileEmulation device attributes
+
+|script           |map fixture                                                                                                                                                                      |
+|set value        |!-Mozilla/5.0 (Linux; Android 4.2.1; en-us; Nexus 5 Build/JOP40D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19-!|for|userAgent               |
+|set int value    |360                                                                                                                                                 |for|deviceMetrics.width     |
+|set int value    |640                                                                                                                                                 |for|deviceMetrics.height    |
+|set double value |3.0                                                                                                                                                 |for|deviceMetrics.pixelRatio|
+|$mobileEmulation=|copy map                                                                                                                                                                         |
+*!
+
+|script          |selenium driver setup                                                                                                                  |
+|start driver for|chrome                                                                                                                                 |
+|note            |start driver for     |!-MicrosoftEdge-!                                                                                                |
+|note            |start driver for     |internet explorer                                                                                                |
+|note            |start driver for     |firefox                                                                                                          |
+|note            |start driver for     |safari                                                                                                           |
+|note            |start driver for     |phantomjs                                                                                                        |
+|note            |start driver for     |chrome mobile emulation|with profile          |!{deviceName:Apple iPhone 6}                                      |
+|note            |start driver for     |chrome mobile emulation|with profile          |$mobileEmulation                                                  |
+|note            |connect to driver for|chrome                 |at                    |${GRID_HUB}                                                       |
+|note            |connect to driver for|!-MicrosoftEdge-!      |at                    |${GRID_HUB}                                                       |
+|note            |connect to driver for|internet explorer      |at                    |${GRID_HUB}                                                       |
+|note            |connect to driver for|firefox                |at                    |${GRID_HUB}                                                       |
+|note            |connect to driver at |${GRID_HUB}            |with capabilities     |!{browserName:internet explorer, platform:Windows 8.1, version:11}|
+|note            |connect to driver at |${GRID_HUB}            |with json capabilities|{aut:"io.selendroid.testapp", emulator: true}                     |
+|show            |driver description                                                                                                                     |

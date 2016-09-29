@@ -25,7 +25,7 @@ This test ensures we can work with lists and select boxes. We use a mock server 
     <li>8th</li>
     <li><span>9th</span></li>
 </ol>
-<label for="s">Option to choose</label>
+<label for="s">Option to&nbsp;choose</label>
 <select id="s">
     <option value="1">Option 1</option>
     <option value="2" disabled>Option 2</option>

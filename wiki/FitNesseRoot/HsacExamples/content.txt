@@ -12,13 +12,13 @@ The baseline Fitnesse installation offers the following features:
  1. Ability to easily create a standalone (no JDK or Maven required) Fitnesse environment.
  2. Run Fitnesse tests on a build server, reporting the results in both JUnit XML format and HTML.
  3. Fitnesse installation for fixture developers containing:
-  * the fixture base classes (and Selenium drivers for Chrome, Internet Explorer and !-PhantomJs-!),
+  * the fixture base classes (and Selenium drivers for Chrome, Internet Explorer, Edge and !-PhantomJs-!),
   * Maven classpath plugin (such that tests can use all dependencies from pom.xml),
   * HSAC's fitnesse-plugin to add additional Wiki features (random values, calculating relative dates, Slim scenarios without need to specify all parameters, Slim scripts that take a screenshot after each step),
   * easy fixture debugging,
 
 !3 1. Create standalone Fitnesse installation
-Execute {{{mvn clean compile dependency:copy-dependencies assembly:single}}}
+Execute {{{mvn clean package -DskipTests}}}
 The standalone installation is present in the wiki directory and as '...-standalone.zip' in the target directory. It can be distributed by just copying the wiki directory or by copying and extracting the zip file to a location without spaces in its own name, or in its parent's names).
 This standalone installation can be started using {{{ java -jar fitnesse-standalone.jar }}} from the wiki directory (or directory where the 'standalone.zip' was extracted).
 

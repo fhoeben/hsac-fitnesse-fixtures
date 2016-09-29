@@ -1,3 +1,6 @@
+|library          |
+|stop test fixture|
+
 |script      |mock xml server setup|
 |add response|{{{<dag/>}}}         |
 |add response                      |{{{<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
@@ -28,28 +31,35 @@ Incomplete address: no zip code</PO:confirmation>
 |add response|{{{<binary/>}}}    |
 |$url=       |get mock server url|
 
-|script   |xml http test                                                                                                                                 |
-|post     |{{{<Hallo/>}}} |to                                          |$url                                                                             |
-|check    |xPath          |count(/dag)                                 |1                                                                                |
-|reject   |post           |{{{<ClientFault/>}}}                        |to                                          |$url                                |
-|show     |response                                                                                                                                      |
-|check    |response status|500                                                                                                                           |
-|check    |raw xPath      |/env:Envelope/env:Body/env:Fault/faultstring|Message does not have necessary info                                             |
-|show     |response headers                                                                                                                              |
-|check    |response header|Content-length                              |556                                                                              |
-|note     |next line is commented out so we won't have a real exception, uncomment to see that SOAP content is shown in exception                        |
-|note     |check          |xPath                                       |/env:Envelope/env:Body/env:Fault/faultstring|Message does not have necessary info|
-|reject   |post           |{{{<ServerFault/>}}}                        |to                                          |$url                                |
-|show     |response                                                                                                                                      |
-|check    |response status|500                                                                                                                           |
-|check    |raw xPath      |/env:Envelope/env:Body/env:Fault/faultstring|Message does not have necessary info                                             |
-|note     |next line is commented out so we won't have a real exception, uncomment to see that SOAP content is shown in exception                        |
-|note     |check          |xPath                                       |/env:Envelope/env:Body/env:Fault/faultstring|Message does not have necessary info|
-|reject   |post           |{{{<NoXml/>}}}                              |to                                          |$url                                |
-|check    |response status|200                                                                                                                           |
-|check    |response       |<no xml                                                                                                                       |
-|note     |next line is commented out so we won't have a real exception, uncomment to see that non-XML content is shown in exception                     |
-|note     |check          |xPath                                       |count(/*)                                   |0                                   |
+|script          |xml http test                                                                                                                                 |
+|check           |response time  |-1                                                                                                                            |
+|post            |{{{<Hallo/>}}} |to                                          |$url                                                                             |
+|check           |xPath          |count(/dag)                                 |1                                                                                |
+|check           |response time  |>0                                                                                                                            |
+|reject          |post           |{{{<ClientFault/>}}}                        |to                                          |$url                                |
+|show            |response                                                                                                                                      |
+|check           |response status|500                                                                                                                           |
+|check           |raw xPath      |/env:Envelope/env:Body/env:Fault/faultstring|Message does not have necessary info                                             |
+|show            |response headers                                                                                                                              |
+|check           |response header|Content-length                              |556                                                                              |
+|note            |next line is commented out so we won't have a real exception, uncomment to see that SOAP content is shown in exception                        |
+|note            |check          |xPath                                       |/env:Envelope/env:Body/env:Fault/faultstring|Message does not have necessary info|
+|reject          |post           |{{{<ServerFault/>}}}                        |to                                          |$url                                |
+|show            |response                                                                                                                                      |
+|check           |response status|500                                                                                                                           |
+|check           |raw xPath      |/env:Envelope/env:Body/env:Fault/faultstring|Message does not have necessary info                                             |
+|note            |next line is commented out so we won't have a real exception, uncomment to see that SOAP content is shown in exception                        |
+|note            |check          |xPath                                       |/env:Envelope/env:Body/env:Fault/faultstring|Message does not have necessary info|
+|reject          |post           |{{{<NoXml/>}}}                              |to                                          |$url                                |
+|check           |response status|200                                                                                                                           |
+|note            |we use !-StopTestFixture-! as library to abort the test if status code is not what we expect                                                  |
+|$responseStatus=|response status                                                                                                                               |
+|stop test if    |$responseStatus|is not                                      |200                                                                              |
+|check           |response       |<no xml                                                                                                                       |
+|note            |next line is commented out so we won't have a real exception, uncomment to see that non-XML content is shown in exception                     |
+|note            |check          |xPath                                       |count(/*)                                   |0                                   |
+
+
 
 |table: Mock Server Message Report|
 

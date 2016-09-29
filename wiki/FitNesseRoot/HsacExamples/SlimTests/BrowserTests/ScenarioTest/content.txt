@@ -1,7 +1,7 @@
 !1 Website testing using ''scenario'' and !-BrowserTest-!
 
 
-On this page we test whether we check the prices of a couple of houses for sale in Utrecht, The Netherlands. 
+On this page we test whether we check the prices of a couple of houses for sale in Utrecht, The Netherlands.
 This test continues where ScriptTest left of. It uses a [[Slim scenario][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScenarioTable]] to define a parameterized script.
 This is then invoked multiple times from a [[Decision table][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.DecisionTable]], once for each row.
 
@@ -15,7 +15,7 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |press   |down                                               |
 |press   |enter                                              |
 |select  |€ 200.000             |for|van                     |
-|select  |€ 1.000.000           |for|tot                     |
+|select  |€ 2.000.000           |for|tot                     |
 |click   |Zoek                                               |
 |click   |@{address}                                         |
 |$price= |value of              |Vraagprijs                  |
@@ -23,10 +23,10 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |script|browser test|
 
-|check original price                             |
-|address       |city   |price?        |state?     |
-|Maliebaan 73 D|Utrecht|€ 295.000 k.k.|Beschikbaar|
-|Gageldijk 104 |Utrecht|€ 900.000 k.k.|Beschikbaar|
+|check original price                               |
+|address       |city   |price?          |state?     |
+|Maliebaan 73 D|Utrecht|€ 295.000 k.k.  |Beschikbaar|
+|Gageldijk 87  |Utrecht|€ 1.750.000 k.k.|Beschikbaar|
 
 
 

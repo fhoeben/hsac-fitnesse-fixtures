@@ -3,10 +3,12 @@ This page shows the same test twice: once using the heuristics in !-BrowserTest-
 We believe this comparison will highlight the benefits of using the heuristics over technical selectors. The result is a more readable (and maintainable) test without the need for custom code (like 'page objects') or extensive 'scenario libraries' just to make test scripts readable. Tests using the heuristics are easier to write, to understand, ''and'' do not require a completed implementation before they can be written. 
 
 !*> Some common setup
-|scenario|open Expedia.com                                                |
-|open    |http://expedia.com                                              |
-|note    |!note Expedia might route us to a localized version of the site |
-|show    |click if available|link=Continue to the U.S. site at Expedia.com|
+|scenario              |open Expedia.com                                                |
+|seconds before timeout|20                                                              |
+|open                  |http://expedia.com                                              |
+|set browser width     |1200                                                            |
+|note                  |!note Expedia might route us to a localized version of the site |
+|show                  |click if available|link=Continue to the U.S. site at Expedia.com|
 
 |scenario|cleanup for next test                     |
 |note    |!note Cleanup for fresh start of next test|
@@ -24,20 +26,22 @@ In this example we will show a test attempting to use Expedia.com to look for a 
 This version shows a test can be understood, and even written, by people without deep technical knowledge of HTML and various ways elements can be selected using Selenium.
 |storyboard            |browser test                                                                                                 |
 |open Expedia.com                                                                                                                    |
-|enter                 |Amsterdam                                             |as                    |Flying from                    |
-|enter                 |New York                                              |as                    |Flying to                      |
-|enter                 |!monthsFromToday (MM/8/yyyy) +10                      |as                    |Departing                      |
-|enter                 |!monthsFromToday (MM/15/yyyy) +10                     |as                    |Returning                      |
-|select                |2                                                     |as                    |Adults                         |
+|enter                 |Amsterdam                                            |as                    |Flying from                     |
+|enter                 |New York                                             |as                    |Flying to                       |
+|enter                 |!monthsFromToday (MM/8/yyyy) +10                     |as                    |Departing                       |
+|enter                 |!monthsFromToday (MM/15/yyyy) +10                    |as                    |Returning                       |
+|select                |2                                                    |as                    |Adults                          |
 |note                  |!note Searching may take a while so we set a longer timeout                                                  |
 |seconds before timeout|40                                                                                                           |
 |click                 |Search                                                                                                       |
-|click                 |Broadway - Times Square                                                                                      |
-|click                 |Star Rating                                                                                                  |
+|wait for visible      |Start by choosing your hotel                                                                                 |
+|click                 |Broadway - Times Square                              |in                    |Neighborhood                    |
+|click                 |Guest Rating                                                                                                 |
 |click                 |The Peninsula New York                                                                                       |
 |switch to next tab                                                                                                                  |
 |note                  |!note The next two actions make use of the accessibility features of Expedia (i.e. its screen reader support)|
-|click                 |Switch main photo to next photo                                                                              |
+|click                 |Next image                                                                                                   |
+|click                 |Show all Rooms & Rates                                                                                       |
 |click                 |Select Junior, Executive Suite                                                                               |
 |wait for visible      |Now select your departing flight                                                                             |
 |cleanup for next test                                                                                                               |
@@ -48,23 +52,25 @@ The test using technical selectors require knowledge on the various way an eleme
 We will now perform the same test as the previous one, verifying a hotel room can be selected to be booked using Expedia.com. But this time controls are identified using [['technical selectors'][.HsacExamples.SlimTests.BrowserTests.TechnicalSelectors]] instead of using heuristics.
 Although the identifiers used inside Expedia's HTML are quite descriptive, this test is not as easy to understand as the previous one. Using technical selectors also makes the test more fragile: a change in identifier or page structure will probably mean the element can no longer be found.
 
-|storyboard            |browser test                                               |
-|open Expedia.com                                                                  |
-|enter                 |Amsterdam                        |as|id=package-origin     |
-|enter                 |New York                         |as|id=package-destination|
-|enter                 |!monthsFromToday (MM/8/yyyy) +10 |as|id=package-departing  |
-|enter                 |!monthsFromToday (MM/15/yyyy) +10|as|id=package-returning  |
-|select                |2                                |as|id=package-1-adults   |
-|seconds before timeout|40                                                         |
-|click                 |id=search-button                                           |
-|click                 |id=id_NeighborhoodRegionName800077                         |
-|click                 |link=Star Rating                                           |
-|click                 |partialLink=The Peninsula New York                         |
-|switch to next tab                                                                |
-|click                 |css=.jumbo-image-next                                      |
-|click                 |xpath=//span[text()='Select Junior, Executive Suite']/../..|
-|wait for visible      |id=BYOT-DepTitle                                           |
-|cleanup for next test                                                             |
+|storyboard            |browser test                                                  |
+|open Expedia.com                                                                     |
+|enter                 |Amsterdam                         |as|id=package-origin       |
+|enter                 |New York                          |as|id=package-destination  |
+|enter                 |!monthsFromToday (MM/8/yyyy) +10  |as|id=package-departing    |
+|enter                 |!monthsFromToday (MM/15/yyyy) +10 |as|id=package-returning    |
+|select                |2                                 |as|id=package-1-adults     |
+|seconds before timeout|40                                                            |
+|click                 |id=search-button                                              |
+|wait for visible      |id=packageSearchTitle                                         |
+|click                 |id=id_NeighborhoodRegionName800077|in|id=neighborhoodContainer|
+|click                 |link=Guest Rating                                             |
+|click                 |partialLink=The Peninsula New York                            |
+|switch to next tab                                                                   |
+|click                 |css=.image-slider-control.next                                |
+|click                 |id=show-more-rooms                                            |
+|click                 |xpath=//span[text()='Select Junior, Executive Suite']/../..   |
+|wait for visible      |id=BYOT-DepTitle                                              |
+|cleanup for next test                                                                |
 
 A script using these selector does not have to be as 'technical' as the example above. [[!-FitNesse's-! scenario's][.FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests.SliM.ScenarioTable]] may be used to provide a layer of abstraction on top of the actual selectors. You might also want to use custom Java code to provide a similar abstraction. But either of these approaches will also introduce an extra layer of complexity to be maintained, and understood, as part of the test set.
 

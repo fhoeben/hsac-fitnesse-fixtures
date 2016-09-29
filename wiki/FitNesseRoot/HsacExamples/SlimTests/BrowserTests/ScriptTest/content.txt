@@ -9,31 +9,31 @@ This class allows us to specify what we want to do using a web browser, by the (
 
 The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
 
-|script           |browser test                                                          |
-|open             |http://www.funda.nl                                                   |
-|select           |€ 800.000         |for                  |van                          |
-|select           |€ 1.000.000       |for                  |tot                          |
-|enter            |Gageldijk, Utrecht|as                   |Plaats, buurt, adres etc     |
-|note             |select option from autocomplete                                       |
-|wait             |1                 |seconds                                            |
-|press            |down                                                                  |
-|press            |enter                                                                 |
-|click            |Zoek                                                                  |
-|click            |Gageldijk 104                                                         |
-|check            |page title        |Huis te koop: Gageldijk 104 3566 MH Utrecht [funda]|
-|check            |value of          |Status               |Beschikbaar                  |
-|check            |value of          |Woonoppervlakte      |270 m²                       |
-|note             |set width so we see button to go to next photo                        |
-|set browser width|1200                                                                  |
-|click            |Foto's                                                                |
-|show             |take screenshot   |Foto_1                                             |
-|click            |Volgende foto                                                         |
-|note             |Wait for the loading of the next photo to complete                    |
-|wait seconds     |1                                                                     |
-|show             |take screenshot   |Foto_2                                             |
-|click            |Volgende foto                                                         |
-|wait seconds     |1                                                                     |
-|show             |take screenshot   |Foto_3                                             |
+|script           |browser test                                                         |
+|open             |http://www.funda.nl                                                  |
+|select           |€ 1.000.000       |for                 |van                          |
+|select           |€ 2.000.000       |for                 |tot                          |
+|enter            |Gageldijk, Utrecht|as                  |Plaats, buurt, adres etc     |
+|note             |select option from autocomplete                                      |
+|wait             |1                 |seconds                                           |
+|press            |down                                                                 |
+|press            |enter                                                                |
+|click            |Zoek                                                                 |
+|click            |Gageldijk 87                                                         |
+|check            |page title        |Huis te koop: Gageldijk 87 3566 MG Utrecht [funda]|
+|check            |value of          |Status              |Beschikbaar                  |
+|check            |value of          |Woonoppervlakte     |392 m²                       |
+|note             |set width so we see button to go to next photo                       |
+|set browser width|1200                                                                 |
+|click            |Foto's                                                               |
+|show             |take screenshot   |Foto_1                                            |
+|click            |Volgende foto                                                        |
+|note             |Wait for the loading of the next photo to complete                   |
+|wait seconds     |1                                                                    |
+|show             |take screenshot   |Foto_2                                            |
+|click            |Volgende foto                                                        |
+|wait seconds     |1                                                                    |
+|show             |take screenshot   |Foto_3                                            |
 
 When multiple similar sequences of steps are needed a script can be generalized using a scenario, which is show in ScenarioTest. 
 To make test more readable, maintainable and powerful we can also create custom subclasses of !-BrowserTest-!. This is shown in CustomFixtureTest.

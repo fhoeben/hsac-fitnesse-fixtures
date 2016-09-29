@@ -6,7 +6,7 @@ set -e
 if [ "${TEST_TYPE}" == "acceptance-test" ]; then
   if [ "${TRAVIS_PULL_REQUEST}" == "false" -a "${TRAVIS_BRANCH}" == "master" ]; then
     echo -e "Create standalone.zip\n"
-    mvn compile dependency:copy-dependencies assembly:single
+    mvn package -DskipTests
   fi
 
   echo -e "Run acceptance test using PhantomJs on Travis server\n"

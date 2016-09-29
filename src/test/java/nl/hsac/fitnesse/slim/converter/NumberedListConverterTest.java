@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.slim.converter;
 
 import fitnesse.slim.converters.ConverterRegistry;
+import org.junit.AfterClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -15,6 +16,11 @@ import static org.junit.Assert.assertNull;
 
 public class NumberedListConverterTest {
     private final NumberedListConverter converter = new NumberedListConverter();
+
+    @AfterClass
+    public static void cleanup() {
+        ConverterRegistry.resetToStandardConverters();
+    }
 
     @Test
     public void testToStringNull() {

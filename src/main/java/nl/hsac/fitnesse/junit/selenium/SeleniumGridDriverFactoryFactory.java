@@ -15,6 +15,7 @@ public class SeleniumGridDriverFactoryFactory extends SeleniumDriverFactoryFacto
     @Override
     public boolean willOverride() {
         return isPropertySet(SELENIUM_GRID_URL)
+                && !isPropertySet(SELENIUM_JSONCAPABILITIES)
                 && isPropertySet(SELENIUM_CAPABILITIES);
     }
 
