@@ -1624,13 +1624,24 @@ public class BrowserTest extends SlimFixture {
      * @return location of screenshot.
      */
     public String takeScreenshot(String basename) {
-        String screenshotFile = createScreenshot(basename);
-        if (screenshotFile == null) {
-            throw new SlimFixtureException(false, "Unable to take screenshot: does the webdriver support it?");
-        } else {
-            screenshotFile = getScreenshotLink(screenshotFile);
+        try {
+            String screenshotFile = createScreenshot(basename);
+            if (screenshotFile == null) {
+                throw new SlimFixtureException(false, "Unable to take screenshot: does the webdriver support it?");
+            } else {
+                screenshotFile = getScreenshotLink(screenshotFile);
+            }
+            return screenshotFile;
+        } catch (UnhandledAlertException e) {
+            // standard behavior will stop test, this breaks storyboard that will attempt to take screenshot
+            // after triggering alert, but before the alert can be handled.
+            // so we output a message but no exception. We rely on a next line to actually handle alert
+            // (which may mean either really handle or stop test).
+            return String.format(
+                    "<div><strong>Unable to take screenshot</strong>, alert is active. Alert text:<br/>" +
+                            "'<span>%s</span>'</div>",
+                    StringEscapeUtils.escapeHtml4(alertText()));
         }
-        return screenshotFile;
     }
 
     private String getScreenshotLink(String screenshotFile) {
