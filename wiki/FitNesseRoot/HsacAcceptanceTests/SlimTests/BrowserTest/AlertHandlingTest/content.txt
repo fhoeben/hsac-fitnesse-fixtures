@@ -11,7 +11,7 @@ This test ensures we can deal with alerts.
 |add response|${HTML}              |
 |$url=       |get mock server url  |
 
-|script                |browser test    |
+|storyboard            |browser test    |
 |open                  |$url            |
 |seconds before timeout|1               |
 |check                 |alert text|null |
