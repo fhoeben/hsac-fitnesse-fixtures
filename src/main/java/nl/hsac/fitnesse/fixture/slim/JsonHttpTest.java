@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.slim;
 
 import nl.hsac.fitnesse.fixture.util.JsonPathHelper;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -29,8 +30,9 @@ public class JsonHttpTest extends HttpTest {
     }
 
     public Object jsonPath(String path) {
+        String responseString = getResponseBody();
         String jsonPath = getPathExpr(path);
-        return pathHelper.getJsonPath(getResponse().getResponse(), jsonPath);
+        return pathHelper.getJsonPath(responseString, jsonPath);
     }
 
     public int jsonPathCount(String path) {
@@ -39,8 +41,17 @@ public class JsonHttpTest extends HttpTest {
     }
 
     protected List<Object> getAllMatches(String path) {
+        String responseString = getResponseBody();
         String jsonPath = getPathExpr(path);
-        return pathHelper.getAllJsonPath(getResponse().getResponse(), jsonPath);
+        return pathHelper.getAllJsonPath(responseString, jsonPath);
+    }
+
+    protected String getResponseBody() {
+        String responseString = getResponse().getResponse();
+        if (StringUtils.isEmpty(responseString)) {
+            throw new SlimFixtureException(false, "No response body available");
+        }
+        return responseString;
     }
 
     /**
@@ -71,8 +82,8 @@ public class JsonHttpTest extends HttpTest {
      * @param path the jsonPath to locate the key whose value needs changing
      * @param value the new value to set
      */
-    public void setJsonPathTo(String path, String value){
-        String jsonStr = getResponse().getResponse();
+    public void setJsonPathTo(String path, String value) {
+        String jsonStr = getResponseBody();
         String jsonPath = getPathExpr(path);
         String newResponse = pathHelper.updateJsonPathWithValue(jsonStr, jsonPath, value);
         getResponse().setResponse(newResponse);
