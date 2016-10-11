@@ -47,6 +47,7 @@ The main commands/keywords (i.e. public methods) offered by !-nl.hsac.fitnesse.f
 |cookie <name> path                 |Path of stored cookie with name 'name'.                                                                                                                               |
 |cookie <name> is persistent        |Whether stored cookie with name 'name' is persistent.                                                                                                                 |
 |cookie <name> is secure            |Whether stored cookie with name 'name' requires a secure connection (i.e. should only be sent over secured connections).                                              |
+|cookie <name> attribute <attribute>|Value of attribute 'attribute' of stored cookie with name 'name'.                                                                                                     |
 |clear cookies                      |Clears the stored cookies.                                                                                                                                            |
 |set content type <content-type>    |Sets the content type to use when posting.                                                                                                                            |
 

@@ -5,12 +5,14 @@ import nl.hsac.fitnesse.fixture.util.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.cookie.BasicClientCookie;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -547,6 +549,20 @@ public class HttpTest extends SlimFixtureWithMap {
         Cookie cookie = getCookie(cookieName);
         if (cookie != null) {
             result = cookie.isSecure();
+        }
+        return result;
+    }
+
+    /**
+     * @param cookieName name of cookie.
+     * @param attributeName name of attribute.
+     * @return value of attribute for cookie.
+     */
+    public String cookieAttribute(String cookieName, String attributeName) {
+        String result = null;
+        Cookie cookie = getCookie(cookieName);
+        if (cookie instanceof BasicClientCookie) {
+            result = ((BasicClientCookie) cookie).getAttribute(attributeName.toLowerCase(Locale.ENGLISH));
         }
         return result;
     }
