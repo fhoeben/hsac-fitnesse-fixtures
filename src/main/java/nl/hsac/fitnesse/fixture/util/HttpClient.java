@@ -144,10 +144,7 @@ public class HttpClient {
             response.setStatusCode(returnCode);
             HttpEntity entity = resp.getEntity();
 
-            Map<String, Object> responseHeaders = response.getResponseHeaders();
-            for (Header h : resp.getAllHeaders()) {
-                responseHeaders.put(h.getName(), h.getValue());
-            }
+            copyHeaders(response.getResponseHeaders(), resp.getAllHeaders());
 
             if (entity == null) {
                 response.setResponse(null);
@@ -175,6 +172,14 @@ public class HttpClient {
             }
             response.setResponseTime(endTime - startTime);
             method.reset();
+        }
+    }
+
+    protected void copyHeaders(Map<String, Object> responseHeaders, Header[] respHeaders) {
+        for (Header h : respHeaders) {
+            String headerName = h.getName();
+            String headerValue = h.getValue();
+            responseHeaders.put(headerName, headerValue);
         }
     }
 
