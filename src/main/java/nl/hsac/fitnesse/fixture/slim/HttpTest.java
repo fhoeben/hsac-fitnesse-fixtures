@@ -440,7 +440,7 @@ public class HttpTest extends SlimFixtureWithMap {
     /**
      * @return headers received with response to last request.
      */
-    public Map<String, String> responseHeaders() {
+    public Map<String, Object> responseHeaders() {
         return response.getResponseHeaders();
     }
 
@@ -448,7 +448,7 @@ public class HttpTest extends SlimFixtureWithMap {
      * @param headerName name of response header.
      * @return value of header in last response.
      */
-    public String responseHeader(String headerName) {
+    public Object responseHeader(String headerName) {
         return responseHeaders().get(headerName);
     }
 
