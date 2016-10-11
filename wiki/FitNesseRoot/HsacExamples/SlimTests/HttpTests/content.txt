@@ -40,9 +40,13 @@ The main commands/keywords (i.e. public methods) offered by !-nl.hsac.fitnesse.f
 |response headers                   |HTTP headers received with last response.                                                                                                                             |
 |response header <name>             |Value of HTTP header 'name' in last response received.                                                                                                                |
 |response is valid                  |Whether the last request was successful, or an error.                                                                                                                 |
-|set store cookies <true/false>     |Whether cookies received should be stored (defaults to 'false') and sent with subsequent requests.                                                                    |
+|set store cookies <true/false>     |Whether cookies received, which are not expired, should be stored (defaults to 'false') and sent with subsequent requests.                                            |
 |cookie values                      |Names and values of all cookies stored.                                                                                                                               |
-|cookie value <name>                |Value of stored cookie with name 'name'.                                                                                                                              |
+|cookie <name> value                |Value of stored cookie with name 'name'.                                                                                                                              |
+|cookie <name> domain               |Domain of stored cookie with name 'name'.                                                                                                                             |
+|cookie <name> path                 |Path of stored cookie with name 'name'.                                                                                                                               |
+|cookie <name> is persistent        |Whether stored cookie with name 'name' is persistent.                                                                                                                 |
+|cookie <name> is secure            |Whether stored cookie with name 'name' requires a secure connection (i.e. should only be sent over secured connections).                                              |
 |clear cookies                      |Clears the stored cookies.                                                                                                                                            |
 |set content type <content-type>    |Sets the content type to use when posting.                                                                                                                            |
 

@@ -492,11 +492,67 @@ public class HttpTest extends SlimFixtureWithMap {
      */
     public String cookieValue(String cookieName) {
         String result = null;
-        Cookie cookie = getResponse().getCookieNamed(cookieName);
+        Cookie cookie = getCookie(cookieName);
         if (cookie != null) {
             result = cookie.getValue();
         }
         return result;
+    }
+
+    /**
+     * @param cookieName name of cookie.
+     * @return domain of cookie in the cookie store.
+     */
+    public String cookieDomain(String cookieName) {
+        String result = null;
+        Cookie cookie = getCookie(cookieName);
+        if (cookie != null) {
+            result = cookie.getDomain();
+        }
+        return result;
+    }
+
+    /**
+     * @param cookieName name of cookie.
+     * @return path of cookie in the cookie store.
+     */
+    public String cookiePath(String cookieName) {
+        String result = null;
+        Cookie cookie = getCookie(cookieName);
+        if (cookie != null) {
+            result = cookie.getPath();
+        }
+        return result;
+    }
+
+    /**
+     * @param cookieName name of cookie.
+     * @return whether cookie in the cookie store is persistent.
+     */
+    public Boolean cookieIsPersistent(String cookieName) {
+        Boolean result = null;
+        Cookie cookie = getCookie(cookieName);
+        if (cookie != null) {
+            result = cookie.isPersistent();
+        }
+        return result;
+    }
+
+    /**
+     * @param cookieName name of cookie.
+     * @return whether cookie in the cookie store requires a secure connection.
+     */
+    public Boolean cookieIsSecure(String cookieName) {
+        Boolean result = null;
+        Cookie cookie = getCookie(cookieName);
+        if (cookie != null) {
+            result = cookie.isSecure();
+        }
+        return result;
+    }
+
+    private Cookie getCookie(String cookieName) {
+        return getResponse().getCookieNamed(cookieName);
     }
 
     /**
