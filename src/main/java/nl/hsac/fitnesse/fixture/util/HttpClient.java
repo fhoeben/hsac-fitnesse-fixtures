@@ -22,6 +22,9 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 /**
  * Helper to make Http calls and get response.
@@ -179,7 +182,24 @@ public class HttpClient {
         for (Header h : respHeaders) {
             String headerName = h.getName();
             String headerValue = h.getValue();
-            responseHeaders.put(headerName, headerValue);
+            if (responseHeaders.containsKey(headerName)) {
+                handleRepeatedHeaderValue(responseHeaders, headerName, headerValue);
+            } else {
+                responseHeaders.put(headerName, headerValue);
+            }
+        }
+    }
+
+    protected void handleRepeatedHeaderValue(Map<String, Object> responseHeaders,
+                                             String headerName, String headerValue) {
+        Object previousHeaderValue = responseHeaders.get(headerName);
+        if (previousHeaderValue instanceof Collection) {
+            ((Collection) previousHeaderValue).add(headerValue);
+        } else {
+            List<Object> valueList = new ArrayList();
+            valueList.add(previousHeaderValue);
+            valueList.add(headerValue);
+            responseHeaders.put(headerName, valueList);
         }
     }
 

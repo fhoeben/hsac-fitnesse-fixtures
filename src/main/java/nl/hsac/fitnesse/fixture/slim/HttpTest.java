@@ -446,7 +446,8 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * @param headerName name of response header.
-     * @return value of header in last response.
+     * @return value of header in last response (may be a list if the saame header name was sent multiple times
+     * (e.g. Set-Cookie).
      */
     public Object responseHeader(String headerName) {
         return responseHeaders().get(headerName);
