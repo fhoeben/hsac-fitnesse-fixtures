@@ -2,6 +2,9 @@ package nl.hsac.fitnesse.fixture.slim;
 
 import freemarker.template.Template;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
+import org.apache.http.client.CookieStore;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicCookieStore;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -20,6 +23,7 @@ public class HttpTest extends SlimFixtureWithMap {
     public final static String DEFAULT_POST_CONTENT_TYPE = "application/x-www-form-urlencoded; charset=UTF-8";
 
     private final Map<String, Object> headerValues = new LinkedHashMap<>();
+    private boolean storeCookies = false;
     private HttpResponse response = createResponse();
     private String template;
     private String contentType = DEFAULT_POST_CONTENT_TYPE;
@@ -296,7 +300,17 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     protected void resetResponse() {
+        CookieStore cookieStore = null;
+        if (storeCookies) {
+            cookieStore = getResponse().getCookieStore();
+            if (cookieStore == null) {
+                cookieStore = new BasicCookieStore();
+            }
+        }
         response = createResponse();
+        if (storeCookies) {
+            response.setCookieStore(cookieStore);
+        }
     }
 
     String createUrlWithParams(String serviceUrl) {
@@ -451,6 +465,38 @@ public class HttpTest extends SlimFixtureWithMap {
      */
     public Object responseHeader(String headerName) {
         return responseHeaders().get(headerName);
+    }
+
+    public void setStoreCookies(boolean storeCookies) {
+        this.storeCookies = storeCookies;
+    }
+
+    /**
+     * @return name->value of cookies in the cookie store.
+     */
+    public Map<String, String> cookieValues() {
+        Map<String, String> result = null;
+        CookieStore cookies = getResponse().getCookieStore();
+        if (cookies != null) {
+            result = new LinkedHashMap<>();
+            for (Cookie cookie : cookies.getCookies()) {
+                result.put(cookie.getName(), cookie.getValue());
+            }
+        }
+        return result;
+    }
+
+    /**
+     * @param cookieName name of cookie.
+     * @return value of cookie in the cookie store.
+     */
+    public String cookieValue(String cookieName) {
+        String result = null;
+        Cookie cookie = getResponse().getCookieNamed(cookieName);
+        if (cookie != null) {
+            result = cookie.getValue();
+        }
+        return result;
     }
 
     protected HttpResponse getResponse() {

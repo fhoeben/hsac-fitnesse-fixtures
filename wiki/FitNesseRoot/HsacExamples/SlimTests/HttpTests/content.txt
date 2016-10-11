@@ -9,6 +9,7 @@ The >HttpPost2UsingScenarioTest makes multiple SOAP calls to a service, where sc
 >HttpPost3UsingFreemarkerTemplateTest shows the usage of a [[Freemarker][http://freemarker.org]] template to define the content of a SOAP request. This allows for dynamic request structure.
 >JsonHttpTest shows examples with GET, POST, AND PUT, using [[!-JsonPath-!][http://goessner.net/articles/JsonPath/]] to perform checks on the response. 
 >HttpGetFollowRedirectTest shows checking the redirect sent by a server instead of following it.
+>HttpCookieHandling shows how cookie handling can be configured.
 
 !2 Language
 
@@ -39,6 +40,9 @@ The main commands/keywords (i.e. public methods) offered by !-nl.hsac.fitnesse.f
 |response headers                   |HTTP headers received with last response.                                                                                                                             |
 |response header <name>             |Value of HTTP header 'name' in last response received.                                                                                                                |
 |response is valid                  |Whether the last request was successful, or an error.                                                                                                                 |
+|set store cookies <true/false>     |Whether cookies received should be stored (defaults to 'false') and sent with subsequent requests.                                                                    |
+|cookie values                      |Names and values of all cookies stored.                                                                                                                               |
+|cookie value <name>                |Value of stored cookie with name 'name'.                                                                                                                              |
 |set content type <content-type>    |Sets the content type to use when posting.                                                                                                                            |
 
 !3 !-JsonHttpTest-!
