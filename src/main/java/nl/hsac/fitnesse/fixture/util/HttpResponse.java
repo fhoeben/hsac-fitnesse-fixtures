@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.fixture.util;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.client.CookieStore;
+import org.apache.http.cookie.Cookie;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -86,6 +87,23 @@ public class HttpResponse {
      */
     public CookieStore getCookieStore() {
         return cookieStore;
+    }
+
+    /**
+     * @param cookieName name of cookie to be found in cookie store
+     * @return cookie found, if any, null otherwise.
+     */
+    public Cookie getCookieNamed(String cookieName) {
+        Cookie result = null;
+        if (cookieStore != null) {
+            for (Cookie cookie : getCookieStore().getCookies()) {
+                if (cookieName.equals(cookie.getName())) {
+                    result = cookie;
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
     /**

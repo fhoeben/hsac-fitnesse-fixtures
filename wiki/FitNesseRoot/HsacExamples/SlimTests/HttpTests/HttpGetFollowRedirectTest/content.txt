@@ -14,4 +14,3 @@ Then we do the same call without following the redirect, allowing us to inspect 
 |check   |response status|301                                            |
 |check   |response header|Location|!-https://mail.live.com/default.aspx-!|
 |show    |response                                                       |
-|show    |response headers                                               |
