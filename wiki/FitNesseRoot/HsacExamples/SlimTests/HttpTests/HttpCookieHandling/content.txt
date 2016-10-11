@@ -27,6 +27,20 @@ By setting 'store cookies' to 'true' we can ensure cookies are stored, and sent 
 |check            |response status|200      |
 |show             |response headers         |
 |show             |cookie values            |
+|check not        |cookie value   |uaid|null|
+|clear cookies                              |
+|get from         |${URL_THAT_SENDS_COOKIES}|
+|check            |response status|200      |
+|show             |response headers         |
+|show             |cookie values            |
+|check not        |cookie value   |uaid|null|
 
+If we set 'store cookies' to 'false' cookies are no longer stored.
 
+|script                                     |
+|set store cookies|false                    |
+|get from         |${URL_THAT_SENDS_COOKIES}|
+|check            |response status|200      |
+|show             |response headers         |
+|check            |cookie value   |uaid|null|
 

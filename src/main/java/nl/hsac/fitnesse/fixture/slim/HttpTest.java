@@ -499,6 +499,13 @@ public class HttpTest extends SlimFixtureWithMap {
         return result;
     }
 
+    /**
+     * Removes all cookies from the cookie store.
+     */
+    public void clearCookies() {
+        getResponse().getCookieStore().clear();
+    }
+
     protected HttpResponse getResponse() {
         return response;
     }

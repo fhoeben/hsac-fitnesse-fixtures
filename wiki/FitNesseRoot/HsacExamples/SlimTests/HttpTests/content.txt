@@ -43,6 +43,7 @@ The main commands/keywords (i.e. public methods) offered by !-nl.hsac.fitnesse.f
 |set store cookies <true/false>     |Whether cookies received should be stored (defaults to 'false') and sent with subsequent requests.                                                                    |
 |cookie values                      |Names and values of all cookies stored.                                                                                                                               |
 |cookie value <name>                |Value of stored cookie with name 'name'.                                                                                                                              |
+|clear cookies                      |Clears the stored cookies.                                                                                                                                            |
 |set content type <content-type>    |Sets the content type to use when posting.                                                                                                                            |
 
 !3 !-JsonHttpTest-!
