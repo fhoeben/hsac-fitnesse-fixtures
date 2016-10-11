@@ -3,7 +3,7 @@ package nl.hsac.fitnesse.fixture.util;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.CookieStore;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class HttpResponse {
     private final static Map<String, HttpResponse> INSTANCES = new ConcurrentHashMap<>();
 
-    private Map<String, String> responseHeaders = new HashMap<>();
+    private Map<String, Object> responseHeaders = new LinkedHashMap<>();
     private String request;
     protected String response;
     private int statusCode;
@@ -77,7 +77,7 @@ public class HttpResponse {
     /**
      * @return headers in response.
      */
-    public Map<String, String> getResponseHeaders() {
+    public Map<String, Object> getResponseHeaders() {
         return responseHeaders;
     }
 

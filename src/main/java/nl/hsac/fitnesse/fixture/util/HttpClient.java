@@ -144,7 +144,7 @@ public class HttpClient {
             response.setStatusCode(returnCode);
             HttpEntity entity = resp.getEntity();
 
-            Map<String, String> responseHeaders = response.getResponseHeaders();
+            Map<String, Object> responseHeaders = response.getResponseHeaders();
             for (Header h : resp.getAllHeaders()) {
                 responseHeaders.put(h.getName(), h.getValue());
             }
