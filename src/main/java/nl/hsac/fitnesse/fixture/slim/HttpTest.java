@@ -555,6 +555,14 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * @param cookieName name of cookie.
+     * @return whether cookie in the cookie store is http-only (not accessible to Javascript).
+     */
+    public Boolean cookieIsHttpOnly(String cookieName) {
+        return cookieAttribute(cookieName, "httponly") != null;
+    }
+
+    /**
+     * @param cookieName name of cookie.
      * @param attributeName name of attribute.
      * @return value of attribute for cookie.
      */
