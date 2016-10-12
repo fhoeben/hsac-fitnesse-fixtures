@@ -5,6 +5,7 @@ First we do a 'normal' GET to ${REDIRECT_URL}, which will redirect us.
 |script  |http test          |
 |get from|${REDIRECT_URL}    |
 |check   |response status|200|
+|show    |response headers   |
 
 Then we do the same call without following the redirect, allowing us to inspect that a redirect is sent and what the redirect location is.
 

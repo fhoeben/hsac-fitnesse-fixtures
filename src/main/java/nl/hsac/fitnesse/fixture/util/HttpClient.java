@@ -22,6 +22,9 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 /**
  * Helper to make Http calls and get response.
@@ -144,10 +147,7 @@ public class HttpClient {
             response.setStatusCode(returnCode);
             HttpEntity entity = resp.getEntity();
 
-            Map<String, String> responseHeaders = response.getResponseHeaders();
-            for (Header h : resp.getAllHeaders()) {
-                responseHeaders.put(h.getName(), h.getValue());
-            }
+            copyHeaders(response.getResponseHeaders(), resp.getAllHeaders());
 
             if (entity == null) {
                 response.setResponse(null);
@@ -175,6 +175,31 @@ public class HttpClient {
             }
             response.setResponseTime(endTime - startTime);
             method.reset();
+        }
+    }
+
+    protected void copyHeaders(Map<String, Object> responseHeaders, Header[] respHeaders) {
+        for (Header h : respHeaders) {
+            String headerName = h.getName();
+            String headerValue = h.getValue();
+            if (responseHeaders.containsKey(headerName)) {
+                handleRepeatedHeaderValue(responseHeaders, headerName, headerValue);
+            } else {
+                responseHeaders.put(headerName, headerValue);
+            }
+        }
+    }
+
+    protected void handleRepeatedHeaderValue(Map<String, Object> responseHeaders,
+                                             String headerName, String headerValue) {
+        Object previousHeaderValue = responseHeaders.get(headerName);
+        if (previousHeaderValue instanceof Collection) {
+            ((Collection) previousHeaderValue).add(headerValue);
+        } else {
+            List<Object> valueList = new ArrayList();
+            valueList.add(previousHeaderValue);
+            valueList.add(headerValue);
+            responseHeaders.put(headerName, valueList);
         }
     }
 

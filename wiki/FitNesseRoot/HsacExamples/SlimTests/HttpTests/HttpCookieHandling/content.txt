@@ -1,0 +1,53 @@
+By default http test ignores 'Set-Cookie' headers (i.e. cookies received are not sent with subsequent requests). 
+
+!define URL_THAT_SENDS_COOKIES {https://mail.live.com/default.aspx}
+
+|script     |http test                        |
+|get from   |${URL_THAT_SENDS_COOKIES}        |
+|check      |response status   |200           |
+|show       |response headers                 |
+|note       |By default cookies are not stored|
+|check      |cookie value      |uaid   |null  |
+|$setCookie=|response header   |Set-Cookie    |
+
+|script|list fixture                     |
+|check |size of |$setCookie|>1           |
+|show  |value at|2         |in|$setCookie|
+
+By setting 'store cookies' to 'true' we can ensure cookies are stored, and sent with subsequent requests.
+
+|script           |http test                                       |
+|set store cookies|true                                            |
+|get from         |${URL_THAT_SENDS_COOKIES}                       |
+|check            |response status|200                             |
+|show             |response headers                                |
+|show             |cookie values                                   |
+|check not        |cookie value   |uaid|null                       |
+|get from         |${URL_THAT_SENDS_COOKIES}                       |
+|check            |response status|200                             |
+|show             |response headers                                |
+|show             |cookie values                                   |
+|check not        |cookie value   |uaid|null                       |
+|clear cookies                                                     |
+|get from         |${URL_THAT_SENDS_COOKIES}                       |
+|check            |response status|200                             |
+|show             |response headers                                |
+|show             |cookie values                                   |
+|check not        |cookie         |uaid|value    |null             |
+|check            |cookie         |uaid|domain   |login.live.com   |
+|check            |cookie         |uaid|path     |/                |
+|reject           |cookie         |uaid|is persistent              |
+|ensure           |cookie         |uaid|is secure                  |
+|ensure           |cookie         |uaid|is http only               |
+|check            |cookie         |uaid|attribute|HTTPOnly    |!--!|
+|check            |cookie         |uaid|attribute|doesNotExist|null|
+
+If we set 'store cookies' to 'false' cookies are no longer stored.
+
+|script                                     |
+|set store cookies|false                    |
+|get from         |${URL_THAT_SENDS_COOKIES}|
+|check            |response status|200      |
+|show             |response headers         |
+|check            |cookie value   |uaid|null|
+
