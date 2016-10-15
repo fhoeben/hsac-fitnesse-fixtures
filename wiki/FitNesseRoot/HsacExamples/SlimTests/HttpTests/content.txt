@@ -71,6 +71,7 @@ The commands/keywords (i.e. public methods) added to those of !-HttpTest-! by !-
 |register prefix <prefix> for namespace <url>              |Defines a prefix to be used to identify a namespace in subsequent 'xPath' evaluation.                                                                                                                |
 |xPath int <expression>                                    |Evaluates the expression against the last response received, returning a whole number (allowing [[relative value tests][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ValueComparisons]]).         |
 |xPath double <expression>                                 |Evaluates the expression against the last response received, returning a floating point number (allowing [[relative value tests][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ValueComparisons]]).|
+|raw xPath <expression>                                    |Evaluates the expression against the last response received, ignoring any (SOAP) faults received (which cause 'xPath <expression>' to throw an exception).                                           |
 |create file <fileName>	from base64 content of <expression>|Evaluates the expression against the last response received, expecting the found element to contain a base64 encoded value. That value will be saved to a file and a link to the file returned.      |
 
 Address of web service used by multiple tests in this suite:
