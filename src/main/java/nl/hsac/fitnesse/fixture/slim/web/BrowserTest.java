@@ -684,6 +684,7 @@ public class BrowserTest extends SlimFixture {
 
     protected boolean clickImp(String place, String container) {
         boolean result = false;
+        place = cleanupValue(place);
         try {
             WebElement element = getElementToClick(place, container);
             result = clickElement(element);
