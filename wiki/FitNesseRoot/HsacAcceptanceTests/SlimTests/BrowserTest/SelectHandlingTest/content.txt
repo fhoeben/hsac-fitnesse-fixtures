@@ -1,0 +1,47 @@
+This test ensures we can work with select boxes. We use a mock server running to serve the HTML defined in this page.
+
+!define HTML { {{{
+<!DOCTYPE html>
+<html>
+<body>
+<label for="s">Option to&nbsp;choose</label>
+<select id="s">
+    <option value="1">example5@example.com</option>
+    <option value="2">example6@example.com</option>
+    <option value="3">example7@example.com</option>
+    <option value="4" selected>example8@example.com</option>
+</select>
+<label for="s2">Options to choose</label>
+<select id="s2">
+    <option value="1">example1@example.com</option>
+    <option value="2" selected>example2@example.com</option>
+    <option value="3">example3@example.com</option>
+    <option value="4">example4@example.com</option>
+</select>
+
+</body>
+</html>}}} }
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+Ensure we use our custom list formatting.
+
+|script                |browser test                                                       |
+|open                  |$url                                                               |
+|seconds before timeout|1                                                                  |
+|check                 |value of                |Option to choose |!-example8@example.com-!|
+|select                |!-example5@example.com-!|for              |Option to choose        |
+|check                 |value of                |Option to choose |!-example5@example.com-!|
+|select                |example6@example.com    |for              |Option to choose        |
+|check                 |value of                |Option to choose |!-example6@example.com-!|
+|check                 |value of                |Options to choose|!-example2@example.com-!|
+|select                |example3@example.com    |for              |Options to choose       |
+|check                 |value of                |Options to choose|!-example3@example.com-!|
+
+
+
+|script|mock xml server setup|
+|stop                        |
+
