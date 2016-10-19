@@ -13,7 +13,7 @@ This test ensures we can click on links based on their text content.
 <a href="" style="text-transform:uppercase">8th Link</a> 
 <a href="" style="text-transform:lowercase"><span class="btn-label"><span aria-hidden="true">Select</span><span style="position: absolute !important;width: 1px;height: 1px;margin: -1px;padding: 0;clip: rect(0 0 0 0);border: 0;overflow: hidden;" class="visuallyhidden">9TH&nbsp;Link</span></span></a> 
 
-
+<a href="mailto:hallo@example.com">hallo@example.com</a>
 
 
 
@@ -83,8 +83,8 @@ This test ensures we can click on links based on their text content.
 |click                 |9th                                                                                      |
 |click                 |9TH Link                                                                                 |
 |click                 |9TH                                                                                      |
-
-
+|click                 |!-hallo@example.com-!                                                                    |
+|click                 |hallo@example.com                                                                        |
 
 
 |comment|
