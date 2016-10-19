@@ -648,6 +648,7 @@ public class BrowserTest extends SlimFixture {
         boolean result = false;
         if (element != null) {
             if (isSelect(element)) {
+                optionValue = cleanupValue(optionValue);
                 By xpath = getSeleniumHelper().byXpath(".//option[normalized(text()) = '%s']", optionValue);
                 WebElement option = getSeleniumHelper().findElement(element, false, xpath);
                 if (option == null) {
