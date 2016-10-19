@@ -7,3 +7,7 @@ Libraries allow a single script table to combine methods defined by multiple fix
 
 !define TEST_SYSTEM {slim} 
 
+!*> variables to use in examples
+!define URL_THAT_SENDS_COOKIES {https://mail.live.com/default.aspx}
+
+*!

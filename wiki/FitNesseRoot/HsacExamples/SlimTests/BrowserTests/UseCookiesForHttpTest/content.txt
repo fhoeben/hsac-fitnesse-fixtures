@@ -1,0 +1,28 @@
+By taking cookies from a browser's session we can test REST services that are only accessible in after (complex) login procedures.
+
+Here we don't actually test a login procedure. We just validate cookies are copied and subsequent requests by http test can change the cookies stored.
+
+|script|browser test             |
+|open  |${URL_THAT_SENDS_COOKIES}|
+|$uaid=|cookie value  |uaid      |
+|$ck=  |cookie value  |!-CkTst-! |
+|$pok= |cookie value  |MSPOK     |
+|$requ=|cookie value  |MSPRequ   |
+
+Copying from browser's cookie store implicitly ensures cookies are stored/sent.
+
+|script   |http test                      |
+|copy browser cookies                     |
+|check    |cookie value   |uaid     |$uaid|
+|check    |cookie value   |!-CkTst-!|$ck  |
+|check    |cookie value   |MSPOK    |$pok |
+|check    |cookie value   |MSPRequ  |$requ|
+|get from |${URL_THAT_SENDS_COOKIES}      |
+|check    |response status|200            |
+|show     |response headers               |
+|show     |cookie values                  |
+|check not|cookie value   |uaid     |$uaid|
+|check    |cookie value   |!-CkTst-!|$ck  |
+|check    |cookie value   |MSPOK    |$pok |
+|check not|cookie value   |MSPRequ  |$requ|
+

@@ -6,12 +6,17 @@ import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.Template;
 import nl.hsac.fitnesse.fixture.util.*;
+import nl.hsac.fitnesse.fixture.util.selenium.CookieConverter;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.http.client.CookieStore;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.openqa.selenium.Cookie;
 
 import java.io.File;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -36,6 +41,7 @@ public class Environment {
     private ProgramHelper programHelper;
     private DatesHelper datesHelper = new DatesHelper();
     private SeleniumHelper seleniumHelper;
+    private CookieConverter cookieConverter;
     private MapHelper mapHelper = new MapHelper();
     private ReflectionHelper reflectionHelper = new ReflectionHelper();
 
@@ -70,6 +76,7 @@ public class Environment {
         configDatesHelper();
 
         seleniumHelper = new SeleniumHelper();
+        cookieConverter = new CookieConverter();
     }
 
     /**
@@ -568,5 +575,33 @@ public class Environment {
 
     public ReflectionHelper getReflectionHelper() {
         return reflectionHelper;
+    }
+
+    /**
+     * Adds Selenium cookies to response's cookie store.
+     * @param response response to which cookies must be added.
+     */
+    public void addSeleniumCookies(HttpResponse response) {
+        CookieStore cookieStore = ensureResponseHasCookieStore(response);
+        CookieConverter converter = getCookieConverter();
+        Set<Cookie> browserCookies = getSeleniumHelper().getCookies();
+        converter.copySeleniumCookies(browserCookies, cookieStore);
+    }
+
+    protected CookieStore ensureResponseHasCookieStore(HttpResponse response) {
+        CookieStore cookieStore = response.getCookieStore();
+        if (cookieStore == null) {
+            cookieStore = new BasicCookieStore();
+            response.setCookieStore(cookieStore);
+        }
+        return cookieStore;
+    }
+
+    public CookieConverter getCookieConverter() {
+        return cookieConverter;
+    }
+
+    public void setCookieConverter(CookieConverter cookieConverter) {
+        this.cookieConverter = cookieConverter;
     }
 }

@@ -16,8 +16,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.cookie.BasicClientCookie;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -31,7 +29,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class BrowserTest extends SlimFixture {
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
@@ -2062,22 +2059,8 @@ public class BrowserTest extends SlimFixture {
      * @param resp response to store content in
      */
     protected void getUrlContent(String url, HttpResponse resp) {
-        Set<Cookie> browserCookies = getSeleniumHelper().getCookies();
-        BasicCookieStore cookieStore = new BasicCookieStore();
-        for (Cookie browserCookie : browserCookies) {
-            BasicClientCookie cookie = convertCookie(browserCookie);
-            cookieStore.addCookie(cookie);
-        }
-        resp.setCookieStore(cookieStore);
+        getEnvironment().addSeleniumCookies(resp);
         getEnvironment().doGet(url, resp);
-    }
-
-    private BasicClientCookie convertCookie(Cookie browserCookie) {
-        BasicClientCookie cookie = new BasicClientCookie(browserCookie.getName(), browserCookie.getValue());
-        cookie.setDomain(browserCookie.getDomain());
-        cookie.setPath(browserCookie.getPath());
-        cookie.setExpiryDate(browserCookie.getExpiry());
-        return cookie;
     }
 
     /**

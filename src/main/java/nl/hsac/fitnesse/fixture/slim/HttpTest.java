@@ -474,6 +474,15 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     /**
+     * Adds all current Selenium cookies to this fixture's cookie store.
+     * This will also ensure this class will store cookies (otherwise copying the cookies has no purpose).
+     */
+    public void copyBrowserCookies() {
+        setStoreCookies(true);
+        getEnvironment().addSeleniumCookies(getResponse());
+    }
+
+    /**
      * @return name->value of cookies in the cookie store.
      */
     public Map<String, String> cookieValues() {
