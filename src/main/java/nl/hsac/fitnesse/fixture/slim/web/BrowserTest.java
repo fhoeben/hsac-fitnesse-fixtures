@@ -2059,7 +2059,7 @@ public class BrowserTest extends SlimFixture {
      * @param resp response to store content in
      */
     protected void getUrlContent(String url, HttpResponse resp) {
-        getEnvironment().addSeleniumCookies(resp);
+        getEnvironment().addSeleniumCookies(resp, -1);
         getEnvironment().doGet(url, resp);
     }
 
