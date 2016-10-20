@@ -581,11 +581,11 @@ public class Environment {
      * Adds Selenium cookies to response's cookie store.
      * @param response response to which cookies must be added.
      */
-    public void addSeleniumCookies(HttpResponse response) {
+    public void addSeleniumCookies(HttpResponse response, int cookieVersion) {
         CookieStore cookieStore = ensureResponseHasCookieStore(response);
         CookieConverter converter = getCookieConverter();
         Set<Cookie> browserCookies = getSeleniumHelper().getCookies();
-        converter.copySeleniumCookies(browserCookies, cookieStore);
+        converter.copySeleniumCookies(browserCookies, cookieStore, cookieVersion);
     }
 
     protected CookieStore ensureResponseHasCookieStore(HttpResponse response) {

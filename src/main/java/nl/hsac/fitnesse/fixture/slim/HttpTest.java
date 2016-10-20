@@ -476,10 +476,20 @@ public class HttpTest extends SlimFixtureWithMap {
     /**
      * Adds all current Selenium cookies to this fixture's cookie store.
      * This will also ensure this class will store cookies (otherwise copying the cookies has no purpose).
+     * No version attribute will be set on the cookies created (Selenium does not provide the information).
      */
     public void copyBrowserCookies() {
+        copyBrowserCookiesWithVersion(-1);
+    }
+
+    /**
+     * Adds all current Selenium cookies to this fixture's cookie store.
+     * This will also ensure this class will store cookies (otherwise copying the cookies has no purpose).
+     * @param cookieVersion version to set on cookies (Selenium does not provide version information).
+     */
+    public void copyBrowserCookiesWithVersion(int cookieVersion) {
         setStoreCookies(true);
-        getEnvironment().addSeleniumCookies(getResponse());
+        getEnvironment().addSeleniumCookies(getResponse(), cookieVersion);
     }
 
     /**
