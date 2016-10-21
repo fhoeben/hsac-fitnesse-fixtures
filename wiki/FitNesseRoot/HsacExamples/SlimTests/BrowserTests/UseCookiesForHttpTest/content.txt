@@ -10,6 +10,7 @@ First http test on its own: 2nd request (with cookies from 1st) gets same cookie
 |check            |response status    |200                |
 |show             |response headers                       |
 |show             |cookie values                          |
+|check not        |cookie value       |uaid    |null      |
 |$uaid1=          |cookie value       |uaid               |
 |note             |see that we get same cookie value again|
 |get from         |${URL_THAT_SENDS_COOKIES}              |
