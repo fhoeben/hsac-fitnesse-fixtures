@@ -41,6 +41,7 @@ public class HttpClient {
         HTTP_CLIENT = HttpClients.custom()
                 .useSystemProperties()
                 .disableContentCompression()
+                .evictExpiredConnections()
                 .setUserAgent(HttpClient.class.getName())
                 .setDefaultRequestConfig(rc)
                 .build();
