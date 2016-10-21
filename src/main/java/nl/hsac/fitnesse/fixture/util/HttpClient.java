@@ -7,6 +7,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -129,6 +130,7 @@ public class HttpClient {
     protected void getResponse(String url, HttpResponse response, HttpRequestBase method, Map<String, Object> headers) {
         long startTime = 0;
         long endTime = -1;
+        org.apache.http.HttpResponse resp = null;
         try {
             if (headers != null) {
                 for (String key : headers.keySet()) {
@@ -139,7 +141,6 @@ public class HttpClient {
                 }
             }
 
-            org.apache.http.HttpResponse resp;
             CookieStore store = response.getCookieStore();
 
             startTime = currentTimeMillis();
@@ -182,6 +183,13 @@ public class HttpClient {
             }
             response.setResponseTime(endTime - startTime);
             method.reset();
+            if (resp instanceof CloseableHttpResponse) {
+                try {
+                    ((CloseableHttpResponse) resp).close();
+                } catch (IOException e) {
+                    throw new RuntimeException("Unable to close connection", e);
+                }
+            }
         }
     }
 
