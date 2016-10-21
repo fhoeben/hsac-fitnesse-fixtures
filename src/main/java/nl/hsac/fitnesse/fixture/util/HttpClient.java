@@ -5,6 +5,7 @@ import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -33,10 +34,15 @@ public class HttpClient {
     private final static org.apache.http.client.HttpClient HTTP_CLIENT;
 
     static {
+        RequestConfig rc = RequestConfig.custom()
+                            .setCookieSpec(CookieSpecs.STANDARD)
+                            .build();
+
         HTTP_CLIENT = HttpClients.custom()
                 .useSystemProperties()
                 .disableContentCompression()
                 .setUserAgent(HttpClient.class.getName())
+                .setDefaultRequestConfig(rc)
                 .build();
     }
 
