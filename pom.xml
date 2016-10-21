@@ -105,7 +105,7 @@
 			<exclusions>
 				<exclusion>
 					<groupId>org.seleniumhq.selenium</groupId>
-					<artifactId>selenium-htmlunit-driver</artifactId>
+					<artifactId>htmlunit-driver</artifactId>
 				</exclusion>
 				<exclusion>
 					<groupId>cglib</groupId>
