@@ -17,6 +17,7 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -32,7 +33,7 @@ import java.util.Map;
  * Helper to make Http calls and get response.
  */
 public class HttpClient {
-    private final static org.apache.http.client.HttpClient HTTP_CLIENT;
+    private final static CloseableHttpClient HTTP_CLIENT;
 
     static {
         RequestConfig rc = RequestConfig.custom()
@@ -130,7 +131,7 @@ public class HttpClient {
     protected void getResponse(String url, HttpResponse response, HttpRequestBase method, Map<String, Object> headers) {
         long startTime = 0;
         long endTime = -1;
-        org.apache.http.HttpResponse resp = null;
+        CloseableHttpResponse resp = null;
         try {
             if (headers != null) {
                 for (String key : headers.keySet()) {
@@ -183,9 +184,9 @@ public class HttpClient {
             }
             response.setResponseTime(endTime - startTime);
             method.reset();
-            if (resp instanceof CloseableHttpResponse) {
+            if (resp != null) {
                 try {
-                    ((CloseableHttpResponse) resp).close();
+                    resp.close();
                 } catch (IOException e) {
                     throw new RuntimeException("Unable to close connection", e);
                 }
@@ -238,13 +239,13 @@ public class HttpClient {
         return fileName;
     }
 
-    protected org.apache.http.HttpResponse getHttpResponse(CookieStore store, String url, HttpRequestBase method) throws IOException {
+    protected CloseableHttpResponse getHttpResponse(CookieStore store, String url, HttpRequestBase method) throws IOException {
         HttpContext localContext = new BasicHttpContext();
         localContext.setAttribute(HttpClientContext.COOKIE_STORE, store);
         return HTTP_CLIENT.execute(method, localContext);
     }
 
-    protected org.apache.http.HttpResponse getHttpResponse(String url, HttpRequestBase method) throws IOException {
+    protected CloseableHttpResponse getHttpResponse(String url, HttpRequestBase method) throws IOException {
         return HTTP_CLIENT.execute(method);
     }
 
