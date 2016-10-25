@@ -17,6 +17,7 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.NoConnectionReuseStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
@@ -44,6 +45,7 @@ public class HttpClient {
                 .useSystemProperties()
                 .disableContentCompression()
                 .evictExpiredConnections()
+                .setConnectionReuseStrategy(NoConnectionReuseStrategy.INSTANCE)
                 .setUserAgent(HttpClient.class.getName())
                 .setDefaultRequestConfig(rc)
                 .build();
