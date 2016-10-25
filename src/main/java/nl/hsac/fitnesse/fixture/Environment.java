@@ -379,6 +379,13 @@ public class Environment {
         httpClient.delete(url, response, headers);
     }
 
+    /**
+     * @return client to use for HTTP calls.
+     */
+    public HttpClient getHttpClient() {
+        return httpClient;
+    }
+
     private void setNamespaceContext(XmlHttpResponse response) {
         response.setNamespaceContext(getNamespaceContext());
     }

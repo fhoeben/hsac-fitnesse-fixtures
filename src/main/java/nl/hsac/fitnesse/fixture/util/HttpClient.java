@@ -34,14 +34,16 @@ import java.util.Map;
  * Helper to make Http calls and get response.
  */
 public class HttpClient {
-    private final static CloseableHttpClient HTTP_CLIENT;
+    /** Default HttpClient instance used. */
+    public final static org.apache.http.client.HttpClient DEFAULT_HTTP_CLIENT;
+    private org.apache.http.client.HttpClient httpClient;
 
     static {
         RequestConfig rc = RequestConfig.custom()
                             .setCookieSpec(CookieSpecs.STANDARD)
                             .build();
 
-        HTTP_CLIENT = HttpClients.custom()
+        DEFAULT_HTTP_CLIENT = HttpClients.custom()
                 .useSystemProperties()
                 .disableContentCompression()
                 .evictExpiredConnections()
@@ -49,6 +51,13 @@ public class HttpClient {
                 .setUserAgent(HttpClient.class.getName())
                 .setDefaultRequestConfig(rc)
                 .build();
+    }
+
+    /**
+     * Creates new.
+     */
+    public HttpClient() {
+        httpClient = DEFAULT_HTTP_CLIENT;
     }
 
     /**
@@ -133,7 +142,7 @@ public class HttpClient {
     protected void getResponse(String url, HttpResponse response, HttpRequestBase method, Map<String, Object> headers) {
         long startTime = 0;
         long endTime = -1;
-        CloseableHttpResponse resp = null;
+        org.apache.http.HttpResponse resp = null;
         try {
             if (headers != null) {
                 for (String key : headers.keySet()) {
@@ -186,9 +195,9 @@ public class HttpClient {
             }
             response.setResponseTime(endTime - startTime);
             method.reset();
-            if (resp != null) {
+            if (resp instanceof CloseableHttpResponse) {
                 try {
-                    resp.close();
+                    ((CloseableHttpResponse)resp).close();
                 } catch (IOException e) {
                     throw new RuntimeException("Unable to close connection", e);
                 }
@@ -241,17 +250,31 @@ public class HttpClient {
         return fileName;
     }
 
-    protected CloseableHttpResponse getHttpResponse(CookieStore store, String url, HttpRequestBase method) throws IOException {
+    protected org.apache.http.HttpResponse getHttpResponse(CookieStore store, String url, HttpRequestBase method) throws IOException {
         HttpContext localContext = new BasicHttpContext();
         localContext.setAttribute(HttpClientContext.COOKIE_STORE, store);
-        return HTTP_CLIENT.execute(method, localContext);
+        return httpClient.execute(method, localContext);
     }
 
-    protected CloseableHttpResponse getHttpResponse(String url, HttpRequestBase method) throws IOException {
-        return HTTP_CLIENT.execute(method);
+    protected org.apache.http.HttpResponse getHttpResponse(String url, HttpRequestBase method) throws IOException {
+        return httpClient.execute(method);
     }
 
     protected long currentTimeMillis() {
         return System.currentTimeMillis();
+    }
+
+    /**
+     * @return http client used to make calls.
+     */
+    public org.apache.http.client.HttpClient getHttpClient() {
+        return httpClient;
+    }
+
+    /**
+     * @param httpClient http client used to make calls.
+     */
+    public void setHttpClient(org.apache.http.client.HttpClient httpClient) {
+        this.httpClient = httpClient;
     }
 }
