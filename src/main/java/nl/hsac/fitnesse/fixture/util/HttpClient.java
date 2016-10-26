@@ -18,7 +18,6 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.NoConnectionReuseStrategy;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -144,46 +143,16 @@ public class HttpClient {
         org.apache.http.HttpResponse resp = null;
         try {
             if (headers != null) {
-                for (String key : headers.keySet()) {
-                    Object value = headers.get(key);
-                    if (value != null) {
-                        method.setHeader(key, value.toString());
-                    }
-                }
+                addHeadersToMethod(headers, method);
             }
 
             CookieStore store = response.getCookieStore();
 
             startTime = currentTimeMillis();
-            if (store == null) {
-                resp = getHttpResponse(url, method);
-            } else {
-                resp = getHttpResponse(store, url, method);
-            }
+            resp = executeMethod(url, method, store);
             endTime = currentTimeMillis();
 
-            int returnCode = resp.getStatusLine().getStatusCode();
-            response.setStatusCode(returnCode);
-            HttpEntity entity = resp.getEntity();
-
-            copyHeaders(response.getResponseHeaders(), resp.getAllHeaders());
-
-            if (entity == null) {
-                response.setResponse(null);
-            } else {
-                if (response instanceof BinaryHttpResponse) {
-                    BinaryHttpResponse binaryHttpResponse = (BinaryHttpResponse) response;
-
-                    byte[] content = EntityUtils.toByteArray(entity);
-                    binaryHttpResponse.setResponseContent(content);
-
-                    String fileName = getAttachmentFileName(resp);
-                    binaryHttpResponse.setFileName(fileName);
-                } else {
-                    String result = EntityUtils.toString(entity);
-                    response.setResponse(result);
-                }
-            }
+            storeResponse(response, resp);
         } catch (Exception e) {
             throw new RuntimeException("Unable to get response from: " + url, e);
         } finally {
@@ -193,18 +162,20 @@ public class HttpClient {
                 }
             }
             response.setResponseTime(endTime - startTime);
-            method.reset();
-            if (resp instanceof CloseableHttpResponse) {
-                try {
-                    ((CloseableHttpResponse)resp).close();
-                } catch (IOException e) {
-                    throw new RuntimeException("Unable to close connection", e);
-                }
+            cleanupAfterRequest(resp, method);
+        }
+    }
+
+    protected void addHeadersToMethod(Map<String, Object> requestHeaders, HttpRequestBase method) {
+        for (String key : requestHeaders.keySet()) {
+            Object value = requestHeaders.get(key);
+            if (value != null) {
+                method.setHeader(key, value.toString());
             }
         }
     }
 
-    protected void copyHeaders(Map<String, Object> responseHeaders, Header[] respHeaders) {
+    protected void addHeadersFromResponse(Map<String, Object> responseHeaders, Header[] respHeaders) {
         for (Header h : respHeaders) {
             String headerName = h.getName();
             String headerValue = h.getValue();
@@ -229,7 +200,36 @@ public class HttpClient {
         }
     }
 
-    private String getAttachmentFileName(org.apache.http.HttpResponse resp) {
+    protected void storeResponse(HttpResponse response, org.apache.http.HttpResponse resp) throws IOException {
+        int returnCode = resp.getStatusLine().getStatusCode();
+        response.setStatusCode(returnCode);
+
+        addHeadersFromResponse(response.getResponseHeaders(), resp.getAllHeaders());
+
+        copyResponseContent(response, resp);
+    }
+
+    protected void copyResponseContent(HttpResponse response, org.apache.http.HttpResponse resp) throws IOException {
+        HttpEntity entity = resp.getEntity();
+        if (entity == null) {
+            response.setResponse(null);
+        } else {
+            if (response instanceof BinaryHttpResponse) {
+                BinaryHttpResponse binaryHttpResponse = (BinaryHttpResponse) response;
+
+                byte[] content = EntityUtils.toByteArray(entity);
+                binaryHttpResponse.setResponseContent(content);
+
+                String fileName = getAttachmentFileName(resp);
+                binaryHttpResponse.setFileName(fileName);
+            } else {
+                String result = EntityUtils.toString(entity);
+                response.setResponse(result);
+            }
+        }
+    }
+
+    protected String getAttachmentFileName(org.apache.http.HttpResponse resp) {
         String fileName = null;
         Header[] contentDisp = resp.getHeaders("content-disposition");
         if (contentDisp != null && contentDisp.length > 0) {
@@ -249,14 +249,37 @@ public class HttpClient {
         return fileName;
     }
 
-    protected org.apache.http.HttpResponse getHttpResponse(CookieStore store, String url, HttpRequestBase method) throws IOException {
+    protected org.apache.http.HttpResponse executeMethod(String url, HttpRequestBase method, CookieStore store)
+            throws IOException {
+        org.apache.http.HttpResponse resp = null;
+        if (store == null) {
+            resp = getHttpResponse(method);
+        } else {
+            resp = getHttpResponse(store, method);
+        }
+        return resp;
+    }
+
+    protected org.apache.http.HttpResponse getHttpResponse(CookieStore store, HttpRequestBase method)
+            throws IOException {
         HttpContext localContext = new BasicHttpContext();
         localContext.setAttribute(HttpClientContext.COOKIE_STORE, store);
         return httpClient.execute(method, localContext);
     }
 
-    protected org.apache.http.HttpResponse getHttpResponse(String url, HttpRequestBase method) throws IOException {
+    protected org.apache.http.HttpResponse getHttpResponse(HttpRequestBase method) throws IOException {
         return httpClient.execute(method);
+    }
+
+    protected void cleanupAfterRequest(org.apache.http.HttpResponse response, HttpRequestBase method) {
+        method.reset();
+        if (response instanceof CloseableHttpResponse) {
+            try {
+                ((CloseableHttpResponse)response).close();
+            } catch (IOException e) {
+                throw new RuntimeException("Unable to close connection", e);
+            }
+        }
     }
 
     protected long currentTimeMillis() {
