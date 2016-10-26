@@ -175,6 +175,29 @@ public class HttpClient {
         }
     }
 
+    protected HttpContext createContext(HttpResponse response) {
+        HttpContext localContext = new BasicHttpContext();
+        CookieStore store = response.getCookieStore();
+        if (store != null) {
+            localContext.setAttribute(HttpClientContext.COOKIE_STORE, store);
+        }
+        return localContext;
+    }
+
+    protected org.apache.http.HttpResponse executeMethod(HttpContext context, HttpRequestBase method)
+            throws IOException {
+        return httpClient.execute(method, context);
+    }
+
+    protected void storeResponse(HttpResponse response, org.apache.http.HttpResponse resp) throws IOException {
+        int returnCode = resp.getStatusLine().getStatusCode();
+        response.setStatusCode(returnCode);
+
+        addHeadersFromResponse(response.getResponseHeaders(), resp.getAllHeaders());
+
+        copyResponseContent(response, resp);
+    }
+
     protected void addHeadersFromResponse(Map<String, Object> responseHeaders, Header[] respHeaders) {
         for (Header h : respHeaders) {
             String headerName = h.getName();
@@ -198,15 +221,6 @@ public class HttpClient {
             valueList.add(headerValue);
             responseHeaders.put(headerName, valueList);
         }
-    }
-
-    protected void storeResponse(HttpResponse response, org.apache.http.HttpResponse resp) throws IOException {
-        int returnCode = resp.getStatusLine().getStatusCode();
-        response.setStatusCode(returnCode);
-
-        addHeadersFromResponse(response.getResponseHeaders(), resp.getAllHeaders());
-
-        copyResponseContent(response, resp);
     }
 
     protected void copyResponseContent(HttpResponse response, org.apache.http.HttpResponse resp) throws IOException {
@@ -247,20 +261,6 @@ public class HttpClient {
             }
         }
         return fileName;
-    }
-
-    protected HttpContext createContext(HttpResponse response) {
-        HttpContext localContext = new BasicHttpContext();
-        CookieStore store = response.getCookieStore();
-        if (store != null) {
-            localContext.setAttribute(HttpClientContext.COOKIE_STORE, store);
-        }
-        return localContext;
-    }
-
-    protected org.apache.http.HttpResponse executeMethod(HttpContext context, HttpRequestBase method)
-            throws IOException {
-        return httpClient.execute(method, context);
     }
 
     protected void cleanupAfterRequest(org.apache.http.HttpResponse response, HttpRequestBase method) {
