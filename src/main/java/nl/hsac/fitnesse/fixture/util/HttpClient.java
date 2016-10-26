@@ -146,10 +146,10 @@ public class HttpClient {
                 addHeadersToMethod(headers, method);
             }
 
-            CookieStore store = response.getCookieStore();
+            HttpContext context = createContext(response);
 
             startTime = currentTimeMillis();
-            resp = executeMethod(store, method);
+            resp = executeMethod(context, method);
             endTime = currentTimeMillis();
 
             storeResponse(response, resp);
@@ -249,13 +249,18 @@ public class HttpClient {
         return fileName;
     }
 
-    protected org.apache.http.HttpResponse executeMethod(CookieStore store, HttpRequestBase method)
-            throws IOException {
+    protected HttpContext createContext(HttpResponse response) {
         HttpContext localContext = new BasicHttpContext();
+        CookieStore store = response.getCookieStore();
         if (store != null) {
             localContext.setAttribute(HttpClientContext.COOKIE_STORE, store);
         }
-        return httpClient.execute(method, localContext);
+        return localContext;
+    }
+
+    protected org.apache.http.HttpResponse executeMethod(HttpContext context, HttpRequestBase method)
+            throws IOException {
+        return httpClient.execute(method, context);
     }
 
     protected void cleanupAfterRequest(org.apache.http.HttpResponse response, HttpRequestBase method) {
