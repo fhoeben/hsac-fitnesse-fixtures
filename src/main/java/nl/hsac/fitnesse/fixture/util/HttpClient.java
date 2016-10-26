@@ -46,7 +46,6 @@ public class HttpClient {
         DEFAULT_HTTP_CLIENT = HttpClients.custom()
                 .useSystemProperties()
                 .disableContentCompression()
-                .evictExpiredConnections()
                 .setConnectionReuseStrategy(NoConnectionReuseStrategy.INSTANCE)
                 .setUserAgent(HttpClient.class.getName())
                 .setDefaultRequestConfig(rc)
