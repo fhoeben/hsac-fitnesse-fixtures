@@ -149,7 +149,7 @@ public class HttpClient {
             CookieStore store = response.getCookieStore();
 
             startTime = currentTimeMillis();
-            resp = executeMethod(url, method, store);
+            resp = executeMethod(store, method);
             endTime = currentTimeMillis();
 
             storeResponse(response, resp);
@@ -249,26 +249,13 @@ public class HttpClient {
         return fileName;
     }
 
-    protected org.apache.http.HttpResponse executeMethod(String url, HttpRequestBase method, CookieStore store)
-            throws IOException {
-        org.apache.http.HttpResponse resp = null;
-        if (store == null) {
-            resp = getHttpResponse(method);
-        } else {
-            resp = getHttpResponse(store, method);
-        }
-        return resp;
-    }
-
-    protected org.apache.http.HttpResponse getHttpResponse(CookieStore store, HttpRequestBase method)
+    protected org.apache.http.HttpResponse executeMethod(CookieStore store, HttpRequestBase method)
             throws IOException {
         HttpContext localContext = new BasicHttpContext();
-        localContext.setAttribute(HttpClientContext.COOKIE_STORE, store);
+        if (store != null) {
+            localContext.setAttribute(HttpClientContext.COOKIE_STORE, store);
+        }
         return httpClient.execute(method, localContext);
-    }
-
-    protected org.apache.http.HttpResponse getHttpResponse(HttpRequestBase method) throws IOException {
-        return httpClient.execute(method);
     }
 
     protected void cleanupAfterRequest(org.apache.http.HttpResponse response, HttpRequestBase method) {
