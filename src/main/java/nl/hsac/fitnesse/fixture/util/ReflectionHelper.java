@@ -108,6 +108,32 @@ public class ReflectionHelper {
         }
     }
 
+    /**
+     * Gets (private) field of o (the field may be defined by o's class, or one of its superclasses).
+     *
+     * @param o         instance to set field of.
+     * @param fieldName name of field.
+     * @return value of field.
+     */
+    public Object getField(Object o, String fieldName) {
+        if (o == null) {
+            throw new IllegalArgumentException("No object to get from provided");
+        }
+        Field field = findField(o, fieldName);
+        if (field == null) {
+            throw new IllegalArgumentException(o.getClass() + " does not have a field " + fieldName);
+        } else {
+            if (!field.isAccessible()) {
+                field.setAccessible(true);
+            }
+            try {
+                return field.get(o);
+            } catch (IllegalAccessException e) {
+                throw new IllegalArgumentException("Unable to get " + fieldName, e);
+            }
+        }
+    }
+
     private Field findField(Object o, String fieldName) {
         Class<?> aClass = o.getClass();
         Field result = null;
