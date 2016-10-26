@@ -43,6 +43,7 @@
 		<fitnesse.version>20160618</fitnesse.version>
 		<selenium.version>2.53.1</selenium.version>
 		<slf4j.version>1.7.21</slf4j.version>
+		<apache.http.version>4.5.2</apache.http.version>
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
 		<fitnesse.port>9090</fitnesse.port>
@@ -69,8 +70,19 @@
 
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${apache.http.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpmime</artifactId>
-			<version>4.5.1</version>
+			<version>${apache.http.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.freemarker</groupId>
@@ -99,6 +111,10 @@
 				<exclusion>
 					<groupId>cglib</groupId>
 					<artifactId>cglib-nodep</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.httpcomponents</groupId>
+					<artifactId>httpclient</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
