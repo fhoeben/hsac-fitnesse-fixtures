@@ -14,17 +14,19 @@ public class ReflectionHelperTest {
     private final ReflectionHelper helper = new ReflectionHelper();
 
     @Test
-    public void testCanSetPrivateFieldOnEnvironment() {
+    public void testCanSetAndGetPrivateFieldOnEnvironment() {
         HtmlCleaner myCleaner = new HtmlCleaner();
         Environment env = Environment.getInstance();
 
         helper.setField(env, "htmlCleaner", myCleaner);
 
         assertSame(myCleaner, env.getHtmlCleaner());
+
+        assertSame(myCleaner, helper.getField(env, "htmlCleaner"));
     }
 
     @Test
-    public void testCanSetPrivateFieldOfSuperClass() {
+    public void testCanSetAndGetPrivateFieldOfSuperClass() {
         String newValue = "Hallo";
         XmlHttpTest xmlHttpTest = new XmlHttpTest();
         String ct = xmlHttpTest.getContentType();
@@ -33,6 +35,7 @@ public class ReflectionHelperTest {
         helper.setField(xmlHttpTest, "contentType", newValue);
 
         assertEquals(newValue, xmlHttpTest.getContentType());
+        assertEquals(newValue, helper.getField(xmlHttpTest, "contentType"));
     }
 
     @Test
