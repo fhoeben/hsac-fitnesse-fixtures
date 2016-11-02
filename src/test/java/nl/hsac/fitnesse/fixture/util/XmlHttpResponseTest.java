@@ -72,7 +72,7 @@ public class XmlHttpResponseTest {
      */
     @Test
     public void testGetXPathList() {
-        XmlHttpResponse resp = new XmlHttpResponse();
+        XmlHttpResponse resp = createResponse();
         resp.setResponse(MULTIPLY_NODES_RESP);
 
         List<String> xpathResult =
@@ -100,9 +100,15 @@ public class XmlHttpResponseTest {
     }
 
     private XmlHttpResponse getOKResponse() {
-        XmlHttpResponse resp = new XmlHttpResponse();
+        XmlHttpResponse resp = createResponse();
         resp.setStatusCode(HttpStatus.SC_ACCEPTED);
         resp.setResponse(OK_RESP);
+        return resp;
+    }
+
+    private XmlHttpResponse createResponse() {
+        XmlHttpResponse resp = new XmlHttpResponse();
+        resp.setXPathHelper(new XPathHelper());
         return resp;
     }
 
