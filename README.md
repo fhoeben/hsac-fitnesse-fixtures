@@ -24,7 +24,7 @@ A zip file containing released versions of this project can be downloaded from t
 A similar zip file containing the latest *snapshot* (i.e. not released but based on the most recent code) version is published as part of the automated build of this project at http://fhoeben.github.io/hsac-fitnesse-fixtures/hsac-fitnesse-fixtures-snapshot-standalone.zip.
 
 ## To run the tests on a build server:
-Have the build server checkout the project and execute `mvn clean test-compile failsafe:integration-test`.
+Have the build server checkout the project and execute `mvn clean test-compile failsafe:integration-test`. Append `failsafe:verify` to the command if you want the build to fail in case of test failures.
 The result in JUnit XML results can be found in: `target/failsafe-reports` (most build servers will pick these up automatically)
 The HTML results can be found in: `target/fitnesse-results/index.html`
 
