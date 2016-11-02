@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.util;
 
 import net.minidev.json.JSONArray;
+import nl.hsac.fitnesse.fixture.Environment;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,7 +17,15 @@ import java.util.Map;
  * Helper dealing with JSON objects.
  */
 public class JsonHelper implements Formatter {
-    private final JsonPathHelper pathHelper = new JsonPathHelper();
+    private JsonPathHelper pathHelper;
+
+    public JsonHelper() {
+        this(new JsonPathHelper());
+    }
+
+    public JsonHelper(JsonPathHelper jsonPathHelper) {
+        pathHelper = jsonPathHelper;
+    }
 
     /**
      * Creates formatted version of the supplied JSON.
@@ -108,4 +117,7 @@ public class JsonHelper implements Formatter {
         return array;
     }
 
+    public void setPathHelper(JsonPathHelper pathHelper) {
+        this.pathHelper = pathHelper;
+    }
 }
