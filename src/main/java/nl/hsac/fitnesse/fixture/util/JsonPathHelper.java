@@ -21,6 +21,9 @@ public class JsonPathHelper {
                                                 .addOptions(Option.SUPPRESS_EXCEPTIONS);
     private final static ParseContext CONTEXT = JsonPath.using(CONF);
 
+    private String lastJson;
+    private DocumentContext lastContext;
+
     /**
      * Evaluates a JsonPath expression returning a single element.
      * @param json JSON value.
@@ -66,6 +69,19 @@ public class JsonPathHelper {
     }
 
     protected DocumentContext parseJson(String json) {
-        return CONTEXT.parse(json);
+        DocumentContext result;
+        if (lastContext != null && lastJson != null
+                && lastJson.equals(json)) {
+            result = lastContext;
+        } else {
+            result = getContext().parse(json);
+            lastContext = result;
+            lastJson = json;
+        }
+        return result;
+    }
+
+    protected ParseContext getContext() {
+        return CONTEXT;
     }
 }
