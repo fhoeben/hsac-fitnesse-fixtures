@@ -10,7 +10,7 @@ import java.util.List;
  * Fixture to make Http calls and interpret the result as JSON.
  */
 public class JsonHttpTest extends HttpTest {
-    private final JsonPathHelper pathHelper = new JsonPathHelper();
+    private JsonPathHelper pathHelper = getEnvironment().getJsonPathHelper();
 
     public boolean postValuesAsJsonTo(String serviceUrl) {
         return postToImpl(jsonEncodeCurrentValues(), serviceUrl);

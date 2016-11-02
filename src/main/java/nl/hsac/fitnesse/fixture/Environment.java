@@ -35,6 +35,7 @@ public class Environment {
     private NamespaceContextImpl nsContext;
     private TextFormatter textFormatter;
     private XMLFormatter xmlFormatter;
+    private JsonPathHelper jsonPathHelper;
     private JsonHelper jsonHelper;
     private HtmlCleaner htmlCleaner;
     private TimeoutHelper timeoutHelper = new TimeoutHelper();
@@ -65,7 +66,8 @@ public class Environment {
         nsContext = new NamespaceContextImpl();
         fillNamespaceContext();
 
-        jsonHelper = new JsonHelper();
+        jsonPathHelper = new JsonPathHelper();
+        jsonHelper = new JsonHelper(jsonPathHelper);
 
         htmlCleaner = new HtmlCleaner();
 
@@ -564,6 +566,13 @@ public class Environment {
      */
     public XMLFormatter getXmlFormatter() {
         return xmlFormatter;
+    }
+
+    /**
+     * @return json path helper used.
+     */
+    public JsonPathHelper getJsonPathHelper() {
+        return jsonPathHelper;
     }
 
     /**
