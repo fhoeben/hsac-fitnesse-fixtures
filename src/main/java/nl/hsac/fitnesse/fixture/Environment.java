@@ -33,6 +33,7 @@ public class Environment {
     private HttpClient httpClient;
     private long nextSequenceNr = System.currentTimeMillis();
     private NamespaceContextImpl nsContext;
+    private XPathHelper xPathHelper;
     private TextFormatter textFormatter;
     private XMLFormatter xmlFormatter;
     private JsonPathHelper jsonPathHelper;
@@ -65,6 +66,7 @@ public class Environment {
         xmlFormatter = new XMLFormatter();
         nsContext = new NamespaceContextImpl();
         fillNamespaceContext();
+        xPathHelper = new XPathHelper();
 
         jsonPathHelper = new JsonPathHelper();
         jsonHelper = new JsonHelper(jsonPathHelper);
@@ -220,7 +222,7 @@ public class Environment {
      */
     public void callService(String url, String templateName, Object model, XmlHttpResponse result, Map<String, Object> headers) {
         doHttpPost(url, templateName, model, result, headers, XmlHttpResponse.CONTENT_TYPE_XML_TEXT_UTF8);
-        setNamespaceContext(result);
+        setContext(result);
     }
 
     /**
@@ -328,7 +330,7 @@ public class Environment {
     public XmlHttpResponse doHttpGetXml(String url) {
         XmlHttpResponse response = new XmlHttpResponse();
         doGet(url, response);
-        setNamespaceContext(response);
+        setContext(response);
         return response;
     }
 
@@ -381,8 +383,9 @@ public class Environment {
         httpClient.delete(url, response, headers);
     }
 
-    private void setNamespaceContext(XmlHttpResponse response) {
+    public void setContext(XmlHttpResponse response) {
         response.setNamespaceContext(getNamespaceContext());
+        response.setXPathHelper(getXPathHelper());
     }
 
     /**
@@ -399,6 +402,13 @@ public class Environment {
      */
     public NamespaceContextImpl getNamespaceContext() {
         return nsContext;
+    }
+
+    /**
+     * @return XPath helper to use.
+     */
+    public XPathHelper getXPathHelper() {
+        return xPathHelper;
     }
 
     /**

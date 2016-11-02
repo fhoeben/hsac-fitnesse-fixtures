@@ -25,7 +25,7 @@ public class XPathHelper {
      * @param xPathExpr XPath expression to evaluate.
      * @return result of evaluation, null if xml is null.
      */
-    public static String getXPath(NamespaceContext context, String xml, String xPathExpr) {
+    public String getXPath(NamespaceContext context, String xml, String xPathExpr) {
         return (String) evaluateXpath(context, xml, xPathExpr, null);
     }
     
@@ -36,7 +36,7 @@ public class XPathHelper {
      * @param xPathExpr XPath expression to evaluate.
      * @return text() of all nodes matching XPath, null if xml is null.
      */
-    public static List<String> getAllXPath(NamespaceContext context, String xml, String xPathExpr) {
+    public List<String> getAllXPath(NamespaceContext context, String xml, String xPathExpr) {
         List<String> result = null;
         
         NodeList nodes = (NodeList) evaluateXpath(context, xml, xPathExpr, XPathConstants.NODESET);
@@ -50,7 +50,7 @@ public class XPathHelper {
         return result;
     }
     
-    private static Object evaluateXpath(NamespaceContext context, String xml, String xPathExpr, QName returnType) {
+    private Object evaluateXpath(NamespaceContext context, String xml, String xPathExpr, QName returnType) {
         Object result = null;
         if (xml != null) {
             if (!xml.startsWith("<")) {
@@ -79,7 +79,7 @@ public class XPathHelper {
         return result;
     }
 
-    private static String getMessage(XPathExpressionException e) {
+    private String getMessage(XPathExpressionException e) {
         String msg;
         Throwable t = e;
         do {
