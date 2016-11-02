@@ -17,16 +17,6 @@ import java.util.Map;
  * Helper dealing with JSON objects.
  */
 public class JsonHelper implements Formatter {
-    private JsonPathHelper pathHelper;
-
-    public JsonHelper() {
-        this(new JsonPathHelper());
-    }
-
-    public JsonHelper(JsonPathHelper jsonPathHelper) {
-        pathHelper = jsonPathHelper;
-    }
-
     /**
      * Creates formatted version of the supplied JSON.
      * @param json JSON to format.
@@ -79,17 +69,18 @@ public class JsonHelper implements Formatter {
      * @return json document with specified array sorted.
      */
     public String sort(String json, String arrayExpr, String nestedPathExpr) {
+        JsonPathHelper pathHelper = getPathHelper();
         Object topLevel = pathHelper.getJsonPath(json, arrayExpr);
         if (topLevel instanceof JSONArray) {
             JSONArray a = (JSONArray) topLevel;
-            JSONArray aSorted = sort(a, nestedPathExpr);
+            JSONArray aSorted = sort(pathHelper, a, nestedPathExpr);
             return pathHelper.updateJsonPathWithValue(json, arrayExpr, aSorted);
         } else {
             throw new IllegalArgumentException("Unable to find array using: " + arrayExpr);
         }
     }
 
-    private JSONArray sort(JSONArray a, final String nestedPathExpr) {
+    private JSONArray sort(final JsonPathHelper pathHelper, JSONArray a, final String nestedPathExpr) {
         List<String> elements = new ArrayList<>(a.size());
         for (Object element : a) {
             net.minidev.json.JSONObject jsonObject = new net.minidev.json.JSONObject((Map<String, ?>) element);
@@ -117,7 +108,7 @@ public class JsonHelper implements Formatter {
         return array;
     }
 
-    public void setPathHelper(JsonPathHelper pathHelper) {
-        this.pathHelper = pathHelper;
+    public JsonPathHelper getPathHelper() {
+        return Environment.getInstance().getJsonPathHelper();
     }
 }
