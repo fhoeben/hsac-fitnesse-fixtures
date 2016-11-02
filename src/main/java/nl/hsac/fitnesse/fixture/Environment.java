@@ -69,7 +69,7 @@ public class Environment {
         xPathHelper = new XPathHelper();
 
         jsonPathHelper = new JsonPathHelper();
-        jsonHelper = new JsonHelper(jsonPathHelper);
+        jsonHelper = new JsonHelper();
 
         htmlCleaner = new HtmlCleaner();
 
