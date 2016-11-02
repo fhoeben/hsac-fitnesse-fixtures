@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.util;
 
 import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.ParseContext;
@@ -31,7 +32,7 @@ public class JsonPathHelper {
         if (!JsonPath.isPathDefinite(jsonPath)) {
             throw new RuntimeException(jsonPath + " returns multiple results, not a single.");
         }
-        return CONTEXT.parse(json).read(jsonPath);
+        return parseJson(json).read(jsonPath);
     }
 
     /**
@@ -51,16 +52,20 @@ public class JsonPathHelper {
                 result = Collections.singletonList(val);
             }
         } else {
-            result = CONTEXT.parse(json).read(jsonPath);
+            result = parseJson(json).read(jsonPath);
         }
         return result;
     }
 
     public String updateJsonPathWithValue(String json, String jsonPath, Object value) {
         if(null != getJsonPath(json, jsonPath)) {
-            return CONTEXT.parse(json).set(jsonPath, value).jsonString();
+            return parseJson(json).set(jsonPath, value).jsonString();
         } else {
             throw new PathNotFoundException("No result for: " + jsonPath + " IN: " + json);
         }
+    }
+
+    protected DocumentContext parseJson(String json) {
+        return CONTEXT.parse(json);
     }
 }
