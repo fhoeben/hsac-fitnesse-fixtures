@@ -1,6 +1,6 @@
 package nl.hsac.fitnesse.fixture.leanapps;
 
-import nl.hsac.fitnesse.fixture.util.FileUtil;
+import nl.hsac.fitnesse.fixture.UnitTestHelper;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 import org.junit.Test;
 
@@ -18,9 +18,8 @@ public class ReportXmlFixtureTest {
     @Test
     public void testReportTrigger() {
         XmlHttpResponse resp = new XmlHttpResponse();
+        UnitTestHelper.fillResponse(resp, "leanapps/report.xml");
         resp.setStatusCode(200);
-        String reportTriggerXml = FileUtil.loadFile("leanapps/report.xml");
-        resp.setResponse(reportTriggerXml);
         fixture.setResponse(resp);
         assertEquals("NEW_POLICY_NEW_CUSTOMER", fixture.reportTrigger());
     }
