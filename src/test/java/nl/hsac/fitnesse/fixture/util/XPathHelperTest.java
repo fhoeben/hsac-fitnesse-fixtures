@@ -34,7 +34,7 @@ public class XPathHelperTest {
             xPathHelper.getXPath(null, responseString, "\\status");
             fail("expected exception");
         } catch (FitFailureException e) {
-            assertTrue("Bad message start: " + e.getMessage(), e.getMessage().startsWith("Unable to evaluate xpath: \\status\n"));
+            assertTrue("Bad message start: " + e.getMessage(), e.getMessage().startsWith("Unable to compile xpath: \\status\n"));
             assertTrue("Bad message end: " + e.getMessage(), e.getMessage().endsWith("A location path was expected, but the following token was encountered:  \\"));
         }
     }
@@ -42,10 +42,22 @@ public class XPathHelperTest {
     @Test
     public void testBadXml() {
         try {
-            xPathHelper.getXPath(null, "bla", "\\status");
+            xPathHelper.getXPath(null, "bla", "//status");
             fail("expected exception");
         } catch (FitFailureException e) {
             assertEquals("Cannot perform XPATH on non-xml: bla", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testBadXml2() {
+        try {
+            xPathHelper.getXPath(null, "<bla", "//status");
+            fail("expected exception");
+        } catch (FitFailureException e) {
+            assertEquals("Unable to evaluate xpath: //status\n" +
+                                "XML document structures must start and end within the same entity.",
+                            e.getMessage());
         }
     }
 

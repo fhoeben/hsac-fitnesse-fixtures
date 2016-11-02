@@ -56,25 +56,44 @@ public class XPathHelper {
             if (!xml.startsWith("<")) {
                 throw new FitFailureException("Cannot perform XPATH on non-xml: " + xml);
             }
-            XPathFactory xPathfactory = XPathFactory.newInstance();
-            XPath xpath = xPathfactory.newXPath();
-            if (context != null) {
-                xpath.setNamespaceContext(context);
-            }
+            XPathExpression expr = createXPathExpression(context, xPathExpr);
             try {
-                XPathExpression expr = xpath.compile(xPathExpr);
-                InputSource source = new InputSource(new StringReader(xml));
-                
-                if (returnType != null) {
-                	result = expr.evaluate(source, returnType);
-                } else {
-                	result = expr.evaluate(source);
-                }
-                
+                result = evaluateXpath(xml, expr, returnType);
             } catch (XPathExpressionException e) {
                 String msg = getMessage(e);
                 throw new FitFailureException("Unable to evaluate xpath: " + xPathExpr + "\n" + msg);
             }
+        }
+        return result;
+    }
+
+    protected XPathExpression createXPathExpression(NamespaceContext context, String xPathExpr) {
+        XPath xpath = createXPath(context);
+        try {
+            return xpath.compile(xPathExpr);
+        } catch (XPathExpressionException e) {
+            String msg = getMessage(e);
+            throw new FitFailureException("Unable to compile xpath: " + xPathExpr + "\n" + msg);
+        }
+    }
+
+    protected XPath createXPath(NamespaceContext context) {
+        XPathFactory xPathfactory = XPathFactory.newInstance();
+        XPath xpath = xPathfactory.newXPath();
+        if (context != null) {
+            xpath.setNamespaceContext(context);
+        }
+        return xpath;
+    }
+
+    protected Object evaluateXpath(String xml, XPathExpression expr, QName returnType) throws XPathExpressionException {
+        Object result;
+        InputSource source = new InputSource(new StringReader(xml));
+
+        if (returnType != null) {
+            result = expr.evaluate(source, returnType);
+        } else {
+            result = expr.evaluate(source);
         }
         return result;
     }
