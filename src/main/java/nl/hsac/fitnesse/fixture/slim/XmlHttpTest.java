@@ -112,7 +112,7 @@ public class XmlHttpTest extends HttpTest {
     @Override
     protected boolean postProcessResponse() {
         // always called after post or get, so easy place to ensure namespaces are registered
-        getResponse().setNamespaceContext(getEnvironment().getNamespaceContext());
+        getEnvironment().setContext(getResponse());
         boolean result = super.postProcessResponse();
         return result;
     }
