@@ -34,8 +34,9 @@ public class XPathHelperTest {
             xPathHelper.getXPath(null, responseString, "\\status");
             fail("expected exception");
         } catch (FitFailureException e) {
-            assertTrue("Bad message start: " + e.getMessage(), e.getMessage().startsWith("Unable to compile xpath: \\status\n"));
-            assertTrue("Bad message end: " + e.getMessage(), e.getMessage().endsWith("A location path was expected, but the following token was encountered:  \\"));
+            String message = e.getMessage();
+            assertTrue("Bad message start: " + message, message.startsWith("Unable to compile xpath: \\status\n"));
+            assertTrue("Bad message end: " + message, message.endsWith("A location path was expected, but the following token was encountered:  \\"));
         }
     }
 
@@ -55,9 +56,9 @@ public class XPathHelperTest {
             xPathHelper.getXPath(null, "<bla", "//status");
             fail("expected exception");
         } catch (FitFailureException e) {
-            assertEquals("Unable to evaluate xpath: //status\n" +
-                                "XML document structures must start and end within the same entity.",
-                            e.getMessage());
+            String message = e.getMessage();
+            assertTrue("Bad message start: " + message, message.startsWith("Unable to evaluate xpath: //status\n"));
+            assertTrue("Bad message end: " + message, message.endsWith("XML document structures must start and end within the same entity."));
         }
     }
 
