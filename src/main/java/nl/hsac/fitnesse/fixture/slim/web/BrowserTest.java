@@ -10,6 +10,7 @@ import nl.hsac.fitnesse.fixture.util.BinaryHttpResponse;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
 import nl.hsac.fitnesse.fixture.util.ReflectionHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.PageSourceSaver;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
 import org.apache.commons.io.FilenameUtils;
@@ -23,10 +24,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -1577,44 +1575,15 @@ public class BrowserTest extends SlimFixture {
      * @return hyperlink to the file containing the page source.
      */
     public String savePageSource() {
-        String fileName = "pageSource";
-        try {
-            String location = location();
-            URL u = new URL(location);
-            String file = FilenameUtils.getName(u.getPath());
-            file = file.replaceAll("^(.*?)(\\.html?)?$", "$1");
-            if (!"".equals(file)) {
-                fileName = file;
-            }
-        } catch (MalformedURLException e) {
-            // ignore
-        }
-
+        String fileName = getSeleniumHelper().getResourceNameFromLocation();
         return savePageSource(fileName, fileName + ".html");
     }
 
     protected String savePageSource(String fileName, String linkText) {
-        String result = null;
-        String html = getSeleniumHelper().getHtml();
-        if (html != null) {
-            try {
-                String file = FileUtil.saveToFile(getPageSourceName(fileName), "html", html.getBytes("utf-8"));
-                String wikiUrl = getWikiUrl(file);
-                if (wikiUrl != null) {
-                    // make href to file
-                    result = String.format("<a href=\"%s\">%s</a>", wikiUrl, linkText);
-                } else {
-                    result = file;
-                }
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException("Unable to save source", e);
-            }
-        }
-        return result;
-    }
-
-    protected String getPageSourceName(String fileName) {
-        return pageSourceBase + fileName;
+        PageSourceSaver saver = getSeleniumHelper().getPageSourceSaver(pageSourceBase);
+        // make href to file
+        String url = saver.savePageSource(fileName);
+        return String.format("<a href=\"%s\">%s</a>", url, linkText);
     }
 
     /**
