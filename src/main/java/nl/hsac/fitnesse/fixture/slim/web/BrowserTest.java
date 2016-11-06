@@ -1624,6 +1624,10 @@ public class BrowserTest extends SlimFixture {
                     String newLocation = savePageSourceWithFrames();
                     nestedPages.put(fullUrlOfFrame, newLocation);
                     nestedPages.put(relativeUrlOfFrame, newLocation);
+                    String framePath = getPath(fullUrlOfFrame);
+                    if (framePath != null) {
+                        nestedPages.put(framePath, newLocation);
+                    }
                 } finally {
                     getSeleniumHelper().switchToParentFrame();
                 }
@@ -1651,6 +1655,17 @@ public class BrowserTest extends SlimFixture {
         }
 
         return result;
+    }
+
+    protected String getPath(String urlString) {
+        String path = null;
+        try {
+            URL url = new URL(urlString);
+            path = url.getPath();
+        } catch (MalformedURLException e) {
+            // leave path null
+        }
+        return path;
     }
 
     protected String savePageSourceWithFormat(String fileName, String linkFormat) {
