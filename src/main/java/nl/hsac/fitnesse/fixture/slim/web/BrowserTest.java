@@ -1580,8 +1580,13 @@ public class BrowserTest extends SlimFixture {
      */
     public String savePageSource() {
         String fileName = getResourceNameFromLocation();
+        return savePageSourceToLink(fileName, fileName + ".html");
+    }
+
+    protected String savePageSourceToLink(String fileName, String linkText) {
+        // make href to file
         String url = savePageSourceWithFrames(fileName);
-        return String.format("<a href=\"%s\">%s.html</a>", url, fileName);
+        return String.format("<a href=\"%s\">%s</a>", url, linkText);
     }
 
     protected String getResourceNameFromLocation() {
@@ -1600,40 +1605,17 @@ public class BrowserTest extends SlimFixture {
         return fileName;
     }
 
-    protected String savePageSourceToLink(String fileName, String linkText) {
-        // make href to file
-        return savePageSourceWithFormat(fileName, "<a href=\"%s\">"+ linkText + "</a>");
-    }
-
     protected String savePageSourceWithFrames(String fileName) {
-        String result = null;
+        Map<String, String> sourceReplacements = new HashMap<>();
         List<WebElement> frames = findAllByCss("iframe,frame");
-        if (frames.isEmpty()) {
-            result = savePageSourceWithFormat(fileName, "%s");
-        } else {
-            Map<String, String> sourceReplacements = new HashMap<>();
-            for (WebElement frame : frames) {
-                String newLocation = saveFrameSource(frame);
-                String fullUrlOfFrame = frame.getAttribute("src");
+        for (WebElement frame : frames) {
+            String newLocation = saveFrameSource(frame);
+            String fullUrlOfFrame = frame.getAttribute("src");
 
-                addSourceReplacementsForFrame(sourceReplacements, newLocation, fullUrlOfFrame);
-            }
-            String html = getCurrentFrameHtml(sourceReplacements);
-            try {
-                fileName = getPageSourceName(fileName);
-                String file = FileUtil.saveToFile(fileName, "html", html.getBytes("utf-8"));
-                String wikiUrl = getWikiUrl(file);
-                if (wikiUrl != null) {
-                    result = wikiUrl;
-                } else {
-                    result = file;
-                }
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException("Unable to save source", e);
-            }
+            addSourceReplacementsForFrame(sourceReplacements, newLocation, fullUrlOfFrame);
         }
-
-        return result;
+        String html = getCurrentFrameHtml(sourceReplacements);
+        return savePageSource(fileName, html);
     }
 
     protected String saveFrameSource(WebElement frame) {
@@ -1688,19 +1670,17 @@ public class BrowserTest extends SlimFixture {
         return path;
     }
 
-    protected String savePageSourceWithFormat(String fileName, String linkFormat) {
-        String result = null;
+    private String savePageSource(String fileName, String html) {
+        String result;
         try {
-            String html = getSeleniumHelper().getHtml();
-            if (html != null) {
-                String file = FileUtil.saveToFile(getPageSourceName(fileName), "html", html.getBytes("utf-8"));
-                String wikiUrl = getWikiUrl(file);
-                if (wikiUrl != null) {
-                    // format file name
-                    result = String.format(linkFormat, wikiUrl);
-                } else {
-                    result = file;
-                }
+            String pageSourceName = getPageSourceName(fileName);
+            String file = FileUtil.saveToFile(pageSourceName, "html", html.getBytes("utf-8"));
+            String wikiUrl = getWikiUrl(file);
+            if (wikiUrl != null) {
+                // format file name
+                result = wikiUrl;
+            } else {
+                result = file;
             }
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("Unable to save source", e);
