@@ -10,8 +10,6 @@ import java.util.List;
  * Fixture to make Http calls and interpret the result as JSON.
  */
 public class JsonHttpTest extends HttpTest {
-    private final JsonPathHelper pathHelper = new JsonPathHelper();
-
     public boolean postValuesAsJsonTo(String serviceUrl) {
         return postToImpl(jsonEncodeCurrentValues(), serviceUrl);
     }
@@ -32,7 +30,7 @@ public class JsonHttpTest extends HttpTest {
     public Object jsonPath(String path) {
         String responseString = getResponseBody();
         String jsonPath = getPathExpr(path);
-        return pathHelper.getJsonPath(responseString, jsonPath);
+        return getPathHelper().getJsonPath(responseString, jsonPath);
     }
 
     public int jsonPathCount(String path) {
@@ -43,7 +41,7 @@ public class JsonHttpTest extends HttpTest {
     protected List<Object> getAllMatches(String path) {
         String responseString = getResponseBody();
         String jsonPath = getPathExpr(path);
-        return pathHelper.getAllJsonPath(responseString, jsonPath);
+        return getPathHelper().getAllJsonPath(responseString, jsonPath);
     }
 
     protected String getResponseBody() {
@@ -85,7 +83,7 @@ public class JsonHttpTest extends HttpTest {
     public void setJsonPathTo(String path, String value) {
         String jsonStr = getResponseBody();
         String jsonPath = getPathExpr(path);
-        String newResponse = pathHelper.updateJsonPathWithValue(jsonStr, jsonPath, value);
+        String newResponse = getPathHelper().updateJsonPathWithValue(jsonStr, jsonPath, value);
         getResponse().setResponse(newResponse);
     }
 
@@ -105,5 +103,9 @@ public class JsonHttpTest extends HttpTest {
     protected String urlEncode(String str) {
         String strNoSpaces = str.replace(" ", "+");
         return super.urlEncode(strNoSpaces);
+    }
+
+    protected JsonPathHelper getPathHelper() {
+        return getEnvironment().getJsonPathHelper();
     }
 }

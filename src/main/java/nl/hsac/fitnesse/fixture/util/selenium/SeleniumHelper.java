@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.fixture.util.selenium;
 
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
+import org.apache.commons.io.FilenameUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
@@ -14,6 +15,8 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -1124,6 +1127,22 @@ public class SeleniumHelper {
         return FileUtil.saveToFile(baseName, "png", png);
     }
 
+    public String getResourceNameFromLocation() {
+        String fileName = "pageSource";
+        try {
+            String location = driver().getCurrentUrl();
+            URL u = new URL(location);
+            String file = FilenameUtils.getName(u.getPath());
+            file = file.replaceAll("^(.*?)(\\.html?)?$", "$1");
+            if (!"".equals(file)) {
+                fileName = file;
+            }
+        } catch (MalformedURLException e) {
+            // ignore
+        }
+        return fileName;
+    }
+
     /**
      * @return HTML content of current page.
      */
@@ -1156,6 +1175,10 @@ public class SeleniumHelper {
             }
         }
         return html;
+    }
+
+    public PageSourceSaver getPageSourceSaver(String baseDir) {
+        return new PageSourceSaver(baseDir, this);
     }
 
     /**
