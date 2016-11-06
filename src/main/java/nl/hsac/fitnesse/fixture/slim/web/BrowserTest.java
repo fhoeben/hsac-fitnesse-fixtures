@@ -1579,8 +1579,8 @@ public class BrowserTest extends SlimFixture {
      * @return hyperlink to the file containing the page source.
      */
     public String savePageSource() {
-        String url = savePageSourceWithFrames();
         String fileName = getResourceNameFromLocation();
+        String url = savePageSourceWithFrames(fileName);
         return String.format("<a href=\"%s\">%s.html</a>", url, fileName);
     }
 
@@ -1605,9 +1605,8 @@ public class BrowserTest extends SlimFixture {
         return savePageSourceWithFormat(fileName, "<a href=\"%s\">"+ linkText + "</a>");
     }
 
-    public String savePageSourceWithFrames() {
+    protected String savePageSourceWithFrames(String fileName) {
         String result = null;
-        String fileName = getResourceNameFromLocation();
         List<WebElement> frames = findAllByCss("iframe,frame");
         if (frames.isEmpty()) {
             result = savePageSourceWithFormat(fileName, "%s");
@@ -1635,6 +1634,16 @@ public class BrowserTest extends SlimFixture {
         }
 
         return result;
+    }
+
+    protected String saveFrameSource(WebElement frame) {
+        try {
+            getSeleniumHelper().switchToFrame(frame);
+            String fileName = getResourceNameFromLocation();
+            return savePageSourceWithFrames(fileName);
+        } finally {
+            getSeleniumHelper().switchToParentFrame();
+        }
     }
 
     protected String getCurrentFrameHtml(Map<String, String> sourceReplacements) {
@@ -1665,15 +1674,6 @@ public class BrowserTest extends SlimFixture {
         String framePath = getPath(fullUrlOfFrame);
         if (framePath != null) {
             sourceReplacements.put(framePath, savedLocation);
-        }
-    }
-
-    protected String saveFrameSource(WebElement frame) {
-        try {
-            getSeleniumHelper().switchToFrame(frame);
-            return savePageSourceWithFrames();
-        } finally {
-            getSeleniumHelper().switchToParentFrame();
         }
     }
 
