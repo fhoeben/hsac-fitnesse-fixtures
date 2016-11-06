@@ -1612,49 +1612,69 @@ public class BrowserTest extends SlimFixture {
         if (frames.isEmpty()) {
             result = savePageSourceWithFormat(fileName, "%s");
         } else {
-            Map<String, String> nestedPages = new HashMap<>();
+            Map<String, String> sourceReplacements = new HashMap<>();
             for (WebElement frame : frames) {
-                try {
-                    String fullUrlOfParent = location();
-                    int lastSlash = fullUrlOfParent.lastIndexOf("/");
-                    String baseUrl = fullUrlOfParent.substring(0, lastSlash + 1);
-                    String fullUrlOfFrame = frame.getAttribute("src");
-                    String relativeUrlOfFrame = fullUrlOfFrame.replace(baseUrl, "");
-                    getSeleniumHelper().switchToFrame(frame);
-                    String newLocation = savePageSourceWithFrames();
-                    nestedPages.put(fullUrlOfFrame, newLocation);
-                    nestedPages.put(relativeUrlOfFrame, newLocation);
-                    String framePath = getPath(fullUrlOfFrame);
-                    if (framePath != null) {
-                        nestedPages.put(framePath, newLocation);
-                    }
-                } finally {
-                    getSeleniumHelper().switchToParentFrame();
-                }
+                String newLocation = saveFrameSource(frame);
+                String fullUrlOfFrame = frame.getAttribute("src");
+
+                addSourceReplacementsForFrame(sourceReplacements, newLocation, fullUrlOfFrame);
             }
-            fileName = getPageSourceName(fileName);
-            String html = getSeleniumHelper().getHtml();
-            for (Map.Entry<String, String> entry : nestedPages.entrySet()) {
-                String originalLocation = entry.getKey();
-                String newLocation = entry.getValue();
-                html = html.replace("src=\"" + originalLocation + "\"", "src=\"/" + newLocation + "\"");
-
-                try {
-                    String file = FileUtil.saveToFile(fileName, "html", html.getBytes("utf-8"));
-                    String wikiUrl = getWikiUrl(file);
-                    if (wikiUrl != null) {
-                        result = wikiUrl;
-                    } else {
-                        result = file;
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    throw new RuntimeException("Unable to save source", e);
+            String html = getCurrentFrameHtml(sourceReplacements);
+            try {
+                fileName = getPageSourceName(fileName);
+                String file = FileUtil.saveToFile(fileName, "html", html.getBytes("utf-8"));
+                String wikiUrl = getWikiUrl(file);
+                if (wikiUrl != null) {
+                    result = wikiUrl;
+                } else {
+                    result = file;
                 }
-
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException("Unable to save source", e);
             }
         }
 
         return result;
+    }
+
+    protected String getCurrentFrameHtml(Map<String, String> sourceReplacements) {
+        String html = getSeleniumHelper().getHtml();
+        if (sourceReplacements != null && !sourceReplacements.isEmpty()) {
+            html = replaceSourceOfFrames(sourceReplacements, html);
+        }
+        return html;
+    }
+
+    protected String replaceSourceOfFrames(Map<String, String> sourceReplacements, String html) {
+        for (Map.Entry<String, String> entry : sourceReplacements.entrySet()) {
+            String originalLocation = entry.getKey();
+            String newLocation = entry.getValue();
+            html = html.replace("src=\"" + originalLocation + "\"", "src=\"/" + newLocation + "\"");
+        }
+        return html;
+    }
+
+    protected void addSourceReplacementsForFrame(Map<String, String> sourceReplacements, String savedLocation, String fullUrlOfFrame) {
+        String fullUrlOfParent = location();
+        int lastSlash = fullUrlOfParent.lastIndexOf("/");
+        String baseUrl = fullUrlOfParent.substring(0, lastSlash + 1);
+        String relativeUrlOfFrame = fullUrlOfFrame.replace(baseUrl, "");
+
+        sourceReplacements.put(fullUrlOfFrame, savedLocation);
+        sourceReplacements.put(relativeUrlOfFrame, savedLocation);
+        String framePath = getPath(fullUrlOfFrame);
+        if (framePath != null) {
+            sourceReplacements.put(framePath, savedLocation);
+        }
+    }
+
+    protected String saveFrameSource(WebElement frame) {
+        try {
+            getSeleniumHelper().switchToFrame(frame);
+            return savePageSourceWithFrames();
+        } finally {
+            getSeleniumHelper().switchToParentFrame();
+        }
     }
 
     protected String getPath(String urlString) {
