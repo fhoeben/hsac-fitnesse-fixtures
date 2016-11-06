@@ -10,6 +10,7 @@ import nl.hsac.fitnesse.fixture.util.BinaryHttpResponse;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
 import nl.hsac.fitnesse.fixture.util.ReflectionHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.PageSourceSaver;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
 import org.apache.commons.io.FilenameUtils;
@@ -23,14 +24,9 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class BrowserTest extends SlimFixture {
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
@@ -1579,117 +1575,15 @@ public class BrowserTest extends SlimFixture {
      * @return hyperlink to the file containing the page source.
      */
     public String savePageSource() {
-        String fileName = getResourceNameFromLocation();
+        String fileName = getSeleniumHelper().getResourceNameFromLocation();
         return savePageSource(fileName, fileName + ".html");
     }
 
     protected String savePageSource(String fileName, String linkText) {
+        PageSourceSaver saver = getSeleniumHelper().getPageSourceSaver(pageSourceBase);
         // make href to file
-        String url = savePageSourceWithFrames(fileName);
+        String url = saver.savePageSource(fileName);
         return String.format("<a href=\"%s\">%s</a>", url, linkText);
-    }
-
-    protected String getResourceNameFromLocation() {
-        String fileName = "pageSource";
-        try {
-            String location = location();
-            URL u = new URL(location);
-            String file = FilenameUtils.getName(u.getPath());
-            file = file.replaceAll("^(.*?)(\\.html?)?$", "$1");
-            if (!"".equals(file)) {
-                fileName = file;
-            }
-        } catch (MalformedURLException e) {
-            // ignore
-        }
-        return fileName;
-    }
-
-    protected String savePageSourceWithFrames(String fileName) {
-        Map<String, String> sourceReplacements = new HashMap<>();
-        List<WebElement> frames = findAllByCss("iframe,frame");
-        for (WebElement frame : frames) {
-            String newLocation = saveFrameSource(frame);
-            String fullUrlOfFrame = frame.getAttribute("src");
-
-            addSourceReplacementsForFrame(sourceReplacements, newLocation, fullUrlOfFrame);
-        }
-        String html = getCurrentFrameHtml(sourceReplacements);
-        return saveHtmlAsPageSource(fileName, html);
-    }
-
-    protected String saveFrameSource(WebElement frame) {
-        try {
-            getSeleniumHelper().switchToFrame(frame);
-            String fileName = getResourceNameFromLocation();
-            return savePageSourceWithFrames(fileName);
-        } finally {
-            getSeleniumHelper().switchToParentFrame();
-        }
-    }
-
-    protected String getCurrentFrameHtml(Map<String, String> sourceReplacements) {
-        String html = getSeleniumHelper().getHtml();
-        if (sourceReplacements != null && !sourceReplacements.isEmpty()) {
-            html = replaceSourceOfFrames(sourceReplacements, html);
-        }
-        return html;
-    }
-
-    protected String replaceSourceOfFrames(Map<String, String> sourceReplacements, String html) {
-        for (Map.Entry<String, String> entry : sourceReplacements.entrySet()) {
-            String originalLocation = entry.getKey();
-            String newLocation = entry.getValue();
-            html = html.replace("src=\"" + originalLocation + "\"", "src=\"/" + newLocation + "\"");
-        }
-        return html;
-    }
-
-    protected void addSourceReplacementsForFrame(Map<String, String> sourceReplacements, String savedLocation, String fullUrlOfFrame) {
-        String fullUrlOfParent = location();
-        int lastSlash = fullUrlOfParent.lastIndexOf("/");
-        String baseUrl = fullUrlOfParent.substring(0, lastSlash + 1);
-        String relativeUrlOfFrame = fullUrlOfFrame.replace(baseUrl, "");
-
-        sourceReplacements.put(fullUrlOfFrame, savedLocation);
-        sourceReplacements.put(relativeUrlOfFrame, savedLocation);
-        String framePath = getPath(fullUrlOfFrame);
-        if (framePath != null) {
-            sourceReplacements.put(framePath, savedLocation);
-        }
-    }
-
-    protected String getPath(String urlString) {
-        String path = null;
-        try {
-            URL url = new URL(urlString);
-            path = url.getPath();
-        } catch (MalformedURLException e) {
-            // leave path null
-        }
-        return path;
-    }
-
-    protected String saveHtmlAsPageSource(String fileName, String html) {
-        String result;
-        try {
-            String pageSourceName = getPageSourceName(fileName);
-            String file = FileUtil.saveToFile(pageSourceName, "html", html.getBytes("utf-8"));
-            String wikiUrl = getWikiUrl(file);
-            if (wikiUrl != null) {
-                // format file name
-                result = wikiUrl;
-            } else {
-                result = file;
-            }
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Unable to save source", e);
-        }
-        return result;
-    }
-
-    protected String getPageSourceName(String fileName) {
-        return pageSourceBase + fileName;
     }
 
     /**
