@@ -33,8 +33,10 @@ public class Environment {
     private HttpClient httpClient;
     private long nextSequenceNr = System.currentTimeMillis();
     private NamespaceContextImpl nsContext;
+    private XPathHelper xPathHelper;
     private TextFormatter textFormatter;
     private XMLFormatter xmlFormatter;
+    private JsonPathHelper jsonPathHelper;
     private JsonHelper jsonHelper;
     private HtmlCleaner htmlCleaner;
     private TimeoutHelper timeoutHelper = new TimeoutHelper();
@@ -64,7 +66,9 @@ public class Environment {
         xmlFormatter = new XMLFormatter();
         nsContext = new NamespaceContextImpl();
         fillNamespaceContext();
+        xPathHelper = new XPathHelper();
 
+        jsonPathHelper = new JsonPathHelper();
         jsonHelper = new JsonHelper();
 
         htmlCleaner = new HtmlCleaner();
@@ -218,7 +222,7 @@ public class Environment {
      */
     public void callService(String url, String templateName, Object model, XmlHttpResponse result, Map<String, Object> headers) {
         doHttpPost(url, templateName, model, result, headers, XmlHttpResponse.CONTENT_TYPE_XML_TEXT_UTF8);
-        setNamespaceContext(result);
+        setContext(result);
     }
 
     /**
@@ -326,7 +330,7 @@ public class Environment {
     public XmlHttpResponse doHttpGetXml(String url) {
         XmlHttpResponse response = new XmlHttpResponse();
         doGet(url, response);
-        setNamespaceContext(response);
+        setContext(response);
         return response;
     }
 
@@ -386,8 +390,9 @@ public class Environment {
         return httpClient;
     }
 
-    private void setNamespaceContext(XmlHttpResponse response) {
+    public void setContext(XmlHttpResponse response) {
         response.setNamespaceContext(getNamespaceContext());
+        response.setXPathHelper(getXPathHelper());
     }
 
     /**
@@ -404,6 +409,13 @@ public class Environment {
      */
     public NamespaceContextImpl getNamespaceContext() {
         return nsContext;
+    }
+
+    /**
+     * @return XPath helper to use.
+     */
+    public XPathHelper getXPathHelper() {
+        return xPathHelper;
     }
 
     /**
@@ -552,6 +564,41 @@ public class Environment {
     }
 
     /**
+     * Converts a file path into a relative wiki path, if the path is insides the wiki's 'files' section.
+     * @param filePath path to file.
+     * @return relative URL pointing to the file (so a hyperlink to it can be created).
+     */
+    public String getWikiUrl(String filePath) {
+        String wikiUrl = null;
+        String filesDir = getFitNesseFilesSectionDir();
+        if (filePath.startsWith(filesDir)) {
+            String relativeFile = filePath.substring(filesDir.length());
+            relativeFile = relativeFile.replace('\\', '/');
+            wikiUrl = "files" + relativeFile;
+        }
+        return wikiUrl;
+    }
+
+    /**
+     * Gets absolute path from wiki url, if file exists.
+     * @param wikiUrl a relative path that can be used in wiki page, or any file path.
+     * @return absolute path to the target of the url, if such a file exists; null if the target does not exist.
+     */
+    public String getFilePathFromWikiUrl(String wikiUrl) {
+        String url = getHtmlCleaner().getUrl(wikiUrl);
+        File file;
+        if (url.startsWith("files/")) {
+            String relativeFile = url.substring("files".length());
+            relativeFile = relativeFile.replace('/', File.separatorChar);
+            String pathname = getFitNesseFilesSectionDir() + relativeFile;
+            file = new File(pathname);
+        } else {
+            file = new File(url);
+        }
+        return file.exists() ? file.getAbsolutePath() : url;
+    }
+
+    /**
      * @return default (global) map helper.
      */
     public MapHelper getMapHelper() {
@@ -571,6 +618,13 @@ public class Environment {
      */
     public XMLFormatter getXmlFormatter() {
         return xmlFormatter;
+    }
+
+    /**
+     * @return json path helper used.
+     */
+    public JsonPathHelper getJsonPathHelper() {
+        return jsonPathHelper;
     }
 
     /**

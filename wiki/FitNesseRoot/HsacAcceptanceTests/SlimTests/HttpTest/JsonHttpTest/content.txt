@@ -21,7 +21,8 @@
 
 |script       |json http test                                                |
 |get from     |$url                                                          |
-|check|json path count|airplanes[*]|2|
+|check        |json path count      |airplanes[*]        |2                  |
+|check        |json path            |airplanes.length()  |2                  |
 |show         |all json path matches|airplanes[*].airline                    |
 |check        |all json path matches|airplanes[*].airline|=~/.*KLM.*Virgin.*/|
 |check        |json path            |airplanes[0].seats  |400                |

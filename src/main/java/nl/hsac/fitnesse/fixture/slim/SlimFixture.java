@@ -5,7 +5,6 @@ import fitnesse.slim.fixtureInteraction.InteractionAwareFixture;
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -116,13 +115,7 @@ public class SlimFixture  implements InteractionAwareFixture {
      * @return relative URL pointing to the file (so a hyperlink to it can be created).
      */
     protected String getWikiUrl(String filePath) {
-        String wikiUrl = null;
-        if (filePath.startsWith(filesDir)) {
-            String relativeFile = filePath.substring(filesDir.length());
-            relativeFile = relativeFile.replace('\\', '/');
-            wikiUrl = "files" + relativeFile;
-        }
-        return wikiUrl;
+        return getEnvironment().getWikiUrl(filePath);
     }
 
     /**
@@ -131,17 +124,7 @@ public class SlimFixture  implements InteractionAwareFixture {
      * @return absolute path to the target of the url, if such a file exists; null if the target does not exist.
      */
     protected String getFilePathFromWikiUrl(String wikiUrl) {
-        String url = getUrl(wikiUrl);
-        File file;
-        if (url.startsWith("files/")) {
-            String relativeFile = url.substring("files".length());
-            relativeFile = relativeFile.replace('/', File.separatorChar);
-            String pathname = filesDir + relativeFile;
-            file = new File(pathname);
-        } else {
-            file = new File(url);
-        }
-        return file.exists() ? file.getAbsolutePath() : url;
+        return getEnvironment().getFilePathFromWikiUrl(wikiUrl);
     }
 
 }

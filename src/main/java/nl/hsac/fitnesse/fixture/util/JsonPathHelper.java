@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.util;
 
 import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.ParseContext;
@@ -20,6 +21,9 @@ public class JsonPathHelper {
                                                 .addOptions(Option.SUPPRESS_EXCEPTIONS);
     private final static ParseContext CONTEXT = JsonPath.using(CONF);
 
+    private String lastJson;
+    private DocumentContext lastContext;
+
     /**
      * Evaluates a JsonPath expression returning a single element.
      * @param json JSON value.
@@ -31,7 +35,7 @@ public class JsonPathHelper {
         if (!JsonPath.isPathDefinite(jsonPath)) {
             throw new RuntimeException(jsonPath + " returns multiple results, not a single.");
         }
-        return CONTEXT.parse(json).read(jsonPath);
+        return parseJson(json).read(jsonPath);
     }
 
     /**
@@ -51,16 +55,33 @@ public class JsonPathHelper {
                 result = Collections.singletonList(val);
             }
         } else {
-            result = CONTEXT.parse(json).read(jsonPath);
+            result = parseJson(json).read(jsonPath);
         }
         return result;
     }
 
     public String updateJsonPathWithValue(String json, String jsonPath, Object value) {
         if(null != getJsonPath(json, jsonPath)) {
-            return CONTEXT.parse(json).set(jsonPath, value).jsonString();
+            return parseJson(json).set(jsonPath, value).jsonString();
         } else {
             throw new PathNotFoundException("No result for: " + jsonPath + " IN: " + json);
         }
+    }
+
+    protected DocumentContext parseJson(String json) {
+        DocumentContext result;
+        if (lastContext != null && lastJson != null
+                && lastJson.equals(json)) {
+            result = lastContext;
+        } else {
+            result = getContext().parse(json);
+            lastContext = result;
+            lastJson = json;
+        }
+        return result;
+    }
+
+    protected ParseContext getContext() {
+        return CONTEXT;
     }
 }
