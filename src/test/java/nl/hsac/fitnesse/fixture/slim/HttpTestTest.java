@@ -1,7 +1,10 @@
 package nl.hsac.fitnesse.fixture.slim;
 
 
+import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 import org.junit.Test;
+
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -11,8 +14,6 @@ import static org.junit.Assert.assertTrue;
  * Tests HttpTest.
  */
 public class HttpTestTest {
-    // site that redirects
-    private static final String URL_WITH_REDIRECT = "http://www.hotmail.com";
     private final HttpTest client = new XmlHttpTest();
 
     @Test
@@ -102,12 +103,23 @@ public class HttpTestTest {
      */
     @Test
     public void testGetFromFollowRedirect() throws Exception {
-        HttpTest httpTest = new HttpTest();
-        boolean result = httpTest.getFrom(URL_WITH_REDIRECT);
-        String resp = httpTest.htmlResponse();
-        assertNotNull(resp);
-        assertEquals(200, httpTest.getResponse().getStatusCode());
-        assertTrue(result);
+        MockXmlServerSetup mockXmlServerSetup = new MockXmlServerSetup();
+
+        try {
+            String serverUrl = setupRedirectResponse(mockXmlServerSetup);
+
+            HttpTest httpTest = new HttpTest();
+            boolean result = httpTest.getFrom(serverUrl);
+            String resp = httpTest.htmlResponse();
+            assertNotNull(resp);
+            assertEquals(200, httpTest.getResponse().getStatusCode());
+            assertEquals("<div><hello/></div>", resp);
+            assertTrue(result);
+
+            assertTrue(mockXmlServerSetup.verifyAllResponsesServed());
+        } finally {
+            mockXmlServerSetup.stop();
+        }
     }
 
     /**
@@ -115,11 +127,32 @@ public class HttpTestTest {
      */
     @Test
     public void testGetFromNoRedirect() throws Exception {
-        HttpTest httpTest = new HttpTest();
-        boolean result = httpTest.getFromNoRedirect(URL_WITH_REDIRECT);
-        String resp = httpTest.htmlResponse();
-        assertNotNull(resp);
-        assertEquals(301, httpTest.getResponse().getStatusCode());
-        assertTrue(result);
+        MockXmlServerSetup mockXmlServerSetup = new MockXmlServerSetup();
+
+        try {
+            String serverUrl = setupRedirectResponse(mockXmlServerSetup);
+
+            HttpTest httpTest = new HttpTest();
+            boolean result = httpTest.getFromNoRedirect(serverUrl);
+            String resp = httpTest.htmlResponse();
+            assertNotNull(resp);
+            assertEquals(301, httpTest.getResponse().getStatusCode());
+            assertTrue(result);
+        } finally {
+            mockXmlServerSetup.stop();
+        }
+    }
+
+    private String setupRedirectResponse(MockXmlServerSetup mockXmlServerSetup) {
+        String serverUrl = mockXmlServerSetup.getMockServerUrl();
+        XmlHttpResponse redirectResp = new XmlHttpResponse();
+        redirectResp.setStatusCode(301);
+        redirectResp.getResponseHeaders().put("Location", serverUrl + "/a");
+
+        List<XmlHttpResponse> list = (List<XmlHttpResponse>) mockXmlServerSetup.getResponseList();
+        list.add(redirectResp);
+
+        mockXmlServerSetup.addResponse("<hello/>");
+        return serverUrl;
     }
 }
