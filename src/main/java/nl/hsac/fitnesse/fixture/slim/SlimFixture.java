@@ -5,7 +5,6 @@ import fitnesse.slim.fixtureInteraction.InteractionAwareFixture;
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
