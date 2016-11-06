@@ -1580,10 +1580,10 @@ public class BrowserTest extends SlimFixture {
      */
     public String savePageSource() {
         String fileName = getResourceNameFromLocation();
-        return savePageSourceToLink(fileName, fileName + ".html");
+        return savePageSource(fileName, fileName + ".html");
     }
 
-    protected String savePageSourceToLink(String fileName, String linkText) {
+    protected String savePageSource(String fileName, String linkText) {
         // make href to file
         String url = savePageSourceWithFrames(fileName);
         return String.format("<a href=\"%s\">%s</a>", url, linkText);
@@ -1615,7 +1615,7 @@ public class BrowserTest extends SlimFixture {
             addSourceReplacementsForFrame(sourceReplacements, newLocation, fullUrlOfFrame);
         }
         String html = getCurrentFrameHtml(sourceReplacements);
-        return savePageSource(fileName, html);
+        return saveHtmlAsPageSource(fileName, html);
     }
 
     protected String saveFrameSource(WebElement frame) {
@@ -1670,7 +1670,7 @@ public class BrowserTest extends SlimFixture {
         return path;
     }
 
-    private String savePageSource(String fileName, String html) {
+    protected String saveHtmlAsPageSource(String fileName, String html) {
         String result;
         try {
             String pageSourceName = getPageSourceName(fileName);
@@ -1895,7 +1895,7 @@ public class BrowserTest extends SlimFixture {
                 } else {
                     fileName = "exception";
                 }
-                label = savePageSourceToLink(fileName, label);
+                label = savePageSource(fileName, label);
             } catch (UnhandledAlertException e) {
                 // https://code.google.com/p/selenium/issues/detail?id=4412
                 System.err.println("Unable to capture page source while alert is present for exception: " + messageBase);
