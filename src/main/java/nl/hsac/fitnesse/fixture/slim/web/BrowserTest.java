@@ -28,7 +28,9 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BrowserTest extends SlimFixture {
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
@@ -1577,6 +1579,12 @@ public class BrowserTest extends SlimFixture {
      * @return hyperlink to the file containing the page source.
      */
     public String savePageSource() {
+        String url = savePageSourceWithFrames();
+        String fileName = getResourceNameFromLocation();
+        return String.format("<a href=\"%s\">%s.html</a>", url, fileName);
+    }
+
+    protected String getResourceNameFromLocation() {
         String fileName = "pageSource";
         try {
             String location = location();
@@ -1589,26 +1597,78 @@ public class BrowserTest extends SlimFixture {
         } catch (MalformedURLException e) {
             // ignore
         }
-
-        return savePageSource(fileName, fileName + ".html");
+        return fileName;
     }
 
-    protected String savePageSource(String fileName, String linkText) {
+    protected String savePageSourceToLink(String fileName, String linkText) {
+        // make href to file
+        return savePageSourceWithFormat(fileName, "<a href=\"%s\">"+ linkText + "</a>");
+    }
+
+    public String savePageSourceWithFrames() {
         String result = null;
-        String html = getSeleniumHelper().getHtml();
-        if (html != null) {
-            try {
+        String fileName = getResourceNameFromLocation();
+        List<WebElement> frames = findAllByCss("iframe,frame");
+        if (frames.isEmpty()) {
+            result = savePageSourceWithFormat(fileName, "%s");
+        } else {
+            Map<String, String> nestedPages = new HashMap<>();
+            for (WebElement frame : frames) {
+                try {
+                    String fullUrlOfParent = location();
+                    int lastSlash = fullUrlOfParent.lastIndexOf("/");
+                    String baseUrl = fullUrlOfParent.substring(0, lastSlash + 1);
+                    String fullUrlOfFrame = frame.getAttribute("src");
+                    String relativeUrlOfFrame = fullUrlOfFrame.replace(baseUrl, "");
+                    getSeleniumHelper().switchToFrame(frame);
+                    String newLocation = savePageSourceWithFrames();
+                    nestedPages.put(fullUrlOfFrame, newLocation);
+                    nestedPages.put(relativeUrlOfFrame, newLocation);
+                } finally {
+                    getSeleniumHelper().switchToParentFrame();
+                }
+            }
+            fileName = getPageSourceName(fileName);
+            String html = getSeleniumHelper().getHtml();
+            for (Map.Entry<String, String> entry : nestedPages.entrySet()) {
+                String originalLocation = entry.getKey();
+                String newLocation = entry.getValue();
+                html = html.replace("src=\"" + originalLocation + "\"", "src=\"/" + newLocation + "\"");
+
+                try {
+                    String file = FileUtil.saveToFile(fileName, "html", html.getBytes("utf-8"));
+                    String wikiUrl = getWikiUrl(file);
+                    if (wikiUrl != null) {
+                        result = wikiUrl;
+                    } else {
+                        result = file;
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    throw new RuntimeException("Unable to save source", e);
+                }
+
+            }
+        }
+
+        return result;
+    }
+
+    protected String savePageSourceWithFormat(String fileName, String linkFormat) {
+        String result = null;
+        try {
+            String html = getSeleniumHelper().getHtml();
+            if (html != null) {
                 String file = FileUtil.saveToFile(getPageSourceName(fileName), "html", html.getBytes("utf-8"));
                 String wikiUrl = getWikiUrl(file);
                 if (wikiUrl != null) {
-                    // make href to file
-                    result = String.format("<a href=\"%s\">%s</a>", wikiUrl, linkText);
+                    // format file name
+                    result = String.format(linkFormat, wikiUrl);
                 } else {
                     result = file;
                 }
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException("Unable to save source", e);
             }
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Unable to save source", e);
         }
         return result;
     }
@@ -1820,7 +1880,7 @@ public class BrowserTest extends SlimFixture {
                 } else {
                     fileName = "exception";
                 }
-                label = savePageSource(fileName, label);
+                label = savePageSourceToLink(fileName, label);
             } catch (UnhandledAlertException e) {
                 // https://code.google.com/p/selenium/issues/detail?id=4412
                 System.err.println("Unable to capture page source while alert is present for exception: " + messageBase);
