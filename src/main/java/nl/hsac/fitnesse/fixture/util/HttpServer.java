@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.apache.http.entity.ContentType;
@@ -9,6 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -132,12 +134,22 @@ public class HttpServer <T extends HttpResponse> {
                     aResponse.setRequest(request);
 
                     ContentType contentType = XML_UTF8_TYPE;
-                    byte[] responseBytes = aResponse.getResponse()
-                                            .getBytes(contentType.getCharset());
+                    byte[] responseBytes;
+                    if (aResponse.getResponse() == null) {
+                        responseBytes = new byte[0];
+                    } else {
+                        responseBytes = aResponse.getResponse()
+                                         .getBytes(contentType.getCharset());
+                    }
+                    Headers heHeaders = he.getResponseHeaders();
+                    Map<String, Object> responseHeaders = aResponse.getResponseHeaders();
+                    for (Map.Entry<String, Object> headerEntry : responseHeaders.entrySet()) {
+                        String headerName = headerEntry.getKey();
+                        Object headerEntryValue = headerEntry.getValue();
+                        heHeaders.add(headerName, headerEntryValue.toString());
+                    }
                     he.sendResponseHeaders(aResponse.getStatusCode(),
                                             responseBytes.length);
-                    he.getResponseHeaders()
-                            .add("Content-Type", contentType.toString());
                     os = he.getResponseBody();
                     os.write(responseBytes);
                     os.flush();
