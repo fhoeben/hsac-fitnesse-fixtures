@@ -25,11 +25,11 @@ public class HttpResponse {
      * @throws RuntimeException if no valid response is available
      */
     public void validResponse() {
-        if (statusCode == HttpStatus.SC_NOT_IMPLEMENTED) {
-            throw new RuntimeException("The method is not implemented by this URI");
+        if (statusCode >= 500 && statusCode <= 599) {
+            throw new RuntimeException("Server error returned: " + statusCode);
         }
-        if (statusCode == HttpStatus.SC_NOT_FOUND) {
-            throw new RuntimeException("No content available for this URI");
+        if (statusCode >= 400 && statusCode <= 499) {
+            throw new RuntimeException("Server reported client error: " + statusCode);
         }
     }
 
