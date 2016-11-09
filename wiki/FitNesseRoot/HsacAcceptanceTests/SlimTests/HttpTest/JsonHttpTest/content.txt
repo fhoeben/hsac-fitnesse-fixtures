@@ -15,9 +15,10 @@
     }
 -!}
 
-|script      |mock xml server setup|
-|add response|${jsonToTest}        |
-|$url=       |get mock server url  |
+|script      |mock xml server setup |
+|add response|${jsonToTest}         |
+|add response|Broken|with status|500|
+|$url=       |get mock server url   |
 
 |script       |json http test                                                |
 |get from     |$url                                                          |
@@ -30,3 +31,9 @@
 |check        |json path            |airplanes[0].seats  |300                |
 |show         |response                                                      |
 
+And now a call which returns an error status code.
+
+|script                       |
+|reject|get from       |$url  |
+|check |response status|500   |
+|check |response       |Broken|
