@@ -1,6 +1,5 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import org.apache.http.HttpStatus;
 import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
 
