@@ -51,6 +51,9 @@ We retry a call until the condition on the response is true.
 |check                          |response status                |300         |
 |check                          |response                       |10 response |
 |check                          |repeat count                   |1           |
+|check                          |response time                  |< 250       |
+|check                          |time spent repeating           |> 250       |
+
 
 
 
