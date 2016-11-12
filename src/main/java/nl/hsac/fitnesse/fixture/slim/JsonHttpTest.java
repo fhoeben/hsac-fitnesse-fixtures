@@ -101,8 +101,9 @@ public class JsonHttpTest extends HttpTest {
                 @Override
                 public boolean isFinished() {
                     Object actual = jsonPath(jsonPath);
-                    return expectedValue.equals(actual)
-                            || expectedValue.toString().equals(actual.toString());
+                    return actual != null
+                            && (expectedValue.equals(actual)
+                            || expectedValue.toString().equals(actual.toString()));
                 }
             };
         }
