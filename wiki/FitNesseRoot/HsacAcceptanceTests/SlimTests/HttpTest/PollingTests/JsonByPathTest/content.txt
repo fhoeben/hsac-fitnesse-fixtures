@@ -11,7 +11,7 @@ We retry a call until a json path expression on the response is a certain value.
 |add response|{body:"5 response"} |with status|201|
 |add response|{body:"6 response"} |with status|299|
 |add response|{body:"7 response"} |with status|300|
-|add response|{body:"8 response"} |with status|200|
+|add response|{body:8}            |with status|200|
 |add response|{body:"9 response"} |with status|300|
 |add response|{body:"10 response"}|with status|300|
 |$url=       |get mock server url                 |
@@ -38,9 +38,9 @@ We retry a call until a json path expression on the response is a certain value.
 |check                 |repeat count          |2                      |
 |put                   |6 request             |to  |$url              |
 |check                 |response status       |299                    |
-|repeat until json path|body                  |is  |8 response        |
+|repeat until json path|body                  |is  |8                 |
 |check                 |response status       |200                    |
-|check                 |json path             |body|8 response        |
+|check                 |json path             |body|8                 |
 |check                 |repeat count          |2                      |
 |repeat at most        |1                     |times                  |
 |delete                |$url                                          |

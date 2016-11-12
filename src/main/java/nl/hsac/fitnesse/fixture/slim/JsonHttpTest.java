@@ -87,7 +87,7 @@ public class JsonHttpTest extends HttpTest {
         getResponse().setResponse(newResponse);
     }
 
-    public boolean repeatUntilJsonPathIs(final String jsonPath, final String expectedValue) {
+    public boolean repeatUntilJsonPathIs(final String jsonPath, final Object expectedValue) {
         RepeatCompletion completion;
         if (expectedValue == null) {
             completion = new RepeatLastCall() {
@@ -100,7 +100,9 @@ public class JsonHttpTest extends HttpTest {
             completion = new RepeatLastCall() {
                 @Override
                 public boolean isFinished() {
-                    return expectedValue.equals(jsonPath(jsonPath));
+                    Object actual = jsonPath(jsonPath);
+                    return expectedValue.equals(actual)
+                            || expectedValue.toString().equals(actual.toString());
                 }
             };
         }
