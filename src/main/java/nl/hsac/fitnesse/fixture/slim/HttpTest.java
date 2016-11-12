@@ -29,12 +29,8 @@ public class HttpTest extends SlimFixtureWithMap {
     private HttpResponse response = createResponse();
     private String template;
     private String contentType = DEFAULT_POST_CONTENT_TYPE;
-    private int repeatInterval = 100;
-    private int repeatMaxCount = 10;
-    private int repeatCount = 0;
     private String lastUrl = null;
     private String lastMethod = null;
-    private long repeatTime = 0;
 
     /**
      * Sets template to use.
@@ -641,57 +637,14 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     // Polling
-
-    public void setRepeatIntervalToMilliseconds(int milliseconds) {
-        repeatInterval = milliseconds;
-    }
-
-    public long repeatInterval() {
-        return repeatInterval;
-    }
-
-    public void repeatAtMostTimes(int maxCount) {
-        repeatMaxCount = maxCount;
-    }
-
-    public int repeatAtMostTimes() {
-        return repeatMaxCount;
-    }
-
-    public int repeatCount() {
-        return repeatCount;
-    }
-
     public boolean repeatUntilResponseStatusIs(final int expectedStatus) {
-        return repeatLastCall(
-                new RepeatCompletion() {
+        return repeatUntil(
+                new RepeatLastCall() {
                     @Override
                     public boolean isFinished() {
                         return responseStatus() == expectedStatus;
                     }
                 });
-    }
-
-    public long timeSpentRepeating() {
-        return repeatTime;
-    }
-
-    protected boolean repeatLastCall(RepeatCompletion repeat) {
-        repeatTime = 0;
-        TimerFixture tf = new TimerFixture();
-        tf.startTimer("$httpTest.repeatTime$");
-        boolean result = repeat.isFinished();
-        try {
-            for (repeatCount = 0; !result && repeatCount < repeatMaxCount; repeatCount++) {
-                waitMilliseconds(repeatInterval);
-                repeatLastCall();
-                result = repeat.isFinished();
-            }
-        } finally {
-            long extraTime = tf.stopTimer("$httpTest.repeatTime$");
-            repeatTime = extraTime;
-        }
-        return result;
     }
 
     protected void repeatLastCall() {
@@ -727,14 +680,11 @@ public class HttpTest extends SlimFixtureWithMap {
         lastUrl = url;
     }
 
-    /**
-     * Interface to check whether repeating call is completed.
-     */
-    public interface RepeatCompletion {
-        /**
-         * @return true if no more repeats are needed.
-         */
-        boolean isFinished();
+    protected abstract class RepeatLastCall implements RepeatCompletion {
+        @Override
+        public void repeat() {
+            repeatLastCall();
+        }
     }
     // Polling
 }
