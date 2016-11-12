@@ -660,7 +660,42 @@ public class HttpTest extends SlimFixtureWithMap {
             completion = new RepeatLastCall() {
                 @Override
                 public boolean isFinished() {
-                    return expectedResponse.equals(response());
+                    boolean result;
+                    Object actual = response();
+                    if (actual == null) {
+                        result = expectedResponse.equals("null");
+                    } else {
+                        result = expectedResponse.equals(actual);
+                    }
+                    return result;
+                }
+            };
+        }
+        return repeatUntil(completion);
+    }
+
+    public boolean repeatUntilHeaderIs(final String header, final Object expectedValue) {
+        RepeatCompletion completion;
+        if (expectedValue == null) {
+            completion = new RepeatLastCall() {
+                @Override
+                public boolean isFinished() {
+                    return responseHeader(header) == null;
+                }
+            };
+        } else {
+            completion = new RepeatLastCall() {
+                @Override
+                public boolean isFinished() {
+                    boolean result;
+                    Object actual = responseHeader(header);
+                    if (actual == null) {
+                        result = expectedValue.equals("null");
+                    } else {
+                        result = expectedValue.equals(actual)
+                                    || expectedValue.toString().equals(actual.toString());
+                    }
+                    return result;
                 }
             };
         }
