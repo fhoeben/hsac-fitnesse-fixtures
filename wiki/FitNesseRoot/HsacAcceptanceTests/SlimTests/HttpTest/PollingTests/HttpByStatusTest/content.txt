@@ -1,7 +1,4 @@
-We retry a call until the condition on the response is true.
-
-
-!2 By Status
+We retry a call until the HTTP status returned is a certain value.
 
 !*> Setup server
 
@@ -67,8 +64,5 @@ We retry a call until the condition on the response is true.
 |stop                        |
 *!
 
-
-
-!2 Response Content
 
 
