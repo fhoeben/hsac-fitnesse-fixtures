@@ -4,6 +4,7 @@ import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 import fitnesse.slim.fixtureInteraction.InteractionAwareFixture;
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
+import org.apache.commons.lang3.time.StopWatch;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -15,6 +16,7 @@ public class SlimFixture  implements InteractionAwareFixture {
     private Environment environment = Environment.getInstance();
     private int repeatInterval = 100;
     private int repeatMaxCount = Integer.MAX_VALUE;
+    private StopWatch repeatTimer = new StopWatch();
     private int repeatCount = 0;
     private long repeatTime = 0;
     protected final String filesDir = getEnvironment().getFitNesseFilesSectionDir();
@@ -140,8 +142,7 @@ public class SlimFixture  implements InteractionAwareFixture {
 
     protected boolean repeatUntil(RepeatCompletion repeat) {
         repeatTime = 0;
-        TimerFixture tf = new TimerFixture();
-        tf.startTimer("$slimTest.repeatTime$");
+        repeatTimer.start();
         boolean result = repeat.isFinished();
         try {
             for (repeatCount = 0; !result && repeatCount < repeatMaxCount; repeatCount++) {
@@ -150,8 +151,8 @@ public class SlimFixture  implements InteractionAwareFixture {
                 result = repeat.isFinished();
             }
         } finally {
-            long extraTime = tf.stopTimer("$slimTest.repeatTime$");
-            repeatTime = extraTime;
+            repeatTime = repeatTimer.getTime();
+            repeatTimer.reset();
         }
         return result;
     }
