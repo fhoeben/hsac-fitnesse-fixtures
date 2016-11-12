@@ -100,15 +100,8 @@ public class JsonHttpTest extends HttpTest {
             completion = new RepeatLastCall() {
                 @Override
                 public boolean isFinished() {
-                    boolean result;
                     Object actual = jsonPath(jsonPath);
-                    if (actual == null) {
-                        result = expectedValue.equals("null");
-                    } else {
-                        result = expectedValue.equals(actual)
-                                || expectedValue.toString().equals(actual.toString());
-                    }
-                    return result;
+                    return compareActualToExpected(expectedValue, actual);
                 }
             };
         }
