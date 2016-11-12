@@ -647,6 +647,26 @@ public class HttpTest extends SlimFixtureWithMap {
                 });
     }
 
+    public boolean repeatUntilResponseIs(final String expectedResponse) {
+        RepeatCompletion completion;
+        if (expectedResponse == null) {
+            completion = new RepeatLastCall() {
+                @Override
+                public boolean isFinished() {
+                    return response() == null;
+                }
+            };
+        } else {
+            completion = new RepeatLastCall() {
+                @Override
+                public boolean isFinished() {
+                    return expectedResponse.equals(response());
+                }
+            };
+        }
+        return repeatUntil(completion);
+    }
+
     protected void repeatLastCall() {
         if (lastMethod == null) {
             throw new SlimFixtureException(false, "First make a call before trying to repeat one.");
