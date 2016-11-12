@@ -34,6 +34,7 @@ public class HttpTest extends SlimFixtureWithMap {
     private int repeatCount = 0;
     private String lastUrl = null;
     private String lastMethod = null;
+    private long repeatTime = 0;
 
     /**
      * Sets template to use.
@@ -671,12 +672,24 @@ public class HttpTest extends SlimFixtureWithMap {
                 });
     }
 
+    public long timeSpentRepeating() {
+        return repeatTime;
+    }
+
     protected boolean repeatLastCall(RepeatCompletion repeat) {
+        repeatTime = 0;
+        TimerFixture tf = new TimerFixture();
+        tf.startTimer("$httpTest.repeatTime$");
         boolean result = repeat.isFinished();
-        for (repeatCount = 0; !result && repeatCount < repeatMaxCount; repeatCount++) {
-            waitMilliseconds(repeatInterval);
-            repeatLastCall();
-            result = repeat.isFinished();
+        try {
+            for (repeatCount = 0; !result && repeatCount < repeatMaxCount; repeatCount++) {
+                waitMilliseconds(repeatInterval);
+                repeatLastCall();
+                result = repeat.isFinished();
+            }
+        } finally {
+            long extraTime = tf.stopTimer("$httpTest.repeatTime$");
+            repeatTime = extraTime;
         }
         return result;
     }
