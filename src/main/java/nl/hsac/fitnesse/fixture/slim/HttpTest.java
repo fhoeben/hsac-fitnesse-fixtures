@@ -29,6 +29,11 @@ public class HttpTest extends SlimFixtureWithMap {
     private HttpResponse response = createResponse();
     private String template;
     private String contentType = DEFAULT_POST_CONTENT_TYPE;
+    private int repeatInterval = 100;
+    private int repeatMaxCount = 10;
+    private int repeatCount = 0;
+    private String lastUrl = null;
+    private String lastMethod = null;
 
     /**
      * Sets template to use.
@@ -115,6 +120,7 @@ public class HttpTest extends SlimFixtureWithMap {
         } else {
             String url = getUrl(serviceUrl);
             try {
+                storeLastCall("POST", serviceUrl);
                 getEnvironment().doHttpPost(url, template, getCurrentValues(), response, headerValues, getContentType());
             } catch (Throwable t) {
                 throw new StopTestException("Unable to get response from POST to: " + url, t);
@@ -142,7 +148,6 @@ public class HttpTest extends SlimFixtureWithMap {
      * @return true if call could be made and response did not indicate error.
      */
     public boolean postFileTo(String fileName, String serviceUrl) {
-
         return postFileToImpl(fileName, serviceUrl);
     }
 
@@ -162,6 +167,7 @@ public class HttpTest extends SlimFixtureWithMap {
         response.setRequest(body);
         String url = getUrl(serviceUrl);
         try {
+            storeLastCall("POST", serviceUrl);
             getEnvironment().doHttpPost(url, response, headerValues, getContentType());
         } catch (Throwable t) {
             throw new StopTestException("Unable to get response from POST to: " + url, t);
@@ -182,6 +188,8 @@ public class HttpTest extends SlimFixtureWithMap {
         }
 
         try {
+            response.setRequest(fileName);
+            storeLastCall("POST_FILE", serviceUrl);
             getEnvironment().doHttpFilePost(url, response, headerValues, file);
         } catch (Throwable t) {
             throw new StopTestException("Unable to get response from POST to: " + url, t);
@@ -203,6 +211,7 @@ public class HttpTest extends SlimFixtureWithMap {
         } else {
             String url = getUrl(serviceUrl);
             try {
+                storeLastCall("PUT", serviceUrl);
                 getEnvironment().doHttpPut(url, template, getCurrentValues(), response, headerValues, getContentType());
             } catch (Throwable t) {
                 throw new StopTestException("Unable to get response from PUT to: " + url, t);
@@ -239,6 +248,7 @@ public class HttpTest extends SlimFixtureWithMap {
         response.setRequest(body);
         String url = getUrl(serviceUrl);
         try {
+            storeLastCall("PUT", serviceUrl);
             getEnvironment().doHttpPut(url, response, headerValues, getContentType());
         } catch (Throwable t) {
             throw new StopTestException("Unable to get response from PUT to: " + url, t);
@@ -274,6 +284,13 @@ public class HttpTest extends SlimFixtureWithMap {
         resetResponse();
         String url = createUrlWithParams(serviceUrl);
         try {
+            String method;
+            if (followRedirect) {
+                method = "GET";
+            } else {
+                method = "GET_NO_REDIRECT";
+            }
+            storeLastCall(method, serviceUrl);
             getEnvironment().doGet(url, response, headerValues, followRedirect);
         } catch (Throwable t) {
             throw new StopTestException("Unable to GET response from: " + url, t);
@@ -293,6 +310,7 @@ public class HttpTest extends SlimFixtureWithMap {
         resetResponse();
         String url = createUrlWithParams(serviceUrl);
         try {
+            storeLastCall("DELETE", serviceUrl);
             getEnvironment().doDelete(url, response, headerValues);
         } catch (Throwable t) {
             throw new StopTestException("Unable to DELETE: " + url, t);
@@ -621,4 +639,89 @@ public class HttpTest extends SlimFixtureWithMap {
         contentType = aContentType;
     }
 
+    // Polling
+
+    public void setRepeatIntervalToMilliseconds(int milliseconds) {
+        repeatInterval = milliseconds;
+    }
+
+    public long repeatInterval() {
+        return repeatInterval;
+    }
+
+    public void repeatAtMostTimes(int maxCount) {
+        repeatMaxCount = maxCount;
+    }
+
+    public int repeatAtMostTimes() {
+        return repeatMaxCount;
+    }
+
+    public int repeatCount() {
+        return repeatCount;
+    }
+
+    public boolean repeatUntilResponseStatusIs(final int expectedStatus) {
+        return repeatLastCall(
+                new RepeatCompletion() {
+                    @Override
+                    public boolean isFinished() {
+                        return responseStatus() == expectedStatus;
+                    }
+                });
+    }
+
+    protected boolean repeatLastCall(RepeatCompletion repeat) {
+        boolean result = repeat.isFinished();
+        for (repeatCount = 0; !result && repeatCount < repeatMaxCount; repeatCount++) {
+            waitMilliseconds(repeatInterval);
+            repeatLastCall();
+            result = repeat.isFinished();
+        }
+        return result;
+    }
+
+    protected void repeatLastCall() {
+        if (lastMethod == null) {
+            throw new SlimFixtureException(false, "First make a call before trying to repeat one.");
+        }
+        switch (lastMethod) {
+            case "GET":
+                getImpl(lastUrl, true);
+                break;
+            case "POST":
+                postToImpl(response.getRequest(), lastUrl);
+                break;
+            case "PUT":
+                putToImpl(response.getRequest(), lastUrl);
+                break;
+            case "DELETE":
+                delete(lastUrl);
+                break;
+            case "GET_NO_REDIRECT":
+                getImpl(lastUrl, false);
+                break;
+            case "POST_FILE":
+                postFileToImpl(response.getRequest(), lastUrl);
+                break;
+            default:
+                throw new SlimFixtureException(false, "Repeat of method: " + lastMethod + " not configured.");
+        }
+    }
+
+    protected void storeLastCall(String method, String url) {
+        lastMethod = method;
+        lastUrl = url;
+    }
+
+    /**
+     * Interface to check whether repeating call is completed.
+     */
+    public interface RepeatCompletion {
+        /**
+         * @return true if no more repeats are needed.
+         */
+        boolean isFinished();
+    }
+    // Polling
 }
