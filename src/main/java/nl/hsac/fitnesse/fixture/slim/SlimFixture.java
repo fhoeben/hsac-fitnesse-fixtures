@@ -13,6 +13,10 @@ import java.lang.reflect.Method;
  */
 public class SlimFixture  implements InteractionAwareFixture {
     private Environment environment = Environment.getInstance();
+    private int repeatInterval = 100;
+    private int repeatMaxCount = Integer.MAX_VALUE;
+    private int repeatCount = 0;
+    private long repeatTime = 0;
     protected final String filesDir = getEnvironment().getFitNesseFilesSectionDir();
 
     @Override
@@ -108,6 +112,65 @@ public class SlimFixture  implements InteractionAwareFixture {
         }
         return result;
     }
+
+    // Polling
+    public void setRepeatIntervalToMilliseconds(int milliseconds) {
+        repeatInterval = milliseconds;
+    }
+
+    public long repeatInterval() {
+        return repeatInterval;
+    }
+
+    public void repeatAtMostTimes(int maxCount) {
+        repeatMaxCount = maxCount;
+    }
+
+    public int repeatAtMostTimes() {
+        return repeatMaxCount;
+    }
+
+    public int repeatCount() {
+        return repeatCount;
+    }
+
+    public long timeSpentRepeating() {
+        return repeatTime;
+    }
+
+    protected boolean repeatUntil(RepeatCompletion repeat) {
+        repeatTime = 0;
+        TimerFixture tf = new TimerFixture();
+        tf.startTimer("$slimTest.repeatTime$");
+        boolean result = repeat.isFinished();
+        try {
+            for (repeatCount = 0; !result && repeatCount < repeatMaxCount; repeatCount++) {
+                waitMilliseconds(repeatInterval);
+                repeat.repeat();
+                result = repeat.isFinished();
+            }
+        } finally {
+            long extraTime = tf.stopTimer("$slimTest.repeatTime$");
+            repeatTime = extraTime;
+        }
+        return result;
+    }
+
+    /**
+     * Interface to repeat a call until a condition is met.
+     */
+    public interface RepeatCompletion {
+        /**
+         * @return true if no more repeats are needed.
+         */
+        boolean isFinished();
+
+        /**
+         * Performs the action again.
+         */
+        void repeat();
+    }
+    // Polling
 
     /**
      * Converts a file path into a relative wiki path, if the path is insides the wiki's 'files' section.
