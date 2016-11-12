@@ -48,7 +48,6 @@ We retry a call until the HTTP status returned is a certain value.
 |check                          |response status                |300         |
 |check                          |response                       |10 response |
 |check                          |repeat count                   |1           |
-|check                          |response time                  |< 50        |
 |check                          |time spent repeating           |> 50        |
 
 
