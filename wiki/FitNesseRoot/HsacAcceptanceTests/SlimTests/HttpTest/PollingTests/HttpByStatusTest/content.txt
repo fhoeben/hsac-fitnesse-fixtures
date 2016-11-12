@@ -19,7 +19,7 @@ We retry a call until the HTTP status returned is a certain value.
 *!
 
 |script                         |http test                                   |
-|set repeat interval to         |250                            |milliseconds|
+|set repeat interval to         |50                             |milliseconds|
 |repeat at most                 |2                              |times       |
 |post                           |0 request                      |to   |$url  |
 |repeat until response status is|200                                         |
@@ -48,8 +48,8 @@ We retry a call until the HTTP status returned is a certain value.
 |check                          |response status                |300         |
 |check                          |response                       |10 response |
 |check                          |repeat count                   |1           |
-|check                          |response time                  |< 250       |
-|check                          |time spent repeating           |> 250       |
+|check                          |response time                  |< 50        |
+|check                          |time spent repeating           |> 50        |
 
 
 
