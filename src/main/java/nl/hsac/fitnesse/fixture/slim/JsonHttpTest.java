@@ -87,6 +87,26 @@ public class JsonHttpTest extends HttpTest {
         getResponse().setResponse(newResponse);
     }
 
+    public boolean repeatUntilJsonPathIs(final String jsonPath, final String expectedValue) {
+        RepeatCompletion completion;
+        if (expectedValue == null) {
+            completion = new RepeatLastCall() {
+                @Override
+                public boolean isFinished() {
+                    return jsonPath(jsonPath) == null;
+                }
+            };
+        } else {
+            completion = new RepeatLastCall() {
+                @Override
+                public boolean isFinished() {
+                    return expectedValue.equals(jsonPath(jsonPath));
+                }
+            };
+        }
+        return repeatUntil(completion);
+    }
+
     protected String getPathExpr(String path) {
         String jsonPath = path;
         if (!path.startsWith("$")) {
