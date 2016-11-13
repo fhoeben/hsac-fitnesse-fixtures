@@ -117,6 +117,27 @@ public class XmlHttpTest extends HttpTest {
         return result;
     }
 
+    public boolean repeatUntilXPathIs(final String xPath, final String expectedValue) {
+        RepeatCompletion completion;
+        if (expectedValue == null) {
+            completion = new RepeatLastCall() {
+                @Override
+                public boolean isFinished() {
+                    return xPath(xPath) == null;
+                }
+            };
+        } else {
+            completion = new RepeatLastCall() {
+                @Override
+                public boolean isFinished() {
+                    Object actual = xPath(xPath);
+                    return compareActualToExpected(expectedValue, actual);
+                }
+            };
+        }
+        return repeatUntil(completion);
+    }
+
     @Override
     public XmlHttpResponse getResponse() {
         return (XmlHttpResponse) super.getResponse();
