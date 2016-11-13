@@ -55,11 +55,12 @@ The main commands/keywords (i.e. public methods) offered by !-nl.hsac.fitnesse.f
 |repeat until response status is <value>|If the last response status is not 'value': repeats last request until it is.                                                                                                           |
 |repeat until response is <value>       |If the last response is not 'value': repeats last request until it is.                                                                                                                  |
 |repeat until header <name> is <value>  |If HTTP header 'name' for the last response is not 'value': repeats last request until it does.                                                                                         |
-|repeat at most	<count> times           |Sets the maximum number of requests sent by 'repeat until ...' commands. The commands will return false if this number is reached without the condition being met.                      |
 |repeat count                           |Returns the number of requests sent by the last 'repeat until ...' command.                                                                                                             |
+|time spent repeating                   |Returns the number of milliseconds the last 'repeat until ...' command took.                                                                                                            |
+|repeat at most	<count> times           |Sets the maximum number of requests sent by 'repeat until ...' commands. The commands will return false if this number is reached without the condition being met.                      |
+|repeat at most	times                   |Returns the maximum number of requests sent by 'repeat until ...' commands.                                                                                                             |
 |set repeat interval to <interval>      |Sets the number of milliseconds between requests sent by 'repeat until ...' commands.                                                                                                   |
 |repeat interval                        |Returns the number of milliseconds between requests sent by 'repeat until ...' commands.                                                                                                |
-|time spent repeating                   |Returns the number of milliseconds the last 'repeat until ...' command took.                                                                                                            |
 
 
 !3 !-JsonHttpTest-!
