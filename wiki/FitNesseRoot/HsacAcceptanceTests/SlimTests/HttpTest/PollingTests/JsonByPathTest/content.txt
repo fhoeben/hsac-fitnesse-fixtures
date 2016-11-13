@@ -1,0 +1,67 @@
+We retry a call until a json path expression on the response is a certain value.
+
+!*> Setup server
+
+|script      |mock xml server setup               |
+|add response|{body:"0 response"} |with status|200|
+|add response|{body:"1 response"} |with status|201|
+|add response|{body:"2 response"} |with status|200|
+|add response|{body:"3 response"} |with status|203|
+|add response|{body:"4 response"} |with status|202|
+|add response|{body:"5 response"} |with status|201|
+|add response|{body:"6 response"} |with status|299|
+|add response|{body:"7 response"} |with status|300|
+|add response|{body:8}            |with status|200|
+|add response|{body:"9 response"} |with status|300|
+|add response|{body:"10 response"}|with status|300|
+|$url=       |get mock server url                 |
+
+*!
+
+|script                |json http test                                |
+|set repeat interval to|50                    |milliseconds           |
+|repeat at most        |2                     |times                  |
+|post                  |0 request             |to  |$url              |
+|repeat until json path|body                  |is  |0 response        |
+|check                 |response status       |200                    |
+|check                 |json path             |body|0 response        |
+|check                 |repeat count          |0                      |
+|post                  |1 request             |to  |$url              |
+|repeat until json path|body                  |is  |2 response        |
+|check                 |response status       |200                    |
+|check                 |json path             |body|2 response        |
+|check                 |repeat count          |1                      |
+|get from              |$url                                          |
+|repeat until json path|body                  |is  |5 response        |
+|check                 |response status       |201                    |
+|check                 |json path             |body|5 response        |
+|check                 |repeat count          |2                      |
+|put                   |6 request             |to  |$url              |
+|check                 |response status       |299                    |
+|repeat until json path|body                  |is  |8                 |
+|check                 |response status       |200                    |
+|check                 |json path             |body|8                 |
+|check                 |repeat count          |2                      |
+|repeat at most        |1                     |times                  |
+|delete                |$url                                          |
+|reject                |repeat until json path|body|is|does not happen|
+|check                 |response status       |300                    |
+|check                 |json path             |body|10 response       |
+|check                 |repeat count          |1                      |
+|check                 |time spent repeating  |> 50                   |
+
+
+
+
+
+
+
+!*> Stop Server
+|table: Mock Server Message Report|
+
+|script|mock xml server setup|
+|stop                        |
+*!
+
+
+
