@@ -5,7 +5,9 @@ import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -15,6 +17,7 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.NoConnectionReuseStrategy;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -30,14 +33,29 @@ import java.util.Map;
  * Helper to make Http calls and get response.
  */
 public class HttpClient {
-    private final static org.apache.http.client.HttpClient HTTP_CLIENT;
+    /** Default HttpClient instance used. */
+    public final static org.apache.http.client.HttpClient DEFAULT_HTTP_CLIENT;
+    private org.apache.http.client.HttpClient httpClient;
 
     static {
-        HTTP_CLIENT = HttpClients.custom()
+        RequestConfig rc = RequestConfig.custom()
+                            .setCookieSpec(CookieSpecs.STANDARD)
+                            .build();
+
+        DEFAULT_HTTP_CLIENT = HttpClients.custom()
                 .useSystemProperties()
                 .disableContentCompression()
+                .setConnectionReuseStrategy(NoConnectionReuseStrategy.INSTANCE)
                 .setUserAgent(HttpClient.class.getName())
+                .setDefaultRequestConfig(rc)
                 .build();
+    }
+
+    /**
+     * Creates new.
+     */
+    public HttpClient() {
+        httpClient = DEFAULT_HTTP_CLIENT;
     }
 
     /**
@@ -122,49 +140,19 @@ public class HttpClient {
     protected void getResponse(String url, HttpResponse response, HttpRequestBase method, Map<String, Object> headers) {
         long startTime = 0;
         long endTime = -1;
+        org.apache.http.HttpResponse resp = null;
         try {
             if (headers != null) {
-                for (String key : headers.keySet()) {
-                    Object value = headers.get(key);
-                    if (value != null) {
-                        method.setHeader(key, value.toString());
-                    }
-                }
+                addHeadersToMethod(headers, method);
             }
 
-            org.apache.http.HttpResponse resp;
-            CookieStore store = response.getCookieStore();
+            HttpContext context = createContext(response);
 
             startTime = currentTimeMillis();
-            if (store == null) {
-                resp = getHttpResponse(url, method);
-            } else {
-                resp = getHttpResponse(store, url, method);
-            }
+            resp = executeMethod(context, method);
             endTime = currentTimeMillis();
 
-            int returnCode = resp.getStatusLine().getStatusCode();
-            response.setStatusCode(returnCode);
-            HttpEntity entity = resp.getEntity();
-
-            copyHeaders(response.getResponseHeaders(), resp.getAllHeaders());
-
-            if (entity == null) {
-                response.setResponse(null);
-            } else {
-                if (response instanceof BinaryHttpResponse) {
-                    BinaryHttpResponse binaryHttpResponse = (BinaryHttpResponse) response;
-
-                    byte[] content = EntityUtils.toByteArray(entity);
-                    binaryHttpResponse.setResponseContent(content);
-
-                    String fileName = getAttachmentFileName(resp);
-                    binaryHttpResponse.setFileName(fileName);
-                } else {
-                    String result = EntityUtils.toString(entity);
-                    response.setResponse(result);
-                }
-            }
+            storeResponse(response, resp);
         } catch (Exception e) {
             throw new RuntimeException("Unable to get response from: " + url, e);
         } finally {
@@ -174,11 +162,43 @@ public class HttpClient {
                 }
             }
             response.setResponseTime(endTime - startTime);
-            method.reset();
+            cleanupAfterRequest(resp, method);
         }
     }
 
-    protected void copyHeaders(Map<String, Object> responseHeaders, Header[] respHeaders) {
+    protected void addHeadersToMethod(Map<String, Object> requestHeaders, HttpRequestBase method) {
+        for (String key : requestHeaders.keySet()) {
+            Object value = requestHeaders.get(key);
+            if (value != null) {
+                method.setHeader(key, value.toString());
+            }
+        }
+    }
+
+    protected HttpContext createContext(HttpResponse response) {
+        HttpContext localContext = new BasicHttpContext();
+        CookieStore store = response.getCookieStore();
+        if (store != null) {
+            localContext.setAttribute(HttpClientContext.COOKIE_STORE, store);
+        }
+        return localContext;
+    }
+
+    protected org.apache.http.HttpResponse executeMethod(HttpContext context, HttpRequestBase method)
+            throws IOException {
+        return httpClient.execute(method, context);
+    }
+
+    protected void storeResponse(HttpResponse response, org.apache.http.HttpResponse resp) throws IOException {
+        int returnCode = resp.getStatusLine().getStatusCode();
+        response.setStatusCode(returnCode);
+
+        addHeadersFromResponse(response.getResponseHeaders(), resp.getAllHeaders());
+
+        copyResponseContent(response, resp);
+    }
+
+    protected void addHeadersFromResponse(Map<String, Object> responseHeaders, Header[] respHeaders) {
         for (Header h : respHeaders) {
             String headerName = h.getName();
             String headerValue = h.getValue();
@@ -203,7 +223,27 @@ public class HttpClient {
         }
     }
 
-    private String getAttachmentFileName(org.apache.http.HttpResponse resp) {
+    protected void copyResponseContent(HttpResponse response, org.apache.http.HttpResponse resp) throws IOException {
+        HttpEntity entity = resp.getEntity();
+        if (entity == null) {
+            response.setResponse(null);
+        } else {
+            if (response instanceof BinaryHttpResponse) {
+                BinaryHttpResponse binaryHttpResponse = (BinaryHttpResponse) response;
+
+                byte[] content = EntityUtils.toByteArray(entity);
+                binaryHttpResponse.setResponseContent(content);
+
+                String fileName = getAttachmentFileName(resp);
+                binaryHttpResponse.setFileName(fileName);
+            } else {
+                String result = EntityUtils.toString(entity);
+                response.setResponse(result);
+            }
+        }
+    }
+
+    protected String getAttachmentFileName(org.apache.http.HttpResponse resp) {
         String fileName = null;
         Header[] contentDisp = resp.getHeaders("content-disposition");
         if (contentDisp != null && contentDisp.length > 0) {
@@ -223,17 +263,32 @@ public class HttpClient {
         return fileName;
     }
 
-    protected org.apache.http.HttpResponse getHttpResponse(CookieStore store, String url, HttpRequestBase method) throws IOException {
-        HttpContext localContext = new BasicHttpContext();
-        localContext.setAttribute(HttpClientContext.COOKIE_STORE, store);
-        return HTTP_CLIENT.execute(method, localContext);
-    }
-
-    protected org.apache.http.HttpResponse getHttpResponse(String url, HttpRequestBase method) throws IOException {
-        return HTTP_CLIENT.execute(method);
+    protected void cleanupAfterRequest(org.apache.http.HttpResponse response, HttpRequestBase method) {
+        method.reset();
+        if (response instanceof CloseableHttpResponse) {
+            try {
+                ((CloseableHttpResponse)response).close();
+            } catch (IOException e) {
+                throw new RuntimeException("Unable to close connection", e);
+            }
+        }
     }
 
     protected long currentTimeMillis() {
         return System.currentTimeMillis();
+    }
+
+    /**
+     * @return http client used to make calls.
+     */
+    public org.apache.http.client.HttpClient getHttpClient() {
+        return httpClient;
+    }
+
+    /**
+     * @param httpClient http client used to make calls.
+     */
+    public void setHttpClient(org.apache.http.client.HttpClient httpClient) {
+        this.httpClient = httpClient;
     }
 }
