@@ -42,9 +42,11 @@ public class PageSourceSaver {
         List<WebElement> frames = getFrames();
         for (WebElement frame : frames) {
             String newLocation = saveFrameSource(frame);
-            String fullUrlOfFrame = frame.getAttribute("src");
+            if (newLocation != null) {
+                String fullUrlOfFrame = frame.getAttribute("src");
 
-            addSourceReplacementsForFrame(sourceReplacements, newLocation, fullUrlOfFrame);
+                addSourceReplacementsForFrame(sourceReplacements, newLocation, fullUrlOfFrame);
+            }
         }
         String html = getCurrentFrameHtml(sourceReplacements);
         return saveHtmlAsPageSource(fileName, html);
@@ -53,10 +55,16 @@ public class PageSourceSaver {
     protected String saveFrameSource(WebElement frame) {
         try {
             getSeleniumHelper().switchToFrame(frame);
-            String fileName = getSeleniumHelper().getResourceNameFromLocation();
-            return savePageSource(fileName);
-        } finally {
-            getSeleniumHelper().switchToParentFrame();
+            try {
+                String fileName = getSeleniumHelper().getResourceNameFromLocation();
+                return savePageSource(fileName);
+            } finally {
+                getSeleniumHelper().switchToParentFrame();
+            }
+        } catch (Exception e) {
+            System.err.println("Error saving sources of nested (i)frame: " + frame);
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -107,7 +115,7 @@ public class PageSourceSaver {
         String result;
         try {
             String pageSourceName = getPageSourceName(fileName);
-            String file = FileUtil.saveToFile(pageSourceName, "html", html.getBytes("utf-8"));
+            String file = FileUtil.saveToFile(pageSourceName, "HTML", html.getBytes("utf-8"));
             String wikiUrl = getWikiUrl(file);
             if (wikiUrl != null) {
                 result = wikiUrl;
