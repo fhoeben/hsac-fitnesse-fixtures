@@ -13,6 +13,7 @@ We retry a call until a header of the response is a certain value.
 *!
 
 |script                |json http test                               |
+|check                 |repeat interval    |100                      |
 |set repeat interval to|50                 |milliseconds             |
 |repeat at most        |2                  |times                    |
 |post                  |0 request          |to                |$url  |
