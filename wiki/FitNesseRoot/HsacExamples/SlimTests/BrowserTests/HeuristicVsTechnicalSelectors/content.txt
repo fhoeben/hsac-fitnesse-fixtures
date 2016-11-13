@@ -32,7 +32,7 @@ This version shows a test can be understood, and even written, by people without
 |enter                 |!monthsFromToday (MM/15/yyyy) +10                    |as                    |Returning                       |
 |select                |2                                                    |as                    |Adults                          |
 |note                  |!note Searching may take a while so we set a longer timeout                                                  |
-|seconds before timeout|40                                                                                                           |
+|seconds before timeout|60                                                                                                           |
 |click                 |Search                                                                                                       |
 |wait for visible      |Start by choosing your hotel                                                                                 |
 |click                 |Broadway - Times Square                              |in                    |Neighborhood                    |
@@ -59,7 +59,7 @@ Although the identifiers used inside Expedia's HTML are quite descriptive, this 
 |enter                 |!monthsFromToday (MM/8/yyyy) +10  |as|id=package-departing    |
 |enter                 |!monthsFromToday (MM/15/yyyy) +10 |as|id=package-returning    |
 |select                |2                                 |as|id=package-1-adults     |
-|seconds before timeout|40                                                            |
+|seconds before timeout|60                                                            |
 |click                 |id=search-button                                              |
 |wait for visible      |id=packageSearchTitle                                         |
 |click                 |id=id_NeighborhoodRegionName800077|in|id=neighborhoodContainer|
