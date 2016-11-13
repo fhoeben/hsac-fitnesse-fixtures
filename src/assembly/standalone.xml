@@ -22,6 +22,7 @@
                 <exclude>FitNesseRoot/PageFooter/**</exclude>
                 <exclude>FitNesseRoot/PageHeader/**</exclude>
                 <exclude>FitNesseRoot/RecentChanges/**</exclude>
+                <exclude>FitNesseRoot/RecentChanges.wiki</exclude>
                 <exclude>FitNesseRoot/TemplateLibrary/**</exclude>
                 <exclude>FitNesseRoot/properties</exclude>
                 <exclude>FitNesseRoot/updateList</exclude>
