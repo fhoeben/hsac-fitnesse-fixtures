@@ -18,6 +18,15 @@ public class StringFixture extends SlimFixture {
     public String valueOf(String value) {
         return value;
     }
+	
+	/**
+     * Returns value.
+     * @param value value to return
+     * @return value
+     */
+    public String assignTo(String value) {
+        return value;
+    }
 
     /**
      * Determines length of string.
