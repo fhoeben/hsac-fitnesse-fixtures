@@ -94,7 +94,11 @@ public class NgBrowserTest extends BrowserTest {
      */
     protected boolean requiresWaitForAngular(Method method) {
         String methodName = method.getName();
-        return !METHODS_NO_WAIT.contains(methodName) && !method.isAnnotationPresent(NoNgWait.class);
+        return !METHODS_NO_WAIT.contains(methodName) && !hasNoWaitAnnotation(method);
+    }
+    
+    protected boolean hasNoWaitAnnotation(Method method) {
+    	return method.isAnnotationPresent(NoNgWait.class);
     }
 
     @Override
