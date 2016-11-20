@@ -77,6 +77,11 @@ public class MockXmlServerSetup extends SlimFixture {
         response.setStatusCode(aStatusCode);
     }
 
+    public void addResponseWithHeaders(String aResponse, Map<String, Object> headers) {
+        XmlHttpResponse response = addResponseImpl(aResponse, null);
+        response.getResponseHeaders().putAll(headers);
+    }
+
     public void addResponseFile(String aResponseFile) {
         String fileContent = loadResponseFromFile(aResponseFile);
         addResponse(fileContent);
