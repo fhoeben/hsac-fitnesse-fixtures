@@ -28,7 +28,11 @@ public class XmlHttpTest extends HttpTest {
 
     @Override
     protected String formatValue(String value) {
-        return getEnvironment().getHtmlForXml(value);
+        String formatted = super.formatValue(value);
+        if (value != null && value.startsWith("<")) {
+            formatted = getEnvironment().getHtmlForXml(value);
+        }
+        return formatted;
     }
 
     /**
