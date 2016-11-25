@@ -21,6 +21,8 @@ public class JsonHttpTestTest {
 
         assertEquals(expected,
                 fixture.safeFormatValue("{\"category\": \"reference\",\"price\": 8.95}").replace("\r", ""));
+        assertEquals(expected,
+                fixture.safeFormatValue(" {\"category\": \"reference\",\"price\": 8.95}").replace("\r", ""));
     }
 
     @Test

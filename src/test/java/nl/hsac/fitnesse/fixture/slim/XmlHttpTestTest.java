@@ -19,6 +19,7 @@ public class XmlHttpTestTest {
         String expected = "<pre>&lt;hello/&gt;\n</pre>";
 
         assertEquals(expected, xmlHttpTest.safeFormatValue("<hello/>").replace("\r", ""));
+        assertEquals(expected, xmlHttpTest.safeFormatValue(" <hello/>").replace("\r", ""));
     }
 
     @Test
