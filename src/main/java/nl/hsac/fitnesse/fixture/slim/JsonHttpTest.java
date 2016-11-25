@@ -25,7 +25,7 @@ public class JsonHttpTest extends HttpTest {
     @Override
     protected String formatValue(String value) {
         String formatted = super.formatValue(value);
-        if (value != null && value.startsWith("{")) {
+        if (value != null && value.trim().startsWith("{")) {
             formatted = getEnvironment().getHtmlForJson(value);
         }
         return formatted;
