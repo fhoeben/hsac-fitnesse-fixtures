@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
  * Tests HttpTest.
  */
 public class HttpTestTest {
-    private final HttpTest client = new XmlHttpTest();
+    private final HttpTest client = new HttpTest();
 
     @Test
     public void testUrlCleanUp() {
