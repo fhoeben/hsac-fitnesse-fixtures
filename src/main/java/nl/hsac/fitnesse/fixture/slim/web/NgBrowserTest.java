@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
+import nl.hsac.fitnesse.fixture.slim.web.annotation.NoNgWait;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.WaitUntil;
 import nl.hsac.fitnesse.fixture.util.selenium.NgClientSideScripts;
 import nl.hsac.fitnesse.slim.interaction.ReflectionHelper;
@@ -93,7 +94,11 @@ public class NgBrowserTest extends BrowserTest {
      */
     protected boolean requiresWaitForAngular(Method method) {
         String methodName = method.getName();
-        return !METHODS_NO_WAIT.contains(methodName);
+        return !METHODS_NO_WAIT.contains(methodName) && !hasNoWaitAnnotation(method);
+    }
+    
+    protected boolean hasNoWaitAnnotation(Method method) {
+    	return method.isAnnotationPresent(NoNgWait.class);
     }
 
     @Override

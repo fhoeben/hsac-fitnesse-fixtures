@@ -65,15 +65,24 @@ public class MockXmlServerSetup extends SlimFixture {
     }
 
     public void addResponseFor(String aResponse, String aRequest) {
-        addResponseImpl(aResponse, aRequest);
+        addResponseImpl(aResponse, aRequest, null);
     }
 
     public void addResponse(String aResponse) {
-        addResponseImpl(aResponse, null);
+        addResponseImpl(aResponse, null, null);
     }
 
     public void addResponseWithStatus(String aResponse, int aStatusCode) {
-        XmlHttpResponse response = addResponseImpl(aResponse, null);
+        XmlHttpResponse response = addResponseImpl(aResponse, null, null);
+        response.setStatusCode(aStatusCode);
+    }
+
+    public void addResponseWithHeaders(String aResponse, Map<String, Object> headers) {
+        addResponseImpl(aResponse, null, headers);
+    }
+
+    public void addResponseWithStatusAndHeaders(String aResponse, int aStatusCode, Map<String, Object> headers) {
+        XmlHttpResponse response = addResponseImpl(aResponse, null, headers);
         response.setStatusCode(aStatusCode);
     }
 
@@ -98,10 +107,14 @@ public class MockXmlServerSetup extends SlimFixture {
         return fileContent;
     }
 
-    protected XmlHttpResponse addResponseImpl(String aResponse, String aRequest) {
+    protected XmlHttpResponse addResponseImpl(String aResponse, String aRequest, Map<String, Object> headers) {
         String responseBody = cleanupBody(aResponse);
         String request = cleanupValue(aRequest);
-        return getResponse().addResponse(responseBody, request);
+        XmlHttpResponse response = getResponse().addResponse(responseBody, request);
+        if (headers != null) {
+            response.getResponseHeaders().putAll(headers);
+        }
+        return response;
     }
 
     protected String cleanupBody(String body) {

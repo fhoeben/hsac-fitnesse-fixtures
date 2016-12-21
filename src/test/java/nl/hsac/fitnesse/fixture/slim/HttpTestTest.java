@@ -1,10 +1,10 @@
 package nl.hsac.fitnesse.fixture.slim;
 
 
-import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 import org.junit.Test;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
  * Tests HttpTest.
  */
 public class HttpTestTest {
-    private final HttpTest client = new XmlHttpTest();
+    private final HttpTest client = new HttpTest();
 
     @Test
     public void testUrlCleanUp() {
@@ -145,12 +145,9 @@ public class HttpTestTest {
 
     private String setupRedirectResponse(MockXmlServerSetup mockXmlServerSetup) {
         String serverUrl = mockXmlServerSetup.getMockServerUrl();
-        XmlHttpResponse redirectResp = new XmlHttpResponse();
-        redirectResp.setStatusCode(301);
-        redirectResp.getResponseHeaders().put("Location", serverUrl + "/a");
-
-        List<XmlHttpResponse> list = (List<XmlHttpResponse>) mockXmlServerSetup.getResponseList();
-        list.add(redirectResp);
+        Map<String, Object> headers = new HashMap();
+        headers.put("Location", serverUrl + "/a");
+        mockXmlServerSetup.addResponseWithStatusAndHeaders("", 301, headers);
 
         mockXmlServerSetup.addResponse("<hello/>");
         return serverUrl;

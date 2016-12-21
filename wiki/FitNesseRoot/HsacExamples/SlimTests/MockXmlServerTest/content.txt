@@ -79,6 +79,36 @@ Here we use !-FitNesse-! as a HTTP server so we can control which responses the 
 |show    |response           |
 
 
+!2 Headers
+
+|script      |mock xml server setup                                                                     |
+|add response|bye |with headers|!{Content-type:application/xml, My-header:abc-Ë}                        |
+|add response|bye2|with headers|!{Content-type:text/html; charset=iso-8859-1, My-header:xyz-Ë}          |
+|add response|bye3|with status |201|and headers|!{Content-Type:text/html; charset=UTF-16, My-header:x-Ë}|
+|$url=       |get mock server url                                                                       |
+
+|script  |http test                                                 |
+|get from|$url                                                      |
+|check   |response header|Content-type|application/xml              |
+|check   |response header|My-header   |abc-Ë                        |
+|check   |response status|200                                       |
+|check   |response       |bye                                       |
+|get from|$url                                                      |
+|check   |response header|Content-type|text/html; charset=iso-8859-1|
+|check   |response header|My-header   |xyz-Ë                        |
+|check   |response status|200                                       |
+|check   |response       |bye2                                      |
+|get from|$url                                                      |
+|check   |response header|Content-type|text/html; charset=UTF-16    |
+|check   |response header|My-header   |x-Ë                          |
+|check   |response status|201                                       |
+|check   |response       |bye3                                      |
+
+
+
+
+
+
 |table: Mock Server Message Report|
 
 |script|mock xml server setup|

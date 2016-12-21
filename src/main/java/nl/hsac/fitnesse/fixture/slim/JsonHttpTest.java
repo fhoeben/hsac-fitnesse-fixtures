@@ -24,7 +24,11 @@ public class JsonHttpTest extends HttpTest {
 
     @Override
     protected String formatValue(String value) {
-        return getEnvironment().getHtmlForJson(value);
+        String formatted = super.formatValue(value);
+        if (value != null && value.trim().startsWith("{")) {
+            formatted = getEnvironment().getHtmlForJson(value);
+        }
+        return formatted;
     }
 
     public Object jsonPath(String path) {
