@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Scanner;
 
 /**
  * Utility fixture to work with files.
@@ -47,6 +48,28 @@ public class FileFixture extends SlimFixtureWithMap {
             }
         }
         return text;
+    }
+
+    public String takeFirstLineFrom(String filename) throws IOException {
+        String result;
+        String fullName = getFullName(filename);
+        ensureParentExists(fullName);
+        File file = new File(fullName);
+        Scanner fileScanner = new Scanner(file);
+        if(fileScanner.hasNextLine()) {
+            result = fileScanner.nextLine();
+        } else{
+            throw new IOException(fullName + " is an empty file.");
+        }
+
+        //Overwrite file, minus the first line.
+        String remainingFileContent = "";
+        while(fileScanner.hasNextLine()) {
+            String next = fileScanner.nextLine();
+            remainingFileContent += next + System.getProperty("line.separator");
+        }
+        createContaining(fullName, remainingFileContent);
+        return result;
     }
 
     public String contentOf(String filename) throws IOException {

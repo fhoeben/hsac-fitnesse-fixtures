@@ -6,6 +6,10 @@ Filenames may be manipulated.
 #!define DIR {/Users/fried/dev/github-hsac-fitnesse-fixtures/wiki/FitNesseRoot/files}
 !define DIR {.}
 
+!define LIST_CONTENT {!-001
+002
+last one!-!}
+
 |script       |file fixture                                                              |
 |note         |default directory used by the fixture is inside the files section         |
 |$created=    |create      |bye1.txt                    |containing|Bye Bye 1            |
@@ -35,5 +39,18 @@ Filenames may be manipulated.
 |check        |filename of |${DIR}\copy\greetingCopy.txt|greetingCopy.txt                |
 |check        |base name of|${DIR}\copy\greetingCopy.txt|greetingCopy                    |
 |check        |extension of|${DIR}\copy\greetingCopy.txt|txt                             |
+
+Table below shows how we can use a list of non-reusable data from a file:
+
+|script                                                             |
+|set directory|http://files/fileFixture                             |
+|create       |list.txt            |containing    |${LIST_CONTENT}  |
+|show         |text in             |list.txt                        |
+|check        |take first line from|list.txt      |001              |
+|show         |text in             |list.txt                        |
+|check        |take first line from|list.txt      |002              |
+|check        |take first line from|list.txt      |last one!        |
+|show         |text in             |list.txt                        |
+
 
 
