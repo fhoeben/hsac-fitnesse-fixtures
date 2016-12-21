@@ -3,6 +3,7 @@ package nl.hsac.fitnesse.fixture.slim;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
@@ -10,6 +11,26 @@ import static org.junit.Assert.fail;
  */
 public class JsonHttpTestTest {
     private JsonHttpTest fixture = new JsonHttpTest();
+
+    @Test
+    public void testFormatJson() {
+        String expected = "<pre>{\n" +
+                "    &quot;category&quot;: &quot;reference&quot;,\n" +
+                "    &quot;price&quot;: 8.95\n" +
+                "}</pre>";
+
+        assertEquals(expected,
+                fixture.safeFormatValue("{\"category\": \"reference\",\"price\": 8.95}").replace("\r", ""));
+        assertEquals(expected,
+                fixture.safeFormatValue(" {\"category\": \"reference\",\"price\": 8.95}").replace("\r", ""));
+    }
+
+    @Test
+    public void testFormatUrl() {
+        String expected = "http://myhost.com/get?has=a&hg=9223s";
+
+        assertEquals(expected, fixture.safeFormatValue(expected));
+    }
 
     @Test
     public void testJsonPathHandleEmptyResponse() {

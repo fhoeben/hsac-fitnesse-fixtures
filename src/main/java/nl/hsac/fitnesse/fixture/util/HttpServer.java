@@ -3,13 +3,17 @@ package nl.hsac.fitnesse.fixture.util;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.apache.http.ParseException;
 import org.apache.http.entity.ContentType;
+import org.apache.http.protocol.HTTP;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -17,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Receiver for a callback from application being tested.
  */
 public class HttpServer <T extends HttpResponse> {
-    private static final ContentType XML_UTF8_TYPE = ContentType.parse(XmlHttpResponse.CONTENT_TYPE_XML_TEXT_UTF8);
+    private static final Charset UTF8 = ContentType.parse(XmlHttpResponse.CONTENT_TYPE_XML_TEXT_UTF8).getCharset();
 
     private final T response;
     private final com.sun.net.httpserver.HttpServer server;
@@ -133,20 +137,19 @@ public class HttpServer <T extends HttpResponse> {
                     }
                     aResponse.setRequest(request);
 
-                    ContentType contentType = XML_UTF8_TYPE;
-                    byte[] responseBytes;
-                    if (aResponse.getResponse() == null) {
-                        responseBytes = new byte[0];
-                    } else {
-                        responseBytes = aResponse.getResponse()
-                                         .getBytes(contentType.getCharset());
-                    }
                     Headers heHeaders = he.getResponseHeaders();
                     Map<String, Object> responseHeaders = aResponse.getResponseHeaders();
                     for (Map.Entry<String, Object> headerEntry : responseHeaders.entrySet()) {
                         String headerName = headerEntry.getKey();
                         Object headerEntryValue = headerEntry.getValue();
                         heHeaders.add(headerName, headerEntryValue.toString());
+                    }
+                    byte[] responseBytes;
+                    if (aResponse.getResponse() == null) {
+                        responseBytes = new byte[0];
+                    } else {
+                        Charset charset = getCharSet(heHeaders);
+                        responseBytes = aResponse.getResponse().getBytes(charset);
                     }
                     he.sendResponseHeaders(aResponse.getStatusCode(),
                                             responseBytes.length);
@@ -163,6 +166,23 @@ public class HttpServer <T extends HttpResponse> {
             }
         };
         return result;
+    }
+
+    protected Charset getCharSet(Headers heHeaders) {
+        Charset charset = UTF8;
+        String contentTypeHeader = heHeaders.getFirst(HTTP.CONTENT_TYPE);
+        if (contentTypeHeader != null) {
+            try {
+                ContentType contentType = ContentType.parse(contentTypeHeader);
+                Charset contentTypeCharset = contentType.getCharset();
+                if (contentTypeCharset != null) {
+                    charset = contentTypeCharset;
+                }
+            } catch (ParseException | UnsupportedCharsetException e) {
+                // ignore, use default charset UTF8
+            }
+        }
+        return charset;
     }
 
     protected int incrementRequestsReceived() {
