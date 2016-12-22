@@ -53,7 +53,7 @@ public class FileFixture extends SlimFixtureWithMap {
         ensureParentExists(fullName);
         File file = new File(fullName);
         Scanner fileScanner = new Scanner(file);
-        if(fileScanner.hasNextLine()) {
+        if (fileScanner.hasNextLine()) {
             result = fileScanner.nextLine();
         } else {
             throw new IOException(fullName + " is an empty file.");
@@ -61,7 +61,7 @@ public class FileFixture extends SlimFixtureWithMap {
 
         //Create a temporary new file, then delete the original and copy temp file to original filename
         String tmpFilename = fullName + ".tmp";
-        File tmpFile = FileUtil.writeStreamFromScanner(tmpFilename, fileScanner);
+        File tmpFile = FileUtil.writeFromScanner(tmpFilename, fileScanner);
         FileUtil.copyFile(tmpFilename, fullName);
         tmpFile.delete();
 
