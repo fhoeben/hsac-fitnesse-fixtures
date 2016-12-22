@@ -175,16 +175,16 @@ public final class FileUtil {
         return new File(filename);
     }
 
-    public static File  writeStreamFromScanner(String filename, Scanner sc){
+    public static File  writeFromScanner(String filename, Scanner sc) {
         PrintWriter pw = null;
         try {
             pw = new PrintWriter(filename, FILE_ENCODING);
 
-            while(sc.hasNextLine()) {
+            while (sc.hasNextLine()) {
                 String next = sc.nextLine();
                 pw.write(next + System.getProperty("line.separator"));
             }
-        } catch(FileNotFoundException e){
+        } catch (FileNotFoundException e){
             throw new IllegalArgumentException("Unable to write to: " + filename + ".tmp", e);
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
