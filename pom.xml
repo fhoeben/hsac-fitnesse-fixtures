@@ -192,9 +192,14 @@
 				<configuration>
 					<filesets>
 						<fileset>
-							<!-- On clean throw away old screen shots stored by BrowserTest -->
-							<directory>wiki/FitNesseRoot/files/screenshots/</directory>
+							<!-- On clean throw away old screenshots, pagesources and downloads stored by BrowserTest -->
+							<directory>wiki/FitNesseRoot/files/</directory>
 							<followSymlinks>false</followSymlinks>
+							<includes>
+								<include>screenshots/**</include>
+								<include>pagesources/**</include>
+								<include>downloads/**</include>
+							</includes>
 						</fileset>
 						<fileset>
 							<!-- On clean throw away plugins to prevent multiple version being present after update -->
