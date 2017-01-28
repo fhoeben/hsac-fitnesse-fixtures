@@ -15,6 +15,17 @@ The baseline FitNesse installation offers the following features:
       Slim scenarios without need to specify all parameters, Slim scripts that take a screenshot after each step),
     - easy fixture debugging,
 
+## To create your own test project
+To create a Maven project to run your own tests, based on this project's baseline:
+ * Clone or download the 
+[sample project](https://github.com/fhoeben/sample-fitnesse-project).
+ * Update the groupId and artifactId in the [`pom.xml`](https://github.com/fhoeben/sample-fitnesse-project/blob/master/pom.xml) downloaded as part of the sample to reflect your own organisation 
+ and project name.
+ * Start the wiki, as described in the sample project's [`README.md`](https://github.com/fhoeben/sample-fitnesse-project/blob/master/README.md).
+ * Start writing tests (and custom fixtures if needed)...
+ * Commit to version control.
+ * Create job to run the tests on your build server.
+
 ## To create the standalone FitNesse installation:
 Execute `mvn clean package -DskipTests`, the standalone installation is present in the wiki
 directory and as `...-standalone.zip` file in the target directory. It can be distributed by just copying the wiki directory or by copying and extracting the zip file to a location without spaces in its own name, or in its parent's names).
