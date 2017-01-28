@@ -8,16 +8,16 @@ The fixtures provided allow testing (SOAP) web services and web applications (us
 
 !2 Baseline installation features
 
-The baseline Fitnesse installation offers the following features:
- 1. Ability to easily create a standalone (no JDK or Maven required) Fitnesse environment.
- 2. Run Fitnesse tests on a build server, reporting the results in both JUnit XML format and HTML.
- 3. Fitnesse installation for fixture developers containing:
+The baseline !-FitNesse-! installation offers the following features:
+ 1. Ability to easily create a standalone (no JDK or Maven required) !-FitNesse-! environment.
+ 2. Run !-FitNesse-! tests on a build server, reporting the results in both JUnit XML format and HTML.
+ 3. !-FitNesse-! installation for fixture developers containing:
   * the fixture base classes (and Selenium drivers for Chrome, Internet Explorer, Edge and !-PhantomJs-!),
   * Maven classpath plugin (such that tests can use all dependencies from pom.xml),
   * HSAC's fitnesse-plugin to add additional Wiki features (random values, calculating relative dates, Slim scenarios without need to specify all parameters, Slim scripts that take a screenshot after each step),
   * easy fixture debugging,
 
-!3 1. Create standalone Fitnesse installation
+!3 1. Create standalone !-FitNesse-! installation
 Execute {{{mvn clean package -DskipTests}}}
 The standalone installation is present in the wiki directory and as '...-standalone.zip' in the target directory. It can be distributed by just copying the wiki directory or by copying and extracting the zip file to a location without spaces in its own name, or in its parent's names).
 This standalone installation can be started using {{{ java -jar fitnesse-standalone.jar }}} from the wiki directory (or directory where the 'standalone.zip' was extracted).
@@ -31,7 +31,7 @@ To run the tests on a build server have the build server checkout the project an
 The result in JUnit XML results can be found in: target/failsafe-reports (most build servers will pick these up automatically)
 The HTML results can be found in: target/fitnesse-results/index.html
 
-The Fitnesse suite to run can be specified by changing the value of the !style_code[@Suite]'s value in !style_code[nl.hsac.fitnesse.fixture.FixtureDebugTest],
+The !-FitNesse-! suite to run can be specified by changing the value of the !style_code[@Suite]'s value in !style_code[nl.hsac.fitnesse.fixture.FixtureDebugTest],
 or (preferably) by adding a system property, called !style_code[fitnesseSuiteToRun], specifying the suite to run to the build server's mvn execution.
 
 The Selenium configuration (e.g. what browser on what platform) to use when testing websites can be overridden by using system properties. This allows different configurations on the build server to test with different browsers, without requiring different Wiki content, but only requiring a different build configuration. More details can be found in >SlimTests.BrowserTests.OverridingSeleniumSetup
@@ -41,10 +41,10 @@ Example reports for [[Windows using a Sauce Labs Selenium driver][http://fhoeben
 !3 3. Fixture developer installation
 Import this project in your favorite Java IDE (with Maven support).
 
-To start Fitnesse: have the IDE execute {{{ mvn compile exec:exec }}}The port used by Fitnesse can be controlled by changing the !style_code[fitnesse.port] property's value in pom.xml.
-Fitnesse will be available at !- http://localhost:&lt;fitnesse.port>/ -!
+To start !-FitNesse-!: have the IDE execute {{{ mvn compile exec:exec }}}The port used by !-FitNesse-! can be controlled by changing the !style_code[fitnesse.port] property's value in pom.xml.
+!-FitNesse-! will be available at !- http://localhost:&lt;fitnesse.port>/ -!
 
-To debug a fixture used in a Fitnesse page: change !style_code[@Suite]'s value to contain page name in !style_code[nl.hsac.fitnesse.fixture.FixtureDebugTest], then just debug this test.
+To debug a fixture used in a !-FitNesse-! page: change !style_code[@Suite]'s value to contain page name in !style_code[nl.hsac.fitnesse.fixture.FixtureDebugTest], then just debug this test.
 
 !anchor classpath
 
