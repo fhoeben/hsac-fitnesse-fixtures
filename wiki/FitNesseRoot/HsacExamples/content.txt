@@ -18,7 +18,7 @@ The baseline !-FitNesse-! installation offers the following features:
   * easy fixture debugging,
 
 !3 To create your own test project
-To create a Maven project to run your own tests, based on this project's baseline (assuming you already have a working Maven installation):
+To create a Maven project to run your own tests, based on this project's baseline (assuming you already have a working [[Maven installation][https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html]]):
  * Go to the directory below which you want to create the project.
  * Use the [[archetype, !style_code[nl.hsac:fitnesse-project],][https://github.com/fhoeben/fitnesse-project-archetype]] to generate the project:
    * On the commandline execute: {{{mvn archetype:generate -DarchetypeGroupId=nl.hsac -DarchetypeArtifactId=fitnesse-project}}} (or use your IDE's ability to create a project from an archetype).
