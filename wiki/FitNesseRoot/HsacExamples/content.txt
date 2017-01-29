@@ -18,10 +18,17 @@ The baseline !-FitNesse-! installation offers the following features:
   * easy fixture debugging,
 
 !3 To create your own test project
-To create a Maven project to run your own tests, based on this project's baseline:
- * Clone or download the [[sample project][https://github.com/fhoeben/sample-fitnesse-project]].
- * Update the groupId and artifactId in the [[''pom.xml''][https://github.com/fhoeben/sample-fitnesse-project/blob/master/pom.xml]] downloaded as part of the sample to reflect your own organisation and project name.
- * Start the wiki, as described in the sample project's [[''README.md''][https://github.com/fhoeben/sample-fitnesse-project/blob/master/README.md]].
+To create a Maven project to run your own tests, based on this project's baseline (assuming you already have a working Maven installation):
+ * Go to the directory below which you want to create the project.
+ * Use the [[archetype, !style_code[nl.hsac:fitnesse-project],][https://github.com/fhoeben/fitnesse-project-archetype]] to generate the project:
+   * On the commandline execute: {{{mvn archetype:generate -DarchetypeGroupId=nl.hsac -DarchetypeArtifactId=fitnesse-project}}} (or use your IDE's ability to create a project from an archetype).
+   * Answer the prompts for 'groupId', 'artifactId' and 'package' for the project.
+ * ''Alternatively'' you could also manually copy and update a sample project:
+   * Clone or download the [[sample project][https://github.com/fhoeben/sample-fitnesse-project]] to a new directory.
+   * Update the 'groupId' and 'artifactId' in the [[!style_code[pom.xml]][https://github.com/fhoeben/sample-fitnesse-project/blob/master/pom.xml]] downloaded as part of the sample to reflect your own organisation
+ and project name.
+   * Move the file for Java class [[!style_code[!-FixtureDebugTest-!]][https://github.com/fhoeben/sample-fitnesse-project/blob/master/src/test/java/nl/hsac/fitnesse/sample_project/FixtureDebugTest.java]] to a package/directory of your choice.
+ * Start the wiki, as described in the generated project's [[!style_code[README.md]][https://github.com/fhoeben/fitnesse-project-archetype/blob/master/src/main/resources/archetype-resources/README.md#running-locally]].
  * Start writing tests (and custom fixtures if needed)...
 
 !3 1. Create standalone !-FitNesse-! installation
