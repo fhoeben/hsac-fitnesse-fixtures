@@ -18,6 +18,8 @@ The baseline !-FitNesse-! installation offers the following features:
   * easy fixture debugging,
 
 !3 To create your own test project
+When you want to use the project's baseline to create and maintain your own test suite, we recommend creating your own Maven project based on the project. This will allow you to run and maintain your test set, in version control, without the need to keep your own copies of dependencies (neither Selenium !-WebDrivers-! nor Java libraries).
+
 To create a Maven project to run your own tests, based on this project's baseline (assuming you already have a working [[Maven installation][https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html]]):
  * Go to the directory below which you want to create the project.
  * Use the [[archetype, !style_code[nl.hsac:fitnesse-project],][https://github.com/fhoeben/fitnesse-project-archetype]] to generate the project:

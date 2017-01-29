@@ -15,7 +15,13 @@ The baseline FitNesse installation offers the following features:
       Slim scenarios without need to specify all parameters, Slim scripts that take a screenshot after each step),
     - easy fixture debugging,
 
+The fastest way to get started: just download the 'standalone.zip' from the 
+[Releases](https://github.com/fhoeben/hsac-fitnesse-fixtures/releases/latest), extract, run it (you'll just need a
+Java runtime) and explore the example tests and maybe add a couple of your own.
+
 ## To create your own test project
+When you want to use the project's baseline to create and maintain your own test suite, we recommend creating your own Maven project based on the project. This will allow you to run and maintain your test set, in version control, without the need to keep your own copies of dependencies (neither Selenium WebDrivers nor Java libraries).
+
 To create a Maven project to run your own tests, based on this project's baseline (assuming you already have a working [Maven installation](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html):
  * Go to the directory below which you want to create the project.
  * Use the [archetype, `nl.hsac:fitnesse-project`,](https://github.com/fhoeben/fitnesse-project-archetype) to generate the project: 
