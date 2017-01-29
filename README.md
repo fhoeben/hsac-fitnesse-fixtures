@@ -23,8 +23,6 @@ To create a Maven project to run your own tests, based on this project's baselin
  and project name.
  * Start the wiki, as described in the sample project's [`README.md`](https://github.com/fhoeben/sample-fitnesse-project/blob/master/README.md).
  * Start writing tests (and custom fixtures if needed)...
- * Commit to version control.
- * Create job to run the tests on your build server.
 
 ## To create the standalone FitNesse installation:
 Execute `mvn clean package -DskipTests`, the standalone installation is present in the wiki
