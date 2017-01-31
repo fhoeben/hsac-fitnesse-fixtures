@@ -1,0 +1,104 @@
+---
+Test
+---
+This test ensures we can find elements inside frames.
+
+
+!define HTML_MAIN { {{{
+<!DOCTYPE html>
+<frameset cols="50%,*">
+<frame name="frame1" src="frame1.html">
+<frame name="frame2" src="frame2.html">
+</frameset>
+</html>}}} }
+
+!define HTML_FRAME1 { {{{
+<!DOCTYPE html>
+<html>
+<frameset cols="50%,*">
+<frame name="frame1_1" src="frame3.html">
+<frame name="frame1_2" src="frame4.html">
+</frameset>
+</html>}}} }
+
+
+
+!define HTML_FRAME2 { {{{
+<html>
+<body>
+<input name="remove2" type="button" value="Remove2">
+<label>Add button2<input name="add" type="button" value="Add2"></label>
+</body>
+</html>}}} }
+
+
+!define HTML_FRAME3 { {{{
+<html>
+<body>
+<input name="remove3" type="button" value="Remove3">
+<label>Add button3<input name="add" type="button" value="Add3"></label>
+<label>Upload button<input name="fileChooser" type="file"></label>
+</body>
+</html>}}} }
+
+!define HTML_FRAME4 { {{{
+<html>
+<body>
+<input name="remove4" type="button" value="Remove4">
+<label>Add button4<input name="add" type="button" value="Add4"></label>
+</body>
+</html>}}} }
+
+
+
+
+
+
+|script      |mock xml server setup                            |
+|add response|${HTML_MAIN}                                     |
+|add response|${HTML_FRAME1}|for|GET: /FitNesseMock/frame1.html|
+|add response|${HTML_FRAME2}|for|GET: /FitNesseMock/frame2.html|
+|add response|${HTML_FRAME3}|for|GET: /FitNesseMock/frame3.html|
+|add response|${HTML_FRAME4}|for|GET: /FitNesseMock/frame4.html|
+|$url=       |get mock server url                              |
+
+
+|script|file fixture                          |
+|$file=|create|testUpload.txt|containing|Hallo|
+
+
+|script                        |browser test                                |
+|open                          |$url/main                                   |
+|seconds before timeout        |1                                           |
+|show                          |save page source                            |
+|check                         |value of          |Add button2|Add2         |
+|check                         |value of          |Add button3|Add3         |
+|check                         |value of          |Add button4|Add4         |
+|click                         |Remove3                                     |
+|click                         |Remove4                                     |
+|click                         |Remove2                                     |
+|set implicit find in frames to|false                                       |
+|reject                        |click if available|Remove2                  |
+|set implicit find in frames to|true                                        |
+|select file                   |$file             |for        |Upload button|
+|scroll to                     |Add3                                        |
+|switch to frame               |name=frame2                                 |
+|switch to parent frame                                                     |
+|switch to frame               |name=frame1                                 |
+|click                         |Add4                                        |
+|click                         |Add3                                        |
+|switch to frame               |name=frame1_2                               |
+|click                         |Add4                                        |
+|reject                        |click if available|Add3                     |
+|reject                        |switch to frame   |name=frame2              |
+|switch to default content                                                  |
+|switch to frame               |name=frame2                                 |
+|reject                        |click if available|Add4                     |
+|switch to default content                                                  |
+
+
+|script|mock xml server setup|
+|verify all responses served |
+|stop                        |
+
+

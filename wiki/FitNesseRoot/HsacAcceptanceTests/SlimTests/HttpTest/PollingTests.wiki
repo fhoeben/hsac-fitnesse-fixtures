@@ -1,0 +1,7 @@
+---
+Help: Repeated calls until a condition is true
+Suite
+---
+!contents -R2 -g -p -f -h
+
+Sometimes services are completed asynchronously. This means the result we are testing for may take some time to be reached. We could wait for the maximum permitted time and only test then, but that would make the test slow. Instead we do the call multiple times and continue if the condition is true and only fail it the maximum time period is exceeded.

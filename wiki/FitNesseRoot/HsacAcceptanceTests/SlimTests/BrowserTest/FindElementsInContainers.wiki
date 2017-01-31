@@ -1,0 +1,198 @@
+---
+Help: Ensure we can indicate which elements to use when they occur multiple times on a page
+Test
+---
+When the same label or link occurs on a page multiple times we can indicate which one to use by specifiying a 'search context'.
+A search context can be provided inline (using the 'in <container>') versions of methods, or be configured for all subsequent commands, until a reset.
+
+By default container found are:
+ * fieldsets with legends are defined. We use those fieldset's legend to indicate which we want to use.
+ * aria labels on those containers.
+ * technical selectors
+
+
+We use a mock server running to serve the HTML defined in this page.
+
+
+!define HTML { {{{
+<html>
+<body>
+<div>
+<span id="lastButton">None</span>
+<button onclick='document.getElementById("lastButton").innerHTML = "Normal Button";'>Button</button>
+<label for="g2">Hello2</label><input id="g2" value="Hi">
+</div>
+<label>Hello4<input value="Hallo"></label>
+<label for="list1">Lijstje</label><ul id="list1"><li>one</li><li>two</li></ul>
+<ol><li>Least favorite</li><li>Favorite Todo </li></ol>
+<label for="select1">Cars</label>
+<select id="select1">
+  <option value="volvo">Volvo</option>
+  <option value="saab">Saab</option>
+  <option value="mercedes">Mercedes</option>
+  <option value="audi">Audi</option>
+</select>
+<fieldset aria-label="My fieldset">
+
+<legend>Special</legend>
+<button onclick='document.getElementById("lastButton").innerHTML = "Special Button";'>Button</button>
+<div>
+<label for="g6">Hello2</label><input id="g6" value="Hi2">
+</div>
+<label>Hello4<input value="Hallo2"></label>
+<label>Hello hidden<input value="I should NOT be hidden"></label>
+<label for="list2">Lijstje</label><ul id="list2"><li>three</li><li>4</li></ul>
+<ol><li>NOOOO</li><li>Least favorite</li><li>Favorite Todo </li></ol>
+<label for="select2">Cars</label>
+<select id="select2">
+  <option value="volvo">Volvo</option>
+  <option value="saab">Saab</option>
+  <option value="mercedes">Mercedes</option>
+  <option value="audi">Audi</option>
+</select>
+</fieldset>
+
+<div id="extraOptions" aria-labelledby="extraOptionsLabel">
+<h2 id="extraOptionsLabel">Extras</h2>
+<button onclick='document.getElementById("lastButton").innerHTML = "Extra Special Button";'>Button</button>
+<div>
+<label for="g10">Hello2</label><input id="g10" value="Hi4">
+</div>
+<label>Hello4<input value="Hallo4"></label>
+<label for="list5">Lijstje</label><ul id="list5"><li>5</li><li>6</li></ul>
+<ol><li>Favorite Todo </li></ol>
+</div>
+
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script  |list fixture |
+|display lists standard|
+
+
+|script                |browser test                                                      |
+|seconds before timeout|1                                                                 |
+|open                  |$url                                                              |
+|check                 |value of          |id=lastButton|None                             |
+|click                 |Button                                                            |
+|check                 |value of          |id=lastButton|Normal Button                    |
+|check                 |value of          |Hello2       |Hi                               |
+|check                 |value of          |Hello4       |Hallo                            |
+|enter                 |1                 |for          |Hello2                           |
+|check                 |value of          |Hello2       |Hi1                              |
+|enter                 |Hallo1            |as           |Hello4                           |
+|check                 |value of          |Hello4       |Hallo1                           |
+|check                 |values of         |Lijstje      |[one, two]                       |
+|check                 |number for        |Favorite Todo|2                                |
+|select                |Saab              |for          |Cars                             |
+|check                 |value for         |Cars         |Saab                             |
+|click                 |Button            |in           |Special                          |
+|check                 |value of          |id=lastButton|Special Button                   |
+|check                 |value of          |Hello2       |in    |Special        |Hi2       |
+|check                 |value of          |Hello4       |in    |My fieldset    |Hallo2    |
+|enter                 |3                 |for          |Hello2|in             |Special   |
+|check                 |value of          |Hello2       |in    |Special        |Hi23      |
+|enter                 |Hallo5            |as           |Hello4|in             |Special   |
+|check                 |value of          |Hello4       |in    |Special        |Hallo5    |
+|check                 |values of         |Lijstje      |in    |Special        |[three, 4]|
+|check                 |number for        |Todo         |in    |Special        |3         |
+|select                |Audi              |for          |Cars  |in             |Special | |
+|check                 |value for         |Cars         |in    |Special        |Audi      |
+|ensure                |is enabled        |Hello hidden |in    |Special                   |
+|scroll to             |Hello hidden      |in           |Special                          |
+|ensure                |is visible        |Hello hidden |in    |Special                   |
+|ensure                |is visible on page|Hello hidden |in    |Special                   |
+|wait for visible      |Hello hidden      |in           |Special                          |
+|click if available    |Button            |in           |xpath=//h2[text()='Extras']/..   |
+|check                 |value of          |id=lastButton|Extra Special Button             |
+|check                 |value of          |Hello2       |in    |id=extraOptions|Hi4       |
+|check                 |value of          |Hello4       |in    |id=extraOptions|Hallo4    |
+|check                 |values of         |Lijstje      |in    |id=extraOptions|[5, 6]    |
+|check                 |number for        |Todo         |in    |id=extraOptions|1         |
+|check                 |value of          |Hello2       |in    |Extras         |Hi4       |
+|scroll to             |id=lastButton                                                     |
+|check                 |value of          |Hello2       |Hi1                              |
+|check                 |value for         |Cars         |Saab                             |
+|set search context to |Special                                                           |
+|check                 |value of          |Hello2       |Hi23                             |
+|check                 |value for         |Cars         |Audi                             |
+|clear search context                                                                     |
+|check                 |value of          |Hello2       |Hi1                              |
+|check                 |value for         |Cars         |Saab                             |
+|clear                 |Hello2            |in           |Special                          |
+|check                 |value of          |Hello2       |in    |Special        |!--!      |
+
+!2 Implicit Reset of Search Context
+
+|script               |browser test                                               |
+|note                 |set context to see that open clears context                |
+|set search context to|Extras                                                     |
+|check                |value of              |Hello2             |Hi4             |
+|open                 |$url                                                       |
+|check                |value of              |Hello2             |Hi              |
+|set search context to|Extras                                                     |
+|check                |value of              |Hello2             |Hi4             |
+|note                 |ensure refresh clears context                              |
+|refresh                                                                          |
+|check                |value of              |Hello2             |Hi              |
+|note                 |set context to see that new browsertest tables don't change|
+|set search context to|Extras                                                     |
+|check                |value of              |Hello2             |Hi4             |
+
+
+|script|browser test       |
+|check |value of|Hello2|Hi4|
+
+
+!2 Tab Switch Resets Context
+
+|script               |browser test                        |
+|open                 |$url          |in new tab           |
+|check                |value of      |Hello2      |Hi      |
+|note                 |ensure switching tabs clears context|
+|set search context to|Extras                              |
+|check                |value of      |Hello2      |Hi4     |
+|switch to previous tab                                    |
+|check                |value of      |Hello2      |Hi      |
+|set search context to|Extras                              |
+|check                |value of      |Hello2      |Hi4     |
+|switch to next tab                                        |
+|check                |value of      |Hello2      |Hi      |
+|set search context to|Extras                              |
+|check                |value of      |Hello2      |Hi4     |
+|close tab                                                 |
+|check                |value of      |Hello2      |Hi      |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+|script|mock xml server setup|
+|stop                        |
+
+

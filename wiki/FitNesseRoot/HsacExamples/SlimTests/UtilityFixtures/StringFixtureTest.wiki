@@ -1,0 +1,49 @@
+---
+Help: Example usage of StringFixture
+---
+!-StringFixture-! is a fixture with helper methods to allow more (String) manipulation to be done in the Wiki.
+It is intended to be used is as a [[library][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.LibraryTable]] to add its methods to the methods available via another fixture in s script table.
+
+This page demonstrates the features of the class (!-nl.hsac.fitnesse.fixture.slim.StringFixture-!) and therefore uses it on its own in a script table (instead of inside a script using a different fixture).
+
+|script|string fixture                                                                                    |
+|check |value of             |Hello                      |Hello                                           |
+|check |length of            |Hello                      |5                                               |
+|ensure|text                 |Hello world!               |contains    |world                              |
+|reject|text                 |Hello world!               |contains    |moon                               |
+|ensure|value                |Hello                      |differs from|Hell                               |
+|ensure|value                |Hello                      |equals      |Hello                              |
+|check |convert to upper case|Bye                        |BYE                                             |
+|check |convert to lower case|Bye                        |bye                                             |
+|check |normalize whitespace |!-   Hello    World    -!  |Hello World                                     |
+|check |replace all          |Hello ([A-Za-z]+)          |in          |Hello World|with|$1      |World    |
+|check |replace all          |(\d{4})-(\d{1,2})-(\d{1,2})|in          |1975-12-3  |with|$3-$2-$1|3-12-1975|
+
+
+Conversions to numbers (so that [[relative checks][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ValueComparisons]] can be done).
+
+|script|string fixture                                            |
+|check |convert to int   |100      |100                           |
+|check |convert to int   |100      |< 101                         |
+|check |convert to double|01.5020  |~=1.5                         |
+|check |convert to double|1.52     |< 2                           |
+|check |extract int from |(42)     |using|\((\d+)\)    |group|1|42|
+|check |extract int from |A200BC001|using|A(\d+)BC(\d+)|group|2|1 |
+
+
+And this can be combined with usage of [[variables/symbols][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.SymbolsInTables]] and [[scenarios][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScenarioTable]] to define more complex checks:
+|scenario|compare yyyy-M-d date _ to dd-MM-yyyy _|input, output                                              |
+|$date=  |replace all                            |^(\d{4})-(\d)-(\d)$    |in|@{input}|with|$1-0$2-0$3        |
+|$date=  |replace all                            |^(\d{4})-(\d\d)-(\d)$  |in|$date   |with|$1-$2-0$3         |
+|$date=  |replace all                            |^(\d{4})-(\d)-(\d\d)$  |in|$date   |with|$1-0$2-$3         |
+|check   |replace all                            |^(\d{4})-(\d\d)-(\d\d)$|in|$date   |with|$3-$2-$1|@{output}|
+
+
+|script|string fixture|
+
+|compare yyyy-M-d date to dd-MM-yyyy|
+|input            |output           |
+|1975-1-2         |02-01-1975       |
+|1975-01-2        |02-01-1975       |
+|1975-1-02        |02-01-1975       |
+|1975-01-02       |02-01-1975       |
