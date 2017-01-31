@@ -17,31 +17,33 @@ import static org.junit.Assert.fail;
  */
 public class XPathHelperTest {
     private static final NamespaceContext NS_CONTEXT = Environment.getInstance().getNamespaceContext();
+    private XPathHelper xPathHelper = new XPathHelper();
 
     @Test
     public void testXPathWithNamespace() {
         LalPolicyXPaths.registerNamespace();
         String responseString = FileUtil.loadFile("leanapps/getPolicyCheckResponse.xml");
-        assertEquals("OK", XPathHelper.getXPath(NS_CONTEXT, responseString, "//lal:status/lal:status"));
+        assertEquals("OK", xPathHelper.getXPath(NS_CONTEXT, responseString, "//lal:status/lal:status"));
     }
 
     @Test
     public void testBadXPath() {
         String responseString = FileUtil.loadFile("leanapps/getPolicyCheckResponse.xml");
-        assertEquals("", XPathHelper.getXPath(null, responseString, "//status"));
+        assertEquals("", xPathHelper.getXPath(null, responseString, "//status"));
         try {
-            XPathHelper.getXPath(null, responseString, "\\status");
+            xPathHelper.getXPath(null, responseString, "\\status");
             fail("expected exception");
         } catch (FitFailureException e) {
-            assertTrue("Bad message start: " + e.getMessage(), e.getMessage().startsWith("Unable to evaluate xpath: \\status\n"));
-            assertTrue("Bad message end: " + e.getMessage(), e.getMessage().endsWith("A location path was expected, but the following token was encountered:  \\"));
+            String message = e.getMessage();
+            assertTrue("Bad message start: " + message, message.startsWith("Unable to compile xpath: \\status\n"));
+            assertTrue("Bad message end: " + message, message.endsWith("A location path was expected, but the following token was encountered:  \\"));
         }
     }
 
     @Test
     public void testBadXml() {
         try {
-            XPathHelper.getXPath(null, "bla", "\\status");
+            xPathHelper.getXPath(null, "bla", "//status");
             fail("expected exception");
         } catch (FitFailureException e) {
             assertEquals("Cannot perform XPATH on non-xml: bla", e.getMessage());
@@ -49,10 +51,22 @@ public class XPathHelperTest {
     }
 
     @Test
+    public void testBadXml2() {
+        try {
+            xPathHelper.getXPath(null, "<bla", "//status");
+            fail("expected exception");
+        } catch (FitFailureException e) {
+            String message = e.getMessage();
+            assertTrue("Bad message start: " + message, message.startsWith("Unable to evaluate xpath: //status\n"));
+            assertTrue("Bad message end: " + message, message.endsWith("XML document structures must start and end within the same entity."));
+        }
+    }
+
+    @Test
     public void testAllXmlNoText() {
         LalPolicyXPaths.registerNamespace();
         String responseString = FileUtil.loadFile("leanapps/getPolicyCheckResponse.xml");
-        List<String> all = XPathHelper.getAllXPath(NS_CONTEXT, responseString, "//*/@xsi:type");
+        List<String> all = xPathHelper.getAllXPath(NS_CONTEXT, responseString, "//*/@xsi:type");
 
         assertEquals(13, all.size());
         assertEquals("ns:PostalAddress", all.get(1));
@@ -62,7 +76,7 @@ public class XPathHelperTest {
     public void testAllXmlWithText() {
         LalPolicyXPaths.registerNamespace();
         String responseString = FileUtil.loadFile("leanapps/getPolicyCheckResponse.xml");
-        List<String> all = XPathHelper.getAllXPath(NS_CONTEXT, responseString, "//lal:key/text()");
+        List<String> all = xPathHelper.getAllXPath(NS_CONTEXT, responseString, "//lal:key/text()");
 
         assertEquals(17, all.size());
         assertEquals("20000541", all.get(0));

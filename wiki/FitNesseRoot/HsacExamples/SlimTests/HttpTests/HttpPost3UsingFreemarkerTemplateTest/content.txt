@@ -32,6 +32,7 @@ When a cityName value is set the enclosing element is sent by the Freemarker tem
 |post template to|${GLOBAL_WEATHER_URL}                                                           |
 |check           |response status                        |200                                     |
 |show            |request                                                                         |
+|show            |response headers                                                                |
 |show            |response                                                                        |
 |register prefix |wsX                                    |for namespace|http://www.webserviceX.NET|
 |show            |xPath                                  |!-//wsX:GetWeatherResult/text()-!       |

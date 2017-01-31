@@ -17,6 +17,7 @@ public class XmlHttpResponse extends HttpResponse {
     public final static String CONTENT_TYPE_XML_TEXT_UTF8 = "text/xml; charset=UTF-8";
 
     private NamespaceContext namespaceContext;
+    private XPathHelper xPathHelper;
 
     @Override
     public void validResponse() {
@@ -65,7 +66,7 @@ public class XmlHttpResponse extends HttpResponse {
 
     protected String getRawXPath(String soapResponse, String xPathExpr, Object... params) {
         String expr = String.format(xPathExpr, params);
-        String xPathValue = XPathHelper.getXPath(namespaceContext, soapResponse, expr);
+        String xPathValue = getXPathHelper().getXPath(namespaceContext, soapResponse, expr);
         if ("".equals(xPathValue)) {
             xPathValue = null;
         }
@@ -231,7 +232,7 @@ public class XmlHttpResponse extends HttpResponse {
 
     protected List<String> getRawAllXPath(String soapResponse, String xPathExpr, Object... params) {
         String expr = String.format(xPathExpr, params);
-        return XPathHelper.getAllXPath(namespaceContext, soapResponse, expr);
+        return getXPathHelper().getAllXPath(namespaceContext, soapResponse, expr);
     }
 
     /**
@@ -239,5 +240,13 @@ public class XmlHttpResponse extends HttpResponse {
      */
     public void setNamespaceContext(NamespaceContext aNamespaceContext) {
         namespaceContext = aNamespaceContext;
+    }
+
+    public void setXPathHelper(XPathHelper xPathHelper) {
+        this.xPathHelper = xPathHelper;
+    }
+
+    public XPathHelper getXPathHelper() {
+        return xPathHelper;
     }
 }

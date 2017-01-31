@@ -32,7 +32,7 @@ This version shows a test can be understood, and even written, by people without
 |enter                 |!monthsFromToday (MM/15/yyyy) +10                    |as                    |Returning                       |
 |select                |2                                                    |as                    |Adults                          |
 |note                  |!note Searching may take a while so we set a longer timeout                                                  |
-|seconds before timeout|40                                                                                                           |
+|seconds before timeout|60                                                                                                           |
 |click                 |Search                                                                                                       |
 |wait for visible      |Start by choosing your hotel                                                                                 |
 |click                 |Broadway - Times Square                              |in                    |Neighborhood                    |
@@ -43,7 +43,7 @@ This version shows a test can be understood, and even written, by people without
 |click                 |Next image                                                                                                   |
 |click                 |Show all Rooms & Rates                                                                                       |
 |click                 |Select Junior, Executive Suite                                                                               |
-|wait for visible      |Now select your departing flight                                                                             |
+|wait for visible      |Select your departure to New York                                                                            |
 |cleanup for next test                                                                                                               |
 !2 Technical Selector Based
 
@@ -52,25 +52,25 @@ The test using technical selectors require knowledge on the various way an eleme
 We will now perform the same test as the previous one, verifying a hotel room can be selected to be booked using Expedia.com. But this time controls are identified using [['technical selectors'][.HsacExamples.SlimTests.BrowserTests.TechnicalSelectors]] instead of using heuristics.
 Although the identifiers used inside Expedia's HTML are quite descriptive, this test is not as easy to understand as the previous one. Using technical selectors also makes the test more fragile: a change in identifier or page structure will probably mean the element can no longer be found.
 
-|storyboard            |browser test                                                  |
-|open Expedia.com                                                                     |
-|enter                 |Amsterdam                         |as|id=package-origin       |
-|enter                 |New York                          |as|id=package-destination  |
-|enter                 |!monthsFromToday (MM/8/yyyy) +10  |as|id=package-departing    |
-|enter                 |!monthsFromToday (MM/15/yyyy) +10 |as|id=package-returning    |
-|select                |2                                 |as|id=package-1-adults     |
-|seconds before timeout|40                                                            |
-|click                 |id=search-button                                              |
-|wait for visible      |id=packageSearchTitle                                         |
-|click                 |id=id_NeighborhoodRegionName800077|in|id=neighborhoodContainer|
-|click                 |link=Guest Rating                                             |
-|click                 |partialLink=The Peninsula New York                            |
-|switch to next tab                                                                   |
-|click                 |css=.image-slider-control.next                                |
-|click                 |id=show-more-rooms                                            |
-|click                 |xpath=//span[text()='Select Junior, Executive Suite']/../..   |
-|wait for visible      |id=BYOT-DepTitle                                              |
-|cleanup for next test                                                                |
+|storyboard            |browser test                                               |
+|open Expedia.com                                                                  |
+|enter                 |Amsterdam                        |as|id=package-origin     |
+|enter                 |New York                         |as|id=package-destination|
+|enter                 |!monthsFromToday (MM/8/yyyy) +10 |as|id=package-departing  |
+|enter                 |!monthsFromToday (MM/15/yyyy) +10|as|id=package-returning  |
+|select                |2                                |as|id=package-1-adults   |
+|seconds before timeout|60                                                         |
+|click                 |id=search-button                                           |
+|wait for visible      |id=hotelResultTitle                                        |
+|click                 |id=800077                                                  |
+|click                 |xpath=//button[@aria-label='Sort by: Guest Rating']        |
+|click                 |xpath=//h3[text()='The Peninsula New York']/..             |
+|switch to next tab                                                                |
+|click                 |css=.image-slider-control.next                             |
+|click                 |id=show-more-rooms                                         |
+|click                 |xpath=//span[text()='Select Junior, Executive Suite']/../..|
+|wait for visible      |css=div.title-departure                                    |
+|cleanup for next test                                                             |
 
 A script using these selector does not have to be as 'technical' as the example above. [[!-FitNesse's-! scenario's][.FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests.SliM.ScenarioTable]] may be used to provide a layer of abstraction on top of the actual selectors. You might also want to use custom Java code to provide a similar abstraction. But either of these approaches will also introduce an extra layer of complexity to be maintained, and understood, as part of the test set.
 

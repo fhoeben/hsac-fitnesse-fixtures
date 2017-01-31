@@ -1,0 +1,49 @@
+By taking cookies from a browser's session we can test REST services that are only accessible in after (complex) login procedures.
+
+Here we don't actually test a login procedure. We just validate cookies are copied and subsequent requests by http test can change the cookies stored.
+
+First http test on its own: 2nd request (with cookies from 1st) gets same cookie value.
+
+|script           |http test                              |
+|set store cookies|true                                   |
+|get from         |${URL_THAT_SENDS_COOKIES}              |
+|check            |response status    |200                |
+|show             |response headers                       |
+|show             |cookie values                          |
+|check not        |cookie value       |uaid    |null      |
+|$uaid1=          |cookie value       |uaid               |
+|note             |see that we get same cookie value again|
+|get from         |${URL_THAT_SENDS_COOKIES}              |
+|check            |response status    |200                |
+|show             |response headers                       |
+|show             |cookie values                          |
+|check            |cookie value       |uaid    |$uaid1    |
+
+Then two requestes one by browser and one by plain http: again same cookie on 2nd request (but not the same as first table).
+
+|script   |browser test                          |
+|open     |${URL_THAT_SENDS_COOKIES}             |
+|$uaid=   |cookie value     |uaid                |
+|note     |see that we get different cookie value|
+|check not|cookie value     |uaid     |$uaid1    |
+|$ck=     |cookie value     |!-CkTst-!           |
+|$pok=    |cookie value     |MSPOK               |
+|$requ=   |cookie value     |MSPRequ             |
+|$loc=    |location                              |
+
+Copying from browser's cookie store implicitly ensures cookies are stored/sent.
+
+|script  |http test                                                         |
+|note    |we set version information for cookies (Selenium cannot supply it)|
+|copy browser cookies                                                       |
+|check   |cookie value               |uaid                 |$uaid           |
+|check   |cookie value               |!-CkTst-!            |$ck             |
+|check   |cookie value               |MSPOK                |$pok            |
+|check   |cookie value               |MSPRequ              |$requ           |
+|get from|$loc                                                              |
+|check   |response status            |200                                   |
+|show    |response headers                                                  |
+|show    |cookie values                                                     |
+|note    |see that we get same cookie value as we copied from browser       |
+|check   |cookie value               |uaid                 |$uaid           |
+

@@ -1,0 +1,48 @@
+We retry a call until a header of the response is a certain value.
+
+!*> Setup server
+
+|script      |mock xml server setup|
+|add response|response             |
+|add response|1 response           |
+|add response|11 response          |
+|add response|another response     |
+|add response|yet another response |
+|$url=       |get mock server url  |
+
+*!
+
+|script                |json http test                               |
+|check                 |repeat interval    |100                      |
+|set repeat interval to|50                 |milliseconds             |
+|repeat at most        |2                  |times                    |
+|post                  |0 request          |to                |$url  |
+|repeat until header   |Content-length     |is                |8     |
+|check                 |response header    |Content-length    |8     |
+|post                  |0 request          |to                |$url  |
+|repeat until header   |Content-length     |is                |11    |
+|check                 |response header    |Content-length    |11    |
+|repeat at most        |1                  |times                    |
+|reject                |repeat until header|Not present       |is|bla|
+|check                 |response           |another response         |
+|repeat until header   |Not present either |is                |null  |
+|check                 |response header    |Not present either|null  |
+|check                 |repeat count       |0                        |
+|show                  |response                                     |
+
+
+
+
+
+
+
+
+!*> Stop Server
+|table: Mock Server Message Report|
+
+|script|mock xml server setup|
+|stop                        |
+*!
+
+
+

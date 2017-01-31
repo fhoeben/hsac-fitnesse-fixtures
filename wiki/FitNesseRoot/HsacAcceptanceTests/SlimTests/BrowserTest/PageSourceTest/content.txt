@@ -17,7 +17,7 @@ This test ensures we can get at a page's HTML source code.
 |show    |page source                                                         |
 |show    |save page source                                                    |
 |$source=|page source                                                         |
-|check   |save page source|=~/<a href="files/.*?\.html">FitNesseMock.html</a>/|
+|check   |save page source|=~/<a href="files/.*?\.HTML">FitNesseMock.html</a>/|
 
 |script|compare fixture                                                    |
 |check |count differences between (ignore whitespace)|${HTML}|and|$source|0|
@@ -33,7 +33,7 @@ This test ensures we can get at a page's HTML source code.
 
 |script|browser test                                                |
 |open  |$url                                                        |
-|check |save page source|=~/<a href="files/.*?\.html">test.html</a>/|
+|check |save page source|=~/<a href="files/.*?\.HTML">test.html</a>/|
 
 |script|mock xml server setup|/test.html|
 |stop                                   |
@@ -46,7 +46,7 @@ This test ensures we can get at a page's HTML source code.
 
 |script|browser test                                                      |
 |open  |$url                                                              |
-|check |save page source|=~/<a href="files/.*?\.html">pageSource.html</a>/|
+|check |save page source|=~/<a href="files/.*?\.HTML">pageSource.html</a>/|
 
 |script|mock xml server setup|/test/|
 |stop                               |
@@ -59,7 +59,7 @@ This test ensures we can get at a page's HTML source code.
 
 |script|browser test                                                |
 |open  |$url?hallo=1&yes=no                                         |
-|check |save page source|=~/<a href="files/.*?\.html">test.html</a>/|
+|check |save page source|=~/<a href="files/.*?\.HTML">test.html</a>/|
 
 |script|mock xml server setup|/test|
 |stop                              |

@@ -10,14 +10,13 @@ import nl.hsac.fitnesse.fixture.util.BinaryHttpResponse;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
 import nl.hsac.fitnesse.fixture.util.ReflectionHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.PageSourceSaver;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.cookie.BasicClientCookie;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -25,13 +24,9 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class BrowserTest extends SlimFixture {
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
@@ -648,6 +643,7 @@ public class BrowserTest extends SlimFixture {
         boolean result = false;
         if (element != null) {
             if (isSelect(element)) {
+                optionValue = cleanupValue(optionValue);
                 By xpath = getSeleniumHelper().byXpath(".//option[normalized(text()) = '%s']", optionValue);
                 WebElement option = getSeleniumHelper().findElement(element, false, xpath);
                 if (option == null) {
@@ -684,6 +680,7 @@ public class BrowserTest extends SlimFixture {
 
     protected boolean clickImp(String place, String container) {
         boolean result = false;
+        place = cleanupValue(place);
         try {
             WebElement element = getElementToClick(place, container);
             result = clickElement(element);
@@ -1578,44 +1575,15 @@ public class BrowserTest extends SlimFixture {
      * @return hyperlink to the file containing the page source.
      */
     public String savePageSource() {
-        String fileName = "pageSource";
-        try {
-            String location = location();
-            URL u = new URL(location);
-            String file = FilenameUtils.getName(u.getPath());
-            file = file.replaceAll("^(.*?)(\\.html?)?$", "$1");
-            if (!"".equals(file)) {
-                fileName = file;
-            }
-        } catch (MalformedURLException e) {
-            // ignore
-        }
-
+        String fileName = getSeleniumHelper().getResourceNameFromLocation();
         return savePageSource(fileName, fileName + ".html");
     }
 
     protected String savePageSource(String fileName, String linkText) {
-        String result = null;
-        String html = getSeleniumHelper().getHtml();
-        if (html != null) {
-            try {
-                String file = FileUtil.saveToFile(getPageSourceName(fileName), "html", html.getBytes("utf-8"));
-                String wikiUrl = getWikiUrl(file);
-                if (wikiUrl != null) {
-                    // make href to file
-                    result = String.format("<a href=\"%s\">%s</a>", wikiUrl, linkText);
-                } else {
-                    result = file;
-                }
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException("Unable to save source", e);
-            }
-        }
-        return result;
-    }
-
-    protected String getPageSourceName(String fileName) {
-        return pageSourceBase + fileName;
+        PageSourceSaver saver = getSeleniumHelper().getPageSourceSaver(pageSourceBase);
+        // make href to file
+        String url = saver.savePageSource(fileName);
+        return String.format("<a href=\"%s\">%s</a>", url, linkText);
     }
 
     /**
@@ -1624,13 +1592,24 @@ public class BrowserTest extends SlimFixture {
      * @return location of screenshot.
      */
     public String takeScreenshot(String basename) {
-        String screenshotFile = createScreenshot(basename);
-        if (screenshotFile == null) {
-            throw new SlimFixtureException(false, "Unable to take screenshot: does the webdriver support it?");
-        } else {
-            screenshotFile = getScreenshotLink(screenshotFile);
+        try {
+            String screenshotFile = createScreenshot(basename);
+            if (screenshotFile == null) {
+                throw new SlimFixtureException(false, "Unable to take screenshot: does the webdriver support it?");
+            } else {
+                screenshotFile = getScreenshotLink(screenshotFile);
+            }
+            return screenshotFile;
+        } catch (UnhandledAlertException e) {
+            // standard behavior will stop test, this breaks storyboard that will attempt to take screenshot
+            // after triggering alert, but before the alert can be handled.
+            // so we output a message but no exception. We rely on a next line to actually handle alert
+            // (which may mean either really handle or stop test).
+            return String.format(
+                    "<div><strong>Unable to take screenshot</strong>, alert is active. Alert text:<br/>" +
+                            "'<span>%s</span>'</div>",
+                    StringEscapeUtils.escapeHtml4(alertText()));
         }
-        return screenshotFile;
     }
 
     private String getScreenshotLink(String screenshotFile) {
@@ -2049,22 +2028,8 @@ public class BrowserTest extends SlimFixture {
      * @param resp response to store content in
      */
     protected void getUrlContent(String url, HttpResponse resp) {
-        Set<Cookie> browserCookies = getSeleniumHelper().getCookies();
-        BasicCookieStore cookieStore = new BasicCookieStore();
-        for (Cookie browserCookie : browserCookies) {
-            BasicClientCookie cookie = convertCookie(browserCookie);
-            cookieStore.addCookie(cookie);
-        }
-        resp.setCookieStore(cookieStore);
+        getEnvironment().addSeleniumCookies(resp);
         getEnvironment().doGet(url, resp);
-    }
-
-    private BasicClientCookie convertCookie(Cookie browserCookie) {
-        BasicClientCookie cookie = new BasicClientCookie(browserCookie.getName(), browserCookie.getValue());
-        cookie.setDomain(browserCookie.getDomain());
-        cookie.setPath(browserCookie.getPath());
-        cookie.setExpiryDate(browserCookie.getExpiry());
-        return cookie;
     }
 
     /**

@@ -6,7 +6,7 @@
 
 	<groupId>nl.hsac</groupId>
 	<artifactId>hsac-fitnesse-fixtures</artifactId>
-	<version>2.8.1-SNAPSHOT</version>
+	<version>2.10.3-SNAPSHOT</version>
 	<url>https://github.com/fhoeben/hsac-fitnesse-fixtures</url>
 	<name>HSAC's FitNesse Fixtures</name>
 	<description>Fixtures to assist in testing via FitNesse</description>
@@ -38,11 +38,12 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<hsac-fitnesse-plugin.version>1.14.0</hsac-fitnesse-plugin.version>
+		<hsac-fitnesse-plugin.version>1.15.0</hsac-fitnesse-plugin.version>
 		<maven-classpath-plugin.version>1.9</maven-classpath-plugin.version>
-		<fitnesse.version>20160618</fitnesse.version>
-		<selenium.version>2.53.0</selenium.version>
+		<fitnesse.version>20161106</fitnesse.version>
+		<selenium.version>2.53.1</selenium.version>
 		<slf4j.version>1.7.21</slf4j.version>
+		<apache.http.version>4.5.2</apache.http.version>
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
 		<fitnesse.port>9090</fitnesse.port>
@@ -70,7 +71,7 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-			<version>4.3.6</version>
+			<version>${apache.http.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-logging</groupId>
@@ -81,7 +82,7 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpmime</artifactId>
-			<version>4.3.6</version>
+			<version>${apache.http.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.freemarker</groupId>
@@ -105,11 +106,15 @@
 			<exclusions>
 				<exclusion>
 					<groupId>org.seleniumhq.selenium</groupId>
-					<artifactId>selenium-htmlunit-driver</artifactId>
+					<artifactId>htmlunit-driver</artifactId>
 				</exclusion>
 				<exclusion>
 					<groupId>cglib</groupId>
 					<artifactId>cglib-nodep</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.httpcomponents</groupId>
+					<artifactId>httpclient</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -187,9 +192,14 @@
 				<configuration>
 					<filesets>
 						<fileset>
-							<!-- On clean throw away old screen shots stored by BrowserTest -->
-							<directory>wiki/FitNesseRoot/files/screenshots/</directory>
+							<!-- On clean throw away old screenshots, pagesources and downloads stored by BrowserTest -->
+							<directory>wiki/FitNesseRoot/files/</directory>
 							<followSymlinks>false</followSymlinks>
+							<includes>
+								<include>screenshots/**</include>
+								<include>pagesources/**</include>
+								<include>downloads/**</include>
+							</includes>
 						</fileset>
 						<fileset>
 							<!-- On clean throw away plugins to prevent multiple version being present after update -->

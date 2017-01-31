@@ -67,4 +67,20 @@ public class NamespaceContextImpl implements NamespaceContext {
         }
         return result.iterator();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        NamespaceContextImpl that = (NamespaceContextImpl) o;
+
+        return namespaces.equals(that.namespaces);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return namespaces.hashCode();
+    }
 }

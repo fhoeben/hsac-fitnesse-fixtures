@@ -4,8 +4,8 @@ import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 import fitnesse.slim.fixtureInteraction.InteractionAwareFixture;
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
+import org.apache.commons.lang3.time.StopWatch;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -14,6 +14,11 @@ import java.lang.reflect.Method;
  */
 public class SlimFixture  implements InteractionAwareFixture {
     private Environment environment = Environment.getInstance();
+    private int repeatInterval = 100;
+    private int repeatMaxCount = Integer.MAX_VALUE;
+    private StopWatch repeatTimer = new StopWatch();
+    private int repeatCount = 0;
+    private long repeatTime = 0;
     protected final String filesDir = getEnvironment().getFitNesseFilesSectionDir();
 
     @Override
@@ -110,19 +115,71 @@ public class SlimFixture  implements InteractionAwareFixture {
         return result;
     }
 
+    // Polling
+    public void setRepeatIntervalToMilliseconds(int milliseconds) {
+        repeatInterval = milliseconds;
+    }
+
+    public long repeatInterval() {
+        return repeatInterval;
+    }
+
+    public void repeatAtMostTimes(int maxCount) {
+        repeatMaxCount = maxCount;
+    }
+
+    public int repeatAtMostTimes() {
+        return repeatMaxCount;
+    }
+
+    public int repeatCount() {
+        return repeatCount;
+    }
+
+    public long timeSpentRepeating() {
+        return repeatTime;
+    }
+
+    protected boolean repeatUntil(RepeatCompletion repeat) {
+        repeatTime = 0;
+        repeatTimer.start();
+        boolean result = repeat.isFinished();
+        try {
+            for (repeatCount = 0; !result && repeatCount < repeatMaxCount; repeatCount++) {
+                waitMilliseconds(repeatInterval);
+                repeat.repeat();
+                result = repeat.isFinished();
+            }
+        } finally {
+            repeatTime = repeatTimer.getTime();
+            repeatTimer.reset();
+        }
+        return result;
+    }
+
+    /**
+     * Interface to repeat a call until a condition is met.
+     */
+    public interface RepeatCompletion {
+        /**
+         * @return true if no more repeats are needed.
+         */
+        boolean isFinished();
+
+        /**
+         * Performs the action again.
+         */
+        void repeat();
+    }
+    // Polling
+
     /**
      * Converts a file path into a relative wiki path, if the path is insides the wiki's 'files' section.
      * @param filePath path to file.
      * @return relative URL pointing to the file (so a hyperlink to it can be created).
      */
     protected String getWikiUrl(String filePath) {
-        String wikiUrl = null;
-        if (filePath.startsWith(filesDir)) {
-            String relativeFile = filePath.substring(filesDir.length());
-            relativeFile = relativeFile.replace('\\', '/');
-            wikiUrl = "files" + relativeFile;
-        }
-        return wikiUrl;
+        return getEnvironment().getWikiUrl(filePath);
     }
 
     /**
@@ -131,17 +188,7 @@ public class SlimFixture  implements InteractionAwareFixture {
      * @return absolute path to the target of the url, if such a file exists; null if the target does not exist.
      */
     protected String getFilePathFromWikiUrl(String wikiUrl) {
-        String url = getUrl(wikiUrl);
-        File file;
-        if (url.startsWith("files/")) {
-            String relativeFile = url.substring("files".length());
-            relativeFile = relativeFile.replace('/', File.separatorChar);
-            String pathname = filesDir + relativeFile;
-            file = new File(pathname);
-        } else {
-            file = new File(url);
-        }
-        return file.exists() ? file.getAbsolutePath() : url;
+        return getEnvironment().getFilePathFromWikiUrl(wikiUrl);
     }
 
 }

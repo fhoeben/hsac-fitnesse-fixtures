@@ -67,6 +67,7 @@ This test ensures we can find elements inside frames.
 |script                        |browser test                                |
 |open                          |$url/main                                   |
 |seconds before timeout        |1                                           |
+|show                          |save page source                            |
 |check                         |value of          |Add button2|Add2         |
 |check                         |value of          |Add button3|Add3         |
 |check                         |value of          |Add button4|Add4         |

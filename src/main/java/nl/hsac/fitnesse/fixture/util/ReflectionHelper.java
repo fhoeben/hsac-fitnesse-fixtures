@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.fixture.util;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -77,6 +78,71 @@ public class ReflectionHelper {
             }
         } catch (final NoSuchMethodException e) {
             // ignore, just return null
+        }
+        return result;
+    }
+
+    /**
+     * Sets (private) field of o (the field may be defined by o's class, or one of its superclasses).
+     *
+     * @param o         instance to set field of.
+     * @param fieldName name of field.
+     * @param newValue  value to set.
+     */
+    public void setField(Object o, String fieldName, Object newValue) {
+        if (o == null) {
+            throw new IllegalArgumentException("No object to set on provided");
+        }
+        Field field = findField(o, fieldName);
+        if (field == null) {
+            throw new IllegalArgumentException(o.getClass() + " does not have a field " + fieldName);
+        } else {
+            if (!field.isAccessible()) {
+                field.setAccessible(true);
+            }
+            try {
+                field.set(o, newValue);
+            } catch (IllegalAccessException e) {
+                throw new IllegalArgumentException("Unable to set " + newValue + " for " + fieldName, e);
+            }
+        }
+    }
+
+    /**
+     * Gets (private) field of o (the field may be defined by o's class, or one of its superclasses).
+     *
+     * @param o         instance to set field of.
+     * @param fieldName name of field.
+     * @return value of field.
+     */
+    public Object getField(Object o, String fieldName) {
+        if (o == null) {
+            throw new IllegalArgumentException("No object to get from provided");
+        }
+        Field field = findField(o, fieldName);
+        if (field == null) {
+            throw new IllegalArgumentException(o.getClass() + " does not have a field " + fieldName);
+        } else {
+            if (!field.isAccessible()) {
+                field.setAccessible(true);
+            }
+            try {
+                return field.get(o);
+            } catch (IllegalAccessException e) {
+                throw new IllegalArgumentException("Unable to get " + fieldName, e);
+            }
+        }
+    }
+
+    private Field findField(Object o, String fieldName) {
+        Class<?> aClass = o.getClass();
+        Field result = null;
+        while (result == null && !Object.class.equals(aClass)) {
+            try {
+                result = aClass.getDeclaredField(fieldName);
+            } catch (NoSuchFieldException e) {
+                aClass = aClass.getSuperclass();
+            }
         }
         return result;
     }

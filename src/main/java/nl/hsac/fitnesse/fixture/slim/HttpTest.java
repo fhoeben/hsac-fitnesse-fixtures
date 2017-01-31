@@ -2,12 +2,17 @@ package nl.hsac.fitnesse.fixture.slim;
 
 import freemarker.template.Template;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
+import org.apache.http.client.CookieStore;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.cookie.BasicClientCookie;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,9 +25,12 @@ public class HttpTest extends SlimFixtureWithMap {
     public final static String DEFAULT_POST_CONTENT_TYPE = "application/x-www-form-urlencoded; charset=UTF-8";
 
     private final Map<String, Object> headerValues = new LinkedHashMap<>();
+    private boolean storeCookies = false;
     private HttpResponse response = createResponse();
     private String template;
     private String contentType = DEFAULT_POST_CONTENT_TYPE;
+    private String lastUrl = null;
+    private String lastMethod = null;
 
     /**
      * Sets template to use.
@@ -109,6 +117,7 @@ public class HttpTest extends SlimFixtureWithMap {
         } else {
             String url = getUrl(serviceUrl);
             try {
+                storeLastCall("POST", serviceUrl);
                 getEnvironment().doHttpPost(url, template, getCurrentValues(), response, headerValues, getContentType());
             } catch (Throwable t) {
                 throw new StopTestException("Unable to get response from POST to: " + url, t);
@@ -136,7 +145,6 @@ public class HttpTest extends SlimFixtureWithMap {
      * @return true if call could be made and response did not indicate error.
      */
     public boolean postFileTo(String fileName, String serviceUrl) {
-
         return postFileToImpl(fileName, serviceUrl);
     }
 
@@ -156,6 +164,7 @@ public class HttpTest extends SlimFixtureWithMap {
         response.setRequest(body);
         String url = getUrl(serviceUrl);
         try {
+            storeLastCall("POST", serviceUrl);
             getEnvironment().doHttpPost(url, response, headerValues, getContentType());
         } catch (Throwable t) {
             throw new StopTestException("Unable to get response from POST to: " + url, t);
@@ -176,6 +185,8 @@ public class HttpTest extends SlimFixtureWithMap {
         }
 
         try {
+            response.setRequest(fileName);
+            storeLastCall("POST_FILE", serviceUrl);
             getEnvironment().doHttpFilePost(url, response, headerValues, file);
         } catch (Throwable t) {
             throw new StopTestException("Unable to get response from POST to: " + url, t);
@@ -197,6 +208,7 @@ public class HttpTest extends SlimFixtureWithMap {
         } else {
             String url = getUrl(serviceUrl);
             try {
+                storeLastCall("PUT", serviceUrl);
                 getEnvironment().doHttpPut(url, template, getCurrentValues(), response, headerValues, getContentType());
             } catch (Throwable t) {
                 throw new StopTestException("Unable to get response from PUT to: " + url, t);
@@ -233,6 +245,7 @@ public class HttpTest extends SlimFixtureWithMap {
         response.setRequest(body);
         String url = getUrl(serviceUrl);
         try {
+            storeLastCall("PUT", serviceUrl);
             getEnvironment().doHttpPut(url, response, headerValues, getContentType());
         } catch (Throwable t) {
             throw new StopTestException("Unable to get response from PUT to: " + url, t);
@@ -268,6 +281,13 @@ public class HttpTest extends SlimFixtureWithMap {
         resetResponse();
         String url = createUrlWithParams(serviceUrl);
         try {
+            String method;
+            if (followRedirect) {
+                method = "GET";
+            } else {
+                method = "GET_NO_REDIRECT";
+            }
+            storeLastCall(method, serviceUrl);
             getEnvironment().doGet(url, response, headerValues, followRedirect);
         } catch (Throwable t) {
             throw new StopTestException("Unable to GET response from: " + url, t);
@@ -287,6 +307,7 @@ public class HttpTest extends SlimFixtureWithMap {
         resetResponse();
         String url = createUrlWithParams(serviceUrl);
         try {
+            storeLastCall("DELETE", serviceUrl);
             getEnvironment().doDelete(url, response, headerValues);
         } catch (Throwable t) {
             throw new StopTestException("Unable to DELETE: " + url, t);
@@ -296,7 +317,17 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     protected void resetResponse() {
+        CookieStore cookieStore = null;
+        if (storeCookies) {
+            cookieStore = getResponse().getCookieStore();
+            if (cookieStore == null) {
+                cookieStore = new BasicCookieStore();
+            }
+        }
         response = createResponse();
+        if (storeCookies) {
+            response.setCookieStore(cookieStore);
+        }
     }
 
     String createUrlWithParams(String serviceUrl) {
@@ -440,16 +471,143 @@ public class HttpTest extends SlimFixtureWithMap {
     /**
      * @return headers received with response to last request.
      */
-    public Map<String, String> responseHeaders() {
+    public Map<String, Object> responseHeaders() {
         return response.getResponseHeaders();
     }
 
     /**
      * @param headerName name of response header.
-     * @return value of header in last response.
+     * @return value of header in last response (may be a list if the saame header name was sent multiple times
+     * (e.g. Set-Cookie).
      */
-    public String responseHeader(String headerName) {
+    public Object responseHeader(String headerName) {
         return responseHeaders().get(headerName);
+    }
+
+    public void setStoreCookies(boolean storeCookies) {
+        this.storeCookies = storeCookies;
+    }
+
+    /**
+     * Adds all current Selenium cookies to this fixture's cookie store.
+     * This will also ensure this class will store cookies (otherwise copying the cookies has no purpose).
+     */
+    public void copyBrowserCookies() {
+        setStoreCookies(true);
+        getEnvironment().addSeleniumCookies(getResponse());
+    }
+
+    /**
+     * @return name->value of cookies in the cookie store.
+     */
+    public Map<String, String> cookieValues() {
+        Map<String, String> result = null;
+        CookieStore cookies = getResponse().getCookieStore();
+        if (cookies != null) {
+            result = new LinkedHashMap<>();
+            for (Cookie cookie : cookies.getCookies()) {
+                result.put(cookie.getName(), cookie.getValue());
+            }
+        }
+        return result;
+    }
+
+    /**
+     * @param cookieName name of cookie.
+     * @return value of cookie in the cookie store.
+     */
+    public String cookieValue(String cookieName) {
+        String result = null;
+        Cookie cookie = getCookie(cookieName);
+        if (cookie != null) {
+            result = cookie.getValue();
+        }
+        return result;
+    }
+
+    /**
+     * @param cookieName name of cookie.
+     * @return domain of cookie in the cookie store.
+     */
+    public String cookieDomain(String cookieName) {
+        String result = null;
+        Cookie cookie = getCookie(cookieName);
+        if (cookie != null) {
+            result = cookie.getDomain();
+        }
+        return result;
+    }
+
+    /**
+     * @param cookieName name of cookie.
+     * @return path of cookie in the cookie store.
+     */
+    public String cookiePath(String cookieName) {
+        String result = null;
+        Cookie cookie = getCookie(cookieName);
+        if (cookie != null) {
+            result = cookie.getPath();
+        }
+        return result;
+    }
+
+    /**
+     * @param cookieName name of cookie.
+     * @return whether cookie in the cookie store is persistent.
+     */
+    public Boolean cookieIsPersistent(String cookieName) {
+        Boolean result = null;
+        Cookie cookie = getCookie(cookieName);
+        if (cookie != null) {
+            result = cookie.isPersistent();
+        }
+        return result;
+    }
+
+    /**
+     * @param cookieName name of cookie.
+     * @return whether cookie in the cookie store requires a secure connection.
+     */
+    public Boolean cookieIsSecure(String cookieName) {
+        Boolean result = null;
+        Cookie cookie = getCookie(cookieName);
+        if (cookie != null) {
+            result = cookie.isSecure();
+        }
+        return result;
+    }
+
+    /**
+     * @param cookieName name of cookie.
+     * @return whether cookie in the cookie store is http-only (not accessible to Javascript).
+     */
+    public Boolean cookieIsHttpOnly(String cookieName) {
+        return cookieAttribute(cookieName, "httponly") != null;
+    }
+
+    /**
+     * @param cookieName name of cookie.
+     * @param attributeName name of attribute.
+     * @return value of attribute for cookie.
+     */
+    public String cookieAttribute(String cookieName, String attributeName) {
+        String result = null;
+        Cookie cookie = getCookie(cookieName);
+        if (cookie instanceof BasicClientCookie) {
+            result = ((BasicClientCookie) cookie).getAttribute(attributeName.toLowerCase(Locale.ENGLISH));
+        }
+        return result;
+    }
+
+    private Cookie getCookie(String cookieName) {
+        return getResponse().getCookieNamed(cookieName);
+    }
+
+    /**
+     * Removes all cookies from the cookie store.
+     */
+    public void clearCookies() {
+        getResponse().getCookieStore().clear();
     }
 
     protected HttpResponse getResponse() {
@@ -468,4 +626,109 @@ public class HttpTest extends SlimFixtureWithMap {
         contentType = aContentType;
     }
 
+    // Polling
+    public boolean repeatUntilResponseStatusIs(final int expectedStatus) {
+        return repeatUntil(
+                new RepeatLastCall() {
+                    @Override
+                    public boolean isFinished() {
+                        return responseStatus() == expectedStatus;
+                    }
+                });
+    }
+
+    public boolean repeatUntilResponseIs(final String expectedResponse) {
+        RepeatCompletion completion;
+        if (expectedResponse == null) {
+            completion = new RepeatLastCall() {
+                @Override
+                public boolean isFinished() {
+                    return response() == null;
+                }
+            };
+        } else {
+            completion = new RepeatLastCall() {
+                @Override
+                public boolean isFinished() {
+                    Object actual = response();
+                    return compareActualToExpected(expectedResponse, actual);
+                }
+            };
+        }
+        return repeatUntil(completion);
+    }
+
+    public boolean repeatUntilHeaderIs(final String header, final Object expectedValue) {
+        RepeatCompletion completion;
+        if (expectedValue == null) {
+            completion = new RepeatLastCall() {
+                @Override
+                public boolean isFinished() {
+                    return responseHeader(header) == null;
+                }
+            };
+        } else {
+            completion = new RepeatLastCall() {
+                @Override
+                public boolean isFinished() {
+                    Object actual = responseHeader(header);
+                    return compareActualToExpected(expectedValue, actual);
+                }
+            };
+        }
+        return repeatUntil(completion);
+    }
+
+    protected void repeatLastCall() {
+        if (lastMethod == null) {
+            throw new SlimFixtureException(false, "First make a call before trying to repeat one.");
+        }
+        switch (lastMethod) {
+            case "GET":
+                getImpl(lastUrl, true);
+                break;
+            case "POST":
+                postToImpl(response.getRequest(), lastUrl);
+                break;
+            case "PUT":
+                putToImpl(response.getRequest(), lastUrl);
+                break;
+            case "DELETE":
+                delete(lastUrl);
+                break;
+            case "GET_NO_REDIRECT":
+                getImpl(lastUrl, false);
+                break;
+            case "POST_FILE":
+                postFileToImpl(response.getRequest(), lastUrl);
+                break;
+            default:
+                throw new SlimFixtureException(false, "Repeat of method: " + lastMethod + " not configured.");
+        }
+    }
+
+    protected void storeLastCall(String method, String url) {
+        lastMethod = method;
+        lastUrl = url;
+    }
+
+    protected abstract class RepeatLastCall implements RepeatCompletion {
+
+        protected boolean compareActualToExpected(Object expected, Object actual) {
+            boolean result;
+            if (actual == null) {
+                result = expected.equals("null");
+            } else {
+                result = expected.equals(actual)
+                        || expected.toString().equals(actual.toString());
+            }
+            return result;
+        }
+
+        @Override
+        public void repeat() {
+            repeatLastCall();
+        }
+    }
+    // Polling
 }

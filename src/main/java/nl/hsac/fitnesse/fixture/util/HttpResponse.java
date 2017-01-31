@@ -1,9 +1,9 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import org.apache.http.HttpStatus;
 import org.apache.http.client.CookieStore;
+import org.apache.http.cookie.Cookie;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class HttpResponse {
     private final static Map<String, HttpResponse> INSTANCES = new ConcurrentHashMap<>();
 
-    private Map<String, String> responseHeaders = new HashMap<>();
+    private Map<String, Object> responseHeaders = new LinkedHashMap<>();
     private String request;
     protected String response;
     private int statusCode;
@@ -24,11 +24,11 @@ public class HttpResponse {
      * @throws RuntimeException if no valid response is available
      */
     public void validResponse() {
-        if (statusCode == HttpStatus.SC_NOT_IMPLEMENTED) {
-            throw new RuntimeException("The method is not implemented by this URI");
+        if (statusCode >= 500 && statusCode <= 599) {
+            throw new RuntimeException("Server error returned: " + statusCode);
         }
-        if (statusCode == HttpStatus.SC_NOT_FOUND) {
-            throw new RuntimeException("No content available for this URI");
+        if (statusCode >= 400 && statusCode <= 499) {
+            throw new RuntimeException("Server reported client error: " + statusCode);
         }
     }
 
@@ -77,7 +77,7 @@ public class HttpResponse {
     /**
      * @return headers in response.
      */
-    public Map<String, String> getResponseHeaders() {
+    public Map<String, Object> getResponseHeaders() {
         return responseHeaders;
     }
 
@@ -86,6 +86,23 @@ public class HttpResponse {
      */
     public CookieStore getCookieStore() {
         return cookieStore;
+    }
+
+    /**
+     * @param cookieName name of cookie to be found in cookie store
+     * @return cookie found, if any, null otherwise.
+     */
+    public Cookie getCookieNamed(String cookieName) {
+        Cookie result = null;
+        if (cookieStore != null) {
+            for (Cookie cookie : getCookieStore().getCookies()) {
+                if (cookieName.equals(cookie.getName())) {
+                    result = cookie;
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
     /**

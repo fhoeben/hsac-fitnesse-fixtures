@@ -81,6 +81,7 @@ This test ensures we can find elements inside iframes.
 |open                  |$url/main                                     |
 |seconds before timeout|1                                             |
 |check                 |page title        |Start Page Title           |
+|show                  |save page source                              |
 |check                 |value of          |Add button |Add            |
 |check                 |value of          |Add button1|Add1           |
 |check                 |value of          |Add button2|Add2           |

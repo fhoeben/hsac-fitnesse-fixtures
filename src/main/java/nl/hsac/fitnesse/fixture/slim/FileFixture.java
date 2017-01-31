@@ -3,10 +3,8 @@ package nl.hsac.fitnesse.fixture.slim;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import org.apache.commons.io.FilenameUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
+import java.util.Scanner;
 
 /**
  * Utility fixture to work with files.
@@ -47,6 +45,27 @@ public class FileFixture extends SlimFixtureWithMap {
             }
         }
         return text;
+    }
+
+    public String takeFirstLineFrom(String filename) throws IOException {
+        String result;
+        String fullName = getFullName(filename);
+        ensureParentExists(fullName);
+        File file = new File(fullName);
+        Scanner fileScanner = new Scanner(file);
+        if (fileScanner.hasNextLine()) {
+            result = fileScanner.nextLine();
+        } else {
+            throw new IOException(fullName + " is an empty file.");
+        }
+
+        //Create a temporary new file, then delete the original and copy temp file to original filename
+        String tmpFilename = fullName + ".tmp";
+        File tmpFile = FileUtil.writeFromScanner(tmpFilename, fileScanner);
+        FileUtil.copyFile(tmpFilename, fullName);
+        tmpFile.delete();
+
+        return result;
     }
 
     public String contentOf(String filename) throws IOException {

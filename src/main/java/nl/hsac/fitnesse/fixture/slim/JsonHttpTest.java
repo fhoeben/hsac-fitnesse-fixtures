@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.slim;
 
 import nl.hsac.fitnesse.fixture.util.JsonPathHelper;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -9,8 +10,6 @@ import java.util.List;
  * Fixture to make Http calls and interpret the result as JSON.
  */
 public class JsonHttpTest extends HttpTest {
-    private final JsonPathHelper pathHelper = new JsonPathHelper();
-
     public boolean postValuesAsJsonTo(String serviceUrl) {
         return postToImpl(jsonEncodeCurrentValues(), serviceUrl);
     }
@@ -25,12 +24,17 @@ public class JsonHttpTest extends HttpTest {
 
     @Override
     protected String formatValue(String value) {
-        return getEnvironment().getHtmlForJson(value);
+        String formatted = super.formatValue(value);
+        if (value != null && value.trim().startsWith("{")) {
+            formatted = getEnvironment().getHtmlForJson(value);
+        }
+        return formatted;
     }
 
     public Object jsonPath(String path) {
+        String responseString = getResponseBody();
         String jsonPath = getPathExpr(path);
-        return pathHelper.getJsonPath(getResponse().getResponse(), jsonPath);
+        return getPathHelper().getJsonPath(responseString, jsonPath);
     }
 
     public int jsonPathCount(String path) {
@@ -39,8 +43,17 @@ public class JsonHttpTest extends HttpTest {
     }
 
     protected List<Object> getAllMatches(String path) {
+        String responseString = getResponseBody();
         String jsonPath = getPathExpr(path);
-        return pathHelper.getAllJsonPath(getResponse().getResponse(), jsonPath);
+        return getPathHelper().getAllJsonPath(responseString, jsonPath);
+    }
+
+    protected String getResponseBody() {
+        String responseString = getResponse().getResponse();
+        if (StringUtils.isEmpty(responseString)) {
+            throw new SlimFixtureException(false, "No response body available");
+        }
+        return responseString;
     }
 
     /**
@@ -71,11 +84,32 @@ public class JsonHttpTest extends HttpTest {
      * @param path the jsonPath to locate the key whose value needs changing
      * @param value the new value to set
      */
-    public void setJsonPathTo(String path, String value){
-        String jsonStr = getResponse().getResponse();
+    public void setJsonPathTo(String path, String value) {
+        String jsonStr = getResponseBody();
         String jsonPath = getPathExpr(path);
-        String newResponse = pathHelper.updateJsonPathWithValue(jsonStr, jsonPath, value);
+        String newResponse = getPathHelper().updateJsonPathWithValue(jsonStr, jsonPath, value);
         getResponse().setResponse(newResponse);
+    }
+
+    public boolean repeatUntilJsonPathIs(final String jsonPath, final Object expectedValue) {
+        RepeatCompletion completion;
+        if (expectedValue == null) {
+            completion = new RepeatLastCall() {
+                @Override
+                public boolean isFinished() {
+                    return jsonPath(jsonPath) == null;
+                }
+            };
+        } else {
+            completion = new RepeatLastCall() {
+                @Override
+                public boolean isFinished() {
+                    Object actual = jsonPath(jsonPath);
+                    return compareActualToExpected(expectedValue, actual);
+                }
+            };
+        }
+        return repeatUntil(completion);
     }
 
     protected String getPathExpr(String path) {
@@ -94,5 +128,9 @@ public class JsonHttpTest extends HttpTest {
     protected String urlEncode(String str) {
         String strNoSpaces = str.replace(" ", "+");
         return super.urlEncode(strNoSpaces);
+    }
+
+    protected JsonPathHelper getPathHelper() {
+        return getEnvironment().getJsonPathHelper();
     }
 }
