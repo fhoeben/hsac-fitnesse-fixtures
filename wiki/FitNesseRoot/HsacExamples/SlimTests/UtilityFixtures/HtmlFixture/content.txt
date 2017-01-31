@@ -1,5 +1,0 @@
-Html Fixture allows HTML (fragments) obtained from an application being tested to be show as 'source' (i.e. the HMTL tags and not what they render like) or to explicitly ensure tags are rendered inside the test's page.  
-
-|script  |html fixture                      |
-|$source=|html source|'''hot''' and ''cold''|
-|show    |html       |$source               |

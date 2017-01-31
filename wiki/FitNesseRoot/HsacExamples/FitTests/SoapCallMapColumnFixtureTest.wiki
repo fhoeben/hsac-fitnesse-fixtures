@@ -1,0 +1,138 @@
+---
+Help: Example test using SoapCallMapColumnFixture to call SOAP service
+---
+By extending !-SoapCallMapColumnFixture-! a Fit test can easily make SOAP calls. The request to send is created using a Freemarker template, all input column's values can be used in template, without requiring Java fields or properties in the fixture class. Output columns (columns whose name ends on a '?') require Java methods to be defined, generally performing a XPath expression on the service's response.
+This page outlines the main features of this class: [[calling a service][#callService]], [[performing an extra call to validate the result of the call][#checkCall]], [[dealing with asynchronous services][#asyncService]] and [[standard methods to access 'meta information' on the exchange][#standardMethods]].
+ 
+!anchor callService
+!2 Call Service
+The first example below calls a weather service, similar to [[Slim !-HttpPost-! using Freemarker example][.HsacExamples.SlimTests.HttpTests.HttpPost3UsingFreemarkerTemplateTest]]. On this page we use an instance of !-SymbolsFixture-! to configure the URL of the service to call. This is a best practice, allowing the url to be configured without changing Java code but not requiring it to be repeated for each table calling the same service. Normally the symbols fixture is placed on a !-SuiteSetup-! page, accessible to all tests in the suite.
+
+|Symbols                                                 |
+|key       |value                                        |
+|weatherUrl|http://www.webservicex.com/globalweather.asmx|
+
+|Get Weather                                                       |
+|countryName|cityName                               |weatherResult?|
+|Canada     |Vancouver International Air-Port, B. C.|              |
+
+The Java code for the 'Get Weather' fixture is a single class: {{{
+public class GetWeatherFixture extends SoapCallMapColumnFixture<XmlHttpResponse> {
+    static {
+        registerNs("wsX", "http://www.webserviceX.NET");
+    }
+
+    public GetWeatherFixture() {
+        super(XmlHttpResponse.class);
+        setTemplateName("samplePost.ftl.xml");
+    }
+
+    @Override
+    protected XmlHttpResponse callService() {
+        return callServiceImpl("weatherUrl", "http://www.webserviceX.NET/GetWeather");
+    }
+
+    public String weatherResult() {
+        String result = getRawResponse().getXPath("//wsX:GetWeatherResult/text()");
+        return xmlAsHtml(result);
+    }
+}
+}}}
+
+!anchor checkCall
+!2 Check Call
+Sometimes testing a SOAP service requires more than a single call the test needs to validate more than the call's response. !-SoapCallMapColumnFixture-! has a feature for this, allowing a second call to be made to validate the outcome of the first. An example usage would be a call to retrieve an account's details, to validate whether the call to the service to create the account has worked.
+To use this feature a couple of things need to be done: update the fixture class with some configuration logic to define how the 'check call' must be made, add a method that uses 'getRawCheckResponse()', and add a column to the test table in the wiki to call this method.
+
+!3 Configure Check Call
+To configure the check call one usually specifies which (Freemarker) template to use for the check call (the constructor is an obvious choice for a call to 'setCheckTemplateName()'). Furthermore one needs to override 'callCheckService()' to make the actual SOAP call to the check service, usually done by calling 'callCheckServiceImpl()'.
+Sometimes it is desirable to add one or more result values from the original service call to the current row's values so that the can be used in the check call (for instance the id of the account created). This can be done by overriding 'addResultsToValuesForCheck()'.
+
+!3 Triggering the Check Call
+Validating the check call gives the expected response is similar to checking the service's response. A method needs to be defined that extracts a value from the check call's response and the test table needs to be extended with an output column mapping to this method.
+'''Please note:''' The check call is only executed when its response is needed (i.e. 'getRawCheckResponse()' is called), so if no output column refers to a method needing this response the call is not made. 
+
+!3 Example With Check Call
+
+In the example below we call a service offered by the Bank of Lithuania to check the exchange rate returned by a currency conversion web service, we ensure the two rates returned are within 10% (for US dollars) or 1% (for Euros).
+
+|Symbols                                                                        |
+|key              |value                                                        |
+|conversionUrl    |http://www.webservicex.net/CurrencyConvertor.asmx            |
+|lbExchangeRateUrl|http://www.lb.lt/webservices/ExchangeRates/ExchangeRates.asmx|
+
+|To Lithuanian Lita                                 |
+|from|conversionRate?|exchangeRate?|margin?         |
+|USD |               |             |-0.50 < _ < 1.10|
+|EUR |               |             |-0.5 < _ < 1.01 |
+
+The Java code for the 'To Lithuanian Lita' fixture is another single class: {{{
+public class ToLithuanianLitaFixture extends SoapCallMapColumnFixture<XmlHttpResponse> {
+    static {
+        registerNs("wsXCR", "http://www.webserviceX.NET/");
+        registerNs("lbER", "http://webservices.lb.lt/ExchangeRates");
+    }
+
+    public ToLithuanianLitaFixture() {
+        super(XmlHttpResponse.class);
+        setTemplateName("ConversionRate.ftl.xml");
+        setCheckTemplateName("LBExchangeRate.ftl.xml");
+    }
+
+    @Override
+    protected XmlHttpResponse callService() {
+        return callServiceImpl("conversionUrl", "http://www.webserviceX.NET/ConversionRate");
+    }
+
+    @Override
+    protected XmlHttpResponse callCheckService() {
+        return callCheckServiceImpl("lbExchangeRateUrl", "http://webservices.lb.lt/ExchangeRates/getExchangeRate");
+    }
+
+    public Double margin() {
+        return conversionRate()/exchangeRate();
+    }
+
+    public Double conversionRate() {
+        return getRawResponse().getXPathDouble("//wsXCR:ConversionRateResult/text()");
+    }
+
+    public Double exchangeRate() {
+        return getRawCheckResponse().getXPathDouble("//lbER:getExchangeRateResult/text()");
+    }
+}
+}}}
+
+!anchor asyncService
+!2 Checking Asynchronous Calls
+
+Some web services return a response to the caller before the call is fully processed. They are asynchronous as the processing continues without the caller having to wait for a response. Validating whether such a service calls has the expected result offers a bit of a challenge: how do you determine whether the expected result will never be reached, or it is just NOT YET reached? And even when you know a maximum amount of time it might take for the result to be reached, it would be nice that if the result is reached sooner the test suite continues without having to wait the maximum amount of time.
+!-SoapCallMapColumnFixture-! offers a mechanism to deal with this last problem. It allows the check call to be executed multiple times (with a configurable wait between the calls) until the response to the call indicates processing of the original call is completed, or until a (configurable) maximum amount of calls is completed. If the original call is fully processed quickly the test will continue to the next row in the table, when a longer wait is needed it will do so, but it will not wait indefinitely.
+
+Configuring this retry behavior involves three things: how to determine whether the original call is fully processed, the maximum number of times the check call may be retried and (optionally) how long to wait between check calls. The first configuration is done in Java code, the latter two are done in the wiki using the test table's header.
+Whether another call to the check service is needed is defined by overriding the method 'isRetryDesirable()', which is passed the response from the last check call.
+Configuring the maximum number of calls and the wait time between calls is done using [[Fit's fixture parameter feature][.FitNesse.UserGuide.WritingAcceptanceTests.FitFramework.ParametersInFixtures]] (i.e. by adding cells to the first row of the table, after the fixture name). The first parameter is the maximum number of tries, the second is the wait time between calls (in milliseconds).
+
+Below is an example table which uses a subclass of the 'To Lithuanian Lita' fixture which retries retrieving the rate from the central bank for at most 4 times, with a 100ms interval, until the two rates retrieved are identical. (This is a bit contrived, even non-sensical, example as we don't expect the result from the check call to change, but it shows the concept of the retry mechanism.) 
+|To Lithuanian Lita Retrying|4              |100          |
+|from                       |conversionRate?|exchangeRate?|
+|USD                        |               |             |
+
+The Java code for the 'To Lithuanian Lita Retrying' fixture is: {{{
+public class ToLithuanianLitaRetryingFixture extends ToLithuanianLitaFixture {
+    @Override
+    protected boolean isRetryDesirable() {
+        return !conversionRate().equals(exchangeRate());
+    }
+}
+}}}
+
+!anchor standardMethods
+!2 Standard Methods
+
+!-SoapCallMapColumnFixture-! offers a set of methods to retrieve information on the SOAP exchange(s). Any fixture derived from this fixture also has these methods, so output columns displaying this information may be added to all tables using these fixtures, without custom Java code. 
+
+The table below shows some of this standard information in its output columns: the request sent, the time (in milliseconds) the call took, the full response sent by the server for both the service and check calls, and how often the check call was executed.
+|To Lithuanian Lita Retrying|4       |50                                                                       |
+|from                       |request?|responseTime?|response?|checkRequest?|checkTime?|checkResponse?|tryCount?|
+|USD                        |        |             |         |             |          |              |4        |

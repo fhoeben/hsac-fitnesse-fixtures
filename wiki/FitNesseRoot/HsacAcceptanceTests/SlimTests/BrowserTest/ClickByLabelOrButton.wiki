@@ -1,0 +1,57 @@
+---
+Test
+---
+This test ensures that we can click on buttons, based on their displayed text, and on labels, even if the associated input is invisible.
+
+We use a mock server running to serve the HTML defined in this page.
+
+
+!define HTML { {{{
+<html>
+<body>
+<button value="b2">Button 2</button>
+<button value="b3">Button&nbsp;3</button>
+<div>
+<label for="g2">Hello2</label><input id="g2" value="Hi">
+</div>
+<label for="g4">Hello4</label><input id="g4" value="Hallo">
+                            <div class="layout layout--6col layout--centered">
+                                <div class="radio">
+                                    <label class="radio_label"><input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" 
+                                           style="display: block;    position: absolute;    top: 0;    bottom: 0;    right: 0;    left: 0;    opacity: 0;    z-index: 500;"
+                                    > <span></span> Ja, ik heb producten</label>
+                                </div>
+                            </div>
+                            <div class="layout layout--6col layout--centered">
+                                <div class="radio">
+                                    <label class="radio_label"><input type="radio" name="optionsRadios" id="optionsRadios2" value="option2"
+                                           style="display: block;    position: absolute;    top: 0;    bottom: 0;    right: 0;    left: 0;    opacity: 0;    z-index: 500;"
+                                    > <span></span> Nee, ik heb geen producten</label>
+                                </div>
+                            </div>
+
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script                |browser test                          |
+|seconds before timeout|1                                     |
+|open                  |$url                                  |
+|note                  |button: exact and partial             |
+|click                 |Button 2                              |
+|click                 |3                                     |
+|click                 |Button 3                              |
+|note                  |label: exact hidden, exact visible    |
+|click                 |Ja, ik heb producten                  |
+|click                 |Hello2                                |
+|note                  |label: partial hidden, partial visible|
+|click                 |geen                                  |
+|click                 |4                                     |
+
+|script|mock xml server setup|
+|stop                        |
+

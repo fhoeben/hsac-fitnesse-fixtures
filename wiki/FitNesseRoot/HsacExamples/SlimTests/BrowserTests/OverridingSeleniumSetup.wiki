@@ -1,0 +1,22 @@
+---
+Help: How to configure Selenium for tests run by a build server
+---
+The Selenium configuration (e.g. what browser on what platform) to use when testing websites in a jUnit suite via the !style_code[!-HsacFitNesseRunner-!] (e.g. !style_code[nl.hsac.fitnesse.fixture.FixtureDebugTest]) can be overridden by using Java system properties. This allows different configurations on a build server to test with different browsers, without requiring different Wiki content, but only requiring a different build configuration.
+
+|Possible configurations                                                                                                                                                                                                                     |
+|Running the tests on a Selenium grid using a specific browser                                                                   |set !style_code[seleniumGridUrl] and !style_code[seleniumBrowser]                                          |
+|Running the tests on a Selenium grid by specifying the required capabilities of the browser                                     |set !style_code[seleniumGridUrl] and !style_code[seleniumCapabilities]                                     |
+|Running the tests on the build server (i.e. the machine running the jUnit test) using a web driver contained in the installation|set !style_code[seleniumBrowser] (and NOT !style_code[seleniumGridUrl])                                    |
+|Running the tests on the build server (i.e. the machine running the jUnit test) using a !-WebDriver-! class directly            |set !style_code[seleniumDriverClass] (and NOT !style_code[seleniumBrowser] or !style_code[seleniumGridUrl])|
+
+The latter option (running the test on the build server and specifying a !-WebDriver-! class directly) is useful when the driver is accessible on the build server, but you never run the wiki the same OS normally so it is not included in the wiki installation. This project uses that option to run tests with !-PhantomJs-! on [[Travis CI][https://travis-ci.org]]. 
+
+The value of !style_code[seleniumCapabilities] must be in the format: ''key:value(,key:value)*'', for instance: !style_code[browserName:internet explorer, platform:Windows 8.1, version:11]. 
+''Please note'' that if any capability value or key contains a space the entire property's value must be enclosed in double quotes (i.e. "), to ensure the whole string (and not just the part up to the first space) is seen as the value for !style_code[seleniumCapabilities].
+
+A suite can be run using Selenium drivers from the cloud service [[Sauce Labs][https://saucelabs.com]] by setting a !style_code[seleniumGridUrl] pointing to their Selenium grid, containing your username and access key, and a !style_code[seleniumCapabilities] describing the browser and platform you would like to use. Which capabilities your run requires can be determined using [[Sauce Labs' Platforms Configurator][https://docs.saucelabs.com/reference/platforms-configurator/]]. The HTML report generate by such a run will embed the screencast created by Sauce Labs.
+So to run with Internet Explorer 11 on Windows 8.1, for instance, add the following options to the java process running the tests: {{{-DseleniumGridUrl=!-http://&lt;username>:&lt;accessKey>@ondemand.saucelabs.com:80/wd/hub-! -DseleniumCapabilities="browserName:internet explorer, platform:Windows 8.1, version:11"}}}
+
+Besides the Selenium browser to use, the default timeout (used by !-BrowserTest-! when ''seconds before timeout <value>'' is not included in scripts) can be configured using the property !style_code[seleniumDefaultTimeout].
+
+In a Jenkins Maven-based build these properties can be configured as !style_code[MAVEN_OPTS] (e.g. !style_code[-DseleniumBrowser=chrome]) for the build. When using !-TeamCity-! these properties can be set as (system) build parameters for the project or configuration.
