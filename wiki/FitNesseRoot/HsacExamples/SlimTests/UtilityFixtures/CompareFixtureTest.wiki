@@ -1,0 +1,104 @@
+---
+Help: Fixture to highlight differences between texts
+---
+Compare Fixture helps to visualize the difference between strings. 
+Showing differences does not actually test anything, it is intended to be used in conjunction with other tests to highlight why two values are not the same.
+
+|script|compare fixture                                          |
+|show  |difference between|Hello           |and|Hello sir        |
+|show  |difference between|Hello madam     |and|Hello            |
+|show  |difference between|Hello madam     |and|Hello sir        |
+|show  |difference between|Hello dear madam|and|Hello madam      |
+|show  |difference between|Hello madam     |and|!-Hello   madam-!|
+|show  |difference between|                |and|                 |
+|show  |difference between|!- -!           |and|                 |
+|show  |difference between|Bye             |and|                 |
+|show  |difference between                                       |!-Hello
+sir
+
+
+
+Greetings to you.
+-!|and|!-Hello
+madam 
+Greetings to you.
+
+-!|
+|show|difference between|!-ha	ha	-!|and|ha ha|
+
+To actually test something we can count the number of 'diffs' between two values
+|script|compare fixture                                                   |
+|check |count differences between|Hello           |and|Hello sir        |1|
+|check |count differences between|Hello madam     |and|Hello            |1|
+|check |count differences between|Hello madam     |and|Hello sir        |2|
+|check |count differences between|Hello dear madam|and|Hello madam      |1|
+|check |count differences between|Hello madam     |and|!-Hello   madam-!|1|
+
+
+
+Sometimes changes in whitespace are not interesting, these may be ignored when determining the difference.
+!note Whitespace added were there was none before, or all whitespace removed between characters, is still considered a difference.
+
+|script|compare fixture                                                              |
+|show  |difference between (ignore whitespace)|Hello dear madam|and|Hello madam      |
+|show  |difference between (ignore whitespace)|Hello madam     |and|!-Hello   madam-!|
+|show  |difference between (ignore whitespace)                                       |!-Hello
+sir
+
+
+
+Greetings to you.
+-!|and|!-Hello
+madam 
+Greetings to you.
+
+-!|
+|show|difference between (ignore whitespace)|!-ha	ha	-!|and|ha ha|
+
+Counting the number of 'diffs' between two values can also ignore whitespace.
+
+|script|compare fixture                                                                       |
+|check |count differences between (ignore whitespace)|Hello           |and|Hello sir        |1|
+|check |count differences between (ignore whitespace)|Hello madam     |and|Hello            |1|
+|check |count differences between (ignore whitespace)|Hello madam     |and|Hello sir        |2|
+|check |count differences between (ignore whitespace)|Hello dear madam|and|Hello madam      |1|
+|check |count differences between (ignore whitespace)|Hello madam     |and|!-Hello   madam-!|0|
+
+Compare preformatted HTML
+
+|script|compare fixture                                                                                                 |
+|show  |difference between                           |{{{Hello dear madam   Bye}}}     |and|{{{Hello dear madam Bye}}}  |
+|show  |difference between                           |{{{Hello dear madam <p>Bye</p>}}}|and|{{{Hello dear madam Bye}}}  |
+|show  |difference between (ignore whitespace)       |{{{Hello dear madam   Bye}}}     |and|{{{Hello dear madam Bye}}}  |
+|show  |difference between (ignore whitespace)       |{{{Hello dear madam <p>Bye</p>}}}|and|{{{Hello dear madam Bye}}}  |
+|check |count differences between                    |{{{Hello dear madam   Bye}}}     |and|{{{Hello dear madam Bye}}}|1|
+|check |count differences between                    |{{{Hello dear madam <p>Bye</p>}}}|and|{{{Hello dear madam Bye}}}|2|
+|check |count differences between (ignore whitespace)|{{{Hello dear madam   Bye}}}     |and|{{{Hello dear madam Bye}}}|0|
+|check |count differences between (ignore whitespace)|{{{Hello dear madam <p>Bye</p>}}}|and|{{{Hello dear madam Bye}}}|2|
+
+Sometimes whitespace is very interesting and visualizing the various different forms of whitespace is desired.
+The compare fixture can make whitespace differences explicit and will use the following symbols to indicate whitespace characters:
+
+-!|comment|
+|whitespace          |symbol|
+|space               |·     |
+|non-breaking space  |•     |
+|newline (\n)        |¶     |
+|carriage return (\r)|↵     |
+|tab (\t)            |→     |
+
+|script|compare fixture                                                                |
+|show  |difference between (explicit whitespace)|Hello dear madam|and|Hello madam      |
+|show  |difference between (explicit whitespace)|Hello madam     |and|!-Hello   madam-!|
+|show  |difference between (explicit whitespace)                                       |!-Hello
+sir
+
+
+
+Greetings to you.
+-!|and|!-Hello
+madam 
+Greetings to you.
+
+-!|
+|show|difference between (explicit whitespace)|!-ha	ha	-!|and|ha ha|

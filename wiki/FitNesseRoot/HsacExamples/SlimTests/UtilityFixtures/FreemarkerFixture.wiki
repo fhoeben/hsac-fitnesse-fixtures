@@ -1,0 +1,41 @@
+---
+Help: Renders Freemarker template to wiki
+Test
+---
+The Freemarker Fixture allows a [[Freemarker][http://freemarker.org]] template to be rendered to the wiki. This allows the template result to be sent to an application being tested, or saved as a mock server's response. It is usable both in [[script tables][#scripts]] and [[dynamic decision tables][#ddt]].
+The templates are loaded from the 'template' directory on the class path (e.g. /fixtures/template in a standalone installation).
+
+If the template's name contains !style_code[.xml] or !style_code[.json] the template's output will be formatted and shown as XML or JSON in the wiki.
+!anchor ddt
+
+!2 Dynamic Decision Table Usage
+
+The template to use can either be supplied using a constructor parameter in the table's first row, or by the name of the output column.
+
+|ddt: freemarker fixture|samplePost.ftl.xml|
+|countryName            |post?             |
+|United States          |$postUs=          |
+|Netherlands            |$postNl=          |
+
+or
+
+|ddt: freemarker fixture          |
+|countryName  |samplePost.ftl.xml?|
+|United States|$postUs2=          |
+|Netherlands  |$postNl2=          |
+
+|script|string fixture           |
+|check |value of|$postUs|$postUs2|
+|check |value of|$postNl|$postNl2|
+
+
+!anchor scripts
+
+!2 Script Usage
+Here we render a template using [[script tables][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScriptTable]]. 
+
+|script   |freemarker fixture               |
+|set value|Netherlands   |for  |countryName |
+|$postNl3=|apply template|samplePost.ftl.xml|
+|set value|Utrecht       |for  |cityName    |
+|$postNl4=|apply template|samplePost.ftl.xml|

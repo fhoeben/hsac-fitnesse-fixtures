@@ -1,0 +1,68 @@
+---
+Help: Fixture to define and manipulate lists in the wiki
+---
+!-List Fixture-! allows Lists to be defined and manipulated in the wiki. It is usable both in [[script tables][#scripts]] and [[dynamic decision tables][#ddt]].
+Furthermore it also allows us to ensure Slim show lists as numbered items, instead of comma separated between square brackets (i.e. '[' and ']'). 
+
+!anchor scripts
+
+!3 Lists in a Script
+Here we manipulate lists using [[script tables][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScriptTable]]. 
+
+
+|script   |list fixture                  |
+|add      |Fried                         |
+|add      |github@hsac.nl                |
+|check    |value at|0 |Fried             |
+|check    |size    |2                    |
+|set value|Ivan    |at|4                 |
+|check    |size    |5                    |
+|check    |value at|2 |null              |
+|check    |value at|3 |null              |
+|check    |value at|4 |Ivan              |
+|check    |value at|1 |!-github@hsac.nl-!|
+|set value|Jan     |at|1                 |
+|check    |value at|1 |Jan               |
+|$list1=  |copy list                     |
+
+!3 Showing Lists as Numbered Items
+As seen in the table above Slim's default behavior is to show lists using Java's !style_code[toString()] notation, comma separated between square brackets.
+By invoking !-ListFixture-!'s ''display lists numbered'' method we instruct Slim to show lists as HTML ordered lists. 
+!note This could also be achieved directly in Java code by invoking !style_code[nl.hsac.fitnesse.slim.converter.NumberedListConverter.register()].
+
+|script   |list fixture|
+|display lists numbered|
+|add      |Fried       |
+|set value|Jan  |at |1 |
+|$list1=  |copy list   |
+
+
+
+!3 List may be nested
+
+|script |list fixture|
+|add    |$list1      |
+|add    |$list1      |
+|$list2=|copy list   |
+
+!anchor ddt
+
+!3 Define a List using Dynamic Decision Table
+This examples show usage of the fixture in a [[dynamic decision table][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.DynamicDecisionTable]].
+
+Here we define two lists (and store them in Slim variables) using a dynamic decision table. Any output column (header name ending on '?') will receive a copy of the list defined.
+|ddt: list fixture                      |
+|0    |1             |3    |4   |list?  |
+|Jan  |github@hsac.nl|Karel|    |$list3=|
+|Karel|Piet          |     |Milk|$list4=|
+
+!3 Map as Argument
+We don't use lists defined in the current fixture instance, but supply the lists to work on in the rows to the script.
+
+|script   |list fixture                                |
+|check    |value at|1     |in|$list3|!-github@hsac.nl-!|
+|check    |size of |$list3|5                           |
+|check    |value at|2     |in|$list4|null              |
+|check    |value at|3     |in|$list4|!--!              |
+|set value|Ivan    |at    |3 |in    |$list4            |
+|check    |value at|3     |in|$list4|Ivan              |
