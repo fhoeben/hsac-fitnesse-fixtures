@@ -1,0 +1,9 @@
+---
+Help: Tests for the Fit Fixtures
+Suite
+SymbolicLinks
+  ArraysAndSymbolsComparison: .HsacExamples.FitTests.ArraysAndSymbolsComparison
+  ReturnArrayAsSymbol: .HsacExamples.FitTests.ReturnArrayAsSymbol
+  SuiteSetUp: .HsacExamples.FitTests.SuiteSetUp
+---
+!contents -R2 -g -p -f -h

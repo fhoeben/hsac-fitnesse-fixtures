@@ -1,0 +1,118 @@
+---
+Help: Running a HTTP server inside the test process to mock a service used by the application being tested
+---
+Here we use !-FitNesse-! as a HTTP server so we can control which responses the application being tested receives.
+
+!2 No Messages
+
+!note The messages report table does not fail a test, it just shows the current status. It will be have an 'ignored' status when no messages were expected nor served.
+
+|table: Mock Server Message Report|
+
+!2 Too Few Messages
+
+|script      |mock xml server setup        |
+|add response|{{{<dag/>}}}                 |
+|add response|{{{<dag2/>}}}|with status|201|
+|$url=       |get mock server url          |
+
+|script|xml http test          |
+|post  |{{{<Hallo/>}}} |to|$url|
+|check |response status|200    |
+|show  |response               |
+
+!note The messages report table does not fail a test, it just shows the current status. It will show red lines for expected requests that never came, or extra requests received.
+
+|table: Mock Server Message Report|
+
+!2 Messages As Expected
+
+|script|xml http test          |
+|post  |{{{<Hallo2/>}}}|to|$url|
+|check |response status|201    |
+|show  |response               |
+
+!note The messages report table does not fail a test, it just shows the current status. It will show red lines for expected requests that never came, or extra requests received.
+
+|table: Mock Server Message Report|
+
+|script|mock xml server setup|
+|verify all responses served |
+|verify no extra requests    |
+|stop                        |
+
+!2 Extra Messages
+
+|script      |mock xml server setup|
+|add response|{{{<bye/>}}}         |
+|$url=       |get mock server url  |
+
+|script|xml http test                                                                                                                   |
+|post  |{{{<Hallo/>}}}                        |to                                   |$url                                               |
+|check |response status                       |200                                                                                      |
+|note  |Posting an extra message will cause a 404 response, normally this fails a test, but we prevent this by using a 'show' line below|
+|show  |post                                  |{{{<Hallo2/>}}}                      |to                      |$url                      |
+|check |response status                       |404                                                                                      |
+|show  |response                                                                                                                        |
+
+!note The messages report table does not fail a test, it just shows the current status. It will show red lines for expected requests that never came, or extra requests received.
+
+|table: Mock Server Message Report|
+
+|script|mock xml server setup|
+|stop                        |
+
+!2 Use a file as the response
+
+|script        |file fixture                                          |
+|set directory |http://files/test                                     |
+|$responseFile=|create|response.xml|containing|!-<responseFromFile/>-!|
+
+|script           |mock xml server setup        |
+|add response file|$responseFile                |
+|add response file|$responseFile|with status|201|
+|$url=            |get mock server url          |
+
+|script  |xml http test      |
+|get from|$url               |
+|check   |response status|200|
+|show    |response           |
+|get from|$url               |
+|check   |response status|201|
+|show    |response           |
+
+
+!2 Headers
+
+|script      |mock xml server setup                                                                     |
+|add response|bye |with headers|!{Content-type:application/xml, My-header:abc-Ë}                        |
+|add response|bye2|with headers|!{Content-type:text/html; charset=iso-8859-1, My-header:xyz-Ë}          |
+|add response|bye3|with status |201|and headers|!{Content-Type:text/html; charset=UTF-16, My-header:x-Ë}|
+|$url=       |get mock server url                                                                       |
+
+|script  |http test                                                 |
+|get from|$url                                                      |
+|check   |response header|Content-type|application/xml              |
+|check   |response header|My-header   |abc-Ë                        |
+|check   |response status|200                                       |
+|check   |response       |bye                                       |
+|get from|$url                                                      |
+|check   |response header|Content-type|text/html; charset=iso-8859-1|
+|check   |response header|My-header   |xyz-Ë                        |
+|check   |response status|200                                       |
+|check   |response       |bye2                                      |
+|get from|$url                                                      |
+|check   |response header|Content-type|text/html; charset=UTF-16    |
+|check   |response header|My-header   |x-Ë                          |
+|check   |response status|201                                       |
+|check   |response       |bye3                                      |
+
+
+
+
+
+
+|table: Mock Server Message Report|
+
+|script|mock xml server setup|
+|stop                        |

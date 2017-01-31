@@ -1,0 +1,96 @@
+---
+Help: Shows example usage of (Json/Xml)HttpTest fixture.
+Suite
+---
+!-(Json/Xml)HttpTest-! defines a basic language (a DSL of sorts) to interact with a website via HTTP requests (allowing SOAP (and REST) services to be tested). The XML subclass adds functionality to perform checks using XPath expressions on the response received. The !-JsonHttpTest-! subclass adds functionality to perform checks using !-JsonPath-! expressions.
+This basic functionality will suffice for many tests, but can be extended by creating a custom subclass. 
+
+The tests in this suite show example usage of this fixture:
+>HttpGetTest shows how an example GET requests, specifying parameters in the query string.
+>HttpPost1Test sends a POST request to a SOAP service, also adding an HTTP header.
+The >HttpPost2UsingScenarioTest makes multiple SOAP calls to a service, where scenario parameters are used to change an input variable's value for each call.
+>HttpPostFileTest sends a binary file.
+>HttpPost3UsingFreemarkerTemplateTest shows the usage of a [[Freemarker][http://freemarker.org]] template to define the content of a SOAP request. This allows for dynamic request structure.
+>JsonHttpTest shows examples with GET, POST, AND PUT, using [[!-JsonPath-!][http://goessner.net/articles/JsonPath/]] to perform checks on the response. 
+>HttpGetFollowRedirectTest shows checking the redirect sent by a server instead of following it.
+>HttpCookieHandling shows how cookie handling can be configured.
+
+!2 Language
+
+!3 !-HttpTest-!
+The main commands/keywords (i.e. public methods) offered by !-nl.hsac.fitnesse.fixture.slim.HttpTest-! are listed below.
+
+-|Comment|
+|get from <url>                         |Sends a GET to the specified url (parameters can be added using 'set value(s) for').                                                                                                    |
+|get from <url> no redirect             |Sends a GET to the specified url not following redirects sent by the server.                                                                                                            |
+|post <body> to <url>                   |Sends a POST containing the specified body to the url.                                                                                                                                  |
+|post template to <url>                 |Sends a POST to the specified url, determining the body by combining the configured template and values (see 'set value for' and 'template')                                            |
+|post file <file> to <url>              |Sends a POST containing the specified file as multipart binary data to the url                                                                                                          |
+|put <body> to <url>                    |Sends a PUT containing the specified body to the url.                                                                                                                                   |
+|put template to <url>                  |Sends a PUT to the specified url, determining the body by combining the configured template and values (see 'set value for' and 'template')                                             |
+|template <location>                    |Configures the Freemarker template to use on next call using 'post template to'.                                                                                                        |
+|set value <value> for <name>           |Stores the value for either a query or template parameter with the supplied name.                                                                                                       |
+|set values <values> for <name>         |Stores the a list of values (comma separated) for either a query or template parameter with the supplied name.                                                                          |
+|post values to <url>                   |Sends a POST containing all (url-encoded) values to the url.                                                                                                                            |
+|set value <value> for header <name>    |Stores the value for an HTTP header to add to subsequent requests.                                                                                                                      |
+|delete <url>                           |Sends a DELETE to the specified url (parameters can be added using 'set value(s) for').                                                                                                 |
+|clear values                           |Clears the list of name/value pairs to be added to GET requests or template evaluation.                                                                                                 |
+|clear header values                    |Clears the list of HTTP headers to be sent with requests.                                                                                                                               |
+|request                                |Returns the last url (including parameters) used for 'get from' or the body used for 'post (template) to'. Intended to be used in combination with the 'show' command.                  |
+|response                               |Returns the last response body returned. Intended to be used in combination with the 'show' or 'check' commands.                                                                        |
+|html response                          |Returns the last response body returned as HTML to be embedded in the test result table (in combination with the 'show' command).                                                       |
+|response status                        |HTTP status code of last response received.                                                                                                                                             |
+|response time                          |Time (in milliseconds) it took to send the last request and receive its response.                                                                                                       |
+|response headers                       |HTTP headers received with last response.                                                                                                                                               |
+|response header <name>                 |Value of HTTP header 'name' in last response received.                                                                                                                                  |
+|response is valid                      |Whether the last request was successful, or an error.                                                                                                                                   |
+|set store cookies <true/false>         |Whether cookies received, which are not expired, should be stored (defaults to 'false') and sent with subsequent requests.                                                              |
+|cookie values                          |Names and values of all cookies stored.                                                                                                                                                 |
+|cookie <name> value                    |Value of stored cookie with name 'name'.                                                                                                                                                |
+|cookie <name> domain                   |Domain of stored cookie with name 'name'.                                                                                                                                               |
+|cookie <name> path                     |Path of stored cookie with name 'name'.                                                                                                                                                 |
+|cookie <name> is persistent            |Whether stored cookie with name 'name' is persistent.                                                                                                                                   |
+|cookie <name> is secure                |Whether stored cookie with name 'name' requires a secure connection (i.e. should only be sent over secured connections).                                                                |
+|cookie <name> is http only             |Whether stored cookie with 'name' is http-only (not accessible to Javascript).                                                                                                          |
+|cookie <name> attribute <attribute>    |Value of attribute 'attribute' of stored cookie with name 'name'.                                                                                                                       |
+|clear cookies                          |Clears the stored cookies.                                                                                                                                                              |
+|copy browser cookies                   |Adds all current Selenium (i.e. !-BrowserTest-!'s) cookies to the stored cookies. This will also ensure these will be sent with subsequent requests and all received cookies are stored.|
+|set content type <content-type>        |Sets the content type to use when posting.                                                                                                                                              |
+|repeat until response status is <value>|If the last response status is not 'value': repeats last request until it is.                                                                                                           |
+|repeat until response is <value>       |If the last response is not 'value': repeats last request until it is.                                                                                                                  |
+|repeat until header <name> is <value>  |If HTTP header 'name' for the last response is not 'value': repeats last request until it does.                                                                                         |
+|repeat count                           |Returns the number of requests sent by the last 'repeat until ...' command.                                                                                                             |
+|time spent repeating                   |Returns the number of milliseconds the last 'repeat until ...' command took.                                                                                                            |
+|repeat at most	<count> times           |Sets the maximum number of requests sent by 'repeat until ...' commands. The commands will return false if this number is reached without the condition being met.                      |
+|repeat at most	times                   |Returns the maximum number of requests sent by 'repeat until ...' commands.                                                                                                             |
+|set repeat interval to <interval>      |Sets the number of milliseconds between requests sent by 'repeat until ...' commands.                                                                                                   |
+|repeat interval                        |Returns the number of milliseconds between requests sent by 'repeat until ...' commands.                                                                                                |
+
+
+!3 !-JsonHttpTest-!
+The commands/keywords (i.e. public methods) added by !-nl.hsac.fitnesse.fixture.slim.JsonHttpTest-! are listed below.
+
+-|Comment|
+|post values as json to <url>                  |Sends a POST containing all values (as JSON properties) to the url.                                                                                              |
+|json path <expression>                        |Evaluates the (definite) expression against the last response received.                                                                                          |
+|json path count <expression>                  |Evaluates the (indefinite) expression against the last response received, counting the number of results.                                                        |
+|all json path matches <expression>            |Evaluates the expression against the last response received and returns all results. Intended to be used with 'show' command.                                    |
+|set json path <expression> to <value>         |Evaluates the expression against the last response received and -if exactly one key is found- replaces that key's existing value with the value that is provided.|
+|repeat until json path <expression> is <value>|If 'expression' does not evaluates to 'value' for the last response: repeats last request until it does.                                                         |
+
+!3 !-XmlHttpTest-!
+The commands/keywords (i.e. public methods) added to those of !-HttpTest-! by !-nl.hsac.fitnesse.fixture.slim.XmlHttpTest-! are listed below.
+
+-|Comment|
+|xPath <expression>                                        |Evaluates the expression against the last response received.                                                                                                                                         |
+|all XPath matches <expression>                            |Evaluates the expression against the last response received and returns all results. Intended to be used with 'show' command.                                                                        |
+|register prefix <prefix> for namespace <url>              |Defines a prefix to be used to identify a namespace in subsequent 'xPath' evaluation.                                                                                                                |
+|xPath int <expression>                                    |Evaluates the expression against the last response received, returning a whole number (allowing [[relative value tests][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ValueComparisons]]).         |
+|xPath double <expression>                                 |Evaluates the expression against the last response received, returning a floating point number (allowing [[relative value tests][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ValueComparisons]]).|
+|raw xPath <expression>                                    |Evaluates the expression against the last response received, ignoring any (SOAP) faults received (which cause 'xPath <expression>' to throw an exception).                                           |
+|create file <fileName>	from base64 content of <expression>|Evaluates the expression against the last response received, expecting the found element to contain a base64 encoded value. That value will be saved to a file and a link to the file returned.      |
+|repeat until xPath <expression> is <value>                |If 'expression' does not evaluates to 'value' for the last response: repeats last request until it does.                                                                                             |
+
+
+Address of web service used by multiple tests in this suite:
+!define URL {http://wsf.cdyne.com/WeatherWS/Weather.asmx}

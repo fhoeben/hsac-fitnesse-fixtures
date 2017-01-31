@@ -1,0 +1,8 @@
+---
+Help: Fixtures to facilitate test definition
+Suite
+---
+Besides fixtures to perform actual tests on an application there are also some fixtures to help the definition of test cases. 
+They allow manipulation of data inside the wiki so that data retrieved from, or sent to, the application can be transformed/set up without having to ''hide'' the required steps in Java code. 
+
+!contents -R2 -g -p -f -h

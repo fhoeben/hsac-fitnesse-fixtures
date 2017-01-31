@@ -1,0 +1,33 @@
+---
+Test
+---
+This test ensures we can wait for elements explicitly (which means test will stop on timeout), but also implicitly (which will cause exception).
+
+
+!define HTML2 { {{{
+<html>
+<title>Start Page Title</title>
+<body>
+<input name="remove" type="button" value="Remove">
+<label>Add button<input name="add" type="button" value="Add"></label>
+<a id="link" href="#">My link</a>
+<script type="text/javascript">
+    window.onload = function() {
+		setTimeout(function() { window.open('http://google.com', '_blank'); }, 2000);
+    }
+</script>
+</body>
+</html>}}} }
+
+|script      |mock xml server setup|
+|add response|${HTML2}             |
+|$url=       |get mock server url  |
+
+|script|browser test|
+|open  |$url        |
+|switch to next tab |
+|close tab          |
+
+|script|mock xml server setup|
+|stop                        |
+

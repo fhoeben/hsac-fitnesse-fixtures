@@ -1,0 +1,47 @@
+---
+Test
+---
+This test ensures we can work with reset/submit buttons that have no explicit text/value.
+
+!define HTML_INPUT1 { {{{
+<html>
+<body>
+<input name="a" type="submit">
+<input name="z" type="reset">
+</body>
+</html>}}} }
+!define HTML_INPUT2 { {{{
+<html>
+<body>
+<input name="b" type="submit" value="Reload">
+<input name="y" type="reset" value="Herstel">
+</body>
+</html>}}} }
+
+|script      |mock xml server setup|
+|add response|${HTML_INPUT1}       |
+|add response|${HTML_INPUT2}       |
+|$url=       |get mock server url  |
+
+|script                |browser test|
+|seconds before timeout|1           |
+
+
+First we check page using inputs without values.
+
+|script           |
+|open      |$url  |
+|is enabled|Submit|
+|is enabled|Reset |
+
+Then we check page using inputs with values.
+
+|script            |
+|open      |$url   |
+|is enabled|Reload |
+|is enabled|Herstel|
+
+|script|mock xml server setup|
+|stop                        |
+
+

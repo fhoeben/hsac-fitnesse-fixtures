@@ -1,0 +1,60 @@
+---
+Help: Utility fixture to work with files
+Test
+---
+The !-FileFixture-! allows file manipulation, either in the [[wiki's files section][.FitNesse.FullReferenceGuide.UserGuide.FitNesseWiki.FilesSection]], or on the file system.
+Files can be generated using Freemarker templates, directly from strings or by copying files. 
+File's content and size may be retrieved.
+Filenames may be manipulated.
+
+#!define DIR {/Users/fried/dev/github-hsac-fitnesse-fixtures/wiki/FitNesseRoot/files}
+!define DIR {.}
+
+!define LIST_CONTENT {!-001
+002
+last one!-!}
+
+|script       |file fixture                                                              |
+|note         |default directory used by the fixture is inside the files section         |
+|$created=    |create      |bye1.txt                    |containing|Bye Bye 1            |
+|check        |text in     |$created                    |Bye Bye 1                       |
+|check        |filename of |$created                    |bye1.txt                        |
+|check        |base name of|$created                    |bye1                            |
+|check        |extension of|$created                    |txt                             |
+|note         |directory to be used by the fixture can be set to inside the files section|
+|set directory|http://files/test                                                         |
+|$created2=   |create      |bye2.txt                    |containing|Bye Bye 2            |
+|check        |text in     |$created2                   |Bye Bye 2                       |
+|note         |directory to be used by the fixture can be set to system path             |
+|set directory|${DIR}                                                                    |
+|show         |create      |bye.txt                     |containing|Bye Bye 3            |
+|check        |size of     |bye.txt                     |9                               |
+|check        |text in     |bye.txt                     |Bye Bye 3                       |
+|set value    |John        |for                         |name                            |
+|show         |create      |greeting.txt                |using     |greeting.ftl         |
+|check        |text in     |greeting.txt                |Hello John                      |
+|set value    |John        |for                         |name                            |
+|show         |create      |greeting.html               |using     |greeting.ftl.html    |
+|show         |text in     |greeting.html                                                |
+|show         |content of  |greeting.html                                                |
+|note         |filename's containing either / or \ will point to sub-directories         |
+|show         |copy        |${DIR}/greeting.txt         |to        |copy/greetingCopy.txt|
+|check        |text in     |${DIR}\copy\greetingCopy.txt|Hello John                      |
+|check        |filename of |${DIR}\copy\greetingCopy.txt|greetingCopy.txt                |
+|check        |base name of|${DIR}\copy\greetingCopy.txt|greetingCopy                    |
+|check        |extension of|${DIR}\copy\greetingCopy.txt|txt                             |
+
+Table below shows how we can use a list of non-reusable data from a file:
+
+|script                                                             |
+|set directory|http://files/fileFixture                             |
+|create       |list.txt            |containing    |${LIST_CONTENT}  |
+|show         |text in             |list.txt                        |
+|check        |take first line from|list.txt      |001              |
+|show         |text in             |list.txt                        |
+|check        |take first line from|list.txt      |002              |
+|check        |take first line from|list.txt      |last one!        |
+|show         |text in             |list.txt                        |
+
+
+

@@ -1,0 +1,67 @@
+---
+Help: Fixture to assist in measuring time during test
+Test
+---
+Timer fixture is intended to be used as [[library][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.LibraryTable]].
+
+All times reported are in milliseconds, resume can only be done after pause. After stopping a timer it is no longer available.
+
+We can start and use a timer without a name.
+
+|script   |timer fixture             |
+|start timer                         |
+|wait     |5            |milliseconds|
+|check    |time on timer|>= 5        |
+|$elapsed=|time on timer             |
+|wait     |1            |milliseconds|
+|check    |stop timer   |>$elapsed   |
+
+We can start and use a timer with a name.
+
+|script     |timer fixture                |
+|start timer|test                         |
+|wait       |1            |seconds        |
+|check      |time on timer|test|>= 1000   |
+|$elapsed=  |time on timer|test           |
+|check      |stop timer   |test|>=$elapsed|
+|start timer|test2                        |
+
+We can use a timer with a name started in another script table.
+
+|script   |timer fixture                 |
+|wait     |1            |milliseconds    |
+|check    |time on timer|test2|> 0       |
+|$elapsed=|time on timer|test2           |
+|check    |stop timer   |test2|>=$elapsed|
+
+We pause and resume timers
+|script      |timer fixture                  |
+|start timer |to Pause                       |
+|wait        |1            |milliseconds     |
+|check       |pause timer  |to Pause|>=1     |
+|$paused=    |time on timer|to Pause         |
+|wait        |1            |milliseconds     |
+|check       |time on timer|to Pause|$paused |
+|resume timer|to Pause                       |
+|wait        |1            |milliseconds     |
+|check       |time on timer|to Pause|>$paused|
+
+
+We can get information on all timers.
+
+|script     |timer fixture  |
+|start timer                |
+|start timer|test 8         |
+|start timer|test 9         |
+|show       |all timer times|
+|show       |stop all timers|
+
+We can get the current system time, possibly specifying a format (the format is the format string used by [[Java's !-SimpleDateFormat-!][http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html]], also used by '!-!today-!') to use.
+The difference between these methods and !-!today-! is that the latter is evaluated when the test is started, these methods return the time at the moment the test executes them.
+
+|script|timer fixture                                                         |
+|show  |current system time                                                   |
+|show  |current system time as|HH:MM:ss.SSS                                   |
+|show  |current system time as|E dd-MMM-yy HH:mm:ss.SSS                       |
+|show  |current system time as|E dd-MMM-yy HH:mm:ss.SSS|in|ja-JP-x-lvariant-JP|
+
