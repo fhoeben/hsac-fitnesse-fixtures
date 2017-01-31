@@ -29,8 +29,7 @@ To create a Maven project to run your own tests, based on this project's baselin
    * Answer the prompts for 'groupId', 'artifactId' and 'package' for the project.
  * _Alternatively_ you could also manually copy and update a sample project: 
    * Clone or download the [sample project](https://github.com/fhoeben/sample-fitnesse-project) to a new directory.
-   * Update the 'groupId' and 'artifactId' in the [`pom.xml`](https://github.com/fhoeben/sample-fitnesse-project/blob/master/pom.xml) downloaded as part of the sample to reflect your own organisation 
- and project name.
+   * Update the 'groupId' and 'artifactId' in the [`pom.xml`](https://github.com/fhoeben/sample-fitnesse-project/blob/master/pom.xml) downloaded as part of the sample to reflect your own organisation and project name.
    * Move the file for Java class [`FixtureDebugTest`](https://github.com/fhoeben/sample-fitnesse-project/blob/master/src/test/java/nl/hsac/fitnesse/sample_project/FixtureDebugTest.java) to a package/directory of your choice.
  * Start the wiki, as described in the generated project's [`README.md`](https://github.com/fhoeben/fitnesse-project-archetype/blob/master/src/main/resources/archetype-resources/README.md#running-locally).
  * Start writing tests (and custom fixtures if needed)...
