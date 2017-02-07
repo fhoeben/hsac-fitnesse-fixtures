@@ -48,6 +48,7 @@ The result in JUnit XML results can be found in: `target/failsafe-reports` (most
 The HTML results can be found in: `target/fitnesse-results/index.html`
 
 The FitNesse suite to run can be specified by changing the value of the `@Suite` annotation in `nl.hsac.fitnesse.fixture.FixtureDebugTest`, or (preferably) by adding a system property, called `fitnesseSuiteToRun`, specifying the suite to run to the build server's mvn execution.
+By using the `@SuiteFilter` and `@ExcludeSuiteFilter` annotations, or (preferably) by adding `suiteFilter` and/or `excludeSuiteFilter` system properties, one can provide tags to in- or exclude and further filter the tests to run within the specified suite. Provide multiple tags by comma-separating them.
 
 The Selenium configuration (e.g. what browser on what platform) to use when testing websites can be overridden by using system properties (i.e. `seleniumGridUrl` and either `seleniumBrowser` or `seleniumCapabilities`).
 This allows different configurations on the build server to test with different browsers, without requiring different Wiki content, but only requiring a different build configuration.

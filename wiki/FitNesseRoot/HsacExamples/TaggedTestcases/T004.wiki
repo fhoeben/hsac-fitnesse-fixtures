@@ -1,0 +1,7 @@
+---
+Suites: dontRun
+Test
+---
+!note This test intentionally does nothing and is used to test suite filtering
+|script|string fixture|
+|check |value of  | | |

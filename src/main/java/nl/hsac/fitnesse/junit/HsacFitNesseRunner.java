@@ -21,6 +21,10 @@ import org.junit.runners.model.InitializationError;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -134,6 +138,33 @@ public class HsacFitNesseRunner extends FitNesseRunner {
             }
         }
 
+    }
+
+    // In the original runner class, we cannot use a system property as annotation value,
+    // so we override it to work exactly like the suiteFilter annotation.
+    // This also needs the ExcludeSuiteFilter interface
+    @Override
+    protected String getExcludeSuiteFilter(Class<?> klass) throws Exception {
+        ExcludeSuiteFilter excludeSuiteFilterAnnotation = (ExcludeSuiteFilter)klass.getAnnotation(ExcludeSuiteFilter.class);
+        if (excludeSuiteFilterAnnotation == null) {
+            return null;
+        } else if (!"".equals(excludeSuiteFilterAnnotation.value())) {
+            return excludeSuiteFilterAnnotation.value();
+        } else if (!"".equals(excludeSuiteFilterAnnotation.systemProperty())) {
+            return System.getProperty(excludeSuiteFilterAnnotation.systemProperty());
+        } else {
+            throw new InitializationError("In annotation @ExcludeSuiteFilter you have to specify either \'value\' or \'systemProperty\'");
+        }
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.TYPE})
+    public @interface ExcludeSuiteFilter {
+        String value() default "";
+
+        String systemProperty() default "";
+
+        boolean andStrategy() default false;
     }
 
     /**
