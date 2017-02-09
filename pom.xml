@@ -42,7 +42,7 @@
 		<maven-classpath-plugin.version>1.9</maven-classpath-plugin.version>
 		<fitnesse.version>20161106</fitnesse.version>
 		<selenium.version>2.53.1</selenium.version>
-		<slf4j.version>1.7.21</slf4j.version>
+		<slf4j.version>1.7.22</slf4j.version>
 		<apache.http.version>4.5.2</apache.http.version>
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
@@ -92,12 +92,12 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.4</version>
+			<version>3.5</version>
 		</dependency>
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib-nodep</artifactId>
-			<version>3.2.2</version>
+			<version>3.2.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
@@ -161,7 +161,7 @@
 		<dependency>
 			<groupId>commons-net</groupId>
 			<artifactId>commons-net</artifactId>
-			<version>3.3</version>
+			<version>3.5</version>
 		</dependency>
 		<!-- Testing -->
 		<dependency>
