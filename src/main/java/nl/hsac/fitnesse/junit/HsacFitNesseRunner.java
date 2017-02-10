@@ -47,6 +47,9 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     public final static String FITNESSE_RESULTS_PATH = "target/fitnesse-results";
     /** Property to override suite to run */
     public final static String SUITE_OVERRIDE_VARIABLE_NAME = "fitnesseSuiteToRun";
+    public final static String SUITE_FILTER_STRATEGY_OVERRIDE_VARIABLE_NAME = "suiteFilterStrategy";
+    public final static String SUITE_FILTER_OVERRIDE_VARIABLE_NAME = "suiteFilter";
+    public final static String EXCLUDE_SUITE_FILTER_OVERRIDE_VARIABLE_NAME = "excludeSuiteFilter";
     private final static String SELENIUM_DEFAULT_TIMEOUT_PROP = "seleniumDefaultTimeout";
     protected final List<SeleniumDriverFactoryFactory> factoryFactories = new ArrayList<>();
 
@@ -140,31 +143,48 @@ public class HsacFitNesseRunner extends FitNesseRunner {
 
     }
 
-    // In the original runner class, we cannot use a system property as annotation value,
-    // so we override it to work exactly like the suiteFilter annotation.
-    // This also needs the ExcludeSuiteFilter interface
+    @Override
+    protected boolean getSuiteFilterAndStrategy(Class<?> klass) throws Exception {
+        String strategy = System.getProperty(SUITE_FILTER_STRATEGY_OVERRIDE_VARIABLE_NAME);
+        if(StringUtils.isEmpty(strategy)){
+            return super.getSuiteFilterAndStrategy(klass);
+        } else if (strategy.equalsIgnoreCase("and")){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    protected String getSuiteFilter(Class<?> klass) throws Exception {
+        String suiteFilter = System.getProperty(SUITE_FILTER_OVERRIDE_VARIABLE_NAME);
+        if (StringUtils.isEmpty(suiteFilter)) {
+            SuiteFilter suiteFilterAnnotation = klass.getAnnotation(SuiteFilter.class);
+            if (suiteFilterAnnotation == null) {
+                return null;
+            }
+            suiteFilter = suiteFilterAnnotation.value();
+        }
+        return suiteFilter;
+    }
+
     @Override
     protected String getExcludeSuiteFilter(Class<?> klass) throws Exception {
-        ExcludeSuiteFilter excludeSuiteFilterAnnotation = (ExcludeSuiteFilter)klass.getAnnotation(ExcludeSuiteFilter.class);
-        if (excludeSuiteFilterAnnotation == null) {
-            return null;
-        } else if (!"".equals(excludeSuiteFilterAnnotation.value())) {
-            return excludeSuiteFilterAnnotation.value();
-        } else if (!"".equals(excludeSuiteFilterAnnotation.systemProperty())) {
-            return System.getProperty(excludeSuiteFilterAnnotation.systemProperty());
-        } else {
-            throw new InitializationError("In annotation @ExcludeSuiteFilter you have to specify either \'value\' or \'systemProperty\'");
+        String excludeSuiteFilter = System.getProperty(EXCLUDE_SUITE_FILTER_OVERRIDE_VARIABLE_NAME);
+        if (StringUtils.isEmpty(excludeSuiteFilter)) {
+            ExcludeSuiteFilter excludeSuiteFilterAnnotation = klass.getAnnotation(ExcludeSuiteFilter.class);
+            if (excludeSuiteFilterAnnotation == null) {
+                return null;
+            }
+            excludeSuiteFilter = excludeSuiteFilterAnnotation.value();
         }
+        return excludeSuiteFilter;
     }
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target({ElementType.TYPE})
     public @interface ExcludeSuiteFilter {
         String value() default "";
-
-        String systemProperty() default "";
-
-        boolean andStrategy() default false;
     }
 
     /**

@@ -5,17 +5,21 @@ Suite
 
 Running this suite using: 
  * mvn test-compile failsafe:integration-test -DfitnesseSuiteToRun=HsacExamples.TaggedTestcases -DsuiteFilter=runMe -DexcludeSuiteFilter=dontRun
-  * Results in 3 test cases 001, 002 to be executed (all cases that have the tag 'runMe', and don't have the tag 'dontRun')
+  * Results in 3 test cases: 001, 002 to be executed (all cases that have the tag 'runMe', and don't have the tag 'dontRun')
  * mvn test-compile failsafe:integration-test -DfitnesseSuiteToRun=HsacExamples.TaggedTestcases -DexcludeSuiteFilter=runMe
-  * Results in 3 test cases 003, 004, 006 to be executed (all cases that don't have the tag 'runMe') 
+  * Results in 3 test cases: 003, 004, 006 to be executed (all cases that don't have the tag 'runMe') 
  * mvn test-compile failsafe:integration-test -DfitnesseSuiteToRun=HsacExamples.TaggedTestcases -DsuiteFilter=runMe
-  * Results in 3 test cases 001, 002, 005 to be executed (all cases that do have the tag 'runMe')
+  * Results in 3 test cases: 001, 002, 005 to be executed (all cases that do have the tag 'runMe')
   
-Passing a comma separated list to the (exlude)suiteFilter is allowed, so we can also use:
- * mvn test-compile failsafe:integration-test -DfitnesseSuiteToRun=HsacExamples.TaggedTestcases -DsuiteFilter=run,dontRun
-  * Results in 5 test cases 001, 002, 003, 004, 005 to be executed (all cases that have the tag 'runMe' OR 'dontRun')
+Passing a comma separated list to the (exlude)suiteFilter is allowed. 
+The suiteFilter can be used as AND or as OR filter by setting the suiteFilterStrategy parameter to 'and' (case-insensitive). Default behaviour is OR. The excludeSuiteFilter always behaves as an OR filter.
+So we can also use:
+ * mvn test-compile failsafe:integration-test -DfitnesseSuiteToRun=HsacExamples.TaggedTestcases -DsuiteFilter=runMe,dontRun
+  * Results in 5 test cases: 001, 002, 003, 004, 005 to be executed (all cases that have the tag 'runMe' OR 'dontRun')
+ * mvn test-compile failsafe:integration-test -DfitnesseSuiteToRun=HsacExamples.TaggedTestcases -DsuiteFilter=runMe,dontRun -DsuiteFilterStrategy=and
+  * Results in 1 test case: 005 to be executed (all cases that have the tag 'runMe' AND 'dontRun') 
  * mvn test-compile failsafe:integration-test -DfitnesseSuiteToRun=HsacExamples.TaggedTestcases -DexcludeSuiteFilter=runMe,dontRun
-  * Results in 1 test case 006 to be executed (all cases that don't have the tag 'runMe' OR 'dontRun')
+  * Results in 1 test case: 006 to be executed (all cases that don't have the tag 'runMe' OR 'dontRun')
   
 
 !contents -R2 -g -p -f -h

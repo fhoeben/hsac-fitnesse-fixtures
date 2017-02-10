@@ -8,8 +8,8 @@ import org.junit.runner.RunWith;
  * Test class to allow fixture code to be debugged.
  */
 @RunWith(HsacFitNesseRunner.class)
-@FitNesseRunner.SuiteFilter(systemProperty = "suiteFilter")
-@HsacFitNesseRunner.ExcludeSuiteFilter(systemProperty = "excludeSuiteFilter")
-@FitNesseRunner.Suite(systemProperty = "fitnesseSuiteToRun")
+@FitNesseRunner.SuiteFilter()
+@HsacFitNesseRunner.ExcludeSuiteFilter()
+@FitNesseRunner.Suite()
 public class FixtureDebugTest {
 }
