@@ -1,27 +1,39 @@
 ---
+Help: Sample suite to demonstrate to how to refine the tests to be run inside a suite when running via jUnit
 Suite
 ---
-!1 Suite To test running a filtered suite from maven
+!1 Suite to test running a filtered suite from Maven
+
+This suite is meant to demonstrate the ability to in- and exclude test cases (i.e. individual pages or suites) based on their [[tags][.FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests.TestSuites.TagsAndFilters]], allowing more fine-grained control than just the single hierarchy provided by Suites.
+!note (Setting tags can be done via the 'Tools/Properties' menu option of a Test or Suite page.)
+The !style_code[!-HsacFitNesseRunner-!] allows you to override the filters applied using system properties. This allows the tests to be executed by a build server to be controlled based on tags, without requiring code changes.
+
+The system properties to control filtering are:
+ * !style_code[suiteFilter]
+ * !style_code[suiteFilterStrategy]
+ * !style_code[excludeSuiteFilter]
+
 
 Running this suite using: 
- * mvn test-compile failsafe:integration-test -DfitnesseSuiteToRun=HsacExamples.TaggedTestcases -DsuiteFilter=runMe -DexcludeSuiteFilter=dontRun
-  * Results in 3 test cases: 001, 002 to be executed (all cases that have the tag 'runMe', and don't have the tag 'dontRun')
- * mvn test-compile failsafe:integration-test -DfitnesseSuiteToRun=HsacExamples.TaggedTestcases -DexcludeSuiteFilter=runMe
+ * !style_code[mvn test-compile failsafe:integration-test -DfitnesseSuiteToRun=HsacExamples.TaggedTestcases -DsuiteFilter=runMe -DexcludeSuiteFilter=dontRun]
+  * Results in 2 test cases: 001, 002 to be executed (all cases that have the tag 'runMe', and don't have the tag 'dontRun')
+ * !style_code[mvn test-compile failsafe:integration-test -DfitnesseSuiteToRun=HsacExamples.TaggedTestcases -DexcludeSuiteFilter=runMe]
   * Results in 3 test cases: 003, 004, 006 to be executed (all cases that don't have the tag 'runMe') 
- * mvn test-compile failsafe:integration-test -DfitnesseSuiteToRun=HsacExamples.TaggedTestcases -DsuiteFilter=runMe
+ * !style_code[mvn test-compile failsafe:integration-test -DfitnesseSuiteToRun=HsacExamples.TaggedTestcases -DsuiteFilter=runMe]
   * Results in 3 test cases: 001, 002, 005 to be executed (all cases that do have the tag 'runMe')
   
 Passing a comma separated list to the (exlude)suiteFilter is allowed. 
-The suiteFilter can be used as AND or as OR filter by setting the suiteFilterStrategy system property to 'and' (case-insensitive). Default behaviour is OR. The excludeSuiteFilter always behaves as an OR filter.
+The !style_code[suiteFilter] can be used as AND or as OR filter by setting the !style_code[suiteFilterStrategy] system property to 'and' (case-insensitive). Default behaviour is OR. The !style_code[excludeSuiteFilter] always behaves as an OR filter.
 So we can also use:
- * mvn test-compile failsafe:integration-test -DfitnesseSuiteToRun=HsacExamples.TaggedTestcases -DsuiteFilter=runMe,dontRun
+ * !style_code[mvn test-compile failsafe:integration-test -DfitnesseSuiteToRun=HsacExamples.TaggedTestcases -DsuiteFilter=runMe,dontRun]
   * Results in 5 test cases: 001, 002, 003, 004, 005 to be executed (all cases that have the tag 'runMe' OR 'dontRun')
- * mvn test-compile failsafe:integration-test -DfitnesseSuiteToRun=HsacExamples.TaggedTestcases -DsuiteFilter=runMe,dontRun -DsuiteFilterStrategy=and
+ * !style_code[mvn test-compile failsafe:integration-test -DfitnesseSuiteToRun=HsacExamples.TaggedTestcases -DsuiteFilter=runMe,dontRun -DsuiteFilterStrategy=and]
   * Results in 1 test case: 005 to be executed (all cases that have the tag 'runMe' AND 'dontRun') 
- * mvn test-compile failsafe:integration-test -DfitnesseSuiteToRun=HsacExamples.TaggedTestcases -DexcludeSuiteFilter=runMe,dontRun
+ * !style_code[mvn test-compile failsafe:integration-test -DfitnesseSuiteToRun=HsacExamples.TaggedTestcases -DexcludeSuiteFilter=runMe,dontRun]
   * Results in 1 test case: 006 to be executed (all cases that don't have the tag 'runMe' OR 'dontRun')
   
 
 !contents -R2 -g -p -f -h
 
 !define TEST_SYSTEM {slim}
+!define slim.port {0}
