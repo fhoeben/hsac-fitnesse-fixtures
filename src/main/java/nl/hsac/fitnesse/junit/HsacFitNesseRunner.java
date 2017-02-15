@@ -158,7 +158,7 @@ public class HsacFitNesseRunner extends FitNesseRunner {
         String suiteFilter = System.getProperty(SUITE_FILTER_OVERRIDE_VARIABLE_NAME);
         if (StringUtils.isEmpty(suiteFilter)) {
             SuiteFilter suiteFilterAnnotation = klass.getAnnotation(SuiteFilter.class);
-            return suiteFilterAnnotation == null?null:suiteFilterAnnotation.value();
+            return suiteFilterAnnotation == null ? null : suiteFilterAnnotation.value();
         }
         return suiteFilter;
     }
