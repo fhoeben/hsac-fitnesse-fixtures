@@ -124,7 +124,7 @@ public class SeleniumHelper {
             WebElement firstFound = element;
             if (!isInteractable(element)) {
                 // finding by linkText does not find actual text if css text-transform is in place
-                element = findByXPath(".//*[normalized(descendant::text())='%s']/ancestor-or-self::a", place);
+                element = findByXPath(".//text()[normalized(.)='%s']/ancestor-or-self::a", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
@@ -162,7 +162,7 @@ public class SeleniumHelper {
             }
             if (!isInteractable(element)) {
                 // finding by linkText does not find actual text if css text-transform is in place
-                element = findByXPath(".//*[contains(normalized(descendant::text()),'%s')]/ancestor-or-self::a", place);
+                element = findByXPath(".//text()[contains(normalized(.),'%s')]/ancestor-or-self::a", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
