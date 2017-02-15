@@ -1,9 +1,6 @@
 ---
-Suite
+Static
 ---
-!1 Test suite X
-!contents -R2 -g -p -f -h
-
-|Import                           |
-|nl.hsac.fitnesse.fixture         |
-|nl.hsac.fitnesse.fixture.slim    |
+|Import                       |
+|nl.hsac.fitnesse.fixture     |
+|nl.hsac.fitnesse.fixture.slim|
