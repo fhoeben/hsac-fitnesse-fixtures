@@ -1449,12 +1449,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected WebElement getElementToCheckVisibility(String place, String container) {
-        SearchContext currentSearchContext = setSearchContextToContainer(container);
-        try {
-            return getElementToClick(place);
-        } finally {
-            resetSearchContext(currentSearchContext);
-        }
+        return getElementToClick(place, container);
     }
 
     /**
