@@ -21,10 +21,6 @@ import org.junit.runners.model.InitializationError;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -170,12 +166,6 @@ public class HsacFitNesseRunner extends FitNesseRunner {
             return super.getExcludeSuiteFilter(klass);
         }
         return excludeSuiteFilter;
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.TYPE})
-    public @interface ExcludeSuiteFilter {
-        String value() default "";
     }
 
     /**
