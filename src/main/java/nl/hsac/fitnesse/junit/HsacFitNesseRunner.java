@@ -146,12 +146,10 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     @Override
     protected boolean getSuiteFilterAndStrategy(Class<?> klass) throws Exception {
         String strategy = System.getProperty(SUITE_FILTER_STRATEGY_OVERRIDE_VARIABLE_NAME);
-        if(StringUtils.isEmpty(strategy)){
+        if (StringUtils.isEmpty(strategy)) {
             return super.getSuiteFilterAndStrategy(klass);
-        } else if (strategy.equalsIgnoreCase("and")){
-            return true;
         } else {
-            return false;
+            return strategy.equalsIgnoreCase("and");
         }
     }
 
@@ -160,10 +158,7 @@ public class HsacFitNesseRunner extends FitNesseRunner {
         String suiteFilter = System.getProperty(SUITE_FILTER_OVERRIDE_VARIABLE_NAME);
         if (StringUtils.isEmpty(suiteFilter)) {
             SuiteFilter suiteFilterAnnotation = klass.getAnnotation(SuiteFilter.class);
-            if (suiteFilterAnnotation == null) {
-                return null;
-            }
-            suiteFilter = suiteFilterAnnotation.value();
+            return suiteFilterAnnotation == null?null:suiteFilterAnnotation.value();
         }
         return suiteFilter;
     }
@@ -172,11 +167,7 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     protected String getExcludeSuiteFilter(Class<?> klass) throws Exception {
         String excludeSuiteFilter = System.getProperty(EXCLUDE_SUITE_FILTER_OVERRIDE_VARIABLE_NAME);
         if (StringUtils.isEmpty(excludeSuiteFilter)) {
-            ExcludeSuiteFilter excludeSuiteFilterAnnotation = klass.getAnnotation(ExcludeSuiteFilter.class);
-            if (excludeSuiteFilterAnnotation == null) {
-                return null;
-            }
-            excludeSuiteFilter = excludeSuiteFilterAnnotation.value();
+            return super.getExcludeSuiteFilter(klass);
         }
         return excludeSuiteFilter;
     }

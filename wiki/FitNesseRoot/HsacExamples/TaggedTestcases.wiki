@@ -12,7 +12,7 @@ Running this suite using:
   * Results in 3 test cases: 001, 002, 005 to be executed (all cases that do have the tag 'runMe')
   
 Passing a comma separated list to the (exlude)suiteFilter is allowed. 
-The suiteFilter can be used as AND or as OR filter by setting the suiteFilterStrategy parameter to 'and' (case-insensitive). Default behaviour is OR. The excludeSuiteFilter always behaves as an OR filter.
+The suiteFilter can be used as AND or as OR filter by setting the suiteFilterStrategy system property to 'and' (case-insensitive). Default behaviour is OR. The excludeSuiteFilter always behaves as an OR filter.
 So we can also use:
  * mvn test-compile failsafe:integration-test -DfitnesseSuiteToRun=HsacExamples.TaggedTestcases -DsuiteFilter=runMe,dontRun
   * Results in 5 test cases: 001, 002, 003, 004, 005 to be executed (all cases that have the tag 'runMe' OR 'dontRun')
