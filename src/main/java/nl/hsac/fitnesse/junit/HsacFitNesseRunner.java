@@ -153,8 +153,7 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     protected String getSuiteFilter(Class<?> klass) throws Exception {
         String suiteFilter = System.getProperty(SUITE_FILTER_OVERRIDE_VARIABLE_NAME);
         if (StringUtils.isEmpty(suiteFilter)) {
-            SuiteFilter suiteFilterAnnotation = klass.getAnnotation(SuiteFilter.class);
-            return suiteFilterAnnotation == null ? null : suiteFilterAnnotation.value();
+            suiteFilter = super.getSuiteFilter(klass);
         }
         return suiteFilter;
     }
@@ -163,7 +162,7 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     protected String getExcludeSuiteFilter(Class<?> klass) throws Exception {
         String excludeSuiteFilter = System.getProperty(EXCLUDE_SUITE_FILTER_OVERRIDE_VARIABLE_NAME);
         if (StringUtils.isEmpty(excludeSuiteFilter)) {
-            return super.getExcludeSuiteFilter(klass);
+            excludeSuiteFilter = super.getExcludeSuiteFilter(klass);
         }
         return excludeSuiteFilter;
     }
