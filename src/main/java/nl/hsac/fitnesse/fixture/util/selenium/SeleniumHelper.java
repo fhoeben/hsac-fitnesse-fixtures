@@ -124,7 +124,7 @@ public class SeleniumHelper {
             WebElement firstFound = element;
             if (!isInteractable(element)) {
                 // finding by linkText does not find actual text if css text-transform is in place
-                element = findByXPath(".//*[normalized(descendant::text())='%s']/ancestor-or-self::a", place);
+                element = findByXPath(".//text()[normalized(.)='%s']/ancestor-or-self::a", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
@@ -162,7 +162,7 @@ public class SeleniumHelper {
             }
             if (!isInteractable(element)) {
                 // finding by linkText does not find actual text if css text-transform is in place
-                element = findByXPath(".//*[contains(normalized(descendant::text()),'%s')]/ancestor-or-self::a", place);
+                element = findByXPath(".//text()[contains(normalized(.),'%s')]/ancestor-or-self::a", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
@@ -187,52 +187,26 @@ public class SeleniumHelper {
             }
             if (!isInteractable(element)) {
                 // find element with specified text and 'onclick' attribute
-                element = findByXPath(".//*[@onclick and normalized(text())='%s']", place);
+                element = findByXPath(".//text()[@onclick and normalized(.)='%s']/..", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
             }
             if (!isInteractable(element)) {
-                element = findByXPath(".//*[@onclick and contains(normalized(text()),'%s')]", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                // find element with child with specified text and 'onclick' attribute
-                element = findByXPath(".//*[@onclick and normalized(descendant::text())='%s']", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findByXPath(".//*[@onclick and contains(normalized(descendant::text()),'%s')]", place);
+                element = findByXPath(".//text()[@onclick and contains(normalized(.),'%s')]/..", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
             }
             if (!isInteractable(element)) {
                 // find element with specified text
-                element = findByXPath(".//*[normalized(text())='%s']", place);
+                element = findByXPath(".//text()[normalized(.)='%s']/..", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
             }
             if (!isInteractable(element)) {
-                element = findByXPath(".//*[contains(normalized(text()),'%s')]", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                // find element with child with specified text
-                element = findByXPath(".//*[normalized(descendant::text())='%s']", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findByXPath(".//*[contains(normalized(descendant::text()),'%s')]", place);
+                element = findByXPath(".//text()[contains(normalized(.),'%s')]/..", place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
