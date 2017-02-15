@@ -21,6 +21,10 @@ import org.junit.runners.model.InitializationError;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +47,9 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     public final static String FITNESSE_RESULTS_PATH = "target/fitnesse-results";
     /** Property to override suite to run */
     public final static String SUITE_OVERRIDE_VARIABLE_NAME = "fitnesseSuiteToRun";
+    public final static String SUITE_FILTER_STRATEGY_OVERRIDE_VARIABLE_NAME = "suiteFilterStrategy";
+    public final static String SUITE_FILTER_OVERRIDE_VARIABLE_NAME = "suiteFilter";
+    public final static String EXCLUDE_SUITE_FILTER_OVERRIDE_VARIABLE_NAME = "excludeSuiteFilter";
     private final static String SELENIUM_DEFAULT_TIMEOUT_PROP = "seleniumDefaultTimeout";
     protected final List<SeleniumDriverFactoryFactory> factoryFactories = new ArrayList<>();
 
@@ -134,6 +141,41 @@ public class HsacFitNesseRunner extends FitNesseRunner {
             }
         }
 
+    }
+
+    @Override
+    protected boolean getSuiteFilterAndStrategy(Class<?> klass) throws Exception {
+        String strategy = System.getProperty(SUITE_FILTER_STRATEGY_OVERRIDE_VARIABLE_NAME);
+        if (StringUtils.isEmpty(strategy)) {
+            return super.getSuiteFilterAndStrategy(klass);
+        } else {
+            return strategy.equalsIgnoreCase("and");
+        }
+    }
+
+    @Override
+    protected String getSuiteFilter(Class<?> klass) throws Exception {
+        String suiteFilter = System.getProperty(SUITE_FILTER_OVERRIDE_VARIABLE_NAME);
+        if (StringUtils.isEmpty(suiteFilter)) {
+            SuiteFilter suiteFilterAnnotation = klass.getAnnotation(SuiteFilter.class);
+            return suiteFilterAnnotation == null?null:suiteFilterAnnotation.value();
+        }
+        return suiteFilter;
+    }
+
+    @Override
+    protected String getExcludeSuiteFilter(Class<?> klass) throws Exception {
+        String excludeSuiteFilter = System.getProperty(EXCLUDE_SUITE_FILTER_OVERRIDE_VARIABLE_NAME);
+        if (StringUtils.isEmpty(excludeSuiteFilter)) {
+            return super.getExcludeSuiteFilter(klass);
+        }
+        return excludeSuiteFilter;
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.TYPE})
+    public @interface ExcludeSuiteFilter {
+        String value() default "";
     }
 
     /**
