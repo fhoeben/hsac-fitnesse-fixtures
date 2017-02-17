@@ -1,0 +1,21 @@
+Sample test on [[Angular][https://angular.io/]] application.
+!note This test does not actually need 'ng browser test'. It would just as well using plain 'browser test', but this at least ensuress the ng2 version works.
+
+|script         |ng2 browser test                                                   |
+|open           |http://www.hiteshbalar.com/preserver/notes                         |
+|click          |Write a note                                                       |
+|enter          |Find an Angular2 sample site     |as         |Title                |
+|enter          |check out angularexpo.com        |as         |Write a note         |
+|click          |Save                                                               |
+|click          |Write a note                                                       |
+|enter          |Find another Angular2 sample site|as         |Title                |
+|enter          |check out code.gov               |as         |Write a note         |
+|click          |Save                                                               |
+|open in new tab|http://angularexpo.com                                             |
+|show           |take screenshot                  |expo                             |
+|close tab                                                                          |
+|hover over     |Find an Angular2 sample site                                       |
+|click          |Archive                                                            |
+|ensure         |is visible                       |Done                             |
+|ensure         |is visible                       |Find another Angular2 sample site|
+|show           |take screenshot                  |one-to-go                        |
