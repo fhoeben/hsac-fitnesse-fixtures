@@ -15,9 +15,9 @@ First we do this with ''plain !-BrowserTest-!'', then with a ''custom subclass, 
 |press |down                                                                                                 |
 |press |enter                                                                                                |
 |click |Zoek                                                                                                 |
-|click |Wittevrouwensingel 66                                                                                |
+|click |Wittevrouwensingel 54                                                                                |
 |note  |Check any element's text based on an xPath, makes test fragile to HTML changes                       |
-|check |value of                   |xpath=//span[@class='object-media-teaser-count']|37                      |
+|check |value of                   |xpath=//span[@class='object-media-teaser-count']|68                      |
 
 What can we do with a custom subclass...
 
@@ -38,8 +38,8 @@ We need to indicate in which package our custom class can be found.
 |press |down                                                              |
 |press |enter                                                             |
 |click |Zoek                                                              |
-|click |Wittevrouwensingel 66                                             |
+|click |Wittevrouwensingel 54                                             |
 |note  |Use custom method to get number of photos                         |
-|check |number of photos               |37                                |
+|check |number of photos               |68                                |
 |note  |Since the custom method returns a number we can do relative checks|
 |check |number of photos               |>10                               |
