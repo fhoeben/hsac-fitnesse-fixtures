@@ -45,12 +45,13 @@ A similar [[zip file containing the latest 'snapshot' (i.e. not released but bas
 
 
 !3 2. Run on build server
-To run the tests on a build server have the build server checkout the project and execute {{{ mvn clean test-compile failsafe:integration-test }}}
+To run the tests on a build server have the build server checkout the project and execute {{{ mvn clean test-compile failsafe:integration-test }}}. To fail the build in case of test failures append: {{{failsafe:verify}}}
 The result in JUnit XML results can be found in: target/failsafe-reports (most build servers will pick these up automatically)
 The HTML results can be found in: target/fitnesse-results/index.html
 
 The !-FitNesse-! suite to run can be specified by changing the value of the !style_code[@Suite]'s value in !style_code[nl.hsac.fitnesse.fixture.FixtureDebugTest],
 or (preferably) by adding a system property, called !style_code[fitnesseSuiteToRun], specifying the suite to run to the build server's mvn execution.
+By using the !style_code[@SuiteFilter] and !style_code[@ExcludeSuiteFilter] annotations, or (preferably) by adding !style_code[suiteFilter] and/or !style_code[excludeSuiteFilter] system properties, one can provide tags to in- or exclude and further filter the tests to run within the specified suite. Provide multiple tags by comma-separating them.
 
 The Selenium configuration (e.g. what browser on what platform) to use when testing websites can be overridden by using system properties. This allows different configurations on the build server to test with different browsers, without requiring different Wiki content, but only requiring a different build configuration. More details can be found in >SlimTests.BrowserTests.OverridingSeleniumSetup
 
