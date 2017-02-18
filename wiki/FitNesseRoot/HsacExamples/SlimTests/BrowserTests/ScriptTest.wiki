@@ -19,10 +19,10 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |press            |down                                                                                   |
 |press            |enter                                                                                  |
 |click            |Zoek                                                                                   |
-|click            |Wittevrouwensingel 66                                                                  |
-|check            |page title                 |Huis te koop: Wittevrouwensingel 66 3572 CC Utrecht [funda]|
+|click            |Wittevrouwensingel 54                                                                  |
+|check            |page title                 |Huis te koop: Wittevrouwensingel 54 3572 CB Utrecht [funda]|
 |check            |value of                   |Status                   |Beschikbaar                      |
-|check            |value of                   |Woonoppervlakte          |323 m²                           |
+|check            |value of                   |Woonoppervlakte          |288 m²                           |
 |note             |set width so we see button to go to next photo                                         |
 |set browser width|1200                                                                                   |
 |click            |Foto's                                                                                 |
