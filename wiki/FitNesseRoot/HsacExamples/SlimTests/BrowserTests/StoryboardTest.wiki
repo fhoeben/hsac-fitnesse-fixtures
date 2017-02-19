@@ -11,11 +11,10 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |click     |Gageldijk 209                                                |
 |$price=   |value of          |xpath=//div[@class='prijs']/strong        |
 |open      |http://www.funda.nl                                          |
-|select    |€ 800.000         |for       |Van                            |
+|select    |€ 700.000         |for       |Van                            |
 |enter     |Gageldijk, Utrecht|as        |Plaats, buurt, adres etc       |
 |note      |select option from autocomplete                              |
-|press     |down                                                         |
-|press     |enter                                                        |
+|press     |tab                                                          |
 |click     |Zoek                                                         |
 |click     |Gageldijk 209                                                |
 |check     |value of          |Vraagprijs|$price k.k.                    |
