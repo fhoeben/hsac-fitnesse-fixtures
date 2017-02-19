@@ -43,8 +43,8 @@ This version shows a test can be understood, and even written, by people without
 |click                 |Guest Rating                                                                                                 |
 |click                 |The Peninsula New York                                                                                       |
 |switch to next tab                                                                                                                  |
-|note                  |!note The next two actions make use of the accessibility features of Expedia (i.e. its screen reader support)|
-|click                 |Next image                                                                                                   |
+|note                  |!note The next action makes use of the accessibility features of Expedia (i.e. its screen reader support)    |
+|click                 |Switch main photo to next photo                                                                              |
 |click                 |Show all Rooms & Rates                                                                                       |
 |click                 |Select Junior, Executive Suite                                                                               |
 |wait for visible      |Select your departure to New York                                                                            |
@@ -70,9 +70,9 @@ Although the identifiers used inside Expedia's HTML are quite descriptive, this 
 |click                 |xpath=//button[@aria-label='Sort by: Guest Rating']        |
 |click                 |xpath=//h3[text()='The Peninsula New York']/..             |
 |switch to next tab                                                                |
-|click                 |css=.image-slider-control.next                             |
+|click                 |css=.jumbo-image-next                                      |
 |click                 |id=show-more-rooms                                         |
-|click                 |xpath=//span[text()='Select Junior, Executive Suite']/../..|
+|click                 |xpath=//span/text()[.='Select Junior, Executive Suite']/../../..|
 |wait for visible      |css=div.title-departure                                    |
 |cleanup for next test                                                             |
 
