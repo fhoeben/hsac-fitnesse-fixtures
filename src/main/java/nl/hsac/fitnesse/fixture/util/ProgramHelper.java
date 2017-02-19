@@ -128,6 +128,7 @@ public class ProgramHelper {
                 String line;
                 while ((line = brCleanUp.readLine ()) != null) {
                     buffer.append(line);
+                    buffer.append(System.lineSeparator());
                 }
                  brCleanUp.close();
             } catch (IOException e) {

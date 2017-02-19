@@ -8,7 +8,6 @@ import freemarker.template.Template;
 import nl.hsac.fitnesse.fixture.util.*;
 import nl.hsac.fitnesse.fixture.util.selenium.CookieConverter;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.client.CookieStore;
 import org.apache.http.impl.client.BasicCookieStore;
@@ -509,13 +508,21 @@ public class Environment {
     public ProgramResponse invokeProgram(int timeout, String directory, String command,
                                          String... arguments) {
         ProgramResponse result = new ProgramResponse();
-        if (directory != null && !StringUtils.isBlank(directory)) {
-            result.setDirectory(new File(directory));
-        }
+        result.setDirectory(directory);
         result.setCommand(command);
         result.setArguments(arguments);
-        programHelper.execute(result, timeout);
+        invokeProgram(timeout, result);
         return result;
+    }
+
+    /**
+     * Invokes an external program, waits for it to complete,
+     * and returns the result.
+     * @param timeout maximum time (in milliseconds) to wait.
+     * @param result conatiner for which program to call and its response.
+     */
+    public void invokeProgram(int timeout, ProgramResponse result) {
+        programHelper.execute(result, timeout);
     }
 
     private void configDatesHelper() {

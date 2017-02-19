@@ -1,0 +1,43 @@
+---
+Help: Fixture to run a program.
+---
+This page demonstrates the usage of !-ExecuteProgramTest-!, which allows you to run a program and inspect its output.
+
+!note The program will be executed on the machine which hosts the Slim process.
+
+We can run a program with some arguments, check its exit code and show its output.
+
+|script |execute program test        |
+|set    |-c            |as argument|0|
+|set    |ls -l /       |as argument|1|
+|execute|/bin/bash                   |
+|check  |exit code     |0            |
+|show   |standard out                |
+|check  |standard error|!--!         |
+
+The default timeout for program execution is one minute, but we can set a custom timeout. Furthermore we can control the directory it is invoked from, set all arguments using a list and get its output 'unformatted'.
+
+|script               |execute program test           |
+|check                |timeout           |60000       |
+|set timeout of       |100               |milliseconds|
+|set working directory|/                              |
+|set                  |-c, ls -l         |as arguments|
+|execute              |/bin/bash                      |
+|check                |exit code         |0           |
+|show                 |raw standard out               |
+|check                |raw standard error|!--!        |
+
+The timeout can also be set in seconds, and pass environment variables (and the process's output is escaped to ensure it is displayed properly).
+
+|script        |execute program test           |
+|set timeout of|1              |seconds        |
+|set value     |Hi <there>     |for        |BLA|
+|set           |-c             |as argument|0  |
+|set           |!-echo ${BLA}-!|as argument|1  |
+|execute       |/bin/bash                      |
+|check         |exit code      |0              |
+|check         |raw standard out               |!-Hi <there>
+-!|
+|check|standard out|{{{Hi <there>
+}}}|
+
