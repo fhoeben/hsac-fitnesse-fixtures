@@ -2,6 +2,7 @@
 Help: Tests for Slim fixtures
 Suite
 SymbolicLinks
+  ExecuteProgramTest: .HsacExamples.SlimTests.ExecuteProgramTest
   MockXmlServerTest: .HsacExamples.SlimTests.MockXmlServerTest
   SuiteSetUp: .HsacExamples.SlimTests.SuiteSetUp
   UtilityFixtures: .HsacExamples.SlimTests.UtilityFixtures

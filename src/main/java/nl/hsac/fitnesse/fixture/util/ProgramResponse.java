@@ -1,7 +1,10 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.File;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,6 +41,14 @@ public class ProgramResponse {
         this.directory = directory;
     }
 
+    public void setDirectory(String directory) {
+        if (directory != null && !StringUtils.isBlank(directory)) {
+            setDirectory(new File(directory));
+        } else {
+            setDirectory(new File("."));
+        }
+    }
+
     public String getCommand() {
         return command;
     }
@@ -52,6 +63,11 @@ public class ProgramResponse {
 
     public void setArguments(String... arguments) {
         this.arguments = arguments;
+    }
+
+    public void setArguments(List<String> arguments) {
+        String[] argArray = arguments.toArray(new String[arguments.size()]);
+        setArguments(argArray);
     }
 
     public Integer getExitCode() {
