@@ -2,8 +2,6 @@ Sample test on [[Angular][https://angular.io/]] application.
 
 !note '''Please note:''' The application used in this test does NOT seem to work with !-PhantomJs-!. It does work when executed with Chrome or Firefox.
 
-!note Due to the nature of [[Plunker][https://plnkr.co/]] which hosts the application in an iframe, the page must first be opened with !-BrowserTest-!, switch to the embedded iframe and wait for the application to load.
-
 
 |table template|add                   |
 |enter         |@{first} |as |First   |
