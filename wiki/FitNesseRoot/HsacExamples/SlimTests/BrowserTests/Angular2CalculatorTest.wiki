@@ -5,22 +5,15 @@ Sample test on [[Angular][https://angular.io/]] application.
 !note Due to the nature of [[Plunker][https://plnkr.co/]] which hosts the application in an iframe, the page must first be opened with !-BrowserTest-!, switch to the embedded iframe and wait for the application to load.
 
 
-|table template|add                      |
-|enter         |@{first} |as |id=first   |
-|enter         |@{second}|as |id=second  |
-|select        |+        |for|id=operator|
-|click         |Go!                      |
-|$result=      |value of |id=latest      |
+|table template|add                   |
+|enter         |@{first} |as |First   |
+|enter         |@{second}|as |Second  |
+|select        |+        |for|Operator|
+|click         |Go!                   |
+|$result=      |value of |Result      |
 
-|script                |Browser Test                                |
-|seconds before timeout|15                                          |
-|set browser size to maximum                                        |
-|open                  |https://embed.plnkr.co/2GtNBG6QrG8AL0l9rxjc/|
-|switch to frame       |css=.plunker-space-iframe                   |
-|switch to frame       |id=preview                                  |
-|wait for visible      |id=calculator-container                     |
-
-|script|Ng2 Browser Test|
+|script|Ng2 Browser Test                            |
+|open  |https://greg73.github.io/angular-calculator/|
 
 |add                 |
 |first|second|result?|
