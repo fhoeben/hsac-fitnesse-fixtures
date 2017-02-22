@@ -1384,6 +1384,13 @@ public class BrowserTest extends SlimFixture {
         boolean result = false;
         WebElement element = getElementToCheckVisibility(place, container);
         if (element != null) {
+            if ("label".equalsIgnoreCase(element.getTagName())) {
+                // for labels we want to know whether their target is enabled, not the label itself
+                WebElement labelTarget = getSeleniumHelper().getLabelledElement(element);
+                if (labelTarget != null) {
+                    element = labelTarget;
+                }
+            }
             result = element.isEnabled();
         }
         return result;
