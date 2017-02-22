@@ -1,0 +1,19 @@
+Sample test on [[Angular][https://angular.io/]] application. 
+
+!note '''Please note:''' The application used in this test does NOT seem to work with !-PhantomJs-!. It does work when executed with Chrome or Firefox.
+
+
+|table template|add                   |
+|enter         |@{first} |as |First   |
+|enter         |@{second}|as |Second  |
+|select        |+        |for|Operator|
+|click         |Go!                   |
+|$result=      |value of |Result      |
+
+|script|Ng2 Browser Test                            |
+|open  |https://greg73.github.io/angular-calculator/|
+
+|add                 |
+|first|second|result?|
+|1    |2     |3      |
+|3    |4     |7      |
