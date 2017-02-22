@@ -3,9 +3,13 @@ This test ensures we can check whether elements are enabled and visible on a pag
 !define HTML { {{{
 <html>
 <body>
-<input name="a" disabled type="submit">
-<input name="b" type="submit" value="Reload">
-<input name="c" style="display:none" type="submit">
+<label for="a1">LabelA</label>
+<input id="a1" name="a" disabled type="submit">
+<label for="b1">LabelB</label>
+<input id="b1" name="b" type="submit" value="Reload">
+<label>LabelC
+<input id="c1" name="c" style="display:none" type="submit">
+</label>
 <button name="d" disabled>Ok</button>
 <button name="e">Cancel</button>
 </body>
@@ -16,21 +20,27 @@ This test ensures we can check whether elements are enabled and visible on a pag
 |add response|${HTML}              |
 |$url=       |get mock server url  |
 
-|script                |browser test     |
-|open                  |$url             |
-|seconds before timeout|1                |
-|reject                |is enabled|name=a|
-|ensure                |is visible|name=a|
-|ensure                |is visible|Submit|
-|ensure                |is enabled|name=b|
-|ensure                |is visible|name=b|
-|ensure                |is enabled|Reload|
-|ensure                |is visible|Reload|
-|reject                |is visible|name=c|
-|reject                |is enabled|name=d|
-|reject                |is enabled|Ok    |
-|is enabled            |name=e           |
-|is enabled            |Cancel           |
+!|script               |browser test                                     |
+|open                  |$url                                             |
+|seconds before timeout|1                                                |
+|reject                |is enabled                |name=a                |
+|ensure                |is visible                |name=a                |
+|reject                |is enabled                |LabelA                |
+|ensure                |is visible                |LabelA                |
+|ensure                |is enabled                |name=b                |
+|ensure                |is visible                |name=b                |
+|ensure                |is visible                |Submit                |
+|ensure                |is enabled                |Reload                |
+|ensure                |is visible                |Reload                |
+|ensure                |is enabled                |LabelB                |
+|ensure                |is visible                |LabelB                |
+|reject                |is visible                |name=c                |
+|note                  |LabelC is visible, as label, but the input is not|
+|ensure                |is visible                |LabelC                |
+|reject                |is enabled                |name=d                |
+|reject                |is enabled                |Ok                    |
+|is enabled            |name=e                                           |
+|is enabled            |Cancel                                           |
 
 |script|mock xml server setup|
 |stop                        |

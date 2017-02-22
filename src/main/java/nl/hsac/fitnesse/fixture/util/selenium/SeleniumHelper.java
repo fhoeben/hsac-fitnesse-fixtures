@@ -426,9 +426,14 @@ public class SeleniumHelper {
     }
 
     private WebElement getElementByLabel(String labelText, int index, String labelXPath) {
-        WebElement element = null;
         String labelPattern = indexedXPath(labelXPath, index);
         WebElement label = findByXPath(labelPattern, labelText);
+        WebElement element = getLabelledElement(label);
+        return element;
+    }
+
+    public WebElement getLabelledElement(WebElement label) {
+        WebElement element = null;
         if (label != null) {
             String forAttr = label.getAttribute("for");
             if (forAttr == null || "".equals(forAttr)) {
