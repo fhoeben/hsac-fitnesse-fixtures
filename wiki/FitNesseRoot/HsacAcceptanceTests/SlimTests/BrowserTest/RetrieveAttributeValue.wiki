@@ -1,7 +1,7 @@
 ---
 Test
 ---
-This test ensures we can find elements based on (partial) title attribute.
+This test ensures we can retrieve element attribute values.
 
 !define HTML { {{{
 <html>
