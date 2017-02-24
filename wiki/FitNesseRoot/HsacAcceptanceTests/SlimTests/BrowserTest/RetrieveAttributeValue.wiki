@@ -1,0 +1,26 @@
+---
+Test
+---
+This test ensures we can find elements based on (partial) title attribute.
+
+!define HTML { {{{
+<html>
+<body>
+<span id="walter" title="That rug really tied the room together.">Walter Says</span>
+<div title="container">
+<img id="myImage" class="styled-img"></img>
+</div>
+</body>
+</html>}}} }
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script|browser test                                                                  |
+|open  |$url                                                                          |
+|check |value of attribute|title|on|id=walter |That rug really tied the room together.|
+|check |value of attribute|class|on|id=myImage|in      |container     |styled-img     |
+
+|script|mock xml server setup|
+|stop                        |
