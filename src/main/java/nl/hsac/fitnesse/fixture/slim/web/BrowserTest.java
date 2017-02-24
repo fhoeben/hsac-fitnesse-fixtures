@@ -935,6 +935,21 @@ public class BrowserTest extends SlimFixture {
         return valueFor(element);
     }
 
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public String valueOfAttributeOn(String attribute, String place) {
+        return valueOfAttributeOnIn(attribute, place, null);
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public String valueOfAttributeOnIn(String attribute, String place, String container) {
+        String result = null;
+        WebElement element = getElementToRetrieveValue(place, container);
+        if (element != null) {
+            result = element.getAttribute(attribute);
+        }
+        return result;
+    }
+
     protected WebElement getElementToRetrieveValue(String place, String container) {
         return getElement(place, container);
     }
