@@ -944,7 +944,7 @@ public class BrowserTest extends SlimFixture {
     public String valueOfAttributeOnIn(String attribute, String place, String container) {
         String result = null;
         WebElement element = getElementToRetrieveValue(place, container);
-        if(element != null) {
+        if (element != null) {
             result = element.getAttribute(attribute);
         }
         return result;
