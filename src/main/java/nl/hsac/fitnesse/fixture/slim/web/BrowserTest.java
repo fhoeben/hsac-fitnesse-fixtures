@@ -942,12 +942,10 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOfAttributeOnIn(String attribute, String place, String container) {
-        String result;
+        String result = null;
         WebElement element = getElementToRetrieveValue(place, container);
-        try {
+        if(element != null) {
             result = element.getAttribute(attribute);
-        } catch(NullPointerException e) {
-            result = null;
         }
         return result;
     }
