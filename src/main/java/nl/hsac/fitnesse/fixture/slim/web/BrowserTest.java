@@ -1466,6 +1466,52 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
+    public int numberOfTimesIsVisibleOnPage(String text) {
+        return numberOfTimesIsVisibleIn(text, null);
+    }
+
+    public int numberOfTimesIsVisibleIn(String text, String container) {
+        SearchContext currentSearchContext = setSearchContextToContainer(container);
+        try {
+            SearchContext containerContext = getSeleniumHelper().getCurrentContext();
+
+            By findAllTexts = getSeleniumHelper().byXpath(".//text()[contains(normalized(.), '%s')]/..", text);
+            List<WebElement> texts = containerContext.findElements(findAllTexts);
+            int result = countDisplayedElements(texts);
+
+            By findAllInputs = getSeleniumHelper().byXpath(".//input[contains(normalized(@value), '%s')]", text);
+            List<WebElement> inputs = containerContext.findElements(findAllInputs);
+            result = result + countDisplayedElements(inputs);
+
+            return result;
+        } finally {
+            resetSearchContext(currentSearchContext);
+        }
+    }
+
+    private int countDisplayedElements(List<WebElement> elements) {
+        int result = 0;
+        for (WebElement element : elements) {
+            if (element.isDisplayed()) {
+                if ("option".equalsIgnoreCase(element.getTagName())) {
+                    WebElement select = element.findElement(By.xpath("./ancestor::select"));
+                    Select s = new Select(select);
+                    if (s.isMultiple()) {
+                        result++;
+                    } else {
+                        WebElement selected = s.getFirstSelectedOption();
+                        if (element.equals(selected)) {
+                            result++;
+                        }
+                    }
+                } else {
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
+
     protected WebElement getElementToCheckVisibility(String place) {
         return getElementToCheckVisibility(place, null);
     }
