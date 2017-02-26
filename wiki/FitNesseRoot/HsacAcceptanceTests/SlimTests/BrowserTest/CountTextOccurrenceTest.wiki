@@ -67,13 +67,16 @@ daar
 |add response|${HTML}              |
 |$url=       |get mock server url  |
 
-|script                |browser test                                                |
-|seconds before timeout|1                                                           |
-|open                  |$url                                                        |
-|check                 |number of times|Hallo     |is visible on page    |26        |
-|check                 |number of times|Hallo     |is visible        in  |special|13|
-|check                 |number of times|Hallo daar|is visible on page    |12        |
-|check                 |number of times|Hallo daar|is visible          in|special|6 |
+|script                |browser test                                               |
+|seconds before timeout|1                                                          |
+|open                  |$url                                                       |
+|check                 |number of times|Hallo     |is visible           |26        |
+|check                 |number of times|Hallo     |is visible on page   |26        |
+|check                 |number of times|Hallo     |is visible in        |special|13|
+|check                 |number of times|Hallo daar|is visible on page   |12        |
+|check                 |number of times|Hallo daar|is visible in        |special|6 |
+|check                 |number of times|Hallo daar|is visible on page in|special|6 |
+
 
 |script|mock xml server setup|
 |stop                        |

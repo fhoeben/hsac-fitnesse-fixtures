@@ -1458,21 +1458,32 @@ public class BrowserTest extends SlimFixture {
         return checkVisible(element, checkOnScreen);
     }
 
+    public int numberOfTimesIsVisible(String text) {
+        return numberOfTimesIsVisibleInImpl(text, null, true);
+    }
+
     public int numberOfTimesIsVisibleOnPage(String text) {
-        return numberOfTimesIsVisibleIn(text, null);
+        return numberOfTimesIsVisibleInImpl(text, null, false);
     }
 
     public int numberOfTimesIsVisibleIn(String text, String container) {
+        return numberOfTimesIsVisibleInImpl(text, container, true);
+    }
+
+    public int numberOfTimesIsVisibleOnPageIn(String text, String container) {
+        return numberOfTimesIsVisibleInImpl(text, container, false);
+    }
+
+    protected int numberOfTimesIsVisibleInImpl(String text, String container, boolean checkOnScreen) {
         SearchContext currentSearchContext = setSearchContextToContainer(container);
         try {
-            boolean checkOnScreen = false;
-            return numberOfTimesIsVisibleImpl(text, checkOnScreen);
+            return countVisibleOccurrences(text, checkOnScreen);
         } finally {
             resetSearchContext(currentSearchContext);
         }
     }
 
-    protected int numberOfTimesIsVisibleImpl(String text, boolean checkOnScreen) {
+    protected int countVisibleOccurrences(String text, boolean checkOnScreen) {
         SearchContext containerContext = getSeleniumHelper().getCurrentContext();
 
         By findAllTexts = getSeleniumHelper().byXpath(".//text()[contains(normalized(.), '%s')]/..", text);
