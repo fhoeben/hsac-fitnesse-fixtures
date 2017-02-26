@@ -8,7 +8,7 @@ This test ensures we can find elements based on explicit technical instructions.
 !define HTML { {{{
 <html>
 <body>
-<div id="a3">And some more</div>
+<div id="a3">And some &nbsp; more </div>
 <button aria-labelledby="a1">Button 1</button>
 <input name="f" aria-labelledby="a2" value="Piet">
 <div aria-labelledby="a3" value="Jan">
@@ -23,18 +23,19 @@ This test ensures we can find elements based on explicit technical instructions.
 |add response|${HTML}              |
 |$url=       |get mock server url  |
 
-|script    |browser test                          |
-|open      |$url                                  |
-|check     |location|$url                         |
-|check     |value of|id=a3 |And some more         |
-|check     |value of|name=f|Piet                  |
-|enter     |Hallo   |as    |css=input[value='Add']|
-|note      |Quick check heuristic can also be used|
-|check     |value of|Add   |Hallo                 |
-|clear     |css=input[value='Add']                |
-|click     |link=My link                          |
-|click     |partialLink=link                      |
-|is visible|xpath=//div[@aria-labelledby="a3"]    |
+|script    |browser test                                     |
+|open      |$url                                             |
+|check     |location           |$url                         |
+|check     |value of           |id=a3 |!-And some   more-!   |
+|check     |normalized value of|id=a3 |And some more         |
+|check     |value of           |name=f|Piet                  |
+|enter     |Hallo              |as    |css=input[value='Add']|
+|note      |Quick check heuristic can also be used           |
+|check     |value of           |Add   |Hallo                 |
+|clear     |css=input[value='Add']                           |
+|click     |link=My link                                     |
+|click     |partialLink=link                                 |
+|is visible|xpath=//div[@aria-labelledby="a3"]               |
 
 |script|mock xml server setup|
 |stop                        |
