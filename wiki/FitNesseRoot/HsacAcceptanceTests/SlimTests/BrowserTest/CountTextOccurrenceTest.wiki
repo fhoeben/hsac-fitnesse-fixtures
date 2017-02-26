@@ -64,7 +64,6 @@ daar
 
 |script      |mock xml server setup|
 |add response|${HTML}              |
-|add response|${HTML}              |
 |$url=       |get mock server url  |
 
 |script                |browser test                                               |
