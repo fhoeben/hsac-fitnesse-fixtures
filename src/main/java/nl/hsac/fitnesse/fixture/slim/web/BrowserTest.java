@@ -1477,11 +1477,11 @@ public class BrowserTest extends SlimFixture {
 
             By findAllTexts = getSeleniumHelper().byXpath(".//text()[contains(normalized(.), '%s')]/..", text);
             List<WebElement> texts = containerContext.findElements(findAllTexts);
-            int result = countDisplayedElements(texts);
+            int result = countDisplayedElements(texts, text);
 
             By findAllInputs = getSeleniumHelper().byXpath(".//input[contains(normalized(@value), '%s')]", text);
             List<WebElement> inputs = containerContext.findElements(findAllInputs);
-            result = result + countDisplayedElements(inputs);
+            result = result + countDisplayedElements(inputs, null);
 
             return result;
         } finally {
@@ -1489,7 +1489,7 @@ public class BrowserTest extends SlimFixture {
         }
     }
 
-    private int countDisplayedElements(List<WebElement> elements) {
+    private int countDisplayedElements(List<WebElement> elements, String textToFind) {
         int result = 0;
         for (WebElement element : elements) {
             if (element.isDisplayed()) {
@@ -1505,7 +1505,24 @@ public class BrowserTest extends SlimFixture {
                         }
                     }
                 } else {
-                    result++;
+                    if (textToFind == null) {
+                        result++;
+                    } else {
+                        String allDirectTextContent =
+                                "var element = arguments[0], text = '';\n" +
+                                "for (var i = 0; i < element.childNodes.length; ++i) {\n" +
+                                "  var node = element.childNodes[i];\n" +
+                                "  if (node.nodeType == Node.TEXT_NODE" +
+                                        " && node.textContent.trim() != '')\n" +
+                                "    text += node.textContent.trim();\n" +
+                                "}\n" +
+                                "return text;";
+                        String elementText = (String) getSeleniumHelper().executeJavascript(allDirectTextContent, element);
+                        // replace &nbsp; by normal space, and collapse whitespace sequences to single space
+                        String normalizedText = elementText.replace('\u00a0', ' ').replaceAll("\\s+", " ");
+                        int occurrencesInText = StringUtils.countMatches(normalizedText, textToFind);
+                        result += occurrencesInText;
+                    }
                 }
             }
         }
