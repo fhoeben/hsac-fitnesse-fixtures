@@ -1459,11 +1459,11 @@ public class BrowserTest extends SlimFixture {
     }
 
     public int numberOfTimesIsVisible(String text) {
-        return numberOfTimesIsVisibleInImpl(text, null, true);
+        return numberOfTimesIsVisibleIn(text, null);
     }
 
     public int numberOfTimesIsVisibleOnPage(String text) {
-        return numberOfTimesIsVisibleInImpl(text, null, false);
+        return numberOfTimesIsVisibleOnPageIn(text, null);
     }
 
     public int numberOfTimesIsVisibleIn(String text, String container) {
