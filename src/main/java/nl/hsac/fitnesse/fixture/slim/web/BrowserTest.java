@@ -1464,16 +1464,33 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected boolean isVisibleImpl(String place, String container, boolean checkOnScreen) {
-        boolean result = false;
         WebElement element = getElementToCheckVisibility(place, container);
-        if (element != null && element.isDisplayed()) {
-            if (checkOnScreen) {
-                result = isElementOnScreen(element);
-            } else {
-                result = true;
-            }
+        return getSeleniumHelper().checkVisible(element, checkOnScreen);
+    }
+
+    public int numberOfTimesIsVisible(String text) {
+        return numberOfTimesIsVisibleIn(text, null);
+    }
+
+    public int numberOfTimesIsVisibleOnPage(String text) {
+        return numberOfTimesIsVisibleOnPageIn(text, null);
+    }
+
+    public int numberOfTimesIsVisibleIn(String text, String container) {
+        return numberOfTimesIsVisibleInImpl(text, container, true);
+    }
+
+    public int numberOfTimesIsVisibleOnPageIn(String text, String container) {
+        return numberOfTimesIsVisibleInImpl(text, container, false);
+    }
+
+    protected int numberOfTimesIsVisibleInImpl(String text, String container, boolean checkOnScreen) {
+        SearchContext currentSearchContext = setSearchContextToContainer(container);
+        try {
+            return getSeleniumHelper().countVisibleOccurrences(text, checkOnScreen);
+        } finally {
+            resetSearchContext(currentSearchContext);
         }
-        return result;
     }
 
     protected WebElement getElementToCheckVisibility(String place) {
