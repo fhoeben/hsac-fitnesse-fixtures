@@ -1497,16 +1497,19 @@ public class BrowserTest extends SlimFixture {
                     WebElement select = element.findElement(By.xpath("./ancestor::select"));
                     Select s = new Select(select);
                     if (s.isMultiple()) {
-                        result++;
+                        // for multi-select we count all options as visible
+                        int occurrencesInText = getOccurrencesInText(element, textToFind);
+                        result += occurrencesInText;
                     } else {
+                        // for drop down we only count only selected option
                         WebElement selected = s.getFirstSelectedOption();
                         if (element.equals(selected)) {
-                            result++;
+                            int occurrencesInText = getOccurrencesInText(element, textToFind);
+                            result += occurrencesInText;
                         }
                     }
                 } else {
-                    String elementText = getSeleniumHelper().getAllDirectText(element);
-                    int occurrencesInText = countOccurrences(textToFind, elementText);
+                    int occurrencesInText = getOccurrencesInText(element, textToFind);
                     result += occurrencesInText;
                 }
             }
@@ -1514,19 +1517,24 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
+    private int getOccurrencesInText(WebElement element, String textToFind) {
+        String elementText = getSeleniumHelper().getAllDirectText(element);
+        return countOccurrences(elementText, textToFind);
+    }
+
     private int countDisplayedValues(List<WebElement> elements, String textToFind) {
         int result = 0;
         for (WebElement element : elements) {
             if (element.isDisplayed()) {
                 String value = element.getAttribute("value");
-                int occurrencesInValue = countOccurrences(textToFind, value);
+                int occurrencesInValue = countOccurrences(value, textToFind);
                 result += occurrencesInValue;
             }
         }
         return result;
     }
 
-    private int countOccurrences(String textToFind, String value) {
+    private int countOccurrences(String value, String textToFind) {
         String normalizedValue = getSeleniumHelper().getNormalizedText(value);
         return StringUtils.countMatches(normalizedValue, textToFind);
     }
