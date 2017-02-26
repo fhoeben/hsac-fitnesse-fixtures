@@ -132,15 +132,8 @@ public class SeleniumHelper {
         if (by != null) {
             return findElement(by);
         } else {
-            WebElement element = findElement(By.linkText(place));
+            WebElement element = findByLinkText(place);
             WebElement firstFound = element;
-            if (!isInteractable(element)) {
-                // finding by linkText does not find actual text if css text-transform is in place
-                element = findByXPath(".//text()[normalized(.)='%s']/ancestor-or-self::a", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
             if (!isInteractable(element)) {
                 element = findByXPath(".//button/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::button", place);
                 if (firstFound == null) {
@@ -167,14 +160,7 @@ public class SeleniumHelper {
                 }
             }
             if (!isInteractable(element)) {
-                element = findElement(By.partialLinkText(place));
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                // finding by linkText does not find actual text if css text-transform is in place
-                element = findByXPath(".//text()[contains(normalized(.),'%s')]/ancestor-or-self::a", place);
+                element = findByPartialLinkText(place);
                 if (firstFound == null) {
                     firstFound = element;
                 }
@@ -227,6 +213,62 @@ public class SeleniumHelper {
                     ? element
                     : firstFound;
         }
+    }
+
+    /**
+     * Finds link.
+     * @param place technical selector or (partial text on link).
+     * @return first interactable link found,
+     *          first element found if no interactable link could be found,
+     *          null if none could be found.
+     */
+    public WebElement getLink(String place) {
+        By by = placeToBy(place);
+        if (by != null) {
+            return findElement(by);
+        } else {
+            WebElement element = findByLinkText(place);
+            WebElement firstFound = element;
+            if (!isInteractable(element)) {
+                element = findByPartialLinkText(place);
+                if (firstFound == null) {
+                    firstFound = element;
+                }
+            }
+            return isInteractable(element)
+                    ? element
+                    : firstFound;
+        }
+    }
+
+    public WebElement findByLinkText(String text) {
+        WebElement element = findElement(By.linkText(text));
+        WebElement firstFound = element;
+        if (!isInteractable(element)) {
+            // finding by linkText does not find actual text if css text-transform is in place
+            element = findByXPath(".//text()[normalized(.)='%s']/ancestor-or-self::a", text);
+            if (firstFound == null) {
+                firstFound = element;
+            }
+        }
+        return isInteractable(element)
+                ? element
+                : firstFound;
+    }
+
+    public WebElement findByPartialLinkText(String partialText) {
+        WebElement element = findElement(By.partialLinkText(partialText));
+        WebElement firstFound = element;
+        if (!isInteractable(element)) {
+            // finding by linkText does not find actual text if css text-transform is in place
+            element = findByXPath(".//text()[contains(normalized(.),'%s')]/ancestor-or-self::a", partialText);
+            if (firstFound == null) {
+                firstFound = element;
+            }
+        }
+        return isInteractable(element)
+                ? element
+                : firstFound;
     }
 
     /**
