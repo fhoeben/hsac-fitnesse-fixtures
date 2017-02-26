@@ -1481,7 +1481,7 @@ public class BrowserTest extends SlimFixture {
 
             By findAllInputs = getSeleniumHelper().byXpath(".//input[contains(normalized(@value), '%s')]", text);
             List<WebElement> inputs = containerContext.findElements(findAllInputs);
-            result = result + countDisplayedElements(inputs, null);
+            result = result + countDisplayedValues(inputs, text);
 
             return result;
         } finally {
@@ -1505,19 +1505,30 @@ public class BrowserTest extends SlimFixture {
                         }
                     }
                 } else {
-                    if (textToFind == null) {
-                        result++;
-                    } else {
-                        String elementText = getSeleniumHelper().getAllDirectText(element);
-                        String normalizedText = getSeleniumHelper().getNormalizedText(elementText);
-
-                        int occurrencesInText = StringUtils.countMatches(normalizedText, textToFind);
-                        result += occurrencesInText;
-                    }
+                    String elementText = getSeleniumHelper().getAllDirectText(element);
+                    int occurrencesInText = countOccurrences(textToFind, elementText);
+                    result += occurrencesInText;
                 }
             }
         }
         return result;
+    }
+
+    private int countDisplayedValues(List<WebElement> elements, String textToFind) {
+        int result = 0;
+        for (WebElement element : elements) {
+            if (element.isDisplayed()) {
+                String value = element.getAttribute("value");
+                int occurrencesInValue = countOccurrences(textToFind, value);
+                result += occurrencesInValue;
+            }
+        }
+        return result;
+    }
+
+    private int countOccurrences(String textToFind, String value) {
+        String normalizedValue = getSeleniumHelper().getNormalizedText(value);
+        return StringUtils.countMatches(normalizedValue, textToFind);
     }
 
     protected WebElement getElementToCheckVisibility(String place) {

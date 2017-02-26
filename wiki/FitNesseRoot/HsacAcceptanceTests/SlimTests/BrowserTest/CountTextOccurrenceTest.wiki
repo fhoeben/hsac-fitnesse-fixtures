@@ -13,7 +13,7 @@ Hallo Hallo
 Hier
 <span>None</span>
 <button>Hallo</button>
-<label for="g2">Hello2</label><input id="g2" value="Hallo2">
+<label for="g2">Hello2</label><input id="g2" value="Hallo2 Hallo">
 Hallo  daar
 </div>
 <label>Hello4<input value="Hallo daar"></label>
@@ -37,7 +37,7 @@ Hallo Hallo
 Hier
 <span>None</span>
 <button>Hallo</button>
-<label for="g2">Hello2</label><input id="g2" value="Hallo2">
+<label for="g2">Hello2</label><input id="g2" value="Hallo2 Hallo">
 Hallo  daar
 </div>
 <label>Hello4<input value="Hallo daar"></label>
@@ -70,8 +70,8 @@ daar
 |script                |browser test                                                |
 |seconds before timeout|1                                                           |
 |open                  |$url                                                        |
-|check                 |number of times|Hallo     |is visible on page    |22        |
-|check                 |number of times|Hallo     |is visible        in  |special|11|
+|check                 |number of times|Hallo     |is visible on page    |24        |
+|check                 |number of times|Hallo     |is visible        in  |special|12|
 |check                 |number of times|Hallo daar|is visible on page    |10        |
 |check                 |number of times|Hallo daar|is visible          in|special|5 |
 
