@@ -50,6 +50,16 @@ public class SeleniumHelper {
                     "  return document.elementFromPoint(x,y);\n" +
                     "} else { return null; }";
 
+    private static final String ALL_DIRECT_TEXT_CONTENT =
+            "var element = arguments[0], text = '';\n" +
+                    "for (var i = 0; i < element.childNodes.length; ++i) {\n" +
+                    "  var node = element.childNodes[i];\n" +
+                    "  if (node.nodeType == Node.TEXT_NODE" +
+                    " && node.textContent.trim() != '')\n" +
+                    "    text += node.textContent.trim();\n" +
+                    "}\n" +
+                    "return text;";
+
     // Regex to find our own 'fake xpath function' in xpath 'By' content
     private final static Pattern X_PATH_NORMALIZED = Pattern.compile("normalized\\((.+?(\\(\\))?)\\)");
 
@@ -561,6 +571,16 @@ public class SeleniumHelper {
     }
 
     /**
+     * Gets the entire text of element, without the text elements of its children (which a normal element.getText()
+     * does include).
+     * @param element element to get text from.
+     * @return all text in the element.
+     */
+    public String getAllDirectText(WebElement element) {
+        return (String) executeJavascript(ALL_DIRECT_TEXT_CONTENT, element);
+    }
+
+    /**
      * Sets value of hidden input field.
      * @param idOrName id or name of input field to set.
      * @param value value to set.
@@ -667,6 +687,20 @@ public class SeleniumHelper {
         }
         String xpath = fillPattern(pattern, parameters);
         return By.xpath(xpath);
+    }
+
+    /**
+     * Mimics effect of 'normalized()` xPath function on Java String.
+     * Replaces &nbsp; by normal space, and collapses whitespace sequences to single space
+     * @param elementText text in element.
+     * @return normalized text.
+     */
+    public String getNormalizedText(String elementText) {
+        String result = null;
+        if (elementText != null) {
+            result = elementText.replace('\u00a0', ' ').replaceAll("\\s+", " ");
+        }
+        return result;
     }
 
     private String replaceNormalizedFunction(String xPath) {
