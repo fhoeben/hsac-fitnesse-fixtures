@@ -1508,18 +1508,9 @@ public class BrowserTest extends SlimFixture {
                     if (textToFind == null) {
                         result++;
                     } else {
-                        String allDirectTextContent =
-                                "var element = arguments[0], text = '';\n" +
-                                "for (var i = 0; i < element.childNodes.length; ++i) {\n" +
-                                "  var node = element.childNodes[i];\n" +
-                                "  if (node.nodeType == Node.TEXT_NODE" +
-                                        " && node.textContent.trim() != '')\n" +
-                                "    text += node.textContent.trim();\n" +
-                                "}\n" +
-                                "return text;";
-                        String elementText = (String) getSeleniumHelper().executeJavascript(allDirectTextContent, element);
-                        // replace &nbsp; by normal space, and collapse whitespace sequences to single space
-                        String normalizedText = elementText.replace('\u00a0', ' ').replaceAll("\\s+", " ");
+                        String elementText = getSeleniumHelper().getAllDirectText(element);
+                        String normalizedText = getSeleniumHelper().getNormalizedText(elementText);
+
                         int occurrencesInText = StringUtils.countMatches(normalizedText, textToFind);
                         result += occurrencesInText;
                     }
