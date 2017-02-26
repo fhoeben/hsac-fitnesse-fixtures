@@ -3,6 +3,7 @@ package nl.hsac.fitnesse.fixture.util.selenium;
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
@@ -13,6 +14,7 @@ import org.openqa.selenium.remote.ScreenshotException;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.MalformedURLException;
@@ -49,6 +51,16 @@ public class SeleniumHelper {
                     "  var y = (rect.top + rect.bottom)/2;\n" +
                     "  return document.elementFromPoint(x,y);\n" +
                     "} else { return null; }";
+
+    private static final String ALL_DIRECT_TEXT_CONTENT =
+            "var element = arguments[0], text = '';\n" +
+                    "for (var i = 0; i < element.childNodes.length; ++i) {\n" +
+                    "  var node = element.childNodes[i];\n" +
+                    "  if (node.nodeType == Node.TEXT_NODE" +
+                    " && node.textContent.trim() != '')\n" +
+                    "    text += node.textContent.trim();\n" +
+                    "}\n" +
+                    "return text;";
 
     // Regex to find our own 'fake xpath function' in xpath 'By' content
     private final static Pattern X_PATH_NORMALIZED = Pattern.compile("normalized\\((.+?(\\(\\))?)\\)");
@@ -560,6 +572,92 @@ public class SeleniumHelper {
         return result;
     }
 
+    public int countVisibleOccurrences(String text, boolean checkOnScreen) {
+        SearchContext containerContext = getCurrentContext();
+
+        By findAllTexts = byXpath(".//text()[contains(normalized(.), '%s')]/..", text);
+        List<WebElement> texts = containerContext.findElements(findAllTexts);
+        int result = countDisplayedElements(texts, text, checkOnScreen);
+
+        By findAllInputs = byXpath(".//input[contains(normalized(@value), '%s')]", text);
+        List<WebElement> inputs = containerContext.findElements(findAllInputs);
+        result = result + countDisplayedValues(inputs, text, checkOnScreen);
+
+        return result;
+    }
+
+    private int countDisplayedElements(List<WebElement> elements, String textToFind, boolean checkOnScreen) {
+        int result = 0;
+        for (WebElement element : elements) {
+            if (checkVisible(element, checkOnScreen)) {
+                if ("option".equalsIgnoreCase(element.getTagName())) {
+                    WebElement select = element.findElement(By.xpath("./ancestor::select"));
+                    Select s = new Select(select);
+                    if (s == null || s.isMultiple()) {
+                        // for multi-select we count all options as visible
+                        int occurrencesInText = getOccurrencesInText(element, textToFind);
+                        result += occurrencesInText;
+                    } else {
+                        // for drop down we only count only selected option
+                        WebElement selected = s.getFirstSelectedOption();
+                        if (element.equals(selected)) {
+                            int occurrencesInText = getOccurrencesInText(element, textToFind);
+                            result += occurrencesInText;
+                        }
+                    }
+                } else {
+                    int occurrencesInText = getOccurrencesInText(element, textToFind);
+                    result += occurrencesInText;
+                }
+            }
+        }
+        return result;
+    }
+
+    private int getOccurrencesInText(WebElement element, String textToFind) {
+        String elementText = getAllDirectText(element);
+        return countOccurrences(elementText, textToFind);
+    }
+
+    private int countDisplayedValues(List<WebElement> elements, String textToFind, boolean checkOnScreen) {
+        int result = 0;
+        for (WebElement element : elements) {
+            if (checkVisible(element, checkOnScreen)) {
+                String value = element.getAttribute("value");
+                int occurrencesInValue = countOccurrences(value, textToFind);
+                result += occurrencesInValue;
+            }
+        }
+        return result;
+    }
+
+    public boolean checkVisible(WebElement element, boolean checkOnScreen) {
+        boolean result = false;
+        if (element != null && element.isDisplayed()) {
+            if (checkOnScreen) {
+                result = isElementOnScreen(element);
+            } else {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    private int countOccurrences(String value, String textToFind) {
+        String normalizedValue = getNormalizedText(value);
+        return StringUtils.countMatches(normalizedValue, textToFind);
+    }
+
+    /**
+     * Gets the entire text of element, without the text elements of its children (which a normal element.getText()
+     * does include).
+     * @param element element to get text from.
+     * @return all text in the element.
+     */
+    public String getAllDirectText(WebElement element) {
+        return (String) executeJavascript(ALL_DIRECT_TEXT_CONTENT, element);
+    }
+
     /**
      * Sets value of hidden input field.
      * @param idOrName id or name of input field to set.
@@ -667,6 +765,20 @@ public class SeleniumHelper {
         }
         String xpath = fillPattern(pattern, parameters);
         return By.xpath(xpath);
+    }
+
+    /**
+     * Mimics effect of 'normalized()` xPath function on Java String.
+     * Replaces &nbsp; by normal space, and collapses whitespace sequences to single space
+     * @param elementText text in element.
+     * @return normalized text.
+     */
+    public String getNormalizedText(String elementText) {
+        String result = null;
+        if (elementText != null) {
+            result = elementText.replace('\u00a0', ' ').replaceAll("\\s+", " ");
+        }
+        return result;
     }
 
     private String replaceNormalizedFunction(String xPath) {
