@@ -936,11 +936,6 @@ public class BrowserTest extends SlimFixture {
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
-    public String valueOfAttributeOn(String attribute, String place) {
-        return valueOfAttributeOnIn(attribute, place, null);
-    }
-
-    @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String tooltipFor(String place) {
         return tooltipForIn(place, null);
     }
@@ -948,6 +943,11 @@ public class BrowserTest extends SlimFixture {
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String tooltipForIn(String place, String container) {
         return valueOfAttributeOnIn("title", place, container);
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public String valueOfAttributeOn(String attribute, String place) {
+        return valueOfAttributeOnIn(attribute, place, null);
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
