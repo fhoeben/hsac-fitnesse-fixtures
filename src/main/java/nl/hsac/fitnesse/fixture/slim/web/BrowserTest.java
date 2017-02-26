@@ -1496,7 +1496,7 @@ public class BrowserTest extends SlimFixture {
                 if ("option".equalsIgnoreCase(element.getTagName())) {
                     WebElement select = element.findElement(By.xpath("./ancestor::select"));
                     Select s = new Select(select);
-                    if (s.isMultiple()) {
+                    if (s == null || s.isMultiple()) {
                         // for multi-select we count all options as visible
                         int occurrencesInText = getOccurrencesInText(element, textToFind);
                         result += occurrencesInText;
