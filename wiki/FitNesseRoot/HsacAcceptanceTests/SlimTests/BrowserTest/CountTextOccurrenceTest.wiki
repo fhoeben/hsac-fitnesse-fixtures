@@ -69,7 +69,7 @@ daar
 |script                |browser test                                               |
 |seconds before timeout|1                                                          |
 |open                  |$url                                                       |
-|set browser size to   |400            |by        |310                             |
+|set browser size to   |400            |by        |340                             |
 |check                 |number of times|Hallo     |is visible           |20        |
 |check                 |number of times|Hallo     |is visible on page   |26        |
 |check                 |number of times|Hallo     |is visible in        |special|10|
