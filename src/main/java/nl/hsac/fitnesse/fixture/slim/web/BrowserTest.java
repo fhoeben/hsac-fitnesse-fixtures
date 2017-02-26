@@ -1455,7 +1455,7 @@ public class BrowserTest extends SlimFixture {
 
     protected boolean isVisibleImpl(String place, String container, boolean checkOnScreen) {
         WebElement element = getElementToCheckVisibility(place, container);
-        return checkVisible(element, checkOnScreen);
+        return getSeleniumHelper().checkVisible(element, checkOnScreen);
     }
 
     public int numberOfTimesIsVisible(String text) {
@@ -1477,74 +1477,10 @@ public class BrowserTest extends SlimFixture {
     protected int numberOfTimesIsVisibleInImpl(String text, String container, boolean checkOnScreen) {
         SearchContext currentSearchContext = setSearchContextToContainer(container);
         try {
-            return countVisibleOccurrences(text, checkOnScreen);
+            return getSeleniumHelper().countVisibleOccurrences(text, checkOnScreen);
         } finally {
             resetSearchContext(currentSearchContext);
         }
-    }
-
-    protected int countVisibleOccurrences(String text, boolean checkOnScreen) {
-        SearchContext containerContext = getSeleniumHelper().getCurrentContext();
-
-        By findAllTexts = getSeleniumHelper().byXpath(".//text()[contains(normalized(.), '%s')]/..", text);
-        List<WebElement> texts = containerContext.findElements(findAllTexts);
-        int result = countDisplayedElements(texts, text, checkOnScreen);
-
-        By findAllInputs = getSeleniumHelper().byXpath(".//input[contains(normalized(@value), '%s')]", text);
-        List<WebElement> inputs = containerContext.findElements(findAllInputs);
-        result = result + countDisplayedValues(inputs, text, checkOnScreen);
-
-        return result;
-    }
-
-    private int countDisplayedElements(List<WebElement> elements, String textToFind, boolean checkOnScreen) {
-        int result = 0;
-        for (WebElement element : elements) {
-            if (checkVisible(element, checkOnScreen)) {
-                if ("option".equalsIgnoreCase(element.getTagName())) {
-                    WebElement select = element.findElement(By.xpath("./ancestor::select"));
-                    Select s = new Select(select);
-                    if (s == null || s.isMultiple()) {
-                        // for multi-select we count all options as visible
-                        int occurrencesInText = getOccurrencesInText(element, textToFind);
-                        result += occurrencesInText;
-                    } else {
-                        // for drop down we only count only selected option
-                        WebElement selected = s.getFirstSelectedOption();
-                        if (element.equals(selected)) {
-                            int occurrencesInText = getOccurrencesInText(element, textToFind);
-                            result += occurrencesInText;
-                        }
-                    }
-                } else {
-                    int occurrencesInText = getOccurrencesInText(element, textToFind);
-                    result += occurrencesInText;
-                }
-            }
-        }
-        return result;
-    }
-
-    private int getOccurrencesInText(WebElement element, String textToFind) {
-        String elementText = getSeleniumHelper().getAllDirectText(element);
-        return countOccurrences(elementText, textToFind);
-    }
-
-    private int countDisplayedValues(List<WebElement> elements, String textToFind, boolean checkOnScreen) {
-        int result = 0;
-        for (WebElement element : elements) {
-            if (checkVisible(element, checkOnScreen)) {
-                String value = element.getAttribute("value");
-                int occurrencesInValue = countOccurrences(value, textToFind);
-                result += occurrencesInValue;
-            }
-        }
-        return result;
-    }
-
-    private int countOccurrences(String value, String textToFind) {
-        String normalizedValue = getSeleniumHelper().getNormalizedText(value);
-        return StringUtils.countMatches(normalizedValue, textToFind);
     }
 
     protected WebElement getElementToCheckVisibility(String place) {
@@ -1553,18 +1489,6 @@ public class BrowserTest extends SlimFixture {
 
     protected WebElement getElementToCheckVisibility(String place, String container) {
         return getElementToClick(place, container);
-    }
-
-    protected boolean checkVisible(WebElement element, boolean checkOnScreen) {
-        boolean result = false;
-        if (element != null && element.isDisplayed()) {
-            if (checkOnScreen) {
-                result = isElementOnScreen(element);
-            } else {
-                result = true;
-            }
-        }
-        return result;
     }
 
     /**

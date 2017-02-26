@@ -3,6 +3,7 @@ package nl.hsac.fitnesse.fixture.util.selenium;
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
@@ -13,6 +14,7 @@ import org.openqa.selenium.remote.ScreenshotException;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.MalformedURLException;
@@ -568,6 +570,82 @@ public class SeleniumHelper {
             }
         }
         return result;
+    }
+
+    public int countVisibleOccurrences(String text, boolean checkOnScreen) {
+        SearchContext containerContext = getCurrentContext();
+
+        By findAllTexts = byXpath(".//text()[contains(normalized(.), '%s')]/..", text);
+        List<WebElement> texts = containerContext.findElements(findAllTexts);
+        int result = countDisplayedElements(texts, text, checkOnScreen);
+
+        By findAllInputs = byXpath(".//input[contains(normalized(@value), '%s')]", text);
+        List<WebElement> inputs = containerContext.findElements(findAllInputs);
+        result = result + countDisplayedValues(inputs, text, checkOnScreen);
+
+        return result;
+    }
+
+    private int countDisplayedElements(List<WebElement> elements, String textToFind, boolean checkOnScreen) {
+        int result = 0;
+        for (WebElement element : elements) {
+            if (checkVisible(element, checkOnScreen)) {
+                if ("option".equalsIgnoreCase(element.getTagName())) {
+                    WebElement select = element.findElement(By.xpath("./ancestor::select"));
+                    Select s = new Select(select);
+                    if (s == null || s.isMultiple()) {
+                        // for multi-select we count all options as visible
+                        int occurrencesInText = getOccurrencesInText(element, textToFind);
+                        result += occurrencesInText;
+                    } else {
+                        // for drop down we only count only selected option
+                        WebElement selected = s.getFirstSelectedOption();
+                        if (element.equals(selected)) {
+                            int occurrencesInText = getOccurrencesInText(element, textToFind);
+                            result += occurrencesInText;
+                        }
+                    }
+                } else {
+                    int occurrencesInText = getOccurrencesInText(element, textToFind);
+                    result += occurrencesInText;
+                }
+            }
+        }
+        return result;
+    }
+
+    private int getOccurrencesInText(WebElement element, String textToFind) {
+        String elementText = getAllDirectText(element);
+        return countOccurrences(elementText, textToFind);
+    }
+
+    private int countDisplayedValues(List<WebElement> elements, String textToFind, boolean checkOnScreen) {
+        int result = 0;
+        for (WebElement element : elements) {
+            if (checkVisible(element, checkOnScreen)) {
+                String value = element.getAttribute("value");
+                int occurrencesInValue = countOccurrences(value, textToFind);
+                result += occurrencesInValue;
+            }
+        }
+        return result;
+    }
+
+    public boolean checkVisible(WebElement element, boolean checkOnScreen) {
+        boolean result = false;
+        if (element != null && element.isDisplayed()) {
+            if (checkOnScreen) {
+                result = isElementOnScreen(element);
+            } else {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    private int countOccurrences(String value, String textToFind) {
+        String normalizedValue = getNormalizedText(value);
+        return StringUtils.countMatches(normalizedValue, textToFind);
     }
 
     /**
