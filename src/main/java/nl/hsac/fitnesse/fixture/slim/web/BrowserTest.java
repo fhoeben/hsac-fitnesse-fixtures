@@ -966,6 +966,16 @@ public class BrowserTest extends SlimFixture {
         return valueOfAttributeOnIn("title", place, container);
     }
 
+    @WaitUntil
+    public String targetOfLink(String place) {
+        String target = null;
+        WebElement linkElement = getSeleniumHelper().getLink(place);
+        if (linkElement != null) {
+            target = linkElement.getAttribute("href");
+        }
+        return target;
+    }
+
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOfAttributeOn(String attribute, String place) {
         return valueOfAttributeOnIn(attribute, place, null);

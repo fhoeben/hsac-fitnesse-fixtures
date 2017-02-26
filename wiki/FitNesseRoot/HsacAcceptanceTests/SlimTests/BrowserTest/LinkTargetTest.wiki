@@ -1,0 +1,26 @@
+This test ensures we can find elements based on explicit technical instructions. We use a mock server running to serve the HTML defined in this page.
+!note The mock server serves the content as ''text/xml'', but the browser does not seem to mind.
+
+
+!define HTML { {{{
+<html>
+<body>
+<a href="http://google.com/" id="a">My link</a>
+<a href="http://google.nl/" id="b">Mijn link</a>
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+!|script|browser test                               |
+|open   |$url                                       |
+|check  |target of link|id=a     |http://google.com/|
+|check  |target of link|Mijn link|http://google.nl/ |
+|check  |target of link|Mijn     |http://google.nl/ |
+
+|script|mock xml server setup|
+|stop                        |
+
