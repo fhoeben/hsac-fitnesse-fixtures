@@ -936,6 +936,27 @@ public class BrowserTest extends SlimFixture {
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public String normalizedValueOf(String place) {
+        return normalizedValueFor(place);
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public String normalizedValueFor(String place) {
+        return normalizedValueForIn(place, null);
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public String normalizedValueOfIn(String place, String container) {
+        return normalizedValueForIn(place, container);
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public String normalizedValueForIn(String place, String container) {
+        String value = valueForIn(place, container);
+        return getSeleniumHelper().getNormalizedText(value);
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String tooltipFor(String place) {
         return tooltipForIn(place, null);
     }
