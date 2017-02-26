@@ -1,0 +1,82 @@
+Sometimes you need to find out how often a text occurs on a page.
+The text could be the entire text in an element, or a substring....
+
+We use a mock server running to serve the HTML defined in this page.
+
+
+!define HTML { {{{
+<html>
+<body>
+
+Hallo Hallo
+<div>
+Hier
+<span>None</span>
+<button>Hallo</button>
+<label for="g2">Hello2</label><input id="g2" value="Hallo2 Hallo">
+Hallo  daar
+</div>
+<label>Hello4<input value="Hallo daar"></label>
+Hallo&nbsp; daar
+<label for="select1">Hallo</label>
+<div>Hallo&nbsp;daar</div>
+<select id="select1">
+  <option value="volvo">Volvo</option>
+  <option value="saab" selected>Hallo Hallo  daar</option>
+  <option value="mercedes">Hallo2</option>
+  <option value="audi">Hallo hier</option>
+</select>
+<input type="submit" value="Hallo  daar">
+<span style="display:none;">Hallo</span>
+
+<fieldset>
+<legend>special</legend>
+
+Hallo Hallo
+<div>
+Hier
+<span>None</span>
+<button>Hallo</button>
+<label for="g2">Hello2</label><input id="g2" value="Hallo2 Hallo">
+Hallo  daar
+</div>
+<label>Hello4<input value="Hallo daar"></label>
+Hallo&nbsp;
+daar
+
+<label for="select1">Hallo</label>
+<div>Hallo&nbsp;daar</div>
+<select id="select1">
+  <option value="volvo">Volvo</option>
+  <option value="saab" selected>Hallo Hallo  daar</option>
+  <option value="mercedes">Hallo2</option>
+  <option value="audi">Hallo hier</option>
+</select>
+<input type="submit" value="Hallo  daar">
+<span style="display:none;">Hallo</span>
+
+
+</fieldset>
+
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script                |browser test                                               |
+|seconds before timeout|1                                                          |
+|open                  |$url                                                       |
+|set browser size to   |800            |by        |600                             |
+|check                 |number of times|Hallo     |is visible           |26        |
+|check                 |number of times|Hallo     |is visible on page   |26        |
+|check                 |number of times|Hallo     |is visible in        |special|13|
+|check                 |number of times|Hallo daar|is visible on page   |12        |
+|check                 |number of times|Hallo daar|is visible in        |special|6 |
+|check                 |number of times|Hallo daar|is visible on page in|special|6 |
+
+
+|script|mock xml server setup|
+|stop                        |

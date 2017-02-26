@@ -8,6 +8,6 @@ import org.junit.runner.RunWith;
  * Test class to allow fixture code to be debugged.
  */
 @RunWith(HsacFitNesseRunner.class)
-@FitNesseRunner.Suite("HsacAcceptanceTests.SlimTests.HttpTest.XmlHttpTest")
+@FitNesseRunner.Suite("HsacAcceptanceTests.SlimTests.BrowserTest.CountTextOccurrenceTest")
 public class FixtureDebugTest {
 }
