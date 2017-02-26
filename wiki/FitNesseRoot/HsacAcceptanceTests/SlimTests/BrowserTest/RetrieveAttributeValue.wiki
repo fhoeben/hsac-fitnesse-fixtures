@@ -17,10 +17,11 @@ This test ensures we can retrieve element attribute values.
 |add response|${HTML}              |
 |$url=       |get mock server url  |
 
-|script|browser test                                                                  |
-|open  |$url                                                                          |
-|check |value of attribute|title|on|id=walter |That rug really tied the room together.|
-|check |value of attribute|class|on|id=myImage|in      |container     |styled-img     |
+|script|browser test                                                                      |
+|open  |$url                                                                              |
+|check |value of attribute|title    |on|id=walter |That rug really tied the room together.|
+|check |tooltip for       |id=walter|That rug really tied the room together.              |
+|check |value of attribute|class    |on|id=myImage|in      |container     |styled-img     |
 
 |script|mock xml server setup|
 |stop                        |
