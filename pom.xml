@@ -357,6 +357,12 @@
 									<classifier>jar-with-dependencies</classifier>
 									<overWrite>true</overWrite>
 								</artifactItem>
+								<artifactItem>
+									<groupId>com.github.tcnh</groupId>
+									<artifactId>fitnesse-bootstrap-plus-theme</artifactId>
+									<version>1.0.1</version>
+									<overWrite>true</overWrite>
+								</artifactItem>
 							</artifactItems>
 							<outputDirectory>${project.basedir}/wiki/plugins</outputDirectory>
 						</configuration>
