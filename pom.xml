@@ -363,6 +363,12 @@
 									<version>1.0.2</version>
 									<overWrite>true</overWrite>
 								</artifactItem>
+								<artifactItem>
+									<groupId>com.github.tcnh</groupId>
+									<artifactId>fitnesse-autocomplete-responder</artifactId>
+									<version>1.0.1</version>
+									<overWrite>true</overWrite>
+								</artifactItem>
 							</artifactItems>
 							<outputDirectory>${project.basedir}/wiki/plugins</outputDirectory>
 						</configuration>
