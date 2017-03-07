@@ -28,6 +28,7 @@ public class HttpTest extends SlimFixtureWithMap {
     private boolean storeCookies = false;
     private HttpResponse response = createResponse();
     private String template;
+    private boolean explicitContentTypeSet = false;
     private String contentType = DEFAULT_POST_CONTENT_TYPE;
     private String lastUrl = null;
     private String lastMethod = null;
@@ -110,6 +111,16 @@ public class HttpTest extends SlimFixtureWithMap {
      * @return true if call could be made and response did not indicate error.
      */
     public boolean postTemplateTo(String serviceUrl) {
+        return postTemplateTo(serviceUrl, getContentType());
+    }
+
+    /**
+     * Sends HTTP POST template with current values to service endpoint.
+     * @param serviceUrl service endpoint to send request to.
+     * @param aContentType content type to use for post.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean postTemplateTo(String serviceUrl, String aContentType) {
         boolean result;
         resetResponse();
         if (template == null) {
@@ -118,7 +129,7 @@ public class HttpTest extends SlimFixtureWithMap {
             String url = getUrl(serviceUrl);
             try {
                 storeLastCall("POST", serviceUrl);
-                getEnvironment().doHttpPost(url, template, getCurrentValues(), response, headerValues, getContentType());
+                getEnvironment().doHttpPost(url, template, getCurrentValues(), response, headerValues, aContentType);
             } catch (Throwable t) {
                 throw new StopTestException("Unable to get response from POST to: " + url, t);
             }
@@ -159,13 +170,17 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     protected boolean postToImpl(String body, String serviceUrl) {
+        return postToImpl(body, serviceUrl, getContentType());
+    }
+
+    protected boolean postToImpl(String body, String serviceUrl, String aContentType) {
         boolean result;
         resetResponse();
         response.setRequest(body);
         String url = getUrl(serviceUrl);
         try {
             storeLastCall("POST", serviceUrl);
-            getEnvironment().doHttpPost(url, response, headerValues, getContentType());
+            getEnvironment().doHttpPost(url, response, headerValues, aContentType);
         } catch (Throwable t) {
             throw new StopTestException("Unable to get response from POST to: " + url, t);
         }
@@ -201,6 +216,16 @@ public class HttpTest extends SlimFixtureWithMap {
      * @return true if call could be made and response did not indicate error.
      */
     public boolean putTemplateTo(String serviceUrl) {
+        return putTemplateTo(serviceUrl, getContentType());
+    }
+
+    /**
+     * Sends HTTP PUT template with current values to service endpoint.
+     * @param serviceUrl service endpoint to send request to.
+     * @param aContentType content type to use for post.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean putTemplateTo(String serviceUrl, String aContentType) {
         boolean result;
         resetResponse();
         if (template == null) {
@@ -209,7 +234,7 @@ public class HttpTest extends SlimFixtureWithMap {
             String url = getUrl(serviceUrl);
             try {
                 storeLastCall("PUT", serviceUrl);
-                getEnvironment().doHttpPut(url, template, getCurrentValues(), response, headerValues, getContentType());
+                getEnvironment().doHttpPut(url, template, getCurrentValues(), response, headerValues, aContentType);
             } catch (Throwable t) {
                 throw new StopTestException("Unable to get response from PUT to: " + url, t);
             }
@@ -240,13 +265,17 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     protected boolean putToImpl(String body, String serviceUrl) {
+        return putToImpl(body, serviceUrl, getContentType());
+    }
+
+    protected boolean putToImpl(String body, String serviceUrl, String aContentType) {
         boolean result;
         resetResponse();
         response.setRequest(body);
         String url = getUrl(serviceUrl);
         try {
             storeLastCall("PUT", serviceUrl);
-            getEnvironment().doHttpPut(url, response, headerValues, getContentType());
+            getEnvironment().doHttpPut(url, response, headerValues, aContentType);
         } catch (Throwable t) {
             throw new StopTestException("Unable to get response from PUT to: " + url, t);
         }
@@ -623,7 +652,12 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     public void setContentType(String aContentType) {
+        explicitContentTypeSet = true;
         contentType = aContentType;
+    }
+
+    public boolean isExplicitContentTypeSet() {
+        return explicitContentTypeSet;
     }
 
     // Polling
