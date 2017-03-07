@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.fixture.slim;
 
 import nl.hsac.fitnesse.fixture.util.JsonPathHelper;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.entity.ContentType;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -10,16 +11,29 @@ import java.util.List;
  * Fixture to make Http calls and interpret the result as JSON.
  */
 public class JsonHttpTest extends HttpTest {
+    public static final String JSON_CONTENT_TYPE = ContentType.APPLICATION_JSON.toString();
+
     public boolean postValuesAsJsonTo(String serviceUrl) {
-        return postToImpl(jsonEncodeCurrentValues(), serviceUrl);
+        return postToImpl(jsonEncodeCurrentValues(), serviceUrl, getContentTypeForJson());
     }
-    
+
     public boolean putValuesAsJsonTo(String serviceUrl) {
-        return putToImpl(jsonEncodeCurrentValues(), serviceUrl);
+        return putToImpl(jsonEncodeCurrentValues(), serviceUrl, getContentTypeForJson());
     }
 
     protected String jsonEncodeCurrentValues() {
         return new JSONObject(getCurrentValues()).toString();
+    }
+
+    protected String getContentTypeForJson() {
+        // for methods that post JSON we change the default content type to be application/json
+        String contentType;
+        if (isExplicitContentTypeSet()) {
+            contentType = getContentType();
+        } else {
+            contentType = JSON_CONTENT_TYPE;
+        }
+        return contentType;
     }
 
     @Override

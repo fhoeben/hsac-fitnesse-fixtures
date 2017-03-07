@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import org.apache.http.entity.ContentType;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;
@@ -55,5 +56,22 @@ public class JsonHttpTestTest {
     private void checkException(SlimFixtureException e) {
         String msg = e.getMessage();
         assertTrue("Did not expect a stacktrace for wiki" + msg, msg.startsWith("message:<<"));
+    }
+
+    @Test
+    public void testDefaultContentType() {
+        String contentType = fixture.getContentType();
+        assertEquals(HttpTest.DEFAULT_POST_CONTENT_TYPE, contentType);
+    }
+
+    @Test
+    public void testDefaultJsonContentType() {
+        String contentType = fixture.getContentTypeForJson();
+        assertEquals(ContentType.APPLICATION_JSON.toString(), contentType);
+
+        String typeSet = "application/json";
+        fixture.setContentType(typeSet);
+        contentType = fixture.getContentTypeForJson();
+        assertEquals(typeSet, contentType);
     }
 }
