@@ -15,5 +15,12 @@ Some extra Wiki symbols that can be used:
 |months from today                                               |{{{!-!monthsFromToday (yyyy-MM-dd) +10 -! }}}              |!monthsFromToday (yyyy-MM-dd) +10                |
 |last day of month                                               |{{{!-!lastDayOfMonth (yyyy-MM-dd) +10 -! }}}               |!lastDayOfMonth (yyyy-MM-dd) +10                 |
 |week days from today                                            |{{{!-!weekDaysFromToday (yyyy-MM-dd) -6 -! }}}             |!weekDaysFromToday (yyyy-MM-dd) -6               |
+|date relative to Monday (today or next)                         |{{{!-!Monday (yyyy-MM-dd)-! }}}                            |!Monday (yyyy-MM-dd)                             |
+|date relative to Tuesday (today or next)                        |{{{!-!Tuesday (yyyy-MM-dd) +1 -! }}}                       |!Tuesday (yyyy-MM-dd) +1                         |
+|date relative to Wednesday (today or next)                      |{{{!-!Wednesday (yyyy-MM-dd)-! }}}                         |!Wednesday (yyyy-MM-dd)                          |
+|date relative to Thursday (today or next)                       |{{{!-!Thursday (yyyy-MM-dd) +1 -! }}}                      |!Thursday (yyyy-MM-dd) +1                        |
+|date relative to Friday (today or next)                         |{{{!-!Friday (yyyy-MM-dd) -7 -! }}}                        |!Friday (yyyy-MM-dd) -7                          |
+|date relative to Saturday (today or next)                       |{{{!-!Saturday (yyyy-MM-dd)-! }}}                          |!Saturday (yyyy-MM-dd)                           |
+|date relative to Sunday (today or next)                         |{{{!-!Sunday (yyyy-MM-dd) +7 -! }}}                        |!Sunday (yyyy-MM-dd) +7                          |
 |wiki variable whose value may be overridden by system property  |{{{!defineDefault HALLO {Hoi} }}}                          |!defineDefault HALLO {Hoi}                       |
 
