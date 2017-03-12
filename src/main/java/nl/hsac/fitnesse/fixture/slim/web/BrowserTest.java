@@ -1232,7 +1232,8 @@ public class BrowserTest extends SlimFixture {
     protected String downloadFromRow(String columnXPath, String place) {
         String result = null;
         // find an a to download from based on its text()
-        WebElement element = findByXPath("%s//a[contains(normalized(text()),'%s')]", columnXPath, place);
+        WebElement element = findByXPath("%s//a/descendant-or-self::text()[contains(normalized(.),'%s')]/ancestor-or-self::a",
+                                            columnXPath, place);
         if (element == null) {
             // find an a to download based on its column header
             String requestedIndex = getXPathForColumnIndex(place);
