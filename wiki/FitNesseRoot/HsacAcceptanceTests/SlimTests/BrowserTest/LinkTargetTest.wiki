@@ -7,6 +7,10 @@ This test ensures we can find elements based on explicit technical instructions.
 <body>
 <a href="http://google.com/" id="a">My link</a>
 <a href="http://google.nl/" id="b">Mijn link</a>
+<a href="http://google.de/" id="c">Meine <span>kleine</span> link</a>
+<a href="http://google.fr/" id="d"><img title="French"/></a>
+<a href="http://google.es/" id="e"><span aria-label="Spanish">Link</span></a>
+<a href="http://google.ru/" id="f" aria-label="Russian">Link</a>
 </body>
 </html>}}} }
 
@@ -20,6 +24,13 @@ This test ensures we can find elements based on explicit technical instructions.
 |check  |target of link|id=a     |http://google.com/|
 |check  |target of link|Mijn link|http://google.nl/ |
 |check  |target of link|Mijn     |http://google.nl/ |
+|check  |target of link|Meine    |http://google.de/ |
+|check  |target of link|klein    |http://google.de/ |
+|check  |target of link|French   |http://google.fr/ |
+|check  |target of link|Fr       |http://google.fr/ |
+|check  |target of link|Spanish  |http://google.es/ |
+|check  |target of link|Rus      |http://google.ru/ |
+
 
 |script|mock xml server setup|
 |stop                        |
