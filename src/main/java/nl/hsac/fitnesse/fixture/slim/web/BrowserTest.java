@@ -968,8 +968,12 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil
     public String targetOfLink(String place) {
-        String target = null;
         WebElement linkElement = getSeleniumHelper().getLink(place);
+        return getLinkTarget(linkElement);
+    }
+
+    protected String getLinkTarget(WebElement linkElement) {
+        String target = null;
         if (linkElement != null) {
             target = linkElement.getAttribute("href");
         }
@@ -1964,20 +1968,7 @@ public class BrowserTest extends SlimFixture {
     public String downloadIn(String place, String container) {
         SearchContext currentSearchContext = setSearchContextToContainer(container);
         try {
-            By selector = By.linkText(place);
-            WebElement element = findElement(selector);
-            if (element == null) {
-                selector = By.partialLinkText(place);
-                element = findElement(selector);
-                if (element == null) {
-                    selector = By.id(place);
-                    element = findElement(selector);
-                    if (element == null) {
-                        selector = By.name(place);
-                        element = findElement(selector);
-                    }
-                }
-            }
+            WebElement element = getSeleniumHelper().getLink(place);
             return downloadLinkTarget(element);
         } finally {
             resetSearchContext(currentSearchContext);
@@ -1994,14 +1985,12 @@ public class BrowserTest extends SlimFixture {
      * @return downloaded file if any, null otherwise.
      */
     protected String downloadLinkTarget(WebElement element) {
-        String result = null;
-        if (element != null) {
-            String href = element.getAttribute("href");
-            if (href != null) {
-                result = downloadContentFrom(href);
-            } else {
-                throw new SlimFixtureException(false, "Could not determine url to download from");
-            }
+        String result;
+        String href = getLinkTarget(element);
+        if (href != null) {
+            result = downloadContentFrom(href);
+        } else {
+            throw new SlimFixtureException(false, "Could not determine url to download from");
         }
         return result;
     }
