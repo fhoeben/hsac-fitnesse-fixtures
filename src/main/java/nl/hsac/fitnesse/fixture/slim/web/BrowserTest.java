@@ -2011,6 +2011,9 @@ public class BrowserTest extends SlimFixture {
                 result = resp.getResponse();
             } else {
                 String fileName = resp.getFileName();
+                if (StringUtils.isEmpty(fileName)) {
+                    fileName = "download";
+                }
                 String baseName = FilenameUtils.getBaseName(fileName);
                 String ext = FilenameUtils.getExtension(fileName);
                 String downloadedFile = FileUtil.saveToFile(getDownloadName(baseName), ext, content);
