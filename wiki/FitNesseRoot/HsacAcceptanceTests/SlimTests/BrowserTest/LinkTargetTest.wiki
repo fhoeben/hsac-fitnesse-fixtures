@@ -30,7 +30,7 @@ This test ensures we can find elements based on explicit technical instructions.
 |check  |target of link|Fr       |http://google.fr/ |
 |check  |target of link|Spanish  |http://google.es/ |
 |check  |target of link|Rus      |http://google.ru/ |
-
+|show   |download      |Mijn                        |
 
 |script|mock xml server setup|
 |stop                        |
