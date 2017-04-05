@@ -1,3 +1,6 @@
+---
+Help: Wiki functions added by hsac-fitnesse-plugin
+---
 !2 Symbol samples
 
 Some extra Wiki symbols that can be used:
@@ -23,4 +26,3 @@ Some extra Wiki symbols that can be used:
 |date relative to Saturday (today or next)                          |{{{!-!Saturday (yyyy-MM-dd)-! }}}                          |!Saturday (yyyy-MM-dd)                           |
 |date relative to Sunday (today or next)                            |{{{!-!Sunday (yyyy-MM-dd) +7 -! }}}                        |!Sunday (yyyy-MM-dd) +7                          |
 |wiki variable whose value may be overridden by system property     |{{{!defineDefault HALLO {Hoi} }}}                          |!defineDefault HALLO {Hoi}                       |
-
