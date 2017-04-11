@@ -1,5 +1,9 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
+import java.util.HashMap;
+
 import net.minidev.json.JSONArray;
 import nl.hsac.fitnesse.fixture.Environment;
 import org.apache.commons.lang3.StringUtils;
@@ -39,11 +43,11 @@ public class JsonHelper implements Formatter {
         if (StringUtils.isEmpty(jsonString)) {
             return null;
         }
-        JSONObject jsonObject;
         try {
-            jsonObject = new JSONObject(jsonString);
-            return jsonObjectToMap(jsonObject);
-        } catch (JSONException e) {
+            Map<String, Object> result = new HashMap<String, Object>();
+            result = (Map<String, Object>)new Gson().fromJson(jsonString, result.getClass());
+            return result;
+        } catch (JsonParseException e) {
             throw new RuntimeException("Unable to convert string to map: " + jsonString, e);
         }
     }
