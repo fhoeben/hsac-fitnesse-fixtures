@@ -1,6 +1,5 @@
 package nl.hsac.fitnesse.junit.selenium;
 
-import com.google.gson.Gson;
 import nl.hsac.fitnesse.fixture.slim.web.SeleniumDriverSetup;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.fixture.Environment;
