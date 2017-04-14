@@ -1,6 +1,8 @@
 wiki/fitnesse-standalone.jar
 wiki/plugins/hsac-fitnesse-plugin-*.jar
 wiki/plugins/maven-classpath-plugin-*.jar
+wiki/plugins/fitnesse-autocomplete-responder-*.jar
+wiki/plugins/fitnesse-bootstrap-plus-theme-*.jar
 wiki/FitNesseRoot/**/*.zip
 wiki/FitNesseRoot/files/screenshots
 wiki/FitNesseRoot/files/testResults
