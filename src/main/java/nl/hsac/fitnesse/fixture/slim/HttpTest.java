@@ -374,27 +374,30 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     protected String urlEncodeCurrentValues() {
-        boolean isFirst = true;
         StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, Object> entry : getCurrentValues().entrySet()) {
-            String key = entry.getKey();
+        addUrlEncodedKeyValues(sb, "", getCurrentValues());
+        return sb.toString();
+    }
+
+    private void addUrlEncodedKeyValues(StringBuilder sb, String prefix, Map<String, Object> map) {
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String key = prefix + entry.getKey();
             Object value = entry.getValue();
             if (value instanceof List) {
                 List values = (List) value;
                 for (Object v : values) {
-                    addEncodedKeyValue(sb, isFirst, key, v);
-                    isFirst = false;
+                    addEncodedKeyValue(sb, key, v);
                 }
+            } else if (value instanceof Map) {
+                addUrlEncodedKeyValues(sb, key + ".", (Map) value);
             } else {
-                addEncodedKeyValue(sb, isFirst, key, value);
-                isFirst = false;
+                addEncodedKeyValue(sb, key, value);
             }
         }
-        return sb.toString();
     }
 
-    private boolean addEncodedKeyValue(StringBuilder sb, boolean isFirst, String key, Object value) {
-        if (!isFirst) {
+    private void addEncodedKeyValue(StringBuilder sb, String key, Object value) {
+        if (sb.length() != 0) {
             sb.append("&");
         }
         sb.append(urlEncode(key));
@@ -402,7 +405,6 @@ public class HttpTest extends SlimFixtureWithMap {
             sb.append("=");
             sb.append(urlEncode(value.toString()));
         }
-        return isFirst;
     }
 
     protected String urlEncode(String str) {
