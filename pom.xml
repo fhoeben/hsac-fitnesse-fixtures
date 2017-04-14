@@ -360,13 +360,13 @@
 								<artifactItem>
 									<groupId>com.github.tcnh</groupId>
 									<artifactId>fitnesse-bootstrap-plus-theme</artifactId>
-									<version>1.0.2</version>
+									<version>1.0.3</version>
 									<overWrite>true</overWrite>
 								</artifactItem>
 								<artifactItem>
 									<groupId>com.github.tcnh</groupId>
 									<artifactId>fitnesse-autocomplete-responder</artifactId>
-									<version>1.0.1</version>
+									<version>1.0.3</version>
 									<overWrite>true</overWrite>
 								</artifactItem>
 							</artifactItems>
