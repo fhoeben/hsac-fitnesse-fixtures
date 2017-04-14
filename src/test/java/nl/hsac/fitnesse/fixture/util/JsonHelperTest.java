@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.fixture.util;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -118,5 +119,21 @@ public class JsonHelperTest {
 
         assertEquals(expected,
                 helper.jsonStringToMap("{\"browserName\":\"chrome\",\"chromeOptions\":{\"mobileEmulation\":{\"deviceName\":\"Google Nexus 5\"}}}"));
+    }
+
+    @Test
+    public void testListedMap() {
+        ArrayList<Object> listargs = new ArrayList<>();
+        listargs.add("start-maximized");
+
+        Map<String, Object> chromeOptions = new LinkedHashMap<>();
+        chromeOptions.put("args", listargs);
+
+        Map<String, Object> expected = new LinkedHashMap<>();
+        expected.put("browserName", "chrome");
+        expected.put("chromeOptions", chromeOptions);
+
+        assertEquals(expected,
+                helper.jsonStringToMap("{\"browserName\":\"chrome\",\"chromeOptions\":{\"args\":[\"start-maximized\"]}}"));
     }
 }

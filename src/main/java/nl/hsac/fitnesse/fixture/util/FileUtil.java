@@ -1,5 +1,7 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.util.Scanner;
@@ -230,7 +232,10 @@ public final class FileUtil {
     }
 
     private static File determineFilename(String baseName, String extension) {
-        File output = new File(baseName + "." + extension);
+        if (!StringUtils.isEmpty(extension)) {
+            extension = "." + extension;
+        }
+        File output = new File(baseName + extension);
         // ensure directory exists
         File parent = output.getAbsoluteFile().getParentFile();
         if (!parent.exists()) {
@@ -244,7 +249,7 @@ public final class FileUtil {
         // determine first filename not yet in use.
         while (output.exists()) {
             i++;
-            String name = String.format("%s_%s.%s", baseName, i, extension);
+            String name = String.format("%s_%s%s", baseName, i, extension);
             output = new File(name);
         }
         return output;

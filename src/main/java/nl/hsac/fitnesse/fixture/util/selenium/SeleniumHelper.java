@@ -228,17 +228,52 @@ public class SeleniumHelper {
             return findElement(by);
         } else {
             WebElement element = findByLinkText(place);
-            WebElement firstFound = element;
+            WebElement firstElement = element;
+            if (!isInteractable(element)) {
+                element = getElementByAriaLabel(place, -1);
+                element = getParentA(element);
+                if (firstElement == null) {
+                    firstElement = element;
+                }
+            }
+            if (!isInteractable(element)) {
+                element = findElement(byCss("[title='%s']", place));
+                element = getParentA(element);
+                if (firstElement == null) {
+                    firstElement = element;
+                }
+            }
             if (!isInteractable(element)) {
                 element = findByPartialLinkText(place);
-                if (firstFound == null) {
-                    firstFound = element;
+                if (firstElement == null) {
+                    firstElement = element;
+                }
+            }
+            if (!isInteractable(element)) {
+                element = getElementByPartialAriaLabel(place, -1);
+                element = getParentA(element);
+                if (firstElement == null) {
+                    firstElement = element;
+                }
+            }
+            if (!isInteractable(element)) {
+                element = findElement(byCss("[title*='%s']", place));
+                element = getParentA(element);
+                if (firstElement == null) {
+                    firstElement = element;
                 }
             }
             return isInteractable(element)
                     ? element
-                    : firstFound;
+                    : firstElement;
         }
+    }
+
+    public WebElement getParentA(WebElement element) {
+        if (element != null && !"a".equalsIgnoreCase(element.getTagName())) {
+            element = element.findElement(By.xpath("./ancestor::a"));
+        }
+        return element;
     }
 
     public WebElement findByLinkText(String text) {
