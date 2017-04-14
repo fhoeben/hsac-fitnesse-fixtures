@@ -91,3 +91,32 @@ Here we supply no map to the constructor, but pass the one to use in each script
 |set value |a                    |for              |b                                                  |
 |set value |c                    |for              |a                                                  |
 |$hash6=   |copy map                                                                                   |
+
+!2 Not Expanding . in Name to Nested Map
+
+Normally when setting values '.' in a name is interpreted to mean a nested map. But this can be disabled. 
+
+|script   |map fixture                                                                                |
+|ensure   |expands periods in names to nested maps                                                    |
+|set value|2            |for                                   |browser.download.folderList           |
+|set value|sheetml.sheet|for                                   |browser.helperApps.neverAsk.saveToDisk|
+|$browser=|value        |browser                               |                                      |
+|check    |size of      |$browser                              |2                                     |
+|check    |value        |browser.download.folderList           |2                                     |
+|check    |value        |browser.helperApps.neverAsk.saveToDisk|sheetml.sheet                         |
+
+
+
+|script                                |map fixture                                                                                |
+|expand periods in names to nested maps|false                                                                                      |
+|reject                                |expands periods in names to nested maps                                                    |
+|set value                             |2            |for                                   |browser.download.folderList           |
+|set value                             |sheetml.sheet|for                                   |browser.helperApps.neverAsk.saveToDisk|
+|check                                 |value        |browser                               |null                                  |
+|check                                 |value        |browser.download.folderList           |2                                     |
+|check                                 |value        |browser.helperApps.neverAsk.saveToDisk|sheetml.sheet                         |
+
+
+
+
+
