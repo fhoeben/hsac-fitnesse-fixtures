@@ -123,7 +123,7 @@ public class JsonHelperTest {
 
     @Test
     public void testListedMap() {
-        ArrayList<Object> listargs = new ArrayList<Object>();
+        ArrayList<Object> listargs = new ArrayList<>();
         listargs.add("start-maximized");
 
         Map<String, Object> chromeOptions = new LinkedHashMap<>();
