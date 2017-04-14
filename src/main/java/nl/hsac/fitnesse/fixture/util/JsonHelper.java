@@ -44,9 +44,7 @@ public class JsonHelper implements Formatter {
             return null;
         }
         try {
-            Map<String, Object> result = new HashMap<>();
-            result = (Map<String, Object>)new Gson().fromJson(jsonString, result.getClass());
-            return result;
+            return new Gson().fromJson(jsonString, HashMap.class);
         } catch (JsonParseException e) {
             throw new RuntimeException("Unable to convert string to map: " + jsonString, e);
         }
