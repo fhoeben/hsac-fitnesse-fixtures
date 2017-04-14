@@ -1,9 +1,5 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
-import java.util.HashMap;
-
 import net.minidev.json.JSONArray;
 import nl.hsac.fitnesse.fixture.Environment;
 import org.apache.commons.lang3.StringUtils;
@@ -43,9 +39,11 @@ public class JsonHelper implements Formatter {
         if (StringUtils.isEmpty(jsonString)) {
             return null;
         }
+        JSONObject jsonObject;
         try {
-            return new Gson().fromJson(jsonString, HashMap.class);
-        } catch (JsonParseException e) {
+            jsonObject = new JSONObject(jsonString);
+            return jsonObjectToMap(jsonObject);
+        } catch (JSONException e) {
             throw new RuntimeException("Unable to convert string to map: " + jsonString, e);
         }
     }
@@ -54,13 +52,24 @@ public class JsonHelper implements Formatter {
         Map<String, Object> result = new LinkedHashMap<>();
         for (Object key : jsonObject.keySet()) {
             String stringKey = String.valueOf(key);
-            Object value = jsonObject.get(stringKey);
-            if (value instanceof JSONObject) {
-                value = jsonObjectToMap((JSONObject) value);
-            }
+            Object value = convertJsonObject(jsonObject.get(stringKey));
             result.put(stringKey, value);
         }
         return  result;
+    }
+
+    private Object convertJsonObject(Object value) {
+        Object result = value;
+        if (value instanceof JSONObject) {
+            result = jsonObjectToMap((JSONObject) value);
+        } else if (value instanceof org.json.JSONArray) {
+            List<Object> newVal = new ArrayList<>();
+            for (Object o : (org.json.JSONArray) value) {
+                newVal.add(convertJsonObject(o));
+            }
+            result = newVal;
+        }
+        return result;
     }
 
     /**
