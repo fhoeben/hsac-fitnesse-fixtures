@@ -27,7 +27,7 @@ public class SlimFixtureWithMap extends SlimFixture {
         currentValues = map;
         // default map helper
         // (shared by all fixtures so default configuration can be changed by one call, if needed)
-        mapHelper = getEnvironment().getMapHelper();
+        mapHelper = getDefaultMapHelper();
     }
 
     /**
@@ -122,6 +122,20 @@ public class SlimFixtureWithMap extends SlimFixture {
 
     //// end: methods to support usage in dynamic decision tables
 
+    public void expandPeriodsInNamesToNestedMaps(boolean expand) {
+        MapHelper newMapHelper;
+        if (expand) {
+            newMapHelper = getDefaultMapHelper();
+        } else {
+            newMapHelper = new NoOpMapHelper();
+        }
+        setMapHelper(newMapHelper);
+    }
+
+    public boolean expandsPeriodsInNamesToNestedMaps() {
+        return !(getMapHelper() instanceof NoOpMapHelper);
+    }
+
     /**
      * @return helper to assist getting/setting (nested) values in a map.
      */
@@ -134,5 +148,19 @@ public class SlimFixtureWithMap extends SlimFixture {
      */
     public void setMapHelper(MapHelper mapHelper) {
         this.mapHelper = mapHelper;
+    }
+
+    protected MapHelper getDefaultMapHelper() {
+        return getEnvironment().getMapHelper();
+    }
+
+    /**
+     * Map helper that does not interpret periods in names to mean nested maps.
+     */
+    private static class NoOpMapHelper extends MapHelper {
+        @Override
+        public void setValueForIn(Object value, String name, Map<String, Object> map) {
+            map.put(name, value);
+        }
     }
 }
