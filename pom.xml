@@ -439,6 +439,10 @@
 								</goals>
 							</execution>
 						</executions>
+						<configuration>
+							<!-- needed to work with Java 8 while we have JavaDoc errors -->
+							<additionalparam>-Xdoclint:none</additionalparam>
+						</configuration>
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
