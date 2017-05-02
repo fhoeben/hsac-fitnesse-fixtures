@@ -40,8 +40,8 @@ Execute {{{mvn clean package -DskipTests}}}
 The standalone installation is present in the wiki directory and as '...-standalone.zip' in the target directory. It can be distributed by just copying the wiki directory or by copying and extracting the zip file to a location without spaces in its own name, or in its parent's names).
 This standalone installation can be started using {{{ java -jar fitnesse-standalone.jar }}} from the wiki directory (or directory where the 'standalone.zip' was extracted).
 
-A zip file containing the standalone version of the latest version of this project can be downloaded from the [[!-GitHub-! releases][https://github.com/fhoeben/hsac-fitnesse-fixtures/releases]].
-A similar [[zip file containing the latest 'snapshot' (i.e. not released but based on the most recent code) version][http://fhoeben.github.io/hsac-fitnesse-fixtures/hsac-fitnesse-fixtures-snapshot-standalone.zip]] is published as part of the automated build of this project.
+A zip file containing the standalone version of the latest version of this project can be downloaded from the [[!-GitHub-! releases][https://github.com/fhoeben/hsac-fitnesse-fixtures/releases/latest]] or [[Maven Central][https://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&g=nl.hsac&a=hsac-fitnesse-fixtures&c=standalone&p=zip&v=RELEASE]].
+A similar zip file containing the latest *snapshot* (i.e. not released but based on the most recent code) version is published as part of the automated build of this project at [[Sonatype OSSRH][https://oss.sonatype.org/service/local/artifact/maven/redirect?r=snapshots&g=nl.hsac&a=hsac-fitnesse-fixtures&v=LATEST&e=zip&c=standalone]].
 
 
 !3 2. Run on build server
