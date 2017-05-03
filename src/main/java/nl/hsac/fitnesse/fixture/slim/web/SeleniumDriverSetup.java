@@ -143,13 +143,13 @@ public class SeleniumDriverSetup extends SlimFixture {
             }
             case "microsoftedge":
             case "edge": {
-                String driverPath = getExecutable("MicrosoftWebDriver");
+                String driverPath = getExecutable("edgedriver");
                 setPropertyValue("webdriver.edge.driver", driverPath);
                 result = startDriver(EdgeDriver.class.getName(), profile);
                 break;
             }
             case "internet explorer": {
-                String driverPath = getExecutable("IEDriverServer");
+                String driverPath = getExecutable("internetexplorerdriver");
                 setPropertyValue("webdriver.ie.driver", driverPath);
                 result = startDriver(InternetExplorerDriver.class.getName(), profile);
                 break;
@@ -170,13 +170,21 @@ public class SeleniumDriverSetup extends SlimFixture {
         return startDriverForWithProfile(browser, null);
     }
 
-    private String getExecutable(String basename) {
+    protected String getExecutable(String basename) {
         String name = getExecutableForOs(basename);
-        return getAbsoluteWebDriverPath(name);
+        for (int bit : new int[] {32, 64}) {
+            String exec = String.format(name, bit);
+            String execPath = getAbsoluteWebDriverPath(exec);
+            if (execPath != null) {
+                name = execPath;
+                break;
+            }
+        }
+        return name;
     }
 
     protected String getAbsoluteWebDriverPath(String executable) {
-        String path = executable;
+        String path = null;
         File f = new File("webdrivers", executable);
         if (f.exists()) {
             path = f.getAbsolutePath();
@@ -193,11 +201,11 @@ public class SeleniumDriverSetup extends SlimFixture {
         String name = basename;
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("win")) {
-            name += ".exe";
+            name = basename + "-windows-%dbit.exe";
         } else if (os.contains("mac")) {
-            name = "osx" + File.separator + basename;
+            name = basename + "-mac-%dbit";
         } else if (os.contains("linux")) {
-            name = "linux" + File.separator + basename;
+            name = basename + "-linux-%dbit";
         }
         return name;
     }
