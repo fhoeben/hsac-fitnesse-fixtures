@@ -206,6 +206,11 @@
 							<directory>wiki/plugins</directory>
 							<followSymlinks>false</followSymlinks>
 						</fileset>
+						<fileset>
+							<!-- On clean throw away web drivers to prevent multiple version being present after update -->
+							<directory>wiki/webdrivers</directory>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
 					</filesets>
 				</configuration>
 			</plugin>
@@ -234,6 +239,59 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.github.webdriverextensions</groupId>
+				<artifactId>webdriverextensions-maven-plugin</artifactId>
+				<version>3.1.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>install-drivers</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<installationDirectory>${basedir}/wiki/webdrivers</installationDirectory>
+					<drivers>
+						<driver>
+							<name>internetexplorerdriver</name>
+							<platform>windows</platform>
+							<bit>32</bit>
+							<version>3.4.0</version>
+						</driver>
+						<driver>
+							<name>edgedriver</name>
+							<platform>windows</platform>
+							<bit>64</bit>
+							<version>4.15063</version>
+						</driver>
+						<driver>
+							<name>chromedriver</name>
+							<platform>windows</platform>
+							<bit>32</bit>
+							<version>2.29</version>
+						</driver>
+						<driver>
+							<name>chromedriver</name>
+							<platform>mac</platform>
+							<bit>64</bit>
+							<version>2.29</version>
+						</driver>
+						<driver>
+							<name>phantomjs</name>
+							<platform>windows</platform>
+							<bit>64</bit>
+							<version>2.1.1</version>
+						</driver>
+						<driver>
+							<name>phantomjs</name>
+							<platform>mac</platform>
+							<bit>64</bit>
+							<version>2.1.1</version>
+						</driver>
+					</drivers>
+				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
