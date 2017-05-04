@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -10,6 +11,7 @@ import static org.junit.Assert.assertTrue;
 public class SeleniumDriverSetupTest {
     private final SeleniumDriverSetup fixture = new SeleniumDriverSetup();
 
+    @Ignore("No executables downloaded for Linux, so skip in Travis-CI")
     @Test
     public void testFindChromedriverExecutable() {
         String exec = fixture.getExecutable("chromedriver");
