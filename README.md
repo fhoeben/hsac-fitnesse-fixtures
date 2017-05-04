@@ -54,7 +54,7 @@ The Selenium configuration (e.g. what browser on what platform) to use when test
 This allows different configurations on the build server to test with different browsers, without requiring different Wiki content, but only requiring a different build configuration.
 
 ### Reports
-Example reports for Windows using a Sauce Labs Selenium driver (http://fhoeben.github.io/hsac-fitnesse-fixtures/examples-results/) and Linux with PhantomJs (http://fhoeben.github.io/hsac-fitnesse-fixtures/acceptance-test-results/) are generated in the automated build process of this project.
+Example reports for Windows using a Sauce Labs Selenium driver (https://fhoeben.github.io/hsac-fitnesse-fixtures-test-results/examples-results/) and Linux with PhantomJs (http://fhoeben.github.io/hsac-fitnesse-fixtures-test-results/acceptance-test-results/) are generated in the automated build process of this project.
 
 ## Fixture developer installation:
 Import this project in your favorite Java IDE (with Maven support).
