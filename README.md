@@ -40,7 +40,7 @@ directory and as `...-standalone.zip` file in the target directory. It can be di
 This standalone installation can be started using `java -jar fitnesse-standalone.jar` from the wiki directory (or directory where the _standalone.zip_ was extracted).
 
 A zip file containing released versions of this project can be downloaded from the [Releases](https://github.com/fhoeben/hsac-fitnesse-fixtures/releases/latest) or [Maven Central](https://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&g=nl.hsac&a=hsac-fitnesse-fixtures&c=standalone&p=zip&v=RELEASE).
-A similar zip file containing the latest *snapshot* (i.e. not released but based on the most recent code) version is published as part of the automated build of this project at [Sonatype OSSRH](https://oss.sonatype.org/service/local/artifact/maven/redirect?r=snapshots&g=nl.hsac&a=hsac-fitnesse-fixtures&v=LATEST&e=zip&c=standalone).
+A similar zip file containing the latest *snapshot* (i.e. not released but based on the most recent code) version is published as part of the automated build of this project at http://fhoeben.github.io/hsac-fitnesse-fixtures-test-results/hsac-fitnesse-fixtures-snapshot-standalone.zip.
 
 ## To run the tests on a build server:
 Have the build server checkout the project and execute `mvn clean test-compile failsafe:integration-test`. Append `failsafe:verify` to the command if you want the build to fail in case of test failures.
