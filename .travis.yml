@@ -14,7 +14,7 @@ cache:
   - $HOME/.m2
 
 script:
-  - ./travis_build_and_test.sh
+  - travis_wait 30 ./travis_build_and_test.sh
 
 after_success:
   - "[[ \"${TRAVIS_PULL_REQUEST}\" == \"false\" && \"${TRAVIS_BRANCH}\" == \"master\" && \"${TEST_TYPE}\" == \"acceptance-test\" ]] && { python travis_add_server.py; mvn -DskipTests deploy --settings ~/.m2/mySettings.xml; };"
