@@ -15,7 +15,7 @@ if [ "${TEST_TYPE}" == "acceptance-test" ]; then
   ./travis_publish_results.sh target/fitnesse-results acceptance-test-results
 elif [ "${TEST_TYPE}" == "examples" -a "${TRAVIS_PULL_REQUEST}" == "false" -a "${TRAVIS_BRANCH}" == "master" ]; then
   echo -e "Run examples via SauceLabs\n"
-  travis_wait 30 mvn -DfitnesseSuiteToRun=HsacExamples -DseleniumGridUrl=http://${SAUCE_USERNAME}:${SAUCE_ACCESS_KEY}@ondemand.saucelabs.com:80/wd/hub -DseleniumCapabilities="${CAPA},name:Travis ${TRAVIS_BUILD_NUMBER}-examples,build:$TRAVIS_BUILD_NUMBER" test-compile failsafe:integration-test
+  mvn -DfitnesseSuiteToRun=HsacExamples -DseleniumGridUrl=http://${SAUCE_USERNAME}:${SAUCE_ACCESS_KEY}@ondemand.saucelabs.com:80/wd/hub -DseleniumCapabilities="${CAPA},name:Travis ${TRAVIS_BUILD_NUMBER}-examples,build:$TRAVIS_BUILD_NUMBER" test-compile failsafe:integration-test
 
   ./travis_publish_results.sh target/fitnesse-results examples-results
 fi
