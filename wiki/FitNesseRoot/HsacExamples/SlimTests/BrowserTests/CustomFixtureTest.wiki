@@ -5,19 +5,19 @@ First we do this with ''plain !-BrowserTest-!'', then with a ''custom subclass, 
 
 !2 Using !-BrowserFixture-!
 
-|script|browser test                                                                                         |
-|open  |http://www.funda.nl                                                                                  |
-|select|€ 1.000.000                |for                                             |Van                     |
-|select|€ 2.000.000                |for                                             |Tot                     |
-|enter |Wittevrouwensingel, Utrecht|as                                              |Plaats, buurt, adres etc|
-|wait  |1                          |seconds                                                                  |
-|note  |select option from autocomplete                                                                      |
-|press |down                                                                                                 |
-|press |enter                                                                                                |
-|click |Zoek                                                                                                 |
-|click |Wittevrouwensingel 54                                                                                |
-|note  |Check any element's text based on an xPath, makes test fragile to HTML changes                       |
-|check |value of                   |xpath=//span[@class='object-media-teaser-count']|68                      |
+|script|browser test                                                                                 |
+|open  |http://www.funda.nl                                                                          |
+|select|€ 1.000.000        |for                                             |Van                     |
+|select|€ 2.000.000        |for                                             |Tot                     |
+|enter |Groenedijk, Utrecht|as                                              |Plaats, buurt, adres etc|
+|wait  |1                  |seconds                                                                  |
+|note  |select option from autocomplete                                                              |
+|press |down                                                                                         |
+|press |enter                                                                                        |
+|click |Zoek                                                                                         |
+|click |Groenedijk 57                                                                                |
+|note  |Check any element's text based on an xPath, makes test fragile to HTML changes               |
+|check |value of           |xpath=//span[@class='object-media-teaser-count']|55                      |
 
 What can we do with a custom subclass...
 
@@ -28,18 +28,16 @@ We need to indicate in which package our custom class can be found.
 |import                 |
 |nl.hsac.fitnesse.sample|
 
-|script|funda test                                                        |
-|open  |http://www.funda.nl                                               |
-|select|€ 1.000.000                    |for   |Van                        |
-|select|€ 2.000.000                    |for   |Tot                        |
-|enter |Wittevrouwensingel, Utrecht    |as    |Plaats, buurt, adres etc   |
-|note  |select option from autocomplete                                   |
-|wait  |1                              |seconds                           |
-|press |down                                                              |
-|press |enter                                                             |
-|click |Zoek                                                              |
-|click |Wittevrouwensingel 54                                             |
-|note  |Use custom method to get number of photos                         |
-|check |number of photos               |68                                |
-|note  |Since the custom method returns a number we can do relative checks|
-|check |number of photos               |>10                               |
+|script|funda test                                      |
+|open  |http://www.funda.nl                             |
+|select|€ 1.000.000        |for|Van                     |
+|select|€ 2.000.000        |for|Tot                     |
+|enter |Groenedijk, Utrecht|as |Plaats, buurt, adres etc|
+|note  |select option from autocomplete                 |
+|wait  |1                  |seconds                     |
+|press |down                                            |
+|press |enter                                           |
+|click |Zoek                                            |
+|click |Groenedijk 57                                   |
+|note  |Use custom method to get number of photos       |
+|check |number of photos   |55                          |

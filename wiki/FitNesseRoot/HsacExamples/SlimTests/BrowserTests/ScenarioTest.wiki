@@ -8,23 +8,26 @@ This is then invoked multiple times from a [[Decision table][.FitNesse.UserGuide
 
 The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
 
-|scenario|check original price _|address, city               |
+|scenario|check original price _|street, number, city        |
 |open    |http://www.funda.nl                                |
-|select  |€ 400.000             |for|Van                     |
+|select  |€ 1.000.000           |for|Van                     |
 |select  |€ 2.000.000           |for|Tot                     |
-|enter   |@{address}, @{city}   |as |Plaats, buurt, adres etc|
-|press   |tab                                                |
+|enter   |@{street}, @{city}    |as |Plaats, buurt, adres etc|
+|note    |select option from autocomplete                    |
+|wait    |1                     |seconds                     |
+|press   |down                                               |
+|press   |enter                                              |
 |click   |Zoek                                               |
-|click   |@{address}                                         |
+|click   |@{street} @{number}                                |
 |$price= |value of              |Vraagprijs                  |
 |$state= |value of              |Status                      |
 
 |script|browser test|
 
-|check original price                                      |
-|address              |city   |price?          |state?     |
-|Buurkerkhof 1 C      |Utrecht|€ 465.000 k.k.  |Beschikbaar|
-|Wittevrouwensingel 54|Utrecht|€ 1.050.000 k.k.|Beschikbaar|
+|check original price                                    |
+|street      |number|city   |price?          |state?     |
+|Breitnerlaan|5     |Utrecht|€ 1.089.000 k.k.|Beschikbaar|
+|Groenedijk  |57    |Utrecht|€ 1.475.000 k.k.|Beschikbaar|
 
 
 Writing the scenario like this can become a bit cumbersome when many parameters are needed. They are repeated in: the scenario's first row, the scenario rows where they are used and the table headers where the scenario is invoked.
