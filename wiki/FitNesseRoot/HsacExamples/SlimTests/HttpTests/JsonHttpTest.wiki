@@ -39,6 +39,8 @@ json={"key":"value"}
 |check |json path            |size    |>0                           |
 |check |json path count      |$.*     |>=5                          |
 |show  |all json path matches|*                                     |
+|check |element              |1       |of json path   |$.*  |false  |
+
 
 Next another POST, posting of url-enoded values defined in the wiki.
 
