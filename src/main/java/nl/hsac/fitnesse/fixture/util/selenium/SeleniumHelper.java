@@ -956,7 +956,19 @@ public class SeleniumHelper {
      * @param element element to place mouse over.
      */
     public void hoverOver(WebElement element) {
-        new Actions(driver()).moveToElement(element).perform();
+        getActions().moveToElement(element).perform();
+    }
+
+    /**
+     * Simulates double clicking on the supplied element
+     * @param element element to double click on
+     */
+    public void doubleClick(WebElement element) {
+        getActions().doubleClick(element).perform();
+    }
+
+    protected Actions getActions() {
+        return new Actions(driver());
     }
 
     /**
