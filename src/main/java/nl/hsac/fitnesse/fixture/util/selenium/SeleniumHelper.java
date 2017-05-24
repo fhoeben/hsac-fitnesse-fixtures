@@ -967,15 +967,6 @@ public class SeleniumHelper {
         getActions().doubleClick(element).perform();
     }
 
-    /**
-     * Simulates a drag from supplied source and drop on the supplied target
-     * @param source element to drag from
-     * @param target element to drop on
-     */
-    public void dragAndDrop(WebElement source, WebElement target) {
-        getActions().clickAndHold(source).moveToElement(target).release(target).build().perform();
-    }
-
     protected Actions getActions() {
         return new Actions(driver());
     }
