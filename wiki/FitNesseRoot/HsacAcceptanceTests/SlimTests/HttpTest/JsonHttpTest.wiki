@@ -4,7 +4,6 @@
 		"type": "747",
 		"brand": "Boeing",
 		"seats": "400",
-        "beds" : null,
 		"airline": "KLM"
 	}, {
 		"id": "002",
