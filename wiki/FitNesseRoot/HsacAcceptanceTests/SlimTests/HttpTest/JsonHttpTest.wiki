@@ -31,7 +31,9 @@
 |set json path|airplanes[0].seats   |to                  |300                                                 |
 |check        |json path            |airplanes[0].seats  |300                                                 |
 |show         |response                                                                                       |
-
+|ensure       |json path exists     |airplanes[0].seats                                                       |
+|reject       |json path exists     |airplanes[0].beds                                                        |
+|ensure       |json path exists     |airplanes[*].airline                                                     |
 And now a call which returns an error status code.
 
 |script                       |

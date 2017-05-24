@@ -61,6 +61,10 @@ public class JsonHttpTest extends HttpTest {
         return all.size();
     }
 
+    public boolean jsonPathExists(String path) {
+        return getPathHelper().jsonPathExists(getResponseBody(), getPathExpr(path));
+    }
+
     protected List<Object> getAllMatches(String path) {
         String responseString = getResponseBody();
         String jsonPath = getPathExpr(path);
