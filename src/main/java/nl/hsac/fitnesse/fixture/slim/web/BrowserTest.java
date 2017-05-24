@@ -716,6 +716,26 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
+    @WaitUntil
+    public boolean dragAndDropTo(String source, String destination) {
+        WebElement sourceElement = getElementToClick(source);
+        WebElement destinationElement = getElementToClick(destination);
+        return dragAndDropTo(sourceElement, destinationElement);
+    }
+
+    protected boolean dragAndDropTo(WebElement sourceElement, WebElement destinationElement) {
+        boolean result = false;
+        if ((sourceElement != null) && (destinationElement != null)) {
+            scrollIfNotOnScreen(sourceElement);
+            if (isInteractable(sourceElement) && destinationElement.isDisplayed()) {
+                getSeleniumHelper().dragAndDrop(sourceElement,destinationElement );
+                result = true;
+            }
+        }
+        return result;
+    }
+
+
     protected WebElement getElementToClick(String place) {
         return getElementToClick(place, null);
     }
