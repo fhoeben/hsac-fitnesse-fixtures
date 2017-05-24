@@ -131,6 +131,10 @@ public class JsonHttpTest extends HttpTest {
         return repeatUntil(completion);
     }
 
+    public boolean jsonPathExists(String path) {
+        return getPathHelper().jsonPathExists(getResponseBody(), getPathExpr(path));
+    }
+
     protected String getPathExpr(String path) {
         String jsonPath = path;
         if (!path.startsWith("$")) {
