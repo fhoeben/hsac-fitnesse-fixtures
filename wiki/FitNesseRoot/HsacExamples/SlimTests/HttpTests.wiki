@@ -78,6 +78,7 @@ The commands/keywords (i.e. public methods) added by !-nl.hsac.fitnesse.fixture.
 |element <index> of json path <expression>     |Evaluates the (indefinite) expression against the last response received, and returns the index-th element of the results.                                       |
 |set json path <expression> to <value>         |Evaluates the expression against the last response received and -if exactly one key is found- replaces that key's existing value with the value that is provided.|
 |repeat until json path <expression> is <value>|If 'expression' does not evaluates to 'value' for the last response: repeats last request until it does.                                                         |
+|json path exists <expression>                 |Returns true if the expression evaluates to a value other than 'null' against the last response.                                                                 |
 
 !3 !-XmlHttpTest-!
 The commands/keywords (i.e. public methods) added to those of !-HttpTest-! by !-nl.hsac.fitnesse.fixture.slim.XmlHttpTest-! are listed below.

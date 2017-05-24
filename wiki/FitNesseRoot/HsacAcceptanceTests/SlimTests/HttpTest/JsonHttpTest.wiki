@@ -30,6 +30,10 @@
 |check        |element              |0                   |of json path|airplanes[?(@.airline=='KLM')].type|747|
 |set json path|airplanes[0].seats   |to                  |300                                                 |
 |check        |json path            |airplanes[0].seats  |300                                                 |
+|ensure       |json path exists     |airplanes[0].seats                                                       |
+|reject       |json path exists     |airplanes[0].beds                                                        |
+|ensure       |json path exists     |airplanes[*].airline                                                     |
+|reject       |json path exists     |airplanes[*].beds                                                        |
 |show         |response                                                                                       |
 
 And now a call which returns an error status code.
