@@ -1363,6 +1363,10 @@ public class BrowserTest extends SlimFixture {
         waitAfterScroll = msToWait;
     }
 
+    protected int getWaitAfterScroll() {
+        return waitAfterScroll;
+    }
+
     protected String getElementText(WebElement element) {
         String result = null;
         if (element != null) {
@@ -1407,15 +1411,16 @@ public class BrowserTest extends SlimFixture {
      */
     protected void scrollTo(WebElement element) {
         getSeleniumHelper().scrollTo(element);
-        waitAfterScroll();
+        waitAfterScroll(waitAfterScroll);
     }
 
     /**
      * Wait after the scroll if needed
+     * @param msToWait amount of ms to wait after the scroll
      */
-    protected void waitAfterScroll() {
-        if (waitAfterScroll > 0) {
-            waitMilliseconds(waitAfterScroll);
+    protected void waitAfterScroll(int msToWait) {
+        if (msToWait > 0) {
+            waitMilliseconds(msToWait);
         }
     }
 
