@@ -68,6 +68,18 @@ public class JsonPathHelper {
         }
     }
 
+    public boolean jsonPathExists(String json, String jsonPath) {
+        boolean result = false;
+        try {
+            result = null != getJsonPath(json, jsonPath);
+        } catch (RuntimeException e) {
+            if(e.getMessage().contains("multiple")) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
     protected DocumentContext parseJson(String json) {
         DocumentContext result;
         if (lastContext != null && lastJson != null
