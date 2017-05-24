@@ -18,7 +18,6 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -695,8 +694,13 @@ public class BrowserTest extends SlimFixture {
     }
 
     @WaitUntil
-    public boolean doubleClick(final String place) {
-        WebElement element = getElementToClick(place);
+    public boolean doubleClick(String place) {
+        return doubleClickIn(place, null);
+    }
+
+    @WaitUntil
+    public boolean doubleClickIn(String place, String container) {
+        WebElement element = getElementToClick(place, container);
         return doubleClick(element);
     }
 
@@ -705,17 +709,11 @@ public class BrowserTest extends SlimFixture {
         if (element != null) {
             scrollIfNotOnScreen(element);
             if (isInteractable(element)) {
-                Actions actions = getActions();
-                actions.doubleClick(element).perform();
+                getSeleniumHelper().doubleClick(element);
                 result = true;
             }
         }
         return result;
-    }
-
-    protected Actions getActions() {
-        WebDriver driver = driver();
-        return new Actions(driver);
     }
 
     protected WebElement getElementToClick(String place) {
@@ -1365,6 +1363,10 @@ public class BrowserTest extends SlimFixture {
         waitAfterScroll = msToWait;
     }
 
+    protected int getWaitAfterScroll() {
+        return waitAfterScroll;
+    }
+
     protected String getElementText(WebElement element) {
         String result = null;
         if (element != null) {
@@ -1409,8 +1411,16 @@ public class BrowserTest extends SlimFixture {
      */
     protected void scrollTo(WebElement element) {
         getSeleniumHelper().scrollTo(element);
-        if (waitAfterScroll > 0) {
-            waitMilliseconds(waitAfterScroll);
+        waitAfterScroll(waitAfterScroll);
+    }
+
+    /**
+     * Wait after the scroll if needed
+     * @param msToWait amount of ms to wait after the scroll
+     */
+    protected void waitAfterScroll(int msToWait) {
+        if (msToWait > 0) {
+            waitMilliseconds(msToWait);
         }
     }
 
