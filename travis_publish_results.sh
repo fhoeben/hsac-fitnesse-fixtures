@@ -12,8 +12,8 @@ if [ "${TRAVIS_PULL_REQUEST}" == "false" -a "${TRAVIS_BRANCH}" == "master" ]; th
   git config --global user.email "travis@travis-ci.org"
   git config --global user.name "Travis"
 
-  #using token clone gh-pages branch
-  git clone --quiet --branch=gh-pages --depth 1 https://${GIT_HUB_TOKEN}@github.com/fhoeben/hsac-fitnesse-fixtures.git  gh-pages > /dev/null
+  #using token clone gh-pages branch, of special project to store test results
+  git clone --quiet --branch=gh-pages --depth 1 https://${GIT_HUB_TOKEN}@github.com/fhoeben/hsac-fitnesse-fixtures-test-results.git  gh-pages > /dev/null
 
   #go into directory, remove files from previous build and copy data we're interested in to that directory
   cd gh-pages

@@ -39,8 +39,8 @@ Execute `mvn clean package -DskipTests`, the standalone installation is present 
 directory and as `...-standalone.zip` file in the target directory. It can be distributed by just copying the wiki directory or by copying and extracting the zip file to a location without spaces in its own name, or in its parent's names).
 This standalone installation can be started using `java -jar fitnesse-standalone.jar` from the wiki directory (or directory where the _standalone.zip_ was extracted).
 
-A zip file containing released versions of this project can be downloaded from the [Releases](https://github.com/fhoeben/hsac-fitnesse-fixtures/releases) or [Maven Central](http://central.maven.org/maven2/nl/hsac/hsac-fitnesse-fixtures/).
-A similar zip file containing the latest *snapshot* (i.e. not released but based on the most recent code) version is published as part of the automated build of this project at http://fhoeben.github.io/hsac-fitnesse-fixtures/hsac-fitnesse-fixtures-snapshot-standalone.zip.
+A zip file containing released versions of this project can be downloaded from the [Releases](https://github.com/fhoeben/hsac-fitnesse-fixtures/releases/latest) or [Maven Central](https://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&g=nl.hsac&a=hsac-fitnesse-fixtures&c=standalone&p=zip&v=RELEASE).
+A similar zip file containing the latest *snapshot* (i.e. not released but based on the most recent code) version is published as part of the automated build of this project at https://fhoeben.github.io/hsac-fitnesse-fixtures-test-results/hsac-fitnesse-fixtures-snapshot-standalone.zip.
 
 ## To run the tests on a build server:
 Have the build server checkout the project and execute `mvn clean test-compile failsafe:integration-test`. Append `failsafe:verify` to the command if you want the build to fail in case of test failures.
@@ -54,7 +54,7 @@ The Selenium configuration (e.g. what browser on what platform) to use when test
 This allows different configurations on the build server to test with different browsers, without requiring different Wiki content, but only requiring a different build configuration.
 
 ### Reports
-Example reports for Windows using a Sauce Labs Selenium driver (http://fhoeben.github.io/hsac-fitnesse-fixtures/examples-results/) and Linux with PhantomJs (http://fhoeben.github.io/hsac-fitnesse-fixtures/acceptance-test-results/) are generated in the automated build process of this project.
+Example reports for Windows using a Sauce Labs Selenium driver (https://fhoeben.github.io/hsac-fitnesse-fixtures-test-results/examples-results/) and Linux with PhantomJs (https://fhoeben.github.io/hsac-fitnesse-fixtures-test-results/acceptance-test-results/) are generated in the automated build process of this project.
 
 ## Fixture developer installation:
 Import this project in your favorite Java IDE (with Maven support).

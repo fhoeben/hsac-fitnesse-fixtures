@@ -67,6 +67,12 @@ public class JsonPathHelperTest {
     }
 
     @Test
+    public void testFindWithIndexExp() {
+        List<Object> result = helper.getAllJsonPath(JSON, "$.store.book[?(@.author=='Herman Melville')].title");
+        assertEquals("Moby Dick", result.get(0));
+    }
+
+    @Test
     public void testJsonPathException() {
         try {
             Object result = helper.getJsonPath(JSON, "$..book[2].author");

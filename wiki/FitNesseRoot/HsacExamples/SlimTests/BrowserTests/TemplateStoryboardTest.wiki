@@ -22,9 +22,9 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |storyboard|browser test|
 
-|check original price                                                             |
-|address              |city   |price?          |square meters|year built?|volume? |
-|Wittevrouwensingel 54|Utrecht|€ 1.050.000 k.k.|288          |Voor 1906  |912 m³  |
-|Nieuwegracht 42      |Utrecht|€ 1.400.000 k.k.|348          |1700       |1.828 m³|
+|check original price                                                       |
+|address        |city   |price?          |square meters|year built?|volume? |
+|Groenedijk 57  |Utrecht|€ 1.475.000 k.k.|442          |1999       |1.830 m³|
+|Nieuwegracht 42|Utrecht|€ 1.400.000 k.k.|348          |1700       |1.828 m³|
 
 

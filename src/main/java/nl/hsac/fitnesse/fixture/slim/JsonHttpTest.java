@@ -51,6 +51,11 @@ public class JsonHttpTest extends HttpTest {
         return getPathHelper().getJsonPath(responseString, jsonPath);
     }
 
+    public Object elementOfJsonPath(int index, String path) {
+        List<Object> all = getAllMatches(path);
+        return all.get(index);
+    }
+
     public int jsonPathCount(String path) {
         List<Object> all = getAllMatches(path);
         return all.size();

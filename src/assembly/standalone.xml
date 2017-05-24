@@ -19,6 +19,23 @@
             <directory>${project.basedir}/wiki</directory>
             <useDefaultExcludes>true</useDefaultExcludes>
             <outputDirectory></outputDirectory>
+            <includes>
+                <include>webdrivers/*</include>
+            </includes>
+            <excludes>
+                <exclude>webdrivers/*.version</exclude>
+                <exclude>webdrivers/*.exe</exclude>
+            </excludes>
+            <fileMode>0755</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/wiki</directory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>webdrivers/*.exe</include>
+                <include>webdrivers/*.version</include>
+            </includes>
             <excludes>
                 <exclude>copy/**</exclude>
                 <exclude>files/**</exclude>

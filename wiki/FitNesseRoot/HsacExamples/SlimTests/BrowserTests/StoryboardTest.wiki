@@ -4,17 +4,17 @@ On this page we compare the asking price of the same house on two websites. We u
  
 The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
 
-|storyboard|browser test                                                 |
-|open      |http://www.huizenzoeker.nl                                   |
-|enter     |Gageldijk, Utrecht|for       |Plaats, postcode met straatnaam|
-|press enter                                                             |
-|click     |Gageldijk 209                                                |
-|$price=   |value of          |xpath=//div[@class='prijs']/strong        |
-|open      |http://www.funda.nl                                          |
-|select    |€ 700.000         |for       |Van                            |
-|enter     |Gageldijk, Utrecht|as        |Plaats, buurt, adres etc       |
-|note      |select option from autocomplete                              |
-|press     |tab                                                          |
-|click     |Zoek                                                         |
-|click     |Gageldijk 209                                                |
-|check     |value of          |Vraagprijs|$price k.k.                    |
+|storyboard|browser test                                                  |
+|open      |http://www.huizenzoeker.nl                                    |
+|enter     |Groenedijk, Utrecht|for       |Plaats, postcode met straatnaam|
+|press enter                                                              |
+|click     |Groenedijk 57                                                 |
+|$price=   |value of           |xpath=//div[@class='prijs']/strong        |
+|open      |http://www.funda.nl                                           |
+|select    |€ 1.000.000        |for       |Van                            |
+|enter     |Groenedijk, Utrecht|as        |Plaats, buurt, adres etc       |
+|note      |select option from autocomplete                               |
+|press     |tab                                                           |
+|click     |Zoek                                                          |
+|click     |Groenedijk 57                                                 |
+|check     |value of           |Vraagprijs|$price k.k.                    |
