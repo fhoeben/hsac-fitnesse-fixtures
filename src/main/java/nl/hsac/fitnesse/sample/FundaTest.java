@@ -12,4 +12,16 @@ public class FundaTest extends BrowserTest {
     public String numberOfPhotos() {
         return valueOf("xpath=//span[@class='object-media-teaser-count']");
     }
+
+    // Custom fixture can use 'if' which scenarios cannot
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public String classification() {
+        String countStr = numberOfPhotos();
+        int count = Integer.parseInt(countStr);
+        if (count > 10) {
+            return "Good";
+        } else {
+            return "Bad";
+        }
+    }
 }

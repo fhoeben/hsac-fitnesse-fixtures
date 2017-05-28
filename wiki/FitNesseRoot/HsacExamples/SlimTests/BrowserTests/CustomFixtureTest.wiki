@@ -41,3 +41,4 @@ We need to indicate in which package our custom class can be found.
 |click |Groenedijk 57                                   |
 |note  |Use custom method to get number of photos       |
 |check |number of photos   |55                          |
+|check |classification     |Good                        |
