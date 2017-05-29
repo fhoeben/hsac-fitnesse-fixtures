@@ -976,7 +976,7 @@ public class SeleniumHelper {
         getActions().clickAndHold(source).moveToElement(target).release(target).build().perform();
     }
 
-    protected Actions getActions() {
+    public Actions getActions() {
         return new Actions(driver());
     }
 
