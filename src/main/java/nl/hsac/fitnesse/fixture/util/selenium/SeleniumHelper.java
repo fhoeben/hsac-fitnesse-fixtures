@@ -989,6 +989,10 @@ public class SeleniumHelper {
         getActions().dragAndDrop(source, target).perform();
     }
 
+    public void clickWithOffset(WebElement element, int xOffset, int yOffset) {
+        getActions().moveToElement(element, xOffset, yOffset ).click().perform();
+    }
+
     public Actions getActions() {
         return new Actions(driver());
     }
