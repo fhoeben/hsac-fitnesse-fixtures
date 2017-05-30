@@ -973,7 +973,7 @@ public class SeleniumHelper {
      * @param target element to end the drag
      */
     public void dragAndDrop(WebElement source, WebElement target) {
-        getActions().clickAndHold(source).moveToElement(target).release(target).build().perform();
+        getActions().dragAndDrop(source, target).perform();
     }
 
     public Actions getActions() {
