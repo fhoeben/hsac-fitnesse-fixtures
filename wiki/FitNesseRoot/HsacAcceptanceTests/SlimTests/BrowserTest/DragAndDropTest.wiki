@@ -8,12 +8,9 @@ We use a mock server running to serve the HTML (which was copied from https://jq
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>jQuery UI Droppable - Default functionality</title>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="/resources/demos/style.css">
 <style>
-#draggable { width: 100px; height: 100px; padding: 0.5em; float: left; margin: 10px 10px 10px 0; }
-#droppable { width: 150px; height: 150px; padding: 0.5em; float: left; margin: 10px; }
+#draggable { width: 100px; height: 100px; padding: 0.5em; float: left; margin: 10px 10px 10px 0; border-style: solid; border-width: 1px; }
+#droppable { width: 150px; height: 150px; padding: 0.5em; float: left; margin: 10px; border-style: solid; border-width: 1px; }
 </style>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -49,8 +46,8 @@ $( this )
 
 
 
-|script                |browser test                     |
-|open                  |$url                             |
-|seconds before timeout|1                                |
-|drag and drop         |Drag me to my target|to|Drop here|
-|wait for visible      |Dropped!                         |
+|script                |browser test                |
+|open                  |$url                        |
+|seconds before timeout|1                           |
+|drag and drop         |id=draggable|to|id=droppable|
+|wait for visible      |css=.ui-state-highlight     |
