@@ -49,8 +49,8 @@ $( this )
 
 
 
-|script                |browser test                              |
-|open                  |$url                                      |
-|seconds before timeout|1                                         |
-|drag                  |Drag me to my target|and drop to|Drop here|
-|wait for visible      |Dropped!                                  |
+|script                |browser test                     |
+|open                  |$url                             |
+|seconds before timeout|1                                |
+|drag and drop         |Drag me to my target|to|Drop here|
+|wait for visible      |Dropped!                         |
