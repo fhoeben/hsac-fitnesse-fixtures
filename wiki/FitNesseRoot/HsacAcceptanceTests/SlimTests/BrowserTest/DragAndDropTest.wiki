@@ -1,0 +1,53 @@
+We ensure drag and drop using jQuery works ([[html5 drag and drop is not yet supported by Selenium][https://github.com/seleniumhq/selenium-google-code-issue-archive/issues/3604]]).
+
+We use a mock server running to serve the HTML (which was copied from https://jqueryui.com/droppable/) defined in this page.
+
+!define HTML { {{{
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+#draggable { width: 100px; height: 100px; padding: 0.5em; float: left; margin: 10px 10px 10px 0; border-style: solid; border-width: 1px; }
+#droppable { width: 150px; height: 150px; padding: 0.5em; float: left; margin: 10px; border-style: solid; border-width: 1px; }
+</style>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+$( function() {
+$( "#draggable" ).draggable();
+$( "#droppable" ).droppable({
+drop: function( event, ui ) {
+$( this )
+.addClass( "ui-state-highlight" )
+.find( "p" )
+.html( "Dropped!" );
+}
+});
+} );
+</script>
+</head>
+<body>
+<div id="draggable" class="ui-widget-content">
+<p>Drag me to my target</p>
+</div>
+<div id="droppable" class="ui-widget-header">
+<p>Drop here</p>
+</div>
+</body>
+</html>
+}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+
+
+|script                |browser test                |
+|open                  |$url                        |
+|seconds before timeout|1                           |
+|drag and drop         |id=draggable|to|id=droppable|
+|wait for visible      |css=.ui-state-highlight     |
