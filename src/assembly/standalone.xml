@@ -32,10 +32,6 @@
             <directory>${project.basedir}/wiki</directory>
             <useDefaultExcludes>true</useDefaultExcludes>
             <outputDirectory></outputDirectory>
-            <includes>
-                <include>webdrivers/*.exe</include>
-                <include>webdrivers/*.version</include>
-            </includes>
             <excludes>
                 <exclude>copy/**</exclude>
                 <exclude>files/**</exclude>
