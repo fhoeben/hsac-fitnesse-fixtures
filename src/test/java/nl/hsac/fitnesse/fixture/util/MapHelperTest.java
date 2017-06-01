@@ -88,4 +88,29 @@ public class MapHelperTest {
         assertNotNull(nested4b);
         assertEquals("2LevelDeep", ((Map<String, Object>)nested4b).get("c"));
     }
+
+    @Test
+    public void testSetValueCreatingList() {
+        Map<String, Object> map = new HashMap<>();
+        helper.setValueForIn("1", "list[0]", map);
+        List list = (List) map.get("list");
+        assertEquals("1", list.get(0));
+
+        helper.setValueForIn("2", "list[1].nested", map);
+        Map<String, Object> secondListElement = (Map<String, Object>) list.get(1);
+        assertEquals("2", secondListElement.get("nested"));
+
+        helper.setValueForIn("3", "list[1].nested", map);
+        assertEquals("3", secondListElement.get("nested"));
+
+        helper.setValueForIn("4", "list[1].nested2[0].nested3", map);
+        assertEquals("4", ((Map) ((List) secondListElement.get("nested2")).get(0)).get("nested3"));
+
+        helper.setValueForIn("5", "list2[0].nested", map);
+        List list2 = (List) map.get("list2");
+        Map<String, Object> thirdListElement = (Map<String, Object>) list2.get(0);
+        assertEquals("5", thirdListElement.get("nested"));
+
+        assertEquals("first element changed","1", list.get(0));
+    }
 }

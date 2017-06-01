@@ -22,25 +22,25 @@ public class MapHelper {
      */
     public Object getValue(Map<String, Object> map, String name) {
         String cleanName = htmlCleaner.cleanupValue(name);
-        return getValueImpl(map, cleanName);
+        return getValueImpl(map, cleanName, true);
     }
 
-    protected Object getValueImpl(Map<String, Object> map, String name) {
+    protected Object getValueImpl(Map<String, Object> map, String name, boolean throwIfNoList) {
         Object value = null;
         if (map.containsKey(name)) {
             value = map.get(name);
         } else {
             String[] parts = name.split("\\.", 2);
             if (parts.length > 1) {
-                Object nested = getValueImpl(map, parts[0]);
+                Object nested = getValueImpl(map, parts[0], throwIfNoList);
                 if (nested instanceof Map) {
                     Map<String, Object> nestedMap = (Map<String, Object>) nested;
-                    value = getValueImpl(nestedMap, parts[1]);
+                    value = getValueImpl(nestedMap, parts[1], throwIfNoList);
                 }
             } else if (isListName(name)) {
                 value = getListValue(map, name);
             } else if (isListIndexExpr(name)) {
-                value = getIndexedListValue(map, name);
+                value = getIndexedListValue(map, name, throwIfNoList);
             }
         }
         return value;
@@ -75,10 +75,14 @@ public class MapHelper {
                 int firstDot = cleanName.indexOf(".");
                 if (firstDot > -1) {
                     String key = cleanName.substring(0, firstDot);
-                    Object nested = getValue(map, key);
+                    Object nested = getValueImpl(map, key, false);
                     if (nested == null) {
                         nested = new LinkedHashMap<String, Object>();
-                        map.put(key, nested);
+                        if (isListIndexExpr(key)) {
+                            setIndexedListValue(map, key, nested);
+                        } else {
+                            map.put(key, nested);
+                        }
                     }
                     if (nested instanceof Map) {
                         Map<String, Object> nestedMap = (Map<String, Object>) nested;
@@ -151,8 +155,8 @@ public class MapHelper {
         return getValue(map, stripListIndicator(name));
     }
 
-    protected Object getIndexedListValue(Map<String, Object> map, String name) {
-        Object value;
+    protected Object getIndexedListValue(Map<String, Object> map, String name, boolean throwIfNoList) {
+        Object value = null;
         String prop = getListKeyName(name);
         Object val = getValue(map, prop);
         if (val instanceof List) {
@@ -164,7 +168,9 @@ public class MapHelper {
                 value = null;
             }
         } else {
-            throw new SlimFixtureException(false, prop + " is not a list, but " + val);
+            if (val != null || throwIfNoList) {
+                throw new SlimFixtureException(false, prop + " is not a list, but " + val);
+            }
         }
         return value;
     }
