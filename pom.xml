@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>nl.hsac</groupId>
 	<artifactId>hsac-fitnesse-fixtures</artifactId>
-	<version>2.12.4-SNAPSHOT</version>
+	<version>2.12.5-SNAPSHOT</version>
 	<url>https://github.com/fhoeben/hsac-fitnesse-fixtures</url>
 	<name>HSAC's FitNesse Fixtures</name>
 	<description>Fixtures to assist in testing via FitNesse</description>
@@ -41,7 +40,7 @@
 		<hsac-fitnesse-plugin.version>1.18.0</hsac-fitnesse-plugin.version>
 		<maven-classpath-plugin.version>1.9</maven-classpath-plugin.version>
 		<fitnesse.version>20161106</fitnesse.version>
-		<selenium.version>2.53.1</selenium.version>
+		<selenium.version>3.4.0</selenium.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<apache.http.version>4.5.3</apache.http.version>
 		<webdriver.download.skip>false</webdriver.download.skip>
@@ -86,6 +85,11 @@
 			<version>${apache.http.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.10</version>
+		</dependency>
+		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
 			<version>2.3.23</version>
@@ -122,7 +126,7 @@
 		<dependency>
 			<groupId>com.codeborne</groupId>
 			<artifactId>phantomjsdriver</artifactId>
-			<version>1.3.0</version>
+			<version>1.4.3</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.seleniumhq.selenium</groupId>
@@ -143,7 +147,8 @@
 			<artifactId>diff</artifactId>
 			<version>1.1.11</version>
 		</dependency>
-		<!-- com.jayway.jsonpath uses slf4j for logging, apache http client redirect to slf4j -->
+		<!-- com.jayway.jsonpath uses slf4j for logging, apache http client redirect 
+			to slf4j -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
@@ -181,8 +186,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.6.1</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 					<encoding>${project.build.sourceEncoding}</encoding>
 					<showDeprecation>true</showDeprecation>
 				</configuration>
@@ -193,7 +198,8 @@
 				<configuration>
 					<filesets>
 						<fileset>
-							<!-- On clean throw away old screenshots, pagesources and downloads stored by BrowserTest -->
+							<!-- On clean throw away old screenshots, pagesources and downloads 
+								stored by BrowserTest -->
 							<directory>wiki/FitNesseRoot/files/</directory>
 							<followSymlinks>false</followSymlinks>
 							<includes>
@@ -203,12 +209,14 @@
 							</includes>
 						</fileset>
 						<fileset>
-							<!-- On clean throw away plugins to prevent multiple version being present after update -->
+							<!-- On clean throw away plugins to prevent multiple version being 
+								present after update -->
 							<directory>wiki/plugins</directory>
 							<followSymlinks>false</followSymlinks>
 						</fileset>
 						<fileset>
-							<!-- On clean throw away web drivers to prevent multiple version being present after update -->
+							<!-- On clean throw away web drivers to prevent multiple version being 
+								present after update -->
 							<directory>wiki/webdrivers</directory>
 							<followSymlinks>false</followSymlinks>
 						</fileset>
@@ -220,10 +228,9 @@
 				<version>3.0.2</version>
 				<executions>
 					<execution>
-						<!-- Copy files from wiki's "files section" that will be read during tests
-						 	to the fitnesse-results directory, so they will be available during integration test
-						 	and in test report.
-						-->
+						<!-- Copy files from wiki's "files section" that will be read during 
+							tests to the fitnesse-results directory, so they will be available during 
+							integration test and in test report. -->
 						<id>copy-httpPostExamples-resources</id>
 						<phase>generate-test-resources</phase>
 						<goals>
@@ -262,10 +269,10 @@
 							<version>3.4.0</version>
 						</driver>
 						<driver>
-							<name>edgedriver</name>
+							<name>internetexplorerdriver</name>
 							<platform>windows</platform>
 							<bit>64</bit>
-							<version>4.15063</version>
+							<version>3.4.0</version>
 						</driver>
 						<driver>
 							<name>chromedriver</name>
@@ -280,6 +287,18 @@
 							<version>2.29</version>
 						</driver>
 						<driver>
+							<name>chromedriver</name>
+							<platform>linux</platform>
+							<bit>32</bit>
+							<version>2.29</version>
+						</driver>
+						<driver>
+							<name>chromedriver</name>
+							<platform>linux</platform>
+							<bit>64</bit>
+							<version>2.29</version>
+						</driver>
+						<driver>
 							<name>phantomjs</name>
 							<platform>windows</platform>
 							<bit>64</bit>
@@ -291,6 +310,42 @@
 							<bit>64</bit>
 							<version>2.1.1</version>
 						</driver>
+						<driver>
+							<name>phantomjs</name>
+							<platform>linux</platform>
+							<bit>32</bit>
+							<version>2.1.1</version>
+						</driver>
+						<driver>
+							<name>phantomjs</name>
+							<platform>linux</platform>
+							<bit>64</bit>
+							<version>2.1.1</version>
+						</driver>
+						<driver>
+							<name>geckodriver</name>
+							<platform>windows</platform>
+							<bit>64</bit>
+							<version>0.16.0</version>
+						</driver>
+						<driver>
+							<name>geckodriver</name>
+							<platform>windows</platform>
+							<bit>32</bit>
+							<version>0.16.0</version>
+						</driver>
+						<driver>
+							<name>geckodriver</name>
+							<platform>mac</platform>
+							<bit>64</bit>
+							<version>0.16.0</version>
+						</driver>
+						<driver>
+							<name>edgedriver</name>
+							<platform>windows</platform>
+							<bit>64</bit>
+							<version>4.15063</version>
+						</driver>
 					</drivers>
 					<skip>${webdriver.download.skip}</skip>
 				</configuration>
@@ -300,10 +355,8 @@
 				<version>2.20</version>
 				<configuration>
 					<excludes>
-						<!-- this test actually runs fitnesse tests
-							 therefore it will only be executed for
-							 integration-test goal
-						-->
+						<!-- this test actually runs fitnesse tests therefore it will only 
+							be executed for integration-test goal -->
 						<exclude>**/FixtureDebugTest.java</exclude>
 					</excludes>
 				</configuration>
@@ -319,7 +372,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<!-- this test actually runs fitnesse tests-->
+					<!-- this test actually runs fitnesse tests -->
 					<test>FixtureDebugTest</test>
 					<systemPropertyVariables>
 						<fitnesseSuiteToRun>${fitnesseSuiteToRun}</fitnesseSuiteToRun>
@@ -336,7 +389,8 @@
 							<value>nl.hsac.fitnesse.junit.JUnitXMLPerPageListener,nl.hsac.fitnesse.junit.ProgressLoggerListener${extraFailsafeListeners}</value>
 						</property>
 					</properties>
-					<!-- Our listener will create XML failsafe should not, or all tests are reported twice -->
+					<!-- Our listener will create XML failsafe should not, or all tests 
+						are reported twice -->
 					<disableXmlReport>true</disableXmlReport>
 				</configuration>
 				<dependencies>
@@ -370,10 +424,10 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<!-- Use dependency:copy-dependencies to copy all jar from dependencies to ${standalone.classpath},
-					 where classes from this project end up also, so that all fixtures and
-					 dependencies are available to Fitnesse without need to have Maven to run tests.
-				-->
+				<!-- Use dependency:copy-dependencies to copy all jar from dependencies 
+					to ${standalone.classpath}, where classes from this project end up also, 
+					so that all fixtures and dependencies are available to Fitnesse without need 
+					to have Maven to run tests. -->
 				<artifactId>maven-dependency-plugin</artifactId>
 				<version>3.0.0</version>
 				<configuration>

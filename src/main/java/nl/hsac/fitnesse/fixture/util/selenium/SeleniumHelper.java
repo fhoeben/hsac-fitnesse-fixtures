@@ -2,12 +2,12 @@ package nl.hsac.fitnesse.fixture.util.selenium;
 
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.internal.Base64Encoder;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.ScreenshotException;
@@ -1297,7 +1297,7 @@ public class SeleniumHelper {
         if (t != null) {
             if (t instanceof ScreenshotException) {
                 String encodedScreenshot = ((ScreenshotException)t).getBase64EncodedScreenshot();
-                result = new Base64Encoder().decode(encodedScreenshot);
+                result = new Base64().decode(encodedScreenshot);
             } else {
                 result = findScreenshot(t.getCause());
             }
