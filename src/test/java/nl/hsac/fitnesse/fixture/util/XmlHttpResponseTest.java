@@ -157,10 +157,10 @@ public class XmlHttpResponseTest {
 
         String expected = SoapCallMapColumnFixture.NO_ESCAPE_PREFIX
                             + "NOK:\n<ul>\n"
-                            + " <li>result: 1 <> 13.44</li>\n"
-                            + " <li>status: OK <> null</li>\n"
-                            + " <li>unknownKey: null <> OK</li>\n"
                             + " <li>amount: 12 <> 158.86</li>\n"
+                            + " <li>unknownKey: null <> OK</li>\n"
+                            + " <li>status: OK <> null</li>\n"
+                            + " <li>result: 1 <> 13.44</li>\n"
                             + "</ul>";
         XPathCheckResult checkResult = resp.checkXPaths(values, expressionsToCheck);
         assertEquals("NOK", checkResult.getResult());
