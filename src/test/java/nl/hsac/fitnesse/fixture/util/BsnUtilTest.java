@@ -12,7 +12,7 @@ public class BsnUtilTest {
     private final BsnUtil generator = new BsnUtil();
 
     /**
-     * Tests basic generation.
+     * Tests basic  generation.
      */
     @Test
     public void testGenerate() {
