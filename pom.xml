@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>nl.hsac</groupId>
@@ -85,11 +86,6 @@
 			<version>${apache.http.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-			<version>1.10</version>
-		</dependency>
-		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
 			<version>2.3.23</version>
@@ -147,8 +143,7 @@
 			<artifactId>diff</artifactId>
 			<version>1.1.11</version>
 		</dependency>
-		<!-- com.jayway.jsonpath uses slf4j for logging, apache http client redirect 
-			to slf4j -->
+		<!-- com.jayway.jsonpath uses slf4j for logging, apache http client redirect to slf4j -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
@@ -198,8 +193,7 @@
 				<configuration>
 					<filesets>
 						<fileset>
-							<!-- On clean throw away old screenshots, pagesources and downloads 
-								stored by BrowserTest -->
+							<!-- On clean throw away old screenshots, pagesources and downloads stored by BrowserTest -->
 							<directory>wiki/FitNesseRoot/files/</directory>
 							<followSymlinks>false</followSymlinks>
 							<includes>
@@ -209,14 +203,12 @@
 							</includes>
 						</fileset>
 						<fileset>
-							<!-- On clean throw away plugins to prevent multiple version being 
-								present after update -->
+							<!-- On clean throw away plugins to prevent multiple version being present after update -->
 							<directory>wiki/plugins</directory>
 							<followSymlinks>false</followSymlinks>
 						</fileset>
 						<fileset>
-							<!-- On clean throw away web drivers to prevent multiple version being 
-								present after update -->
+							<!-- On clean throw away web drivers to prevent multiple version being present after update -->
 							<directory>wiki/webdrivers</directory>
 							<followSymlinks>false</followSymlinks>
 						</fileset>
@@ -228,9 +220,10 @@
 				<version>3.0.2</version>
 				<executions>
 					<execution>
-						<!-- Copy files from wiki's "files section" that will be read during 
-							tests to the fitnesse-results directory, so they will be available during 
-							integration test and in test report. -->
+						<!-- Copy files from wiki's "files section" that will be read during tests
+						 	to the fitnesse-results directory, so they will be available during integration test
+						 	and in test report.
+						-->
 						<id>copy-httpPostExamples-resources</id>
 						<phase>generate-test-resources</phase>
 						<goals>
@@ -278,25 +271,25 @@
 							<name>chromedriver</name>
 							<platform>windows</platform>
 							<bit>32</bit>
-							<version>2.29</version>
+							<version>2.30</version>
 						</driver>
 						<driver>
 							<name>chromedriver</name>
 							<platform>mac</platform>
 							<bit>64</bit>
-							<version>2.29</version>
+							<version>2.30</version>
 						</driver>
 						<driver>
 							<name>chromedriver</name>
 							<platform>linux</platform>
 							<bit>32</bit>
-							<version>2.29</version>
+							<version>2.30</version>
 						</driver>
 						<driver>
 							<name>chromedriver</name>
 							<platform>linux</platform>
 							<bit>64</bit>
-							<version>2.29</version>
+							<version>2.30</version>
 						</driver>
 						<driver>
 							<name>phantomjs</name>
@@ -355,8 +348,10 @@
 				<version>2.20</version>
 				<configuration>
 					<excludes>
-						<!-- this test actually runs fitnesse tests therefore it will only 
-							be executed for integration-test goal -->
+						<!-- this test actually runs fitnesse tests
+							 therefore it will only be executed for
+							 integration-test goal
+						-->
 						<exclude>**/FixtureDebugTest.java</exclude>
 					</excludes>
 				</configuration>
@@ -389,8 +384,7 @@
 							<value>nl.hsac.fitnesse.junit.JUnitXMLPerPageListener,nl.hsac.fitnesse.junit.ProgressLoggerListener${extraFailsafeListeners}</value>
 						</property>
 					</properties>
-					<!-- Our listener will create XML failsafe should not, or all tests 
-						are reported twice -->
+					<!-- Our listener will create XML failsafe should not, or all tests are reported twice -->
 					<disableXmlReport>true</disableXmlReport>
 				</configuration>
 				<dependencies>
@@ -424,10 +418,10 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<!-- Use dependency:copy-dependencies to copy all jar from dependencies 
-					to ${standalone.classpath}, where classes from this project end up also, 
-					so that all fixtures and dependencies are available to Fitnesse without need 
-					to have Maven to run tests. -->
+				<!-- Use dependency:copy-dependencies to copy all jar from dependencies to ${standalone.classpath},
+					 where classes from this project end up also, so that all fixtures and
+					 dependencies are available to Fitnesse without need to have Maven to run tests.
+				-->
 				<artifactId>maven-dependency-plugin</artifactId>
 				<version>3.0.0</version>
 				<configuration>

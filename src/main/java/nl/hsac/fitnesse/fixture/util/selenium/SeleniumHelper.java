@@ -2,7 +2,6 @@ package nl.hsac.fitnesse.fixture.util.selenium;
 
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.*;
@@ -19,10 +18,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1297,7 +1293,7 @@ public class SeleniumHelper {
         if (t != null) {
             if (t instanceof ScreenshotException) {
                 String encodedScreenshot = ((ScreenshotException)t).getBase64EncodedScreenshot();
-                result = new Base64().decode(encodedScreenshot);
+                result = Base64.getDecoder().decode(encodedScreenshot);
             } else {
                 result = findScreenshot(t.getCause());
             }
