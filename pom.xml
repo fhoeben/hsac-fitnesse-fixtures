@@ -268,52 +268,52 @@
 							<version>3.4.0</version>
 						</driver>
 						<driver>
-							<name>chromedriver</name>
-							<platform>windows</platform>
-							<bit>32</bit>
-							<version>2.29</version>
-						</driver>
-						<driver>
-							<name>chromedriver</name>
-							<platform>mac</platform>
-							<bit>64</bit>
-							<version>2.29</version>
-						</driver>
-						<driver>
-							<name>phantomjs</name>
-							<platform>windows</platform>
-							<bit>64</bit>
-							<version>2.1.1</version>
-						</driver>
-						<driver>
-							<name>phantomjs</name>
-							<platform>mac</platform>
-							<bit>64</bit>
-							<version>2.1.1</version>
-						</driver>
-						<driver>
-							<name>geckodriver</name>
-							<platform>windows</platform>
-							<bit>64</bit>
-							<version>0.16.0</version>
-						</driver>
-						<driver>
-							<name>geckodriver</name>
-							<platform>windows</platform>
-							<bit>32</bit>
-							<version>0.16.0</version>
-						</driver>
-						<driver>
-							<name>geckodriver</name>
-							<platform>mac</platform>
-							<bit>64</bit>
-							<version>0.16.0</version>
-						</driver>
-						<driver>
 							<name>edgedriver</name>
 							<platform>windows</platform>
 							<bit>64</bit>
 							<version>4.15063</version>
+						</driver>
+						<driver>
+							<name>chromedriver</name>
+							<platform>windows</platform>
+							<bit>32</bit>
+							<version>2.29</version>
+						</driver>
+						<driver>
+							<name>chromedriver</name>
+							<platform>mac</platform>
+							<bit>64</bit>
+							<version>2.29</version>
+						</driver>
+						<driver>
+							<name>phantomjs</name>
+							<platform>windows</platform>
+							<bit>64</bit>
+							<version>2.1.1</version>
+						</driver>
+						<driver>
+							<name>phantomjs</name>
+							<platform>mac</platform>
+							<bit>64</bit>
+							<version>2.1.1</version>
+						</driver>
+						<driver>
+							<name>geckodriver</name>
+							<platform>windows</platform>
+							<bit>64</bit>
+							<version>0.16.0</version>
+						</driver>
+						<driver>
+							<name>geckodriver</name>
+							<platform>windows</platform>
+							<bit>32</bit>
+							<version>0.16.0</version>
+						</driver>
+						<driver>
+							<name>geckodriver</name>
+							<platform>mac</platform>
+							<bit>64</bit>
+							<version>0.16.0</version>
 						</driver>
 					</drivers>
 					<skip>${webdriver.download.skip}</skip>
