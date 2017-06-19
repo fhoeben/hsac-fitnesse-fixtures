@@ -343,7 +343,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<!-- this test actually runs fitnesse tests -->
+					<!-- this test actually runs fitnesse tests-->
 					<test>FixtureDebugTest</test>
 					<systemPropertyVariables>
 						<fitnesseSuiteToRun>${fitnesseSuiteToRun}</fitnesseSuiteToRun>
