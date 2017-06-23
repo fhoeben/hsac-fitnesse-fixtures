@@ -262,12 +262,6 @@
 							<version>3.4.0</version>
 						</driver>
 						<driver>
-							<name>internetexplorerdriver</name>
-							<platform>windows</platform>
-							<bit>64</bit>
-							<version>3.4.0</version>
-						</driver>
-						<driver>
 							<name>edgedriver</name>
 							<platform>windows</platform>
 							<bit>64</bit>
@@ -296,12 +290,6 @@
 							<platform>mac</platform>
 							<bit>64</bit>
 							<version>2.1.1</version>
-						</driver>
-						<driver>
-							<name>geckodriver</name>
-							<platform>windows</platform>
-							<bit>64</bit>
-							<version>0.16.0</version>
 						</driver>
 						<driver>
 							<name>geckodriver</name>
