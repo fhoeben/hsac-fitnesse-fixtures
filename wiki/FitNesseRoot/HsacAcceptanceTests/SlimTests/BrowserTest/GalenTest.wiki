@@ -26,6 +26,7 @@ See whether we can check layout of a page
 |show             |layout check using  |http://files/galenExamples/menuHighlight.gspec|
 |check            |layout error count  |2                                             |
 |check            |layout warning count|0                                             |
+|show             |layout check messages                                              |
 |set included tags|usual                                                              |
 |show             |layout check using  |http://files/galenExamples/menuHighlight.gspec|
 |check            |layout error count  |1                                             |

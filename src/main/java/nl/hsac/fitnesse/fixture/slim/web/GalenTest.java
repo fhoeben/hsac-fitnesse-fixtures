@@ -5,12 +5,18 @@ import com.galenframework.reports.GalenTestInfo;
 import com.galenframework.reports.HtmlReportBuilder;
 import com.galenframework.reports.model.LayoutReport;
 import com.galenframework.speclang2.pagespec.SectionFilter;
+import com.galenframework.specs.Spec;
+import com.galenframework.validation.ValidationError;
+import com.galenframework.validation.ValidationObject;
+import com.galenframework.validation.ValidationResult;
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
 import org.openqa.selenium.WebDriver;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +79,57 @@ public class GalenTest extends SlimFixture {
 
     public int layoutErrorCount() {
         return getLayoutReport().errors();
+    }
+
+    public Object layoutCheckMessages() {
+        List<ValidationResult> errorResults = getLayoutReport().getValidationErrorResults();
+        return formatResultsForWiki(errorResults);
+    }
+
+    protected Map<List<String>, Map<String, List<String>>> formatResultsForWiki(List<ValidationResult> errorResults) {
+        Map<List<String>, Map<String, List<String>>> result = new LinkedHashMap<>();
+        for (ValidationResult errorResult : errorResults) {
+            List<String> key = formatValidationObjectsForWiki(errorResult.getValidationObjects());
+            Map<String, List<String>> value = formatErrorForWiki(errorResult.getSpec(), errorResult.getError());
+
+            if (result.containsKey(key)) {
+                // add all current values to new value
+                Map<String, List<String>> currentValue = result.get(key);
+                addAllCurrentValues(value, currentValue);
+            }
+            result.put(key, value);
+        }
+        return result;
+    }
+
+    protected List<String> formatValidationObjectsForWiki(List<ValidationObject> validationObjects) {
+        List<String> names = new ArrayList<>();
+        for (ValidationObject error : validationObjects) {
+            names.add(error.getName());
+        }
+        return names;
+    }
+
+    protected Map<String, List<String>> formatErrorForWiki(Spec spec, ValidationError error) {
+        String key = error.isOnlyWarn() ? "warning" : "error";
+        key += " on: " + spec.toText();
+        Map<String, List<String>> messageMap = new LinkedHashMap<>();
+        List<String> messages = error.getMessages();
+        messageMap.put(key, new ArrayList<>(messages));
+        return messageMap;
+    }
+
+    protected void addAllCurrentValues(Map<String, List<String>> value, Map<String, List<String>> currentValue) {
+        for (Map.Entry<String, List<String>> currentEntries : currentValue.entrySet()) {
+            String currentKey = currentEntries.getKey();
+            List<String> currentValues = currentEntries.getValue();
+            List<String> newValues = value.get(currentKey);
+            if (newValues == null) {
+                value.put(currentKey, currentValues);
+            } else {
+                newValues.addAll(currentValues);
+            }
+        }
     }
 
     public int layoutWarningCount() {
