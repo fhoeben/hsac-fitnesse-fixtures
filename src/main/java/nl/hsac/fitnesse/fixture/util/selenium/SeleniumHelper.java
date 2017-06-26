@@ -7,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.internal.Base64Encoder;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.ScreenshotException;
@@ -19,10 +18,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1297,7 +1293,7 @@ public class SeleniumHelper {
         if (t != null) {
             if (t instanceof ScreenshotException) {
                 String encodedScreenshot = ((ScreenshotException)t).getBase64EncodedScreenshot();
-                result = new Base64Encoder().decode(encodedScreenshot);
+                result = Base64.getDecoder().decode(encodedScreenshot);
             } else {
                 result = findScreenshot(t.getCause());
             }
