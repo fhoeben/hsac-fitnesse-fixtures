@@ -57,10 +57,10 @@ public class GalenTest extends SlimFixture {
 
     protected String getReportTitle(String specPath, List<String> includedTags, List<String> excludedTags) {
         String tagsMsg = "";
-        if (!includedTags.isEmpty()) {
+        if (includedTags != null && !includedTags.isEmpty()) {
             tagsMsg += "; including " + includedTags;
         }
-        if (!excludedTags.isEmpty()) {
+        if (excludedTags != null && !excludedTags.isEmpty()) {
             tagsMsg += "; excluding " + excludedTags;
         }
         return String.format("Layout check using: %s%s", specPath, tagsMsg);

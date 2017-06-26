@@ -1,0 +1,37 @@
+See whether we can check layout of a page
+
+!define HTML { {{{
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="menu">
+        <ul>
+            <li cass="when-not-logged"><a href="#">Home</a></li>
+        </ul>
+    </div>
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+
+|script|browser test|
+|open  |$url        |
+
+|script           |galen test                                                         |
+|set included tags|usual,hovered                                                      |
+|show             |layout check using  |http://files/galenExamples/menuHighlight.gspec|
+|check            |layout error count  |2                                             |
+|check            |layout warning count|0                                             |
+|set included tags|usual                                                              |
+|show             |layout check using  |http://files/galenExamples/menuHighlight.gspec|
+|check            |layout error count  |1                                             |
+|check            |layout warning count|0                                             |
+|set included tags|                                                                   |
+|show             |layout check using  |http://files/galenExamples/menuHighlight.gspec|
+|check            |layout error count  |0                                             |
+|check            |layout warning count|0                                             |
+
