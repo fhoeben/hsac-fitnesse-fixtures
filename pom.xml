@@ -199,12 +199,14 @@
 					<filesets>
 						<fileset>
 							<!-- On clean throw away old screenshots, pagesources and downloads stored by BrowserTest -->
+							<!-- and reports created by GalenTest -->
 							<directory>wiki/FitNesseRoot/files/</directory>
 							<followSymlinks>false</followSymlinks>
 							<includes>
 								<include>screenshots/**</include>
 								<include>pagesources/**</include>
 								<include>downloads/**</include>
+								<include>galen-reports/**</include>
 							</includes>
 						</fileset>
 						<fileset>
