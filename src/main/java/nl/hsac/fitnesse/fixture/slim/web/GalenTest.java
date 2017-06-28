@@ -14,13 +14,7 @@ import org.openqa.selenium.WebDriver;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 import static nl.hsac.fitnesse.fixture.util.FileUtil.ensureNoHtmlFiles;
 
@@ -29,7 +23,8 @@ import static nl.hsac.fitnesse.fixture.util.FileUtil.ensureNoHtmlFiles;
  * @link http://galenframework.com
  */
 public class GalenTest extends SlimFixture {
-    private String reportBase = new File(filesDir, "galen-reports").getPath();
+    private final static String REPORT_SUBDIR = String.valueOf(new Date().getTime());
+    private String reportBase = new File(filesDir, "galen-reports/" + REPORT_SUBDIR).getPath();
     private List<String> includedTags = Collections.emptyList();
     private List<String> excludedTags = Collections.emptyList();
 
