@@ -32,13 +32,14 @@ public class GalenTest extends SlimFixture {
     private String reportBase = new File(filesDir, "galen-reports/" + REPORT_SUBDIR).getPath();
     private List<String> includedTags = Collections.emptyList();
     private List<String> excludedTags = Collections.emptyList();
+    private String layoutCheckName;
 
     private LayoutReport layoutReport = new LayoutReport();
     private TestStatistic testStatistic = new TestStatistic();
 
     public String layoutCheckUsing(String spec) throws IOException {
         String specPath = getFilePathFromWikiUrl(spec);
-        GalenTestInfo test = getGalenTestInfo();
+        GalenTestInfo test = createGalenTestInfo();
 
         checkLayout(specPath, test);
 
@@ -64,6 +65,8 @@ public class GalenTest extends SlimFixture {
         testStatistic = report.fetchStatistic();
 
         ALL_TESTS.add(test);
+        // re-set name for next test
+        setLayoutCheckName(null);
     }
 
     protected String getReportTitle(String specPath, List<String> includedTags, List<String> excludedTags) {
@@ -77,9 +80,15 @@ public class GalenTest extends SlimFixture {
         return String.format("Layout check using: %s%s", specPath, tagsMsg);
     }
 
-    protected GalenTestInfo getGalenTestInfo() {
-        String name = String.format("FitNesse%s%s", getClass().getSimpleName(), ALL_TESTS.size());
+    protected GalenTestInfo createGalenTestInfo() {
+        String name = getGalenTestInfoName();
         return GalenTestInfo.fromString(name);
+    }
+
+    protected String getGalenTestInfoName() {
+        String name = layoutCheckName();
+        return name == null ?
+                String.format("FitNesse%s%s", getClass().getSimpleName(), ALL_TESTS.size()) : name;
     }
 
     public int layoutTotalCount() {
@@ -163,6 +172,14 @@ public class GalenTest extends SlimFixture {
 
     public void setExcludedTags(List<String> excludedTags) {
         this.excludedTags = excludedTags;
+    }
+
+    public void setLayoutCheckName(String testName) {
+        this.layoutCheckName = testName;
+    }
+
+    protected String layoutCheckName() {
+        return layoutCheckName;
     }
 
     protected String report() throws IOException {
