@@ -8,6 +8,7 @@ import com.galenframework.reports.TestStatistic;
 import com.galenframework.reports.model.LayoutReport;
 import com.galenframework.speclang2.pagespec.SectionFilter;
 import com.galenframework.specs.Spec;
+import com.galenframework.utils.GalenUtils;
 import com.galenframework.validation.ValidationError;
 import com.galenframework.validation.ValidationObject;
 import com.galenframework.validation.ValidationResult;
@@ -172,9 +173,10 @@ public class GalenTest extends SlimFixture {
     }
 
     protected String createLinkToGalenReport(int testCount, GalenTestInfo last) {
-        String fileName = String.format("%s-%s.HTML", testCount, last.getName());
+        String baseName = GalenUtils.convertToFileName(last.getName());
+        String fileName = String.format("%s-%s.HTML", testCount, baseName);
         String testPath = new File(getReportBase(), fileName).getPath();
-        return String.format("<a href=\"%s\">report</a>", getWikiUrl(testPath));
+        return String.format("<a href=\"%s\">%s</a>", getWikiUrl(testPath), fileName);
     }
 
     protected void generateHtmlReports() throws IOException {
