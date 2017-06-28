@@ -3,6 +3,8 @@ package nl.hsac.fitnesse.fixture.slim.web;
 import com.galenframework.api.Galen;
 import com.galenframework.reports.GalenTestInfo;
 import com.galenframework.reports.HtmlReportBuilder;
+import com.galenframework.reports.TestReport;
+import com.galenframework.reports.TestStatistic;
 import com.galenframework.reports.model.LayoutReport;
 import com.galenframework.speclang2.pagespec.SectionFilter;
 import com.galenframework.specs.Spec;
@@ -31,6 +33,7 @@ public class GalenTest extends SlimFixture {
     private List<String> excludedTags = Collections.emptyList();
 
     private LayoutReport layoutReport = new LayoutReport();
+    private TestStatistic testStatistic = new TestStatistic();
 
     public String layoutCheckUsing(String spec) throws IOException {
         String specPath = getFilePathFromWikiUrl(spec);
@@ -50,10 +53,15 @@ public class GalenTest extends SlimFixture {
     protected void checkLayout(String specPath, GalenTestInfo test, String reportTitle,
                                SectionFilter sectionFilter, Properties properties, Map<String, Object> jsVariables)
             throws IOException {
+        TestReport report = test.getReport();
+        // ensure we reset test statistic before each call
+        testStatistic = new TestStatistic();
         layoutReport = Galen.checkLayout(getDriver(), specPath, sectionFilter, properties, jsVariables);
 
         // Adding layout report to the test report
-        test.getReport().layout(layoutReport, reportTitle);
+        report.layout(layoutReport, reportTitle);
+        testStatistic = report.fetchStatistic();
+
         ALL_TESTS.add(test);
     }
 
@@ -73,12 +81,20 @@ public class GalenTest extends SlimFixture {
         return GalenTestInfo.fromString(name);
     }
 
+    public int layoutTotalCount() {
+        return getTestStatistic().getTotal();
+    }
+
+    public int layoutPassedCount() {
+        return getTestStatistic().getPassed();
+    }
+
     public int layoutErrorCount() {
-        return getLayoutReport().errors();
+        return getTestStatistic().getErrors();
     }
 
     public int layoutWarningCount() {
-        return getLayoutReport().warnings();
+        return getTestStatistic().getWarnings();
     }
 
     public Object layoutCheckMessages() {
@@ -169,6 +185,10 @@ public class GalenTest extends SlimFixture {
 
     protected LayoutReport getLayoutReport() {
         return layoutReport;
+    }
+
+    protected TestStatistic getTestStatistic() {
+        return testStatistic;
     }
 
     protected String getReportBase() {

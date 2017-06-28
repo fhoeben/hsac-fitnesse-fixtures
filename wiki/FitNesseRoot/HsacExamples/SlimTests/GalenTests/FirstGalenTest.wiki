@@ -4,6 +4,8 @@
 |script           |galen test                                                         |
 |set included tags|usual,hovered                                                      |
 |show             |layout check using  |http://files/galenExamples/menuHighlight.gspec|
+|check            |layout total count  |>0                                            |
+|check            |layout passed count |0                                             |
 |check            |layout error count  |2                                             |
 |check            |layout warning count|0                                             |
 |show             |layout check messages                                              |
