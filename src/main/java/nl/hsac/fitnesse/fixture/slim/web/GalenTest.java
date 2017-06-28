@@ -77,6 +77,10 @@ public class GalenTest extends SlimFixture {
         return getLayoutReport().errors();
     }
 
+    public int layoutWarningCount() {
+        return getLayoutReport().warnings();
+    }
+
     public Object layoutCheckMessages() {
         List<ValidationResult> errorResults = getLayoutReport().getValidationErrorResults();
         return formatResultsForWiki(errorResults);
@@ -126,10 +130,6 @@ public class GalenTest extends SlimFixture {
                 newValues.addAll(currentValues);
             }
         }
-    }
-
-    public int layoutWarningCount() {
-        return getLayoutReport().warnings();
     }
 
     public List<String> includedTags() {
