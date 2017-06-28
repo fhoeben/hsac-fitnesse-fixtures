@@ -24,11 +24,12 @@ import static nl.hsac.fitnesse.fixture.util.FileUtil.ensureNoHtmlFiles;
  */
 public class GalenTest extends SlimFixture {
     private final static String REPORT_SUBDIR = String.valueOf(new Date().getTime());
+    private final static List<GalenTestInfo> ALL_TESTS = new LinkedList<>();
+
     private String reportBase = new File(filesDir, "galen-reports/" + REPORT_SUBDIR).getPath();
     private List<String> includedTags = Collections.emptyList();
     private List<String> excludedTags = Collections.emptyList();
 
-    private List<GalenTestInfo> tests = new LinkedList<>();
     private LayoutReport layoutReport = new LayoutReport();
 
     public String layoutCheckUsing(String spec) throws IOException {
@@ -53,7 +54,7 @@ public class GalenTest extends SlimFixture {
 
         // Adding layout report to the test report
         test.getReport().layout(layoutReport, reportTitle);
-        tests.add(test);
+        ALL_TESTS.add(test);
     }
 
     protected String getReportTitle(String specPath, List<String> includedTags, List<String> excludedTags) {
@@ -68,7 +69,7 @@ public class GalenTest extends SlimFixture {
     }
 
     protected GalenTestInfo getGalenTestInfo() {
-        String name = String.format("FitNesse%s%s", getClass().getSimpleName(), tests.size());
+        String name = String.format("FitNesse%s%s", getClass().getSimpleName(), ALL_TESTS.size());
         return GalenTestInfo.fromString(name);
     }
 
@@ -149,8 +150,8 @@ public class GalenTest extends SlimFixture {
 
     protected String report() throws IOException {
         generateHtmlReports();
-        int testCount = tests.size();
-        GalenTestInfo last = tests.get(testCount - 1);
+        int testCount = ALL_TESTS.size();
+        GalenTestInfo last = ALL_TESTS.get(testCount - 1);
         return createLinkToGalenReport(testCount, last);
     }
 
@@ -162,7 +163,7 @@ public class GalenTest extends SlimFixture {
 
     protected void generateHtmlReports() throws IOException {
         String dir = getReportBase();
-        new HtmlReportBuilder().build(tests, dir);
+        new HtmlReportBuilder().build(ALL_TESTS, dir);
         ensureNoHtmlFiles(dir);
     }
 
