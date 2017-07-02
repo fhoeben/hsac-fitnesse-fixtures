@@ -25,7 +25,7 @@ import static nl.hsac.fitnesse.fixture.util.FileUtil.ensureNoHtmlFiles;
  * Fixture to check web page layout using Galen Framework.
  * @link http://galenframework.com
  */
-public class GalenTest extends SlimFixture {
+public class LayoutTest extends SlimFixture {
     private final static String REPORT_SUBDIR = String.valueOf(new Date().getTime());
     private final static List<GalenTestInfo> ALL_TESTS = new LinkedList<>();
 
@@ -37,8 +37,8 @@ public class GalenTest extends SlimFixture {
     private LayoutReport layoutReport = new LayoutReport();
     private TestStatistic testStatistic = new TestStatistic();
 
-    public String layoutCheckUsing(String spec) throws IOException {
-        String specPath = getFilePathFromWikiUrl(spec);
+    public String verifyLayoutUsing(String specFile) throws IOException {
+        String specPath = getFilePathFromWikiUrl(specFile);
         GalenTestInfo test = createGalenTestInfo();
 
         checkLayout(specPath, test);
@@ -91,19 +91,19 @@ public class GalenTest extends SlimFixture {
                 String.format("FitNesse%s%s", getClass().getSimpleName(), ALL_TESTS.size()) : name;
     }
 
-    public int layoutTotalCount() {
+    public int verifiedSpecCount() {
         return getTestStatistic().getTotal();
     }
 
-    public int layoutPassedCount() {
+    public int passedSpecCount() {
         return getTestStatistic().getPassed();
     }
 
-    public int layoutErrorCount() {
+    public int specErrorCount() {
         return getTestStatistic().getErrors();
     }
 
-    public int layoutWarningCount() {
+    public int specWarningCount() {
         return getTestStatistic().getWarnings();
     }
 
