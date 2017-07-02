@@ -12,7 +12,7 @@ import com.galenframework.utils.GalenUtils;
 import com.galenframework.validation.ValidationError;
 import com.galenframework.validation.ValidationObject;
 import com.galenframework.validation.ValidationResult;
-import nl.hsac.fitnesse.fixture.slim.SlimFixture;
+import nl.hsac.fitnesse.fixture.slim.SlimFixtureWithMap;
 import org.openqa.selenium.WebDriver;
 
 import java.io.File;
@@ -25,7 +25,7 @@ import static nl.hsac.fitnesse.fixture.util.FileUtil.ensureNoHtmlFiles;
  * Fixture to check web page layout using Galen Framework.
  * @link http://galenframework.com
  */
-public class LayoutTest extends SlimFixture {
+public class LayoutTest extends SlimFixtureWithMap {
     private final static String REPORT_SUBDIR = String.valueOf(new Date().getTime());
     private final static List<GalenTestInfo> ALL_TESTS = new LinkedList<>();
 
@@ -49,7 +49,7 @@ public class LayoutTest extends SlimFixture {
     protected void checkLayout(String specPath, GalenTestInfo test) throws IOException {
         String reportTitle = getReportTitle(specPath, includedTags(), excludedTags());
         SectionFilter sectionFilter = new SectionFilter(includedTags(), excludedTags());
-        checkLayout(specPath, test, reportTitle, sectionFilter, new Properties(), null);
+        checkLayout(specPath, test, reportTitle, sectionFilter, new Properties(), getCurrentValues());
     }
 
     protected void checkLayout(String specPath, GalenTestInfo test, String reportTitle,
