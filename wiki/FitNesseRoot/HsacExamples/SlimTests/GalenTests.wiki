@@ -1,8 +1,0 @@
----
-Help: Examples of usage of fixture to check page layout using Galen Framework
-Suite
-SymbolicLinks
-  SuiteSetUp: .HsacExamples.SlimTests.BrowserTests.SuiteSetUp
-  SuiteTearDown: .HsacExamples.SlimTests.BrowserTests.SuiteTearDown
----
-!contents -R2 -g -p -f -h
