@@ -13,13 +13,12 @@ import com.galenframework.validation.ValidationError;
 import com.galenframework.validation.ValidationObject;
 import com.galenframework.validation.ValidationResult;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureWithMap;
+import nl.hsac.fitnesse.fixture.util.FileUtil;
 import org.openqa.selenium.WebDriver;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-
-import static nl.hsac.fitnesse.fixture.util.FileUtil.ensureNoHtmlFiles;
 
 /**
  * Fixture to check web page layout using Galen Framework.
@@ -199,7 +198,7 @@ public class LayoutTest extends SlimFixtureWithMap {
     protected void generateHtmlReports() throws IOException {
         String dir = getReportBase();
         new HtmlReportBuilder().build(ALL_TESTS, dir);
-        ensureNoHtmlFiles(dir);
+        FileUtil.ensureNoHtmlFiles(dir);
     }
 
     protected LayoutReport getLayoutReport() {
