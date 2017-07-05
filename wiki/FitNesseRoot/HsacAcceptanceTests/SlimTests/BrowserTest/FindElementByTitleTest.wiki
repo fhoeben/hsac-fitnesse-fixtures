@@ -6,7 +6,7 @@ This test ensures we can find elements based on (partial) title attribute.
 <input name="first" title="Firstname" value="John">
 <textarea name="middle" title="Is not Last in its entirely">T.</textarea>
 <input name="last" title="Lastname" value="Doe">
-<img title="Edit"/>
+<img title="Edit" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAE0lEQVR42mNk+P//PwMaYKSBIACCTQ73jQGOiQAAAABJRU5ErkJggg=="/>
 </body>
 </html>}}} }
 
