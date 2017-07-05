@@ -1,5 +1,8 @@
 language: java
 
+addons:
+  chrome: stable
+
 matrix:
   fast_finish: true
   allow_failures:
