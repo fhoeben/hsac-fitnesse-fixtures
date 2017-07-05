@@ -206,7 +206,9 @@ public class LayoutTest extends SlimFixtureWithMap {
     }
 
     protected String createRelativeLinkToOverallReport(String dir) {
-        return String.format("files/galen-reports/%s/report.HTML", REPORT_SUBDIR);
+        String report = new File(dir, "report.HTML").getPath();
+        String rootDir = getEnvironment().getFitNesseRootDir();
+        return FileUtil.getRelativePath(rootDir, report);
     }
 
     protected LayoutReport getLayoutReport() {

@@ -284,4 +284,14 @@ public final class FileUtil {
             }
         }
     }
+
+    /**
+     * Determines a file's relative path related to a base directory (a parent some levels up in the tree).
+     * @param base base directory.
+     * @param child file to get relative path for.
+     * @return relative path.
+     */
+    public static String getRelativePath(String base, String child) {
+        return new File(base).toURI().relativize(new File(child).toURI()).getPath();
+    }
 }
