@@ -10,7 +10,7 @@ if [ "${TEST_TYPE}" == "acceptance-test" ]; then
   fi
 
   echo -e "Run acceptance test using PhantomJs on Travis server\n"
-  mvn -DseleniumDriverClass=org.openqa.selenium.phantomjs.PhantomJSDriver test
+  mvn -DseleniumBrowser=chrome "-DseleniumJsonCapabilities={'args':['headless', 'disable-gpu']}" test
 
   ./travis_publish_results.sh target/fitnesse-results acceptance-test-results
 elif [ "${TEST_TYPE}" == "examples" -a "${TRAVIS_PULL_REQUEST}" == "false" -a "${TRAVIS_BRANCH}" == "master" ]; then
