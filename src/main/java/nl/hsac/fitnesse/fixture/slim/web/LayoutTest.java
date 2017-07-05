@@ -12,6 +12,7 @@ import com.galenframework.utils.GalenUtils;
 import com.galenframework.validation.ValidationError;
 import com.galenframework.validation.ValidationObject;
 import com.galenframework.validation.ValidationResult;
+import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureWithMap;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import org.openqa.selenium.WebDriver;
@@ -25,8 +26,9 @@ import java.util.*;
  * @link http://galenframework.com
  */
 public class LayoutTest extends SlimFixtureWithMap {
-    private final static String REPORT_SUBDIR = String.valueOf(new Date().getTime());
-    private final static List<GalenTestInfo> ALL_TESTS = new LinkedList<>();
+    private static final String REPORT_OVERVIEW_SYMBOL = "GALEN_TOP_LEVEL_REPORT_INDEX";
+    private static final String REPORT_SUBDIR = String.valueOf(new Date().getTime());
+    private static final List<GalenTestInfo> ALL_TESTS = new LinkedList<>();
 
     private String reportBase = new File(filesDir, "galen-reports/" + REPORT_SUBDIR).getPath();
     private List<String> includedTags = Collections.emptyList();
@@ -199,6 +201,12 @@ public class LayoutTest extends SlimFixtureWithMap {
         String dir = getReportBase();
         new HtmlReportBuilder().build(ALL_TESTS, dir);
         FileUtil.ensureNoHtmlFiles(dir);
+        String link = createRelativeLinkToOverallReport(dir);
+        getEnvironment().setSymbol(REPORT_OVERVIEW_SYMBOL, link);
+    }
+
+    protected String createRelativeLinkToOverallReport(String dir) {
+        return String.format("files/galen-reports/%s/report.HTML", REPORT_SUBDIR);
     }
 
     protected LayoutReport getLayoutReport() {
@@ -215,5 +223,10 @@ public class LayoutTest extends SlimFixtureWithMap {
 
     protected WebDriver getDriver() {
         return getEnvironment().getSeleniumHelper().driver();
+    }
+
+    public static String getOverallReportLink() {
+        String file = Environment.getInstance().getSymbol(REPORT_OVERVIEW_SYMBOL);
+        return String.format("<a href=\"%s\">Layout Test's Galen Reports</a>", file);
     }
 }
