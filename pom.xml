@@ -280,6 +280,12 @@
 							<version>2.30</version>
 						</driver>
 						<driver>
+							<name>chromedriver</name>
+							<platform>linux</platform>
+							<bit>64</bit>
+							<version>2.30</version>
+						</driver>
+						<driver>
 							<name>phantomjs</name>
 							<platform>windows</platform>
 							<bit>64</bit>
