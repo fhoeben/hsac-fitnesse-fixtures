@@ -15,6 +15,7 @@ public abstract class SeleniumDriverFactoryFactoryBase implements SeleniumDriver
     public final static String SELENIUM_DRIVER_CLASS = "seleniumDriverClass";
     public final static String SELENIUM_CAPABILITIES = "seleniumCapabilities";
     public final static String SELENIUM_JSONCAPABILITIES = "seleniumJsonCapabilities";
+    public final static String SELENIUM_JSONPROFILE = "seleniumJsonProfile";
 
     @Override
     public abstract boolean willOverride();
