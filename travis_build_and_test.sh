@@ -9,7 +9,7 @@ if [ "${TEST_TYPE}" == "acceptance-test" ]; then
     mvn package -DskipTests
   fi
 
-  echo -e "Run acceptance test using PhantomJs on Travis server\n"
+  echo -e "Run acceptance test using Headless Chrome on Travis server\n"
   mvn -DseleniumBrowser=chrome "-DseleniumJsonProfile={'args':['headless', 'disable-gpu']}" test
 
   ./travis_publish_results.sh target/fitnesse-results acceptance-test-results
