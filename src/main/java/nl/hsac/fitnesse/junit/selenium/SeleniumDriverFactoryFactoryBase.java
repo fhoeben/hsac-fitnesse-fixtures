@@ -1,7 +1,10 @@
 package nl.hsac.fitnesse.junit.selenium;
 
+import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Map;
 
 /**
  * Base class for Selenium driver factory factories.
@@ -12,6 +15,7 @@ public abstract class SeleniumDriverFactoryFactoryBase implements SeleniumDriver
     public final static String SELENIUM_DRIVER_CLASS = "seleniumDriverClass";
     public final static String SELENIUM_CAPABILITIES = "seleniumCapabilities";
     public final static String SELENIUM_JSONCAPABILITIES = "seleniumJsonCapabilities";
+    public final static String SELENIUM_JSONPROFILE = "seleniumJsonProfile";
 
     @Override
     public abstract boolean willOverride();
@@ -30,5 +34,15 @@ public abstract class SeleniumDriverFactoryFactoryBase implements SeleniumDriver
             value = value.substring(1, value.length() - 1);
         }
         return value;
+    }
+
+    protected Map<String, Object> parseJsonProperty(String propertyName) {
+        String capabilitiesString = getProperty(propertyName);
+        try {
+            return Environment.getInstance().getJsonHelper().jsonStringToMap(capabilitiesString);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Unable to parse value of JSON property: " + propertyName +
+                    ". Value was: " + capabilitiesString, e);
+        }
     }
 }
