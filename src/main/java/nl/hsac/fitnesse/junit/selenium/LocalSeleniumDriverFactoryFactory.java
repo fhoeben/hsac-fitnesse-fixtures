@@ -39,9 +39,6 @@ public class LocalSeleniumDriverFactoryFactory extends SeleniumDriverFactoryFact
 
     protected Map<String, Object> getCapabilities() {
         String capabilitiesString = getProperty(SELENIUM_JSONCAPABILITIES);
-        if (capabilitiesString == null || "".equals(capabilitiesString)) {
-            return null;
-        }
         try {
             return Environment.getInstance().getJsonHelper().jsonStringToMap(capabilitiesString);
         } catch (Exception e) {
