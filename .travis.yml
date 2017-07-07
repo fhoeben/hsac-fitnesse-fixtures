@@ -20,7 +20,7 @@ cache:
   - $HOME/.m2
 
 script:
-  - jdk_switcher use oraclejdk7
+  - jdk_switcher use openjdk7
   - travis_wait 60 ./travis_build_and_test.sh
 
 after_success:
