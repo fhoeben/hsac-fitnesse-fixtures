@@ -1391,11 +1391,7 @@ public class BrowserTest extends SlimFixture {
         String result = null;
         if (element != null) {
             scrollIfNotOnScreen(element);
-            result = element.getText();
-            if (result != null) {
-                // safari driver does not trim
-                result = result.trim();
-            }
+            result = getSeleniumHelper().getText(element);
         }
         return result;
     }
