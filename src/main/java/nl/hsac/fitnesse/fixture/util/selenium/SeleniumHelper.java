@@ -60,6 +60,7 @@ public class SeleniumHelper {
 
     // Regex to find our own 'fake xpath function' in xpath 'By' content
     private final static Pattern X_PATH_NORMALIZED = Pattern.compile("normalized\\((.+?(\\(\\))?)\\)");
+    private final static char NON_BREAKING_SPACE = 160;
 
     private final List<WebElement> currentIFramePath = new ArrayList<WebElement>(4);
     private int frameDepthOnLastAlertError;
@@ -719,6 +720,22 @@ public class SeleniumHelper {
     private int countOccurrences(String value, String textToFind) {
         String normalizedValue = getNormalizedText(value);
         return StringUtils.countMatches(normalizedValue, textToFind);
+    }
+
+    /**
+     * Gets element's text content.
+     * @param element element to get text() of.
+     * @return text, without trailing whitespace and with &nbsp; as normal spaces.
+     */
+    public String getText(WebElement element) {
+        String text = element.getText();
+        if (text != null) {
+            // Safari driver does not return &nbsp; as normal spacce, while others do
+            text = text.replace(NON_BREAKING_SPACE, ' ');
+            // Safari driver does not return trim, while others do
+            text = text.trim();
+        }
+        return text;
     }
 
     /**

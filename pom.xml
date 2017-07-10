@@ -322,13 +322,13 @@
 							<name>geckodriver</name>
 							<platform>windows</platform>
 							<bit>32</bit>
-							<version>0.16.0</version>
+							<version>0.17.0</version>
 						</driver>
 						<driver>
 							<name>geckodriver</name>
 							<platform>mac</platform>
 							<bit>64</bit>
-							<version>0.16.0</version>
+							<version>0.17.0</version>
 						</driver>
 					</drivers>
 					<skip>${webdriver.download.skip}</skip>
