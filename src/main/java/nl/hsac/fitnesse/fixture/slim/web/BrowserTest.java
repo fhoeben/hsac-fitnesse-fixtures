@@ -1391,7 +1391,7 @@ public class BrowserTest extends SlimFixture {
         String result = null;
         if (element != null) {
             scrollIfNotOnScreen(element);
-            result = element.getText();
+            result = getSeleniumHelper().getText(element);
         }
         return result;
     }

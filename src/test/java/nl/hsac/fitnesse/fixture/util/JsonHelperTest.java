@@ -21,8 +21,8 @@ public class JsonHelperTest {
     public void testFormatSimple() {
         assertEquals(
                 "{\n" +
-                        "    \"category\": \"reference\",\n" +
-                        "    \"price\": 8.95\n" +
+                        "    \"price\": 8.95,\n" +
+                        "    \"category\": \"reference\"\n" +
                         "}",
                 helper.format("{\"category\": \"reference\",\"price\": 8.95}"));
     }
@@ -61,12 +61,12 @@ public class JsonHelperTest {
                         "    \"extraKey\": 2,\n" +
                         "    \"parameters\": [\n" +
                         "        {\n" +
-                        "            \"category\": \"areference\",\n" +
-                        "            \"price\": 18.95\n" +
+                        "            \"price\": 18.95,\n" +
+                        "            \"category\": \"areference\"\n" +
                         "        },\n" +
                         "        {\n" +
-                        "            \"category\": \"reference\",\n" +
-                        "            \"price\": 8.95\n" +
+                        "            \"price\": 8.95,\n" +
+                        "            \"category\": \"reference\"\n" +
                         "        }\n" +
                         "    ]\n" +
                         "}",
@@ -93,12 +93,12 @@ public class JsonHelperTest {
                         "    \"extraKey\": 2,\n" +
                         "    \"parameters\": [\n" +
                         "        {\n" +
-                        "            \"category\": \"reference\",\n" +
-                        "            \"price\": 8.95\n" +
+                        "            \"price\": 8.95,\n" +
+                        "            \"category\": \"reference\"\n" +
                         "        },\n" +
                         "        {\n" +
-                        "            \"category\": \"areference\",\n" +
-                        "            \"price\": 18.95\n" +
+                        "            \"price\": 18.95,\n" +
+                        "            \"category\": \"areference\"\n" +
                         "        }\n" +
                         "    ]\n" +
                         "}",

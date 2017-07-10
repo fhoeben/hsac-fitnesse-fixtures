@@ -124,6 +124,8 @@ public class SeleniumDriverSetup extends SlimFixture {
         String browserName = browser.toLowerCase();
         switch (browserName) {
             case "firefox": {
+                String driverPath = getExecutable("geckodriver");
+                setPropertyValue("webdriver.gecko.driver", driverPath);
                 result = startDriver(FirefoxDriver.class.getName(), profile);
                 break;
             }
