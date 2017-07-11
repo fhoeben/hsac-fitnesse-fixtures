@@ -30,7 +30,7 @@ before_install:
   - "phantomjs --version"
 
 script:
-  - ./travis_build_and_test.sh
+  - travis_wait 60 ./travis_build_and_test.sh
 
 after_success:
   - "[[ \"${TRAVIS_PULL_REQUEST}\" == \"false\" && \"${TRAVIS_BRANCH}\" == \"master\" && \"${TEST_TYPE}\" == \"acceptance-test\" ]] && { ./travis_publish_results.sh target/*.zip hsac-fitnesse-fixtures-snapshot-standalone.zip; python travis_add_server.py; mvn -DskipTests deploy --settings ~/.m2/mySettings.xml; };"
