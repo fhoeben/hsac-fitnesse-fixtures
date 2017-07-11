@@ -69,6 +69,18 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- com.jayway.jsonpath uses slf4j for logging, apache http client redirect to slf4j -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-jdk14</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
@@ -142,22 +154,17 @@
 			<groupId>com.galenframework</groupId>
 			<artifactId>galen-core</artifactId>
 			<version>2.3.4</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-simple</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.sksamuel.diff</groupId>
 			<artifactId>diff</artifactId>
 			<version>1.1.11</version>
-		</dependency>
-		<!-- com.jayway.jsonpath uses slf4j for logging, apache http client redirect to slf4j -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-jdk14</artifactId>
-			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>
