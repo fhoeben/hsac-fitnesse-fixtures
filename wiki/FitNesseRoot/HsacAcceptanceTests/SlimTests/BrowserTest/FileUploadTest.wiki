@@ -1,7 +1,3 @@
----
-Help: Skipped because PhantomJs on Linux seems to crash when using file inputs.
-Prune
----
 This test ensures we can deal with file upload inputs.
 
 !define HTML { {{{
