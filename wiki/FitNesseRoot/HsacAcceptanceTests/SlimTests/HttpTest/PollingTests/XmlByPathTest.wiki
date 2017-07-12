@@ -48,7 +48,7 @@ We retry a call until a xPath path expression on the response is a certain value
 |check                 |response status     |300                     |
 |check                 |xPath               |/body|10 response       |
 |check                 |repeat count        |1                       |
-|check                 |time spent repeating|> 50                    |
+|check                 |time spent repeating|>= 50                   |
 
 
 
