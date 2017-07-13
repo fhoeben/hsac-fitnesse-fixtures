@@ -50,5 +50,14 @@
                 <exclude>FitNesseRoot/updateDoNotCopyOverList</exclude>
             </excludes>
         </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/wiki</directory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>FitNesseRoot/files/httpPostExamples/**</include>
+                <include>FitNesseRoot/files/galenExamples/**</include>
+            </includes>
+        </fileSet>
     </fileSets>
 </assembly> 

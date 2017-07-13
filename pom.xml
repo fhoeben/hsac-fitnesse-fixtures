@@ -6,7 +6,7 @@
 
 	<groupId>nl.hsac</groupId>
 	<artifactId>hsac-fitnesse-fixtures</artifactId>
-	<version>3.0.0-SNAPSHOT</version>
+	<version>3.0.1-SNAPSHOT</version>
 	<url>https://github.com/fhoeben/hsac-fitnesse-fixtures</url>
 	<name>HSAC's FitNesse Fixtures</name>
 	<description>Fixtures to assist in testing via FitNesse</description>
@@ -67,6 +67,18 @@
 			<artifactId>fitnesse</artifactId>
 			<version>${fitnesse.version}</version>
 			<scope>provided</scope>
+		</dependency>
+
+		<!-- com.jayway.jsonpath uses slf4j for logging, apache http client redirect to slf4j -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>${slf4j.version}</version>
 		</dependency>
 
 		<dependency>
@@ -139,25 +151,19 @@
 			</exclusions>
 		</dependency>
 		<dependency>
+			<groupId>com.galenframework</groupId>
+			<artifactId>galen-core</artifactId>
+			<version>2.3.4</version>
+		</dependency>
+		<dependency>
 			<groupId>com.sksamuel.diff</groupId>
 			<artifactId>diff</artifactId>
 			<version>1.1.11</version>
 		</dependency>
-		<!-- com.jayway.jsonpath uses slf4j for logging, apache http client redirect to slf4j -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-jdk14</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
 		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>
-			<version>2.2.0</version>
+			<version>2.4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-net</groupId>
@@ -194,12 +200,14 @@
 					<filesets>
 						<fileset>
 							<!-- On clean throw away old screenshots, pagesources and downloads stored by BrowserTest -->
+							<!-- and reports created by GalenTest -->
 							<directory>wiki/FitNesseRoot/files/</directory>
 							<followSymlinks>false</followSymlinks>
 							<includes>
 								<include>screenshots/**</include>
 								<include>pagesources/**</include>
 								<include>downloads/**</include>
+								<include>galen-reports/**</include>
 							</includes>
 						</fileset>
 						<fileset>
@@ -234,6 +242,26 @@
 							<resources>
 								<resource>
 									<directory>wiki/FitNesseRoot/files/httpPostExamples</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<!-- Copy files from wiki's "files section" that will be read during tests
+						 	to the fitnesse-results directory, so they will be available during integration test
+						 	and in test report.
+						-->
+						<id>copy-galenTestExamples-resources</id>
+						<phase>generate-test-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>target/fitnesse-results/files/galenExamples</outputDirectory>
+							<resources>
+								<resource>
+									<directory>wiki/FitNesseRoot/files/galenExamples</directory>
 									<filtering>false</filtering>
 								</resource>
 							</resources>

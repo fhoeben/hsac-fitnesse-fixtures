@@ -2,6 +2,9 @@ language: java
 jdk:
   - oraclejdk8
 
+dist: trusty
+sudo: false
+
 matrix:
   fast_finish: true
   allow_failures:
@@ -14,6 +17,16 @@ env:
 cache:
   directories:
   - $HOME/.m2
+  - "travis_phantomjs"
+
+before_install:
+  - "phantomjs --version"
+  - "export PATH=$PWD/travis_phantomjs/phantomjs-2.1.1-linux-x86_64/bin:$PATH"
+  - "phantomjs --version"
+  - "if [ $(phantomjs --version) != '2.1.1' ]; then rm -rf $PWD/travis_phantomjs; mkdir -p $PWD/travis_phantomjs; fi"
+  - "if [ $(phantomjs --version) != '2.1.1' ]; then wget https://assets.membergetmember.co/software/phantomjs-2.1.1-linux-x86_64.tar.bz2 -O $PWD/travis_phantomjs/phantomjs-2.1.1-linux-x86_64.tar.bz2; fi"
+  - "if [ $(phantomjs --version) != '2.1.1' ]; then tar -xvf $PWD/travis_phantomjs/phantomjs-2.1.1-linux-x86_64.tar.bz2 -C $PWD/travis_phantomjs; fi"
+  - "phantomjs --version"
 
 script:
   - travis_wait 60 ./travis_build_and_test.sh

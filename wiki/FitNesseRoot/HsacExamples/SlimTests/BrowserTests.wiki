@@ -15,6 +15,7 @@ The >TableTemplateTest simplifies the parameterization of the script.
 >CustomFixtureTest shows the usage of a custom subclass of !-BrowserTest-! to make test content more descriptive by encapsulating knowledge of the site's HTML in Java code.
 >StoryboardTest shows a test where a screenshot is taken after each action. This is then combined with a scenario in >TemplateStoryboardTest.
 >ResizeTest shows some manipulation of the browser window.
+>LayoutTest shows how the layout of a page can be checked, using [[Galen Framework][http://galenframework.com]] specs.
 >AngularJsCalculatorTest test an [[!-AngularJs-!][https://angularjs.org]] application using !-NgBrowserTest-! to select elements by model, binding and repeater.
 >Angular2CalculatorTest tests an [[Angular][https://angular.io]] application using !-Ng2BrowserTest-!.
 >AngularUiSelectTest show a test interacting with [[!-AngularJs-! ui-select][https://github.com/angular-ui/ui-select]].

@@ -1,0 +1,43 @@
+See whether we can check layout of a page
+
+!define HTML { {{{
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="menu">
+        <ul>
+            <li cass="when-not-logged"><a href="#">Home</a></li>
+        </ul>
+    </div>
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+
+|script|browser test|
+|open  |$url        |
+
+|script               |layout test                                                       |
+|set included tags    |usual,hovered                                                     |
+|show                 |verify layout using|http://files/galenExamples/menuHighlight.gspec|
+|check                |verified spec count|>0                                            |
+|check                |passed spec count  |0                                             |
+|check                |spec error count   |2                                             |
+|check                |spec warning count |0                                             |
+|show                 |layout check messages                                             |
+|set included tags    |usual                                                             |
+|set layout check name|Usual menu highlight                                              |
+|show                 |verify layout using|http://files/galenExamples/menuHighlight.gspec|
+|check                |verified spec count|>0                                            |
+|check                |spec error count   |1                                             |
+|check                |spec warning count |0                                             |
+|set included tags    |                                                                  |
+|show                 |verify layout using|http://files/galenExamples/menuHighlight.gspec|
+|check                |verified spec count|0                                             |
+|check                |spec error count   |0                                             |
+|check                |spec warning count |0                                             |
+
