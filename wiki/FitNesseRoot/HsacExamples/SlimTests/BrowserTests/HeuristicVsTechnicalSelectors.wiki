@@ -2,7 +2,7 @@
 Help: Highlight difference between using our heuristics in tests vs 'normal' Selenium (i.e. technical) selectors
 Test
 ---
-This page shows the same test twice: once using the heuristics in !-BrowserTest-!, and then using [[technical selectors][.HsacExamples.SlimTests.BrowserTests.TechnicalSelectors]]. In both cases we will be booking a trip using Expedia. Because Expedia is not the fastest of sites, both scripts also showcase that !-BrowserTest-! waits for elements to appear, without the need for explicit 'wait' operations. Unfortunately the speed of Expedia also means this page is quite slow to complete.
+This page shows the same test twice: once using the [[heuristics in !-BrowserTest-!][FindingByHeuristics]], and then using [[technical selectors][TechnicalSelectors]]. In both cases we will be booking a trip using Expedia. Because Expedia is not the fastest of sites, both scripts also showcase that !-BrowserTest-! waits for elements to appear, without the need for explicit 'wait' operations. Unfortunately the speed of Expedia also means this page is quite slow to complete.
 
 We believe this comparison will highlight the benefits of using the heuristics over technical selectors. The result is a more readable (and maintainable) test without the need for custom code (like 'page objects') or extensive 'scenario libraries' just to make test scripts readable. Tests using the heuristics are easier to write, to understand, ''and'' do not require a completed implementation before they can be written.
 
