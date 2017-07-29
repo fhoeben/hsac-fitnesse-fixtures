@@ -16,8 +16,8 @@ public class JsonHttpTestTest {
     @Test
     public void testFormatJson() {
         String expected = "<pre>{\n" +
-                "    &quot;category&quot;: &quot;reference&quot;,\n" +
-                "    &quot;price&quot;: 8.95\n" +
+                "    &quot;price&quot;: 8.95,\n" +
+                "    &quot;category&quot;: &quot;reference&quot;\n" +
                 "}</pre>";
 
         assertEquals(expected,

@@ -48,7 +48,7 @@ We retry a call until the response is a certain value.
 |check                   |response status         |300         |
 |check                   |response                |10 response |
 |check                   |repeat count            |1           |
-|check                   |time spent repeating    |> 50        |
+|check                   |time spent repeating    |>= 50       |
 
 
 !*> Stop Server

@@ -1,0 +1,37 @@
+---
+Help: Heuristic to find elements on a page
+---
+The standard behavior of !-BrowserTest-! is to use a heuristic to find the element on a web page based on the (end-user) description in the wiki. This heuristic involves checking multiple possible meanings of the description and using the first element matching the description. First it tries to find an exact match. If no exact match can be found, the same steps are re-tried to see whether a partial match can be found.
+When the heuristic does not suffice to find the element one needs, the heuristic may be bypassed in favor of [[technical selectors][TechnicalSelectors]] to specify which element is meant.
+
+The heuristic is based on what command the element is needed for. The options considered (and their order) are listed below.
+
+!2 Enter/Retrieve Value
+ * Label's text (either a contained input/textarea or the element identified by the 'for' attribute)
+ * Input's placeholder
+ * Value attribute of (visible) input
+ * Textarea's placeholder
+ * Table header (th) text in row
+ * Term/name in a description list ('dt' element)
+ * Aria-label (either 'aria-label' attribute value or the text of an element identified by an 'aria-labelledby' attribute)
+ * Element's title (i.e. tooltip text)
+
+!2 Click
+ * Link's text
+ * Button's text
+ * ''Each option listed above for 'Enter/Retrieve Value'''
+ * Input with type 'reset' or 'submit', if place is 'Submit' or 'Reset'
+ * Text of element with an 'onclick' attribute
+ * Element's text
+
+!2 Is Visible
+''Same as for 'Click'''
+
+!2 Downloading File or Checking Link's Target
+ * Link's text
+ * Aria-label (either 'aria-label' attribute value or the text of an element identified by an 'aria-labelledby' attribute)
+ * Element's title (i.e. tooltip text)
+
+!2 Search Context
+ * Legend's text to select fieldset
+ * Aria-label (either 'aria-label' attribute value or the text of an element identified by an 'aria-labelledby' attribute)

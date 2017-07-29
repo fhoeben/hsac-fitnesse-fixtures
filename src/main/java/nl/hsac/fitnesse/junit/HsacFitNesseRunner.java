@@ -6,6 +6,7 @@ import fitnesse.components.PluginsClassLoader;
 import fitnesse.junit.FitNesseRunner;
 import fitnesse.wiki.WikiPage;
 import nl.hsac.fitnesse.fixture.Environment;
+import nl.hsac.fitnesse.fixture.slim.web.LayoutTest;
 import nl.hsac.fitnesse.fixture.slim.web.SeleniumDriverSetup;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
@@ -223,10 +224,25 @@ public class HsacFitNesseRunner extends FitNesseRunner {
 
     protected String getIndexHtmlContent(String overviewHtml) {
         String result = overviewHtml;
-        String runSummary = SeleniumDriverSetup.getLastRunSummary();
-        if (runSummary != null) {
-            result = overviewHtml.replace("<table", runSummary + "<table");
+        String runSummary = getRunSummary();
+
+        if (!"".equals(runSummary)) {
+            result = overviewHtml.replaceFirst("<table", runSummary + "<table");
         }
         return result;
+    }
+
+    protected String getRunSummary() {
+        String runSummary = "";
+
+        String seleniumSummary = SeleniumDriverSetup.getLastRunSummary();
+        if (seleniumSummary != null) {
+            runSummary += seleniumSummary;
+        }
+        String galenReport = LayoutTest.getOverallReportLink();
+        if (galenReport != null) {
+            runSummary += galenReport;
+        }
+        return runSummary;
     }
 }
