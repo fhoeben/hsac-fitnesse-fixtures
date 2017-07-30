@@ -2172,4 +2172,14 @@ public class BrowserTest extends SlimFixture {
         this.implicitFindInFrames = implicitFindInFrames;
     }
 
+    /**
+     * Executes javascript in the browser
+     *
+     * @param script you want to execute
+     * @return
+     */
+    public Object executeScript(String script) {
+        return getSeleniumHelper().executeJavascript(script);
+    }
+
 }
