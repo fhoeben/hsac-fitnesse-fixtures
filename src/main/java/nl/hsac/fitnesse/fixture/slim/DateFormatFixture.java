@@ -36,7 +36,7 @@ public class DateFormatFixture extends SlimFixture {
 
     public String formatDateAs(String date, String newFormat) {
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
-        SimpleDateFormat targetFormat =new SimpleDateFormat(newFormat);
+        SimpleDateFormat targetFormat = new SimpleDateFormat(newFormat);
         String formattedDate = null;
         try {
             formattedDate = targetFormat.format(sdf.parse(date));
