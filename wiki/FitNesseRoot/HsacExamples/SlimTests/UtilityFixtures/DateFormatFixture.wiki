@@ -1,0 +1,36 @@
+---
+Test
+---
+|library            |
+|date format fixture|
+
+!2 Date Format Fixture
+!3 Features:
+ * Format dates to timestamps (seconds/millis after epoch)
+ * Reformat dates/times to a different format
+ * Display timestamps as formatted dates
+
+Default format is dd-MM-yyyy and can be changed by using 'set date format' followed by the desired format.
+Input dates are expected to be in the specified format.
+To toggle between seconds/milliseconds after epoch, use 'timestamp has millisecnds' followed by the desired boolean value (default: true)
+
+!3 Examples
+
+!define dateTime {!today (dd-MM-yyyy HH:mm:ss)}
+!define date {!today (dd-MM-yyyy)}
+
+|script |date format fixture                             |
+|$stamp=|timestamp for date|${date}                      |
+|show   |format timestamp  |$stamp                       |
+|show   |format timestamp  |$stamp|as|yyyy/MM/dd HH:mm:ss|
+
+
+|script                    |date format fixture                                  |
+|timestamp has milliseconds|false                                                |
+|set date format           |dd-MM-yyyy HH:mm:ss                                  |
+|show                      |format date       |${dateTime}|as|yyyy/MM/dd HH:mm   |
+|$stamp=                   |timestamp for date|${dateTime}                       |
+|show                      |format timestamp  |$stamp                            |
+|show                      |format timestamp  |$stamp     |as|yyyy/MM/dd HH:mm:ss|
+
+
