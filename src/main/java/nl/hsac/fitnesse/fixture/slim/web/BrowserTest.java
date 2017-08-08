@@ -2179,7 +2179,7 @@ public class BrowserTest extends SlimFixture {
      * @return
      */
     public Object executeScript(String script) {
-        return getSeleniumHelper().executeJavascript(script);
+        return getSeleniumHelper().executeJavascript(cleanupValue(script));
     }
 
 }
