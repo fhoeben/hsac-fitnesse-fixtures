@@ -613,12 +613,7 @@ public class BrowserTest extends SlimFixture {
         SearchContext searchContext = setSearchContextToContainer(container);
         try {
             // choose option for select, if possible
-            boolean result = clickSelectOption(place, value);
-            if (!result) {
-                // try to click the first element with right value
-                result = click(value);
-            }
-            return result;
+            return clickSelectOption(place, value);
         } finally {
             resetSearchContext(searchContext);
         }
