@@ -45,7 +45,6 @@ The latter allows tests to be executed on different operating systems. This is a
 |note            |start driver for     |internet explorer                                                                                                |
 |note            |start driver for     |firefox                                                                                                          |
 |note            |start driver for     |safari                                                                                                           |
-|note            |start driver for     |phantomjs                                                                                                        |
 |note            |start driver for     |chrome mobile emulation|with profile          |!{deviceName:Apple iPhone 6}                                      |
 |note            |start driver for     |chrome mobile emulation|with profile          |$mobileEmulation                                                  |
 |note            |start driver for     |chrome                 |with profile          |$chromeHeadlessProfile                                            |

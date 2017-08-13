@@ -1,5 +1,5 @@
 ---
-Help: PhantomJs' Selenium driver does not support alerts...
+Help: Headless chrome does not support alerts, yet (see https://bugs.chromium.org/p/chromium/issues/detail?id=718235)...
 Prune
 ---
 This test ensures we can deal with alerts.

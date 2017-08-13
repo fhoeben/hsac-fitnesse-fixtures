@@ -49,7 +49,6 @@
 		<selenium.internetexplorerdriver.version>3.4.0</selenium.internetexplorerdriver.version>
 		<selenium.edgedriver.version>4.15063</selenium.edgedriver.version>
 		<selenium.chromedriver.version>2.31</selenium.chromedriver.version>
-		<selenium.phantomjs.version>2.1.1</selenium.phantomjs.version>
 		<selenium.geckodriver.version>0.18</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
@@ -319,18 +318,6 @@
 							<platform>linux</platform>
 							<bit>64</bit>
 							<version>${selenium.chromedriver.version}</version>
-						</driver>
-						<driver>
-							<name>phantomjs</name>
-							<platform>windows</platform>
-							<bit>64</bit>
-							<version>${selenium.phantomjs.version}</version>
-						</driver>
-						<driver>
-							<name>phantomjs</name>
-							<platform>mac</platform>
-							<bit>64</bit>
-							<version>${selenium.phantomjs.version}</version>
 						</driver>
 						<driver>
 							<name>geckodriver</name>

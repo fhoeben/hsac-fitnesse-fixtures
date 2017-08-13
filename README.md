@@ -9,7 +9,7 @@ The baseline FitNesse installation offers the following features:
 * Ability to easily create a standalone (no JDK or Maven required) FitNesse environment.
 * Run FitNesse tests on a build server, reporting the results in both JUnit XML format and HTML.
 * FitNesse installation for test/fixture developers containing:
-    - the fixture base classes (and Selenium drivers for _Chrome_, _Internet Explorer_, _Edge_ and _PhantomJs_),
+    - the fixture base classes (and Selenium drivers for _Chrome_, _Internet Explorer_, _Edge_ and _Firefox_),
     - Maven classpath plugin (such that tests can use all dependencies from `pom.xml`),
     - HSAC's fitnesse-plugin to add additional Wiki features (random values, calculating relative dates,
       Slim scenarios without need to specify all parameters, Slim scripts that take a screenshot after each step),
