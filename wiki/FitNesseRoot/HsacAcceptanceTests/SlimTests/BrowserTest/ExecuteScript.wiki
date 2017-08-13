@@ -1,0 +1,29 @@
+---
+Test
+---
+This test ensures that we can execute javascript on a page.
+
+We use a mock server running to serve the HTML defined in this page.
+
+
+!define HTML { {{{
+<html>
+<body>
+<input type="date" id="dateField">
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script                |browser test                                                    |
+|seconds before timeout|1                                                               |
+|open                  |$url                                                            |
+|execute script        |document.getElementById("dateField").setAttribute("type","text")|
+|check                 |value of attribute    |type    |on    |id=dateField    |text    |
+
+|script|mock xml server setup|
+|stop                        |
+
