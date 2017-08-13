@@ -2168,13 +2168,13 @@ public class BrowserTest extends SlimFixture {
     }
 
     /**
-     * Executes javascript in the browser
-     *
+     * Executes javascript in the browser.
      * @param script you want to execute
-     * @return
+     * @return result from script
      */
     public Object executeScript(String script) {
-        return getSeleniumHelper().executeJavascript(cleanupValue(script));
+        String statement = cleanupValue(script);
+        return getSeleniumHelper().executeJavascript(statement);
     }
 
 }
