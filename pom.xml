@@ -41,12 +41,12 @@
 		<hsac-fitnesse-plugin.version>1.18.0</hsac-fitnesse-plugin.version>
 		<maven-classpath-plugin.version>1.9</maven-classpath-plugin.version>
 		<fitnesse.version>20161106</fitnesse.version>
-		<selenium.version>3.5.0</selenium.version>
+		<selenium.version>3.4.0</selenium.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<apache.http.version>4.5.3</apache.http.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
-		<selenium.internetexplorerdriver.version>3.5.0</selenium.internetexplorerdriver.version>
+		<selenium.internetexplorerdriver.version>3.4.0</selenium.internetexplorerdriver.version>
 		<selenium.edgedriver.version>4.15063</selenium.edgedriver.version>
 		<selenium.chromedriver.version>2.31</selenium.chromedriver.version>
 		<selenium.geckodriver.version>0.18</selenium.geckodriver.version>
