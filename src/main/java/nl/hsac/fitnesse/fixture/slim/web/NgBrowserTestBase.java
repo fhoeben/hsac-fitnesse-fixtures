@@ -64,7 +64,8 @@ public abstract class NgBrowserTestBase extends BrowserTest {
                 "globalValue",
                 "clearSearchContext",
                 "setAngularRoot",
-                "getAngularRoot");
+                "getAngularRoot",
+                "executeScript");
     }
 
     public NgBrowserTestBase(String waitForAngular) {
