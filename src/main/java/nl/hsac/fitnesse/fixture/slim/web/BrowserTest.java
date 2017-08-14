@@ -711,6 +711,28 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
+    @WaitUntil
+    public boolean rightClick(String place) {
+        return rightClickIn(place, null);
+    }
+
+    @WaitUntil
+    public boolean rightClickIn(String place, String container) {
+        WebElement element = getElementToClick(place, container);
+        return rightClick(element);
+    }
+
+    protected boolean rightClick(WebElement element) {
+        boolean result = false;
+        if (element != null) {
+            scrollIfNotOnScreen(element);
+            if (isInteractable(element)) {
+                getSeleniumHelper().rightClick(element);
+                result = true;
+            }
+        }
+        return result;
+    }
 
     @WaitUntil
     public boolean dragAndDropTo(String source, String destination) {

@@ -981,6 +981,14 @@ public class SeleniumHelper {
     }
 
     /**
+     * Simulates right clicking (i.e. context clicking) on the supplied element
+     * @param element element to right click on
+     */
+    public void rightClick(WebElement element) {
+        getActions().contextClick(element).perform();
+    }
+
+    /**
      * Simulates a drag from source element and drop to target element
      * @param source element to start the drag
      * @param target element to end the drag
