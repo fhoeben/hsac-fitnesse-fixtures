@@ -25,7 +25,7 @@ When you want to use the project's baseline to create and maintain your own test
 To create a Maven project to run your own tests, based on this project's baseline (assuming you already have a working [Maven installation](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html):
  * Go to the directory below which you want to create the project.
  * Use the [archetype, `nl.hsac:fitnesse-project`,](https://github.com/fhoeben/fitnesse-project-archetype) to generate the project: 
-   * Maven should find the latest version of the archetype automatically, but it doesn't always, so: check the latest version number on the [releases page](https://github.com/fhoeben/fitnesse-project-archetype/releases/latest), and use this instead of `<latest-version>` in the next command.
+   * (Maven should find the latest version of the archetype automatically, but it doesn't always.) Check the latest version number on the [releases page](https://github.com/fhoeben/fitnesse-project-archetype/releases/latest), and use this instead of `<latest-version>` in the next command.
    * On the commandline execute: `mvn archetype:generate -DarchetypeGroupId=nl.hsac -DarchetypeArtifactId=fitnesse-project -DarchetypeVersion=<latest-version>` (or use your IDE's ability to create a project from an archetype).
    * Answer the prompts for 'groupId', 'artifactId' and 'package' for the project.
  * _Alternatively_ you could also manually copy and update a sample project: 
