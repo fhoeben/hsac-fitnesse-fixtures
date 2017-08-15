@@ -3,6 +3,7 @@ package nl.hsac.fitnesse.fixture.slim;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Fixture that helps converting dates to and from various formats. Intended to be used as a utility fixture i.e. as library
@@ -10,10 +11,15 @@ import java.util.Date;
 
 public class DateFormatFixture extends SlimFixture {
     private String dateFormat = "dd-MM-yyyy";
+    private TimeZone timezone = TimeZone.getTimeZone("GMT+1");
     private boolean timestampHasMilliseconds = true;
 
     public void setDateFormat(String df) {
         dateFormat = df;
+    }
+
+    public void setTimezone(String newTimezone) {
+        timezone = TimeZone.getTimeZone(newTimezone);
     }
 
     public void timestampHasMilliseconds(boolean hasMillis) {
@@ -31,32 +37,35 @@ public class DateFormatFixture extends SlimFixture {
 
         Date date = new Date(timestamp);
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+        sdf.setTimeZone(timezone);
         return sdf.format(date);
     }
 
     public String formatDateAs(String date, String newFormat) {
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+        sdf.setTimeZone(timezone);
         SimpleDateFormat targetFormat = new SimpleDateFormat(newFormat);
-        String formattedDate = null;
+        targetFormat.setTimeZone(timezone);
+        String formattedDate;
         try {
             formattedDate = targetFormat.format(sdf.parse(date));
         } catch (ParseException e) {
-            e.printStackTrace();
+            throw new SlimFixtureException(false, e.getMessage(), e);
         }
         return formattedDate;
     }
 
     public long timestampForDate(String date) {
-        long timeStamp = 0;
+        long timeStamp;
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
-
+        sdf.setTimeZone(timezone);
         try {
             timeStamp = sdf.parse(date).getTime();
             if (!timestampHasMilliseconds) {
                 timeStamp = timeStamp / 1000L;
             }
         } catch (ParseException e) {
-            e.printStackTrace();
+            throw new SlimFixtureException(false, e.getMessage(), e);
         }
         return timeStamp;
     }
