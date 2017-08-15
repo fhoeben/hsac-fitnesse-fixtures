@@ -44,7 +44,6 @@ Time zone can be set using ''set timezone'' and defaults to 'GMT+1'
 |#Change input format and convert to a different format                                            |
 |set date format|MM/dd/yyyy                                                                        |
 |check          |format date     |11/14/2016|as|dd-MM-yyyy           |14-11-2016                   |
-|check          |format date     |01-01-2000|as|dd-MM-yyyy           |14-11-2016                   |
 
 
 

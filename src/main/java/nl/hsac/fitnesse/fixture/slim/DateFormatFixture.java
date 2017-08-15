@@ -50,7 +50,7 @@ public class DateFormatFixture extends SlimFixture {
         try {
             formattedDate = targetFormat.format(sdf.parse(date));
         } catch (ParseException e) {
-            throw new SlimFixtureException(false, e.getMessage(), e);
+            throw new SlimFixtureException(false, "Could not parse " + date + " using format: " + dateFormat, e);
         }
         return formattedDate;
     }
@@ -65,7 +65,7 @@ public class DateFormatFixture extends SlimFixture {
                 timeStamp = timeStamp / 1000L;
             }
         } catch (ParseException e) {
-            throw new SlimFixtureException(false, e.getMessage(), e);
+            throw new SlimFixtureException(false, "Could not parse " + date + " using format: " + dateFormat, e);
         }
         return timeStamp;
     }
