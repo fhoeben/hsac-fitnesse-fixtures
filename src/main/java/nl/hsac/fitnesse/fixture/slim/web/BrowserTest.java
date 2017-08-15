@@ -494,6 +494,15 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
+    public boolean enterDateAs(String date, String place) {
+        WebElement element = getElementToSendValue(place);
+        boolean result = element != null && isInteractable(element);
+        if (result) {
+            getSeleniumHelper().fillDateInput(element, date);
+        }
+        return result;
+    }
+
     protected WebElement getElementToSendValue(String place) {
         return getElementToSendValue(place, null);
     }
