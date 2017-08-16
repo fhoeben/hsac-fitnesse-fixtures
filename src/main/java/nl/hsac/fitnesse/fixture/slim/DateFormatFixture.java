@@ -18,6 +18,10 @@ public class DateFormatFixture extends SlimFixture {
         this(getDefaultFormat(), getDefaultTimeZone());
     }
 
+    public DateFormatFixture(String dateformat) {
+        this(dateformat, getDefaultTimeZone());
+    }
+
     public DateFormatFixture(String dateformat, String timezone) {
         setDateFormat(dateformat);
         setTimezone(timezone);

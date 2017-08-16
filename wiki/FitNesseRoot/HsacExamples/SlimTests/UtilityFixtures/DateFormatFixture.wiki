@@ -32,6 +32,8 @@ This fixture is intended to be used as a library. (See below)
 
 !4 Instantiate the fixture with a given format and time zone
 
+!note One could also specify only one constructor parameter, in which case the timezone remains the system's default.
+
 |script                    |date format fixture|dd-MM-yyyy HH:mm:ss|GMT+1                                                 |
 |timestamp has milliseconds|false                                                                                         |
 |show                      |format date        |${dateTime}        |as|yyyy/MM/dd HH:mm                                   |
@@ -62,16 +64,24 @@ Example usage of date formatting methods from a string fixture script table:
 |show   |format timestamp  |$stamp|as|yyyy/MM/dd HH:mm:ss|
 |check  |format timestamp  |$stamp|as|dd-MM-yyyy |${date}|
 
-But we can also configure the values used for format and time zone.
+But we can also configure the value used for format (leaving time zone alone).
 
-|library                             |
-|date format fixture|dd-MM-yyyy|GMT+1|
+|library                       |
+|date format fixture|dd-MM-yyyy|
 
 Now the calls to the formatting methods behave differently:
 
 |script |string fixture                                  |
-|$stamp=|timestamp for date|${date}                      |
 |check  |format timestamp  |$stamp|${date}               |
+
+But we can also configure the values used for both format and time zone.
+
+|library                             |
+|date format fixture|dd-MM-yyyy|GMT+1|
+
+Now the calls to the formatting methods behave differently again (the date might change depending on the default system locale used to generate the timestamp):
+
+|script |string fixture                                  |
 |show   |format timestamp  |$stamp|as|yyyy/MM/dd HH:mm:ss|
-|check  |format timestamp  |$stamp|as|dd-MM-yyyy |${date}|
+|show   |format timestamp  |$stamp                       |
 
