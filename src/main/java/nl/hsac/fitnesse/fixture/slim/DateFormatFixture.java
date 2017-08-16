@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,22 +34,17 @@ public class DateFormatFixture extends SlimFixture {
     }
 
     public String formatTimestamp(long timestamp) {
-        return formatTimestampAs(timestamp, dateFormat);
+        return formatTimestamp(getConfiguredDateFormat(), timestamp);
     }
 
     public String formatTimestampAs(long timestamp, String dateFormat) {
-        SimpleDateFormat sdf = getDateFormat(dateFormat);
-        if(!timestampHasMilliseconds) {
-            timestamp = timestamp * 1000L;
-        }
-
-        Date date = new Date(timestamp);
-        return sdf.format(date);
+        DateFormat sdf = getDateFormat(dateFormat);
+        return formatTimestamp(sdf, timestamp);
     }
 
     public String formatDateAs(String date, String newFormat) {
         Date parsedDate = parseDate(date);
-        SimpleDateFormat targetFormat = getDateFormat(newFormat);
+        DateFormat targetFormat = getDateFormat(newFormat);
         return targetFormat.format(parsedDate);
     }
 
@@ -59,6 +55,15 @@ public class DateFormatFixture extends SlimFixture {
             timeStamp = timeStamp / 1000L;
         }
         return timeStamp;
+    }
+
+    protected String formatTimestamp(DateFormat sdf, long timestamp) {
+        if(!timestampHasMilliseconds) {
+            timestamp = timestamp * 1000L;
+        }
+
+        Date date = new Date(timestamp);
+        return sdf.format(date);
     }
 
     protected Date parseDate(String date) {
