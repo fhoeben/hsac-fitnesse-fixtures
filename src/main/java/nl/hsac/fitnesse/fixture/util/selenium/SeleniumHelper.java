@@ -748,6 +748,18 @@ public class SeleniumHelper {
         return (String) executeJavascript(ALL_DIRECT_TEXT_CONTENT, element);
     }
 
+
+    /**
+     * Sets value of input field of type 'date'.
+     * Entering a value using sendKeys requires you to know what format the browser's OS is using for dates,
+     * this method prevents that problem by setting the input's value directly.
+     * @param element id or name of input field to set.
+     * @param value value to set, must be in format yyyy-mm-dd.
+     */
+    public void fillDateInput(WebElement element, String value) {
+        executeJavascript("arguments[0].value = arguments[1]", element, value);
+    }
+
     /**
      * Sets value of hidden input field.
      * @param idOrName id or name of input field to set.

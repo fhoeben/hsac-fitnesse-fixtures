@@ -1,0 +1,36 @@
+---
+Test
+---
+This test ensures that we can enter a value for input of type 'date'.
+
+We use a mock server running to serve the HTML defined in this page.
+
+
+!define HTML { {{{
+<html lang="nl-NL">
+<body>
+<label for="dateField">Datum</label>
+<input type="date" id="dateField">
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script    |browser test                        |
+|open      |$url                                |
+|check     |value of  |id=dateField|!--!        |
+|enter date|2018-09-27|as          |id=dateField|
+|check     |value of  |id=dateField|2018-09-27  |
+|enter date|2018-10-01|as          |Datum       |
+|check     |value of  |id=dateField|2018-10-01  |
+|enter date|2017-01-31|as          |id=dateField|
+|check     |value of  |id=dateField|2017-01-31  |
+
+|script|mock xml server setup|
+|stop                        |
+
+
+http://localhost:9090/HsacAcceptanceTests.SlimTests.BrowserTest.EnterDateField
