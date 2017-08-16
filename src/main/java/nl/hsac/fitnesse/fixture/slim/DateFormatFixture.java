@@ -56,6 +56,16 @@ public class DateFormatFixture extends SlimFixture {
 
     public long timestampForDate(String date) {
         Date parsedDate = parseDate(date);
+        return timestampForDate(parsedDate);
+    }
+
+    public long timestampForDateAs(String date, String dateFormat) {
+        SimpleDateFormat df = getDateFormat(dateFormat);
+        Date parsedDate = parseDate(df, date);
+        return timestampForDate(parsedDate);
+    }
+
+    protected long timestampForDate(Date parsedDate) {
         long timeStamp = parsedDate.getTime();
         if (!timestampHasMilliseconds) {
             timeStamp = timeStamp / 1000L;
@@ -64,7 +74,7 @@ public class DateFormatFixture extends SlimFixture {
     }
 
     protected String formatTimestamp(DateFormat sdf, long timestamp) {
-        if(!timestampHasMilliseconds) {
+        if (!timestampHasMilliseconds) {
             timestamp = timestamp * 1000L;
         }
 

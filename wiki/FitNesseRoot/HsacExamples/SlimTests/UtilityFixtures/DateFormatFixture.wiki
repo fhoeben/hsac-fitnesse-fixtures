@@ -59,10 +59,9 @@ By default a library will use system default date format and timezone.
 Example usage of date formatting methods from a string fixture script table:
 
 |script |string fixture                                  |
-|$stamp=|timestamp for date|${date}                      |
+|$stamp=|timestamp for date|${date}|as|dd-MM-yyyy        |
 |show   |format timestamp  |$stamp                       |
-|show   |format timestamp  |$stamp|as|yyyy/MM/dd HH:mm:ss|
-|check  |format timestamp  |$stamp|as|dd-MM-yyyy |${date}|
+|check  |format timestamp  |$stamp |as|dd-MM-yyyy|${date}|
 
 But we can also configure the value used for format (leaving time zone alone).
 
@@ -71,8 +70,8 @@ But we can also configure the value used for format (leaving time zone alone).
 
 Now the calls to the formatting methods behave differently:
 
-|script |string fixture                                  |
-|check  |format timestamp  |$stamp|${date}               |
+|script|string fixture                 |
+|check |format timestamp|$stamp|${date}|
 
 But we can also configure the values used for both format and time zone.
 
@@ -81,7 +80,7 @@ But we can also configure the values used for both format and time zone.
 
 Now the calls to the formatting methods behave differently again (the date might change depending on the default system locale used to generate the timestamp):
 
-|script |string fixture                                  |
-|show   |format timestamp  |$stamp|as|yyyy/MM/dd HH:mm:ss|
-|show   |format timestamp  |$stamp                       |
+|script|string fixture                                |
+|show  |format timestamp|$stamp|as|yyyy/MM/dd HH:mm:ss|
+|show  |format timestamp|$stamp                       |
 
