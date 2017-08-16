@@ -43,13 +43,13 @@ public class DateFormatFixture extends SlimFixture {
         }
 
         Date date = new Date(timestamp);
-        SimpleDateFormat sdf = getSimpleDateFormat(dateFormat);
+        DateFormat sdf = getDateFormat(dateFormat);
         return sdf.format(date);
     }
 
     public String formatDateAs(String date, String newFormat) {
-        SimpleDateFormat sdf = getSimpleDateFormat(dateFormat);
-        SimpleDateFormat targetFormat = getSimpleDateFormat(newFormat);
+        DateFormat sdf = getConfiguredDateFormat();
+        DateFormat targetFormat = getDateFormat(newFormat);
         String formattedDate;
         try {
             formattedDate = targetFormat.format(sdf.parse(date));
@@ -61,7 +61,7 @@ public class DateFormatFixture extends SlimFixture {
 
     public long timestampForDate(String date) {
         long timeStamp;
-        SimpleDateFormat sdf = getSimpleDateFormat(dateFormat);
+        DateFormat sdf = getConfiguredDateFormat();
         try {
             timeStamp = sdf.parse(date).getTime();
             if (!timestampHasMilliseconds) {
@@ -73,7 +73,11 @@ public class DateFormatFixture extends SlimFixture {
         return timeStamp;
     }
 
-    private SimpleDateFormat getSimpleDateFormat(String dateFormat) {
+    protected DateFormat getConfiguredDateFormat() {
+        return getDateFormat(dateFormat);
+    }
+
+    protected DateFormat getDateFormat(String dateFormat) {
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
         sdf.setTimeZone(timezone);
         return sdf;
