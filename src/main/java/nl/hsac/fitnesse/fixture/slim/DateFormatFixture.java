@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,9 +11,15 @@ import java.util.TimeZone;
  */
 
 public class DateFormatFixture extends SlimFixture {
-    private String dateFormat = "dd-MM-yyyy";
-    private TimeZone timezone = TimeZone.getTimeZone("GMT+1");
+    private String dateFormat = ((SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT)).toPattern();
+    private TimeZone timezone = TimeZone.getDefault();
     private boolean timestampHasMilliseconds = true;
+
+    public DateFormatFixture() {}
+    public DateFormatFixture(String dateformat, String timezone) {
+        setDateFormat(dateformat);
+        setTimezone(timezone);
+    }
 
     public void setDateFormat(String df) {
         dateFormat = df;
@@ -36,16 +43,13 @@ public class DateFormatFixture extends SlimFixture {
         }
 
         Date date = new Date(timestamp);
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
-        sdf.setTimeZone(timezone);
+        SimpleDateFormat sdf = getSimpleDateFormat(dateFormat);
         return sdf.format(date);
     }
 
     public String formatDateAs(String date, String newFormat) {
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
-        sdf.setTimeZone(timezone);
-        SimpleDateFormat targetFormat = new SimpleDateFormat(newFormat);
-        targetFormat.setTimeZone(timezone);
+        SimpleDateFormat sdf = getSimpleDateFormat(dateFormat);
+        SimpleDateFormat targetFormat = getSimpleDateFormat(newFormat);
         String formattedDate;
         try {
             formattedDate = targetFormat.format(sdf.parse(date));
@@ -57,8 +61,7 @@ public class DateFormatFixture extends SlimFixture {
 
     public long timestampForDate(String date) {
         long timeStamp;
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
-        sdf.setTimeZone(timezone);
+        SimpleDateFormat sdf = getSimpleDateFormat(dateFormat);
         try {
             timeStamp = sdf.parse(date).getTime();
             if (!timestampHasMilliseconds) {
@@ -68,6 +71,12 @@ public class DateFormatFixture extends SlimFixture {
             throw new SlimFixtureException(false, "Could not parse " + date + " using format: " + dateFormat, e);
         }
         return timeStamp;
+    }
+
+    private SimpleDateFormat getSimpleDateFormat(String dateFormat) {
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+        sdf.setTimeZone(timezone);
+        return sdf;
     }
 }
 
