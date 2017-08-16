@@ -9,13 +9,15 @@ import java.util.TimeZone;
 /**
  * Fixture that helps converting dates to and from various formats. Intended to be used as a utility fixture i.e. as library
  */
-
 public class DateFormatFixture extends SlimFixture {
-    private String dateFormat = ((SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT)).toPattern();
-    private TimeZone timezone = TimeZone.getDefault();
+    private String dateFormat;
+    private TimeZone timezone;
     private boolean timestampHasMilliseconds = true;
 
-    public DateFormatFixture() {}
+    public DateFormatFixture() {
+        this(getDefaultFormat(), getDefaultTimeZone());
+    }
+
     public DateFormatFixture(String dateformat, String timezone) {
         setDateFormat(dateformat);
         setTimezone(timezone);
@@ -88,6 +90,14 @@ public class DateFormatFixture extends SlimFixture {
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
         sdf.setTimeZone(timezone);
         return sdf;
+    }
+
+    protected static String getDefaultFormat() {
+        return ((SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT)).toPattern();
+    }
+
+    protected static String getDefaultTimeZone() {
+        return TimeZone.getDefault().getID();
     }
 }
 
