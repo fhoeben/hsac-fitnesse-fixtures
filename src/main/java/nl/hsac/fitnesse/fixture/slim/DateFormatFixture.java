@@ -1,6 +1,5 @@
 package nl.hsac.fitnesse.fixture.slim;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,46 +37,49 @@ public class DateFormatFixture extends SlimFixture {
     }
 
     public String formatTimestampAs(long timestamp, String dateFormat) {
+        SimpleDateFormat sdf = getDateFormat(dateFormat);
         if(!timestampHasMilliseconds) {
             timestamp = timestamp * 1000L;
         }
 
         Date date = new Date(timestamp);
-        DateFormat sdf = getDateFormat(dateFormat);
         return sdf.format(date);
     }
 
     public String formatDateAs(String date, String newFormat) {
-        DateFormat sdf = getConfiguredDateFormat();
-        DateFormat targetFormat = getDateFormat(newFormat);
-        String formattedDate;
-        try {
-            formattedDate = targetFormat.format(sdf.parse(date));
-        } catch (ParseException e) {
-            throw new SlimFixtureException(false, "Could not parse " + date + " using format: " + dateFormat, e);
-        }
-        return formattedDate;
+        Date parsedDate = parseDate(date);
+        SimpleDateFormat targetFormat = getDateFormat(newFormat);
+        return targetFormat.format(parsedDate);
     }
 
     public long timestampForDate(String date) {
-        long timeStamp;
-        DateFormat sdf = getConfiguredDateFormat();
-        try {
-            timeStamp = sdf.parse(date).getTime();
-            if (!timestampHasMilliseconds) {
-                timeStamp = timeStamp / 1000L;
-            }
-        } catch (ParseException e) {
-            throw new SlimFixtureException(false, "Could not parse " + date + " using format: " + dateFormat, e);
+        Date parsedDate = parseDate(date);
+        long timeStamp = parsedDate.getTime();
+        if (!timestampHasMilliseconds) {
+            timeStamp = timeStamp / 1000L;
         }
         return timeStamp;
     }
 
-    protected DateFormat getConfiguredDateFormat() {
+    protected Date parseDate(String date) {
+        SimpleDateFormat sdf = getConfiguredDateFormat();
+        return parseDate(sdf, date);
+    }
+
+    protected Date parseDate(SimpleDateFormat sdf, String date) {
+        try {
+            return sdf.parse(date);
+        } catch (ParseException e) {
+            String pattern = sdf.toPattern();
+            throw new SlimFixtureException(false, "Could not parse " + date + " using format: " + pattern, e);
+        }
+    }
+
+    protected SimpleDateFormat getConfiguredDateFormat() {
         return getDateFormat(dateFormat);
     }
 
-    protected DateFormat getDateFormat(String dateFormat) {
+    protected SimpleDateFormat getDateFormat(String dateFormat) {
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
         sdf.setTimeZone(timezone);
         return sdf;
