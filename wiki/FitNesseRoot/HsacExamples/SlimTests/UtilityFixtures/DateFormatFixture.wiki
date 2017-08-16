@@ -1,0 +1,86 @@
+---
+Help: Fixture to help converting dates to and from various formats
+Test
+---
+!2 Date Format Fixture
+!3 Features:
+ * Format dates to timestamps (seconds/millis after epoch)
+ * Reformat dates/times to a different format
+ * Display timestamps as formatted dates
+
+When the fixture is called without arguments, the date format is the system locale default short format and can be changed by using ''set date format'' followed by the desired format.
+Input dates are expected to be in the default or specified input format.
+To toggle between seconds/milliseconds after epoch, use ''timestamp has milliseconds'' followed by the desired boolean value (default: true)
+Time zone can be set using ''set timezone'' and -if no argument is given- defaults to the system default time zone.
+
+This fixture is intended to be used as a library. (See below)
+
+!3 Examples
+
+!define dateTime {10-05-2001 12:13:14}
+!define date {!today (dd-MM-yyyy)}
+
+!4 Instantiate with system default date format and timezone
+
+|script           |date format fixture                                   |
+|#Get a timestamp for a given date and convert it back to formatted dates|
+|set date format  |dd-MM-yyyy                                            |
+|$stamp=          |timestamp for date  |${date}                          |
+|show             |format timestamp    |$stamp                           |
+|show             |format timestamp    |$stamp |as |yyyy/MM/dd HH:mm:ss  |
+|check            |format timestamp    |$stamp |as |dd-MM-yyyy  |${date} |
+
+!4 Instantiate the fixture with a given format and time zone
+
+!note One could also specify only one constructor parameter, in which case the timezone remains the system's default.
+
+|script                    |date format fixture|dd-MM-yyyy HH:mm:ss|GMT+1                                                 |
+|timestamp has milliseconds|false                                                                                         |
+|show                      |format date        |${dateTime}        |as|yyyy/MM/dd HH:mm                                   |
+|$stamp=                   |timestamp for date |${dateTime}                                                               |
+|show                      |format timestamp   |$stamp                                                                    |
+|check                     |format timestamp   |$stamp             |as|dd-MM-yyyy HH:mm:ss  |${dateTime}                  |
+|#Change the time zone, adding one hour to the expected outcome                                                           |
+|set timezone              |GMT+2                                                                                         |
+|check                     |format timestamp   |$stamp             |as|dd-MM-yyyy HH:mm:ss z|10-05-2001 13:13:14 GMT+02:00|
+|#Change input format and convert to a different format                                                                   |
+|set date format           |MM/dd/yyyy                                                                                    |
+|check                     |format date        |11/14/2016         |as|dd-MM-yyyy           |14-11-2016                   |
+
+!4 Use as a library fixture from any other fixture table
+
+When we use this fixture as a library we can call date format methods from any script table.
+
+By default a library will use system default date format and timezone.
+
+|library            |
+|date format fixture|
+
+Example usage of date formatting methods from a string fixture script table:
+
+|script |string fixture                                  |
+|$stamp=|timestamp for date|${date}|as|dd-MM-yyyy        |
+|show   |format timestamp  |$stamp                       |
+|check  |format timestamp  |$stamp |as|dd-MM-yyyy|${date}|
+
+But we can also configure the value used for format (leaving time zone alone).
+
+|library                       |
+|date format fixture|dd-MM-yyyy|
+
+Now the calls to the formatting methods behave differently:
+
+|script|string fixture                 |
+|check |format timestamp|$stamp|${date}|
+
+But we can also configure the values used for both format and time zone.
+
+|library                             |
+|date format fixture|dd-MM-yyyy|GMT+1|
+
+Now the calls to the formatting methods behave differently again (the date might change depending on the default system locale used to generate the timestamp):
+
+|script|string fixture                                |
+|show  |format timestamp|$stamp|as|yyyy/MM/dd HH:mm:ss|
+|show  |format timestamp|$stamp                       |
+
