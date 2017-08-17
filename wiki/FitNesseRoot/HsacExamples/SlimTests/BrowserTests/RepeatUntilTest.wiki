@@ -1,0 +1,14 @@
+---
+Test
+---
+|script        |browser test                                                                        |
+|repeat at most|10                           |times                                                 |
+|open          |http://tweakers.net                                                                 |
+|click         |geef toestemming                                                                    |
+|click         |xpath=//*[@id="news"]/h2[1]/a|until value of|xpath=//*[@id="news"]/h2[1]/a|is|Nieuws|
+
+
+
+|comment                                                                                                          |
+|click                 |Reviews                         |until value of|xpath=//*[@id="navMenu"]/li[2]/a|is|Nieuws|
+|refresh until value of|xpath=//*[@id="navMenu"]/li[2]/a|is            |Nieuws                                    |

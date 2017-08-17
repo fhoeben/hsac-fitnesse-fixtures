@@ -78,9 +78,8 @@ public class BrowserTest extends SlimFixture {
                 }
             }
         };
-        if (implicitFindInFrames) {
-            condition = getSeleniumHelper().conditionForAllFrames(condition);
-        }
+        condition = wrapConditionForFramesIfNeeded(condition);
+
         Object result;
         switch (waitUntil.value()) {
             case STOP_TEST:
@@ -2168,6 +2167,63 @@ public class BrowserTest extends SlimFixture {
             result = cookie.getValue();
         }
         return result;
+    }
+
+    public boolean refreshUntilValueOfIs(String place, String expectedValue) {
+        return repeatUntil(new RepeatUntilValueIsCompletion(place, expectedValue) {
+            @Override
+            public void repeat() {
+                refresh();
+            }
+        });
+    }
+
+    public boolean clickUntilValueOfIs(String clickPlace, String checkPlace, String expectedValue) {
+        // first ensure there is something to click (using normal timeout)
+        clickAndStopIfNotFound(clickPlace);
+
+        boolean valueFound = repeatUntil(new RepeatUntilValueIsCompletion(checkPlace, expectedValue) {
+            @Override
+            public void repeat() {
+                clickAndStopIfNotFound(clickPlace);
+            }
+        });
+        return valueFound;
+    }
+
+    private void clickAndStopIfNotFound(String clickPlace) {
+        ExpectedCondition<Object> condition = webDriver -> click(clickPlace);
+        condition = wrapConditionForFramesIfNeeded(condition);
+        waitUntil(condition);
+    }
+
+    private ExpectedCondition<Object> wrapConditionForFramesIfNeeded(ExpectedCondition<Object> condition) {
+        if (implicitFindInFrames) {
+            condition = getSeleniumHelper().conditionForAllFrames(condition);
+        }
+        return condition;
+    }
+
+    protected abstract class RepeatUntilValueIsCompletion implements RepeatCompletion {
+        private final String place;
+        private final String expectedValue;
+
+        protected RepeatUntilValueIsCompletion(String place, String expectedValue) {
+            this.place = place;
+            this.expectedValue = expectedValue;
+        }
+
+        @Override
+        public boolean isFinished() {
+            boolean match;
+            String actual = valueOf(place);
+            if (expectedValue == null) {
+                match = actual == null;
+            } else {
+                match = expectedValue.equals(actual);
+            }
+            return match;
+        }
     }
 
     protected Object waitForJavascriptCallback(String statement, Object... parameters) {
