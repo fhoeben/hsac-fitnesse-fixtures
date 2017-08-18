@@ -15,8 +15,23 @@ We use a mock server running to serve the HTML defined in this page.
 </html>}}} }
 
 
+!define HTML2 { {{{
+<html>
+<body>
+<input type="date" id="dateField" name="dateF" value="2017-10-09">
+<script type="text/javascript">
+    window.onload = function() {
+		setTimeout(function() { document.getElementById("dateField").setAttribute("name", "dateField"); }, 2000);
+    }
+</script>
+</body>
+</html>}}} }
+
+
+
 |script      |mock xml server setup|
 |add response|${HTML}              |
+|add response|${HTML2}             |
 |$url=       |get mock server url  |
 
 |script    |browser test                        |
@@ -29,8 +44,13 @@ We use a mock server running to serve the HTML defined in this page.
 |enter date|2017-01-31|as          |id=dateField|
 |check     |value of  |id=dateField|2017-01-31  |
 
+Now check that we wait:
+|script    |browser test                          |
+|open      |$url                                  |
+|enter date|2018-09-08|as          |name=dateField|
+|check     |value of  |id=dateField|2018-09-08    |
+
 |script|mock xml server setup|
 |stop                        |
 
 
-http://localhost:9090/HsacAcceptanceTests.SlimTests.BrowserTest.EnterDateField
