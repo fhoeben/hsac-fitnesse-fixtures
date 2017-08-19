@@ -2188,15 +2188,17 @@ public class BrowserTest extends SlimFixture {
     }
 
     public boolean clickUntilValueOfIs(String clickPlace, String checkPlace, String expectedValue) {
-        String place = cleanupValue(clickPlace);
-        ExpectedCondition<Object> condition = wrapConditionForFramesIfNeeded(webDriver -> click(place));
-        return repeatUntil(getClickUntilCompletion(checkPlace, expectedValue, condition));
+        return repeatUntil(getClickUntilValueIs(clickPlace, checkPlace, expectedValue));
     }
 
     public boolean clickUntilValueOfIsNot(String clickPlace, String checkPlace, String expectedValue) {
+        return repeatUntilNot(getClickUntilValueIs(clickPlace, checkPlace, expectedValue));
+    }
+
+    protected RepeatUntilValueIsCompletion getClickUntilValueIs(String clickPlace, String checkPlace, String expectedValue) {
         String place = cleanupValue(clickPlace);
         ExpectedCondition<Object> condition = wrapConditionForFramesIfNeeded(webDriver -> click(place));
-        return repeatUntilNot(getClickUntilCompletion(checkPlace, expectedValue, condition));
+        return getClickUntilCompletion(checkPlace, expectedValue, condition);
     }
 
     protected RepeatUntilValueIsCompletion getClickUntilCompletion(String checkPlace, String expectedValue, ExpectedCondition<Object> condition) {
