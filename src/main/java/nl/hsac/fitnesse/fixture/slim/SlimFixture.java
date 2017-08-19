@@ -157,9 +157,13 @@ public class SlimFixture  implements InteractionAwareFixture {
         return result;
     }
 
+    protected boolean repeatUntilNot(RepeatCompletion repeat) {
+        return repeatUntil(new Negate(repeat));
+    }
+
     /**
-     * Interface to repeat a call until a condition is met.
-     */
+         * Interface to repeat a call until a condition is met.
+         */
     public interface RepeatCompletion {
         /**
          * @return true if no more repeats are needed.

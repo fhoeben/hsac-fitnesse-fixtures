@@ -2175,7 +2175,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     public boolean refreshUntilValueOfIsNot(String place, String expectedValue) {
-        return repeatUntil(new Negate(getRefreshUntilCondition(place, expectedValue)));
+        return repeatUntilNot(getRefreshUntilCondition(place, expectedValue));
     }
 
     protected RepeatUntilValueIsCompletion getRefreshUntilCondition(String place, String expectedValue) {
@@ -2196,7 +2196,7 @@ public class BrowserTest extends SlimFixture {
     public boolean clickUntilValueOfIsNot(String clickPlace, String checkPlace, String expectedValue) {
         String place = cleanupValue(clickPlace);
         ExpectedCondition<Object> condition = wrapConditionForFramesIfNeeded(webDriver -> click(place));
-        return repeatUntil(new Negate(getClickUntilCompletion(checkPlace, expectedValue, condition)));
+        return repeatUntilNot(getClickUntilCompletion(checkPlace, expectedValue, condition));
     }
 
     protected RepeatUntilValueIsCompletion getClickUntilCompletion(String checkPlace, String expectedValue, ExpectedCondition<Object> condition) {
@@ -2227,7 +2227,8 @@ public class BrowserTest extends SlimFixture {
         @Override
         public boolean isFinished() {
             ExpectedCondition<Boolean> condition = wrapConditionForFramesIfNeeded(webDriver -> checkValueImpl());
-            return condition.apply(driver());
+            Boolean valueFound = condition.apply(driver());
+            return valueFound != null && valueFound;
         }
 
         protected boolean checkValueImpl() {
