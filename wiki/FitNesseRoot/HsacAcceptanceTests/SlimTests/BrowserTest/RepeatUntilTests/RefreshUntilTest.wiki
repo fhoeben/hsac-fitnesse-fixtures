@@ -1,0 +1,62 @@
+This test ensures that we can keep refreshing a page until a condition is met.
+
+We use a mock server running to serve the HTML defined in this page.
+
+
+!define HTML { {{{
+<html>
+<body>
+<label for="field">Counter</label>
+<input id="field" value="1">
+</body>
+</html>}}} }
+
+
+!define HTML2 { {{{
+<html>
+<body>
+<label for="field">Counter</label>
+<input id="field" value="2">
+</body>
+</html>}}} }
+
+!define HTML3 { {{{
+<html>
+<body>
+<label for="field">Counter</label>
+<input id="field" value="3">
+</body>
+</html>}}} }
+
+
+!define HTML4 { {{{
+<html>
+<body>
+<label for="field">Counter</label>
+<input id="field" value="4">
+</body>
+</html>}}} }
+
+!define HTML5 { {{{
+<html>
+<body>
+<label for="field">Counter</label>
+<input id="field" value="5">
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|add response|${HTML2}             |
+|add response|${HTML3}             |
+|add response|${HTML4}             |
+|add response|${HTML5}             |
+|$url=       |get mock server url  |
+
+|script                |browser test      |
+|open                  |$url              |
+|repeat at most        |10          |times|
+|refresh until value of|Counter     |is |4|
+|check                 |repeat count|3    |
+
