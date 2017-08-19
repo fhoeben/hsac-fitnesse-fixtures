@@ -1,0 +1,41 @@
+This test ensures that we can keep clicking until a condition is NOT met.
+
+We use a mock server running to serve the HTML defined in this page.
+
+
+!define HTML { {{{
+<html>
+<body>
+<a href="FitNesseMock/2.html">link</a>
+<label for="field">Counter</label>
+<input id="field" value="1">
+</body>
+</html>}}} }
+
+
+!define HTML3 { {{{
+<html>
+<body>
+<a href="FitNesseMock/4.html">link</a>
+<label for="field">Counter</label>
+<input id="field" value="3">
+</body>
+</html>}}} }
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|add response|${HTML}              |
+|add response|${HTML3}             |
+|add response|${HTML}              |
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script        |browser test                                |
+|open          |$url                                        |
+|repeat at most|10          |times                          |
+|click         |link        |until value of|Counter|is not|1|
+|check         |repeat count|2                              |
+|check         |value of    |Counter       |3               |
+
+|script|mock xml server setup|
+|stop                        |

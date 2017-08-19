@@ -171,6 +171,31 @@ public class SlimFixture  implements InteractionAwareFixture {
          */
         void repeat();
     }
+
+    /**
+     * RepeatCompletion which negates the completion condition of another completion, but performs same action.
+     */
+    public class Negate implements RepeatCompletion {
+        private final RepeatCompletion nested;
+
+        /**
+         * Creates new with same action, but the exact opposite completion condition.
+         * @param nested completion whose #isFinished() will be negated.
+         */
+        public Negate(RepeatCompletion nested) {
+            this.nested = nested;
+        }
+
+        @Override
+        public boolean isFinished() {
+            return !nested.isFinished();
+        }
+
+        @Override
+        public void repeat() {
+            nested.repeat();
+        }
+    }
     // Polling
 
     /**

@@ -2171,24 +2171,41 @@ public class BrowserTest extends SlimFixture {
     }
 
     public boolean refreshUntilValueOfIs(String place, String expectedValue) {
-        return repeatUntil(new RepeatUntilValueIsCompletion(place, expectedValue) {
+        return repeatUntil(getRefreshUntilCondition(place, expectedValue));
+    }
+
+    public boolean refreshUntilValueOfIsNot(String place, String expectedValue) {
+        return repeatUntil(new Negate(getRefreshUntilCondition(place, expectedValue)));
+    }
+
+    protected RepeatUntilValueIsCompletion getRefreshUntilCondition(String place, String expectedValue) {
+        return new RepeatUntilValueIsCompletion(place, expectedValue) {
             @Override
             public void repeat() {
                 refresh();
             }
-        });
+        };
     }
 
     public boolean clickUntilValueOfIs(String clickPlace, String checkPlace, String expectedValue) {
         String place = cleanupValue(clickPlace);
         ExpectedCondition<Object> condition = wrapConditionForFramesIfNeeded(webDriver -> click(place));
-        boolean valueFound = repeatUntil(new RepeatUntilValueIsCompletion(checkPlace, expectedValue) {
+        return repeatUntil(getClickUntilCompletion(checkPlace, expectedValue, condition));
+    }
+
+    public boolean clickUntilValueOfIsNot(String clickPlace, String checkPlace, String expectedValue) {
+        String place = cleanupValue(clickPlace);
+        ExpectedCondition<Object> condition = wrapConditionForFramesIfNeeded(webDriver -> click(place));
+        return repeatUntil(new Negate(getClickUntilCompletion(checkPlace, expectedValue, condition)));
+    }
+
+    protected RepeatUntilValueIsCompletion getClickUntilCompletion(String checkPlace, String expectedValue, ExpectedCondition<Object> condition) {
+        return new RepeatUntilValueIsCompletion(checkPlace, expectedValue) {
             @Override
             public void repeat() {
                 waitUntil(condition);
             }
-        });
-        return valueFound;
+        };
     }
 
     protected <T> ExpectedCondition<T> wrapConditionForFramesIfNeeded(ExpectedCondition<T> condition) {
