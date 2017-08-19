@@ -2180,25 +2180,18 @@ public class BrowserTest extends SlimFixture {
     }
 
     public boolean clickUntilValueOfIs(String clickPlace, String checkPlace, String expectedValue) {
-        // first ensure there is something to click (using normal timeout)
-        clickAndStopIfNotFound(clickPlace);
-
+        String place = cleanupValue(clickPlace);
+        ExpectedCondition<Object> condition = wrapConditionForFramesIfNeeded(webDriver -> click(place));
         boolean valueFound = repeatUntil(new RepeatUntilValueIsCompletion(checkPlace, expectedValue) {
             @Override
             public void repeat() {
-                clickAndStopIfNotFound(clickPlace);
+                waitUntil(condition);
             }
         });
         return valueFound;
     }
 
-    private void clickAndStopIfNotFound(String clickPlace) {
-        ExpectedCondition<Object> condition = webDriver -> click(clickPlace);
-        condition = wrapConditionForFramesIfNeeded(condition);
-        waitUntil(condition);
-    }
-
-    private ExpectedCondition<Object> wrapConditionForFramesIfNeeded(ExpectedCondition<Object> condition) {
+    protected <T> ExpectedCondition<T> wrapConditionForFramesIfNeeded(ExpectedCondition<T> condition) {
         if (implicitFindInFrames) {
             condition = getSeleniumHelper().conditionForAllFrames(condition);
         }
