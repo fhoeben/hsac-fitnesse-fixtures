@@ -60,3 +60,6 @@ We use a mock server running to serve the HTML defined in this page.
 |refresh until value of|Counter     |is |4|
 |check                 |repeat count|3    |
 
+|script|mock xml server setup|
+|stop                        |
+

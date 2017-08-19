@@ -65,3 +65,5 @@ We use a mock server running to serve the HTML defined in this page.
 |click         |link        |until value of|Counter|is|3|
 |check         |repeat count|2                          |
 
+|script|mock xml server setup|
+|stop                        |
