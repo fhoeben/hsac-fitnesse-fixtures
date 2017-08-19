@@ -2226,6 +2226,11 @@ public class BrowserTest extends SlimFixture {
 
         @Override
         public boolean isFinished() {
+            ExpectedCondition<Boolean> condition = wrapConditionForFramesIfNeeded(webDriver -> checkValueImpl());
+            return condition.apply(driver());
+        }
+
+        protected boolean checkValueImpl() {
             boolean match;
             String actual = valueOf(place);
             if (expectedValue == null) {
