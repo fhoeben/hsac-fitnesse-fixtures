@@ -2171,14 +2171,14 @@ public class BrowserTest extends SlimFixture {
     }
 
     public boolean refreshUntilValueOfIs(String place, String expectedValue) {
-        return repeatUntil(getRefreshUntilCondition(place, expectedValue));
+        return repeatUntil(getRefreshUntilValueIs(place, expectedValue));
     }
 
     public boolean refreshUntilValueOfIsNot(String place, String expectedValue) {
-        return repeatUntilNot(getRefreshUntilCondition(place, expectedValue));
+        return repeatUntilNot(getRefreshUntilValueIs(place, expectedValue));
     }
 
-    protected RepeatUntilValueIsCompletion getRefreshUntilCondition(String place, String expectedValue) {
+    protected RepeatUntilValueIsCompletion getRefreshUntilValueIs(String place, String expectedValue) {
         return new RepeatUntilValueIsCompletion(place, expectedValue) {
             @Override
             public void repeat() {
