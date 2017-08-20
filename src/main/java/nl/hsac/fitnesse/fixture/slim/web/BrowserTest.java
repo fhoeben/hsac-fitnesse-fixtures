@@ -2223,7 +2223,7 @@ public class BrowserTest extends SlimFixture {
 
         protected RepeatUntilValueIsCompletion(String place, String expectedValue) {
             this.place = place;
-            this.expectedValue = expectedValue;
+            this.expectedValue = cleanExpectedValue(expectedValue);
         }
 
         @Override
