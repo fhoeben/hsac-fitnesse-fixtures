@@ -2197,11 +2197,11 @@ public class BrowserTest extends SlimFixture {
 
     protected RepeatUntilValueIsCompletion getClickUntilValueIs(String clickPlace, String checkPlace, String expectedValue) {
         String place = cleanupValue(clickPlace);
-        ExpectedCondition<Object> condition = wrapConditionForFramesIfNeeded(webDriver -> click(place));
-        return getClickUntilCompletion(checkPlace, expectedValue, condition);
+        return getClickUntilCompletion(place, checkPlace, expectedValue);
     }
 
-    protected RepeatUntilValueIsCompletion getClickUntilCompletion(String checkPlace, String expectedValue, ExpectedCondition<Object> condition) {
+    protected RepeatUntilValueIsCompletion getClickUntilCompletion(String place, String checkPlace, String expectedValue) {
+        ExpectedCondition<Object> condition = wrapConditionForFramesIfNeeded(webDriver -> click(place));
         return new RepeatUntilValueIsCompletion(checkPlace, expectedValue) {
             @Override
             public void repeat() {
