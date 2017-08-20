@@ -31,6 +31,7 @@ We use a mock server running to serve the HTML defined in this page.
 |script                |browser test          |
 |open                  |$url                  |
 |repeat at most        |10          |times    |
+|seconds before timeout|1                     |
 |refresh until value of|Counter     |is not |1|
 |check                 |repeat count|3        |
 |check                 |value of    |Counter|4|

@@ -30,12 +30,13 @@ We use a mock server running to serve the HTML defined in this page.
 |add response|${HTML}              |
 |$url=       |get mock server url  |
 
-|script        |browser test                                |
-|open          |$url                                        |
-|repeat at most|10          |times                          |
-|click         |link        |until value of|Counter|is not|1|
-|check         |repeat count|2                              |
-|check         |value of    |Counter       |3               |
+|script                |browser test                                |
+|open                  |$url                                        |
+|repeat at most        |10          |times                          |
+|seconds before timeout|1                                           |
+|click                 |link        |until value of|Counter|is not|1|
+|check                 |repeat count|2                              |
+|check                 |value of    |Counter       |3               |
 
 |script|mock xml server setup|
 |stop                        |

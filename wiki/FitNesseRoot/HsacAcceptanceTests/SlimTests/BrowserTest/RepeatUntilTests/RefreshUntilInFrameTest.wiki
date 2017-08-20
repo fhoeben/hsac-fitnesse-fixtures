@@ -22,8 +22,13 @@ We use a mock server running to serve the HTML defined in this page.
 !define HTML_FRAME1_2 { {{{
 <html>
 <body>
-<label for="field">Counter</label>
+<label id="label" for="field">Teller</label>
 <input id="field" value="1">
+<script type="text/javascript">
+    window.onload = function() {
+		setTimeout(function() { document.getElementById("label").innerHTML = "Counter"; }, 1500);
+    }
+</script>
 </body>
 </html>}}} }
 
@@ -35,6 +40,7 @@ We use a mock server running to serve the HTML defined in this page.
 
 |script                |browser test      |
 |open                  |$url/main         |
+|seconds before timeout|2                 |
 |repeat at most        |3           |times|
 |refresh until value of|Counter     |is |1|
 |check                 |repeat count|0    |
