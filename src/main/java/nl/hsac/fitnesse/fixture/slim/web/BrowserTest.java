@@ -773,46 +773,38 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected <T> T doInContainer(WebElement container, Supplier<T> action) {
-        SearchContext currentSearchContext = setSearchContextToContainer(container);
-        try {
-            return action.get();
-        } finally {
-            resetSearchContext(currentSearchContext);
+        T result;
+        if (container == null) {
+            result = action.get();
+        } else {
+            SearchContext currentSearchContext = getSeleniumHelper().getCurrentContext();
+            setSearchContextTo(container);
+            try {
+                result = action.get();
+            } finally {
+                setSearchContextTo(currentSearchContext);
+            }
         }
+        return result;
     }
 
     @WaitUntil
     public boolean setSearchContextTo(String container) {
-        WebElement containerElement = getContainerElement(container);
-        return setSearchContextTo(containerElement);
-    }
-
-    private boolean setSearchContextTo(WebElement containerElement) {
         boolean result = false;
+        WebElement containerElement = getContainerElement(container);
         if (containerElement != null) {
-            getSeleniumHelper().setCurrentContext(containerElement);
+            setSearchContextTo(containerElement);
             result = true;
         }
         return result;
     }
 
-    protected SearchContext setSearchContextToContainer(WebElement containerElement) {
-        SearchContext result = null;
-        SearchContext currentSearchContext = getSeleniumHelper().getCurrentContext();
-        if (setSearchContextTo(containerElement)) {
-            result = currentSearchContext;
-        }
-        return result;
+    protected void setSearchContextTo(SearchContext containerElement) {
+        getSeleniumHelper().setCurrentContext(containerElement);
     }
 
     public void clearSearchContext() {
         getSeleniumHelper().setCurrentContext(null);
-    }
-
-    protected void resetSearchContext(SearchContext currentSearchContext) {
-        if (currentSearchContext != null) {
-            getSeleniumHelper().setCurrentContext(currentSearchContext);
-        }
     }
 
     protected WebElement getContainerElement(String container) {
