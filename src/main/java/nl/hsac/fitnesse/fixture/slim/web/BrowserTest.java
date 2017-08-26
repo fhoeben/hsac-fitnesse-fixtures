@@ -1371,6 +1371,11 @@ public class BrowserTest extends SlimFixture {
         return getSeleniumHelper().findByXPath(xpathPattern, params);
     }
 
+    protected WebElement findByCss(String cssPattern, String... params) {
+        By by = getSeleniumHelper().byCss(cssPattern, params);
+        return findElement(by);
+    }
+
     protected WebElement findByJavascript(String script, Object... parameters) {
         By by = getSeleniumHelper().byJavascript(script, parameters);
         return findElement(by);
@@ -1571,7 +1576,22 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected WebElement getElementToCheckVisibility(String place) {
-        return getElementToClick(place);
+        WebElement result = null;
+        By by = getSeleniumHelper().placeToBy(place);
+        if (by != null) {
+            result = findElement(by);
+        } else {
+            result = findByXPath(".//text()[contains(normalized(.),'%s')]/..", place);
+            if (result == null || !result.isDisplayed()) {
+                result = getElementToSendValue(place);
+                if (result == null || !result.isDisplayed()) {
+                    if (("Submit".equals(place) || "Reset".equals(place))) {
+                        result = findByCss("input[type='%s']:not([value])", place.toLowerCase());
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     protected WebElement getElementToCheckVisibility(String place, String container) {
