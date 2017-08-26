@@ -1199,7 +1199,7 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOfInRowNumber(String requestedColumnName, int rowIndex) {
-        String columnXPath = String.format("(.//tr[boolean(td)])[%s]/td", rowIndex);
+        String columnXPath = String.format("(.//table[.//tr/th/descendant-or-self::text()[normalized(.)='%s']]//tr[boolean(td)])[%s]/td", requestedColumnName, rowIndex);
         return valueInRow(columnXPath, requestedColumnName);
     }
 

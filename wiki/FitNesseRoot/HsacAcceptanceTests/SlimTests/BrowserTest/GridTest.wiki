@@ -43,6 +43,7 @@ This test ensures we can find elements inside tables representing a grid where e
 |open                  |$url                                                                                       |
 |check                 |value of column number|1            |in row number|2           |Johnson                    |
 |check                 |value of              |Gender       |in row number|2           |Female                     |
+|check                 |value of              |Kind         |in row number|3           |Cat                        |
 |row exists where      |Birth date            |is           |02-12-1978                                            |
 |reject                |row exists where      |Birth date   |is           |03-12-1978                              |
 |check                 |value of              |Kind         |in row where |Name        |is   |Joey      |Dog       |
