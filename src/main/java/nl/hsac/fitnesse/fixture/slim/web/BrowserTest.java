@@ -1576,7 +1576,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected WebElement getElementToCheckVisibility(String place) {
-        WebElement result = null;
+        WebElement result;
         By by = getSeleniumHelper().placeToBy(place);
         if (by != null) {
             result = findElement(by);
