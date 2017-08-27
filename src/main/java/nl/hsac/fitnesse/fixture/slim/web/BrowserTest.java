@@ -1583,12 +1583,7 @@ public class BrowserTest extends SlimFixture {
         } else {
             result = findByXPath(".//text()[contains(normalized(.),'%s')]/..", place);
             if (result == null || !result.isDisplayed()) {
-                result = getElementToSendValue(place);
-                if (result == null || !result.isDisplayed()) {
-                    if (("Submit".equals(place) || "Reset".equals(place))) {
-                        result = findByCss("input[type='%s']:not([value])", place.toLowerCase());
-                    }
-                }
+                result = getElementToClick(place);
             }
         }
         return result;
