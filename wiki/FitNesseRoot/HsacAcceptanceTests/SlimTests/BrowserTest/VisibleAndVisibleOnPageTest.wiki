@@ -13,9 +13,11 @@ p {
 </style>
 </head>
 <body>
+<a style="text-transform:uppercase" href="">somewhere else</a>
 <div>A</div>
 <p>&nbsp</p>
 <div>B</div>
+<a style="text-transform:uppercase" href="">my link</a>
 </body>
 </html>}}} }
 
@@ -24,13 +26,15 @@ p {
 |add response|${HTML}              |
 |$url=       |get mock server url  |
 
-|script                |browser test        |
-|seconds before timeout|1                   |
-|open                  |$url                |
-|ensure                |is Visible        |A|
-|reject                |is Visible        |B|
-|ensure                |is Visible On Page|A|
-|ensure                |is Visible On Page|B|
+|script                |browser test           |
+|seconds before timeout|1                      |
+|open                  |$url                   |
+|ensure                |is Visible        |A   |
+|ensure                |is Visible        |ELSE|
+|reject                |is Visible        |B   |
+|ensure                |is Visible On Page|A   |
+|ensure                |is Visible On Page|B   |
+|ensure                |is Visible On Page|link|
 
 |script|mock xml server setup|
 |stop                        |
