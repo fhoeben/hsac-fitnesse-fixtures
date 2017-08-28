@@ -1194,7 +1194,7 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOfInRowNumber(String requestedColumnName, int rowIndex) {
-        String columnXPath = String.format("(.//table[.//tr/th/descendant-or-self::text()[normalized(.)='%s']]//tr[boolean(td)])[%s]/td", requestedColumnName, rowIndex);
+        String columnXPath = String.format("((.//table[.//tr/th/descendant-or-self::text()[normalized(.)='%s']])[last()]//tr[boolean(td)])[%s]/td", requestedColumnName, rowIndex);
         return valueInRow(columnXPath, requestedColumnName);
     }
 
@@ -1301,7 +1301,7 @@ public class BrowserTest extends SlimFixture {
      */
     protected String getXPathForColumnInRowByValueInOtherColumn(String columnName, String value) {
         String selectIndex = getXPathForColumnIndex(columnName);
-        return String.format(".//tr[td[%s]/descendant-or-self::text()[normalized(.)='%s']]/td", selectIndex, value);
+        return String.format("(.//table[.//tr/th/descendant-or-self::text()[normalized(.)='%3$s']])[last()]//tr[td[%1$s]/descendant-or-self::text()[normalized(.)='%2$s']]/td", selectIndex, value, columnName);
     }
 
     /**
