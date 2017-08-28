@@ -773,19 +773,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected <T> T doInContainer(WebElement container, Supplier<T> action) {
-        T result;
-        if (container == null) {
-            result = action.get();
-        } else {
-            SearchContext currentSearchContext = getSeleniumHelper().getCurrentContext();
-            setSearchContextTo(container);
-            try {
-                result = action.get();
-            } finally {
-                setSearchContextTo(currentSearchContext);
-            }
-        }
-        return result;
+        return getSeleniumHelper().doInContext(container, action);
     }
 
     @WaitUntil

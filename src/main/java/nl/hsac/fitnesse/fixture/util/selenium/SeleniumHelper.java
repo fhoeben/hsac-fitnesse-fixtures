@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1059,6 +1060,29 @@ public class SeleniumHelper {
 
     public SearchContext getCurrentContext() {
         return currentContext != null? currentContext : driver();
+    }
+
+    /**
+     * Perform action/supplier in context.
+     * @param context context to perfom action in.
+     * @param action action to perform.
+     * @param <T> type of action result.
+     * @return action result.
+     */
+    public <T> T doInContext(SearchContext context, Supplier<T> action) {
+        T result;
+        if (context == null) {
+            result = action.get();
+        } else {
+            SearchContext currentSearchContext = getCurrentContext();
+            setCurrentContext(context);
+            try {
+                result = action.get();
+            } finally {
+                setCurrentContext(currentSearchContext);
+            }
+        }
+        return result;
     }
 
     /**
