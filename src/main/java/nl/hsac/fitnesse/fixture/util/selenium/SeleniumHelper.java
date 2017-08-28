@@ -126,10 +126,7 @@ public class SeleniumHelper {
      *          null if none could be found.
      */
     public WebElement getElementToClick(String place) {
-        By by = placeToBy(place);
-        if (by != null) {
-            return findElement(by);
-        } else {
+        return findByTechnicalSelectorOr(place, () -> {
             WebElement element = findByLinkText(place);
             WebElement firstFound = element;
             if (!isInteractable(element)) {
@@ -210,7 +207,7 @@ public class SeleniumHelper {
             return isInteractable(element)
                     ? element
                     : firstFound;
-        }
+        });
     }
 
     /**
@@ -221,10 +218,7 @@ public class SeleniumHelper {
      *          null if none could be found.
      */
     public WebElement getLink(String place) {
-        By by = placeToBy(place);
-        if (by != null) {
-            return findElement(by);
-        } else {
+        return findByTechnicalSelectorOr(place, () -> {
             WebElement element = findByLinkText(place);
             WebElement firstElement = element;
             if (!isInteractable(element)) {
@@ -264,7 +258,7 @@ public class SeleniumHelper {
             return isInteractable(element)
                     ? element
                     : firstElement;
-        }
+        });
     }
 
     public WebElement getParentA(WebElement element) {
@@ -312,10 +306,7 @@ public class SeleniumHelper {
      *          null if none could be found.
      */
     public WebElement getElement(String place) {
-        By by = placeToBy(place);
-        if (by != null) {
-            return findElement(by);
-        } else {
+        return findByTechnicalSelectorOr(place, () -> {
             WebElement element = getElementExact(place);
             // first element found, even if it is not (yet) interactable.
             WebElement firstElement = element;
@@ -328,7 +319,12 @@ public class SeleniumHelper {
             return isInteractable(element)
                     ? element
                     : firstElement;
-        }
+        });
+    }
+
+    public boolean isTechnicalSelector(String place) {
+        return StringUtils.startsWithAny(place,
+                "id=", "xpath=", "css=", "name=", "link=", "partialLink=");
     }
 
     public By placeToBy(String place) {
@@ -347,6 +343,17 @@ public class SeleniumHelper {
             result = By.xpath(place.substring(6));
         }
         return result;
+    }
+
+    public WebElement findByTechnicalSelectorOr(String possibleTechnicalSelector, Supplier<WebElement> supplier) {
+        WebElement element;
+        By by = placeToBy(possibleTechnicalSelector);
+        if (by != null) {
+            element = findElement(by);
+        } else {
+            element = supplier.get();
+        }
+        return element;
     }
 
     public WebElement getElementExact(String place) {
