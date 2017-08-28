@@ -32,11 +32,11 @@ public class NgBrowserTest extends NgBrowserTestBase {
     @Override
     public String valueFor(String place) {
         String result;
-        WebElement angularModelBinding = getAngularElement(place);
-        if (angularModelBinding == null) {
+        WebElement element = findByTechnicalSelectorOr(place, this::getAngularElement);
+        if (element == null) {
             result = super.valueFor(place);
         } else {
-            result = valueFor(angularModelBinding);
+            result = valueFor(element);
         }
         return result;
     }
@@ -44,11 +44,11 @@ public class NgBrowserTest extends NgBrowserTestBase {
     @Override
     public boolean selectFor(String value, String place) {
         boolean result;
-        WebElement angularModelSelect = findSelect(place);
-        if (angularModelSelect == null) {
+        WebElement element = findByTechnicalSelectorOr(place, this::findSelect);
+        if (element == null) {
             result = super.selectFor(value, place);
         } else {
-            result = clickSelectOption(angularModelSelect, value);
+            result = clickSelectOption(element, value);
         }
         return result;
     }
@@ -56,12 +56,12 @@ public class NgBrowserTest extends NgBrowserTestBase {
     @Override
     public boolean enterAs(String value, String place) {
         boolean result;
-        WebElement angularModelInput = getAngularElementToEnterIn(place);
-        if (angularModelInput == null) {
+        WebElement input = findByTechnicalSelectorOr(place, this::getAngularElementToEnterIn);
+        if (input == null) {
             result = super.enterAs(value, place);
         } else {
-            angularModelInput.clear();
-            sendValue(angularModelInput, value);
+            input.clear();
+            sendValue(input, value);
             result = true;
         }
         return result;

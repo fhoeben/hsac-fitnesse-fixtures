@@ -26,6 +26,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class BrowserTest extends SlimFixture {
@@ -773,19 +774,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected <T> T doInContainer(WebElement container, Supplier<T> action) {
-        T result;
-        if (container == null) {
-            result = action.get();
-        } else {
-            SearchContext currentSearchContext = getSeleniumHelper().getCurrentContext();
-            setSearchContextTo(container);
-            try {
-                result = action.get();
-            } finally {
-                setSearchContextTo(currentSearchContext);
-            }
-        }
-        return result;
+        return getSeleniumHelper().doInContext(container, action);
     }
 
     @WaitUntil
@@ -808,19 +797,17 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected WebElement getContainerElement(String container) {
-        WebElement containerElement = null;
-        By by = getSeleniumHelper().placeToBy(container);
-        if (by != null) {
-            containerElement = findElement(by);
-        } else {
-            containerElement = findByXPath(".//fieldset[.//legend/text()[normalized(.) = '%s']]", container);
+        return findByTechnicalSelectorOr(container, this::getContainerImpl);
+    }
+
+    protected WebElement getContainerImpl(String container) {
+        WebElement containerElement = findByXPath(".//fieldset[.//legend/text()[normalized(.) = '%s']]", container);
+        if (containerElement == null) {
+            containerElement = getSeleniumHelper().getElementByAriaLabel(container, -1);
             if (containerElement == null) {
-                containerElement = getSeleniumHelper().getElementByAriaLabel(container, -1);
+                containerElement = findByXPath(".//fieldset[.//legend/text()[contains(normalized(.), '%s')]]", container);
                 if (containerElement == null) {
-                    containerElement = findByXPath(".//fieldset[.//legend/text()[contains(normalized(.), '%s')]]", container);
-                    if (containerElement == null) {
-                        containerElement = getSeleniumHelper().getElementByPartialAriaLabel(container, -1);
-                    }
+                    containerElement = getSeleniumHelper().getElementByPartialAriaLabel(container, -1);
                 }
             }
         }
@@ -1591,21 +1578,15 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected WebElement getElementToCheckVisibility(String place) {
-        WebElement result;
-        By by = getSeleniumHelper().placeToBy(place);
-        if (by != null) {
-            result = findElement(by);
-        } else {
-            result = findByXPath(".//text()[contains(normalized(.),'%s')]/..", place);
-            if (result == null || !result.isDisplayed()) {
+        WebElement result = findByXPath(".//text()[contains(normalized(.),'%s')]/..", place);
+        if (result == null || !result.isDisplayed()) {
                 result = getElementToClick(place);
             }
-        }
         return result;
     }
 
     protected WebElement getElementToCheckVisibility(String place, String container) {
-        return doInContainer(container, () -> getElementToCheckVisibility(place));
+        return doInContainer(container, () -> findByTechnicalSelectorOr(place, this::getElementToCheckVisibility));
     }
 
     /**
@@ -2043,6 +2024,10 @@ public class BrowserTest extends SlimFixture {
 
     protected WebElement findElement(By selector) {
         return getSeleniumHelper().findElement(selector);
+    }
+
+    public WebElement findByTechnicalSelectorOr(String place, Function<String, WebElement> supplierF) {
+        return getSeleniumHelper().findByTechnicalSelectorOr(place, () -> supplierF.apply(place));
     }
 
     /**
