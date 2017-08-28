@@ -1169,7 +1169,7 @@ public class BrowserTest extends SlimFixture {
     @WaitUntil
     public boolean enterAsInRowWhereIs(String value, String requestedColumnName, String selectOnColumn, String selectOnValue) {
         boolean result = false;
-        String columnXPath = getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue);
+        String columnXPath = getXPathForColumnInRowByValueInOtherColumn(requestedColumnName, selectOnColumn, selectOnValue);
         String requestedIndex = getXPathForColumnIndex(requestedColumnName);
         WebElement cell = findByXPath("%s[%s]", columnXPath, requestedIndex);
         if (cell != null) {
@@ -1200,7 +1200,7 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOfInRowWhereIs(String requestedColumnName, String selectOnColumn, String selectOnValue) {
-        String columnXPath = getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue);
+        String columnXPath = getXPathForColumnInRowByValueInOtherColumn(requestedColumnName, selectOnColumn, selectOnValue);
         return valueInRow(columnXPath, requestedColumnName);
     }
 
@@ -1301,7 +1301,22 @@ public class BrowserTest extends SlimFixture {
      */
     protected String getXPathForColumnInRowByValueInOtherColumn(String columnName, String value) {
         String selectIndex = getXPathForColumnIndex(columnName);
-        return String.format("(.//table[.//tr/th/descendant-or-self::text()[normalized(.)='%3$s']])[last()]//tr[td[%1$s]/descendant-or-self::text()[normalized(.)='%2$s']]/td", selectIndex, value, columnName);
+        return String.format("(.//table[.//tr/th/descendant-or-self::text()[normalized(.)='%3$s']])[last()]//tr[td[%1$s]/descendant-or-self::text()[normalized(.)='%2$s']]/td",
+                selectIndex, value, columnName);
+    }
+
+    /**
+     * Creates an XPath expression that will find a cell in a row, selecting the row based on the
+     * text in a specific column (identified by its header text).
+     * @param extraColumnName name of other header text that must be present in table's header row
+     * @param columnName header text of the column to find value in.
+     * @param value text to find in column with the supplied header.
+     * @return XPath expression selecting a td in the row
+     */
+    protected String getXPathForColumnInRowByValueInOtherColumn(String extraColumnName, String columnName, String value) {
+        String selectIndex = getXPathForColumnIndex(columnName);
+        return String.format("(.//table[.//tr[th/descendant-or-self::text()[normalized(.)='%3$s'] and th/descendant-or-self::text()[normalized(.)='%4$s']]])[last()]//tr[td[%1$s]/descendant-or-self::text()[normalized(.)='%2$s']]/td",
+                selectIndex, value, columnName, extraColumnName);
     }
 
     /**
