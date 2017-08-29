@@ -7,7 +7,7 @@ This test ensures we can retrieve element attribute values.
 <html>
 <body>
 <span id="walter" title="That rug really tied the room together.">Walter Says</span>
-<div title="container">
+<div aria-label="container">
 <img id="myImage" class="styled-img"></img>
 </div>
 </body>
