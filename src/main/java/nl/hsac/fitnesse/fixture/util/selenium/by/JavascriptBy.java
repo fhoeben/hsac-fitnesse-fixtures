@@ -1,4 +1,4 @@
-package nl.hsac.fitnesse.fixture.util.selenium;
+package nl.hsac.fitnesse.fixture.util.selenium.by;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;

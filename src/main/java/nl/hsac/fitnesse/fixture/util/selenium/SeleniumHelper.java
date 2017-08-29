@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.fixture.util.selenium;
 
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
+import nl.hsac.fitnesse.fixture.util.selenium.by.JavascriptBy;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.*;
