@@ -61,7 +61,7 @@ We use a mock server running to serve the HTML defined in this page.
 
 |script                |browser test                                                 |
 |open                  |$url                                                         |
-|set repeat interval to|500                 |milliseconds                            |
+|set repeat interval to|1100                |milliseconds                            |
 |repeat at most        |10                  |times                                   |
 |click                 |link                |until value of|Counter|is|a3@example.com|
 |check                 |repeat count        |2                                       |

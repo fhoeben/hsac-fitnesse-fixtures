@@ -143,10 +143,15 @@ public class SlimFixture  implements InteractionAwareFixture {
     protected boolean repeatUntil(RepeatCompletion repeat) {
         repeatTime = 0;
         repeatTimer.start();
+        StopWatch loopTimer = new StopWatch();
+        loopTimer.start();
         boolean result = repeat.isFinished();
         try {
             for (repeatCount = 0; !result && repeatCount < repeatMaxCount; repeatCount++) {
-                waitMilliseconds(repeatInterval);
+                int nextInterval = getNextInterval(loopTimer);
+                waitMilliseconds(nextInterval);
+
+                loopTimer.start();
                 repeat.repeat();
                 result = repeat.isFinished();
             }
@@ -155,6 +160,14 @@ public class SlimFixture  implements InteractionAwareFixture {
             repeatTimer.reset();
         }
         return result;
+    }
+
+    private int getNextInterval(StopWatch loopTimer) {
+        int nextInterval;
+        long loopTime = loopTimer.getTime();
+        nextInterval = Math.max(0, ((int) (repeatInterval - loopTime)));
+        loopTimer.reset();
+        return nextInterval;
     }
 
     protected boolean repeatUntilNot(RepeatCompletion repeat) {
