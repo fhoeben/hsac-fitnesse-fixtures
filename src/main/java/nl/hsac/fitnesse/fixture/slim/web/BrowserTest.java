@@ -2214,6 +2214,18 @@ public class BrowserTest extends SlimFixture {
         return condition;
     }
 
+    @Override
+    protected boolean repeatUntil(RepeatCompletion repeat) {
+        int previousTimeout = secondsBeforeTimeout();
+        try {
+            int timeoutDuringRepeat = Math.max((Math.toIntExact(repeatInterval() / 1000)), 1);
+            secondsBeforeTimeout(timeoutDuringRepeat);
+            return super.repeatUntil(repeat);
+        } finally {
+            secondsBeforeTimeout(previousTimeout);
+        }
+    }
+
     protected abstract class RepeatUntilValueIsCompletion implements RepeatCompletion {
         private final String place;
         private final String expectedValue;

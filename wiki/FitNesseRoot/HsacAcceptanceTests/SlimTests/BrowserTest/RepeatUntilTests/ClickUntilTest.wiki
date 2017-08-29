@@ -59,12 +59,13 @@ We use a mock server running to serve the HTML defined in this page.
 |add response|${HTML5}             |
 |$url=       |get mock server url  |
 
-|script                |browser test                                         |
-|open                  |$url                                                 |
-|seconds before timeout|1                                                    |
-|repeat at most        |10          |times                                   |
-|click                 |link        |until value of|Counter|is|a3@example.com|
-|check                 |repeat count|2                                       |
+|script                |browser test                                                 |
+|open                  |$url                                                         |
+|set repeat interval to|500                 |milliseconds                            |
+|repeat at most        |10                  |times                                   |
+|click                 |link                |until value of|Counter|is|a3@example.com|
+|check                 |repeat count        |2                                       |
+|check                 |time spent repeating|<10000                                  |
 
 |script|mock xml server setup|
 |stop                        |
