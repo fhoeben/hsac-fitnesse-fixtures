@@ -38,12 +38,12 @@ We use a mock server running to serve the HTML defined in this page.
 |add response|${HTML_FRAME1_2}|for|GET: /FitNesseMock/frame2.html|
 |$url=       |get mock server url                                |
 
-|script                |browser test      |
-|open                  |$url/main         |
-|seconds before timeout|2                 |
-|repeat at most        |3           |times|
-|refresh until value of|Counter     |is |1|
-|check                 |repeat count|0    |
+|script                |browser test             |
+|open                  |$url/main                |
+|set repeat interval to|2000        |milliseconds|
+|repeat at most        |3           |times       |
+|refresh until value of|Counter     |is|1        |
+|check                 |repeat count|0           |
 
 |script|mock xml server setup|
 |stop                        |
