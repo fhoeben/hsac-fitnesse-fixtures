@@ -763,12 +763,14 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected <T> T doInContainer(String container, Supplier<T> action) {
-        T result;
+        T result = null;
         if (container == null) {
             result = action.get();
         } else {
             WebElement containerElement = getContainerElement(container);
-            result = doInContainer(containerElement, action);
+            if (containerElement != null) {
+                result = doInContainer(containerElement, action);
+            }
         }
         return result;
     }
