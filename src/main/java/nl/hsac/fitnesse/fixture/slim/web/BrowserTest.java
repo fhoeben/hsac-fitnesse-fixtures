@@ -2216,13 +2216,19 @@ public class BrowserTest extends SlimFixture {
 
     @Override
     protected boolean repeatUntil(RepeatCompletion repeat) {
+        // During repeating we reduce the timeout used for finding elements,
+        // but the page load timeout is kept as-is (which takes extra work because secondsBeforeTimeout(int)
+        // also changes that.
         int previousTimeout = secondsBeforeTimeout();
+        int pageLoadTimeout = secondsBeforePageLoadTimeout();
         try {
             int timeoutDuringRepeat = Math.max((Math.toIntExact(repeatInterval() / 1000)), 1);
             secondsBeforeTimeout(timeoutDuringRepeat);
+            secondsBeforePageLoadTimeout(pageLoadTimeout);
             return super.repeatUntil(repeat);
         } finally {
             secondsBeforeTimeout(previousTimeout);
+            secondsBeforePageLoadTimeout(pageLoadTimeout);
         }
     }
 
