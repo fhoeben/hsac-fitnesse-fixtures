@@ -828,12 +828,12 @@ public class SeleniumHelper {
 
     /**
      * Creates By based on CSS selector, supporting placeholder replacement.
-     * @param pattern basic CSS selectot, possibly with placeholders.
+     * @param pattern basic CSS selector, possibly with placeholders.
      * @param parameters values for placeholders.
      * @return ByCssSelector.
      */
     public By byCss(String pattern, String... parameters) {
-        return new CssBy(pattern, pattern);
+        return new CssBy(pattern, parameters);
     }
 
     /**
