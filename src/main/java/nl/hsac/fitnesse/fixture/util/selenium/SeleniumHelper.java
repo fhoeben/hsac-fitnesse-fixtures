@@ -3,6 +3,7 @@ package nl.hsac.fitnesse.fixture.util.selenium;
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.selenium.by.BestMatchBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.CssBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.JavascriptBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
 import org.apache.commons.io.FilenameUtils;
@@ -855,8 +856,7 @@ public class SeleniumHelper {
      * @return ByCssSelector.
      */
     public By byCss(String pattern, String... parameters) {
-        String selector = fillPattern(pattern, parameters);
-        return By.cssSelector(selector);
+        return new CssBy(pattern, pattern);
     }
 
     /**
@@ -868,40 +868,11 @@ public class SeleniumHelper {
      * @return ByXPath.
      */
     public By byXpath(String pattern, String... parameters) {
-        String xpath = fillPattern(pattern, parameters);
-        return new XPathBy(xpath);
+        return new XPathBy(pattern, parameters);
     }
 
     public By byJavascript(String pattern, Object... arguments) {
         return new JavascriptBy(pattern, arguments);
-    }
-
-    /**
-     * Fills in placeholders in pattern using the supplied parameters.
-     * @param pattern pattern to fill (in String.format style).
-     * @param parameters parameters to use.
-     * @return filled in pattern.
-     */
-    protected String fillPattern(String pattern, String[] parameters) {
-        boolean containsSingleQuote = false;
-        boolean containsDoubleQuote = false;
-        Object[] escapedParams = new Object[parameters.length];
-        for (int i = 0; i < parameters.length; i++) {
-            String param = parameters[i];
-            containsSingleQuote = containsSingleQuote || param.contains("'");
-            containsDoubleQuote = containsDoubleQuote || param.contains("\"");
-            escapedParams[i] = param;
-        }
-        if (containsDoubleQuote && containsSingleQuote) {
-            throw new RuntimeException("Unsupported combination of single and double quotes");
-        }
-        String patternToUse;
-        if (containsSingleQuote) {
-            patternToUse = pattern.replace("'", "\"");
-        } else {
-            patternToUse = pattern;
-        }
-        return String.format(patternToUse, escapedParams);
     }
 
     /**
