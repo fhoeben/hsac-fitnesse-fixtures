@@ -334,7 +334,7 @@ public class SeleniumHelper {
         } else if (place.startsWith("partialLink=")) {
             result = By.partialLinkText(place.substring(12));
         } else if (place.startsWith("xpath=")) {
-            result = By.xpath(place.substring(6));
+            result = new XPathBy(place.substring(6));
         }
         return result;
     }
