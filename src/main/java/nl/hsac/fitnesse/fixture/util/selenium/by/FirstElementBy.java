@@ -27,7 +27,7 @@ public class FirstElementBy extends SingleElementOrNullBy {
     }
 
     public FirstElementBy(By... bys) {
-        this(Stream.of(bys).map(SingleElementOrNullBy::byToFunction).toArray(Function[]::new));
+        this(convertToFunctions(bys));
     }
 
     @Override
@@ -47,5 +47,14 @@ public class FirstElementBy extends SingleElementOrNullBy {
     @Override
     public String toString() {
         return "FirstElementBy[" + Arrays.toString(functions) + "]";
+    }
+
+    /**
+     * Converts array of By to array of Function returning first result (or null).
+     * @param bys bys to convert.
+     * @return functions, each returning first result of by.
+     */
+    public static Function<SearchContext, WebElement>[] convertToFunctions(By[] bys) {
+        return Stream.of(bys).map(SingleElementOrNullBy::byToFunction).toArray(Function[]::new);
     }
 }
