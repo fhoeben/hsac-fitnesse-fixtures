@@ -12,6 +12,7 @@ import nl.hsac.fitnesse.fixture.util.HttpResponse;
 import nl.hsac.fitnesse.fixture.util.ReflectionHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.PageSourceSaver;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -986,7 +987,7 @@ public class BrowserTest extends SlimFixture {
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String normalizedValueForIn(String place, String container) {
         String value = valueForIn(place, container);
-        return getSeleniumHelper().getNormalizedText(value);
+        return XPathBy.getNormalizedText(value);
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)

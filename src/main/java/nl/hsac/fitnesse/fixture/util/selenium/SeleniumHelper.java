@@ -4,6 +4,7 @@ import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.selenium.by.BestMatchBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.JavascriptBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.*;
@@ -26,8 +27,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Helper to work with Selenium.
@@ -56,8 +55,6 @@ public class SeleniumHelper {
                     "}\n" +
                     "return text;";
 
-    // Regex to find our own 'fake xpath function' in xpath 'By' content
-    private final static Pattern X_PATH_NORMALIZED = Pattern.compile("normalized\\((.+?(\\(\\))?)\\)");
     private final static char NON_BREAKING_SPACE = 160;
 
     private final List<WebElement> currentIFramePath = new ArrayList<WebElement>(4);
@@ -723,7 +720,7 @@ public class SeleniumHelper {
     }
 
     private int countOccurrences(String value, String textToFind) {
-        String normalizedValue = getNormalizedText(value);
+        String normalizedValue = XPathBy.getNormalizedText(value);
         return StringUtils.countMatches(normalizedValue, textToFind);
     }
 
@@ -871,39 +868,8 @@ public class SeleniumHelper {
      * @return ByXPath.
      */
     public By byXpath(String pattern, String... parameters) {
-        pattern = replaceNormalizedFunction(pattern);
-        for (int i = 0; i < parameters.length; i++) {
-            parameters[i] = replaceNormalizedFunction(parameters[i]);
-        }
         String xpath = fillPattern(pattern, parameters);
-        return By.xpath(xpath);
-    }
-
-    /**
-     * Mimics effect of 'normalized()` xPath function on Java String.
-     * Replaces &nbsp; by normal space, and collapses whitespace sequences to single space
-     * @param elementText text in element.
-     * @return normalized text.
-     */
-    public String getNormalizedText(String elementText) {
-        String result = null;
-        if (elementText != null) {
-            result = elementText.replace('\u00a0', ' ').replaceAll("\\s+", " ");
-        }
-        return result;
-    }
-
-    private String replaceNormalizedFunction(String xPath) {
-        if (xPath.contains("normalized(")) {
-            /*
-                we first check whether the pattern contains the function name, to not have the overhead of
-                regex replacement when it is not needed.
-            */
-            Matcher m = X_PATH_NORMALIZED.matcher(xPath);
-            String updatedPattern = m.replaceAll("normalize-space(translate($1, '\u00a0', ' '))");
-            xPath = updatedPattern;
-        }
-        return xPath;
+        return new XPathBy(xpath);
     }
 
     public By byJavascript(String pattern, Object... arguments) {
