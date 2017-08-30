@@ -580,7 +580,7 @@ public class SeleniumHelper {
     }
 
     public WebElement getNestedElementForValue(WebElement parent) {
-        return findElement(parent, false, By.xpath(".//input|.//select|.//textarea"));
+        return findElement(parent, By.xpath(".//input|.//select|.//textarea"));
     }
 
     /**
@@ -1042,23 +1042,12 @@ public class SeleniumHelper {
     }
 
     /**
-     * Finds first element matching the By supplied.
+     * Finds element matching the By supplied.
      * @param by criteria.
      * @return element if found, null if none could be found.
      */
     public WebElement findElement(By by) {
-        return findElement(false, by);
-    }
-
-    /**
-     * Finds element matching the By supplied.
-     * @param atMostOne true indicates multiple matching elements should trigger an exception
-     * @param by criteria.
-     * @return element if found, null if none could be found.
-     * @throws RuntimeException if atMostOne is true and multiple elements match by.
-     */
-    public WebElement findElement(boolean atMostOne, By by) {
-        return findElement(getCurrentContext(), atMostOne, by);
+        return findElement(getCurrentContext(), by);
     }
 
     private SearchContext currentContext;
@@ -1232,15 +1221,11 @@ public class SeleniumHelper {
     /**
      * Finds element matching the By supplied.
      * @param context context to find element in.
-     * @param atMostOne true indicates multiple matching elements (that have an id) should trigger an exception
      * @param by criteria.
      * @return element if found, null if none could be found.
      * @throws RuntimeException if atMostOne is true and multiple elements (having an id) match the by.
      */
-    public WebElement findElement(SearchContext context, boolean atMostOne, By by) {
-        if (atMostOne) {
-            throw new IllegalArgumentException("Requiring only a single result is no longer possible");
-        }
+    public WebElement findElement(SearchContext context, By by) {
         By toUse = new BestMatchBy(by);
         return toUse.findElement(context);
     }
