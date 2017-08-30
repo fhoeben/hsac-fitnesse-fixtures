@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.util.selenium.by;
 
+import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.SearchContext;
@@ -30,6 +31,21 @@ public class JavascriptBy extends By {
     @Override
     public List<WebElement> findElements(SearchContext searchContext) {
         List<WebElement> result;
+        JavascriptExecutor executor = getJavascriptExecutor(searchContext);
+        Object results = SeleniumHelper.executeScript(executor, script, scriptParameters);
+        if (results instanceof List) {
+            result = (List<WebElement>) results;
+        } else {
+            if (results == null) {
+                result = Collections.emptyList();
+            } else {
+                throw new RuntimeException("Script returned something else than a list: " + results);
+            }
+        }
+        return result;
+    }
+
+    static JavascriptExecutor getJavascriptExecutor(SearchContext searchContext) {
         JavascriptExecutor executor = null;
         if (searchContext instanceof JavascriptExecutor) {
             executor = (JavascriptExecutor) searchContext;
@@ -46,16 +62,6 @@ public class JavascriptBy extends By {
             throw new RuntimeException("Unable to get: " + JavascriptExecutor.class.getName()
                     + " from: " + searchContext.getClass().getName());
         }
-        Object results = executor.executeScript(script, scriptParameters);
-        if (results instanceof List) {
-            result = (List<WebElement>) results;
-        } else {
-            if (results == null) {
-                result = Collections.emptyList();
-            } else {
-                throw new RuntimeException("Script returned something else than a list: " + results);
-            }
-        }
-        return result;
+        return executor;
     }
 }

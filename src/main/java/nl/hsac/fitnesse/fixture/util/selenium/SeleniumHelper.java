@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.fixture.util.selenium;
 
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
+import nl.hsac.fitnesse.fixture.util.selenium.by.BestMatchBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.JavascriptBy;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +20,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
@@ -41,14 +45,6 @@ public class SeleniumHelper {
                     "  rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&\n" +
                     "  rect.right <= (window.innerWidth || document.documentElement.clientWidth));\n" +
             "} else { return null; }";
-
-    private static final String TOP_ELEMENT_AT =
-            "if (arguments[0].getBoundingClientRect) {\n" +
-                    "  var rect = arguments[0].getBoundingClientRect();\n" +
-                    "  var x = (rect.left + rect.right)/2;\n" +
-                    "  var y = (rect.top + rect.bottom)/2;\n" +
-                    "  return document.elementFromPoint(x,y);\n" +
-                    "} else { return null; }";
 
     private static final String ALL_DIRECT_TEXT_CONTENT =
             "var element = arguments[0], text = '';\n" +
@@ -809,8 +805,13 @@ public class SeleniumHelper {
     }
 
     protected Object executeScript(String script, Object... parameters) {
-        Object result;
         JavascriptExecutor jse = (JavascriptExecutor) driver();
+        Object result = executeScript(jse, script, parameters);
+        return result;
+    }
+
+    public static Object executeScript(JavascriptExecutor jse, String script, Object... parameters) {
+        Object result;
         try {
             result = jse.executeScript(script, parameters);
         } catch (WebDriverException e) {
@@ -1237,88 +1238,11 @@ public class SeleniumHelper {
      * @throws RuntimeException if atMostOne is true and multiple elements (having an id) match the by.
      */
     public WebElement findElement(SearchContext context, boolean atMostOne, By by) {
-        WebElement element = null;
-        List<WebElement> elements = context.findElements(by);
-        if (elements.size() == 1) {
-            element = elements.get(0);
-        } else if (elements.size() > 1) {
-            if (!atMostOne) {
-                element = selectBestElement(elements);
-            } else {
-                elements = elementsWithId(elements);
-                if (elements.size() == 1) {
-                    element = elements.get(0);
-                } else {
-                    throw new RuntimeException("Multiple elements with id found for: " + by
-                                                + ":\n" + elementsAsString(elements));
-                }
-            }
+        if (atMostOne) {
+            throw new IllegalArgumentException("Requiring only a single result is no longer possible");
         }
-        return element;
-    }
-
-    private WebElement selectBestElement(List<WebElement> elements) {
-        // take the first displayed element without any elements on top of it,
-        // if none: take first displayed
-        // or if none are displayed: just take the first
-        WebElement element = elements.get(0);
-        WebElement firstDisplayed = null;
-        WebElement firstOnTop = null;
-        if (!element.isDisplayed() || !isOnTop(element)) {
-            for (int i = 1; i < elements.size(); i++) {
-                WebElement otherElement = elements.get(i);
-                if (otherElement.isDisplayed()) {
-                    if (firstDisplayed == null) {
-                        firstDisplayed = otherElement;
-                    }
-                    if (isOnTop(otherElement)) {
-                        firstOnTop = otherElement;
-                        element = otherElement;
-                        break;
-                    }
-                }
-            }
-            if (firstOnTop == null
-                    && firstDisplayed != null
-                    && !element.isDisplayed()) {
-                // none displayed and on top
-                // first was not displayed, but another was
-                element = firstDisplayed;
-            }
-        }
-        return element;
-    }
-
-    private boolean isOnTop(WebElement element) {
-        WebElement e = (WebElement) executeJavascript(TOP_ELEMENT_AT, element);
-        return element.equals(e);
-    }
-
-    private List<WebElement> elementsWithId(List<WebElement> elements) {
-        List<WebElement> result = new ArrayList<WebElement>(1);
-        for (WebElement e : elements) {
-            String attr = e.getAttribute("id");
-            if (attr != null && !attr.isEmpty()) {
-                result.add(e);
-            }
-        }
-        return result;
-    }
-
-    private String elementsAsString(Collection<WebElement> elements) {
-        StringBuilder b = new StringBuilder();
-        b.append("[");
-        boolean first = true;
-        for (WebElement e : elements) {
-            if (first) {
-                first = false;
-            } else {
-                b.append(", ");
-            }
-            b.append(e.getAttribute("id"));
-        }
-        b.append("]");
-        return b.toString();
+        By toUse = new BestMatchBy(by);
+        return toUse.findElement(context);
     }
 
     /**
