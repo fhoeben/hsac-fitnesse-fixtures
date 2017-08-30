@@ -1,6 +1,6 @@
 package nl.hsac.fitnesse.fixture.util.selenium.by;
 
-import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.JavascriptHelper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.SearchContext;
@@ -40,7 +40,7 @@ public class BestMatchBy extends SingleElementOrNullBy {
     }
 
     private WebElement selectBestElement(SearchContext context, List<WebElement> elements) {
-        JavascriptExecutor jse = JavascriptBy.getJavascriptExecutor(context);
+        JavascriptExecutor jse = JavascriptHelper.getJavascriptExecutor(context);
         // take the first displayed element without any elements on top of it,
         // if none: take first displayed
         // or if none are displayed: just take the first
@@ -73,7 +73,7 @@ public class BestMatchBy extends SingleElementOrNullBy {
     }
 
     private boolean isOnTop(JavascriptExecutor executor, WebElement element) {
-        WebElement e = (WebElement) SeleniumHelper.executeScript(executor, TOP_ELEMENT_AT, element);
+        WebElement e = (WebElement) JavascriptHelper.executeScript(executor, TOP_ELEMENT_AT, element);
         return element.equals(e);
     }
 

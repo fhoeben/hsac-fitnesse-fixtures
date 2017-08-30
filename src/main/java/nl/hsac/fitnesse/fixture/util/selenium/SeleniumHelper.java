@@ -804,23 +804,7 @@ public class SeleniumHelper {
 
     protected Object executeScript(String script, Object... parameters) {
         JavascriptExecutor jse = (JavascriptExecutor) driver();
-        Object result = executeScript(jse, script, parameters);
-        return result;
-    }
-
-    public static Object executeScript(JavascriptExecutor jse, String script, Object... parameters) {
-        Object result;
-        try {
-            result = jse.executeScript(script, parameters);
-        } catch (WebDriverException e) {
-            String msg = e.getMessage();
-            if (msg != null && msg.contains("Detected a page unload event; script execution does not work across page loads.")) {
-                // page reloaded while script ran, retry it once
-                result = jse.executeScript(script, parameters);
-            } else {
-                throw e;
-            }
-        }
+        Object result = JavascriptHelper.executeScript(jse, script, parameters);
         return result;
     }
 
