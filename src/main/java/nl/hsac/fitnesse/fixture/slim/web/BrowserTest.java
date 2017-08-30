@@ -1228,12 +1228,13 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected boolean clickInRow(String columnXPath, String place) {
-        // find an input to click in the row
-        WebElement element = findByXPath("%s//*[(local-name()='input' and contains(@value, '%s'))" +
-                        " or contains(normalized(text()),'%s') or contains(@title, '%s')]",
-                columnXPath, place,
-                place, place);
-        return clickElement(element);
+        boolean result = false;
+        // xpath finds cell, we want to look in row so we go up one level
+        WebElement row = findByXPath("%s/..", columnXPath);
+        if (row != null) {
+            result = doInContainer(row, () -> click(place));
+        }
+        return result;
     }
 
     /**

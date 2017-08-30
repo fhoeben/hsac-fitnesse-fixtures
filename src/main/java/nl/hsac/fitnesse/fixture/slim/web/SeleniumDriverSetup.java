@@ -12,6 +12,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
@@ -75,7 +76,8 @@ public class SeleniumDriverSetup extends SlimFixture {
 
                     if ("firefoxdriver".equalsIgnoreCase(driverClass.getSimpleName())) {
                         FirefoxProfile fxProfile = getFirefoxProfile(profile);
-                        driver = new FirefoxDriver(fxProfile);
+                        FirefoxOptions options = new FirefoxOptions().setProfile(fxProfile);
+                        driver = new FirefoxDriver(options);
                     }
                     else if("chromedriver".equalsIgnoreCase(driverClass.getSimpleName())) {
                         DesiredCapabilities capabilities = getChromeMobileCapabilities(profile);
