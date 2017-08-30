@@ -821,15 +821,8 @@ public class SeleniumHelper {
      * @return return value from statement.
      */
     public Object waitForJavascriptCallback(String statementPattern, Object... parameters) {
-        Object result;
-        String script = "var callback = arguments[arguments.length - 1];"
-                        + String.format(statementPattern, parameters);
         JavascriptExecutor jse = (JavascriptExecutor) driver();
-        if (statementPattern.contains("arguments")) {
-            result = jse.executeAsyncScript(script, parameters);
-        } else {
-            result = jse.executeAsyncScript(script);
-        }
+        Object result = JavascriptHelper.waitForJavascriptCallback(jse, statementPattern, parameters);
         return result;
     }
 

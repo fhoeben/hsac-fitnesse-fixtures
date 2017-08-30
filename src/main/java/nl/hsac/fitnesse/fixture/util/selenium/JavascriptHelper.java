@@ -51,4 +51,29 @@ public class JavascriptHelper {
         }
         return result;
     }
+
+    /**
+     * Executes Javascript in browser and then waits for 'callback' to be invoked.
+     * If statementPattern should reference the magic (function) variable 'callback' which should be
+     * called to provide this method's result.
+     * If the statementPattern contains the magic variable 'arguments'
+     * the parameters will also be passed to the statement. In the latter case the parameters
+     * must be a number, a boolean, a String, WebElement, or a List of any combination of the above.
+     * @link http://selenium.googlecode.com/git/docs/api/java/org/openqa/selenium/JavascriptExecutor.html#executeAsyncScript(java.lang.String,%20java.lang.Object...)
+     * @param jse executor to use.
+     * @param statementPattern javascript to run, possibly with placeholders to be replaced.
+     * @param parameters placeholder values that should be replaced before executing the script.
+     * @return return value from statement.
+     */
+    public static Object waitForJavascriptCallback(JavascriptExecutor jse, String statementPattern, Object... parameters) {
+        Object result;
+        String script = "var callback = arguments[arguments.length - 1];"
+                + String.format(statementPattern, parameters);
+        if (statementPattern.contains("arguments")) {
+            result = jse.executeAsyncScript(script, parameters);
+        } else {
+            result = jse.executeAsyncScript(script);
+        }
+        return result;
+    }
 }
