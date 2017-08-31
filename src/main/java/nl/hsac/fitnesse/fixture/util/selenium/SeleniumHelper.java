@@ -2,13 +2,7 @@ package nl.hsac.fitnesse.fixture.util.selenium;
 
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
-import nl.hsac.fitnesse.fixture.util.selenium.by.AriaLabelBy;
-import nl.hsac.fitnesse.fixture.util.selenium.by.BestMatchBy;
-import nl.hsac.fitnesse.fixture.util.selenium.by.CssBy;
-import nl.hsac.fitnesse.fixture.util.selenium.by.IsInteractableFilter;
-import nl.hsac.fitnesse.fixture.util.selenium.by.JavascriptBy;
-import nl.hsac.fitnesse.fixture.util.selenium.by.LinkBy;
-import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.*;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.*;
@@ -1086,7 +1080,10 @@ public class SeleniumHelper {
      * @throws RuntimeException if atMostOne is true and multiple elements (having an id) match the by.
      */
     public WebElement findElement(SearchContext context, By by) {
-        By toUse = new BestMatchBy(by);
+        By toUse = by;
+        if (!(by instanceof SingleElementOrNullBy)) {
+            toUse = new BestMatchBy(by);
+        }
         return toUse.findElement(context);
     }
 
