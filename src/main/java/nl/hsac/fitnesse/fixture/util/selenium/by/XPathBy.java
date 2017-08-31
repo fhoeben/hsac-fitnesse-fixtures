@@ -1,7 +1,9 @@
 package nl.hsac.fitnesse.fixture.util.selenium.by;
 
+import nl.hsac.fitnesse.fixture.util.CacheHelper;
 import org.openqa.selenium.By;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,6 +12,7 @@ import java.util.regex.Pattern;
  * that does whitespace normalization, that also considers a '&nbsp;' whitespace.
  */
 public class XPathBy extends LazyPatternBy {
+    private final static Map<String, String> CACHE = CacheHelper.lruCache(1000);
     // Regex to find our own 'fake xpath function' in xpath 'By' content
     private final static Pattern X_PATH_NORMALIZED = Pattern.compile("normalized\\((.+?(\\(\\))?)\\)");
 
@@ -41,16 +44,22 @@ public class XPathBy extends LazyPatternBy {
     }
 
     private static String replaceNormalizedFunction(String xPath) {
-        if (xPath.contains("normalized(")) {
+        String result = CACHE.get(xPath);
+        if (result == null) {
+            if (xPath.contains("normalized(")) {
             /*
                 we first check whether the pattern contains the function name, to not have the overhead of
                 regex replacement when it is not needed.
             */
-            Matcher m = X_PATH_NORMALIZED.matcher(xPath);
-            String updatedPattern = m.replaceAll("normalize-space(translate($1, '\u00a0', ' '))");
-            xPath = updatedPattern;
+                Matcher m = X_PATH_NORMALIZED.matcher(xPath);
+                String updatedPattern = m.replaceAll("normalize-space(translate($1, '\u00a0', ' '))");
+                result = updatedPattern;
+            } else {
+                result = xPath;
+            }
+            CACHE.put(xPath, result);
         }
-        return xPath;
+        return result;
     }
 
     /**
