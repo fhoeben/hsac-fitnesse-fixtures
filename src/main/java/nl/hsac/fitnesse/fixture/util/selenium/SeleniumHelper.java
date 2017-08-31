@@ -327,7 +327,7 @@ public class SeleniumHelper {
     }
 
     public WebElement getElementExact(String place) {
-        WebElement element = getElementByLabelOccurrence(place, -1);
+        WebElement element = getElementByLabelOccurrence(place);
         // first element found, even if it is not (yet) interactable.
         WebElement firstElement = element;
 
@@ -379,7 +379,7 @@ public class SeleniumHelper {
     }
 
     public WebElement getElementPartial(String place) {
-        WebElement element = getElementByPartialLabelOccurrence(place, -1);
+        WebElement element = getElementByPartialLabelOccurrence(place);
         // first element found, even if it is not (yet) interactable.
         WebElement firstElement = element;
 
@@ -441,13 +441,12 @@ public class SeleniumHelper {
     /**
      * Finds element based on the exact (aria-)label text.
      * @param labelText text for label.
-     * @param index occurrence of label (first is 1).
      * @return first interactable element found,
      *          first element found if no interactable element could be found,
      *          null if none could be found.
      */
-    public WebElement getElementByLabelOccurrence(String labelText, int index) {
-        return getElementByLabel(labelText, index,
+    public WebElement getElementByLabelOccurrence(String labelText) {
+        return getElementByLabel(labelText,
                                     ".//label/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::label"
         );
     }
@@ -455,13 +454,12 @@ public class SeleniumHelper {
     /**
      * Finds element based on the start of the (aria-)label text.
      * @param labelText text for label.
-     * @param index occurrence of label (first is 1).
      * @return first interactable element found,
      *          first element found if no interactable element could be found,
      *          null if none could be found.
      */
-    public WebElement getElementByStartLabelOccurrence(String labelText, int index) {
-        return getElementByLabel(labelText, index,
+    public WebElement getElementByStartLabelOccurrence(String labelText) {
+        return getElementByLabel(labelText,
                 ".//label/descendant-or-self::text()[starts-with(normalized(.), '%s')]/ancestor-or-self::label"
         );
     }
@@ -469,29 +467,18 @@ public class SeleniumHelper {
     /**
      * Finds element based on part of the (aria-)label text.
      * @param labelText text for label.
-     * @param index occurrence of label (first is 1).
      * @return first interactable element found,
      *          first element found if no interactable element could be found,
      *          null if none could be found.
      */
-    public WebElement getElementByPartialLabelOccurrence(String labelText, int index) {
-        return getElementByLabel(labelText, index,
+    public WebElement getElementByPartialLabelOccurrence(String labelText) {
+        return getElementByLabel(labelText,
                 ".//label/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::label"
         );
     }
 
-    private String indexedXPath(String xpathBase, int index) {
-
-        String xPath = xpathBase;
-        if (index > 0) {
-            xPath = String.format("(%s)[%s]", xpathBase, index);
-        }
-        return xPath;
-    }
-
-    private WebElement getElementByLabel(String labelText, int index, String labelXPath) {
-        String labelPattern = indexedXPath(labelXPath, index);
-        WebElement label = findByXPath(labelPattern, labelText);
+    private WebElement getElementByLabel(String labelText, String labelXPath) {
+        WebElement label = findByXPath(labelXPath, labelText);
         WebElement element = getLabelledElement(label);
         return element;
     }
