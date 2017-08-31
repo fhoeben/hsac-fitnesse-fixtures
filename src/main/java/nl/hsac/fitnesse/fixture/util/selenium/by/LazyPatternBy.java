@@ -33,7 +33,12 @@ public abstract class LazyPatternBy extends By {
         return getNested().findElements(context);
     }
 
-    protected synchronized By getNested() {
+    @Override
+    public String toString() {
+        return getNested().toString();
+    }
+
+    private final synchronized By getNested() {
         if (nested == null) {
             String expr = createExpression(pattern, parameters);
             nested = createNested(expr);
