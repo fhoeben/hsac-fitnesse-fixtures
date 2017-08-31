@@ -505,7 +505,7 @@ public class SeleniumHelper {
     }
 
     public WebElement getNestedElementForValue(WebElement parent) {
-        return findElement(parent, By.xpath(".//input|.//select|.//textarea"));
+        return NestedElementForValueBy.INSTANCE.findElement(parent);
     }
 
     /**
