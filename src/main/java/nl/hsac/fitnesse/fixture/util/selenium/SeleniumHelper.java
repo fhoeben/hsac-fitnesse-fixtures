@@ -219,7 +219,7 @@ public class SeleniumHelper {
             WebElement element = findByLinkText(place);
             WebElement firstElement = element;
             if (!isInteractable(element)) {
-                element = getElementByAriaLabel(place, -1);
+                element = getElementByAriaLabel(place);
                 element = getParentA(element);
                 if (firstElement == null) {
                     firstElement = element;
@@ -239,7 +239,7 @@ public class SeleniumHelper {
                 }
             }
             if (!isInteractable(element)) {
-                element = getElementByPartialAriaLabel(place, -1);
+                element = getElementByPartialAriaLabel(place);
                 element = getParentA(element);
                 if (firstElement == null) {
                     firstElement = element;
@@ -367,7 +367,7 @@ public class SeleniumHelper {
             }
         }
         if (!isInteractable(element)) {
-            element = getElementByAriaLabel(place, -1);
+            element = getElementByAriaLabel(place);
             if (firstElement == null) {
                 firstElement = element;
             }
@@ -419,7 +419,7 @@ public class SeleniumHelper {
             }
         }
         if (!isInteractable(element)) {
-            element = getElementByPartialAriaLabel(place, -1);
+            element = getElementByPartialAriaLabel(place);
             if (firstElement == null) {
                 firstElement = element;
             }
@@ -514,19 +514,15 @@ public class SeleniumHelper {
         return element;
     }
 
-    public WebElement getElementByAriaLabel(String labelText, int index) {
+    public WebElement getElementByAriaLabel(String labelText) {
         // see if there is an element with labelText as text, whose id is referenced by an aria-labelledby attribute
-        String labelledByPattern = indexedXPath(".//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[normalized(.) = '%s']/ancestor-or-self::*[@id]/@id]", index);
+        String labelledByPattern = ".//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[normalized(.) = '%s']/ancestor-or-self::*[@id]/@id]";
         WebElement element = findByXPath(labelledByPattern, labelText);
         WebElement firstFound = element;
 
         if (!isInteractable(element)) {
             By by = byCss("[aria-label='%s']", labelText);
-            if (index > 0) {
-                element = findElement(by, index - 1);
-            } else {
-                element = findElement(by);
-            }
+            element = findElement(by);
             if (firstFound == null) {
                 firstFound = element;
             }
@@ -536,18 +532,14 @@ public class SeleniumHelper {
                 : firstFound;
     }
 
-    public WebElement getElementByPartialAriaLabel(String labelText, int index) {
-        String labelledByPattern = indexedXPath(".//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::*[@id]/@id]", index);
+    public WebElement getElementByPartialAriaLabel(String labelText) {
+        String labelledByPattern = ".//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::*[@id]/@id]";
         WebElement element = findByXPath(labelledByPattern, labelText);
         WebElement firstFound = element;
 
         if (!isInteractable(element)) {
             By by = byCss("[aria-label*='%s']", labelText);
-            if (index > 0) {
-                element = findElement(by, index - 1);
-            } else {
-                element = findElement(by);
-            }
+            element = findElement(by);
             if (firstFound == null) {
                 firstFound = element;
             }

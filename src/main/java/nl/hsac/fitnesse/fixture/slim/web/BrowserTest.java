@@ -806,11 +806,11 @@ public class BrowserTest extends SlimFixture {
     protected WebElement getContainerImpl(String container) {
         WebElement containerElement = findByXPath(".//fieldset[.//legend/text()[normalized(.) = '%s']]", container);
         if (containerElement == null) {
-            containerElement = getSeleniumHelper().getElementByAriaLabel(container, -1);
+            containerElement = getSeleniumHelper().getElementByAriaLabel(container);
             if (containerElement == null) {
                 containerElement = findByXPath(".//fieldset[.//legend/text()[contains(normalized(.), '%s')]]", container);
                 if (containerElement == null) {
-                    containerElement = getSeleniumHelper().getElementByPartialAriaLabel(container, -1);
+                    containerElement = getSeleniumHelper().getElementByPartialAriaLabel(container);
                 }
             }
         }
