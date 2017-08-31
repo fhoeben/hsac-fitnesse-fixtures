@@ -6,6 +6,7 @@ import nl.hsac.fitnesse.fixture.util.selenium.by.BestMatchBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.CssBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.IsInteractableFilter;
 import nl.hsac.fitnesse.fixture.util.selenium.by.JavascriptBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.LinkBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -265,33 +266,11 @@ public class SeleniumHelper {
     }
 
     public WebElement findByLinkText(String text) {
-        WebElement element = findElement(By.linkText(text));
-        WebElement firstFound = element;
-        if (!isInteractable(element)) {
-            // finding by linkText does not find actual text if css text-transform is in place
-            element = findByXPath(".//text()[normalized(.)='%s']/ancestor-or-self::a", text);
-            if (firstFound == null) {
-                firstFound = element;
-            }
-        }
-        return isInteractable(element)
-                ? element
-                : firstFound;
+        return findElement(LinkBy.exactText(text));
     }
 
     public WebElement findByPartialLinkText(String partialText) {
-        WebElement element = findElement(By.partialLinkText(partialText));
-        WebElement firstFound = element;
-        if (!isInteractable(element)) {
-            // finding by linkText does not find actual text if css text-transform is in place
-            element = findByXPath(".//text()[contains(normalized(.),'%s')]/ancestor-or-self::a", partialText);
-            if (firstFound == null) {
-                firstFound = element;
-            }
-        }
-        return isInteractable(element)
-                ? element
-                : firstFound;
+        return findElement(LinkBy.partialText(partialText));
     }
 
     /**

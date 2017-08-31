@@ -9,6 +9,8 @@ import java.util.function.Function;
  * It will filter out non-interactable elements.
  */
 public class IsInteractableFilter implements Function<WebElement, WebElement> {
+    private WebElement firstFound;
+
     /**
      * Filters out non-interactable elements.
      * @param webElement element to check.
@@ -16,7 +18,17 @@ public class IsInteractableFilter implements Function<WebElement, WebElement> {
      */
     @Override
     public WebElement apply(WebElement webElement) {
+        if (firstFound == null) {
+            firstFound = webElement;
+        }
         return mayPass(webElement) ? webElement : null;
+    }
+
+    /**
+     * @return first non-null element encountered by filter (may or may not be interactable);
+     */
+    public WebElement getFirstFound() {
+        return firstFound;
     }
 
     /**
