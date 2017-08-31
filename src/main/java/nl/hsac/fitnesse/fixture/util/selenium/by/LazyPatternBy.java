@@ -38,6 +38,25 @@ public abstract class LazyPatternBy extends By {
         return getNested().toString();
     }
 
+    @Override
+    public int hashCode() {
+        return getNested().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        } else {
+            By nested = getNested();
+            if (o instanceof LazyPatternBy) {
+                return nested.equals(((LazyPatternBy) o).getNested());
+            } else {
+                return nested.equals(o);
+            }
+        }
+    }
+
     private final synchronized By getNested() {
         if (nested == null) {
             String expr = createExpression(pattern, parameters);
