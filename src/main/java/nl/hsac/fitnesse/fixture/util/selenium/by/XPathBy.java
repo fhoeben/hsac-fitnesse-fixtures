@@ -35,8 +35,9 @@ public class XPathBy extends LazyPatternBy {
 
     @Override
     protected String createExpression(String pattern, String... parameters) {
-        pattern = replaceNormalizedFunction(pattern);
+        pattern = CACHE.computeIfAbsent(pattern, XPathBy::replaceNormalizedFunction);
         for (int i = 0; i < parameters.length; i++) {
+            // caching of parameters seems less likely to be worth while...
             parameters[i] = replaceNormalizedFunction(parameters[i]);
         }
         String xpath = super.createExpression(pattern, parameters);
@@ -44,20 +45,17 @@ public class XPathBy extends LazyPatternBy {
     }
 
     private static String replaceNormalizedFunction(String xPath) {
-        String result = CACHE.get(xPath);
-        if (result == null) {
-            if (xPath.contains("normalized(")) {
-            /*
-                we first check whether the pattern contains the function name, to not have the overhead of
-                regex replacement when it is not needed.
-            */
-                Matcher m = X_PATH_NORMALIZED.matcher(xPath);
-                String updatedPattern = m.replaceAll("normalize-space(translate($1, '\u00a0', ' '))");
-                result = updatedPattern;
-            } else {
-                result = xPath;
-            }
-            CACHE.put(xPath, result);
+        String result;
+        if (xPath.contains("normalized(")) {
+        /*
+            we first check whether the pattern contains the function name, to not have the overhead of
+            regex replacement when it is not needed.
+        */
+            Matcher m = X_PATH_NORMALIZED.matcher(xPath);
+            String updatedPattern = m.replaceAll("normalize-space(translate($1, '\u00a0', ' '))");
+            result = updatedPattern;
+        } else {
+            result = xPath;
         }
         return result;
     }
