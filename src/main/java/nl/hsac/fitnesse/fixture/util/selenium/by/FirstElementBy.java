@@ -37,11 +37,18 @@ public class FirstElementBy extends SingleElementOrNullBy {
 
     /**
      * Sets post processor to apply to each function's/By's result.
-     * This function should return
+     * This function should return null when element should not be returned.
      * @param postProcessor function to apply to each element found to determine whether it should be returned.
      */
     public void setPostProcessor(Function<WebElement, WebElement> postProcessor) {
         this.postProcessor = postProcessor;
+    }
+
+    /**
+     * @return post processor in use.
+     */
+    public Function<WebElement, WebElement> getPostProcessor() {
+        return postProcessor;
     }
 
     @Override
