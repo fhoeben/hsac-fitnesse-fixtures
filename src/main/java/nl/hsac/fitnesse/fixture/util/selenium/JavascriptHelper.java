@@ -36,6 +36,15 @@ public class JavascriptHelper {
         return executor;
     }
 
+    /**
+     * Executes Javascript in browser. If script contains the magic variable 'arguments'
+     * the parameters will also be passed to the statement. In the latter case the parameters
+     * must be a number, a boolean, a String, WebElement, or a List of any combination of the above.
+     * @link http://selenium.googlecode.com/git/docs/api/java/org/openqa/selenium/JavascriptExecutor.html#executeScript(java.lang.String,%20java.lang.Object...)
+     * @param script javascript to run.
+     * @param parameters parameters for the script.
+     * @return return value from statement.
+     */
     public static Object executeScript(JavascriptExecutor jse, String script, Object... parameters) {
         Object result;
         try {
