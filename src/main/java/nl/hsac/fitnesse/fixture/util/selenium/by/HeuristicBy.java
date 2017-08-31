@@ -37,11 +37,16 @@ public class HeuristicBy extends FirstElementBy {
 
     private static Function<SearchContext, WebElement>[] wrapNested(By firstNested, By[] extraNestedBys) {
         Function[] functions = new Function[extraNestedBys.length + 1];
-        functions[0] = SingleElementOrNullBy.byToFunction(firstNested);
+        functions[0] = nestedFunction(firstNested);
         for (int i = 0; i < extraNestedBys.length; i++) {
-            BestMatchBy nestedBestMatch = new BestMatchBy(extraNestedBys[i]);
-            functions[i + 1] = SingleElementOrNullBy.byToFunction(nestedBestMatch);
+            By nestedBy = extraNestedBys[i];
+            functions[i + 1] = nestedFunction(nestedBy);
         }
         return functions;
+    }
+
+    private static Function<SearchContext, WebElement> nestedFunction(By nestedBy) {
+        // nested may not be needed, so we wait to create the nested BestMatchBy until it is needed
+        return (sc) -> new BestMatchBy(nestedBy).findElement(sc);
     }
 }
