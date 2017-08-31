@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  * Own subclass of By on XPath, which also supports the fictional 'normalized()' function
  * that does whitespace normalization, that also considers a '&nbsp;' whitespace.
  */
-public class XPathBy extends By.ByXPath {
+public class XPathBy extends LazyPatternBy {
     // Regex to find our own 'fake xpath function' in xpath 'By' content
     private final static Pattern X_PATH_NORMALIZED = Pattern.compile("normalized\\((.+?(\\(\\))?)\\)");
 
@@ -22,15 +22,21 @@ public class XPathBy extends By.ByXPath {
      * @return ByXPath.
      */
     public XPathBy(String pattern, String... parameters) {
-        super(createExpression(pattern, parameters));
+        super(pattern, parameters);
     }
 
-    private static String createExpression(String pattern, String... parameters) {
+    @Override
+    protected By createNested(String expr) {
+        return By.xpath(expr);
+    }
+
+    @Override
+    protected String createExpression(String pattern, String... parameters) {
         pattern = replaceNormalizedFunction(pattern);
         for (int i = 0; i < parameters.length; i++) {
             parameters[i] = replaceNormalizedFunction(parameters[i]);
         }
-        String xpath = fillPattern(pattern, parameters);
+        String xpath = super.createExpression(pattern, parameters);
         return xpath;
     }
 
@@ -59,33 +65,5 @@ public class XPathBy extends By.ByXPath {
             result = elementText.replace('\u00a0', ' ').replaceAll("\\s+", " ");
         }
         return result;
-    }
-
-    /**
-     * Fills in placeholders in pattern using the supplied parameters.
-     * @param pattern pattern to fill (in String.format style).
-     * @param parameters parameters to use.
-     * @return filled in pattern.
-     */
-    public static String fillPattern(String pattern, String[] parameters) {
-        boolean containsSingleQuote = false;
-        boolean containsDoubleQuote = false;
-        Object[] escapedParams = new Object[parameters.length];
-        for (int i = 0; i < parameters.length; i++) {
-            String param = parameters[i];
-            containsSingleQuote = containsSingleQuote || param.contains("'");
-            containsDoubleQuote = containsDoubleQuote || param.contains("\"");
-            escapedParams[i] = param;
-        }
-        if (containsDoubleQuote && containsSingleQuote) {
-            throw new RuntimeException("Unsupported combination of single and double quotes");
-        }
-        String patternToUse;
-        if (containsSingleQuote) {
-            patternToUse = pattern.replace("'", "\"");
-        } else {
-            patternToUse = pattern;
-        }
-        return String.format(patternToUse, escapedParams);
     }
 }

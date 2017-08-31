@@ -5,7 +5,7 @@ import org.openqa.selenium.By;
 /**
  * By using CSS selectors.
  */
-public class CssBy extends By.ByCssSelector {
+public class CssBy extends LazyPatternBy {
     /**
      * Creates By based on CSS selector, supporting placeholder replacement.
      * @param pattern basic CSS selector, possibly with placeholders.
@@ -13,6 +13,11 @@ public class CssBy extends By.ByCssSelector {
      * @return ByCssSelector.
      */
     public CssBy(String pattern, String... parameters) {
-        super(XPathBy.fillPattern(pattern, parameters));
+        super(pattern, parameters);
+    }
+
+    @Override
+    protected By createNested(String expr) {
+        return By.cssSelector(expr);
     }
 }
