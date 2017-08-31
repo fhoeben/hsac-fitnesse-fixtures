@@ -18,18 +18,18 @@ public abstract class SingleElementOrNullBy extends By {
      * @return function returning first result of by.
      */
     public static Function<SearchContext, WebElement> byToFunction(By by) {
-        return sc -> {
-            WebElement result;
-            if (by instanceof SingleElementOrNullBy) {
-                // will not throw exception, but return null when no element is found
-                result = by.findElement(sc);
-            } else {
+        Function<SearchContext, WebElement> function;
+        if (by instanceof SingleElementOrNullBy) {
+            // will not throw exception, but return null when no element is found
+            function = sc -> by.findElement(sc);
+        } else {
+            function = sc -> {
                 // single element case will throw exception when no element is found
                 List<WebElement> elements = by.findElements(sc);
-                result = (elements != null && !elements.isEmpty())? elements.get(0): null;
-            }
-            return result;
-        };
+                return (elements != null && !elements.isEmpty())? elements.get(0): null;
+            };
+        }
+        return function;
     }
 
     /**
