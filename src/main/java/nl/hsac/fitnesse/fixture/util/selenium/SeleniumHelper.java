@@ -4,6 +4,7 @@ import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.selenium.by.BestMatchBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.CssBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.IsInteractableFilter;
 import nl.hsac.fitnesse.fixture.util.selenium.by.JavascriptBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
 import org.apache.commons.io.FilenameUtils;
@@ -460,7 +461,7 @@ public class SeleniumHelper {
      * @return whether the element is displayed and enabled.
      */
     public boolean isInteractable(WebElement element) {
-        return element != null && element.isDisplayed() && element.isEnabled();
+        return IsInteractableFilter.mayPass(element);
     }
 
     /**
