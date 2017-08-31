@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.fixture.util.selenium;
 
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
+import nl.hsac.fitnesse.fixture.util.selenium.by.AriaLabelBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.BestMatchBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.CssBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.IsInteractableFilter;
@@ -515,38 +516,11 @@ public class SeleniumHelper {
     }
 
     public WebElement getElementByAriaLabel(String labelText) {
-        // see if there is an element with labelText as text, whose id is referenced by an aria-labelledby attribute
-        String labelledByPattern = ".//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[normalized(.) = '%s']/ancestor-or-self::*[@id]/@id]";
-        WebElement element = findByXPath(labelledByPattern, labelText);
-        WebElement firstFound = element;
-
-        if (!isInteractable(element)) {
-            By by = byCss("[aria-label='%s']", labelText);
-            element = findElement(by);
-            if (firstFound == null) {
-                firstFound = element;
-            }
-        }
-        return isInteractable(element)
-                ? element
-                : firstFound;
+        return findElement(AriaLabelBy.exact(labelText));
     }
 
     public WebElement getElementByPartialAriaLabel(String labelText) {
-        String labelledByPattern = ".//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::*[@id]/@id]";
-        WebElement element = findByXPath(labelledByPattern, labelText);
-        WebElement firstFound = element;
-
-        if (!isInteractable(element)) {
-            By by = byCss("[aria-label*='%s']", labelText);
-            element = findElement(by);
-            if (firstFound == null) {
-                firstFound = element;
-            }
-        }
-        return isInteractable(element)
-                ? element
-                : firstFound;
+        return findElement(AriaLabelBy.partial(labelText));
     }
 
     public WebElement getNestedElementForValue(WebElement parent) {
