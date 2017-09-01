@@ -28,7 +28,7 @@ public class ElementBy {
     }
 
     /**
-     * Finds by exact link text.
+     * Finds elements exactly matching supplied place.
      */
     public static class Exact extends AbstractHeuristicBy {
         public Exact(String place) {
@@ -43,7 +43,7 @@ public class ElementBy {
     }
 
     /**
-     * Finds by partial link text.
+     * Finds elements also showing supplied place.
      */
     public static class Partial extends AbstractHeuristicBy {
         public Partial(String place) {
