@@ -44,18 +44,18 @@ public class LabelBy extends SingleElementOrNullBy {
     @Override
     public WebElement findElement(SearchContext context) {
         WebElement label = by.findElement(context);
-        WebElement element = getLabelledElement(label);
+        WebElement element = getLabelledElement(context, label);
         return element;
     }
 
-    public static WebElement getLabelledElement(WebElement label) {
+    public static WebElement getLabelledElement(SearchContext conetxt, WebElement label) {
         WebElement element = null;
         if (label != null) {
             String forAttr = label.getAttribute("for");
             if (forAttr == null || "".equals(forAttr)) {
                 element = ConstantBy.nestedElementForValue().findElement(label);
             } else {
-                element = new BestMatchBy(By.id(forAttr)).findElement(label);
+                element = new BestMatchBy(By.id(forAttr)).findElement(conetxt);
             }
         }
         return element;
