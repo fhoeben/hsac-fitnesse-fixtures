@@ -11,12 +11,7 @@ public class ConstantBy {
     private static final BestMatchBy NESTED_ELEMENT_FOR_VALUE_BY = new BestMatchBy(By.xpath(".//input|.//select|.//textarea"));
     private static final BestMatchBy SUBMIT_BUTTON_BY = new BestMatchBy(By.cssSelector("input[type='submit']:not([value])"));
     private static final BestMatchBy RESET_BUTTON_BY = new BestMatchBy(By.cssSelector("input[type='reset']:not([value])"));
-    private static final SingleElementOrNullBy NULL_BY = new SingleElementOrNullBy() {
-        @Override
-        public WebElement findElement(SearchContext context) {
-            return null;
-        }
-    };
+    private static final SingleElementOrNullBy NULL_BY = new FindsNothing();
 
     /**
      * @return By which will return a nested element to obtain a value from (e.g. input or select).
@@ -59,5 +54,17 @@ public class ConstantBy {
      */
     public static SingleElementOrNullBy nothing() {
         return NULL_BY;
+    }
+
+    private static final class FindsNothing extends SingleElementOrNullBy {
+        @Override
+        public WebElement findElement(SearchContext context) {
+            return null;
+        }
+
+        @Override
+        public String toString() {
+            return "FindsNothingBy";
+        }
     }
 }

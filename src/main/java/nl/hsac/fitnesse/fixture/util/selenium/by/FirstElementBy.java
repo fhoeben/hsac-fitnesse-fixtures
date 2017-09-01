@@ -68,6 +68,15 @@ public class FirstElementBy extends SingleElementOrNullBy {
 
     @Override
     public String toString() {
-        return getClass().getName() + byList;
+        return getByName(getClass()) + byList;
+    }
+
+    public static String getByName(Class<?> c) {
+        String name = c.getSimpleName();
+        Class<?> enclosingClass = c.getEnclosingClass();
+        if (enclosingClass != null) {
+            name = enclosingClass.getSimpleName() + "." + name;
+        }
+        return name;
     }
 }
