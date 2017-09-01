@@ -53,7 +53,7 @@ public class LabelBy extends SingleElementOrNullBy {
         if (label != null) {
             String forAttr = label.getAttribute("for");
             if (forAttr == null || "".equals(forAttr)) {
-                element = NestedElementForValueBy.INSTANCE.findElement(label);
+                element = ConstantBy.nestedElementForValue().findElement(label);
             } else {
                 // please not we DO NOT start xPath with '.' as we want to search entire document
                 // and not just inside the label

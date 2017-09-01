@@ -254,10 +254,7 @@ public class SeleniumHelper {
     }
 
     public WebElement getParentA(WebElement element) {
-        if (element != null && !"a".equalsIgnoreCase(element.getTagName())) {
-            element = element.findElement(By.xpath("./ancestor::a"));
-        }
-        return element;
+        return ConstantBy.parentA().findElement(element);
     }
 
     public WebElement findByLinkText(String text) {
@@ -473,7 +470,7 @@ public class SeleniumHelper {
     }
 
     public WebElement getNestedElementForValue(WebElement parent) {
-        return NestedElementForValueBy.INSTANCE.findElement(parent);
+        return ConstantBy.nestedElementForValue().findElement(parent);
     }
 
     /**
