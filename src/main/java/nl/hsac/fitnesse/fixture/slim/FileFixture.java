@@ -3,7 +3,10 @@ package nl.hsac.fitnesse.fixture.slim;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import org.apache.commons.io.FilenameUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -95,6 +98,29 @@ public class FileFixture extends SlimFixtureWithMap {
         return file.length();
     }
 
+    public boolean exists(String filename) {
+        String fullName = getFullName(filename);
+        return new File(fullName).exists();
+    }
+
+    public boolean delete(String filename) {
+        String fullName = getFullName(filename);
+        File file = getFile(fullName);
+        return file.delete();
+    }
+
+    public boolean deleteIfExists(String filename) {
+        String fullName = getFullName(filename);
+        File file = new File(fullName);
+        boolean result = file.exists();
+        if (result) {
+            if (!file.delete()) {
+                throw new SlimFixtureException(false, "Unable to delete file");
+            }
+        }
+        return result;
+    }
+
     public String filenameOf(String filename) {
         String fullName = getFullName(filename);
         return getFile(fullName).getName();
@@ -152,4 +178,21 @@ public class FileFixture extends SlimFixtureWithMap {
         return String.format("<a href=\"%s\">%s</a>", url, f.getName());
     }
 
+    public boolean pollUntilExists(String filename) {
+        String fullname = getFullName(filename);
+        return repeatUntil(fileExistsCompletion(fullname));
+    }
+
+    public boolean pollUntilDoesNotExist(String filename) {
+        String fullname = getFullName(filename);
+        return repeatUntilNot(fileExistsCompletion(fullname));
+    }
+
+    protected static PollCompletion fileExistsCompletion(String fullname) {
+        return new PollCompletion(() -> new File(fullname).exists());
+    }
+
+    public boolean pollUntilSizeOfExceeds(String filename, long expectedSize) {
+        return repeatUntil(new PollCompletion(() -> exists(filename) && sizeOf(filename) > expectedSize));
+    }
 }
