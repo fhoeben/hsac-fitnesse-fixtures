@@ -15,7 +15,6 @@ public class InputBy {
     }
 
     /**
-     * new CssBy("input[value='%s']:not([type='hidden'])", place)
      * @param value value to look for
      * @return non-hidden input containing value.
      */
