@@ -8,6 +8,7 @@ import org.apache.commons.lang3.time.StopWatch;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.function.Supplier;
 
 /**
  * Base class for Slim fixtures.
@@ -211,6 +212,26 @@ public class SlimFixture  implements InteractionAwareFixture {
         @Override
         public void repeat() {
             nested.repeat();
+        }
+    }
+
+    /**
+     * RepeatCompletion without repeat action, just calls function to determine whether it is completed.
+     */
+    public static class PollCompletion implements RepeatCompletion {
+        private final Supplier<Boolean> isFinishedSupplier;
+
+        public PollCompletion(Supplier<Boolean> isFinishedSupplier) {
+            this.isFinishedSupplier = isFinishedSupplier;
+        }
+
+        @Override
+        public boolean isFinished() {
+            return Boolean.TRUE.equals(isFinishedSupplier.get());
+        }
+
+        @Override
+        public void repeat() {
         }
     }
     // Polling

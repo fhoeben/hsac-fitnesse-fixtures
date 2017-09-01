@@ -178,4 +178,21 @@ public class FileFixture extends SlimFixtureWithMap {
         return String.format("<a href=\"%s\">%s</a>", url, f.getName());
     }
 
+    public boolean pollUntilExists(String filename) {
+        String fullname = getFullName(filename);
+        return repeatUntil(fileExistsCompletion(fullname));
+    }
+
+    public boolean pollUntilDoesNotExist(String filename) {
+        String fullname = getFullName(filename);
+        return repeatUntilNot(fileExistsCompletion(fullname));
+    }
+
+    protected static PollCompletion fileExistsCompletion(String fullname) {
+        return new PollCompletion(() -> new File(fullname).exists());
+    }
+
+    public boolean pollUntilSizeOfExceeds(String filename, long expectedSize) {
+        return repeatUntil(new PollCompletion(() -> exists(filename) && sizeOf(filename) > expectedSize));
+    }
 }
