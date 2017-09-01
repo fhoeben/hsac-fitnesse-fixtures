@@ -21,10 +21,17 @@ last one!-!}
 |check        |filename of |$created                    |bye1.txt                        |
 |check        |base name of|$created                    |bye1                            |
 |check        |extension of|$created                    |txt                             |
+|ensure       |exists      |$created                                                     |
+|delete       |$created                                                                  |
+|reject       |exists      |$created                                                     |
+|             |deleting non-existing file does not work: throws exception                |
+|             |but ensuring non-existing file does not exist is no problem, returns false|
+|reject       |delete      |$created                    |if exists                       |
 |note         |directory to be used by the fixture can be set to inside the files section|
 |set directory|http://files/test                                                         |
 |$created2=   |create      |bye2.txt                    |containing|Bye Bye 2            |
 |check        |text in     |$created2                   |Bye Bye 2                       |
+|delete       |$created2   |if exists                                                    |
 |note         |directory to be used by the fixture can be set to system path             |
 |set directory|${DIR}                                                                    |
 |show         |create      |bye.txt                     |containing|Bye Bye 3            |
@@ -46,15 +53,15 @@ last one!-!}
 
 Table below shows how we can use a list of non-reusable data from a file:
 
-|script                                                             |
-|set directory|http://files/fileFixture                             |
-|create       |list.txt            |containing    |${LIST_CONTENT}  |
-|show         |text in             |list.txt                        |
-|check        |take first line from|list.txt      |001              |
-|show         |text in             |list.txt                        |
-|check        |take first line from|list.txt      |002              |
-|check        |take first line from|list.txt      |last one!        |
-|show         |text in             |list.txt                        |
+|script                                                       |
+|set directory|http://files/fileFixture                       |
+|create       |list.txt            |containing|${LIST_CONTENT}|
+|show         |text in             |list.txt                  |
+|check        |take first line from|list.txt  |001            |
+|show         |text in             |list.txt                  |
+|check        |take first line from|list.txt  |002            |
+|check        |take first line from|list.txt  |last one!      |
+|show         |text in             |list.txt                  |
 
 
 
