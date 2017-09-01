@@ -29,6 +29,10 @@ public class BestMatchBy extends SingleElementOrNullBy {
 
     @Override
     public WebElement findElement(SearchContext context) {
+        return findElement(by, context);
+    }
+
+    public static WebElement findElement(By by, SearchContext context) {
         WebElement element = null;
         List<WebElement> elements = context.findElements(by);
         if (elements.size() == 1) {
@@ -39,7 +43,7 @@ public class BestMatchBy extends SingleElementOrNullBy {
         return element;
     }
 
-    private WebElement selectBestElement(SearchContext context, List<WebElement> elements) {
+    private static WebElement selectBestElement(SearchContext context, List<WebElement> elements) {
         JavascriptExecutor jse = JavascriptHelper.getJavascriptExecutor(context);
         // take the first displayed element without any elements on top of it,
         // if none: take first displayed
@@ -72,7 +76,7 @@ public class BestMatchBy extends SingleElementOrNullBy {
         return element;
     }
 
-    private boolean isOnTop(JavascriptExecutor executor, WebElement element) {
+    private static boolean isOnTop(JavascriptExecutor executor, WebElement element) {
         WebElement e = (WebElement) JavascriptHelper.executeScript(executor, TOP_ELEMENT_AT, element);
         return element.equals(e);
     }

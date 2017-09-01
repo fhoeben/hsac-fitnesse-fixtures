@@ -15,7 +15,7 @@ public class ContainerBy {
         return new Heuristic(containerName);
     }
 
-    public static class Heuristic extends AbstractHeuristicBy {
+    public static class Heuristic extends HeuristicBy {
         public Heuristic(String container) {
             super(new XPathBy(".//fieldset[.//legend/text()[normalized(.) = '%s']]", container),
                     AriaLabelBy.exact(container),

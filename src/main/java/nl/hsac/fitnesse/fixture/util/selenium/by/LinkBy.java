@@ -22,7 +22,7 @@ public class LinkBy {
     /**
      * Finds by exact link text.
      */
-    public static class Exact extends AbstractHeuristicBy {
+    public static class Exact extends HeuristicBy {
         public Exact(String text) {
             super(By.linkText(text),
                     new XPathBy(".//text()[normalized(.)='%s']/ancestor-or-self::a", text));
@@ -32,7 +32,7 @@ public class LinkBy {
     /**
      * Finds by partial link text.
      */
-    public static class Partial extends AbstractHeuristicBy {
+    public static class Partial extends HeuristicBy {
         public Partial(String partialText) {
             super(By.partialLinkText(partialText),
                     new XPathBy(".//text()[contains(normalized(.),'%s')]/ancestor-or-self::a", partialText));
@@ -42,7 +42,7 @@ public class LinkBy {
     /**
      * Finds using heuristic.
      */
-    public static class Heuristic extends AbstractHeuristicBy {
+    public static class Heuristic extends HeuristicBy {
         public Heuristic(String place) {
             super(new FindParentAAndCheckInteractableFilter(),
                     exactText(place),

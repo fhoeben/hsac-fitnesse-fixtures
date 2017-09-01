@@ -10,7 +10,7 @@ public class ToClickBy {
         return new Heuristic(place);
     }
 
-    public static class Heuristic extends AbstractHeuristicBy {
+    public static class Heuristic extends HeuristicBy {
         public Heuristic(String place) {
             super(LinkBy.exactText(place),
                     new XPathBy(".//button/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::button", place),

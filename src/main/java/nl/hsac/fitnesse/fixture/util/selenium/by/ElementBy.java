@@ -21,7 +21,7 @@ public class ElementBy {
     /**
      * Finds using heuristic.
      */
-    public static class Heuristic extends AbstractHeuristicBy {
+    public static class Heuristic extends HeuristicBy {
         public Heuristic(String place) {
             super(exact(place), partial(place));
         }
@@ -30,7 +30,7 @@ public class ElementBy {
     /**
      * Finds elements exactly matching supplied place.
      */
-    public static class Exact extends AbstractHeuristicBy {
+    public static class Exact extends HeuristicBy {
         public Exact(String place) {
             super(LabelBy.exact(place),
                     PlaceholderBy.exact(place),
@@ -45,7 +45,7 @@ public class ElementBy {
     /**
      * Finds elements also showing supplied place.
      */
-    public static class Partial extends AbstractHeuristicBy {
+    public static class Partial extends HeuristicBy {
         public Partial(String place) {
             super(LabelBy.partial(place),
                     PlaceholderBy.partial(place),

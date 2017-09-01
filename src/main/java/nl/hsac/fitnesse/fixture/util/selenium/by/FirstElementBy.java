@@ -4,35 +4,50 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 import static nl.hsac.fitnesse.fixture.util.FirstNonNullHelper.firstNonNull;
 
 /**
- * By which returns the first non-null result of a sequence of element functions, or nested By clauses.
+ * By which returns the first non-null result of a sequence of nested By clauses.
+ * If a nested By returns mutliple elements it uses {@link BestMatchBy#findElement(By, SearchContext)} to select
+ * the element to use.
  */
 public class FirstElementBy extends SingleElementOrNullBy {
-    private final Function<SearchContext, WebElement>[] functions;
+    private final List<By> byList;
     private Function<WebElement, WebElement> postProcessor;
 
-    public FirstElementBy(Function<WebElement, WebElement> postProcessor, Function<SearchContext, WebElement>... functions) {
-        this.functions = functions;
+    public FirstElementBy(Function<WebElement, WebElement> postProcessor, By firstBy, By... bys) {
+        int size = 1;
+        if (bys != null) {
+            size += bys.length;
+        }
+        byList = new ArrayList<>(size);
+        byList.add(firstBy);
+        Collections.addAll(byList, bys);
         setPostProcessor(postProcessor);
     }
 
-    public FirstElementBy(Function<SearchContext, WebElement>... functions) {
-        this(Function.identity(), functions);
-    }
-
-    public FirstElementBy(By... bys) {
-        this(convertToFunctions(bys));
+    public FirstElementBy(By firstBy, By... bys) {
+        this(Function.identity(), firstBy, bys);
     }
 
     @Override
     public WebElement findElement(SearchContext context) {
-        return firstNonNull(c -> postProcessor.apply(c.apply(context)), functions);
+        return firstNonNull(by -> postProcessor.apply(getWebElement(by, context)), byList);
+    }
+
+    protected WebElement getWebElement(By by, SearchContext context) {
+        WebElement byResult;
+        if (by instanceof SingleElementOrNullBy) {
+            byResult = by.findElement(context);
+        } else {
+            byResult = BestMatchBy.findElement(by, context);
+        }
+        return byResult;
     }
 
     /**
@@ -53,15 +68,6 @@ public class FirstElementBy extends SingleElementOrNullBy {
 
     @Override
     public String toString() {
-        return "FirstElementBy[" + Arrays.toString(functions) + "]";
-    }
-
-    /**
-     * Converts array of By to array of Function returning first result (or null).
-     * @param bys bys to convert.
-     * @return functions, each returning first result of by.
-     */
-    public static Function<SearchContext, WebElement>[] convertToFunctions(By[] bys) {
-        return Stream.of(bys).map(SingleElementOrNullBy::byToFunction).toArray(Function[]::new);
+        return getClass().getName() + byList;
     }
 }
