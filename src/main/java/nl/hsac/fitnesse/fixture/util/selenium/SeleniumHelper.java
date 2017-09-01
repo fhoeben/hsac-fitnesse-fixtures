@@ -118,88 +118,7 @@ public class SeleniumHelper {
      *          null if none could be found.
      */
     public WebElement getElementToClick(String place) {
-        return findByTechnicalSelectorOr(place, () -> {
-            WebElement element = findByLinkText(place);
-            WebElement firstFound = element;
-            if (!isInteractable(element)) {
-                element = findByXPath(".//button/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::button", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findByXPath(".//label/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::label", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = getElementExact(place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (("Submit".equals(place) || "Reset".equals(place))
-                    && !isInteractable(element)) {
-                element = findElement(byCss("input[type='%s']:not([value])", place.toLowerCase()));
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findByPartialLinkText(place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findByXPath(".//button/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::button", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findByXPath(".//label/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::label", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = getElementPartial(place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                // find element with specified text and 'onclick' attribute
-                element = findByXPath(".//text()[@onclick and normalized(.)='%s']/..", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findByXPath(".//text()[@onclick and contains(normalized(.),'%s')]/..", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                // find element with specified text
-                element = findByXPath(".//text()[normalized(.)='%s']/..", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findByXPath(".//text()[contains(normalized(.),'%s')]/..", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            return isInteractable(element)
-                    ? element
-                    : firstFound;
-        });
+        return findByTechnicalSelectorOr(place, () -> findElement(ToClickBy.heuristic(place)));
     }
 
     /**
@@ -211,14 +130,6 @@ public class SeleniumHelper {
      */
     public WebElement getLink(String place) {
         return findByTechnicalSelectorOr(place, () -> findElement(LinkBy.heuristic(place)));
-    }
-
-    public WebElement findByLinkText(String text) {
-        return findElement(LinkBy.exactText(text));
-    }
-
-    public WebElement findByPartialLinkText(String partialText) {
-        return findElement(LinkBy.partialText(partialText));
     }
 
     /**
@@ -266,42 +177,12 @@ public class SeleniumHelper {
         return element;
     }
 
-    public WebElement getElementExact(String place) {
-        return findElement(ElementBy.exact(place));
-    }
-
-    public WebElement getElementPartial(String place) {
-        return findElement(ElementBy.partial(place));
-    }
-
     /**
      * @param element element to check.
      * @return whether the element is displayed and enabled.
      */
     public boolean isInteractable(WebElement element) {
         return IsInteractableFilter.mayPass(element);
-    }
-
-    /**
-     * Finds element based on the exact (aria-)label text.
-     * @param labelText text for label.
-     * @return first interactable element found,
-     *          first element found if no interactable element could be found,
-     *          null if none could be found.
-     */
-    public WebElement getElementByLabelOccurrence(String labelText) {
-        return findElement(LabelBy.exact(labelText));
-    }
-
-    /**
-     * Finds element based on part of the (aria-)label text.
-     * @param labelText text for label.
-     * @return first interactable element found,
-     *          first element found if no interactable element could be found,
-     *          null if none could be found.
-     */
-    public WebElement getElementByPartialLabelOccurrence(String labelText) {
-        return findElement(LabelBy.partial(labelText));
     }
 
     public WebElement getLabelledElement(WebElement label) {
