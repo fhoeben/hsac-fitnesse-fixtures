@@ -189,14 +189,6 @@ public class SeleniumHelper {
         return LabelBy.getLabelledElement(getCurrentContext(), label);
     }
 
-    public WebElement getElementByAriaLabel(String labelText) {
-        return findElement(AriaLabelBy.exact(labelText));
-    }
-
-    public WebElement getElementByPartialAriaLabel(String labelText) {
-        return findElement(AriaLabelBy.partial(labelText));
-    }
-
     public WebElement getNestedElementForValue(WebElement parent) {
         return ConstantBy.nestedElementForValue().findElement(parent);
     }
@@ -370,7 +362,6 @@ public class SeleniumHelper {
     public String getAllDirectText(WebElement element) {
         return (String) executeJavascript(ALL_DIRECT_TEXT_CONTENT, element);
     }
-
 
     /**
      * Sets value of input field of type 'date'.
