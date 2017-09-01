@@ -446,22 +446,7 @@ public class SeleniumHelper {
      *          null if none could be found.
      */
     public WebElement getElementByLabelOccurrence(String labelText) {
-        return getElementByLabel(labelText,
-                                    ".//label/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::label"
-        );
-    }
-
-    /**
-     * Finds element based on the start of the (aria-)label text.
-     * @param labelText text for label.
-     * @return first interactable element found,
-     *          first element found if no interactable element could be found,
-     *          null if none could be found.
-     */
-    public WebElement getElementByStartLabelOccurrence(String labelText) {
-        return getElementByLabel(labelText,
-                ".//label/descendant-or-self::text()[starts-with(normalized(.), '%s')]/ancestor-or-self::label"
-        );
+        return findElement(LabelBy.exact(labelText));
     }
 
     /**
@@ -472,28 +457,11 @@ public class SeleniumHelper {
      *          null if none could be found.
      */
     public WebElement getElementByPartialLabelOccurrence(String labelText) {
-        return getElementByLabel(labelText,
-                ".//label/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::label"
-        );
-    }
-
-    private WebElement getElementByLabel(String labelText, String labelXPath) {
-        WebElement label = findByXPath(labelXPath, labelText);
-        WebElement element = getLabelledElement(label);
-        return element;
+        return findElement(LabelBy.partial(labelText));
     }
 
     public WebElement getLabelledElement(WebElement label) {
-        WebElement element = null;
-        if (label != null) {
-            String forAttr = label.getAttribute("for");
-            if (forAttr == null || "".equals(forAttr)) {
-                element = getNestedElementForValue(label);
-            } else {
-                element = findElement(By.id(forAttr));
-            }
-        }
-        return element;
+        return LabelBy.getLabelledElement(label);
     }
 
     public WebElement getElementByAriaLabel(String labelText) {
