@@ -38,7 +38,7 @@ public class ElementBy {
                     new XPathBy(".//th/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::th[1]/../td", place),
                     new XPathBy(".//dt/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::dt[1]/following-sibling::dd[1]", place),
                     AriaLabelBy.exact(place),
-                    new CssBy("[title='%s']", place));
+                    TitleBy.exact(place));
         }
     }
 
@@ -53,7 +53,7 @@ public class ElementBy {
                     new XPathBy(".//th/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::th[1]/../td", place),
                     new XPathBy(".//dt/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::dt[1]/following-sibling::dd[1]", place),
                     AriaLabelBy.partial(place),
-                    new CssBy("[title*='%s']", place));
+                    TitleBy.partial(place));
         }
     }
 }

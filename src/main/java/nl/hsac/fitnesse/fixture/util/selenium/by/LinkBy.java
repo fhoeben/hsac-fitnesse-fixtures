@@ -47,10 +47,10 @@ public class LinkBy {
             super(new FindParentAAndCheckInteractableFilter(),
                     exactText(place),
                     AriaLabelBy.exact(place),
-                    new CssBy("[title='%s']", place),
+                    TitleBy.exact(place),
                     partialText(place),
                     AriaLabelBy.partial(place),
-                    new CssBy("[title*='%s']", place));
+                    TitleBy.partial(place));
         }
 
         /**
