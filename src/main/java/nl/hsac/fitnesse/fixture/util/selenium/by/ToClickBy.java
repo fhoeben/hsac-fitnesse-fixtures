@@ -17,6 +17,7 @@ public class ToClickBy {
                     new XPathBy(".//label/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::label", place),
                     ElementBy.exact(place),
                     ConstantBy.submitOrReset(place),
+                    LinkBy.partialText(place),
                     new XPathBy(".//button/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::button", place),
                     new XPathBy(".//label/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::label", place),
                     ElementBy.partial(place),
