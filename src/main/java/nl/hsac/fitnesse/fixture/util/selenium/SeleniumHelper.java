@@ -210,51 +210,7 @@ public class SeleniumHelper {
      *          null if none could be found.
      */
     public WebElement getLink(String place) {
-        return findByTechnicalSelectorOr(place, () -> {
-            WebElement element = findByLinkText(place);
-            WebElement firstElement = element;
-            if (!isInteractable(element)) {
-                element = getElementByAriaLabel(place);
-                element = getParentA(element);
-                if (firstElement == null) {
-                    firstElement = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findElement(byCss("[title='%s']", place));
-                element = getParentA(element);
-                if (firstElement == null) {
-                    firstElement = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findByPartialLinkText(place);
-                if (firstElement == null) {
-                    firstElement = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = getElementByPartialAriaLabel(place);
-                element = getParentA(element);
-                if (firstElement == null) {
-                    firstElement = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findElement(byCss("[title*='%s']", place));
-                element = getParentA(element);
-                if (firstElement == null) {
-                    firstElement = element;
-                }
-            }
-            return isInteractable(element)
-                    ? element
-                    : firstElement;
-        });
-    }
-
-    public WebElement getParentA(WebElement element) {
-        return ConstantBy.parentA().findElement(element);
+        return findByTechnicalSelectorOr(place, () -> findElement(LinkBy.heuristic(place)));
     }
 
     public WebElement findByLinkText(String text) {
