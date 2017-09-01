@@ -51,6 +51,13 @@ public class FirstElementBy extends SingleElementOrNullBy {
     }
 
     /**
+     * @return Bys nested inside.
+     */
+    public List<By> getByList() {
+        return byList;
+    }
+
+    /**
      * Sets post processor to apply to each function's/By's result.
      * This function should return null when element should not be returned.
      * @param postProcessor function to apply to each element found to determine whether it should be returned.
