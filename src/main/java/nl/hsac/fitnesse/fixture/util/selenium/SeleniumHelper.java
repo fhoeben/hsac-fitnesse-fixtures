@@ -186,7 +186,7 @@ public class SeleniumHelper {
     }
 
     public WebElement getLabelledElement(WebElement label) {
-        return LabelBy.getLabelledElement(label);
+        return LabelBy.getLabelledElement(getCurrentContext(), label);
     }
 
     public WebElement getElementByAriaLabel(String labelText) {
