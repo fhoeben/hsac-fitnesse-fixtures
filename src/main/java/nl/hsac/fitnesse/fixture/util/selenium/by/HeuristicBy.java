@@ -46,7 +46,13 @@ public class HeuristicBy extends FirstElementBy {
     }
 
     private static Function<SearchContext, WebElement> nestedFunction(By nestedBy) {
-        // nested may not be needed, so we wait to create the nested BestMatchBy until it is needed
-        return (sc) -> new BestMatchBy(nestedBy).findElement(sc);
+        Function<SearchContext, WebElement> result;
+        if (nestedBy instanceof SingleElementOrNullBy) {
+            result = nestedBy::findElement;
+        } else {
+            // nested may not be needed, so we wait to create the nested BestMatchBy until it is needed
+            result = (sc) -> new BestMatchBy(nestedBy).findElement(sc);
+        }
+        return result;
     }
 }

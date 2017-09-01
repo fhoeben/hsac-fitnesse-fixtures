@@ -21,7 +21,7 @@ public abstract class SingleElementOrNullBy extends By {
         Function<SearchContext, WebElement> function;
         if (by instanceof SingleElementOrNullBy) {
             // will not throw exception, but return null when no element is found
-            function = sc -> by.findElement(sc);
+            function = by::findElement;
         } else {
             function = sc -> {
                 // single element case will throw exception when no element is found
