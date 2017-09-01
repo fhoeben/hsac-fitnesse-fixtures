@@ -33,9 +33,8 @@ public class ElementBy {
     public static class Exact extends AbstractHeuristicBy {
         public Exact(String place) {
             super(LabelBy.exact(place),
-                    new CssBy("input[placeholder='%s']", place),
+                    PlaceholderBy.exact(place),
                     InputBy.exactValue(place),
-                    new CssBy("textarea[placeholder='%s']", place),
                     new XPathBy(".//th/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::th[1]/../td", place),
                     new XPathBy(".//dt/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::dt[1]/following-sibling::dd[1]", place),
                     AriaLabelBy.exact(place),
@@ -49,9 +48,8 @@ public class ElementBy {
     public static class Partial extends AbstractHeuristicBy {
         public Partial(String place) {
             super(LabelBy.partial(place),
-                    new CssBy("input[placeholder*='%s']", place),
+                    PlaceholderBy.partial(place),
                     InputBy.partialValue(place),
-                    new CssBy("textarea[placeholder*='%s']", place),
                     new XPathBy(".//th/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::th[1]/../td", place),
                     new XPathBy(".//dt/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::dt[1]/following-sibling::dd[1]", place),
                     AriaLabelBy.partial(place),
