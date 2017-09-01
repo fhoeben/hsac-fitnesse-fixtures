@@ -276,7 +276,7 @@ public class SeleniumHelper {
         List<WebElement> texts = containerContext.findElements(findAllTexts);
         int result = countDisplayedElements(texts, text, checkOnScreen);
 
-        By findAllInputs = InputBy.partialValue(text);
+        By findAllInputs = byXpath(".//input[contains(normalized(@value), '%s')]", text);
         List<WebElement> inputs = containerContext.findElements(findAllInputs);
         result = result + countDisplayedValues(inputs, text, checkOnScreen);
 
