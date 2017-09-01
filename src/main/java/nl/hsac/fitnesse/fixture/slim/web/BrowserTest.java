@@ -12,6 +12,7 @@ import nl.hsac.fitnesse.fixture.util.HttpResponse;
 import nl.hsac.fitnesse.fixture.util.ReflectionHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.PageSourceSaver;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.by.ContainerBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.TextBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
@@ -805,17 +806,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected WebElement getContainerImpl(String container) {
-        WebElement containerElement = findByXPath(".//fieldset[.//legend/text()[normalized(.) = '%s']]", container);
-        if (containerElement == null) {
-            containerElement = getSeleniumHelper().getElementByAriaLabel(container);
-            if (containerElement == null) {
-                containerElement = findByXPath(".//fieldset[.//legend/text()[contains(normalized(.), '%s')]]", container);
-                if (containerElement == null) {
-                    containerElement = getSeleniumHelper().getElementByPartialAriaLabel(container);
-                }
-            }
-        }
-        return containerElement;
+        return findElement(ContainerBy.heuristic(container));
     }
 
     protected boolean clickElement(WebElement element) {
