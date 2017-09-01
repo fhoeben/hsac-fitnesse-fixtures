@@ -272,7 +272,7 @@ public class SeleniumHelper {
     public int countVisibleOccurrences(String text, boolean checkOnScreen) {
         SearchContext containerContext = getCurrentContext();
 
-        By findAllTexts = byXpath(".//text()[contains(normalized(.), '%s')]/..", text);
+        By findAllTexts = TextBy.partial(text);
         List<WebElement> texts = containerContext.findElements(findAllTexts);
         int result = countDisplayedElements(texts, text, checkOnScreen);
 

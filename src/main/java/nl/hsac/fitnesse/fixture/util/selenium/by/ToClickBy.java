@@ -22,8 +22,8 @@ public class ToClickBy {
                     ElementBy.partial(place),
                     new XPathBy(".//text()[@onclick and normalized(.)='%s']/..", place),
                     new XPathBy(".//text()[@onclick and contains(normalized(.),'%s')]/..", place),
-                    new XPathBy(".//text()[normalized(.)='%s']/..", place),
-                    new XPathBy(".//text()[contains(normalized(.),'%s')]/..", place));
+                    TextBy.exact(place),
+                    TextBy.partial(place));
         }
     }
 }
