@@ -12,9 +12,12 @@ import java.util.regex.Pattern;
  * that does whitespace normalization, that also considers a '&nbsp;' whitespace.
  */
 public class XPathBy extends LazyPatternBy {
-    private final static Map<String, String> CACHE = CacheHelper.lruCache(1000);
+    private static final Map<String, String> CACHE = CacheHelper.lruCache(1000);
     // Regex to find our own 'fake xpath function' in xpath 'By' content
-    private final static Pattern X_PATH_NORMALIZED = Pattern.compile("normalized\\((.+?(\\(\\))?)\\)");
+    private static final Pattern X_PATH_NORMALIZED = Pattern.compile("normalized\\((.+?(\\(\\))?)\\)");
+    private static final String NBSP_CHAR = "\u00a0";
+    private static final String NORMALIZED_REPLACEMENT = "normalize-space(translate($1, '" + NBSP_CHAR + "', ' '))";
+    private static final Pattern WHITESPACE_REPLACE = Pattern.compile("[" + NBSP_CHAR + "\\s]+");
 
     /**
      * Creates By based on xPath, supporting placeholder replacement.
@@ -52,7 +55,7 @@ public class XPathBy extends LazyPatternBy {
             regex replacement when it is not needed.
         */
             Matcher m = X_PATH_NORMALIZED.matcher(xPath);
-            String updatedPattern = m.replaceAll("normalize-space(translate($1, '\u00a0', ' '))");
+            String updatedPattern = m.replaceAll(NORMALIZED_REPLACEMENT);
             result = updatedPattern;
         } else {
             result = xPath;
@@ -69,7 +72,7 @@ public class XPathBy extends LazyPatternBy {
     public static String getNormalizedText(String elementText) {
         String result = null;
         if (elementText != null) {
-            result = elementText.replace('\u00a0', ' ').replaceAll("\\s+", " ");
+            result = WHITESPACE_REPLACE.matcher(elementText).replaceAll(" ");
         }
         return result;
     }
