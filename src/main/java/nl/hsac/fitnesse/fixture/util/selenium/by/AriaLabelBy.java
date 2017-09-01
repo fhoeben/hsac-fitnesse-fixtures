@@ -17,7 +17,7 @@ public class AriaLabelBy {
     /**
      * Finds by exact label text.
      */
-    public static class Exact extends HeuristicBy {
+    public static class Exact extends AbstractHeuristicBy {
         public Exact(String text) {
             super(new XPathBy(".//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[normalized(.) = '%s']/ancestor-or-self::*[@id]/@id]", text),
                     new CssBy("[aria-label='%s']", text));
@@ -27,7 +27,7 @@ public class AriaLabelBy {
     /**
      * Finds by partial label text.
      */
-    public static class Partial extends HeuristicBy {
+    public static class Partial extends AbstractHeuristicBy {
         public Partial(String partialText) {
             super(new XPathBy(".//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::*[@id]/@id]", partialText),
                     new CssBy("[aria-label*='%s']", partialText));
