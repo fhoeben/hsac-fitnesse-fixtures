@@ -57,7 +57,7 @@ public class LabelBy extends SingleElementOrNullBy {
             } else {
                 // please not we DO NOT start xPath with '.' as we want to search entire document
                 // and not just inside the label
-                element = createXPathBy("//*[@id = '%s']", forAttr).findElement(label);
+                element = new BestMatchBy(By.id(forAttr)).findElement(label);
             }
         }
         return element;
