@@ -229,20 +229,7 @@ public class SeleniumHelper {
      *          null if none could be found.
      */
     public WebElement getElement(String place) {
-        return findByTechnicalSelectorOr(place, () -> {
-            WebElement element = getElementExact(place);
-            // first element found, even if it is not (yet) interactable.
-            WebElement firstElement = element;
-            if (!isInteractable(element)) {
-                element = getElementPartial(place);
-                if (firstElement == null) {
-                    firstElement = element;
-                }
-            }
-            return isInteractable(element)
-                    ? element
-                    : firstElement;
-        });
+        return findByTechnicalSelectorOr(place, () -> findElement(ElementBy.heuristic(place)));
     }
 
     public boolean isTechnicalSelector(String place) {
@@ -280,107 +267,11 @@ public class SeleniumHelper {
     }
 
     public WebElement getElementExact(String place) {
-        WebElement element = getElementByLabelOccurrence(place);
-        // first element found, even if it is not (yet) interactable.
-        WebElement firstElement = element;
-
-        if (!isInteractable(element)) {
-            element = findElement(byCss("input[placeholder='%s']", place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findElement(byCss("input[value='%s']:not([type='hidden'])", place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findElement(byCss("textarea[placeholder='%s']", place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findByXPath(".//th/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::th[1]/../td ", place);
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findByXPath(".//dt/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::dt[1]/following-sibling::dd[1] ", place);
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = getElementByAriaLabel(place);
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findElement(byCss("[title='%s']", place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        return isInteractable(element)
-                ? element
-                : firstElement;
+        return findElement(ElementBy.exact(place));
     }
 
     public WebElement getElementPartial(String place) {
-        WebElement element = getElementByPartialLabelOccurrence(place);
-        // first element found, even if it is not (yet) interactable.
-        WebElement firstElement = element;
-
-        if (!isInteractable(element)) {
-            element = findElement(byCss("input[placeholder*='%s']", place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findElement(byCss("input[value*='%s']:not([type='hidden'])", place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findElement(byCss("textarea[placeholder*='%s']", place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findByXPath(".//th/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::th[1]/../td ", place);
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findByXPath(".//dt/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::dt[1]/following-sibling::dd[1] ", place);
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = getElementByPartialAriaLabel(place);
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findElement(byCss("[title*='%s']", place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        return isInteractable(element)
-                ? element
-                : firstElement;
+        return findElement(ElementBy.partial(place));
     }
 
     /**
