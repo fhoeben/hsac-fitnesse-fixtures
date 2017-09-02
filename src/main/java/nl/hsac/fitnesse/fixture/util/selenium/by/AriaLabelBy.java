@@ -7,11 +7,11 @@ import org.openqa.selenium.By;
  */
 public class AriaLabelBy {
     public static By exact(String text) {
-        return new AriaLabelBy.Exact(text);
+        return new Exact(text);
     }
 
     public static By partial(String partialText) {
-        return new AriaLabelBy.Partial(partialText);
+        return new Partial(partialText);
     }
 
     /**

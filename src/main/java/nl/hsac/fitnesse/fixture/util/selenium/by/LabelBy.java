@@ -6,11 +6,11 @@ import org.openqa.selenium.WebElement;
 
 public class LabelBy extends SingleElementOrNullBy {
     public static By exact(String text) {
-        return new LabelBy.Exact(text);
+        return new Exact(text);
     }
 
     public static By partial(String partialText) {
-        return new LabelBy.Partial(partialText);
+        return new Partial(partialText);
     }
 
     /**
