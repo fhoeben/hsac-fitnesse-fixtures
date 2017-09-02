@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.util.selenium.by;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -43,9 +44,10 @@ public class LinkBy {
      * Finds using heuristic.
      */
     public static class Heuristic extends HeuristicBy {
+        private static final By FIND_PARENT_A_BY = By.xpath("./ancestor::a");
+
         public Heuristic(String place) {
-            super(new FindParentAAndCheckInteractableFilter(),
-                    exactText(place),
+            super(exactText(place),
                     AriaLabelBy.exact(place),
                     TitleBy.exact(place),
                     partialText(place),
@@ -53,22 +55,13 @@ public class LinkBy {
                     TitleBy.partial(place));
         }
 
-        /**
-         * Ensures any element returned is a link (i.e. an 'a'), AND is interactable.
-         */
-        private static class FindParentAAndCheckInteractableFilter extends IsInteractableFilter {
-            private static final By findParentABy = By.xpath("./ancestor::a");
-
-            @Override
-            public WebElement apply(WebElement element) {
-                if (element != null) {
-                    if (!"a".equalsIgnoreCase(element.getTagName())) {
-                        element = findParentABy.findElement(element);
-                    }
-                    return super.apply(element);
-                }
-                return null;
+        @Override
+        public WebElement findElement(SearchContext context) {
+            WebElement element = super.findElement(context);
+            if (element != null && !"a".equalsIgnoreCase(element.getTagName())) {
+                element = FIND_PARENT_A_BY.findElement(element);
             }
+            return element;
         }
     }
 }
