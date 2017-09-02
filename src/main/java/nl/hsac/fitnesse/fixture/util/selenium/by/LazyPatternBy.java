@@ -5,12 +5,14 @@ import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Own subclass of By which supports placeholders in its pattern.
  * The pattern will only be expanded on first usage.
  */
 public abstract class LazyPatternBy extends By {
+    private final static Pattern SINGLE_QUOTE_PATTERN = Pattern.compile("'");
     private final String pattern;
     private final String[] parameters;
     private By nested;
@@ -68,7 +70,13 @@ public abstract class LazyPatternBy extends By {
     protected abstract By createNested(String expr);
 
     protected String createExpression(String pattern, String... parameters) {
-        return fillPattern(pattern, parameters);
+        String result;
+        if (parameters.length == 0) {
+            result = pattern;
+        } else {
+            result = fillPattern(pattern, parameters);
+        }
+        return result;
     }
 
     /**
@@ -92,7 +100,7 @@ public abstract class LazyPatternBy extends By {
         }
         String patternToUse;
         if (containsSingleQuote) {
-            patternToUse = pattern.replace("'", "\"");
+            patternToUse = SINGLE_QUOTE_PATTERN.matcher(pattern).replaceAll("\"");
         } else {
             patternToUse = pattern;
         }
