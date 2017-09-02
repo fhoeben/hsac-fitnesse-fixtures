@@ -732,11 +732,7 @@ public class SeleniumHelper {
      * @throws RuntimeException if atMostOne is true and multiple elements (having an id) match the by.
      */
     public WebElement findElement(SearchContext context, By by) {
-        By toUse = by;
-        if (!(by instanceof SingleElementOrNullBy)) {
-            toUse = new BestMatchBy(by);
-        }
-        return toUse.findElement(context);
+        return FirstElementBy.getWebElement(by, context);
     }
 
     /**

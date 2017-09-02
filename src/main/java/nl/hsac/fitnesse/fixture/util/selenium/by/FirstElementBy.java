@@ -40,7 +40,7 @@ public class FirstElementBy extends SingleElementOrNullBy {
         return firstNonNull(by -> postProcessor.apply(getWebElement(by, context)), byList);
     }
 
-    protected WebElement getWebElement(By by, SearchContext context) {
+    public static WebElement getWebElement(By by, SearchContext context) {
         WebElement byResult;
         if (by instanceof SingleElementOrNullBy) {
             byResult = by.findElement(context);
