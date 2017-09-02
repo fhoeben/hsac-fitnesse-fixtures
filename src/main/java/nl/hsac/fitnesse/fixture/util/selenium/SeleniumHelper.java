@@ -24,6 +24,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -118,7 +119,7 @@ public class SeleniumHelper {
      *          null if none could be found.
      */
     public WebElement getElementToClick(String place) {
-        return findByTechnicalSelectorOr(place, () -> findElement(ToClickBy.heuristic(place)));
+        return findByTechnicalSelectorOr(place, ToClickBy::heuristic);
     }
 
     /**
@@ -129,7 +130,7 @@ public class SeleniumHelper {
      *          null if none could be found.
      */
     public WebElement getLink(String place) {
-        return findByTechnicalSelectorOr(place, () -> findElement(LinkBy.heuristic(place)));
+        return findByTechnicalSelectorOr(place, LinkBy::heuristic);
     }
 
     /**
@@ -140,11 +141,15 @@ public class SeleniumHelper {
      *          null if none could be found.
      */
     public WebElement getElement(String place) {
-        return findByTechnicalSelectorOr(place, () -> findElement(ElementBy.heuristic(place)));
+        return findByTechnicalSelectorOr(place, ElementBy::heuristic);
     }
 
-    public By placeToBy(String place) {
-        return TechnicalSelectorBy.forPlace(place);
+    public WebElement findByTechnicalSelectorOr(String place, Function<String, By> byFunction) {
+        By by = placeToBy(place);
+        if (by == null) {
+            by = byFunction.apply(place);
+        }
+        return findElement(by);
     }
 
     public WebElement findByTechnicalSelectorOr(String possibleTechnicalSelector, Supplier<WebElement> supplier) {
@@ -156,6 +161,10 @@ public class SeleniumHelper {
             element = supplier.get();
         }
         return element;
+    }
+
+    public By placeToBy(String place) {
+        return TechnicalSelectorBy.forPlace(place);
     }
 
     /**
