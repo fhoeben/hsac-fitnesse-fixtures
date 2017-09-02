@@ -143,27 +143,8 @@ public class SeleniumHelper {
         return findByTechnicalSelectorOr(place, () -> findElement(ElementBy.heuristic(place)));
     }
 
-    public boolean isTechnicalSelector(String place) {
-        return StringUtils.startsWithAny(place,
-                "id=", "xpath=", "css=", "name=", "link=", "partialLink=");
-    }
-
     public By placeToBy(String place) {
-        By result = null;
-        if (place.startsWith("id=")) {
-            result = By.id(place.substring(3));
-        } else if (place.startsWith("css=")) {
-            result = By.cssSelector(place.substring(4));
-        } else if (place.startsWith("name=")) {
-            result = By.name(place.substring(5));
-        } else if (place.startsWith("link=")) {
-            result = By.linkText(place.substring(5));
-        } else if (place.startsWith("partialLink=")) {
-            result = By.partialLinkText(place.substring(12));
-        } else if (place.startsWith("xpath=")) {
-            result = new XPathBy(place.substring(6));
-        }
-        return result;
+        return TechnicalSelectorBy.forPlace(place);
     }
 
     public WebElement findByTechnicalSelectorOr(String possibleTechnicalSelector, Supplier<WebElement> supplier) {
