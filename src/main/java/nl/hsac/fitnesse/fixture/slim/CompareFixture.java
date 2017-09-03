@@ -2,7 +2,7 @@ package nl.hsac.fitnesse.fixture.slim;
 
 import com.sksamuel.diffpatch.DiffMatchPatch;
 import nl.hsac.fitnesse.fixture.util.Formatter;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.LinkedList;
 

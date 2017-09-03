@@ -1,7 +1,7 @@
 package nl.hsac.fitnesse.junit;
 
 import fitnesse.util.TimeMeasurement;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;

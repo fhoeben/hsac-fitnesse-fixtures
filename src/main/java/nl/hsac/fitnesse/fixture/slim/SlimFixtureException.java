@@ -1,6 +1,6 @@
 package nl.hsac.fitnesse.fixture.slim;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 
 /**
  * Exception in Slim fixture.
