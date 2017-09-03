@@ -1,6 +1,5 @@
-package nl.hsac.fitnesse.fixture.util;
+package nl.hsac.fitnesse.fixture.util.selenium;
 
-import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import org.junit.Test;
 import org.openqa.selenium.By;
 

@@ -12,6 +12,9 @@ import nl.hsac.fitnesse.fixture.util.HttpResponse;
 import nl.hsac.fitnesse.fixture.util.ReflectionHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.PageSourceSaver;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.by.ContainerBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.TextBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -640,10 +643,10 @@ public class BrowserTest extends SlimFixture {
             if (isSelect(element)) {
                 optionValue = cleanupValue(optionValue);
                 By xpath = getSeleniumHelper().byXpath(".//option[normalized(text()) = '%s']", optionValue);
-                WebElement option = getSeleniumHelper().findElement(element, false, xpath);
+                WebElement option = getSeleniumHelper().findElement(element, xpath);
                 if (option == null) {
                     xpath = getSeleniumHelper().byXpath(".//option[contains(normalized(text()), '%s')]", optionValue);
-                    option = getSeleniumHelper().findElement(element, false, xpath);
+                    option = getSeleniumHelper().findElement(element, xpath);
                 }
                 if (option != null) {
                     result = clickElement(option);
@@ -803,17 +806,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected WebElement getContainerImpl(String container) {
-        WebElement containerElement = findByXPath(".//fieldset[.//legend/text()[normalized(.) = '%s']]", container);
-        if (containerElement == null) {
-            containerElement = getSeleniumHelper().getElementByAriaLabel(container, -1);
-            if (containerElement == null) {
-                containerElement = findByXPath(".//fieldset[.//legend/text()[contains(normalized(.), '%s')]]", container);
-                if (containerElement == null) {
-                    containerElement = getSeleniumHelper().getElementByPartialAriaLabel(container, -1);
-                }
-            }
-        }
-        return containerElement;
+        return findElement(ContainerBy.heuristic(container));
     }
 
     protected boolean clickElement(WebElement element) {
@@ -986,7 +979,7 @@ public class BrowserTest extends SlimFixture {
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String normalizedValueForIn(String place, String container) {
         String value = valueForIn(place, container);
-        return getSeleniumHelper().getNormalizedText(value);
+        return XPathBy.getNormalizedText(value);
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
@@ -1581,7 +1574,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected WebElement getElementToCheckVisibility(String place) {
-        WebElement result = findByXPath(".//text()[contains(normalized(.),'%s')]/..", place);
+        WebElement result = findElement(TextBy.partial(place));
         if (result == null || !result.isDisplayed()) {
                 result = getElementToClick(place);
             }

@@ -1,0 +1,34 @@
+This test ensures we can find 'input' and 'textarea' elements based on their placeholder text (which is shown before data is entered).
+
+!define HTML { {{{
+<html>
+<body>
+<label for="u">User</label>
+<textarea id="u" placeholder="Please enter your username"></textarea>
+<label for="p">Password</label>
+<input id="p" placeholder="Please enter your secret password">
+
+</body>
+</html>}}} }
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script                |browser test                                       |
+|open                  |$url                                               |
+|seconds before timeout|1                                                  |
+|                      |partial match                                      |
+|enter                 |Doe     |as      |your username                    |
+|check                 |value of|User    |Doe                              |
+|enter                 |s2      |as      |secret passwo                    |
+|check                 |value of|Password|s2                               |
+|                      |exact match                                        |
+|enter                 |John    |as      |Please enter your username       |
+|check                 |value of|User    |John                             |
+|enter                 |s       |as      |Please enter your secret password|
+|check                 |value of|Password|s                                |
+
+|script|mock xml server setup|
+|stop                        |
+

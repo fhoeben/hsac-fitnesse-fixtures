@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.fixture.util.selenium;
 
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
+import nl.hsac.fitnesse.fixture.util.selenium.by.*;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.*;
@@ -18,11 +19,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Helper to work with Selenium.
@@ -41,14 +44,6 @@ public class SeleniumHelper {
                     "  rect.right <= (window.innerWidth || document.documentElement.clientWidth));\n" +
             "} else { return null; }";
 
-    private static final String TOP_ELEMENT_AT =
-            "if (arguments[0].getBoundingClientRect) {\n" +
-                    "  var rect = arguments[0].getBoundingClientRect();\n" +
-                    "  var x = (rect.left + rect.right)/2;\n" +
-                    "  var y = (rect.top + rect.bottom)/2;\n" +
-                    "  return document.elementFromPoint(x,y);\n" +
-                    "} else { return null; }";
-
     private static final String ALL_DIRECT_TEXT_CONTENT =
             "var element = arguments[0], text = '';\n" +
                     "for (var i = 0; i < element.childNodes.length; ++i) {\n" +
@@ -59,8 +54,6 @@ public class SeleniumHelper {
                     "}\n" +
                     "return text;";
 
-    // Regex to find our own 'fake xpath function' in xpath 'By' content
-    private final static Pattern X_PATH_NORMALIZED = Pattern.compile("normalized\\((.+?(\\(\\))?)\\)");
     private final static char NON_BREAKING_SPACE = 160;
 
     private final List<WebElement> currentIFramePath = new ArrayList<WebElement>(4);
@@ -126,88 +119,7 @@ public class SeleniumHelper {
      *          null if none could be found.
      */
     public WebElement getElementToClick(String place) {
-        return findByTechnicalSelectorOr(place, () -> {
-            WebElement element = findByLinkText(place);
-            WebElement firstFound = element;
-            if (!isInteractable(element)) {
-                element = findByXPath(".//button/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::button", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findByXPath(".//label/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::label", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = getElementExact(place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (("Submit".equals(place) || "Reset".equals(place))
-                    && !isInteractable(element)) {
-                element = findElement(byCss("input[type='%s']:not([value])", place.toLowerCase()));
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findByPartialLinkText(place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findByXPath(".//button/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::button", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findByXPath(".//label/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::label", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = getElementPartial(place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                // find element with specified text and 'onclick' attribute
-                element = findByXPath(".//text()[@onclick and normalized(.)='%s']/..", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findByXPath(".//text()[@onclick and contains(normalized(.),'%s')]/..", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                // find element with specified text
-                element = findByXPath(".//text()[normalized(.)='%s']/..", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findByXPath(".//text()[contains(normalized(.),'%s')]/..", place);
-                if (firstFound == null) {
-                    firstFound = element;
-                }
-            }
-            return isInteractable(element)
-                    ? element
-                    : firstFound;
-        });
+        return findByTechnicalSelectorOr(place, ToClickBy::heuristic);
     }
 
     /**
@@ -218,84 +130,7 @@ public class SeleniumHelper {
      *          null if none could be found.
      */
     public WebElement getLink(String place) {
-        return findByTechnicalSelectorOr(place, () -> {
-            WebElement element = findByLinkText(place);
-            WebElement firstElement = element;
-            if (!isInteractable(element)) {
-                element = getElementByAriaLabel(place, -1);
-                element = getParentA(element);
-                if (firstElement == null) {
-                    firstElement = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findElement(byCss("[title='%s']", place));
-                element = getParentA(element);
-                if (firstElement == null) {
-                    firstElement = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findByPartialLinkText(place);
-                if (firstElement == null) {
-                    firstElement = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = getElementByPartialAriaLabel(place, -1);
-                element = getParentA(element);
-                if (firstElement == null) {
-                    firstElement = element;
-                }
-            }
-            if (!isInteractable(element)) {
-                element = findElement(byCss("[title*='%s']", place));
-                element = getParentA(element);
-                if (firstElement == null) {
-                    firstElement = element;
-                }
-            }
-            return isInteractable(element)
-                    ? element
-                    : firstElement;
-        });
-    }
-
-    public WebElement getParentA(WebElement element) {
-        if (element != null && !"a".equalsIgnoreCase(element.getTagName())) {
-            element = element.findElement(By.xpath("./ancestor::a"));
-        }
-        return element;
-    }
-
-    public WebElement findByLinkText(String text) {
-        WebElement element = findElement(By.linkText(text));
-        WebElement firstFound = element;
-        if (!isInteractable(element)) {
-            // finding by linkText does not find actual text if css text-transform is in place
-            element = findByXPath(".//text()[normalized(.)='%s']/ancestor-or-self::a", text);
-            if (firstFound == null) {
-                firstFound = element;
-            }
-        }
-        return isInteractable(element)
-                ? element
-                : firstFound;
-    }
-
-    public WebElement findByPartialLinkText(String partialText) {
-        WebElement element = findElement(By.partialLinkText(partialText));
-        WebElement firstFound = element;
-        if (!isInteractable(element)) {
-            // finding by linkText does not find actual text if css text-transform is in place
-            element = findByXPath(".//text()[contains(normalized(.),'%s')]/ancestor-or-self::a", partialText);
-            if (firstFound == null) {
-                firstFound = element;
-            }
-        }
-        return isInteractable(element)
-                ? element
-                : firstFound;
+        return findByTechnicalSelectorOr(place, LinkBy::heuristic);
     }
 
     /**
@@ -306,43 +141,15 @@ public class SeleniumHelper {
      *          null if none could be found.
      */
     public WebElement getElement(String place) {
-        return findByTechnicalSelectorOr(place, () -> {
-            WebElement element = getElementExact(place);
-            // first element found, even if it is not (yet) interactable.
-            WebElement firstElement = element;
-            if (!isInteractable(element)) {
-                element = getElementPartial(place);
-                if (firstElement == null) {
-                    firstElement = element;
-                }
-            }
-            return isInteractable(element)
-                    ? element
-                    : firstElement;
-        });
+        return findByTechnicalSelectorOr(place, ElementBy::heuristic);
     }
 
-    public boolean isTechnicalSelector(String place) {
-        return StringUtils.startsWithAny(place,
-                "id=", "xpath=", "css=", "name=", "link=", "partialLink=");
-    }
-
-    public By placeToBy(String place) {
-        By result = null;
-        if (place.startsWith("id=")) {
-            result = By.id(place.substring(3));
-        } else if (place.startsWith("css=")) {
-            result = By.cssSelector(place.substring(4));
-        } else if (place.startsWith("name=")) {
-            result = By.name(place.substring(5));
-        } else if (place.startsWith("link=")) {
-            result = By.linkText(place.substring(5));
-        } else if (place.startsWith("partialLink=")) {
-            result = By.partialLinkText(place.substring(12));
-        } else if (place.startsWith("xpath=")) {
-            result = By.xpath(place.substring(6));
+    public WebElement findByTechnicalSelectorOr(String place, Function<String, By> byFunction) {
+        By by = placeToBy(place);
+        if (by == null) {
+            by = byFunction.apply(place);
         }
-        return result;
+        return findElement(by);
     }
 
     public WebElement findByTechnicalSelectorOr(String possibleTechnicalSelector, Supplier<WebElement> supplier) {
@@ -356,108 +163,8 @@ public class SeleniumHelper {
         return element;
     }
 
-    public WebElement getElementExact(String place) {
-        WebElement element = getElementByLabelOccurrence(place, -1);
-        // first element found, even if it is not (yet) interactable.
-        WebElement firstElement = element;
-
-        if (!isInteractable(element)) {
-            element = findElement(byCss("input[placeholder='%s']", place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findElement(byCss("input[value='%s']:not([type='hidden'])", place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findElement(byCss("textarea[placeholder='%s']", place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findByXPath(".//th/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::th[1]/../td ", place);
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findByXPath(".//dt/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::dt[1]/following-sibling::dd[1] ", place);
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = getElementByAriaLabel(place, -1);
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findElement(byCss("[title='%s']", place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        return isInteractable(element)
-                ? element
-                : firstElement;
-    }
-
-    public WebElement getElementPartial(String place) {
-        WebElement element = getElementByPartialLabelOccurrence(place, -1);
-        // first element found, even if it is not (yet) interactable.
-        WebElement firstElement = element;
-
-        if (!isInteractable(element)) {
-            element = findElement(byCss("input[placeholder*='%s']", place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findElement(byCss("input[value*='%s']:not([type='hidden'])", place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findElement(byCss("textarea[placeholder*='%s']", place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findByXPath(".//th/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::th[1]/../td ", place);
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findByXPath(".//dt/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::dt[1]/following-sibling::dd[1] ", place);
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = getElementByPartialAriaLabel(place, -1);
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        if (!isInteractable(element)) {
-            element = findElement(byCss("[title*='%s']", place));
-            if (firstElement == null) {
-                firstElement = element;
-            }
-        }
-        return isInteractable(element)
-                ? element
-                : firstElement;
+    public By placeToBy(String place) {
+        return TechnicalSelectorBy.forPlace(place);
     }
 
     /**
@@ -465,125 +172,15 @@ public class SeleniumHelper {
      * @return whether the element is displayed and enabled.
      */
     public boolean isInteractable(WebElement element) {
-        return element != null && element.isDisplayed() && element.isEnabled();
-    }
-
-    /**
-     * Finds element based on the exact (aria-)label text.
-     * @param labelText text for label.
-     * @param index occurrence of label (first is 1).
-     * @return first interactable element found,
-     *          first element found if no interactable element could be found,
-     *          null if none could be found.
-     */
-    public WebElement getElementByLabelOccurrence(String labelText, int index) {
-        return getElementByLabel(labelText, index,
-                                    ".//label/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::label"
-        );
-    }
-
-    /**
-     * Finds element based on the start of the (aria-)label text.
-     * @param labelText text for label.
-     * @param index occurrence of label (first is 1).
-     * @return first interactable element found,
-     *          first element found if no interactable element could be found,
-     *          null if none could be found.
-     */
-    public WebElement getElementByStartLabelOccurrence(String labelText, int index) {
-        return getElementByLabel(labelText, index,
-                ".//label/descendant-or-self::text()[starts-with(normalized(.), '%s')]/ancestor-or-self::label"
-        );
-    }
-
-    /**
-     * Finds element based on part of the (aria-)label text.
-     * @param labelText text for label.
-     * @param index occurrence of label (first is 1).
-     * @return first interactable element found,
-     *          first element found if no interactable element could be found,
-     *          null if none could be found.
-     */
-    public WebElement getElementByPartialLabelOccurrence(String labelText, int index) {
-        return getElementByLabel(labelText, index,
-                ".//label/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::label"
-        );
-    }
-
-    private String indexedXPath(String xpathBase, int index) {
-
-        String xPath = xpathBase;
-        if (index > 0) {
-            xPath = String.format("(%s)[%s]", xpathBase, index);
-        }
-        return xPath;
-    }
-
-    private WebElement getElementByLabel(String labelText, int index, String labelXPath) {
-        String labelPattern = indexedXPath(labelXPath, index);
-        WebElement label = findByXPath(labelPattern, labelText);
-        WebElement element = getLabelledElement(label);
-        return element;
+        return IsInteractableFilter.mayPass(element);
     }
 
     public WebElement getLabelledElement(WebElement label) {
-        WebElement element = null;
-        if (label != null) {
-            String forAttr = label.getAttribute("for");
-            if (forAttr == null || "".equals(forAttr)) {
-                element = getNestedElementForValue(label);
-            } else {
-                element = findElement(By.id(forAttr));
-            }
-        }
-        return element;
-    }
-
-    public WebElement getElementByAriaLabel(String labelText, int index) {
-        // see if there is an element with labelText as text, whose id is referenced by an aria-labelledby attribute
-        String labelledByPattern = indexedXPath(".//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[normalized(.) = '%s']/ancestor-or-self::*[@id]/@id]", index);
-        WebElement element = findByXPath(labelledByPattern, labelText);
-        WebElement firstFound = element;
-
-        if (!isInteractable(element)) {
-            By by = byCss("[aria-label='%s']", labelText);
-            if (index > 0) {
-                element = findElement(by, index - 1);
-            } else {
-                element = findElement(by);
-            }
-            if (firstFound == null) {
-                firstFound = element;
-            }
-        }
-        return isInteractable(element)
-                ? element
-                : firstFound;
-    }
-
-    public WebElement getElementByPartialAriaLabel(String labelText, int index) {
-        String labelledByPattern = indexedXPath(".//*[@aria-labelledby and @aria-labelledby=//*[@id]/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::*[@id]/@id]", index);
-        WebElement element = findByXPath(labelledByPattern, labelText);
-        WebElement firstFound = element;
-
-        if (!isInteractable(element)) {
-            By by = byCss("[aria-label*='%s']", labelText);
-            if (index > 0) {
-                element = findElement(by, index - 1);
-            } else {
-                element = findElement(by);
-            }
-            if (firstFound == null) {
-                firstFound = element;
-            }
-        }
-        return isInteractable(element)
-                ? element
-                : firstFound;
+        return LabelBy.getLabelledElement(getCurrentContext(), label);
     }
 
     public WebElement getNestedElementForValue(WebElement parent) {
-        return findElement(parent, false, By.xpath(".//input|.//select|.//textarea"));
+        return ConstantBy.nestedElementForValue().findElement(parent);
     }
 
     /**
@@ -657,11 +254,11 @@ public class SeleniumHelper {
     public int countVisibleOccurrences(String text, boolean checkOnScreen) {
         SearchContext containerContext = getCurrentContext();
 
-        By findAllTexts = byXpath(".//text()[contains(normalized(.), '%s')]/..", text);
+        By findAllTexts = TextBy.partial(text);
         List<WebElement> texts = containerContext.findElements(findAllTexts);
         int result = countDisplayedElements(texts, text, checkOnScreen);
 
-        By findAllInputs = byXpath(".//input[contains(normalized(@value), '%s')]", text);
+        By findAllInputs = InputBy.partialNormalizedValue(text);
         List<WebElement> inputs = containerContext.findElements(findAllInputs);
         result = result + countDisplayedValues(inputs, text, checkOnScreen);
 
@@ -726,7 +323,7 @@ public class SeleniumHelper {
     }
 
     private int countOccurrences(String value, String textToFind) {
-        String normalizedValue = getNormalizedText(value);
+        String normalizedValue = XPathBy.getNormalizedText(value);
         return StringUtils.countMatches(normalizedValue, textToFind);
     }
 
@@ -755,7 +352,6 @@ public class SeleniumHelper {
     public String getAllDirectText(WebElement element) {
         return (String) executeJavascript(ALL_DIRECT_TEXT_CONTENT, element);
     }
-
 
     /**
      * Sets value of input field of type 'date'.
@@ -808,19 +404,8 @@ public class SeleniumHelper {
     }
 
     protected Object executeScript(String script, Object... parameters) {
-        Object result;
         JavascriptExecutor jse = (JavascriptExecutor) driver();
-        try {
-            result = jse.executeScript(script, parameters);
-        } catch (WebDriverException e) {
-            String msg = e.getMessage();
-            if (msg != null && msg.contains("Detected a page unload event; script execution does not work across page loads.")) {
-                // page reloaded while script ran, retry it once
-                result = jse.executeScript(script, parameters);
-            } else {
-                throw e;
-            }
-        }
+        Object result = JavascriptHelper.executeScript(jse, script, parameters);
         return result;
     }
 
@@ -837,27 +422,19 @@ public class SeleniumHelper {
      * @return return value from statement.
      */
     public Object waitForJavascriptCallback(String statementPattern, Object... parameters) {
-        Object result;
-        String script = "var callback = arguments[arguments.length - 1];"
-                        + String.format(statementPattern, parameters);
         JavascriptExecutor jse = (JavascriptExecutor) driver();
-        if (statementPattern.contains("arguments")) {
-            result = jse.executeAsyncScript(script, parameters);
-        } else {
-            result = jse.executeAsyncScript(script);
-        }
+        Object result = JavascriptHelper.waitForJavascriptCallback(jse, statementPattern, parameters);
         return result;
     }
 
     /**
      * Creates By based on CSS selector, supporting placeholder replacement.
-     * @param pattern basic CSS selectot, possibly with placeholders.
+     * @param pattern basic CSS selector, possibly with placeholders.
      * @param parameters values for placeholders.
      * @return ByCssSelector.
      */
     public By byCss(String pattern, String... parameters) {
-        String selector = fillPattern(pattern, parameters);
-        return By.cssSelector(selector);
+        return new CssBy(pattern, parameters);
     }
 
     /**
@@ -869,71 +446,11 @@ public class SeleniumHelper {
      * @return ByXPath.
      */
     public By byXpath(String pattern, String... parameters) {
-        pattern = replaceNormalizedFunction(pattern);
-        for (int i = 0; i < parameters.length; i++) {
-            parameters[i] = replaceNormalizedFunction(parameters[i]);
-        }
-        String xpath = fillPattern(pattern, parameters);
-        return By.xpath(xpath);
-    }
-
-    /**
-     * Mimics effect of 'normalized()` xPath function on Java String.
-     * Replaces &nbsp; by normal space, and collapses whitespace sequences to single space
-     * @param elementText text in element.
-     * @return normalized text.
-     */
-    public String getNormalizedText(String elementText) {
-        String result = null;
-        if (elementText != null) {
-            result = elementText.replace('\u00a0', ' ').replaceAll("\\s+", " ");
-        }
-        return result;
-    }
-
-    private String replaceNormalizedFunction(String xPath) {
-        if (xPath.contains("normalized(")) {
-            /*
-                we first check whether the pattern contains the function name, to not have the overhead of
-                regex replacement when it is not needed.
-            */
-            Matcher m = X_PATH_NORMALIZED.matcher(xPath);
-            String updatedPattern = m.replaceAll("normalize-space(translate($1, '\u00a0', ' '))");
-            xPath = updatedPattern;
-        }
-        return xPath;
+        return new XPathBy(pattern, parameters);
     }
 
     public By byJavascript(String pattern, Object... arguments) {
         return new JavascriptBy(pattern, arguments);
-    }
-
-    /**
-     * Fills in placeholders in pattern using the supplied parameters.
-     * @param pattern pattern to fill (in String.format style).
-     * @param parameters parameters to use.
-     * @return filled in pattern.
-     */
-    protected String fillPattern(String pattern, String[] parameters) {
-        boolean containsSingleQuote = false;
-        boolean containsDoubleQuote = false;
-        Object[] escapedParams = new Object[parameters.length];
-        for (int i = 0; i < parameters.length; i++) {
-            String param = parameters[i];
-            containsSingleQuote = containsSingleQuote || param.contains("'");
-            containsDoubleQuote = containsDoubleQuote || param.contains("\"");
-            escapedParams[i] = param;
-        }
-        if (containsDoubleQuote && containsSingleQuote) {
-            throw new RuntimeException("Unsupported combination of single and double quotes");
-        }
-        String patternToUse;
-        if (containsSingleQuote) {
-            patternToUse = pattern.replace("'", "\"");
-        } else {
-            patternToUse = pattern;
-        }
-        return String.format(patternToUse, escapedParams);
     }
 
     /**
@@ -1040,23 +557,12 @@ public class SeleniumHelper {
     }
 
     /**
-     * Finds first element matching the By supplied.
+     * Finds element matching the By supplied.
      * @param by criteria.
      * @return element if found, null if none could be found.
      */
     public WebElement findElement(By by) {
-        return findElement(false, by);
-    }
-
-    /**
-     * Finds element matching the By supplied.
-     * @param atMostOne true indicates multiple matching elements should trigger an exception
-     * @param by criteria.
-     * @return element if found, null if none could be found.
-     * @throws RuntimeException if atMostOne is true and multiple elements match by.
-     */
-    public WebElement findElement(boolean atMostOne, By by) {
-        return findElement(getCurrentContext(), atMostOne, by);
+        return findElement(getCurrentContext(), by);
     }
 
     private SearchContext currentContext;
@@ -1230,94 +736,11 @@ public class SeleniumHelper {
     /**
      * Finds element matching the By supplied.
      * @param context context to find element in.
-     * @param atMostOne true indicates multiple matching elements (that have an id) should trigger an exception
      * @param by criteria.
      * @return element if found, null if none could be found.
-     * @throws RuntimeException if atMostOne is true and multiple elements (having an id) match the by.
      */
-    public WebElement findElement(SearchContext context, boolean atMostOne, By by) {
-        WebElement element = null;
-        List<WebElement> elements = context.findElements(by);
-        if (elements.size() == 1) {
-            element = elements.get(0);
-        } else if (elements.size() > 1) {
-            if (!atMostOne) {
-                element = selectBestElement(elements);
-            } else {
-                elements = elementsWithId(elements);
-                if (elements.size() == 1) {
-                    element = elements.get(0);
-                } else {
-                    throw new RuntimeException("Multiple elements with id found for: " + by
-                                                + ":\n" + elementsAsString(elements));
-                }
-            }
-        }
-        return element;
-    }
-
-    private WebElement selectBestElement(List<WebElement> elements) {
-        // take the first displayed element without any elements on top of it,
-        // if none: take first displayed
-        // or if none are displayed: just take the first
-        WebElement element = elements.get(0);
-        WebElement firstDisplayed = null;
-        WebElement firstOnTop = null;
-        if (!element.isDisplayed() || !isOnTop(element)) {
-            for (int i = 1; i < elements.size(); i++) {
-                WebElement otherElement = elements.get(i);
-                if (otherElement.isDisplayed()) {
-                    if (firstDisplayed == null) {
-                        firstDisplayed = otherElement;
-                    }
-                    if (isOnTop(otherElement)) {
-                        firstOnTop = otherElement;
-                        element = otherElement;
-                        break;
-                    }
-                }
-            }
-            if (firstOnTop == null
-                    && firstDisplayed != null
-                    && !element.isDisplayed()) {
-                // none displayed and on top
-                // first was not displayed, but another was
-                element = firstDisplayed;
-            }
-        }
-        return element;
-    }
-
-    private boolean isOnTop(WebElement element) {
-        WebElement e = (WebElement) executeJavascript(TOP_ELEMENT_AT, element);
-        return element.equals(e);
-    }
-
-    private List<WebElement> elementsWithId(List<WebElement> elements) {
-        List<WebElement> result = new ArrayList<WebElement>(1);
-        for (WebElement e : elements) {
-            String attr = e.getAttribute("id");
-            if (attr != null && !attr.isEmpty()) {
-                result.add(e);
-            }
-        }
-        return result;
-    }
-
-    private String elementsAsString(Collection<WebElement> elements) {
-        StringBuilder b = new StringBuilder();
-        b.append("[");
-        boolean first = true;
-        for (WebElement e : elements) {
-            if (first) {
-                first = false;
-            } else {
-                b.append(", ");
-            }
-            b.append(e.getAttribute("id"));
-        }
-        b.append("]");
-        return b.toString();
+    public WebElement findElement(SearchContext context, By by) {
+        return FirstElementBy.getWebElement(by, context);
     }
 
     /**

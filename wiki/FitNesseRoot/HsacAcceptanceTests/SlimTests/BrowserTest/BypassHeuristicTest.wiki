@@ -36,6 +36,8 @@ This test ensures we can find elements based on explicit technical instructions.
 |click     |link=My link                                     |
 |click     |partialLink=link                                 |
 |is visible|xpath=//div[@aria-labelledby="a3"]               |
+|is visible|xpath=//div[normalized(@aria-labelledby)="a3"]   |
+
 
 |script|mock xml server setup|
 |stop                        |
