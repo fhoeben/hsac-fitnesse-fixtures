@@ -62,11 +62,6 @@ We use a mock server running to serve the HTML defined in this page.
 <label for="list5">Lijstje</label><ul id="list5"><li>5</li><li>6</li></ul>
 <ol><li>Favorite Todo </li></ol>
 </div>
-
-<details>
-<summary><span>Initially hidden</span></summary>
-<label for="hi21">Hello4</label><input id="hi21" value="Hidden"></label>
-</details>
 </body>
 </html>}}} }
 
@@ -82,60 +77,57 @@ We use a mock server running to serve the HTML defined in this page.
 |display lists standard|
 
 
-|script                |browser test                                                       |
-|seconds before timeout|1                                                                  |
-|open                  |$url                                                               |
-|check                 |value of          |id=lastButton|None                              |
-|click                 |Button                                                             |
-|check                 |value of          |id=lastButton|Normal Button                     |
-|check                 |value of          |Hello2       |Hi                                |
-|check                 |value of          |Hello4       |Hallo                             |
-|enter                 |1                 |for          |Hello2                            |
-|check                 |value of          |Hello2       |Hi1                               |
-|enter                 |Hallo1            |as           |Hello4                            |
-|check                 |value of          |Hello4       |Hallo1                            |
-|check                 |values of         |Lijstje      |[one, two]                        |
-|check                 |number for        |Favorite Todo|2                                 |
-|select                |Saab              |for          |Cars                              |
-|check                 |value for         |Cars         |Saab                              |
-|click                 |Button            |in           |Special                           |
-|check                 |value of          |id=lastButton|Special Button                    |
-|check                 |value of          |Hello2       |in    |Special         |Hi2       |
-|check                 |value of          |Hello4       |in    |My fieldset     |Hallo2    |
-|enter                 |3                 |for          |Hello2|in              |Special   |
-|check                 |value of          |Hello2       |in    |Special         |Hi23      |
-|enter                 |Hallo5            |as           |Hello4|in              |Special   |
-|check                 |value of          |Hello4       |in    |Special         |Hallo5    |
-|check                 |values of         |Lijstje      |in    |Special         |[three, 4]|
-|check                 |number for        |Todo         |in    |Special         |3         |
-|select                |Audi              |for          |Cars  |in              |Special | |
-|check                 |value for         |Cars         |in    |Special         |Audi      |
-|ensure                |is enabled        |Hello hidden |in    |Special                    |
-|scroll to             |Hello hidden      |in           |Special                           |
-|ensure                |is visible        |Hello hidden |in    |Special                    |
-|ensure                |is visible on page|Hello hidden |in    |Special                    |
-|wait for visible      |Hello hidden      |in           |Special                           |
-|click if available    |Button            |in           |xpath=//h2[text()='Extras']/..    |
-|check                 |value of          |id=lastButton|Extra Special Button              |
-|check                 |value of          |Hello2       |in    |id=extraOptions |Hi4       |
-|check                 |value of          |Hello4       |in    |id=extraOptions |Hallo4    |
-|check                 |values of         |Lijstje      |in    |id=extraOptions |[5, 6]    |
-|check                 |number for        |Todo         |in    |id=extraOptions |1         |
-|check                 |value of          |Hello2       |in    |Extras          |Hi4       |
-|scroll to             |id=lastButton                                                      |
-|check                 |value of          |Hello2       |Hi1                               |
-|check                 |value for         |Cars         |Saab                              |
-|set search context to |Special                                                            |
-|check                 |value of          |Hello2       |Hi23                              |
-|check                 |value for         |Cars         |Audi                              |
-|clear search context                                                                      |
-|check                 |value of          |Hello2       |Hi1                               |
-|check                 |value for         |Cars         |Saab                              |
-|clear                 |Hello2            |in           |Special                           |
-|check                 |value of          |Hello2       |in    |Special         |!--!      |
-|click                 |Initially hidden                                                   |
-|check                 |value of          |Hello4       |in    |Initially hidden|Hidden    |
-|check                 |value of          |Hello4       |in    |Initially       |Hidden    |
+|script                |browser test                                                      |
+|seconds before timeout|1                                                                 |
+|open                  |$url                                                              |
+|check                 |value of          |id=lastButton|None                             |
+|click                 |Button                                                            |
+|check                 |value of          |id=lastButton|Normal Button                    |
+|check                 |value of          |Hello2       |Hi                               |
+|check                 |value of          |Hello4       |Hallo                            |
+|enter                 |1                 |for          |Hello2                           |
+|check                 |value of          |Hello2       |Hi1                              |
+|enter                 |Hallo1            |as           |Hello4                           |
+|check                 |value of          |Hello4       |Hallo1                           |
+|check                 |values of         |Lijstje      |[one, two]                       |
+|check                 |number for        |Favorite Todo|2                                |
+|select                |Saab              |for          |Cars                             |
+|check                 |value for         |Cars         |Saab                             |
+|click                 |Button            |in           |Special                          |
+|check                 |value of          |id=lastButton|Special Button                   |
+|check                 |value of          |Hello2       |in    |Special        |Hi2       |
+|check                 |value of          |Hello4       |in    |My fieldset    |Hallo2    |
+|enter                 |3                 |for          |Hello2|in             |Special   |
+|check                 |value of          |Hello2       |in    |Special        |Hi23      |
+|enter                 |Hallo5            |as           |Hello4|in             |Special   |
+|check                 |value of          |Hello4       |in    |Special        |Hallo5    |
+|check                 |values of         |Lijstje      |in    |Special        |[three, 4]|
+|check                 |number for        |Todo         |in    |Special        |3         |
+|select                |Audi              |for          |Cars  |in             |Special | |
+|check                 |value for         |Cars         |in    |Special        |Audi      |
+|ensure                |is enabled        |Hello hidden |in    |Special                   |
+|scroll to             |Hello hidden      |in           |Special                          |
+|ensure                |is visible        |Hello hidden |in    |Special                   |
+|ensure                |is visible on page|Hello hidden |in    |Special                   |
+|wait for visible      |Hello hidden      |in           |Special                          |
+|click if available    |Button            |in           |xpath=//h2[text()='Extras']/..   |
+|check                 |value of          |id=lastButton|Extra Special Button             |
+|check                 |value of          |Hello2       |in    |id=extraOptions|Hi4       |
+|check                 |value of          |Hello4       |in    |id=extraOptions|Hallo4    |
+|check                 |values of         |Lijstje      |in    |id=extraOptions|[5, 6]    |
+|check                 |number for        |Todo         |in    |id=extraOptions|1         |
+|check                 |value of          |Hello2       |in    |Extras         |Hi4       |
+|scroll to             |id=lastButton                                                     |
+|check                 |value of          |Hello2       |Hi1                              |
+|check                 |value for         |Cars         |Saab                             |
+|set search context to |Special                                                           |
+|check                 |value of          |Hello2       |Hi23                             |
+|check                 |value for         |Cars         |Audi                             |
+|clear search context                                                                     |
+|check                 |value of          |Hello2       |Hi1                              |
+|check                 |value for         |Cars         |Saab                             |
+|clear                 |Hello2            |in           |Special                          |
+|check                 |value of          |Hello2       |in    |Special        |!--!      |
 
 !2 Implicit Reset of Search Context
 

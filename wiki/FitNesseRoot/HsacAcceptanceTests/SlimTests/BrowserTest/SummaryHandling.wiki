@@ -1,0 +1,42 @@
+---
+Test
+---
+Summary elements can be clicked to expand/collapse their details section.
+They can also be used as container to select between multiple labels with same text on screen.
+
+We use a mock server running to serve the HTML defined in this page.
+
+
+!define HTML { {{{
+<html>
+<body>
+<div>
+
+<label for="hi">Hello4</label><input id="hi" value="Shown"></label>
+<details>
+<summary><span>Initially hidden</span></summary>
+<label for="hi21">Hello4</label><input id="hi21" value="Hidden"></label>
+</details>
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script                |browser test                              |
+|seconds before timeout|1                                         |
+|open                  |$url                                      |
+|check                 |value of|Hello4|Shown                     |
+|                      |exact match                               |
+|click                 |Initially hidden                          |
+|check                 |value of|Hello4|in|Initially hidden|Hidden|
+|                      |partial match                             |
+|click                 |hidden                                    |
+|check                 |value of|Hello4|in|Initially       |Hidden|
+
+|script|mock xml server setup|
+|stop                        |
+
+
