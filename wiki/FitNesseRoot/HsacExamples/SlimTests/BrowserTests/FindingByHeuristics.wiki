@@ -19,6 +19,7 @@ The heuristic is based on what command the element is needed for. The options co
 !2 Click
  * Link's text
  * Button's text
+ * Summary's text (to collapse/expand details element) 
  * ''Each option listed above for 'Enter/Retrieve Value'''
  * Input with type 'reset' or 'submit', if place is 'Submit' or 'Reset'
  * Text of element with an 'onclick' attribute
@@ -34,4 +35,5 @@ The heuristic is based on what command the element is needed for. The options co
 
 !2 Search Context
  * Legend's text to select fieldset
+ * Summary's text to select details element
  * Aria-label (either 'aria-label' attribute value or the text of an element identified by an 'aria-labelledby' attribute)

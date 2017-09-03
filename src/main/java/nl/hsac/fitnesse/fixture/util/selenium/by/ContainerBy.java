@@ -42,6 +42,7 @@ public class ContainerBy {
     public static class Exact extends HeuristicBy {
         public Exact(String container) {
             super(new XPathBy(".//fieldset[.//legend/text()[normalized(.) = '%s']]", container),
+                    new XPathBy(".//details[.//summary[.//text()[normalized(.) = '%s']]]", container),
                     AriaLabelBy.exact(container));
         }
     }
@@ -49,6 +50,7 @@ public class ContainerBy {
     public static class Partial extends HeuristicBy {
         public Partial(String container) {
             super(new XPathBy(".//fieldset[.//legend/text()[contains(normalized(.), '%s')]]", container),
+                    new XPathBy(".//details[.//summary[.//text()[contains(normalized(.), '%s')]]]", container),
                     AriaLabelBy.partial(container));
         }
     }

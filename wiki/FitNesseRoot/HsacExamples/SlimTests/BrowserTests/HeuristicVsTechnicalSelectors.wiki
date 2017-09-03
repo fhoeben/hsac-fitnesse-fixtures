@@ -30,8 +30,8 @@ In this example we will show a test attempting to use Expedia.com to look for a 
 This version shows a test can be understood, and even written, by people without deep technical knowledge of HTML and various ways elements can be selected using Selenium.
 |storyboard            |browser test                                                                                             |
 |open Expedia.com                                                                                                                |
-|enter                 |Amsterdam                                           |as                   |Flying from                   |
-|enter                 |New York                                            |as                   |Flying to                     |
+|enter                 |Amsterdam                                           |as                   |Origin                        |
+|enter                 |New York                                            |as                   |Destination                   |
 |enter                 |!monthsFromToday (MM/8/yyyy) +10                    |as                   |Departing                     |
 |enter                 |!monthsFromToday (MM/15/yyyy) +10                   |as                   |Returning                     |
 |select                |2                                                   |as                   |Adults                        |
@@ -39,6 +39,7 @@ This version shows a test can be understood, and even written, by people without
 |seconds before timeout|60                                                                                                       |
 |click                 |Search                                                                                                   |
 |wait for visible      |Start by choosing your hotel                                                                             |
+|click                 |Neighborhood                                                                                             |
 |click                 |Broadway - Times Square                             |in                   |Neighborhood                  |
 |click                 |Guest Rating                                                                                             |
 |click                 |The Peninsula New York                                                                                   |
@@ -56,25 +57,26 @@ The test using technical selectors require knowledge on the various way an eleme
 We will now perform the same test as the previous one, verifying a hotel room can be selected to be booked using Expedia.com. But this time controls are identified using [['technical selectors'][.HsacExamples.SlimTests.BrowserTests.TechnicalSelectors]] instead of using heuristics.
 Although the identifiers used inside Expedia's HTML are quite descriptive, this test is not as easy to understand as the previous one. Using technical selectors also makes the test more fragile: a change in identifier or page structure will probably mean the element can no longer be found.
 
-|storyboard            |browser test                                                    |
-|open Expedia.com                                                                       |
-|enter                 |Amsterdam                          |as  |id=package-origin      |
-|enter                 |New York                           |as  |id=package-destination |
-|enter                 |!monthsFromToday (MM/8/yyyy) +10   |as  |id=package-departing   |
-|enter                 |!monthsFromToday (MM/15/yyyy) +10  |as  |id=package-returning   |
-|select                |2                                  |as  |id=package-1-adults    |
-|seconds before timeout|60                                                              |
-|click                 |id=search-button                                                |
-|wait for visible      |id=hotelResultTitle                                             |
-|click                 |id=800077                                                       |
-|click                 |xpath=//button[@aria-label='Sort by: Guest Rating']             |
-|click                 |xpath=//h3[text()='The Peninsula New York']/..                  |
-|switch to next tab                                                                     |
-|click                 |css=.jumbo-image-next                                           |
-|click                 |id=show-more-rooms                                              |
-|click                 |xpath=//span/text()[.='Select Junior, Executive Suite']/../../..|
-|wait for visible      |css=div.title-departure                                         |
-|cleanup for next test                                                                  |
+|storyboard            |browser test                                                          |
+|open Expedia.com                                                                             |
+|enter                 |Amsterdam                        |as|id=package-origin-hp-package     |
+|enter                 |New York                         |as|id=package-destination-hp-package|
+|enter                 |!monthsFromToday (MM/8/yyyy) +10 |as|id=package-departing-hp-package  |
+|enter                 |!monthsFromToday (MM/15/yyyy) +10|as|id=package-returning-hp-package  |
+|select                |2                                |as|id=package-1-adults-hp-package   |
+|seconds before timeout|60                                                                    |
+|click                 |id=search-button-hp-package                                           |
+|wait for visible      |id=hotelResultTitle                                                   |
+|click                 |id=neighborhood-legend                                                |
+|click                 |id=neighborhood1                                                      |
+|click                 |xpath=//button[@aria-label='Sort by: Guest Rating']                   |
+|click                 |xpath=//h3[text()='The Peninsula New York']/..                        |
+|switch to next tab                                                                           |
+|click                 |css=.jumbo-image-next                                                 |
+|click                 |id=show-more-rooms                                                    |
+|click                 |xpath=//span/text()[.='Select Junior, Executive Suite']/../../..      |
+|wait for visible      |css=div.title-departure                                               |
+|cleanup for next test                                                                        |
 
 A script using these selector does not have to be as 'technical' as the example above. [[!-FitNesse's-! scenario's][.FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests.SliM.ScenarioTable]] may be used to provide a layer of abstraction on top of the actual selectors. You might also want to use custom Java code to provide a similar abstraction. But either of these approaches will also introduce an extra layer of complexity to be maintained, and understood, as part of the test set.
 
