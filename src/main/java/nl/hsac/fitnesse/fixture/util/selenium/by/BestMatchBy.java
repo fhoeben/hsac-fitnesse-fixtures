@@ -81,4 +81,8 @@ public class BestMatchBy extends SingleElementOrNullBy {
         return element.equals(e);
     }
 
+    @Override
+    public String toString() {
+        return "BestMatchOf: " + by;
+    }
 }

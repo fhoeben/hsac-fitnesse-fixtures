@@ -31,37 +31,36 @@ public class LabelBy extends SingleElementOrNullBy {
         }
     }
 
-    private final SingleElementOrNullBy by;
+    private final By by;
+    private final String text;
 
-    protected LabelBy(String xpath, String... parameters) {
-        this(createXPathBy(xpath, parameters));
-    }
-
-    protected LabelBy(SingleElementOrNullBy by) {
-        this.by = by;
+    protected LabelBy(String pattern, String textToFind) {
+        by = new XPathBy(pattern, textToFind);
+        text = textToFind;
     }
 
     @Override
     public WebElement findElement(SearchContext context) {
-        WebElement label = by.findElement(context);
+        WebElement label = BestMatchBy.findElement(by, context);
         WebElement element = getLabelledElement(context, label);
         return element;
     }
 
-    public static WebElement getLabelledElement(SearchContext conetxt, WebElement label) {
+    @Override
+    public String toString() {
+        return super.toString() + ": " + text;
+    }
+
+    public static WebElement getLabelledElement(SearchContext context, WebElement label) {
         WebElement element = null;
         if (label != null) {
             String forAttr = label.getAttribute("for");
             if (forAttr == null || "".equals(forAttr)) {
                 element = ConstantBy.nestedElementForValue().findElement(label);
             } else {
-                element = new BestMatchBy(By.id(forAttr)).findElement(conetxt);
+                element = BestMatchBy.findElement(By.id(forAttr), context);
             }
         }
         return element;
-    }
-
-    private static BestMatchBy createXPathBy(String pattern, String... parameters) {
-        return new BestMatchBy(new XPathBy(pattern, parameters));
     }
 }

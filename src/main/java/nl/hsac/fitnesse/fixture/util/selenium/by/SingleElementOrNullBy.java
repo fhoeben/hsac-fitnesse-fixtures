@@ -49,6 +49,15 @@ public abstract class SingleElementOrNullBy extends By {
 
     @Override
     public String toString() {
-        return "SingleElementBy";
+        return getByName(getClass());
+    }
+
+    public static String getByName(Class<?> c) {
+        String name = c.getSimpleName();
+        Class<?> enclosingClass = c.getEnclosingClass();
+        if (enclosingClass != null) {
+            name = enclosingClass.getSimpleName() + "." + name;
+        }
+        return name;
     }
 }
