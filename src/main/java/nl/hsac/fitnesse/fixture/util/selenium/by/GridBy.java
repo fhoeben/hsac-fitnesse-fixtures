@@ -7,7 +7,7 @@ import org.openqa.selenium.WebElement;
 /**
  * Custom By to deal with finding elements in a table representing a grid of values.
  */
-public abstract class GridBy {
+public class GridBy {
     public static SingleElementOrNullBy coordinates(int columnIndex, int rowIndex) {
         return new Value.AtCoordinates(columnIndex, rowIndex);
     }
@@ -91,7 +91,7 @@ public abstract class GridBy {
         }
     }
 
-    public static abstract class Row {
+    public static class Row {
         public static class InNumber extends XPathBy {
             public InNumber(int rowIndex) {
                 super("(.//tr[boolean(td)])[%s]", Integer.toString(rowIndex));
