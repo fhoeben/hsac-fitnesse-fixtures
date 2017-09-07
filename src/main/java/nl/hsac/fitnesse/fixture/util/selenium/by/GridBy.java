@@ -9,76 +9,78 @@ import org.openqa.selenium.WebElement;
  */
 public abstract class GridBy extends SingleElementOrNullBy {
     public static By coordinates(int columnIndex, int rowIndex) {
-        return new ValueAtCoordinates(columnIndex, rowIndex);
+        return new Value.AtCoordinates(columnIndex, rowIndex);
     }
 
     public static By columnInRow(String requestedColumnName, int rowIndex) {
-        return new ValueOfInRowNumber(requestedColumnName, rowIndex);
+        return new Value.OfInRowNumber(requestedColumnName, rowIndex);
     }
 
     public static By columnInRowWhereIs(String requestedColumnName, String selectOnColumn, String selectOnValue) {
-        return new ValueOfInRowWhereIs(requestedColumnName, selectOnValue, selectOnColumn);
+        return new Value.OfInRowWhereIs(requestedColumnName, selectOnValue, selectOnColumn);
     }
 
-    public static class ValueAtCoordinates extends GridBy {
-        private final int columnIndex;
-        private final int rowIndex;
+    public static abstract class Value extends GridBy {
+        public static class AtCoordinates extends Value {
+            private final int columnIndex;
+            private final int rowIndex;
 
-        public ValueAtCoordinates(int columnIndex, int rowIndex) {
-            this.columnIndex = columnIndex;
-            this.rowIndex = rowIndex;
+            public AtCoordinates(int columnIndex, int rowIndex) {
+                this.columnIndex = columnIndex;
+                this.rowIndex = rowIndex;
+            }
+
+            @Override
+            public WebElement findElement(SearchContext context) {
+                String row = Integer.toString(rowIndex);
+                String column = Integer.toString(columnIndex);
+                return getValueByXPath(context, "(.//tr[boolean(td)])[%s]/td[%s]", row, column);
+            }
         }
 
-        @Override
-        public WebElement findElement(SearchContext context) {
-            String row = Integer.toString(rowIndex);
-            String column = Integer.toString(columnIndex);
-            return getValueByXPath(context, "(.//tr[boolean(td)])[%s]/td[%s]", row, column);
-        }
-    }
+        public static class OfInRowNumber extends Value {
+            private final String requestedColumnName;
+            private final int rowIndex;
 
-    public static class ValueOfInRowNumber extends GridBy {
-        private final String requestedColumnName;
-        private final int rowIndex;
+            public OfInRowNumber(String requestedColumnName, int rowIndex) {
+                this.requestedColumnName = requestedColumnName;
+                this.rowIndex = rowIndex;
+            }
 
-        public ValueOfInRowNumber(String requestedColumnName, int rowIndex) {
-            this.requestedColumnName = requestedColumnName;
-            this.rowIndex = rowIndex;
-        }
-
-        @Override
-        public WebElement findElement(SearchContext context) {
-            String columnXPath = String.format("((.//table[.//tr/th/descendant-or-self::text()[normalized(.)='%s']])[last()]//tr[boolean(td)])[%s]/td", requestedColumnName, rowIndex);
-            return valueInRow(context, columnXPath, requestedColumnName);
-        }
-    }
-
-    public static class ValueOfInRowWhereIs extends GridBy {
-        private final String requestedColumnName;
-        private final String selectOnColumn;
-        private final String selectOnValue;
-
-        public ValueOfInRowWhereIs(String requestedColumnName, String selectOnValue, String selectOnColumn) {
-            this.requestedColumnName = requestedColumnName;
-            this.selectOnColumn = selectOnColumn;
-            this.selectOnValue = selectOnValue;
+            @Override
+            public WebElement findElement(SearchContext context) {
+                String columnXPath = String.format("((.//table[.//tr/th/descendant-or-self::text()[normalized(.)='%s']])[last()]//tr[boolean(td)])[%s]/td", requestedColumnName, rowIndex);
+                return valueInRow(context, columnXPath, requestedColumnName);
+            }
         }
 
-        @Override
-        public WebElement findElement(SearchContext context) {
-            String columnXPath = getXPathForColumnInRowByValueInOtherColumn(requestedColumnName, selectOnColumn, selectOnValue);
-            return valueInRow(context, columnXPath, requestedColumnName);
+        public static class OfInRowWhereIs extends Value {
+            private final String requestedColumnName;
+            private final String selectOnColumn;
+            private final String selectOnValue;
+
+            public OfInRowWhereIs(String requestedColumnName, String selectOnValue, String selectOnColumn) {
+                this.requestedColumnName = requestedColumnName;
+                this.selectOnColumn = selectOnColumn;
+                this.selectOnValue = selectOnValue;
+            }
+
+            @Override
+            public WebElement findElement(SearchContext context) {
+                String columnXPath = getXPathForColumnInRowByValueInOtherColumn(requestedColumnName, selectOnColumn, selectOnValue);
+                return valueInRow(context, columnXPath, requestedColumnName);
+            }
         }
-    }
 
-    protected WebElement valueInRow(SearchContext context, String columnXPath, String requestedColumnName) {
-        String requestedIndex = getXPathForColumnIndex(requestedColumnName);
-        return getValueByXPath(context, "%s[%s]", columnXPath, requestedIndex);
-    }
+        protected WebElement valueInRow(SearchContext context, String columnXPath, String requestedColumnName) {
+            String requestedIndex = getXPathForColumnIndex(requestedColumnName);
+            return getValueByXPath(context, "%s[%s]", columnXPath, requestedIndex);
+        }
 
-    protected WebElement getValueByXPath(SearchContext context, String xpathPattern, String... params) {
-        By xPathBy = new XPathBy(xpathPattern, params);
-        return new ValueOfBy(xPathBy).findElement(context);
+        protected WebElement getValueByXPath(SearchContext context, String xpathPattern, String... params) {
+            By xPathBy = new XPathBy(xpathPattern, params);
+            return new ValueOfBy(xPathBy).findElement(context);
+        }
     }
 
     /**
