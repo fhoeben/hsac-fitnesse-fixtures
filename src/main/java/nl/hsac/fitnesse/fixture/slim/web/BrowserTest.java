@@ -1274,9 +1274,7 @@ public class BrowserTest extends SlimFixture {
      * @return XPath expression selecting a td in the row
      */
     protected String getXPathForColumnInRowByValueInOtherColumn(String columnName, String value) {
-        String selectIndex = getXPathForColumnIndex(columnName);
-        return String.format("(.//table[.//tr/th/descendant-or-self::text()[normalized(.)='%3$s']])[last()]//tr[td[%1$s]/descendant-or-self::text()[normalized(.)='%2$s']]/td",
-                selectIndex, value, columnName);
+        return GridBy.getXPathForColumnInRowByValueInOtherColumn(columnName, value);
     }
 
     /**

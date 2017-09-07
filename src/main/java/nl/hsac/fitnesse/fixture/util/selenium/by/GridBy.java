@@ -84,6 +84,19 @@ public abstract class GridBy extends SingleElementOrNullBy {
     /**
      * Creates an XPath expression that will find a cell in a row, selecting the row based on the
      * text in a specific column (identified by its header text).
+     * @param columnName header text of the column to find value in.
+     * @param value text to find in column with the supplied header.
+     * @return XPath expression selecting a td in the row
+     */
+    public static String getXPathForColumnInRowByValueInOtherColumn(String columnName, String value) {
+        String selectIndex = getXPathForColumnIndex(columnName);
+        return String.format("(.//table[.//tr/th/descendant-or-self::text()[normalized(.)='%3$s']])[last()]//tr[td[%1$s]/descendant-or-self::text()[normalized(.)='%2$s']]/td",
+                selectIndex, value, columnName);
+    }
+
+    /**
+     * Creates an XPath expression that will find a cell in a row, selecting the row based on the
+     * text in a specific column (identified by its header text).
      * @param extraColumnName name of other header text that must be present in table's header row
      * @param columnName header text of the column to find value in.
      * @param value text to find in column with the supplied header.
