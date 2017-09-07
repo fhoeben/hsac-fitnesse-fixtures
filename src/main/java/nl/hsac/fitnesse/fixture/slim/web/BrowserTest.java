@@ -1226,8 +1226,7 @@ public class BrowserTest extends SlimFixture {
      */
     @WaitUntil
     public String downloadFromRowNumber(String place, int rowNumber) {
-        String columnXPath = String.format("(.//tr[boolean(td)])[%s]/td", rowNumber);
-        return downloadFromRow(columnXPath, place);
+        return downloadFromRow(GridBy.linkInRow(place, rowNumber));
     }
 
     /**
@@ -1239,24 +1238,12 @@ public class BrowserTest extends SlimFixture {
      */
     @WaitUntil
     public String downloadFromRowWhereIs(String place, String selectOnColumn, String selectOnValue) {
-        String columnXPath = getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue);
-        return downloadFromRow(columnXPath, place);
+        return downloadFromRow(GridBy.linkInRowWhereIs(place, selectOnColumn, selectOnValue));
     }
 
-    protected String downloadFromRow(String columnXPath, String place) {
+    protected String downloadFromRow(By linkBy) {
         String result = null;
-        // find an a to download from based on its text()
-        WebElement element = findByXPath("%s//a/descendant-or-self::text()[contains(normalized(.),'%s')]/ancestor-or-self::a",
-                columnXPath, place);
-        if (element == null) {
-            // find an a to download based on its column header
-            String requestedIndex = getXPathForColumnIndex(place);
-            element = findByXPath("%s[%s]//a", columnXPath, requestedIndex);
-            if (element == null) {
-                // find an a to download in the row by its title (aka tooltip)
-                element = findByXPath("%s//a[contains(@title, '%s')]", columnXPath, place);
-            }
-        }
+        WebElement element = findElement(linkBy);
         if (element != null) {
             result = downloadLinkTarget(element);
         }

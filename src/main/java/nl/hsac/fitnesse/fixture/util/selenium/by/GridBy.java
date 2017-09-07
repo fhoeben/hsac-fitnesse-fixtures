@@ -28,6 +28,14 @@ public class GridBy {
         return new Row.WhereIs(selectOnValue, selectOnColumn);
     }
 
+    public static SingleElementOrNullBy linkInRow(String place, int rowIndex) {
+        return new Link.InRow(place, rowIndex);
+    }
+
+    public static SingleElementOrNullBy linkInRowWhereIs(String place, String selectOnColumn, String selectOnValue) {
+        return new Link.InRowWhereIs(place, selectOnValue, selectOnColumn);
+    }
+
     public static abstract class Value extends SingleElementOrNullBy {
         public static class AtCoordinates extends Value {
             private final int columnIndex;
@@ -101,6 +109,27 @@ public class GridBy {
         public static class WhereIs extends XPathBy {
             public WhereIs(String selectOnValue, String selectOnColumn) {
                 super(getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue) + "/..");
+            }
+        }
+    }
+
+    public static class Link extends HeuristicBy {
+        protected Link(String place, String cellXPath) {
+            super(new XPathBy("%s//a/descendant-or-self::text()[contains(normalized(.),'%s')]/ancestor-or-self::a", cellXPath, place),
+                    new XPathBy("%s[%s]//a", cellXPath, getXPathForColumnIndex(place)),
+                    new XPathBy("%s//a[contains(@title, '%s')]", cellXPath, place));
+        }
+
+        public static class InRow extends Link {
+            public InRow(String place, int rowIndex) {
+                super(place, String.format("(.//tr[boolean(td)])[%s]/td", rowIndex));
+            }
+
+        }
+
+        public static class InRowWhereIs extends Link {
+            public InRowWhereIs(String place, String selectOnValue, String selectOnColumn) {
+                super(place, getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue));
             }
         }
     }
