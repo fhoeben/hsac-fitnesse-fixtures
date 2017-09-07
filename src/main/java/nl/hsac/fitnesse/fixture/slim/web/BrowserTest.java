@@ -13,6 +13,7 @@ import nl.hsac.fitnesse.fixture.util.ReflectionHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.PageSourceSaver;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ContainerBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.GridBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.TextBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
@@ -1025,6 +1026,11 @@ public class BrowserTest extends SlimFixture {
         return getElement(place, container);
     }
 
+    protected String valueFor(By by) {
+        WebElement element = getSeleniumHelper().findElement(by);
+        return valueFor(element);
+    }
+
     protected String valueFor(WebElement element) {
         String result = null;
         if (element != null) {
@@ -1171,35 +1177,20 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOfColumnNumberInRowNumber(int columnIndex, int rowIndex) {
-        return getValueByXPath("(.//tr[boolean(td)])[%s]/td[%s]", Integer.toString(rowIndex), Integer.toString(columnIndex));
+        By by = GridBy.coordinates(columnIndex, rowIndex);
+        return valueFor(by);
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOfInRowNumber(String requestedColumnName, int rowIndex) {
-        String columnXPath = String.format("((.//table[.//tr/th/descendant-or-self::text()[normalized(.)='%s']])[last()]//tr[boolean(td)])[%s]/td", requestedColumnName, rowIndex);
-        return valueInRow(columnXPath, requestedColumnName);
+        By by = GridBy.columnInRow(requestedColumnName, rowIndex);
+        return valueFor(by);
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOfInRowWhereIs(String requestedColumnName, String selectOnColumn, String selectOnValue) {
-        String columnXPath = getXPathForColumnInRowByValueInOtherColumn(requestedColumnName, selectOnColumn, selectOnValue);
-        return valueInRow(columnXPath, requestedColumnName);
-    }
-
-    protected String valueInRow(String columnXPath, String requestedColumnName) {
-        String requestedIndex = getXPathForColumnIndex(requestedColumnName);
-        return getValueByXPath("%s[%s]", columnXPath, requestedIndex);
-    }
-
-    protected String getValueByXPath(String xpathPattern, String... params) {
-        WebElement element = findByXPath(xpathPattern, params);
-        if (element != null) {
-            WebElement nested = getSeleniumHelper().getNestedElementForValue(element);
-            if (nested != null && nested.isDisplayed()) {
-                element = nested;
-            }
-        }
-        return valueFor(element);
+        By by = GridBy.columnInRowWhereIs(requestedColumnName, selectOnColumn, selectOnValue);
+        return valueFor(by);
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
@@ -1297,9 +1288,7 @@ public class BrowserTest extends SlimFixture {
      * @return XPath expression selecting a td in the row
      */
     protected String getXPathForColumnInRowByValueInOtherColumn(String extraColumnName, String columnName, String value) {
-        String selectIndex = getXPathForColumnIndex(columnName);
-        return String.format("(.//table[.//tr[th/descendant-or-self::text()[normalized(.)='%3$s'] and th/descendant-or-self::text()[normalized(.)='%4$s']]])[last()]//tr[td[%1$s]/descendant-or-self::text()[normalized(.)='%2$s']]/td",
-                selectIndex, value, columnName, extraColumnName);
+        return GridBy.getXPathForColumnInRowByValueInOtherColumn(extraColumnName, columnName, value);
     }
 
     /**
@@ -1309,9 +1298,7 @@ public class BrowserTest extends SlimFixture {
      * @return XPath expression which can be used to select a td in a row
      */
     protected String getXPathForColumnIndex(String columnName) {
-        // determine how many columns are before the column with the requested name
-        // the column with the requested name will have an index of the value +1 (since XPath indexes are 1 based)
-        return String.format("count(ancestor::table[1]//tr/th/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::th[1]/preceding-sibling::th)+1", columnName);
+        return GridBy.getXPathForColumnIndex(columnName);
     }
 
     protected WebElement getElement(String place) {
