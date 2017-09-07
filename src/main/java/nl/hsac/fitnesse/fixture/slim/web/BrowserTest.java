@@ -1195,7 +1195,7 @@ public class BrowserTest extends SlimFixture {
         WebElement element = findByXPath(xpathPattern, params);
         if (element != null) {
             WebElement nested = getSeleniumHelper().getNestedElementForValue(element);
-            if (isInteractable(nested)) {
+            if (nested != null && element.isDisplayed()) {
                 element = nested;
             }
         }

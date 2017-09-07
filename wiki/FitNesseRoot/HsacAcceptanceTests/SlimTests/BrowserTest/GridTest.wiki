@@ -25,7 +25,7 @@ This test ensures we can find elements inside tables representing a grid where e
     <tbody>
     <tr><td>Dog</td><td>Joey</td><td>Black</td><td>Unknown</td><td>11-01-1975</td><td><button>Edit</button><button>Delete</button></td></tr>
     <tr><td>Cat&nbsp;&nbsp; Food</td><td>Pamelasi</td><td>White</td><td>Jack</td><td>02-12-1978</td><td><button title="Edit Pam's data">Edit</button><button>Delete</button></td></tr>
-    <tr><td>Cat</td><td>Pam</td><td>White</td><td>Jack</td><td>02-12-1978</td><td><button title="Edit Pam's data">Edit</button><button>Delete</button></td></tr>
+    <tr><td>Cat</td><td>Pam</td><td><input value="White" disabled="disabled"></td><td>Jack</td><td>02-12-1978</td><td><button title="Edit Pam's data">Edit</button><button>Delete</button></td></tr>
     <tr><td>Chicken</td><td>Tweety</td><td>Brown</td><td>Jill</td><td>12-01-1980</td><td><input value="Delete This"><button>Edit</button></td></tr>
     <tr><td><input name="newKind"/></td><td><textarea name="newName" rows="4" cols="50"></textarea></td><td><input name="newColor" type="checkbox" checked="true"/></td><td>Owner name</td><td><select name="newBirthDate"><option value="volvo">Volvo</option><option value="mercedes" selected>Mercedes</option><option value="audi">Audi</option></select></td><td><button>Add</button></td></tr>
     </tbody>
@@ -56,6 +56,7 @@ This test ensures we can find elements inside tables representing a grid where e
 |click                 |Edit Pam's data       |in row where |Name         |is          |Pam                        |
 |enter                 |Sheep                 |as           |Kind         |in row where|Owner|is        |Owner name|
 |enter                 |John2                 |as           |Name         |in row where|Owner|is        |Owner name|
+|check                 |value of              |Color        |in row where |Kind       |is   |Cat|White     |
 |check                 |value of              |Kind         |in row where |Owner       |is   |Owner name|Sheep     |
 |check                 |value of              |Name         |in row where |Owner       |is   |Owner name|John2     |
 |check                 |value of              |Color        |in row where |Owner       |is   |Owner name|true      |
