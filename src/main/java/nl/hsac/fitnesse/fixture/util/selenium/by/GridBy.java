@@ -5,7 +5,7 @@ import nl.hsac.fitnesse.fixture.util.selenium.by.grid.Row;
 import nl.hsac.fitnesse.fixture.util.selenium.by.grid.Value;
 
 /**
- * Custom By to deal with finding elements in a table representing a grid of values.
+ * Factory for custom Bys to deal with finding elements in a table representing a grid of values.
  */
 public class GridBy {
     public static SingleElementOrNullBy coordinates(int columnIndex, int rowIndex) {
