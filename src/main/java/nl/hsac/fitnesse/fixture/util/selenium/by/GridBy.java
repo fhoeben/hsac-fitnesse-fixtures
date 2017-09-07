@@ -7,20 +7,28 @@ import org.openqa.selenium.WebElement;
 /**
  * Custom By to deal with finding elements in a table representing a grid of values.
  */
-public abstract class GridBy extends SingleElementOrNullBy {
-    public static By coordinates(int columnIndex, int rowIndex) {
+public abstract class GridBy {
+    public static SingleElementOrNullBy coordinates(int columnIndex, int rowIndex) {
         return new Value.AtCoordinates(columnIndex, rowIndex);
     }
 
-    public static By columnInRow(String requestedColumnName, int rowIndex) {
+    public static SingleElementOrNullBy columnInRow(String requestedColumnName, int rowIndex) {
         return new Value.OfInRowNumber(requestedColumnName, rowIndex);
     }
 
-    public static By columnInRowWhereIs(String requestedColumnName, String selectOnColumn, String selectOnValue) {
+    public static SingleElementOrNullBy columnInRowWhereIs(String requestedColumnName, String selectOnColumn, String selectOnValue) {
         return new Value.OfInRowWhereIs(requestedColumnName, selectOnValue, selectOnColumn);
     }
 
-    public static abstract class Value extends GridBy {
+    public static XPathBy rowNumber(int rowIndex) {
+        return new Row.InNumber(rowIndex);
+    }
+
+    public static XPathBy rowWhereIs(String selectOnColumn, String selectOnValue) {
+        return new Row.WhereIs(selectOnValue, selectOnColumn);
+    }
+
+    public static abstract class Value extends SingleElementOrNullBy {
         public static class AtCoordinates extends Value {
             private final int columnIndex;
             private final int rowIndex;
@@ -80,6 +88,20 @@ public abstract class GridBy extends SingleElementOrNullBy {
         protected WebElement getValueByXPath(SearchContext context, String xpathPattern, String... params) {
             By xPathBy = new XPathBy(xpathPattern, params);
             return new ValueOfBy(xPathBy).findElement(context);
+        }
+    }
+
+    public static abstract class Row {
+        public static class InNumber extends XPathBy {
+            public InNumber(int rowIndex) {
+                super("(.//tr[boolean(td)])[%s]", Integer.toString(rowIndex));
+            }
+        }
+
+        public static class WhereIs extends XPathBy {
+            public WhereIs(String selectOnValue, String selectOnColumn) {
+                super(getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue) + "/..");
+            }
         }
     }
 

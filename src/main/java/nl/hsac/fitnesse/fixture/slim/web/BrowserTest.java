@@ -1201,20 +1201,19 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil
     public boolean clickInRowNumber(String place, int rowIndex) {
-        String columnXPath = String.format("(.//tr[boolean(td)])[%s]/td", rowIndex);
-        return clickInRow(columnXPath, place);
+        By rowBy = GridBy.rowNumber(rowIndex);
+        return clickInRow(rowBy, place);
     }
 
     @WaitUntil
     public boolean clickInRowWhereIs(String place, String selectOnColumn, String selectOnValue) {
-        String columnXPath = getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue);
-        return clickInRow(columnXPath, place);
+        By rowBy = GridBy.rowWhereIs(selectOnColumn, selectOnValue);
+        return clickInRow(rowBy, place);
     }
 
-    protected boolean clickInRow(String columnXPath, String place) {
+    protected boolean clickInRow(By rowBy, String place) {
         boolean result = false;
-        // xpath finds cell, we want to look in row so we go up one level
-        WebElement row = findByXPath("%s/..", columnXPath);
+        WebElement row = findElement(rowBy);
         if (row != null) {
             result = doInContainer(row, () -> click(place));
         }
