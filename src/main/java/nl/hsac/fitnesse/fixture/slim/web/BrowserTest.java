@@ -13,6 +13,7 @@ import nl.hsac.fitnesse.fixture.util.ReflectionHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.PageSourceSaver;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ContainerBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.GridBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.TextBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
@@ -1025,6 +1026,11 @@ public class BrowserTest extends SlimFixture {
         return getElement(place, container);
     }
 
+    protected String valueFor(By by) {
+        WebElement element = getSeleniumHelper().findElement(by);
+        return valueFor(element);
+    }
+
     protected String valueFor(WebElement element) {
         String result = null;
         if (element != null) {
@@ -1151,11 +1157,9 @@ public class BrowserTest extends SlimFixture {
     @WaitUntil
     public boolean enterAsInRowWhereIs(String value, String requestedColumnName, String selectOnColumn, String selectOnValue) {
         boolean result = false;
-        String columnXPath = getXPathForColumnInRowByValueInOtherColumn(requestedColumnName, selectOnColumn, selectOnValue);
-        String requestedIndex = getXPathForColumnIndex(requestedColumnName);
-        WebElement cell = findByXPath("%s[%s]", columnXPath, requestedIndex);
-        if (cell != null) {
-            WebElement element = getSeleniumHelper().getNestedElementForValue(cell);
+        By cellBy = GridBy.columnInRowWhereIs(requestedColumnName, selectOnColumn, selectOnValue);
+        WebElement element = findElement(cellBy);
+        if (element != null) {
             if (isSelect(element)) {
                 result = clickSelectOption(element, value);
             } else {
@@ -1171,59 +1175,42 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOfColumnNumberInRowNumber(int columnIndex, int rowIndex) {
-        return getValueByXPath("(.//tr[boolean(td)])[%s]/td[%s]", Integer.toString(rowIndex), Integer.toString(columnIndex));
+        By by = GridBy.coordinates(columnIndex, rowIndex);
+        return valueFor(by);
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOfInRowNumber(String requestedColumnName, int rowIndex) {
-        String columnXPath = String.format("((.//table[.//tr/th/descendant-or-self::text()[normalized(.)='%s']])[last()]//tr[boolean(td)])[%s]/td", requestedColumnName, rowIndex);
-        return valueInRow(columnXPath, requestedColumnName);
+        By by = GridBy.columnInRow(requestedColumnName, rowIndex);
+        return valueFor(by);
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOfInRowWhereIs(String requestedColumnName, String selectOnColumn, String selectOnValue) {
-        String columnXPath = getXPathForColumnInRowByValueInOtherColumn(requestedColumnName, selectOnColumn, selectOnValue);
-        return valueInRow(columnXPath, requestedColumnName);
-    }
-
-    protected String valueInRow(String columnXPath, String requestedColumnName) {
-        String requestedIndex = getXPathForColumnIndex(requestedColumnName);
-        return getValueByXPath("%s[%s]", columnXPath, requestedIndex);
-    }
-
-    protected String getValueByXPath(String xpathPattern, String... params) {
-        WebElement element = findByXPath(xpathPattern, params);
-        if (element != null) {
-            WebElement nested = getSeleniumHelper().getNestedElementForValue(element);
-            if (nested != null && element.isDisplayed()) {
-                element = nested;
-            }
-        }
-        return valueFor(element);
+        By by = GridBy.columnInRowWhereIs(requestedColumnName, selectOnColumn, selectOnValue);
+        return valueFor(by);
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
     public boolean rowExistsWhereIs(String selectOnColumn, String selectOnValue) {
-        String columnXPath = getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue);
-        return findByXPath(columnXPath) != null;
+        return findElement(GridBy.rowWhereIs(selectOnColumn, selectOnValue)) != null;
     }
 
     @WaitUntil
     public boolean clickInRowNumber(String place, int rowIndex) {
-        String columnXPath = String.format("(.//tr[boolean(td)])[%s]/td", rowIndex);
-        return clickInRow(columnXPath, place);
+        By rowBy = GridBy.rowNumber(rowIndex);
+        return clickInRow(rowBy, place);
     }
 
     @WaitUntil
     public boolean clickInRowWhereIs(String place, String selectOnColumn, String selectOnValue) {
-        String columnXPath = getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue);
-        return clickInRow(columnXPath, place);
+        By rowBy = GridBy.rowWhereIs(selectOnColumn, selectOnValue);
+        return clickInRow(rowBy, place);
     }
 
-    protected boolean clickInRow(String columnXPath, String place) {
+    protected boolean clickInRow(By rowBy, String place) {
         boolean result = false;
-        // xpath finds cell, we want to look in row so we go up one level
-        WebElement row = findByXPath("%s/..", columnXPath);
+        WebElement row = findElement(rowBy);
         if (row != null) {
             result = doInContainer(row, () -> click(place));
         }
@@ -1238,8 +1225,7 @@ public class BrowserTest extends SlimFixture {
      */
     @WaitUntil
     public String downloadFromRowNumber(String place, int rowNumber) {
-        String columnXPath = String.format("(.//tr[boolean(td)])[%s]/td", rowNumber);
-        return downloadFromRow(columnXPath, place);
+        return downloadFromRow(GridBy.linkInRow(place, rowNumber));
     }
 
     /**
@@ -1251,67 +1237,16 @@ public class BrowserTest extends SlimFixture {
      */
     @WaitUntil
     public String downloadFromRowWhereIs(String place, String selectOnColumn, String selectOnValue) {
-        String columnXPath = getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue);
-        return downloadFromRow(columnXPath, place);
+        return downloadFromRow(GridBy.linkInRowWhereIs(place, selectOnColumn, selectOnValue));
     }
 
-    protected String downloadFromRow(String columnXPath, String place) {
+    protected String downloadFromRow(By linkBy) {
         String result = null;
-        // find an a to download from based on its text()
-        WebElement element = findByXPath("%s//a/descendant-or-self::text()[contains(normalized(.),'%s')]/ancestor-or-self::a",
-                columnXPath, place);
-        if (element == null) {
-            // find an a to download based on its column header
-            String requestedIndex = getXPathForColumnIndex(place);
-            element = findByXPath("%s[%s]//a", columnXPath, requestedIndex);
-            if (element == null) {
-                // find an a to download in the row by its title (aka tooltip)
-                element = findByXPath("%s//a[contains(@title, '%s')]", columnXPath, place);
-            }
-        }
+        WebElement element = findElement(linkBy);
         if (element != null) {
             result = downloadLinkTarget(element);
         }
         return result;
-    }
-
-    /**
-     * Creates an XPath expression that will find a cell in a row, selecting the row based on the
-     * text in a specific column (identified by its header text).
-     * @param columnName header text of the column to find value in.
-     * @param value text to find in column with the supplied header.
-     * @return XPath expression selecting a td in the row
-     */
-    protected String getXPathForColumnInRowByValueInOtherColumn(String columnName, String value) {
-        String selectIndex = getXPathForColumnIndex(columnName);
-        return String.format("(.//table[.//tr/th/descendant-or-self::text()[normalized(.)='%3$s']])[last()]//tr[td[%1$s]/descendant-or-self::text()[normalized(.)='%2$s']]/td",
-                selectIndex, value, columnName);
-    }
-
-    /**
-     * Creates an XPath expression that will find a cell in a row, selecting the row based on the
-     * text in a specific column (identified by its header text).
-     * @param extraColumnName name of other header text that must be present in table's header row
-     * @param columnName header text of the column to find value in.
-     * @param value text to find in column with the supplied header.
-     * @return XPath expression selecting a td in the row
-     */
-    protected String getXPathForColumnInRowByValueInOtherColumn(String extraColumnName, String columnName, String value) {
-        String selectIndex = getXPathForColumnIndex(columnName);
-        return String.format("(.//table[.//tr[th/descendant-or-self::text()[normalized(.)='%3$s'] and th/descendant-or-self::text()[normalized(.)='%4$s']]])[last()]//tr[td[%1$s]/descendant-or-self::text()[normalized(.)='%2$s']]/td",
-                selectIndex, value, columnName, extraColumnName);
-    }
-
-    /**
-     * Creates an XPath expression that will determine, for a row, which index to use to select the cell in the column
-     * with the supplied header text value.
-     * @param columnName name of column in header (th)
-     * @return XPath expression which can be used to select a td in a row
-     */
-    protected String getXPathForColumnIndex(String columnName) {
-        // determine how many columns are before the column with the requested name
-        // the column with the requested name will have an index of the value +1 (since XPath indexes are 1 based)
-        return String.format("count(ancestor::table[1]//tr/th/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::th[1]/preceding-sibling::th)+1", columnName);
     }
 
     protected WebElement getElement(String place) {

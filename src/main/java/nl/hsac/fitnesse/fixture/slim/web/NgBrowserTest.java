@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.slim.web.annotation.WaitUntil;
 import nl.hsac.fitnesse.fixture.util.selenium.NgClientSideScripts;
+import nl.hsac.fitnesse.fixture.util.selenium.by.GridBy;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -97,6 +98,16 @@ public class NgBrowserTest extends NgBrowserTestBase {
             }
         }
         return result;
+    }
+
+    /**
+     * Creates an XPath expression that will determine, for a row, which index to use to select the cell in the column
+     * with the supplied header text value.
+     * @param columnName name of column in header (th)
+     * @return XPath expression which can be used to select a td in a row
+     */
+    protected String getXPathForColumnIndex(String columnName) {
+        return GridBy.getXPathForColumnIndex(columnName);
     }
 
     protected String getTextInRepeaterColumn(String columnIndexXPath, int rowIndex, String repeater) {
