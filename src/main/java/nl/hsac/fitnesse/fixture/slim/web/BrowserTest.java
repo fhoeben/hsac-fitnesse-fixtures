@@ -1249,16 +1249,6 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
-    /**
-     * Creates an XPath expression that will determine, for a row, which index to use to select the cell in the column
-     * with the supplied header text value.
-     * @param columnName name of column in header (th)
-     * @return XPath expression which can be used to select a td in a row
-     */
-    protected String getXPathForColumnIndex(String columnName) {
-        return GridBy.getXPathForColumnIndex(columnName);
-    }
-
     protected WebElement getElement(String place) {
         return getSeleniumHelper().getElement(place);
     }
