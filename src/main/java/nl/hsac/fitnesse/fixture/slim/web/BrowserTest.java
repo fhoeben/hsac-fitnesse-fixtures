@@ -1193,8 +1193,7 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
     public boolean rowExistsWhereIs(String selectOnColumn, String selectOnValue) {
-        String columnXPath = getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue);
-        return findByXPath(columnXPath) != null;
+        return findElement(GridBy.rowWhereIs(selectOnColumn, selectOnValue)) != null;
     }
 
     @WaitUntil
@@ -1248,17 +1247,6 @@ public class BrowserTest extends SlimFixture {
             result = downloadLinkTarget(element);
         }
         return result;
-    }
-
-    /**
-     * Creates an XPath expression that will find a cell in a row, selecting the row based on the
-     * text in a specific column (identified by its header text).
-     * @param columnName header text of the column to find value in.
-     * @param value text to find in column with the supplied header.
-     * @return XPath expression selecting a td in the row
-     */
-    protected String getXPathForColumnInRowByValueInOtherColumn(String columnName, String value) {
-        return GridBy.getXPathForColumnInRowByValueInOtherColumn(columnName, value);
     }
 
     /**
