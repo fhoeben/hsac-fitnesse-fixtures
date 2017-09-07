@@ -10,6 +10,7 @@ import nl.hsac.fitnesse.fixture.util.BinaryHttpResponse;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
 import nl.hsac.fitnesse.fixture.util.ReflectionHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.ListItemBy;
 import nl.hsac.fitnesse.fixture.util.selenium.PageSourceSaver;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ContainerBy;
@@ -1105,10 +1106,7 @@ public class BrowserTest extends SlimFixture {
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public Integer numberFor(String place) {
         Integer number = null;
-        WebElement element = findByXPath(".//ol/li/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::li", place);
-        if (element == null) {
-            element = findByXPath(".//ol/li/descendant-or-self::text()[contains(normalized(.),'%s')]/ancestor-or-self::li", place);
-        }
+        WebElement element = findElement(ListItemBy.numbered(place));
         if (element != null) {
             scrollIfNotOnScreen(element);
             number = getSeleniumHelper().getNumberFor(element);
