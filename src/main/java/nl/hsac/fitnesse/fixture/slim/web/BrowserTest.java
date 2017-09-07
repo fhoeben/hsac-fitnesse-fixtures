@@ -14,6 +14,7 @@ import nl.hsac.fitnesse.fixture.util.selenium.PageSourceSaver;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ContainerBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.GridBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.OptionBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.TextBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
@@ -643,12 +644,8 @@ public class BrowserTest extends SlimFixture {
         if (element != null) {
             if (isSelect(element)) {
                 optionValue = cleanupValue(optionValue);
-                By xpath = getSeleniumHelper().byXpath(".//option[normalized(text()) = '%s']", optionValue);
-                WebElement option = getSeleniumHelper().findElement(element, xpath);
-                if (option == null) {
-                    xpath = getSeleniumHelper().byXpath(".//option[contains(normalized(text()), '%s')]", optionValue);
-                    option = getSeleniumHelper().findElement(element, xpath);
-                }
+                By optionBy = new OptionBy(optionValue);
+                WebElement option = optionBy.findElement(element);
                 if (option != null) {
                     result = clickElement(option);
                 }
