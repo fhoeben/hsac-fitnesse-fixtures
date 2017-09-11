@@ -29,7 +29,7 @@ import java.util.List;
  * JUnit Runner to run a FitNesse suite or page as JUnit test.
  *
  * The suite/page to run must be specified either via the Java property
- * 'fitnesseSuiteToRun', or by adding a FitNesseSuite.Name annotation to the test class.
+ * 'fitnesseSuiteToRun', or by adding a {@Link FitNesseRunner.Name} annotation to the test class.
  * If both are present the system property is used.
  *
  * The Selenium driver used for tests may be overridden (from what is configured in the wiki)
@@ -37,10 +37,12 @@ import java.util.List;
  * The default timeout (in seconds) for Selenium tests may be overridden by specifying the property
  * 'seleniumDefaultTimeout'.
  *
- * The HTML generated for each page is saved in target/fitnesse-results
+ * The HTML generated for each page is saved in the location specified by the system property 'fitnesseResultsDir',
+ * or in the location configured using the {@link FitNesseRunner.OutputDir} annotation, or in target/fitnesse-results.
  */
 public class HsacFitNesseRunner extends FitNesseRunner {
     /** Output path for HTML results */
+    public final static String FITNESSE_RESULTS_PATH_OVERRIDE_VARIABLE_NAME = "fitnesseResultsDir";
     public final static String FITNESSE_RESULTS_PATH = "target/fitnesse-results";
     /** Property to override suite to run */
     public final static String SUITE_OVERRIDE_VARIABLE_NAME = "fitnesseSuiteToRun";
@@ -93,9 +95,12 @@ public class HsacFitNesseRunner extends FitNesseRunner {
 
     @Override
     protected String getOutputDir(Class<?> klass) throws InitializationError {
-        String dir = FITNESSE_RESULTS_PATH;
-        if (klass.isAnnotationPresent(OutputDir.class)) {
-            dir = super.getOutputDir(klass);
+        String dir = System.getProperty(FITNESSE_RESULTS_PATH_OVERRIDE_VARIABLE_NAME);
+        if (StringUtils.isEmpty(dir)) {
+            dir = FITNESSE_RESULTS_PATH;
+            if (klass.isAnnotationPresent(OutputDir.class)) {
+                dir = super.getOutputDir(klass);
+            }
         }
         return dir;
     }
