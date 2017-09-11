@@ -85,8 +85,7 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     @Override
     protected String getFitNesseDir(Class<?> suiteClass) throws InitializationError {
         String dir = "wiki";
-        FitnesseDir fitnesseDirAnnotation = suiteClass.getAnnotation(FitnesseDir.class);
-        if (fitnesseDirAnnotation != null) {
+        if (suiteClass.isAnnotationPresent(FitnesseDir.class)) {
             dir = super.getFitNesseDir(suiteClass);
         }
         return dir;
@@ -95,8 +94,7 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     @Override
     protected String getOutputDir(Class<?> klass) throws InitializationError {
         String dir = FITNESSE_RESULTS_PATH;
-        OutputDir outputDirAnnotation = klass.getAnnotation(OutputDir.class);
-        if (outputDirAnnotation != null) {
+        if (klass.isAnnotationPresent(OutputDir.class)) {
             dir = super.getOutputDir(klass);
         }
         return dir;
@@ -105,8 +103,7 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     @Override
     protected String getFitNesseRoot(Class<?> suiteClass) {
         String root = ContextConfigurator.DEFAULT_ROOT;
-        FitnesseDir fitnesseDirAnnotation = suiteClass.getAnnotation(FitnesseDir.class);
-        if (fitnesseDirAnnotation != null) {
+        if (suiteClass.isAnnotationPresent(FitnesseDir.class)) {
             root = super.getFitNesseRoot(suiteClass);
         }
         return root;
