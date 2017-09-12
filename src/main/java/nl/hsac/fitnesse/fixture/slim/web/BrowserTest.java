@@ -494,7 +494,7 @@ public class BrowserTest extends SlimFixture {
         boolean result = element != null && isInteractable(element);
         if (result) {
             if (shouldClear) {
-                element.clear();
+                clear(element);
             }
             sendValue(element, value);
         }
@@ -1139,10 +1139,14 @@ public class BrowserTest extends SlimFixture {
         boolean result = false;
         WebElement element = getElementToClear(place, container);
         if (element != null) {
-            element.clear();
+            clear(element);
             result = true;
         }
         return result;
+    }
+
+    protected void clear(WebElement element) {
+        element.clear();
     }
 
     protected WebElement getElementToClear(String place, String container) {
@@ -1160,7 +1164,7 @@ public class BrowserTest extends SlimFixture {
             } else {
                 if (isInteractable(element)) {
                     result = true;
-                    element.clear();
+                    clear(element);
                     sendValue(element, value);
                 }
             }
