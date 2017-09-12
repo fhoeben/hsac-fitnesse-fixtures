@@ -61,9 +61,7 @@ public class NgBrowserTest extends NgBrowserTestBase {
         if (input == null) {
             result = super.enterAs(value, place);
         } else {
-            clear(input);
-            sendValue(input, value);
-            result = true;
+            result = enter(input, value, true);
         }
         return result;
     }

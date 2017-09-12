@@ -491,12 +491,20 @@ public class BrowserTest extends SlimFixture {
 
     protected boolean enter(String value, String place, String container, boolean shouldClear) {
         WebElement element = getElementToSendValue(place, container);
+        return enter(element, value, shouldClear);
+    }
+
+    protected boolean enter(WebElement element, String value, boolean shouldClear) {
         boolean result = element != null && isInteractable(element);
         if (result) {
-            if (shouldClear) {
-                clear(element);
+            if (isSelect(element)) {
+                result = clickSelectOption(element, value);
+            } else {
+                if (shouldClear) {
+                    clear(element);
+                }
+                sendValue(element, value);
             }
-            sendValue(element, value);
         }
         return result;
     }
@@ -1155,21 +1163,9 @@ public class BrowserTest extends SlimFixture {
 
     @WaitUntil
     public boolean enterAsInRowWhereIs(String value, String requestedColumnName, String selectOnColumn, String selectOnValue) {
-        boolean result = false;
         By cellBy = GridBy.columnInRowWhereIs(requestedColumnName, selectOnColumn, selectOnValue);
         WebElement element = findElement(cellBy);
-        if (element != null) {
-            if (isSelect(element)) {
-                result = clickSelectOption(element, value);
-            } else {
-                if (isInteractable(element)) {
-                    result = true;
-                    clear(element);
-                    sendValue(element, value);
-                }
-            }
-        }
-        return result;
+        return enter(element, value, true);
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
