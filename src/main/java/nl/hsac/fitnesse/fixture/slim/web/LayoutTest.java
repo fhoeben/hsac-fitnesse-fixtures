@@ -229,6 +229,6 @@ public class LayoutTest extends SlimFixtureWithMap {
 
     public static String getOverallReportLink() {
         String file = Environment.getInstance().getSymbol(REPORT_OVERVIEW_SYMBOL);
-        return String.format("<a href=\"%s\">Layout Test's Galen Reports</a>", file);
+        return file == null ? null : String.format("<a href=\"%s\">Layout Test's Galen Reports</a>", file);
     }
 }
