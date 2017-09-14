@@ -11,6 +11,8 @@ import java.util.List;
  * it just shows which messages have (not) been received.
  */
 public class MockServerMessageReport extends SlimFixture {
+    private static final String CSS_RED = "diff";
+    private static final String CSS_GREEN = "green";
     private final String path;
 
     public MockServerMessageReport() {
@@ -79,7 +81,7 @@ public class MockServerMessageReport extends SlimFixture {
 
     protected void addMessageNoCell(boolean result, StringBuilder builder, int counter) {
         builder.append("<td class=\"");
-        builder.append(result ? "pass" : "fail");
+        builder.append(result ? CSS_GREEN : CSS_RED);
         builder.append("\">");
         builder.append(counter);
         builder.append("</td>");
@@ -147,11 +149,12 @@ public class MockServerMessageReport extends SlimFixture {
             scenarioClosed = "";
             detailClosed = "";
         }
+        String cssClass = status.equals("pass") ? CSS_GREEN : CSS_RED;
         return String.format("<table><tbody>"
                                     +"<tr class=\"scenario%s\"><td class=\"%s\">%s</td></tr>"
                                     +"<tr class=\"scenario-detail%s\"><td>%s</td></tr>"
                                 +"</tbody></table>",
-                            scenarioClosed, status, header, detailClosed, detail);
+                            scenarioClosed, cssClass, header, detailClosed, detail);
     }
 
     protected String createCollapsible(boolean open, String title, String body) {
