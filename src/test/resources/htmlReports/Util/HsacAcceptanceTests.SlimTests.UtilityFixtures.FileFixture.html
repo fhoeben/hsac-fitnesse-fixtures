@@ -1,0 +1,286 @@
+<html><head><title>HsacAcceptanceTests.SlimTests.UtilityFixtures.FileFixture</title><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='css/fitnesse.css'/><script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script><script src='javascript/fitnesse.js' type='text/javascript'></script></head><body><header><h2>HsacAcceptanceTests.SlimTests.UtilityFixtures.FileFixture</h2></header><article><br/>The FileFixture allows file manipulation, either in the <a href="FitNesse.FullReferenceGuide.UserGuide.FitNesseWiki.FilesSection">wiki's files section</a>, or on the file system.<br/>Files can be generated using Freemarker templates, directly from strings or by copying files. <br/>File's content and size may be retrieved.<br/>Filenames may be manipulated.<br/><br/><span class="meta">variable defined: DIR=.</span>
+<br/><br/><span class="meta">variable defined: LIST_CONTENT=!-001
+002
+last one!-!</span>
+<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="4"><span class="pass">file fixture</span></td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td>note</td>
+		<td colspan="4">default directory used by the fixture is inside the files section</td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>$created&lt;-[<a href="files/fileFixture/bye1.txt">bye1.txt</a>]</td>
+		<td>create</td>
+		<td>bye1.txt</td>
+		<td>containing</td>
+		<td>Bye Bye 1</td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td><span class="pass">poll until</span></td>
+		<td>$created->[<a href="files/fileFixture/bye1.txt">bye1.txt</a>]</td>
+		<td colspan="3">exists</td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td><span class="pass">poll until size of</span></td>
+		<td>$created->[<a href="files/fileFixture/bye1.txt">bye1.txt</a>]</td>
+		<td>exceeds</td>
+		<td colspan="2">0</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>text in</td>
+		<td>$created->[<a href="files/fileFixture/bye1.txt">bye1.txt</a>]</td>
+		<td colspan="2"><span class="pass">Bye Bye 1</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>filename of</td>
+		<td>$created->[<a href="files/fileFixture/bye1.txt">bye1.txt</a>]</td>
+		<td colspan="2"><span class="pass">bye1.txt</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>base name of</td>
+		<td>$created->[<a href="files/fileFixture/bye1.txt">bye1.txt</a>]</td>
+		<td colspan="2"><span class="pass">bye1</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>extension of</td>
+		<td>$created->[<a href="files/fileFixture/bye1.txt">bye1.txt</a>]</td>
+		<td colspan="2"><span class="pass">txt</span></td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td><span class="pass">ensure</span></td>
+		<td>exists</td>
+		<td colspan="3">$created->[<a href="files/fileFixture/bye1.txt">bye1.txt</a>]</td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td><span class="pass">delete</span></td>
+		<td colspan="4">$created->[<a href="files/fileFixture/bye1.txt">bye1.txt</a>]</td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td><span class="pass">reject</span></td>
+		<td>exists</td>
+		<td colspan="3">$created->[<a href="files/fileFixture/bye1.txt">bye1.txt</a>]</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td></td>
+		<td colspan="4">deleting non-existing file does not work: throws exception</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td></td>
+		<td colspan="4">but ensuring non-existing file does not exist is no problem, returns false</td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td><span class="pass">reject</span></td>
+		<td>delete</td>
+		<td>$created->[<a href="files/fileFixture/bye1.txt">bye1.txt</a>]</td>
+		<td colspan="2">if exists</td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td><span class="pass">poll until</span></td>
+		<td>$created->[<a href="files/fileFixture/bye1.txt">bye1.txt</a>]</td>
+		<td colspan="3">does not exist</td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td>note</td>
+		<td colspan="4">directory to be used by the fixture can be set to inside the files section</td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set directory</td>
+		<td colspan="4"><a href="files/test">http://files/test</a></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>$created2&lt;-[<a href="files/test/bye2.txt">bye2.txt</a>]</td>
+		<td>create</td>
+		<td>bye2.txt</td>
+		<td>containing</td>
+		<td>Bye Bye 2</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>text in</td>
+		<td>$created2->[<a href="files/test/bye2.txt">bye2.txt</a>]</td>
+		<td colspan="2"><span class="pass">Bye Bye 2</span></td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td><span class="pass">delete</span></td>
+		<td>$created2->[<a href="files/test/bye2.txt">bye2.txt</a>]</td>
+		<td colspan="3">if exists</td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td>note</td>
+		<td colspan="4">directory to be used by the fixture can be set to system path</td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set directory</td>
+		<td colspan="4">.</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>create</td>
+		<td>bye.txt</td>
+		<td>containing</td>
+		<td>Bye Bye 3</td>
+	<td><a href="file:/Users/fried/dev/hsac-fitnesse-fixtures/./bye.txt">bye.txt</a></td></tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>size of</td>
+		<td>bye.txt</td>
+		<td colspan="2"><span class="pass">9</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>text in</td>
+		<td>bye.txt</td>
+		<td colspan="2"><span class="pass">Bye Bye 3</span></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set value</td>
+		<td>John</td>
+		<td>for</td>
+		<td colspan="2">name</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>create</td>
+		<td>greeting.txt</td>
+		<td>using</td>
+		<td>greeting.ftl</td>
+	<td><a href="file:/Users/fried/dev/hsac-fitnesse-fixtures/./greeting.txt">greeting.txt</a></td></tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>text in</td>
+		<td>greeting.txt</td>
+		<td colspan="2"><span class="pass">Hello John</span></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set value</td>
+		<td>John</td>
+		<td>for</td>
+		<td colspan="2">name</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>create</td>
+		<td>greeting.html</td>
+		<td>using</td>
+		<td>greeting.ftl.html</td>
+	<td><a href="file:/Users/fried/dev/hsac-fitnesse-fixtures/./greeting.html">greeting.html</a></td></tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>text in</td>
+		<td colspan="3">greeting.html</td>
+	<td>&lt;html&gt;
+    &lt;body&gt;
+        Hello&lt;br/&gt;
+        &lt;h1&gt;John&lt;/h1&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</td></tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>content of</td>
+		<td colspan="3">greeting.html</td>
+	<td><pre>&lt;html&gt;
+    &lt;body&gt;
+        Hello&lt;br/&gt;
+        &lt;h1&gt;John&lt;/h1&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre></td></tr>
+	<tr class="slimRowColor8">
+		<td>note</td>
+		<td colspan="4">filename's containing either / or \ will point to sub-directories</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>copy</td>
+		<td>./greeting.txt</td>
+		<td>to</td>
+		<td>copy/greetingCopy.txt</td>
+	<td><a href="file:/Users/fried/dev/hsac-fitnesse-fixtures/./copy/greetingCopy.txt">greetingCopy.txt</a></td></tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>text in</td>
+		<td>.\copy\greetingCopy.txt</td>
+		<td colspan="2"><span class="pass">Hello John</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>filename of</td>
+		<td>.\copy\greetingCopy.txt</td>
+		<td colspan="2"><span class="pass">greetingCopy.txt</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>base name of</td>
+		<td>.\copy\greetingCopy.txt</td>
+		<td colspan="2"><span class="pass">greetingCopy</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>extension of</td>
+		<td>.\copy\greetingCopy.txt</td>
+		<td colspan="2"><span class="pass">txt</span></td>
+	</tr>
+</table>
+<br/>Table below shows how we can use a list of non-reusable data from a file:<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td colspan="4">script</td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set directory</td>
+		<td colspan="3"><a href="files/fileFixture">http://files/fileFixture</a></td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td>create</td>
+		<td>list.txt</td>
+		<td>containing</td>
+		<td>001
+002
+last one!</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>text in</td>
+		<td colspan="2">list.txt</td>
+	<td>001
+002
+last one!</td></tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>take first line from</td>
+		<td>list.txt</td>
+		<td><span class="pass">001</span></td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>text in</td>
+		<td colspan="2">list.txt</td>
+	<td>002
+last one!
+</td></tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>take first line from</td>
+		<td>list.txt</td>
+		<td><span class="pass">002</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>take first line from</td>
+		<td>list.txt</td>
+		<td><span class="pass">last one!</span></td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>text in</td>
+		<td colspan="2">list.txt</td>
+	<td></td></tr>
+</table>
+<br/><br/><br/></article></body></html>

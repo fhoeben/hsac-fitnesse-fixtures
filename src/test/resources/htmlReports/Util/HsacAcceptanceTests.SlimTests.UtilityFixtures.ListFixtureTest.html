@@ -1,0 +1,201 @@
+<html><head><title>HsacAcceptanceTests.SlimTests.UtilityFixtures.ListFixtureTest</title><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='css/fitnesse.css'/><script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script><script src='javascript/fitnesse.js' type='text/javascript'></script></head><body><header><h2>HsacAcceptanceTests.SlimTests.UtilityFixtures.ListFixtureTest</h2></header><article><br/>List Fixture allows Lists to be defined and manipulated in the wiki. It is usable both in <a href="#scripts">script tables</a> and <a href="#ddt">dynamic decision tables</a>.<br/>Furthermore it also allows us to ensure Slim show lists as numbered items, instead of comma separated between square brackets (i.e. '[' and ']'). <br/><br/><a name="scripts"> </a><br/><br/><h3>Lists in a Script</h3>
+Here we manipulate lists using <a href="FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScriptTable">script tables</a>. <br/><br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="3"><span class="pass">list fixture</span></td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td>add</td>
+		<td colspan="3">Fried</td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td>add</td>
+		<td colspan="3"><a href="mailto:github@hsac.nl">github@hsac.nl</a></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value at</td>
+		<td>0</td>
+		<td>[Fried] <span class="fail">expected [Fried</span><span class="diff"> 2</span><span class="fail">]</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>size</td>
+		<td colspan="2"><span class="pass">2</span></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set value</td>
+		<td>Ivan</td>
+		<td>at</td>
+		<td>4</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>size</td>
+		<td colspan="2"><span class="pass">5</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value at</td>
+		<td>2</td>
+		<td><span class="pass">null</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value at</td>
+		<td>3</td>
+		<td><span class="pass">null</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value at</td>
+		<td>4</td>
+		<td><span class="pass">Ivan</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value at</td>
+		<td>1</td>
+		<td><span class="pass">github@hsac.nl</span></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set value</td>
+		<td>Jan</td>
+		<td>at</td>
+		<td>1</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value at</td>
+		<td>1</td>
+		<td><span class="pass">Jan</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>$list1&lt;-[[Fried, Jan, null, null, Ivan]]</td>
+		<td colspan="3">copy list</td>
+	</tr>
+</table>
+<br/><h3>Showing Lists as Numbered Items</h3>
+As seen in the table above Slim's default behavior is to show lists using Java's <span class="code">toString()</span> notation, comma separated between square brackets.<br/>By invoking ListFixture's <i>display lists numbered</i> method we instruct Slim to show lists as HTML ordered lists. <br/><p class="note">This could also be achieved directly in Java code by invoking <span class="code">nl.hsac.fitnesse.slim.converter.NumberedListConverter.register()</span>.</p><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="3"><span class="pass">list fixture</span></td>
+	</tr>
+	<tr class="slimRowColor1">
+		<td colspan="4">display lists numbered</td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td>add</td>
+		<td colspan="3">Fried</td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set value</td>
+		<td>Jan</td>
+		<td>at</td>
+		<td>1</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>$list1&lt;-[<ol start="0"><li>Fried</li><li>Jan</li></ol>]</td>
+		<td colspan="3">copy list</td>
+	</tr>
+</table>
+<br/><br/><br/><h3>List may be nested</h3>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td><span class="pass">list fixture</span></td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td>add</td>
+		<td>$list1->[<ol start="0"><li>Fried</li><li>Jan</li></ol>]</td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td>add</td>
+		<td>$list1->[<ol start="0"><li>Fried</li><li>Jan</li></ol>]</td>
+	</tr>
+	<tr class="slimRowColor1">
+		<td>$list2&lt;-[<ol start="0"><li><ol start="0"><li>Fried</li><li>Jan</li></ol></li><li><ol start="0"><li>Fried</li><li>Jan</li></ol></li></ol>]</td>
+		<td>copy list</td>
+	</tr>
+</table>
+<br/><a name="ddt"> </a><br/><br/><h3>Define a List using Dynamic Decision Table</h3>
+This examples show usage of the fixture in a <a href="FitNesse.UserGuide.WritingAcceptanceTests.SliM.DynamicDecisionTable">dynamic decision table</a>.<br/><br/>Here we define two lists (and store them in Slim variables) using a dynamic decision table. Any output column (header name ending on '?') will receive a copy of the list defined.<br/><table>
+	<tr class="slimRowTitle">
+		<td colspan="5"><span class="pass">ddt: list fixture</span></td>
+	</tr>
+	<tr class="slimRowTitle">
+		<td>0</td>
+		<td>1</td>
+		<td>3</td>
+		<td>4</td>
+		<td>list?</td>
+	</tr>
+	<tr class="slimRowColor1">
+		<td>Jan</td>
+		<td><a href="mailto:github@hsac.nl">github@hsac.nl</a></td>
+		<td>Karel</td>
+		<td></td>
+		<td>$list3&lt;-[<ol start="0"><li>Jan</li><li>github@hsac.nl</li><li>null</li><li>Karel</li><li></li></ol>]</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>Karel</td>
+		<td>Piet</td>
+		<td></td>
+		<td>Milk</td>
+		<td>$list4&lt;-[<ol start="0"><li>Karel</li><li>Piet</li><li>null</li><li></li><li>Milk</li></ol>]</td>
+	</tr>
+</table>
+<br/><h3>Map as Argument</h3>
+We don't use lists defined in the current fixture instance, but supply the lists to work on in the rows to the script.<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="5"><span class="pass">list fixture</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value at</td>
+		<td>1</td>
+		<td>in</td>
+		<td>$list3->[<ol start="0"><li>Jan</li><li>github@hsac.nl</li><li>null</li><li>Karel</li><li></li></ol>]</td>
+		<td><span class="pass">github@hsac.nl</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>size of</td>
+		<td>$list3->[<ol start="0"><li>Jan</li><li>github@hsac.nl</li><li>null</li><li>Karel</li><li></li></ol>]</td>
+		<td colspan="3"><span class="pass">5</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value at</td>
+		<td>2</td>
+		<td>in</td>
+		<td>$list4->[<ol start="0"><li>Karel</li><li>Piet</li><li>null</li><li></li><li>Milk</li></ol>]</td>
+		<td><span class="pass">null</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value at</td>
+		<td>3</td>
+		<td>in</td>
+		<td>$list4->[<ol start="0"><li>Karel</li><li>Piet</li><li>null</li><li></li><li>Milk</li></ol>]</td>
+		<td><span class="pass">BLANK</span></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set value</td>
+		<td>Ivan</td>
+		<td>at</td>
+		<td>3</td>
+		<td>in</td>
+		<td>$list4->[<ol start="0"><li>Karel</li><li>Piet</li><li>null</li><li></li><li>Milk</li></ol>]</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value at</td>
+		<td>3</td>
+		<td>in</td>
+		<td>$list4->[<ol start="0"><li>Karel</li><li>Piet</li><li>null</li><li></li><li>Milk</li></ol>]</td>
+		<td><span class="pass">Ivan</span></td>
+	</tr>
+</table>
+</article></body></html>

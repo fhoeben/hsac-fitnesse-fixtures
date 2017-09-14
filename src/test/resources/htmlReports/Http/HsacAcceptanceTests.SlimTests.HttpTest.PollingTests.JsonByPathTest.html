@@ -1,0 +1,268 @@
+<html><head><title>HsacAcceptanceTests.SlimTests.HttpTest.PollingTests.JsonByPathTest</title><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='css/fitnesse.css'/><script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script><script src='javascript/fitnesse.js' type='text/javascript'></script></head><body><header><h2>HsacAcceptanceTests.SlimTests.HttpTest.PollingTests.JsonByPathTest</h2></header><article><br/>We retry a call until a json path expression on the response is a certain value.<br/><br/><div class="collapsible closed"><ul><li><a href='#' class='expandall'>Expand</a></li><li><a href='#' class='collapseall'>Collapse</a></li></ul>
+	<p class="title">Setup server</p>
+	<div><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="3"><span class="pass">mock xml server setup</span></td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td>add response</td>
+		<td>{body:"0 response"}</td>
+		<td>with status</td>
+		<td>200</td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td>add response</td>
+		<td>{body:"1 response"}</td>
+		<td>with status</td>
+		<td>201</td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td>add response</td>
+		<td>{body:"2 response"}</td>
+		<td>with status</td>
+		<td>200</td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td>add response</td>
+		<td>{body:"3 response"}</td>
+		<td>with status</td>
+		<td>203</td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td>add response</td>
+		<td>{body:"4 response"}</td>
+		<td>with status</td>
+		<td>202</td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td>add response</td>
+		<td>{body:"5 response"}</td>
+		<td>with status</td>
+		<td>201</td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td>add response</td>
+		<td>{body:"6 response"}</td>
+		<td>with status</td>
+		<td>299</td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td>add response</td>
+		<td>{body:"7 response"}</td>
+		<td>with status</td>
+		<td>300</td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td>add response</td>
+		<td>{body:8}</td>
+		<td>with status</td>
+		<td>200</td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td>add response</td>
+		<td>{body:"9 response"}</td>
+		<td>with status</td>
+		<td>300</td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td>add response</td>
+		<td>{body:"10 response"}</td>
+		<td>with status</td>
+		<td>300</td>
+	</tr>
+	<tr class="slimRowColor6">
+		<td>$url&lt;-[http://192.168.0.112:8000/FitNesseMock]</td>
+		<td colspan="3">get mock server url</td>
+	</tr>
+</table>
+<br/></div>
+</div>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="4"><span class="pass">json http test</span></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set repeat interval to <span class="error">Method setRepeatIntervalTo[2] not found in nl.hsac.fitnesse.fixture.slim.JsonHttpTest.</span></td>
+		<td>50</td>
+		<td></td>
+		<td colspan="2">milliseconds</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>repeat at most</td>
+		<td>2</td>
+		<td colspan="3">times</td>
+	</tr>
+	<tr class="slimRowColor4">
+		<td><span class="pass">post</span></td>
+		<td>0 request</td>
+		<td>to</td>
+		<td colspan="2">$url->[http://192.168.0.112:8000/FitNesseMock]</td>
+	</tr>
+	<tr class="slimRowColor4">
+		<td><span class="pass">repeat until json path</span></td>
+		<td>body</td>
+		<td>is</td>
+		<td colspan="2">0 response</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>response status</td>
+		<td colspan="3"><span class="pass">200</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>json path</td>
+		<td>body</td>
+		<td colspan="2"><span class="pass">0 response</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>repeat count</td>
+		<td colspan="3"><span class="pass">0</span></td>
+	</tr>
+	<tr class="slimRowColor4">
+		<td><span class="pass">post</span></td>
+		<td>1 request</td>
+		<td>to</td>
+		<td colspan="2">$url->[http://192.168.0.112:8000/FitNesseMock]</td>
+	</tr>
+	<tr class="slimRowColor4">
+		<td><span class="pass">repeat until json path</span></td>
+		<td>body</td>
+		<td>is</td>
+		<td colspan="2">2 response</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>response status</td>
+		<td colspan="3"><span class="pass">200</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>json path</td>
+		<td>body</td>
+		<td colspan="2"><span class="pass">2 response</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>repeat count</td>
+		<td colspan="3"><span class="pass">1</span></td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td><span class="pass">get from</span></td>
+		<td colspan="4">$url->[http://192.168.0.112:8000/FitNesseMock]</td>
+	</tr>
+	<tr class="slimRowColor4">
+		<td><span class="pass">repeat until json path</span></td>
+		<td>body</td>
+		<td>is</td>
+		<td colspan="2">5 response</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>response status</td>
+		<td colspan="3"><span class="pass">201</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>json path</td>
+		<td>body</td>
+		<td colspan="2"><span class="pass">5 response</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>repeat count</td>
+		<td colspan="3"><span class="pass">2</span></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td><span class="pass">put</span></td>
+		<td>6 request</td>
+		<td>to</td>
+		<td colspan="2">$url->[http://192.168.0.112:8000/FitNesseMock]</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>response status</td>
+		<td colspan="3"><span class="pass">299</span></td>
+	</tr>
+	<tr class="slimRowColor4">
+		<td><span class="pass">repeat until json path</span></td>
+		<td>body</td>
+		<td>is</td>
+		<td colspan="2">8</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>response status</td>
+		<td colspan="3"><span class="pass">200</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>json path</td>
+		<td>body</td>
+		<td colspan="2"><span class="pass">8</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>repeat count</td>
+		<td colspan="3"><span class="pass">2</span></td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>repeat at most</td>
+		<td>1</td>
+		<td colspan="3">times</td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td><span class="pass">delete</span></td>
+		<td colspan="4">$url->[http://192.168.0.112:8000/FitNesseMock]</td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td><span class="pass">reject</span></td>
+		<td>repeat until json path</td>
+		<td>body</td>
+		<td>is</td>
+		<td>does not happen</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>response status</td>
+		<td colspan="3"><span class="pass">300</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>json path</td>
+		<td>body</td>
+		<td colspan="2"><span class="pass">10 response</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>repeat count</td>
+		<td colspan="3"><span class="pass">1</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>time spent repeating</td>
+		<td colspan="3"><span class="pass">107&gt;= 50</span></td>
+	</tr>
+</table>
+<br/><br/><br/><br/><br/><br/><br/><div class="collapsible closed"><ul><li><a href='#' class='expandall'>Expand</a></li><li><a href='#' class='collapseall'>Collapse</a></li></ul>
+	<p class="title">Stop Server</p>
+	<div><table>
+	<tr class="slimRowTitle">
+		<td><span class="pass">table: Mock Server Message Report</span></td>
+	</tr>
+<tr><td><table><tbody><tr class="scenario closed"><td class="green">Expected and received 11 requests</td></tr><tr class="scenario-detail closed-detail"><td><table><tbody><tr><td class="green">1</td><td><div class="collapsible closed"><p class="title">request</p><div>0 request</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div>{body:"0 response"}</div></div></td></tr><tr><td class="green">2</td><td><div class="collapsible closed"><p class="title">request</p><div>1 request</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div>{body:"1 response"}</div></div></td></tr><tr><td class="green">3</td><td><div class="collapsible closed"><p class="title">request</p><div>1 request</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div>{body:"2 response"}</div></div></td></tr><tr><td class="green">4</td><td><div class="collapsible closed"><p class="title">request</p><div>GET: /FitNesseMock</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div>{body:"3 response"}</div></div></td></tr><tr><td class="green">5</td><td><div class="collapsible closed"><p class="title">request</p><div>GET: /FitNesseMock</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div>{body:"4 response"}</div></div></td></tr><tr><td class="green">6</td><td><div class="collapsible closed"><p class="title">request</p><div>GET: /FitNesseMock</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div>{body:"5 response"}</div></div></td></tr><tr><td class="green">7</td><td><div class="collapsible closed"><p class="title">request</p><div>6 request</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div>{body:"6 response"}</div></div></td></tr><tr><td class="green">8</td><td><div class="collapsible closed"><p class="title">request</p><div>6 request</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div>{body:"7 response"}</div></div></td></tr><tr><td class="green">9</td><td><div class="collapsible closed"><p class="title">request</p><div>6 request</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div>{body:8}</div></div></td></tr><tr><td class="green">10</td><td><div class="collapsible closed"><p class="title">request</p><div>DELETE: /FitNesseMock</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div>{body:"9 response"}</div></div></td></tr><tr><td class="green">11</td><td><div class="collapsible closed"><p class="title">request</p><div>DELETE: /FitNesseMock</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div>{body:"10 response"}</div></div></td></tr></tbody></table></td></tr></tbody></table></td></tr></table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td><span class="pass">mock xml server setup</span></td>
+	</tr>
+	<tr class="slimRowColor4">
+		<td colspan="2">stop</td>
+	</tr>
+</table>
+</div>
+</div>
+<br/><br/><br/></article></body></html>

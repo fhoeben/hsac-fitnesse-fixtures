@@ -1,0 +1,382 @@
+<html><head><title>HsacAcceptanceTests.SlimTests.UtilityFixtures.StringFixtureTest</title><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='css/fitnesse.css'/><script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script><script src='javascript/fitnesse.js' type='text/javascript'></script></head><body><header><h2>HsacAcceptanceTests.SlimTests.UtilityFixtures.StringFixtureTest</h2></header><article><br/>StringFixture is a fixture with helper methods to allow more (String) manipulation to be done in the Wiki.<br/>It is intended to be used is as a <a href="FitNesse.UserGuide.WritingAcceptanceTests.SliM.LibraryTable">library</a> to add its methods to the methods available via another fixture in s script table.<br/><br/>This page demonstrates the features of the class (nl.hsac.fitnesse.fixture.slim.StringFixture) and therefore uses it on its own in a script table (instead of inside a script using a different fixture).<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="7"><span class="pass">string fixture</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value of</td>
+		<td>Hello</td>
+		<td colspan="5"><span class="pass">Hello</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>length of</td>
+		<td>Hello</td>
+		<td colspan="5"><span class="pass">5</span></td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td><span class="pass">ensure</span></td>
+		<td>text</td>
+		<td>Hello world!</td>
+		<td>contains</td>
+		<td colspan="4">world</td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td><span class="pass">reject</span></td>
+		<td>text</td>
+		<td>Hello world!</td>
+		<td>contains</td>
+		<td colspan="4">moon</td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td><span class="pass">ensure</span></td>
+		<td>value</td>
+		<td>Hello</td>
+		<td>differs from</td>
+		<td colspan="4">Hell</td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td><span class="pass">ensure</span></td>
+		<td>value</td>
+		<td>Hello</td>
+		<td>equals</td>
+		<td colspan="4">Hello</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>convert to upper case</td>
+		<td>Bye</td>
+		<td colspan="5"><span class="pass">BYE</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>convert to lower case</td>
+		<td>Bye</td>
+		<td colspan="5"><span class="pass">bye</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>normalize whitespace</td>
+		<td>   Hello    World    </td>
+		<td colspan="5"><span class="pass">Hello World</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>replace all</td>
+		<td>Hello ([A-Za-z]+)</td>
+		<td>in</td>
+		<td>Hello World</td>
+		<td>with</td>
+		<td>$1</td>
+		<td><span class="pass">World</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>replace all</td>
+		<td>(\d{4})-(\d{1,2})-(\d{1,2})</td>
+		<td>in</td>
+		<td>1975-12-3</td>
+		<td>with</td>
+		<td>$3-$2-$1</td>
+		<td><span class="pass">3-12-1975</span></td>
+	</tr>
+</table>
+<br/><br/>Conversions to numbers (so that <a href="FitNesse.UserGuide.WritingAcceptanceTests.SliM.ValueComparisons">relative checks</a> can be done).<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="7"><span class="pass">string fixture</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>convert to int</td>
+		<td>100</td>
+		<td colspan="5"><span class="pass">100</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>convert to int</td>
+		<td>100</td>
+		<td colspan="5"><span class="pass">100&lt; 101</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>convert to double</td>
+		<td>01.5020</td>
+		<td colspan="5"><span class="pass">1.502~=1.5</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>convert to double</td>
+		<td>1.52</td>
+		<td colspan="5"><span class="pass">1.52&lt; 2</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>extract int from</td>
+		<td>(42)</td>
+		<td>using</td>
+		<td>\((\d+)\)</td>
+		<td>group</td>
+		<td>1</td>
+		<td><span class="pass">42</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>extract int from</td>
+		<td>A200BC001</td>
+		<td>using</td>
+		<td>A(\d+)BC(\d+)</td>
+		<td>group</td>
+		<td>2</td>
+		<td><span class="pass">1</span></td>
+	</tr>
+</table>
+<br/><br/>And this can be combined with usage of <a href="FitNesse.UserGuide.WritingAcceptanceTests.SliM.SymbolsInTables">variables/symbols</a> and <a href="FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScenarioTable">scenarios</a> to define more complex checks:<br/><table>
+	<tr class="slimRowTitle">
+		<td>scenario</td>
+		<td>compare yyyy-M-d date _ to dd-MM-yyyy _</td>
+		<td colspan="6">input, output</td>
+	</tr>
+	<tr class="slimRowColor1">
+		<td>$date=</td>
+		<td>replace all</td>
+		<td>^(\d{4})-(\d)-(\d)$</td>
+		<td>in</td>
+		<td>@{input}</td>
+		<td>with</td>
+		<td colspan="2">$1-0$2-0$3</td>
+	</tr>
+	<tr class="slimRowColor1">
+		<td>$date=</td>
+		<td>replace all</td>
+		<td>^(\d{4})-(\d\d)-(\d)$</td>
+		<td>in</td>
+		<td>$date</td>
+		<td>with</td>
+		<td colspan="2">$1-$2-0$3</td>
+	</tr>
+	<tr class="slimRowColor1">
+		<td>$date=</td>
+		<td>replace all</td>
+		<td>^(\d{4})-(\d)-(\d\d)$</td>
+		<td>in</td>
+		<td>$date</td>
+		<td>with</td>
+		<td colspan="2">$1-0$2-$3</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>replace all</td>
+		<td>^(\d{4})-(\d\d)-(\d\d)$</td>
+		<td>in</td>
+		<td>$date</td>
+		<td>with</td>
+		<td>$3-$2-$1</td>
+		<td>@{output}</td>
+	</tr>
+</table>
+<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td><span class="pass">string fixture</span></td>
+	</tr>
+</table>
+<br/><table>
+	<tr>
+		<td colspan="2">compare yyyy-M-d date to dd-MM-yyyy</td>
+	</tr>
+	<tr>
+		<td>input</td>
+		<td>output</td>
+	</tr>
+	<tr class="scenario closed">
+		<td class="pass">1975-1-2</td>
+		<td class="pass">02-01-1975</td>
+	</tr><tr class="scenario-detail closed-detail"><td colspan="2"><table>
+	<tr class="slimRowTitle">
+		<td>scenario</td>
+		<td>compare yyyy-M-d date _ to dd-MM-yyyy _</td>
+		<td colspan="6">input, output</td>
+	</tr>
+	<tr class="slimRowColor1">
+		<td>$date&lt;-[1975-01-02]</td>
+		<td>replace all</td>
+		<td>^(\d{4})-(\d)-(\d)$</td>
+		<td>in</td>
+		<td>1975-1-2</td>
+		<td>with</td>
+		<td colspan="2">$1-0$2-0$3</td>
+	</tr>
+	<tr class="slimRowColor1">
+		<td>$date&lt;-[1975-01-02]</td>
+		<td>replace all</td>
+		<td>^(\d{4})-(\d\d)-(\d)$</td>
+		<td>in</td>
+		<td>$date->[1975-01-02]</td>
+		<td>with</td>
+		<td colspan="2">$1-$2-0$3</td>
+	</tr>
+	<tr class="slimRowColor1">
+		<td>$date&lt;-[1975-01-02]</td>
+		<td>replace all</td>
+		<td>^(\d{4})-(\d)-(\d\d)$</td>
+		<td>in</td>
+		<td>$date->[1975-01-02]</td>
+		<td>with</td>
+		<td colspan="2">$1-0$2-$3</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>replace all</td>
+		<td>^(\d{4})-(\d\d)-(\d\d)$</td>
+		<td>in</td>
+		<td>$date->[1975-01-02]</td>
+		<td>with</td>
+		<td>$3-$2-$1</td>
+		<td><span class="pass">02-01-1975</span></td>
+	</tr>
+</table></td></tr>
+	<tr class="scenario closed">
+		<td class="pass">1975-01-2</td>
+		<td class="pass">02-01-1975</td>
+	</tr><tr class="scenario-detail closed-detail"><td colspan="2"><table>
+	<tr class="slimRowTitle">
+		<td>scenario</td>
+		<td>compare yyyy-M-d date _ to dd-MM-yyyy _</td>
+		<td colspan="6">input, output</td>
+	</tr>
+	<tr class="slimRowColor1">
+		<td>$date&lt;-[1975-01-2]</td>
+		<td>replace all</td>
+		<td>^(\d{4})-(\d)-(\d)$</td>
+		<td>in</td>
+		<td>1975-01-2</td>
+		<td>with</td>
+		<td colspan="2">$1-0$2-0$3</td>
+	</tr>
+	<tr class="slimRowColor1">
+		<td>$date&lt;-[1975-01-02]</td>
+		<td>replace all</td>
+		<td>^(\d{4})-(\d\d)-(\d)$</td>
+		<td>in</td>
+		<td>$date->[1975-01-2]</td>
+		<td>with</td>
+		<td colspan="2">$1-$2-0$3</td>
+	</tr>
+	<tr class="slimRowColor1">
+		<td>$date&lt;-[1975-01-02]</td>
+		<td>replace all</td>
+		<td>^(\d{4})-(\d)-(\d\d)$</td>
+		<td>in</td>
+		<td>$date->[1975-01-02]</td>
+		<td>with</td>
+		<td colspan="2">$1-0$2-$3</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>replace all</td>
+		<td>^(\d{4})-(\d\d)-(\d\d)$</td>
+		<td>in</td>
+		<td>$date->[1975-01-02]</td>
+		<td>with</td>
+		<td>$3-$2-$1</td>
+		<td><span class="pass">02-01-1975</span></td>
+	</tr>
+</table></td></tr>
+	<tr class="scenario closed">
+		<td class="pass">1975-1-02</td>
+		<td class="pass">02-01-1975</td>
+	</tr><tr class="scenario-detail closed-detail"><td colspan="2"><table>
+	<tr class="slimRowTitle">
+		<td>scenario</td>
+		<td>compare yyyy-M-d date _ to dd-MM-yyyy _</td>
+		<td colspan="6">input, output</td>
+	</tr>
+	<tr class="slimRowColor1">
+		<td>$date&lt;-[1975-1-02]</td>
+		<td>replace all</td>
+		<td>^(\d{4})-(\d)-(\d)$</td>
+		<td>in</td>
+		<td>1975-1-02</td>
+		<td>with</td>
+		<td colspan="2">$1-0$2-0$3</td>
+	</tr>
+	<tr class="slimRowColor1">
+		<td>$date&lt;-[1975-1-02]</td>
+		<td>replace all</td>
+		<td>^(\d{4})-(\d\d)-(\d)$</td>
+		<td>in</td>
+		<td>$date->[1975-1-02]</td>
+		<td>with</td>
+		<td colspan="2">$1-$2-0$3</td>
+	</tr>
+	<tr class="slimRowColor1">
+		<td>$date&lt;-[1975-01-02]</td>
+		<td>replace all</td>
+		<td>^(\d{4})-(\d)-(\d\d)$</td>
+		<td>in</td>
+		<td>$date->[1975-1-02]</td>
+		<td>with</td>
+		<td colspan="2">$1-0$2-$3</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>replace all</td>
+		<td>^(\d{4})-(\d\d)-(\d\d)$</td>
+		<td>in</td>
+		<td>$date->[1975-01-02]</td>
+		<td>with</td>
+		<td>$3-$2-$1</td>
+		<td><span class="pass">02-01-1975</span></td>
+	</tr>
+</table></td></tr>
+	<tr class="scenario closed">
+		<td class="pass">1975-01-02</td>
+		<td class="pass">02-01-1975</td>
+	</tr><tr class="scenario-detail closed-detail"><td colspan="2"><table>
+	<tr class="slimRowTitle">
+		<td>scenario</td>
+		<td>compare yyyy-M-d date _ to dd-MM-yyyy _</td>
+		<td colspan="6">input, output</td>
+	</tr>
+	<tr class="slimRowColor1">
+		<td>$date&lt;-[1975-01-02]</td>
+		<td>replace all</td>
+		<td>^(\d{4})-(\d)-(\d)$</td>
+		<td>in</td>
+		<td>1975-01-02</td>
+		<td>with</td>
+		<td colspan="2">$1-0$2-0$3</td>
+	</tr>
+	<tr class="slimRowColor1">
+		<td>$date&lt;-[1975-01-02]</td>
+		<td>replace all</td>
+		<td>^(\d{4})-(\d\d)-(\d)$</td>
+		<td>in</td>
+		<td>$date->[1975-01-02]</td>
+		<td>with</td>
+		<td colspan="2">$1-$2-0$3</td>
+	</tr>
+	<tr class="slimRowColor1">
+		<td>$date&lt;-[1975-01-02]</td>
+		<td>replace all</td>
+		<td>^(\d{4})-(\d)-(\d\d)$</td>
+		<td>in</td>
+		<td>$date->[1975-01-02]</td>
+		<td>with</td>
+		<td colspan="2">$1-0$2-$3</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>replace all</td>
+		<td>^(\d{4})-(\d\d)-(\d\d)$</td>
+		<td>in</td>
+		<td>$date->[1975-01-02]</td>
+		<td>with</td>
+		<td>$3-$2-$1</td>
+		<td><span class="pass">02-01-1975</span></td>
+	</tr>
+</table></td></tr>
+</table>
+</article></body></html>

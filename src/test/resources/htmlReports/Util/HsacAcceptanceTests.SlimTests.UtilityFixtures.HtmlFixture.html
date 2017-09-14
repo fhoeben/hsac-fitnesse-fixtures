@@ -1,0 +1,17 @@
+<html><head><title>HsacAcceptanceTests.SlimTests.UtilityFixtures.HtmlFixture</title><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='css/fitnesse.css'/><script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script><script src='javascript/fitnesse.js' type='text/javascript'></script></head><body><header><h2>HsacAcceptanceTests.SlimTests.UtilityFixtures.HtmlFixture</h2></header><article><br/>Html Fixture allows HTML (fragments) obtained from an application being tested to be show as 'source' (i.e. the HMTL tags and not what they render like) or to explicitly ensure tags are rendered inside the test's page.  <br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="2"><span class="pass">html fixture</span></td>
+	</tr>
+	<tr class="slimRowColor4">
+		<td>$source&lt;-[<pre>&lt;b&gt;hot&lt;/b&gt; and &lt;i&gt;cold&lt;/i&gt;</pre>]</td>
+		<td>html source</td>
+		<td><b>hot</b> and <i>cold</i></td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>html</td>
+		<td>$source->[<pre>&lt;b&gt;hot&lt;/b&gt; and &lt;i&gt;cold&lt;/i&gt;</pre>]</td>
+	<td><div><b>hot</b> and <i>cold</i></div></td></tr>
+</table>
+</article></body></html>
