@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.junit.reportmerge;
 
 import nl.hsac.fitnesse.fixture.util.FileUtil;
+import nl.hsac.fitnesse.junit.HsacFitNesseRunner;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,6 +22,16 @@ import java.util.stream.Collectors;
  */
 public class HtmlReportIndexGenerator {
     protected static final String OVERVIEW_TABLE_START = "<table><tr><td>Name</td><td>Right</td><td>Wrong</td><td>Exceptions</td></tr>";
+
+    public static void main(String[] arguments) throws IOException {
+        String path = HsacFitNesseRunner.FITNESSE_RESULTS_PATH;
+        if (arguments != null && arguments.length > 0) {
+            path = arguments[0];
+        }
+        System.out.println("Generating based on: " + path);
+        String output = new HtmlReportIndexGenerator().createFrom(path);
+        System.out.println("Generated overview: " + output);
+    }
 
     public String createFrom(String path) throws IOException {
         File parentDir = new File(path);
