@@ -73,14 +73,14 @@ public class HtmlReportIndexGenerator {
     }
 
     protected void writeBody(File index, PrintWriter pw, Map<String, String> categorized) {
+        Map<String, String> overviewPages = filterByStatus(categorized, "overview");
+        overviewPages = fillStatusForOverviews(index.getParentFile(), overviewPages);
+        writeSection(pw, "Overview Pages", overviewPages);
+
         Map<String, String> erroredTests = filterByStatus(categorized, "error");
         writeSection(pw, "Errored Tests", erroredTests);
         Map<String, String> failedTests = filterByStatus(categorized, "fail");
         writeSection(pw, "Failed Tests", failedTests);
-
-        Map<String, String> overviewPages = filterByStatus(categorized, "overview");
-        overviewPages = fillStatusForOverviews(index.getParentFile(), overviewPages);
-        writeSection(pw, "Overview Pages", overviewPages);
 
         Map<String, String> ignoredTests = filterByStatus(categorized, "ignore");
         writeSection(pw, "Ignored Tests", ignoredTests);
