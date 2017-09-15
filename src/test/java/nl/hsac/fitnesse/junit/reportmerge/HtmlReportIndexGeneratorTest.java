@@ -44,6 +44,7 @@ public class HtmlReportIndexGeneratorTest {
 
             assertTrue("File does not start with expected content, but was:\n" + contents, contents.startsWith("<html><head>"));
             assertTrue("File does not end with expected content, but was:\n" + contents, contents.endsWith("</body></html>"));
+            assertTrue("File does not have expected CSS link:\n" + contents, contents.contains("href='Fit/css/fitnesse.css'"));
             String[] rows = contents.split("</tr>\\s*<tr");
             assertEquals("Unexpected number of rows: \n" + String.join("\n", rows), 29, rows.length);
         }
