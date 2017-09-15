@@ -84,10 +84,18 @@ public class HtmlReportIndexGenerator {
     }
 
     protected void writeBody(File index, PrintWriter pw, Map<String, String> categorized) {
+        writeOverviewSection(index, pw, categorized);
+        writeTestResultsSection(pw, categorized);
+    }
+
+    protected void writeOverviewSection(File index, PrintWriter pw, Map<String, String> categorized) {
         Map<String, String> overviewPages = filterByStatus(categorized, "overview");
         overviewPages = fillStatusForOverviews(index.getParentFile(), overviewPages);
         writeSection(pw, "Overview Pages", overviewPages);
+    }
 
+    protected void writeTestResultsSection(PrintWriter pw, Map<String, String> categorized) {
+        pw.write("<div id=\"testResults\">");
         Map<String, String> erroredTests = filterByStatus(categorized, "error");
         writeSection(pw, "Errored Tests", erroredTests);
         Map<String, String> failedTests = filterByStatus(categorized, "fail");
@@ -97,6 +105,7 @@ public class HtmlReportIndexGenerator {
         writeSection(pw, "Ignored Tests", ignoredTests);
         Map<String, String> passedTests = filterByStatus(categorized, "pass");
         writeSection(pw, "Passed Tests", passedTests);
+        pw.write("</div>");
     }
 
     protected Map<String, String> fillStatusForOverviews(File parentFile, Map<String, String> overviewPages) {
