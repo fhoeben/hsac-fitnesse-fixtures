@@ -108,12 +108,14 @@ public class HtmlReportIndexGenerator {
 
     protected void writeSection(PrintWriter pw, String header, Map<String, String> statuses) {
         if (!statuses.isEmpty()) {
-            pw.write("<h2 id=\"");
+            pw.write("<div id=\"");
             pw.write(header.replaceAll("\\s", ""));
             pw.write("\">");
+            pw.write("<h2>");
             pw.write(header);
             pw.write("</h2>");
             writeTestsTable(pw, statuses);
+            pw.write("</div>");
         }
     }
 
