@@ -95,7 +95,7 @@ public class HtmlReportIndexGenerator {
     }
 
     protected void writeTestResultsSection(PrintWriter pw, Map<String, String> categorized) {
-        pw.write("<div id=\"testResults\">");
+        pw.write("<div id=\"TestResults\">");
         Map<String, String> erroredTests = filterByStatus(categorized, "error");
         writeSection(pw, "Errored Tests", erroredTests);
         Map<String, String> failedTests = filterByStatus(categorized, "fail");
