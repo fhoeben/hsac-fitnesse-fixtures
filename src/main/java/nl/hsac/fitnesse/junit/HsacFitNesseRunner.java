@@ -70,8 +70,8 @@ public class HsacFitNesseRunner extends FitNesseRunner {
                                                 "Desktop.ini", // Windows
                                                 ".DS_Store", // macOS
                                                 ".svn"); // Subversion
-        String exclude();
-        String[] excludes();
+        String exclude() default "";
+        String[] excludes() default {};
         boolean addDefaultExcludes() default true;
     }
 
@@ -135,11 +135,11 @@ public class HsacFitNesseRunner extends FitNesseRunner {
         if (fsAnn != null) {
             excludes = new ArrayList<>();
             String exclude = fsAnn.exclude();
-            if (exclude != null) {
+            if (!"".equals(exclude)) {
                 excludes.add(exclude);
             }
             String[] explicitExcludes = fsAnn.excludes();
-            if (explicitExcludes != null) {
+            if (explicitExcludes.length > 0) {
                 excludes.addAll(Arrays.asList(explicitExcludes));
             }
             if (fsAnn.addDefaultExcludes()) {
