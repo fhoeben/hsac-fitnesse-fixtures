@@ -67,6 +67,8 @@ public class HsacFitNesseRunner extends FitNesseRunner {
                                                 "galen-reports", // LayoutTest
                                                 "fileFixture", // FileFixture
                                                 "test", // HsacExamples.SlimTests.UtilityFixtures.FileFixture
+                                                "galenExamples", // HsacExamples.SlimTests.BrowserTest.LayoutTest
+                                                "httpPostExamples", // HsacExamples.SlimTests.HttpTest.HttpPostFileTest
                                                 "Desktop.ini", // Windows
                                                 ".DS_Store", // macOS
                                                 ".svn"); // Subversion

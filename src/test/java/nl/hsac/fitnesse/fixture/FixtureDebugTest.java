@@ -9,5 +9,10 @@ import org.junit.runner.RunWith;
  */
 @RunWith(HsacFitNesseRunner.class)
 @FitNesseRunner.Suite("HsacAcceptanceTests.SlimTests.BrowserTest.CountTextOccurrenceTest")
+// Here we use an explicit FilesSectionCopy (without default) because we DO want to get galenExamples and httpPostExamples
+@HsacFitNesseRunner.FilesSectionCopy(addDefaultExcludes = false,
+        exclude = {"testResults", "testProgress",
+                    "screenshots", "pagesources", "downloads", "galen-reports", "fileFixture",
+                    "test", "Desktop.ini", ".DS_Store"})
 public class FixtureDebugTest {
 }
