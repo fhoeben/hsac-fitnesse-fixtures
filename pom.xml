@@ -235,52 +235,6 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.0.2</version>
-				<executions>
-					<execution>
-						<!-- Copy files from wiki's "files section" that will be read during tests
-						 	to the fitnesse-results directory, so they will be available during integration test
-						 	and in test report.
-						-->
-						<id>copy-httpPostExamples-resources</id>
-						<phase>generate-test-resources</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>target/fitnesse-results/files/httpPostExamples</outputDirectory>
-							<resources>
-								<resource>
-									<directory>wiki/FitNesseRoot/files/httpPostExamples</directory>
-									<filtering>false</filtering>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-					<execution>
-						<!-- Copy files from wiki's "files section" that will be read during tests
-						 	to the fitnesse-results directory, so they will be available during integration test
-						 	and in test report.
-						-->
-						<id>copy-galenTestExamples-resources</id>
-						<phase>generate-test-resources</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>target/fitnesse-results/files/galenExamples</outputDirectory>
-							<resources>
-								<resource>
-									<directory>wiki/FitNesseRoot/files/galenExamples</directory>
-									<filtering>false</filtering>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>com.github.webdriverextensions</groupId>
 				<artifactId>webdriverextensions-maven-plugin</artifactId>
 				<version>3.1.2</version>
