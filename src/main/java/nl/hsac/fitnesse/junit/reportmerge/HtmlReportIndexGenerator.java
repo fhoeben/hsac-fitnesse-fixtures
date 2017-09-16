@@ -88,8 +88,35 @@ public class HtmlReportIndexGenerator {
     }
 
     protected void writeOverviewSection(PrintWriter pw, List<TestReportHtml> htmls) {
+        writeOverviewGraph(pw, htmls);
         List<TestReportHtml> overviewPages = filterBy(htmls, TestReportHtml::isOverviewPage);
         writeSection(pw, "Overview Pages", overviewPages);
+    }
+
+    protected void writeOverviewGraph(PrintWriter pw, List<TestReportHtml> htmls) {
+        List<TestReportHtml> testHtmls = filterBy(htmls, x -> !x.isOverviewPage());
+        int total = testHtmls.size();
+        int errorCount = filterByStatus(testHtmls, "error").size();
+        int errorPct = (errorCount * 100) / total;
+        int failCount = filterByStatus(testHtmls, "fail").size();
+        int failPct = (failCount * 100) / total;
+        int ignoreCount = filterByStatus(testHtmls, "ignore").size();
+        int ignorePct = (ignoreCount * 100) / total;
+        int passCount = filterByStatus(testHtmls, "pass").size();
+        int passPct = (passCount * 100) / total;
+        pw.write("<table style=\"width:100%;text-align:center;\"><tr>");
+        String cells = String.format(
+                "<td class=\"error\" style=\"width:%s%%;\">%s</td>" +
+                "<td class=\"fail\" style=\"width:%s%%;\">%s</td>" +
+                "<td class=\"ignore\" style=\"width:%s%%;\">%s</td>" +
+                "<td class=\"pass\" style=\"width:%s%%;\">%s</td>",
+                errorPct, errorCount,
+                failPct, failCount,
+                ignorePct, ignoreCount,
+                passPct, passCount);
+        pw.write(cells);
+        pw.write("</tr></table>");
+
     }
 
     protected void writeTestResultsSection(PrintWriter pw, List<TestReportHtml> htmls) {
