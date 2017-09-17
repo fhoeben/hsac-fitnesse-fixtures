@@ -103,28 +103,22 @@ public class HtmlReportIndexGenerator {
         List<TestReportHtml> testHtmls = filterBy(htmls,
                                                     x -> !x.isOverviewPage()
                                                             && !NO_TEST_STATUS.equals(x.getStatus()));
-        int total = testHtmls.size();
-        int errorCount = filterByStatus(testHtmls, ERROR_STATUS).size();
-        int errorPct = (errorCount * 100) / total;
-        int failCount = filterByStatus(testHtmls, FAIL_STATUS).size();
-        int failPct = (failCount * 100) / total;
-        int ignoreCount = filterByStatus(testHtmls, IGNORE_STATUS).size();
-        int ignorePct = (ignoreCount * 100) / total;
-        int passCount = filterByStatus(testHtmls, PASS_STATUS).size();
-        int passPct = (passCount * 100) / total;
         pw.write("<table style=\"width:100%;text-align:center;\"><tr>");
-        String cells = String.format(
-                "<td class=\"error\" style=\"width:%s%%;\">%s</td>" +
-                "<td class=\"fail\" style=\"width:%s%%;\">%s</td>" +
-                "<td class=\"ignore\" style=\"width:%s%%;\">%s</td>" +
-                "<td class=\"pass\" style=\"width:%s%%;\">%s</td>",
-                errorPct, errorCount,
-                failPct, failCount,
-                ignorePct, ignoreCount,
-                passPct, passCount);
-        pw.write(cells);
+        writeGraphCell(pw, ERROR_STATUS, testHtmls);
+        writeGraphCell(pw, FAIL_STATUS, testHtmls);
+        writeGraphCell(pw, IGNORE_STATUS, testHtmls);
+        writeGraphCell(pw, PASS_STATUS, testHtmls);
         pw.write("</tr></table>");
+    }
 
+    protected void writeGraphCell(PrintWriter pw, String status, List<TestReportHtml> testHtmls) {
+        int totalCount = testHtmls.size();
+        int count = filterByStatus(testHtmls, status).size();
+        if (count > 0) {
+            int pct = (count * 100) / totalCount;
+            String cell = String.format("<td class=\"%s\" style=\"width:%s%%;\">%s</td>", status, pct, count);
+            pw.write(cell);
+        }
     }
 
     protected void writeTestResultsSection(PrintWriter pw, List<TestReportHtml> htmls) {
