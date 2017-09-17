@@ -9,6 +9,7 @@ import java.io.IOException;
 import static nl.hsac.fitnesse.junit.reportmerge.TestReportHtml.ERROR_STATUS;
 import static nl.hsac.fitnesse.junit.reportmerge.TestReportHtml.FAIL_STATUS;
 import static nl.hsac.fitnesse.junit.reportmerge.TestReportHtml.IGNORE_STATUS;
+import static nl.hsac.fitnesse.junit.reportmerge.TestReportHtml.NO_TEST_STATUS;
 import static nl.hsac.fitnesse.junit.reportmerge.TestReportHtml.PASS_STATUS;
 
 /**
@@ -37,8 +38,10 @@ public class TestReportFactory {
             result = FAIL_STATUS;
         } else if (content.contains("class=\"pass\">")) {
             result = PASS_STATUS;
-        } else {
+        } else if (content.contains("class=\"ignore\">")) {
             result = IGNORE_STATUS;
+        } else {
+            result = NO_TEST_STATUS;
         }
         return result;
     }

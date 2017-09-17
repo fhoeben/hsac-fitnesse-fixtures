@@ -10,6 +10,7 @@ public class TestReportHtml {
     public static final String FAIL_STATUS = "fail";
     public static final String PASS_STATUS = "pass";
     public static final String IGNORE_STATUS = "ignore";
+    public static final String NO_TEST_STATUS = "no-test";
 
     private final File htmlFile;
     private final String relativePath;

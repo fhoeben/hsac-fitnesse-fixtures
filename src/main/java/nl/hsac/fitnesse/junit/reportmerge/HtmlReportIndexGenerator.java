@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import static nl.hsac.fitnesse.junit.reportmerge.TestReportHtml.ERROR_STATUS;
 import static nl.hsac.fitnesse.junit.reportmerge.TestReportHtml.FAIL_STATUS;
 import static nl.hsac.fitnesse.junit.reportmerge.TestReportHtml.IGNORE_STATUS;
+import static nl.hsac.fitnesse.junit.reportmerge.TestReportHtml.NO_TEST_STATUS;
 import static nl.hsac.fitnesse.junit.reportmerge.TestReportHtml.PASS_STATUS;
 
 /**
@@ -99,7 +100,9 @@ public class HtmlReportIndexGenerator {
     }
 
     protected void writeOverviewGraph(PrintWriter pw, List<TestReportHtml> htmls) {
-        List<TestReportHtml> testHtmls = filterBy(htmls, x -> !x.isOverviewPage());
+        List<TestReportHtml> testHtmls = filterBy(htmls,
+                                                    x -> !x.isOverviewPage()
+                                                            && !NO_TEST_STATUS.equals(x.getStatus()));
         int total = testHtmls.size();
         int errorCount = filterByStatus(testHtmls, ERROR_STATUS).size();
         int errorPct = (errorCount * 100) / total;
@@ -136,6 +139,8 @@ public class HtmlReportIndexGenerator {
         writeSection(pw, "Ignored Tests", ignoredTests);
         List<TestReportHtml> passedTests = filterByStatus(testHtmls, PASS_STATUS);
         writeSection(pw, "Passed Tests", passedTests);
+        List<TestReportHtml> noTests = filterByStatus(testHtmls, NO_TEST_STATUS);
+        writeSection(pw, "Pages Without Assertions", noTests);
         pw.write("</div>");
     }
 
