@@ -1,0 +1,170 @@
+<html><head><title>HsacAcceptanceTests.SlimTests.HttpTest.JsonHttpTest</title><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='css/fitnesse.css'/><script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script><script src='javascript/fitnesse.js' type='text/javascript'></script></head><body><header><h2>HsacAcceptanceTests.SlimTests.HttpTest.JsonHttpTest</h2></header><article><br/><span class="meta">variable defined: jsonToTest=!-{
+	"airplanes": [{
+		"id": "001",
+		"type": "747",
+		"brand": "Boeing",
+		"seats": "400",
+		"airline": "KLM"
+	}, {
+		"id": "002",
+		"type": "737",
+		"brand": "Boeing",
+		"seats": "400",
+		"airline": "Virgin"
+	}]
+    }
+-!</span>
+<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="3"><span class="pass">mock xml server setup</span></td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td>add response</td>
+		<td colspan="3">{
+	"airplanes": [{
+		"id": "001",
+		"type": "747",
+		"brand": "Boeing",
+		"seats": "400",
+		"airline": "KLM"
+	}, {
+		"id": "002",
+		"type": "737",
+		"brand": "Boeing",
+		"seats": "400",
+		"airline": "Virgin"
+	}]
+    }
+</td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td>add response</td>
+		<td>Broken</td>
+		<td>with status</td>
+		<td>500</td>
+	</tr>
+	<tr class="slimRowColor6">
+		<td>$url&lt;-[http://192.168.0.112:8000/FitNesseMock]</td>
+		<td colspan="3">get mock server url</td>
+	</tr>
+</table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="5"><span class="pass">json http test</span></td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td><span class="pass">get from</span></td>
+		<td colspan="5">$url->[http://192.168.0.112:8000/FitNesseMock]</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>json path count</td>
+		<td>airplanes[*]</td>
+		<td colspan="3"><span class="pass">2</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>json path</td>
+		<td>airplanes.length()</td>
+		<td colspan="3"><span class="pass">2</span></td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>all json path matches</td>
+		<td colspan="4">airplanes[*].airline</td>
+	<td><div><ul><li>KLM</li><li>Virgin</li></ul></div></td></tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>all json path matches</td>
+		<td>airplanes[*].airline</td>
+		<td colspan="3"><span class="pass">/.*KLM.*Virgin.*/ found in: &lt;div&gt;&lt;ul&gt;&lt;li&gt;KLM&lt;/li&gt;&lt;li&gt;Virgin&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>json path</td>
+		<td>airplanes[0].seats</td>
+		<td colspan="3"><span class="pass">400</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>element</td>
+		<td>0</td>
+		<td>of json path</td>
+		<td>airplanes[?(@.airline=='KLM')].type</td>
+		<td><span class="pass">747</span></td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td>set json path</td>
+		<td>airplanes[0].seats</td>
+		<td>to</td>
+		<td colspan="3">300</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>json path</td>
+		<td>airplanes[0].seats</td>
+		<td colspan="3"><span class="pass">300</span></td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td><span class="pass">ensure</span></td>
+		<td>json path exists</td>
+		<td colspan="4">airplanes[0].seats</td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td><span class="pass">reject</span></td>
+		<td>json path exists</td>
+		<td colspan="4">airplanes[0].beds</td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td><span class="pass">ensure</span></td>
+		<td>json path exists</td>
+		<td colspan="4">airplanes[*].airline</td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td><span class="pass">reject</span></td>
+		<td>json path exists</td>
+		<td colspan="4">airplanes[*].beds</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td colspan="5">response</td>
+	<td><pre>{&quot;airplanes&quot;: [
+    {
+        &quot;id&quot;: &quot;001&quot;,
+        &quot;type&quot;: &quot;747&quot;,
+        &quot;airline&quot;: &quot;KLM&quot;,
+        &quot;brand&quot;: &quot;Boeing&quot;,
+        &quot;seats&quot;: &quot;300&quot;
+    },
+    {
+        &quot;id&quot;: &quot;002&quot;,
+        &quot;type&quot;: &quot;737&quot;,
+        &quot;airline&quot;: &quot;Virgin&quot;,
+        &quot;brand&quot;: &quot;Boeing&quot;,
+        &quot;seats&quot;: &quot;400&quot;
+    }
+]}</pre></td></tr>
+</table>
+<br/>And now a call which returns an error status code.<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td colspan="3">script</td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td><span class="pass">reject</span></td>
+		<td>get from</td>
+		<td>$url->[http://192.168.0.112:8000/FitNesseMock]</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>response status</td>
+		<td><span class="pass">500</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>response</td>
+		<td><span class="pass">Broken</span></td>
+	</tr>
+</table>
+</article></body></html>

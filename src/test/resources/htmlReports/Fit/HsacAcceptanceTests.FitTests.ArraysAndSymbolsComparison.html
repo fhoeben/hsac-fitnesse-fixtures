@@ -1,0 +1,114 @@
+<html><head><title>HsacAcceptanceTests.FitTests.ArraysAndSymbolsComparison</title><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='css/fitnesse.css'/><script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script><script src='javascript/fitnesse.js' type='text/javascript'></script></head><body><header><h2>HsacAcceptanceTests.FitTests.ArraysAndSymbolsComparison</h2></header><article><br/><h1>Symbol and array comparison</h1>
+To use the symbol and array behavior, one must start by adding a $ to the end of the columnname.<br/><br/><h2>Compare result with symbol</h2>
+This functionality was added when we wanted to compare a returning value with a value that was earlier returned in the same testpage. How to use this functionality is demonstrated with the use of the CompareValues fixture. However this will work for all fixtures extending the nl.hsac.fitnesse.fixture.fit.MapColumnFixture.<br/><br/><h3>Demonstration of comparing with symbol:</h3>
+<br/>First store value1 and value2 in symbols so we can compare with them later.<br/><table>
+	<tr>
+		<td colspan="4">CompareValues</td>
+	</tr>
+	<tr>
+		<td>value1</td>
+		<td>value2</td>
+		<td>=value1?</td>
+		<td>=value2?</td>
+	</tr>
+	<tr>
+		<td>1</td>
+		<td>2</td>
+		<td>symbolValue1 <span class="fit_grey"><a id="symbolValue1"> = 1</a></span></td>
+		<td>symbolValue2 <span class="fit_grey"><a id="symbolValue2"> = 2</a></span></td>
+	</tr>
+</table>
+<br/>Now compare new value1 and value2 with the values stored in symbolValue1 and symbolValue2.<br/><br/><table>
+	<tr>
+		<td colspan="4">CompareValues</td>
+	</tr>
+	<tr>
+		<td>value1</td>
+		<td>value2</td>
+		<td>value1?$</td>
+		<td>value2?$</td>
+	</tr>
+	<tr>
+		<td>1</td>
+		<td>2</td>
+		<td class="pass">1 (symbolValue1)</td>
+		<td class="pass">2 (symbolValue2)</td>
+	</tr>
+</table>
+Tip: to see how the output is in case of a failure, change value1 and/or value2.<br/><br/><h2>Compare result with an array</h2>
+Functionality is added to compare the returning value of a column fixture with an array of values. The array of values can consist out of literal values, symbols or a combination of the two. If the array contains symbols, the symbols need to be prefixed with a $.  While the symbol comparison (discussed above) works for all fixtures extending from the nl.hsac.fitnesse.fixture.fit.MapColumnFixture, for comparing with array one need to implement a method that returns the array of values as a string, separated by a delimiter. For an example, see the asDelimiterSepList method of the CompareValuesFixture class.<br/><br/><h3>Demonstration of comparing with an array:</h3>
+<br/>Compare value1 and value2 with values and symbols in an array.<br/><table>
+	<tr>
+		<td>CompareValues</td>
+		<td colspan="2"></td>
+	</tr>
+	<tr>
+		<td>value1</td>
+		<td>value2</td>
+		<td>asDelimiterSepList?$</td>
+	</tr>
+	<tr>
+		<td>1</td>
+		<td>2</td>
+		<td class="pass">1,2 (Array[1,2])</td>
+	</tr>
+	<tr>
+		<td>1</td>
+		<td>2</td>
+		<td class="pass">1,2 (Array[$symbolValue1,$symbolValue2])</td>
+	</tr>
+	<tr>
+		<td>1</td>
+		<td>2</td>
+		<td class="pass">1,2 (Array[$symbolValue1,2])</td>
+	</tr>
+</table>
+Tip: to see how the output is in case of a failure, change value1 and/or value2.<br/><br/>The default array separator is a comma. If you need another separator, ie // then you can specify this by using the ARRAY_SEPARATOR parameter.<br/><table>
+	<tr>
+		<td>CompareValues</td>
+		<td colspan="2">ARRAY_SEPARATOR=//</td>
+	</tr>
+	<tr>
+		<td>value1</td>
+		<td>value2</td>
+		<td>asDelimiterSepList?$</td>
+	</tr>
+	<tr>
+		<td>1</td>
+		<td>2</td>
+		<td class="pass">1//2 (Array[$symbolValue1//$symbolValue2])</td>
+	</tr>
+</table>
+<br/><h2>Compare result with string containing a symbol</h2>
+This was added to be able to compare the returning value of a column fixture with a string that contains a symbol.<br/>The symbol in the string must be place in $[..].<br/><br/><h3>Demonstration of comparing with text that contains one symbol:</h3>
+<table>
+	<tr>
+		<td>CompareValues</td>
+		<td colspan="3"></td>
+	</tr>
+	<tr>
+		<td>value1</td>
+		<td>value2</td>
+		<td>=value2?$</td>
+		<td>value1?$</td>
+	</tr>
+	<tr>
+		<td>randomtext2</td>
+		<td>2</td>
+		<td>storedValue2 <span class="fit_grey"> = 2</span></td>
+		<td class="pass">randomtext2 (randomtext$[storedValue2])</td>
+	</tr>
+	<tr>
+		<td>randomtext4moreText</td>
+		<td>4</td>
+		<td>storedValue4 <span class="fit_grey"> = 4</span></td>
+		<td class="pass">randomtext4moreText (randomtext$[storedValue4]moreText)</td>
+	</tr>
+	<tr>
+		<td>randomtext2moreText4</td>
+		<td></td>
+		<td> <span class="fit_grey"> = null</span></td>
+		<td class="pass">randomtext2moreText4 (randomtext$[storedValue2]moreText$[storedValue4])</td>
+	</tr>
+</table>
+</article></body></html>

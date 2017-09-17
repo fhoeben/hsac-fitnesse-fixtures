@@ -1,0 +1,368 @@
+<html><head><title>HsacAcceptanceTests.SlimTests.UtilityFixtures.CompareFixtureTest</title><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='css/fitnesse.css'/><script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script><script src='javascript/fitnesse.js' type='text/javascript'></script></head><body><header><h2>HsacAcceptanceTests.SlimTests.UtilityFixtures.CompareFixtureTest</h2></header><article><br/>Compare Fixture helps to visualize the difference between strings. <br/>Showing differences does not actually test anything, it is intended to be used in conjunction with other tests to highlight why two values are not the same.<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="4"><span class="pass">compare fixture</span></td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>difference between</td>
+		<td>Hello</td>
+		<td>and</td>
+		<td>Hello sir</td>
+	<td><div><span>Hello</span><ins class="collapse_rim">&nbsp;sir</ins></div></td></tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>difference between</td>
+		<td>Hello madam</td>
+		<td>and</td>
+		<td>Hello</td>
+	<td><div><span>Hello</span><del class="collapse_rim">&nbsp;madam</del></div></td></tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>difference between</td>
+		<td>Hello madam</td>
+		<td>and</td>
+		<td>Hello sir</td>
+	<td><div><span>Hello </span><del class="collapse_rim">madam</del><ins class="collapse_rim">sir</ins></div></td></tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>difference between</td>
+		<td>Hello dear madam</td>
+		<td>and</td>
+		<td>Hello madam</td>
+	<td><div><span>Hello </span><del class="collapse_rim">dear&nbsp;</del><span>madam</span></div></td></tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>difference between</td>
+		<td>Hello madam</td>
+		<td>and</td>
+		<td>Hello   madam</td>
+	<td><div><span>Hello </span><ins class="collapse_rim">&nbsp;&nbsp;</ins><span>madam</span></div></td></tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>difference between</td>
+		<td></td>
+		<td>and</td>
+		<td></td>
+	<td><div></div></td></tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>difference between</td>
+		<td> </td>
+		<td>and</td>
+		<td></td>
+	<td><div><del class="collapse_rim">&nbsp;</del></div></td></tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>difference between</td>
+		<td>Bye</td>
+		<td>and</td>
+		<td></td>
+	<td><div><del class="collapse_rim">Bye</del></div></td></tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>difference between</td>
+		<td>Hello
+sir
+
+
+
+Greetings to you.
+</td>
+		<td>and</td>
+		<td>Hello
+madam 
+Greetings to you.
+
+</td>
+	<td><div><span>Hello
+</span><del class="collapse_rim">sir&nbsp;<br/>&nbsp;<br/>&nbsp;<br/></del><ins class="collapse_rim">madam&nbsp;</ins><span>
+Greetings to you.
+</span><ins class="collapse_rim">&nbsp;<br/></ins></div></td></tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>difference between</td>
+		<td>ha	ha	</td>
+		<td>and</td>
+		<td>ha ha</td>
+	<td><div><span>ha</span><del class="collapse_rim">	</del><ins class="collapse_rim">&nbsp;</ins><span>ha</span><del class="collapse_rim">	</del></div></td></tr>
+</table>
+<br/>To actually test something we can count the number of 'diffs' between two values<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="5"><span class="pass">compare fixture</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>count differences between</td>
+		<td>Hello</td>
+		<td>and</td>
+		<td>Hello sir</td>
+		<td><span class="pass">1</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>count differences between</td>
+		<td>Hello madam</td>
+		<td>and</td>
+		<td>Hello</td>
+		<td><span class="pass">1</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>count differences between</td>
+		<td>Hello madam</td>
+		<td>and</td>
+		<td>Hello sir</td>
+		<td><span class="pass">2</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>count differences between</td>
+		<td>Hello dear madam</td>
+		<td>and</td>
+		<td>Hello madam</td>
+		<td><span class="pass">1</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>count differences between</td>
+		<td>Hello madam</td>
+		<td>and</td>
+		<td>Hello   madam</td>
+		<td><span class="pass">1</span></td>
+	</tr>
+</table>
+<br/><br/><br/>Sometimes changes in whitespace are not interesting, these may be ignored when determining the difference.<br/><p class="note">Whitespace added were there was none before, or all whitespace removed between characters, is still considered a difference.</p><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="4"><span class="pass">compare fixture</span></td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>difference between (ignore whitespace)</td>
+		<td>Hello dear madam</td>
+		<td>and</td>
+		<td>Hello madam</td>
+	<td><div><span>Hello </span><del class="collapse_rim">dear&nbsp;</del><span>madam</span></div></td></tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>difference between (ignore whitespace)</td>
+		<td>Hello madam</td>
+		<td>and</td>
+		<td>Hello   madam</td>
+	<td><div>Hello madam</div></td></tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>difference between (ignore whitespace)</td>
+		<td>Hello
+sir
+
+
+
+Greetings to you.
+</td>
+		<td>and</td>
+		<td>Hello
+madam 
+Greetings to you.
+
+</td>
+	<td><div><span>Hello </span><del class="collapse_rim">sir</del><ins class="collapse_rim">madam</ins><span> Greetings to you. </span></div></td></tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>difference between (ignore whitespace)</td>
+		<td>ha	ha	</td>
+		<td>and</td>
+		<td>ha ha</td>
+	<td><div><span>ha ha</span><del class="collapse_rim">&nbsp;</del></div></td></tr>
+</table>
+<br/>Counting the number of 'diffs' between two values can also ignore whitespace.<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="5"><span class="pass">compare fixture</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>count differences between (ignore whitespace)</td>
+		<td>Hello</td>
+		<td>and</td>
+		<td>Hello sir</td>
+		<td><span class="pass">1</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>count differences between (ignore whitespace)</td>
+		<td>Hello madam</td>
+		<td>and</td>
+		<td>Hello</td>
+		<td><span class="pass">1</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>count differences between (ignore whitespace)</td>
+		<td>Hello madam</td>
+		<td>and</td>
+		<td>Hello sir</td>
+		<td><span class="pass">2</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>count differences between (ignore whitespace)</td>
+		<td>Hello dear madam</td>
+		<td>and</td>
+		<td>Hello madam</td>
+		<td><span class="pass">1</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>count differences between (ignore whitespace)</td>
+		<td>Hello madam</td>
+		<td>and</td>
+		<td>Hello   madam</td>
+		<td><span class="pass">0</span></td>
+	</tr>
+</table>
+<br/>Compare preformatted HTML<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="5"><span class="pass">compare fixture</span></td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>difference between</td>
+		<td><pre>Hello dear madam   Bye</pre></td>
+		<td>and</td>
+		<td colspan="2"><pre>Hello dear madam Bye</pre></td>
+	<td><pre><span>Hello dear madam </span><del class="collapse_rim">&nbsp;&nbsp;</del><span>Bye</span></pre></td></tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>difference between</td>
+		<td><pre>Hello dear madam &lt;p&gt;Bye&lt;/p&gt;</pre></td>
+		<td>and</td>
+		<td colspan="2"><pre>Hello dear madam Bye</pre></td>
+	<td><pre><span>Hello dear madam </span><del class="collapse_rim">&lt;p&gt;Bye&lt;/p&gt;</del><ins class="collapse_rim">Bye</ins></pre></td></tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>difference between (ignore whitespace)</td>
+		<td><pre>Hello dear madam   Bye</pre></td>
+		<td>and</td>
+		<td colspan="2"><pre>Hello dear madam Bye</pre></td>
+	<td><pre>Hello dear madam   Bye</pre></td></tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>difference between (ignore whitespace)</td>
+		<td><pre>Hello dear madam &lt;p&gt;Bye&lt;/p&gt;</pre></td>
+		<td>and</td>
+		<td colspan="2"><pre>Hello dear madam Bye</pre></td>
+	<td><pre><span>Hello dear madam </span><del class="collapse_rim">&lt;p&gt;Bye&lt;/p&gt;</del><ins class="collapse_rim">Bye</ins></pre></td></tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>count differences between</td>
+		<td><pre>Hello dear madam   Bye</pre></td>
+		<td>and</td>
+		<td><pre>Hello dear madam Bye</pre></td>
+		<td><span class="pass">1</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>count differences between</td>
+		<td><pre>Hello dear madam &lt;p&gt;Bye&lt;/p&gt;</pre></td>
+		<td>and</td>
+		<td><pre>Hello dear madam Bye</pre></td>
+		<td><span class="pass">2</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>count differences between (ignore whitespace)</td>
+		<td><pre>Hello dear madam   Bye</pre></td>
+		<td>and</td>
+		<td><pre>Hello dear madam Bye</pre></td>
+		<td><span class="pass">0</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>count differences between (ignore whitespace)</td>
+		<td><pre>Hello dear madam &lt;p&gt;Bye&lt;/p&gt;</pre></td>
+		<td>and</td>
+		<td><pre>Hello dear madam Bye</pre></td>
+		<td><span class="pass">2</span></td>
+	</tr>
+</table>
+<br/>Sometimes whitespace is very interesting and visualizing the various different forms of whitespace is desired.<br/>The compare fixture can make whitespace differences explicit and will use the following symbols to indicate whitespace characters:<br/><br/><table>
+	<tr class="hidden">
+		<td colspan="2">comment</td>
+	</tr>
+	<tr>
+		<td>whitespace</td>
+		<td>symbol</td>
+	</tr>
+	<tr>
+		<td>space</td>
+		<td>·</td>
+	</tr>
+	<tr>
+		<td>non-breaking space</td>
+		<td>•</td>
+	</tr>
+	<tr>
+		<td>newline (\n)</td>
+		<td>¶</td>
+	</tr>
+	<tr>
+		<td>carriage return (\r)</td>
+		<td>↵</td>
+	</tr>
+	<tr>
+		<td>tab (\t)</td>
+		<td>→</td>
+	</tr>
+</table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="4"><span class="pass">compare fixture</span></td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>difference between (explicit whitespace)</td>
+		<td>Hello dear madam</td>
+		<td>and</td>
+		<td>Hello madam</td>
+	<td><div><span>Hello </span><del class="collapse_rim">dear&middot;</del><span>madam</span></div></td></tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>difference between (explicit whitespace)</td>
+		<td>Hello madam</td>
+		<td>and</td>
+		<td>Hello   madam</td>
+	<td><div><span>Hello </span><ins class="collapse_rim">&middot;&middot;</ins><span>madam</span></div></td></tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>difference between (explicit whitespace)</td>
+		<td>Hello
+sir
+
+
+
+Greetings to you.
+</td>
+		<td>and</td>
+		<td>Hello
+madam 
+Greetings to you.
+
+</td>
+	<td><div><span>Hello
+</span><del class="collapse_rim">sir&para;<br/>&para;<br/>&para;<br/></del><ins class="collapse_rim">madam&middot;</ins><span>
+Greetings to you.
+</span><ins class="collapse_rim">&para;<br/></ins></div></td></tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>difference between (explicit whitespace)</td>
+		<td>ha	ha	</td>
+		<td>and</td>
+		<td>ha ha</td>
+	<td><div><span>ha</span><del class="collapse_rim">&rarr;</del><ins class="collapse_rim">&middot;</ins><span>ha</span><del class="collapse_rim">&rarr;</del></div></td></tr>
+</table>
+</article></body></html>

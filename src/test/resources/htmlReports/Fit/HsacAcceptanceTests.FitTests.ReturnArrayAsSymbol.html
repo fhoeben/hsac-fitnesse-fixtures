@@ -1,0 +1,35 @@
+<html><head><title>HsacAcceptanceTests.FitTests.ReturnArrayAsSymbol</title><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='css/fitnesse.css'/><script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script><script src='javascript/fitnesse.js' type='text/javascript'></script></head><body><header><h2>HsacAcceptanceTests.FitTests.ReturnArrayAsSymbol</h2></header><article><br/><h1>Return array as symbol</h1>
+Sometimes it might be desirable to be able to store an array returned from a test in a symbol and to compare entries of that array with values in later tests.<br/><br/>To use this feature, implement a method in your fixture that returns a String array. For an example, see the asArray method of the CompareValuesFixture class. To use an array entry in comparison with an expected output, add a $ to the end of the columnname (see <a href="HsacAcceptanceTests.FitTests.ArraysAndSymbolsComparison">Symbol and array comparison</a>).<br/><br/>The array is 1 based instead of 0 based.<br/><br/><h2>Demonstration</h2>
+<br/>First store value1 and value2 as array in symbol myArray.<br/><table>
+	<tr>
+		<td colspan="3">CompareValues</td>
+	</tr>
+	<tr>
+		<td>value1</td>
+		<td>value2</td>
+		<td>=asArray?</td>
+	</tr>
+	<tr>
+		<td>1</td>
+		<td>2</td>
+		<td>myArray <span class="fit_grey"><a id="myArray"> = [1, 2]</a></span></td>
+	</tr>
+</table>
+<br/>Compare first and second entry from array with new value1.<br/><table>
+	<tr>
+		<td colspan="2">CompareValues</td>
+	</tr>
+	<tr>
+		<td>value1</td>
+		<td>value1?$</td>
+	</tr>
+	<tr>
+		<td>1</td>
+		<td class="pass">1 (myArray.1)</td>
+	</tr>
+	<tr>
+		<td>2</td>
+		<td class="pass">2 (myArray.2)</td>
+	</tr>
+</table>
+Tip: to see how the output is in case of a failure, change value1.<br/></article></body></html>

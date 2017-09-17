@@ -16,13 +16,25 @@ import nl.hsac.fitnesse.junit.selenium.SeleniumDriverFactoryFactory;
 import nl.hsac.fitnesse.junit.selenium.SeleniumGridDriverFactoryFactory;
 import nl.hsac.fitnesse.junit.selenium.SeleniumJsonGridDriverFactoryFactory;
 import nl.hsac.fitnesse.junit.selenium.SimpleSeleniumGridDriverFactoryFactory;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.NotFileFilter;
+import org.apache.commons.io.filefilter.OrFileFilter;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -41,6 +53,29 @@ import java.util.List;
  * or in the location configured using the {@link FitNesseRunner.OutputDir} annotation, or in target/fitnesse-results.
  */
 public class HsacFitNesseRunner extends FitNesseRunner {
+    /**
+     * The <code>FilesSectionCopy</code> annotation specifies which directories in the FitNesseRoot files
+     * section to exclude from tests output (which makes them available in tests and in the generated test reports).
+     * Each excludes can use wildcards.
+     */
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.TYPE)
+    public @interface FilesSectionCopy {
+        List<String> DEFAULT_EXCLUDES = Arrays.asList(
+                                                "testResults", "testProgress", // FitNesse
+                                                "screenshots", "pagesources", "downloads", // BrowserTest
+                                                "galen-reports", // LayoutTest
+                                                "fileFixture", // FileFixture
+                                                "test", // HsacExamples.SlimTests.UtilityFixtures.FileFixture
+                                                "galenExamples", // HsacExamples.SlimTests.BrowserTest.LayoutTest
+                                                "httpPostExamples", // HsacExamples.SlimTests.HttpTest.HttpPostFileTest
+                                                "Desktop.ini", // Windows
+                                                ".DS_Store", // macOS
+                                                ".svn"); // Subversion
+        String[] exclude() default {};
+        boolean addDefaultExcludes() default true;
+    }
+
     /** Output path for HTML results */
     public final static String FITNESSE_RESULTS_PATH_OVERRIDE_VARIABLE_NAME = "fitnesseResultsDir";
     public final static String FITNESSE_RESULTS_PATH = "target/fitnesse-results";
@@ -61,14 +96,54 @@ public class HsacFitNesseRunner extends FitNesseRunner {
             factoryFactories.add(new LocalSeleniumDriverFactoryFactory());
             factoryFactories.add(new LocalSeleniumDriverClassFactoryFactory());
 
+            Environment environment = Environment.getInstance();
             // we include images in output so build server will have single
             // directory containing both HTML results and the images created by the tests
+            // we must ensure any files present in the wiki's files section are also present there, so tests
+            // can use them
             String outputDir = getOutputDir(suiteClass);
             new File(outputDir).mkdirs();
-            Environment.getInstance().setFitNesseRoot(outputDir);
+
+            String srcRootDir = getFitNesseDir(suiteClass) + "/" + getFitNesseRoot(suiteClass);
+            environment.setFitNesseRoot(srcRootDir);
+            String srcFilesDir = environment.getFitNesseFilesSectionDir();
+
+            environment.setFitNesseRoot(outputDir);
+            String targetFilesDir = environment.getFitNesseFilesSectionDir();
+
+            copyFilesToOutputDir(suiteClass, srcFilesDir, targetFilesDir);
         } catch (Exception e) {
             throw new InitializationError(e);
         }
+    }
+
+    protected void copyFilesToOutputDir(Class<?> suiteClass, String srcFilesDir, String targetFilesDir) throws IOException {
+        FileFilter fileSectionFilter = getFileSectionCopyFilter(suiteClass);
+        FileUtils.copyDirectory(new File(srcFilesDir), new File(targetFilesDir), fileSectionFilter);
+    }
+
+    protected FileFilter getFileSectionCopyFilter(Class<?> suiteClass) {
+        List<String> excludes = getFileSectionCopyExcludes(suiteClass);
+        List<IOFileFilter> excludeFilters = new ArrayList<>(excludes.size());
+        excludes.forEach(x -> excludeFilters.add(new WildcardFileFilter(x)));
+        return new NotFileFilter(new OrFileFilter(excludeFilters));
+    }
+
+    protected List<String> getFileSectionCopyExcludes(Class<?> suiteClass) {
+        List<String> excludes = FilesSectionCopy.DEFAULT_EXCLUDES;
+
+        FilesSectionCopy fsAnn = suiteClass.getAnnotation(FilesSectionCopy.class);
+        if (fsAnn != null) {
+            excludes = new ArrayList<>();
+            String[] explicitExcludes = fsAnn.exclude();
+            if (explicitExcludes.length > 0) {
+                excludes.addAll(Arrays.asList(explicitExcludes));
+            }
+            if (fsAnn.addDefaultExcludes()) {
+                excludes.addAll(FilesSectionCopy.DEFAULT_EXCLUDES);
+            }
+        }
+        return excludes;
     }
 
     @Override

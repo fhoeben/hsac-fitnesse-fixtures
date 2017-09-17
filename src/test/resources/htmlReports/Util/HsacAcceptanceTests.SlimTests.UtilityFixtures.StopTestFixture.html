@@ -1,0 +1,68 @@
+<html><head><title>HsacAcceptanceTests.SlimTests.UtilityFixtures.StopTestFixture</title><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='css/fitnesse.css'/><script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script><script src='javascript/fitnesse.js' type='text/javascript'></script></head><body><header><h2>HsacAcceptanceTests.SlimTests.UtilityFixtures.StopTestFixture</h2></header><article><br/>StopTestFixture is a fixture with helper methods to allow a test to be aborted in certain cases. <br/>Sometimes (in larger test) there is no use in continuing the rest of the test if certain basic checks at the start are not met. This fixture allows a test to be stopped in such cases.<br/><br/>Basic commands are shown in the first table below. The next tables give an idea of more realistic usage.<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="3"><span class="pass">stop test fixture</span></td>
+	</tr>
+	<tr class="slimRowColor3">
+		<td><span class="pass">stop test if</span></td>
+		<td>Bye</td>
+		<td>is</td>
+		<td>Hello</td>
+	</tr>
+	<tr class="slimRowColor3">
+		<td><span class="pass">stop test if</span></td>
+		<td>Hello</td>
+		<td>is not</td>
+		<td>Hello</td>
+	</tr>
+</table>
+<br/><br/>The expected use is that some other fixture is used (in a script) to assign the outcome of a measurement to a variable. The contents of this variable can the be checked using StopTestFixture, and if the value does not meet the expectation the execution of the rest of the page is skipped.<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="6"><span class="pass">string fixture</span></td>
+	</tr>
+	<tr class="slimRowColor3">
+		<td>$myResponseCode&lt;-[Hallo]</td>
+		<td>value of</td>
+		<td colspan="5">Hallo</td>
+	</tr>
+	<tr class="slimRowColor4">
+		<td>$myResponse&lt;-[H]</td>
+		<td>replace all</td>
+		<td>[a-z]*</td>
+		<td>in</td>
+		<td>Hallo</td>
+		<td>with</td>
+		<td></td>
+	</tr>
+	<tr class="slimRowColor6">
+		<td>$myInt&lt;-[100]</td>
+		<td>convert to int</td>
+		<td colspan="5">100</td>
+	</tr>
+</table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="3"><span class="pass">stop test fixture</span></td>
+	</tr>
+	<tr class="slimRowColor3">
+		<td><span class="pass">stop test if</span></td>
+		<td>$myResponseCode->[Hallo]</td>
+		<td>is not</td>
+		<td>Hallo</td>
+	</tr>
+	<tr class="slimRowColor3">
+		<td><span class="pass">stop test if</span></td>
+		<td>$myResponse->[H]</td>
+		<td>is</td>
+		<td>B</td>
+	</tr>
+	<tr class="slimRowColor3">
+		<td><span class="pass">stop test if</span></td>
+		<td>$myInt->[100]</td>
+		<td>is not</td>
+		<td>100</td>
+	</tr>
+</table>
+<br/><br/></article></body></html>
