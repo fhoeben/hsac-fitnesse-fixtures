@@ -6,6 +6,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import static nl.hsac.fitnesse.junit.reportmerge.TestReportHtml.ERROR_STATUS;
+import static nl.hsac.fitnesse.junit.reportmerge.TestReportHtml.FAIL_STATUS;
+import static nl.hsac.fitnesse.junit.reportmerge.TestReportHtml.IGNORE_STATUS;
+import static nl.hsac.fitnesse.junit.reportmerge.TestReportHtml.PASS_STATUS;
+
 /**
  * Factory to create TestReportHtml instances.
  */
@@ -27,13 +32,13 @@ public class TestReportFactory {
     protected String getStatus(String content) {
         String result;
         if (content.contains("class=\"error\">")) {
-            result = "error";
+            result = ERROR_STATUS;
         } else if (content.contains("class=\"fail\">")) {
-            result = "fail";
+            result = FAIL_STATUS;
         } else if (content.contains("class=\"pass\">")) {
-            result = "pass";
+            result = PASS_STATUS;
         } else {
-            result = "ignore";
+            result = IGNORE_STATUS;
         }
         return result;
     }

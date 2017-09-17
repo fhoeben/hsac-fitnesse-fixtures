@@ -10,6 +10,11 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static nl.hsac.fitnesse.junit.reportmerge.TestReportHtml.ERROR_STATUS;
+import static nl.hsac.fitnesse.junit.reportmerge.TestReportHtml.FAIL_STATUS;
+import static nl.hsac.fitnesse.junit.reportmerge.TestReportHtml.IGNORE_STATUS;
+import static nl.hsac.fitnesse.junit.reportmerge.TestReportHtml.PASS_STATUS;
+
 /**
  * Creates a (single) overview page based on a pre-existing set of FitNesse result HTML pages.
  * This is useful to generate a combined result page when multiple suites were run separately (e.g. in parallel).
@@ -96,13 +101,13 @@ public class HtmlReportIndexGenerator {
     protected void writeOverviewGraph(PrintWriter pw, List<TestReportHtml> htmls) {
         List<TestReportHtml> testHtmls = filterBy(htmls, x -> !x.isOverviewPage());
         int total = testHtmls.size();
-        int errorCount = filterByStatus(testHtmls, "error").size();
+        int errorCount = filterByStatus(testHtmls, ERROR_STATUS).size();
         int errorPct = (errorCount * 100) / total;
-        int failCount = filterByStatus(testHtmls, "fail").size();
+        int failCount = filterByStatus(testHtmls, FAIL_STATUS).size();
         int failPct = (failCount * 100) / total;
-        int ignoreCount = filterByStatus(testHtmls, "ignore").size();
+        int ignoreCount = filterByStatus(testHtmls, IGNORE_STATUS).size();
         int ignorePct = (ignoreCount * 100) / total;
-        int passCount = filterByStatus(testHtmls, "pass").size();
+        int passCount = filterByStatus(testHtmls, PASS_STATUS).size();
         int passPct = (passCount * 100) / total;
         pw.write("<table style=\"width:100%;text-align:center;\"><tr>");
         String cells = String.format(
@@ -122,14 +127,14 @@ public class HtmlReportIndexGenerator {
     protected void writeTestResultsSection(PrintWriter pw, List<TestReportHtml> htmls) {
         List<TestReportHtml> testHtmls = filterBy(htmls, x -> !x.isOverviewPage());
         pw.write("<div id=\"TestResults\">");
-        List<TestReportHtml> erroredTests = filterByStatus(testHtmls, "error");
+        List<TestReportHtml> erroredTests = filterByStatus(testHtmls, ERROR_STATUS);
         writeSection(pw, "Errored Tests", erroredTests);
-        List<TestReportHtml> failedTests = filterByStatus(testHtmls, "fail");
+        List<TestReportHtml> failedTests = filterByStatus(testHtmls, FAIL_STATUS);
         writeSection(pw, "Failed Tests", failedTests);
 
-        List<TestReportHtml> ignoredTests = filterByStatus(testHtmls, "ignore");
+        List<TestReportHtml> ignoredTests = filterByStatus(testHtmls, IGNORE_STATUS);
         writeSection(pw, "Ignored Tests", ignoredTests);
-        List<TestReportHtml> passedTests = filterByStatus(testHtmls, "pass");
+        List<TestReportHtml> passedTests = filterByStatus(testHtmls, PASS_STATUS);
         writeSection(pw, "Passed Tests", passedTests);
         pw.write("</div>");
     }

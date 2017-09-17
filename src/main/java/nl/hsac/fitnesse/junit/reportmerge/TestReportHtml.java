@@ -6,6 +6,11 @@ import java.io.File;
  * Wrapper around FitNesse test result HTML page.
  */
 public class TestReportHtml {
+    public static final String ERROR_STATUS = "error";
+    public static final String FAIL_STATUS = "fail";
+    public static final String PASS_STATUS = "pass";
+    public static final String IGNORE_STATUS = "ignore";
+
     private final File htmlFile;
     private final String relativePath;
     private final boolean isOverviewPage;
