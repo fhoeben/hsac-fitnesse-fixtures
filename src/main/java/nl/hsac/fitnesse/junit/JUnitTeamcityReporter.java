@@ -6,12 +6,14 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
 import java.io.PrintStream;
+import java.lang.management.ManagementFactory;
 
 /**
  * JUnit RunListener so that TeamCity is updated with progress info while tests run.
  */
 public class JUnitTeamcityReporter extends RunListener {
     private final PrintStream out;
+    private final String flowId = ManagementFactory.getRuntimeMXBean().getName();
     private String currentTestClassName = null;
 
     public JUnitTeamcityReporter() {
@@ -20,7 +22,7 @@ public class JUnitTeamcityReporter extends RunListener {
 
     public JUnitTeamcityReporter(final PrintStream out) {
         this.out = out;
-        this.currentTestClassName = null;
+        currentTestClassName = null;
     }
 
     @Override
@@ -30,42 +32,43 @@ public class JUnitTeamcityReporter extends RunListener {
 
         if (currentTestClassName == null || !currentTestClassName.equals(testClassName)) {
             testRunFinished(null);
-            this.out.println(String.format("##teamcity[testSuiteStarted name='%s']", testClassName));
+            println("##teamcity[testSuiteStarted flowId='%s' name='%s']", flowId, testClassName);
             currentTestClassName = testClassName;
         }
-
-        out.println(String.format("##teamcity[testStarted name='%s' captureStandardOutput='true']", testName));
+        println("##teamcity[testStarted flowId='%s' name='%s' captureStandardOutput='true']", flowId, testClassName, testName);
     }
 
     @Override
     public void testFinished(Description description) {
         final String testName = getTestName(description);
 
-        out.println(String.format("##teamcity[testFinished name='%s']", testName));
+        println("##teamcity[testFinished flowId='%s' name='%s']", flowId, testName);
     }
 
     @Override
     public void testFailure(Failure failure) {
         if (failure.getTrace() != null && !failure.getTrace().isEmpty())
-            out.print(failure.getTrace());
-        out.println(String.format("##teamcity[testFailed name='%s' message='%s' details='%s']",
+            print(failure.getTrace());
+        println("##teamcity[testFailed flowId='%s' name='%s' message='%s' details='%s']",
+                flowId,
                 getTestName(failure.getDescription()),
                 "failed",
-                ""));
+                "");
         testFinished(failure.getDescription());
     }
 
     @Override
     public void testIgnored(Description description) {
-        out.println(String.format("##teamcity[testIgnored name='%s' message='%s']",
+        println("##teamcity[testIgnored flowId='%s' name='%s' message='%s']",
+                flowId,
                 getTestName(description),
-                ""));
+                "");
     }
 
     @Override
     public void testRunFinished(Result result) {
         if (currentTestClassName != null) {
-            out.println(String.format("##teamcity[testSuiteFinished name='%s']", currentTestClassName));
+            println("##teamcity[testSuiteFinished flowId='%s' name='%s']", flowId, currentTestClassName);
         }
     }
 
@@ -75,5 +78,14 @@ public class JUnitTeamcityReporter extends RunListener {
 
     protected String getTestName(final Description description) {
         return description.getMethodName();
+    }
+
+    private void println(String pattern, Object... args) {
+        String msg = String.format(pattern, args);
+        out.println(msg);
+    }
+
+    private void print(String msg) {
+        out.print(msg);
     }
 }
