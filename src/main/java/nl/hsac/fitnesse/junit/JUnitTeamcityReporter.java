@@ -35,7 +35,7 @@ public class JUnitTeamcityReporter extends RunListener {
             println("##teamcity[testSuiteStarted flowId='%s' name='%s']", flowId, testClassName);
             currentTestClassName = testClassName;
         }
-        println("##teamcity[testStarted flowId='%s' name='%s' captureStandardOutput='true']", flowId, testClassName, testName);
+        println("##teamcity[testStarted flowId='%s' name='%s' captureStandardOutput='true']", flowId, testName);
     }
 
     @Override
