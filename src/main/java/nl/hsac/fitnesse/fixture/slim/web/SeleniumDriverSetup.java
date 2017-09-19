@@ -28,6 +28,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiFunction;
 
 /**
  * Script fixture to set up webdriver to be used by Selenium tests.
@@ -378,22 +379,26 @@ public class SeleniumDriverSetup extends SlimFixture {
 
     protected boolean createAndSetRemoteDriver(String url, final DesiredCapabilities desiredCapabilities)
             throws MalformedURLException {
+        return createAndSetRemoteWebDriver(RemoteWebDriver::new, url, desiredCapabilities);
+    }
+
+    protected boolean createAndSetRemoteWebDriver(BiFunction<URL, Capabilities, ? extends RemoteWebDriver> constr,
+                                                  String url,
+                                                  DesiredCapabilities desiredCapabilities)
+            throws MalformedURLException {
         if (OVERRIDE_ACTIVE) {
             return true;
         }
 
         String cleanUrl = cleanupValue(url);
         final URL remoteUrl = new URL(cleanUrl);
-        SeleniumHelper.DriverFactory driverFactory = new SeleniumHelper.DriverFactory() {
-            @Override
-            public void createDriver() {
-                RemoteWebDriver remoteWebDriver = new RemoteWebDriver(remoteUrl, desiredCapabilities);
-                FileDetector fd = remoteWebDriver.getFileDetector();
-                if (fd == null || fd instanceof UselessFileDetector) {
-                    remoteWebDriver.setFileDetector(new LocalFileDetector());
-                }
-                setDriver(remoteWebDriver);
+        SeleniumHelper.DriverFactory driverFactory = () -> {
+            RemoteWebDriver remoteWebDriver = constr.apply(remoteUrl, desiredCapabilities);
+            FileDetector fd = remoteWebDriver.getFileDetector();
+            if (fd == null || fd instanceof UselessFileDetector) {
+                remoteWebDriver.setFileDetector(new LocalFileDetector());
             }
+            setDriver(remoteWebDriver);
         };
         WebDriver driver = setAndUseDriverFactory(driverFactory);
         getEnvironment().setSymbol(REMOTE_URL_KEY, cleanUrl);
