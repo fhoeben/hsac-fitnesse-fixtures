@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.junit.selenium;
 
 import nl.hsac.fitnesse.fixture.slim.web.SeleniumDriverSetup;
+import nl.hsac.fitnesse.fixture.util.LambdaMetaHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -16,7 +17,7 @@ import java.util.function.BiFunction;
  * Factories using it are configured by setting the system property 'seleniumGridUrl'.
  */
 public abstract class SeleniumGridWithCapabilitiesDriverFactoryFactoryBase extends SeleniumDriverFactoryFactoryBase {
-    private BiFunction<URL, Capabilities, RemoteWebDriver> webDriverConstructor = RemoteWebDriver::new;
+    private BiFunction<URL, Capabilities, RemoteWebDriver> webDriverConstructor;
 
     @Override
     public SeleniumHelper.DriverFactory getDriverFactory() {
@@ -38,6 +39,25 @@ public abstract class SeleniumGridWithCapabilitiesDriverFactoryFactoryBase exten
     }
 
     protected BiFunction<URL, Capabilities, RemoteWebDriver> getRemoteWebDriverConstructor() {
+        if (webDriverConstructor == null) {
+            if (isPropertySet(SELENIUM_DRIVER_CLASS)) {
+                String driverClass = getProperty(SELENIUM_DRIVER_CLASS);
+                try {
+                    Class<?> clazz = Class.forName(driverClass);
+                    if (RemoteWebDriver.class.isAssignableFrom(clazz)) {
+                        Class<? extends RemoteWebDriver> rmd = (Class<? extends RemoteWebDriver>) clazz;
+                        webDriverConstructor = new LambdaMetaHelper().getConstructor(rmd, URL.class, Capabilities.class);
+                    } else {
+                        throw new IllegalArgumentException(driverClass + " does not implement RemoteWebDiver");
+                    }
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Unable to create RemoteWebDriver using: " + driverClass, e);
+                }
+            } else {
+                webDriverConstructor = RemoteWebDriver::new;
+            }
+        }
+
         return webDriverConstructor;
     }
 
