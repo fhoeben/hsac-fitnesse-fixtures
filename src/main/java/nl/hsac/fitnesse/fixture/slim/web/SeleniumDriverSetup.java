@@ -259,10 +259,7 @@ public class SeleniumDriverSetup extends SlimFixture {
 
     public boolean connectToDriverAtWithCapabilities(String url, Map<String, Object> capabilities)
             throws MalformedURLException {
-        DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
-        for (Map.Entry<String, Object> capability : capabilities.entrySet()) {
-            desiredCapabilities.setCapability(capability.getKey(), capability.getValue());
-        }
+        DesiredCapabilities desiredCapabilities = new DesiredCapabilities(capabilities);
         return createAndSetRemoteDriver(url, desiredCapabilities);
     }
 
@@ -382,7 +379,7 @@ public class SeleniumDriverSetup extends SlimFixture {
         return createAndSetRemoteWebDriver(RemoteWebDriver::new, url, desiredCapabilities);
     }
 
-    protected boolean createAndSetRemoteWebDriver(BiFunction<URL, Capabilities, ? extends RemoteWebDriver> constr,
+    public boolean createAndSetRemoteWebDriver(BiFunction<URL, Capabilities, ? extends RemoteWebDriver> constr,
                                                   String url,
                                                   DesiredCapabilities desiredCapabilities)
             throws MalformedURLException {
