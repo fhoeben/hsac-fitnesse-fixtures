@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * Base class for fixtures testing sites using AngularJs.
  */
-public abstract class NgBrowserTestBase extends BrowserTest {
+public abstract class NgBrowserTestBase extends BrowserTest<WebElement> {
     private final static Set<String> METHODS_NO_WAIT;
 
     private final String waitForAngularScript;

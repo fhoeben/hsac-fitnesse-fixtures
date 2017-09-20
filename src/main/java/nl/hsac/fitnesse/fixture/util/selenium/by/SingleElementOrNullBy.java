@@ -11,22 +11,22 @@ import java.util.function.Function;
 /**
  * By which returns either a single element or null.
  */
-public abstract class SingleElementOrNullBy extends By {
+public abstract class SingleElementOrNullBy<T extends WebElement> extends By {
     /**
      * Converts By to Function returning first result (or null).
      * @param by by to convert.
      * @return function returning first result of by.
      */
-    public static Function<SearchContext, WebElement> byToFunction(By by) {
-        Function<SearchContext, WebElement> function;
+    public static <T extends WebElement> Function<SearchContext, T> byToFunction(By by) {
+        Function<SearchContext, T> function;
         if (by instanceof SingleElementOrNullBy) {
             // will not throw exception, but return null when no element is found
-            function = by::findElement;
+            function = sc -> (T) by.findElement(sc);
         } else {
             function = sc -> {
                 // single element case will throw exception when no element is found
-                List<WebElement> elements = by.findElements(sc);
-                return (elements != null && !elements.isEmpty())? elements.get(0): null;
+                List elements = by.findElements(sc);
+                return (elements != null && !elements.isEmpty())? (T) elements.get(0) : null;
             };
         }
         return function;
@@ -39,11 +39,11 @@ public abstract class SingleElementOrNullBy extends By {
      * @return element found, if any, null otherwise (unlike normal By which throws exception).
      */
     @Override
-    public abstract WebElement findElement(SearchContext context);
+    public abstract T findElement(SearchContext context);
 
     @Override
     public List<WebElement> findElements(SearchContext searchContext) {
-        WebElement element = findElement(searchContext);
+        T element = findElement(searchContext);
         return element == null? Collections.emptyList(): Collections.singletonList(element);
     }
 

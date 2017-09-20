@@ -32,7 +32,7 @@ public class BestMatchBy extends SingleElementOrNullBy {
         return findElement(by, context);
     }
 
-    public static WebElement findElement(By by, SearchContext context) {
+    public static <T extends WebElement> T findElement(By by, SearchContext context) {
         WebElement element = null;
         List<WebElement> elements = context.findElements(by);
         if (elements.size() == 1) {
@@ -40,7 +40,7 @@ public class BestMatchBy extends SingleElementOrNullBy {
         } else if (elements.size() > 1) {
             element = selectBestElement(context, elements);
         }
-        return element;
+        return (T) element;
     }
 
     private static WebElement selectBestElement(SearchContext context, List<WebElement> elements) {
