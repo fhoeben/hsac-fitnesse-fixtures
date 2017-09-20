@@ -1,6 +1,6 @@
 package nl.hsac.fitnesse.fixture.util.selenium;
 
-import org.openqa.selenium.By;
+import nl.hsac.fitnesse.fixture.util.selenium.by.ConstantBy;
 import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -14,8 +14,6 @@ import java.util.List;
  * @param <T> type of condition result.
  */
 class TryAllFramesConditionDecorator<T> implements ExpectedCondition<T> {
-    private static final By BY_FRAME = By.cssSelector("iframe,frame");
-
     private final SeleniumHelper helper;
     private final ExpectedCondition<T> decorated;
     private int frameDepthOnStart;
@@ -41,7 +39,7 @@ class TryAllFramesConditionDecorator<T> implements ExpectedCondition<T> {
 
     private T invokeInFrames(WebDriver webDriver) {
         T result = null;
-        List<WebElement> frames = webDriver.findElements(BY_FRAME);
+        List<WebElement> frames = webDriver.findElements(ConstantBy.frames());
         for (WebElement frame : frames) {
             helper.switchToFrame(frame);
             try {

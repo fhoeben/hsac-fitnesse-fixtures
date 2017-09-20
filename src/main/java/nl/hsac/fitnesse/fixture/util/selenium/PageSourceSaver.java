@@ -2,8 +2,8 @@ package nl.hsac.fitnesse.fixture.util.selenium;
 
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
+import nl.hsac.fitnesse.fixture.util.selenium.by.ConstantBy;
 import org.apache.commons.lang3.StringUtils;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -19,7 +19,6 @@ import java.util.Map;
  * Saves page source to disk.
  */
 public class PageSourceSaver {
-    private static final By SELECTOR = By.cssSelector("iframe,frame");
     private static final String FAKE_SRC_ATTR = "data-fake_src";
     private final String pageSourceBase;
     private final Environment environment = Environment.getInstance();
@@ -152,7 +151,7 @@ public class PageSourceSaver {
     }
 
     protected List<WebElement> getFrames() {
-        return getDriver().findElements(SELECTOR);
+        return getDriver().findElements(ConstantBy.frames());
     }
 
     protected String getLocation() {
@@ -173,7 +172,7 @@ public class PageSourceSaver {
         try {
             getSeleniumHelper().executeJavascript(pattern, params);
         } catch (RuntimeException e) {
-            // ignore exception addiung/removing attributes and carry on rest of code
+            // ignore exception adding/removing attributes and carry on rest of code
         }
     }
 

@@ -8,10 +8,18 @@ import org.openqa.selenium.WebElement;
  * Container class for relative By statements that take no parameters.
  */
 public class ConstantBy {
+    private static final By FRAME_BY = By.cssSelector("iframe,frame");
     private static final BestMatchBy NESTED_ELEMENT_FOR_VALUE_BY = new BestMatchBy(By.cssSelector("input:not([type='hidden']),select,textarea"));
     private static final BestMatchBy SUBMIT_BUTTON_BY = new BestMatchBy(By.cssSelector("input[type='submit']:not([value])"));
     private static final BestMatchBy RESET_BUTTON_BY = new BestMatchBy(By.cssSelector("input[type='reset']:not([value])"));
     private static final SingleElementOrNullBy NULL_BY = new FindsNothing();
+
+    /**
+     * @return By which will return all frames and iframes.
+     */
+    public static By frames() {
+        return FRAME_BY;
+    }
 
     /**
      * @return By which will return a nested element to obtain a value from (e.g. input or select).
