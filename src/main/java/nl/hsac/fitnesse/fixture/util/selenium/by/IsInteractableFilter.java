@@ -3,12 +3,13 @@ package nl.hsac.fitnesse.fixture.util.selenium.by;
 import org.openqa.selenium.WebElement;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Function to be used as post-processor when finding elements.
  * It will filter out non-interactable elements.
  */
-public class IsInteractableFilter<T extends WebElement> implements Function<T, T> {
+public class IsInteractableFilter<T extends WebElement> implements Function<T, T>, Supplier<T> {
     private T firstFound;
 
     /**
@@ -27,7 +28,8 @@ public class IsInteractableFilter<T extends WebElement> implements Function<T, T
     /**
      * @return first non-null element encountered by filter (may or may not be interactable);
      */
-    public T getFirstFound() {
+    @Override
+    public T get() {
         return firstFound;
     }
 

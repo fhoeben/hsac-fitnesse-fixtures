@@ -18,9 +18,9 @@ import static nl.hsac.fitnesse.fixture.util.FirstNonNullHelper.firstNonNull;
  */
 public class FirstElementBy<T extends WebElement> extends SingleElementOrNullBy<T> {
     private final List<By> byList;
-    private Function<T, T> postProcessor;
+    private Function<? super T, ? extends T> postProcessor;
 
-    public FirstElementBy(Function<T, T> postProcessor, By firstBy, By... bys) {
+    public FirstElementBy(Function<? super T, ? extends T> postProcessor, By firstBy, By... bys) {
         int size = 1;
         if (bys != null) {
             size += bys.length;
@@ -62,14 +62,14 @@ public class FirstElementBy<T extends WebElement> extends SingleElementOrNullBy<
      * This function should return null when element should not be returned.
      * @param postProcessor function to apply to each element found to determine whether it should be returned.
      */
-    public void setPostProcessor(Function<T, T> postProcessor) {
+    public void setPostProcessor(Function<? super T, ? extends T> postProcessor) {
         this.postProcessor = postProcessor;
     }
 
     /**
      * @return post processor in use.
      */
-    public Function<T, T> getPostProcessor() {
+    public Function<? super T, ? extends T> getPostProcessor() {
         return postProcessor;
     }
 

@@ -5,6 +5,7 @@ import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * FirstElementBy which if no interactable element is found returns the first element matched
@@ -28,7 +29,7 @@ public class HeuristicBy<T extends WebElement> extends FirstElementBy<T> {
      * @param firstNested first By to be wrapped.
      * @param extraNestedBys optional extra Bys to be wrapped.
      */
-    protected HeuristicBy(IsInteractableFilter postProcessor, By firstNested, By... extraNestedBys) {
+    protected HeuristicBy(Function<? super T, ? extends T> postProcessor, By firstNested, By... extraNestedBys) {
         super(postProcessor, firstNested, extraNestedBys);
     }
 
@@ -37,9 +38,10 @@ public class HeuristicBy<T extends WebElement> extends FirstElementBy<T> {
         T element = super.findElement(context);
         if (element == null) {
             // no interactable element found
-            Function<T, T> postProcessor = getPostProcessor();
-            if (postProcessor instanceof IsInteractableFilter) {
-                element = ((IsInteractableFilter<T>) postProcessor).getFirstFound();
+            Object postProcessor = getPostProcessor();
+            if (postProcessor instanceof Supplier) {
+                Supplier supplier = (Supplier) postProcessor;
+                element = (T) supplier.get();
             }
         }
         return element;
