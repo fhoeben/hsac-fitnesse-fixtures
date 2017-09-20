@@ -764,6 +764,29 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
+    @WaitUntil
+    public boolean clickWithOffsetXY(String place, int xOffset, int yOffset) {
+        return  clickWithOffsetXYIn(place, xOffset, yOffset, null);
+    }
+
+    @WaitUntil
+    public boolean clickWithOffsetXYIn(String place, int xOffset, int yOffset, String container) {
+        WebElement element = getElementToClick(place, container);
+        return clickWithOffsetXY(element, xOffset, yOffset);
+    }
+
+    protected boolean clickWithOffsetXY(WebElement element, int xOffset, int yOffset) {
+        boolean result = false;
+        if (element != null) {
+            scrollIfNotOnScreen(element);
+            if (isInteractable(element)) {
+                getSeleniumHelper().clickWithOffset(element, xOffset, yOffset);
+                result = true;
+            }
+        }
+        return result;
+    }
+
     protected WebElement getElementToClick(String place) {
         return getSeleniumHelper().getElementToClick(place);
     }

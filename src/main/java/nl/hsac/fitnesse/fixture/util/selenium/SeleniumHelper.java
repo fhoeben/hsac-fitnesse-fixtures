@@ -534,6 +534,16 @@ public class SeleniumHelper {
         getActions().dragAndDrop(source, target).perform();
     }
 
+    /**
+     * Simulates click with an offset
+     * @param element element to click on
+     * @param xOffset amount pixels to offset measured of the left side
+     * @param yOffset amount pixels to offset measured of the top side
+     */
+    public void clickWithOffset(WebElement element, int xOffset, int yOffset) {
+        getActions().moveToElement(element, xOffset, yOffset ).click().perform();
+    }
+
     public Actions getActions() {
         return new Actions(driver());
     }
