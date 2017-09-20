@@ -12,7 +12,7 @@ import java.util.List;
  * Decorator for a By statement, always returning only a single element.
  * When the nested By returns multiple the first element displayed, and 'on top' is returned.
  */
-public class BestMatchBy extends SingleElementOrNullBy {
+public class BestMatchBy<T extends WebElement> extends SingleElementOrNullBy<T> {
     private static final String TOP_ELEMENT_AT =
             "if (arguments[0].getBoundingClientRect) {\n" +
                     "  var rect = arguments[0].getBoundingClientRect();\n" +
@@ -28,7 +28,7 @@ public class BestMatchBy extends SingleElementOrNullBy {
     }
 
     @Override
-    public WebElement findElement(SearchContext context) {
+    public T findElement(SearchContext context) {
         return findElement(by, context);
     }
 
@@ -76,8 +76,12 @@ public class BestMatchBy extends SingleElementOrNullBy {
         return element;
     }
 
-    private static boolean isOnTop(JavascriptExecutor executor, WebElement element) {
-        WebElement e = (WebElement) JavascriptHelper.executeScript(executor, TOP_ELEMENT_AT, element);
+    private static <T extends WebElement> T getElement(List<WebElement> elements, int i) {
+        return (T) elements.get(i);
+    }
+
+    private static <T extends WebElement> boolean isOnTop(JavascriptExecutor executor, T element) {
+        T e = (T) JavascriptHelper.executeScript(executor, TOP_ELEMENT_AT, element);
         return element.equals(e);
     }
 

@@ -10,7 +10,7 @@ import java.util.function.Function;
  * FirstElementBy which if no interactable element is found returns the first element matched
  * (which was originally filtered out).
  */
-public class HeuristicBy extends FirstElementBy {
+public class HeuristicBy<T extends WebElement> extends FirstElementBy<T> {
     /**
      * Creates new, using {@link IsInteractableFilter}.
      * (First By is separate so compiler will ensure at least one By is passed.)
@@ -33,13 +33,13 @@ public class HeuristicBy extends FirstElementBy {
     }
 
     @Override
-    public WebElement findElement(SearchContext context) {
-        WebElement element = super.findElement(context);
+    public T findElement(SearchContext context) {
+        T element = super.findElement(context);
         if (element == null) {
             // no interactable element found
-            Function<WebElement, WebElement> postProcessor = getPostProcessor();
+            Function<T, T> postProcessor = getPostProcessor();
             if (postProcessor instanceof IsInteractableFilter) {
-                element = ((IsInteractableFilter) postProcessor).getFirstFound();
+                element = ((IsInteractableFilter<T>) postProcessor).getFirstFound();
             }
         }
         return element;
