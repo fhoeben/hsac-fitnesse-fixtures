@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.fixture.util.selenium;
 
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -9,6 +10,7 @@ import org.openqa.selenium.WebElement;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +20,7 @@ import java.util.Map;
  */
 public class PageSourceSaver {
     private static final By SELECTOR = By.cssSelector("iframe,frame");
+    private static final String FAKE_SRC_ATTR = "data-fake_src";
     private final String pageSourceBase;
     private final Environment environment = Environment.getInstance();
     private final SeleniumHelper helper;
@@ -38,17 +41,28 @@ public class PageSourceSaver {
      * @return wiki Url, if file was created inside wiki's files dir, absolute filename otherwise.
      */
     public String savePageSource(String fileName) {
+        List<WebElement> framesWithFakeSources = new ArrayList<>(2);
         Map<String, String> sourceReplacements = new HashMap<>();
         List<WebElement> frames = getFrames();
         for (WebElement frame : frames) {
             String newLocation = saveFrameSource(frame);
             if (newLocation != null) {
                 String fullUrlOfFrame = frame.getAttribute("src");
+                if (StringUtils.isEmpty(fullUrlOfFrame)) {
+                    framesWithFakeSources.add(frame);
+                    fullUrlOfFrame = "anonymousFrame" + frames.indexOf(frame);
+                    addFakeSourceAttr(frame, fullUrlOfFrame);
+                }
 
                 addSourceReplacementsForFrame(sourceReplacements, newLocation, fullUrlOfFrame);
             }
         }
         String html = getCurrentFrameHtml(sourceReplacements);
+        if (!framesWithFakeSources.isEmpty()) {
+            // replace fake_src by src
+            html = html.replace(" " + FAKE_SRC_ATTR + "=", " src=");
+            removeFakeSourceAttr(framesWithFakeSources);
+        }
         return saveHtmlAsPageSource(fileName, html);
     }
 
@@ -143,6 +157,24 @@ public class PageSourceSaver {
 
     protected String getLocation() {
         return getDriver().getCurrentUrl();
+    }
+
+    protected void addFakeSourceAttr(WebElement frame, String s) {
+        executeJavascript("arguments[0].setAttribute(arguments[1], arguments[2]);", frame, FAKE_SRC_ATTR, s);
+    }
+
+    protected void removeFakeSourceAttr(List<WebElement> framesWithFakeSources) {
+        for (WebElement frame : framesWithFakeSources) {
+            executeJavascript("arguments[0].removeAttribute(arguments[1]);", frame, FAKE_SRC_ATTR);
+        }
+    }
+
+    protected void executeJavascript(String pattern, Object... params) {
+        try {
+            getSeleniumHelper().executeJavascript(pattern, params);
+        } catch (RuntimeException e) {
+            // ignore exception addiung/removing attributes and carry on rest of code
+        }
     }
 
     protected WebDriver getDriver() {
