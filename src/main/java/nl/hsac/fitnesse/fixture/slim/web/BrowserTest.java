@@ -1963,7 +1963,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return getSeleniumHelper().findElement(selector);
     }
 
-    public T findByTechnicalSelectorOr(String place, Function<String, T> supplierF) {
+    public T findByTechnicalSelectorOr(String place, Function<String, ? extends T> supplierF) {
         return getSeleniumHelper().findByTechnicalSelectorOr(place, () -> supplierF.apply(place));
     }
 

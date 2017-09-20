@@ -152,7 +152,7 @@ public class SeleniumHelper<T extends WebElement> {
         return findElement(by);
     }
 
-    public T findByTechnicalSelectorOr(String possibleTechnicalSelector, Supplier<T> supplier) {
+    public T findByTechnicalSelectorOr(String possibleTechnicalSelector, Supplier<? extends T> supplier) {
         T element;
         By by = placeToBy(possibleTechnicalSelector);
         if (by != null) {
