@@ -20,7 +20,7 @@ This test ensures we can find elements inside tables representing a grid where e
 </table>
 <table>
     <thead>
-    <tr><th>Kind</th><th>Name</th><th>Color</th><th><a><img /><strong>Owner</strong></a></th><th>Birth&nbsp;date</th><th>Buttons</th></tr>
+    <tr><th>Kind<span>*</span>:</th><th>Name</th><th>Color</th><th><a><img /><strong>Owner</strong></a></th><th>Birth&nbsp;date</th><th>Buttons</th></tr>
     </thead>
     <tbody>
     <tr><td>Dog</td><td>Joey</td><td>Black</td><td>Unknown</td><td>11-01-1975</td><td><button>Edit</button><button>Delete</button></td></tr>
@@ -56,7 +56,7 @@ This test ensures we can find elements inside tables representing a grid where e
 |click                 |Edit Pam's data       |in row where |Name         |is          |Pam                        |
 |enter                 |Sheep                 |as           |Kind         |in row where|Owner|is        |Owner name|
 |enter                 |John2                 |as           |Name         |in row where|Owner|is        |Owner name|
-|check                 |value of              |Color        |in row where |Kind       |is   |Cat|White     |
+|check                 |value of              |Color        |in row where |Kind        |is   |Cat       |White     |
 |check                 |value of              |Kind         |in row where |Owner       |is   |Owner name|Sheep     |
 |check                 |value of              |Name         |in row where |Owner       |is   |Owner name|John2     |
 |check                 |value of              |Color        |in row where |Owner       |is   |Owner name|true      |
