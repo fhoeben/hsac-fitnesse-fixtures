@@ -26,7 +26,7 @@ public class LinkBy {
     public static class Exact extends HeuristicBy {
         public Exact(String text) {
             super(By.linkText(text),
-                    new XPathBy(".//text()[normalized(.)='%s']/ancestor-or-self::a", text));
+                    new XPathBy(".//a[descendant-or-self::text()[normalized(.)='%s']]", text));
         }
     }
 
@@ -36,7 +36,7 @@ public class LinkBy {
     public static class Partial extends HeuristicBy {
         public Partial(String partialText) {
             super(By.partialLinkText(partialText),
-                    new XPathBy(".//text()[contains(normalized(.),'%s')]/ancestor-or-self::a", partialText));
+                    new XPathBy(".//a[descendant-or-self::text()[contains(normalized(.),'%s')]]", partialText));
         }
     }
 
