@@ -58,6 +58,6 @@ public class GridBy {
     public static String getXPathForColumnIndex(String columnName) {
         // determine how many columns are before the column with the requested name
         // the column with the requested name will have an index of the value +1 (since XPath indexes are 1 based)
-        return String.format("count(ancestor::table[1]//tr/th/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::th[1]/preceding-sibling::th)+1", columnName);
+        return String.format("count(ancestor::table[1]//tr/th[descendant-or-self::text()[normalized(.)='%s']]/preceding-sibling::th)+1", columnName);
     }
 }
