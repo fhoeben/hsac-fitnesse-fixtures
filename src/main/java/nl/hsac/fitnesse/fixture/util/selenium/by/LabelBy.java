@@ -18,7 +18,7 @@ public class LabelBy extends SingleElementOrNullBy {
      */
     public static class Exact extends LabelBy {
         public Exact(String text) {
-            super(".//label/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::label", text);
+            super(".//label[descendant-or-self::text()[normalized(.)='%s']]", text);
         }
     }
 
@@ -27,7 +27,7 @@ public class LabelBy extends SingleElementOrNullBy {
      */
     public static class Partial extends LabelBy {
         public Partial(String partialText) {
-            super(".//label/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::label", partialText);
+            super(".//label[descendant-or-self::text()[contains(normalized(.), '%s')]]", partialText);
         }
     }
 

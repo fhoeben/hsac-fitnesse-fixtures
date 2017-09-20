@@ -35,8 +35,8 @@ public class ElementBy {
             super(LabelBy.exact(place),
                     PlaceholderBy.exact(place),
                     InputBy.exactValue(place),
-                    new XPathBy(".//th/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::th[1]/../td", place),
-                    new XPathBy(".//dt/descendant-or-self::text()[normalized(.)='%s']/ancestor-or-self::dt[1]/following-sibling::dd[1]", place),
+                    new XPathBy(".//th[descendant-or-self::text()[normalized(.)='%s']]/../td", place),
+                    new XPathBy(".//dt[descendant-or-self::text()[normalized(.)='%s']]/following-sibling::dd[1]", place),
                     AriaLabelBy.exact(place),
                     TitleBy.exact(place));
         }
@@ -50,8 +50,8 @@ public class ElementBy {
             super(LabelBy.partial(place),
                     PlaceholderBy.partial(place),
                     InputBy.partialValue(place),
-                    new XPathBy(".//th/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::th[1]/../td", place),
-                    new XPathBy(".//dt/descendant-or-self::text()[contains(normalized(.), '%s')]/ancestor-or-self::dt[1]/following-sibling::dd[1]", place),
+                    new XPathBy(".//th[descendant-or-self::text()[contains(normalized(.), '%s')]]/../td", place),
+                    new XPathBy(".//dt[descendant-or-self::text()[contains(normalized(.), '%s')]]/following-sibling::dd[1]", place),
                     AriaLabelBy.partial(place),
                     TitleBy.partial(place));
         }

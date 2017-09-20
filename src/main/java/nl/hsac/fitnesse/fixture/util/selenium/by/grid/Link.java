@@ -9,7 +9,7 @@ import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
  */
 public class Link extends HeuristicBy {
     protected Link(String place, String cellXPath) {
-        super(new XPathBy("%s//a/descendant-or-self::text()[contains(normalized(.),'%s')]/ancestor-or-self::a", cellXPath, place),
+        super(new XPathBy("%s//a[descendant-or-self::text()[contains(normalized(.),'%s')]]", cellXPath, place),
                 new XPathBy("%s[%s]//a", cellXPath, GridBy.getXPathForColumnIndex(place)),
                 new XPathBy("%s//a[contains(@title, '%s')]", cellXPath, place));
     }
