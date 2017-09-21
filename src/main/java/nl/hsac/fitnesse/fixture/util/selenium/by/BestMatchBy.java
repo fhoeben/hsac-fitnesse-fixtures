@@ -7,6 +7,7 @@ import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
+import java.util.function.BiFunction;
 
 /**
  * Decorator for a By statement, always returning only a single element.
@@ -20,6 +21,7 @@ public class BestMatchBy<T extends WebElement> extends SingleElementOrNullBy<T> 
                     "  var y = (rect.top + rect.bottom)/2;\n" +
                     "  return document.elementFromPoint(x,y);\n" +
                     "} else { return null; }";
+    private static BiFunction<SearchContext, List<WebElement>, ? extends WebElement> BEST_FUNCTION = BestMatchBy::selectBestElement;
 
     private final By by;
 
@@ -38,12 +40,12 @@ public class BestMatchBy<T extends WebElement> extends SingleElementOrNullBy<T> 
         if (elements.size() == 1) {
             element = elements.get(0);
         } else if (elements.size() > 1) {
-            element = selectBestElement(context, elements);
+            element = BEST_FUNCTION.apply(context, elements);
         }
         return (T) element;
     }
 
-    private static WebElement selectBestElement(SearchContext context, List<WebElement> elements) {
+    public static WebElement selectBestElement(SearchContext context, List<WebElement> elements) {
         JavascriptExecutor jse = JavascriptHelper.getJavascriptExecutor(context);
         // take the first displayed element without any elements on top of it,
         // if none: take first displayed
@@ -79,6 +81,20 @@ public class BestMatchBy<T extends WebElement> extends SingleElementOrNullBy<T> 
     private static <T extends WebElement> boolean isOnTop(JavascriptExecutor executor, T element) {
         T e = (T) JavascriptHelper.executeScript(executor, TOP_ELEMENT_AT, element);
         return element.equals(e);
+    }
+
+    /**
+     * @return function used to select best element when multiple elements were found.
+     */
+    public static BiFunction<SearchContext, List<WebElement>, ? extends WebElement> getBestFunction() {
+        return BEST_FUNCTION;
+    }
+
+    /**
+     * @param bestFunction function to use to select best element from list of elements found.
+     */
+    public static void setBestFunction(BiFunction<SearchContext, List<WebElement>, ? extends WebElement> bestFunction) {
+        BEST_FUNCTION = bestFunction;
     }
 
     @Override
