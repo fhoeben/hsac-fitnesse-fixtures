@@ -66,7 +66,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     @Override
-    protected Object invoke(final FixtureInteraction interaction, final Method method, final Object[] arguments)
+    protected Object invoke(FixtureInteraction interaction, Method method, Object[] arguments)
             throws Throwable {
         Object result;
         WaitUntil waitUntil = reflectionHelper.getAnnotation(WaitUntil.class, method);
@@ -78,7 +78,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return result;
     }
 
-    protected Object invokedWrappedInWaitUntil(WaitUntil waitUntil, final FixtureInteraction interaction, final Method method, final Object[] arguments) {
+    protected Object invokedWrappedInWaitUntil(WaitUntil waitUntil, FixtureInteraction interaction, Method method, Object[] arguments) {
         ExpectedCondition<Object> condition = new ExpectedCondition<Object>() {
             @Override
             public Object apply(WebDriver webDriver) {
@@ -188,7 +188,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     public boolean open(String address) {
-        final String url = getUrl(address);
+        String url = getUrl(address);
         try {
             getNavigation().to(url);
         } catch (TimeoutException e) {
@@ -298,7 +298,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     public boolean openInNewTab(String url) {
         String cleanUrl = getUrl(url);
-        final int tabCount = tabCount();
+        int tabCount = tabCount();
         getSeleniumHelper().executeJavascript("window.open('%s', '_blank')", cleanUrl);
         // ensure new window is open
         waitUntil(new ExpectedCondition<Boolean>() {
@@ -650,7 +650,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     @WaitUntil
-    public boolean enterForHidden(final String value, final String idOrName) {
+    public boolean enterForHidden(String value, String idOrName) {
         return getSeleniumHelper().setHiddenInputValue(idOrName, value);
     }
 
@@ -674,7 +674,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     @WaitUntil
-    public boolean click(final String place) {
+    public boolean click(String place) {
         return clickImp(place, null);
     }
 
@@ -855,8 +855,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return waitForElementWithText(By.className(cssClassName), expectedText);
     }
 
-    protected boolean waitForElementWithText(final By by, String expectedText) {
-        final String textToLookFor = cleanExpectedValue(expectedText);
+    protected boolean waitForElementWithText(By by, String expectedText) {
+        String textToLookFor = cleanExpectedValue(expectedText);
         return waitUntilOrStop(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver webDriver) {
@@ -942,7 +942,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     @Deprecated
-    protected boolean waitForVisible(final By by) {
+    protected boolean waitForVisible(By by) {
         return waitUntilOrStop(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver webDriver) {
