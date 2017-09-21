@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 /**
  * Function to be used as post-processor when finding elements.
  * It will filter out non-interactable elements.
+ * @param <T> type of element to return.
  */
 public class IsInteractableFilter<T extends WebElement> implements Function<T, T>, Supplier<T> {
     private T firstFound;

@@ -15,6 +15,7 @@ import static nl.hsac.fitnesse.fixture.util.FirstNonNullHelper.firstNonNull;
  * By which returns the first non-null result of a sequence of nested By clauses.
  * If a nested By returns mutliple elements it uses {@link BestMatchBy#findElement(By, SearchContext)} to select
  * the element to use.
+ * @param <T> type of element to return.
  */
 public class FirstElementBy<T extends WebElement> extends SingleElementOrNullBy<T> {
     private final List<By> byList;

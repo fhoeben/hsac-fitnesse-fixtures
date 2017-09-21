@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 /**
  * FirstElementBy which if no interactable element is found returns the first element matched
  * (which was originally filtered out).
+ * @param <T> type of element to return.
  */
 public class HeuristicBy<T extends WebElement> extends FirstElementBy<T> {
     /**

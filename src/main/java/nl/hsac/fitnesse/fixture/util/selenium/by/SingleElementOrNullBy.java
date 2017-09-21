@@ -10,6 +10,7 @@ import java.util.function.Function;
 
 /**
  * By which returns either a single element or null.
+ * @param <T> type of element to return.
  */
 public abstract class SingleElementOrNullBy<T extends WebElement> extends By {
     /**
