@@ -546,6 +546,13 @@ public class Environment {
     }
 
     /**
+     * @param seleniumHelper to be used.
+     */
+    public void setSeleniumHelper(SeleniumHelper seleniumHelper) {
+        this.seleniumHelper = seleniumHelper;
+    }
+
+    /**
      * @return directory containing FitNesse's root.
      */
     public String getFitNesseRootDir() {
