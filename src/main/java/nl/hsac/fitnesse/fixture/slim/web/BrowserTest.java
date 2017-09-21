@@ -79,20 +79,17 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected Object invokedWrappedInWaitUntil(WaitUntil waitUntil, FixtureInteraction interaction, Method method, Object[] arguments) {
-        ExpectedCondition<Object> condition = new ExpectedCondition<Object>() {
-            @Override
-            public Object apply(WebDriver webDriver) {
-                try {
-                    return superInvoke(interaction, method, arguments);
-                } catch (Throwable e) {
-                    Throwable realEx = ExceptionHelper.stripReflectionException(e);
-                    if (realEx instanceof RuntimeException) {
-                        throw (RuntimeException) realEx;
-                    } else if (realEx instanceof Error) {
-                        throw (Error) realEx;
-                    } else {
-                        throw new RuntimeException(realEx);
-                    }
+        ExpectedCondition<Object> condition = webDriver -> {
+            try {
+                return superInvoke(interaction, method, arguments);
+            } catch (Throwable e) {
+                Throwable realEx = ExceptionHelper.stripReflectionException(e);
+                if (realEx instanceof RuntimeException) {
+                    throw (RuntimeException) realEx;
+                } else if (realEx instanceof Error) {
+                    throw (Error) realEx;
+                } else {
+                    throw new RuntimeException(realEx);
                 }
             }
         };
@@ -196,18 +193,15 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         } finally {
             switchToDefaultContent();
         }
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver webDriver) {
-                String readyState = getSeleniumHelper().executeJavascript("return document.readyState").toString();
-                // IE 7 is reported to return "loaded"
-                boolean done = "complete".equalsIgnoreCase(readyState) || "loaded".equalsIgnoreCase(readyState);
-                if (!done) {
-                    System.err.printf("Open of %s returned while document.readyState was %s", url, readyState);
-                    System.err.println();
-                }
-                return done;
+        waitUntil(webDriver -> {
+            String readyState = getSeleniumHelper().executeJavascript("return document.readyState").toString();
+            // IE 7 is reported to return "loaded"
+            boolean done = "complete".equalsIgnoreCase(readyState) || "loaded".equalsIgnoreCase(readyState);
+            if (!done) {
+                System.err.printf("Open of %s returned while document.readyState was %s", url, readyState);
+                System.err.println();
             }
+            return done;
         });
         return true;
     }
@@ -301,12 +295,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         int tabCount = tabCount();
         getSeleniumHelper().executeJavascript("window.open('%s', '_blank')", cleanUrl);
         // ensure new window is open
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver webDriver) {
-                return tabCount() > tabCount;
-            }
-        });
+        waitUntil(webDriver -> tabCount() > tabCount);
         return switchToNextTab();
     }
 
@@ -857,26 +846,23 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     protected boolean waitForElementWithText(By by, String expectedText) {
         String textToLookFor = cleanExpectedValue(expectedText);
-        return waitUntilOrStop(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver webDriver) {
-                boolean ok = false;
+        return waitUntilOrStop(webDriver -> {
+            boolean ok = false;
 
-                List<WebElement> elements = webDriver.findElements(by);
-                if (elements != null) {
-                    for (WebElement element : elements) {
-                        // we don't want stale elements to make single
-                        // element false, but instead we stop processing
-                        // current list and do a new findElements
-                        ok = hasText(element, textToLookFor);
-                        if (ok) {
-                            // no need to continue to check other elements
-                            break;
-                        }
+            List<WebElement> elements = webDriver.findElements(by);
+            if (elements != null) {
+                for (WebElement element : elements) {
+                    // we don't want stale elements to make single
+                    // element false, but instead we stop processing
+                    // current list and do a new findElements
+                    ok = hasText(element, textToLookFor);
+                    if (ok) {
+                        // no need to continue to check other elements
+                        break;
                     }
                 }
-                return ok;
             }
+            return ok;
         });
     }
 
@@ -943,17 +929,14 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     @Deprecated
     protected boolean waitForVisible(By by) {
-        return waitUntilOrStop(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver webDriver) {
-                Boolean result = Boolean.FALSE;
-                WebElement element = findElement(by);
-                if (element != null) {
-                    scrollIfNotOnScreen(element);
-                    result = element.isDisplayed();
-                }
-                return result;
+        return waitUntilOrStop(webDriver -> {
+            Boolean result = Boolean.FALSE;
+            WebElement element = findElement(by);
+            if (element != null) {
+                scrollIfNotOnScreen(element);
+                result = element.isDisplayed();
             }
+            return result;
         });
     }
 
