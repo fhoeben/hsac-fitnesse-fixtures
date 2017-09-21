@@ -23,7 +23,17 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.text.StringEscapeUtils;
-import org.openqa.selenium.*;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.SearchContext;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.UnhandledAlertException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -35,8 +45,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class BrowserTest extends SlimFixture {
-    private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
+public class BrowserTest<T extends WebElement> extends SlimFixture {
+    private SeleniumHelper<T> seleniumHelper = getEnvironment().getSeleniumHelper();
     private ReflectionHelper reflectionHelper = getEnvironment().getReflectionHelper();
     private NgBrowserTest ngBrowserTest;
     private boolean implicitWaitForAngular = false;
@@ -407,7 +417,7 @@ public class BrowserTest extends SlimFixture {
      */
     public boolean switchToFrame(String technicalSelector) {
         boolean result = false;
-        WebElement iframe = getElement(technicalSelector);
+        T iframe = getElement(technicalSelector);
         if (iframe != null) {
             getSeleniumHelper().switchToFrame(iframe);
             result = true;
@@ -519,11 +529,11 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
-    protected WebElement getElementToSendValue(String place) {
+    protected T getElementToSendValue(String place) {
         return getElementToSendValue(place, null);
     }
 
-    protected WebElement getElementToSendValue(String place, String container) {
+    protected T getElementToSendValue(String place, String container) {
         return getElement(place, container);
     }
 
@@ -644,7 +654,7 @@ public class BrowserTest extends SlimFixture {
         return getSeleniumHelper().setHiddenInputValue(idOrName, value);
     }
 
-    protected WebElement getElementToSelectFor(String selectPlace) {
+    protected T getElementToSelectFor(String selectPlace) {
         return getElement(selectPlace);
     }
 
@@ -764,20 +774,20 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
-    protected WebElement getElementToClick(String place) {
+    protected T getElementToClick(String place) {
         return getSeleniumHelper().getElementToClick(place);
     }
 
-    protected WebElement getElementToClick(String place, String container) {
+    protected T getElementToClick(String place, String container) {
         return doInContainer(container, () -> getElementToClick(place));
     }
 
-    protected <T> T doInContainer(String container, Supplier<T> action) {
-        T result = null;
+    protected <R> R doInContainer(String container, Supplier<R> action) {
+        R result = null;
         if (container == null) {
             result = action.get();
         } else {
-            WebElement containerElement = getContainerElement(container);
+            T containerElement = getContainerElement(container);
             if (containerElement != null) {
                 result = doInContainer(containerElement, action);
             }
@@ -785,7 +795,7 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
-    protected <T> T doInContainer(WebElement container, Supplier<T> action) {
+    protected <R> R doInContainer(T container, Supplier<R> action) {
         return getSeleniumHelper().doInContext(container, action);
     }
 
@@ -808,11 +818,11 @@ public class BrowserTest extends SlimFixture {
         getSeleniumHelper().setCurrentContext(null);
     }
 
-    protected WebElement getContainerElement(String container) {
+    protected T getContainerElement(String container) {
         return findByTechnicalSelectorOr(container, this::getContainerImpl);
     }
 
-    protected WebElement getContainerImpl(String container) {
+    protected T getContainerImpl(String container) {
         return findElement(ContainerBy.heuristic(container));
     }
 
@@ -1028,7 +1038,7 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
-    protected WebElement getElementToRetrieveValue(String place, String container) {
+    protected T getElementToRetrieveValue(String place, String container) {
         return getElement(place, container);
     }
 
@@ -1157,7 +1167,7 @@ public class BrowserTest extends SlimFixture {
         element.clear();
     }
 
-    protected WebElement getElementToClear(String place, String container) {
+    protected T getElementToClear(String place, String container) {
         return getElementToSendValue(place, container);
     }
 
@@ -1205,7 +1215,7 @@ public class BrowserTest extends SlimFixture {
 
     protected boolean clickInRow(By rowBy, String place) {
         boolean result = false;
-        WebElement row = findElement(rowBy);
+        T row = findElement(rowBy);
         if (row != null) {
             result = doInContainer(row, () -> click(place));
         }
@@ -1244,11 +1254,11 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
-    protected WebElement getElement(String place) {
+    protected T getElement(String place) {
         return getSeleniumHelper().getElement(place);
     }
 
-    protected WebElement getElement(String place, String container) {
+    protected T getElement(String place, String container) {
         return doInContainer(container, () -> getElement(place));
     }
 
@@ -1290,42 +1300,43 @@ public class BrowserTest extends SlimFixture {
         return getElementText(element);
     }
 
-    protected WebElement findByClassName(String className) {
+    protected T findByClassName(String className) {
         By by = By.className(className);
         return findElement(by);
     }
 
-    protected WebElement findByXPath(String xpathPattern, String... params) {
+    protected T findByXPath(String xpathPattern, String... params) {
         return getSeleniumHelper().findByXPath(xpathPattern, params);
     }
 
-    protected WebElement findByCss(String cssPattern, String... params) {
+    protected T findByCss(String cssPattern, String... params) {
         By by = getSeleniumHelper().byCss(cssPattern, params);
         return findElement(by);
     }
 
-    protected WebElement findByJavascript(String script, Object... parameters) {
+    protected T findByJavascript(String script, Object... parameters) {
         By by = getSeleniumHelper().byJavascript(script, parameters);
         return findElement(by);
     }
 
-    protected List<WebElement> findAllByXPath(String xpathPattern, String... params) {
+    protected List<T> findAllByXPath(String xpathPattern, String... params) {
         By by = getSeleniumHelper().byXpath(xpathPattern, params);
         return findElements(by);
     }
 
-    protected List<WebElement> findAllByCss(String cssPattern, String... params) {
+    protected List<T> findAllByCss(String cssPattern, String... params) {
         By by = getSeleniumHelper().byCss(cssPattern, params);
         return findElements(by);
     }
 
-    protected List<WebElement> findAllByJavascript(String script, Object... parameters) {
+    protected List<T> findAllByJavascript(String script, Object... parameters) {
         By by = getSeleniumHelper().byJavascript(script, parameters);
         return findElements(by);
     }
 
-    protected List<WebElement> findElements(By by) {
-        return driver().findElements(by);
+    protected List<T> findElements(By by) {
+        List elements = driver().findElements(by);
+        return elements;
     }
 
     public void waitMilliSecondAfterScroll(int msToWait) {
@@ -1370,7 +1381,7 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
-    protected WebElement getElementToScrollTo(String place, String container) {
+    protected T getElementToScrollTo(String place, String container) {
         return getElementToCheckVisibility(place, container);
     }
 
@@ -1422,11 +1433,11 @@ public class BrowserTest extends SlimFixture {
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
     public boolean isEnabledIn(String place, String container) {
         boolean result = false;
-        WebElement element = getElementToCheckVisibility(place, container);
+        T element = getElementToCheckVisibility(place, container);
         if (element != null) {
             if ("label".equalsIgnoreCase(element.getTagName())) {
                 // for labels we want to know whether their target is enabled, not the label itself
-                WebElement labelTarget = getSeleniumHelper().getLabelledElement(element);
+                T labelTarget = getSeleniumHelper().getLabelledElement(element);
                 if (labelTarget != null) {
                     element = labelTarget;
                 }
@@ -1503,15 +1514,15 @@ public class BrowserTest extends SlimFixture {
         return getSeleniumHelper().countVisibleOccurrences(text, checkOnScreen);
     }
 
-    protected WebElement getElementToCheckVisibility(String place) {
-        WebElement result = findElement(TextBy.partial(place));
+    protected T getElementToCheckVisibility(String place) {
+        T result = findElement(TextBy.partial(place));
         if (result == null || !result.isDisplayed()) {
                 result = getElementToClick(place);
             }
         return result;
     }
 
-    protected WebElement getElementToCheckVisibility(String place, String container) {
+    protected T getElementToCheckVisibility(String place, String container) {
         return doInContainer(container, () -> findByTechnicalSelectorOr(place, this::getElementToCheckVisibility));
     }
 
@@ -1878,7 +1889,7 @@ public class BrowserTest extends SlimFixture {
     /**
      * @return helper to use.
      */
-    protected final SeleniumHelper getSeleniumHelper() {
+    protected final SeleniumHelper<T> getSeleniumHelper() {
         return seleniumHelper;
     }
 
@@ -1886,7 +1897,7 @@ public class BrowserTest extends SlimFixture {
      * Sets SeleniumHelper to use, for testing purposes.
      * @param helper helper to use.
      */
-    void setSeleniumHelper(SeleniumHelper helper) {
+    protected void setSeleniumHelper(SeleniumHelper<T> helper) {
         seleniumHelper = helper;
     }
 
@@ -1948,11 +1959,11 @@ public class BrowserTest extends SlimFixture {
         return doInContainer(container, () -> download(place));
     }
 
-    protected WebElement findElement(By selector) {
+    protected T findElement(By selector) {
         return getSeleniumHelper().findElement(selector);
     }
 
-    public WebElement findByTechnicalSelectorOr(String place, Function<String, WebElement> supplierF) {
+    public T findByTechnicalSelectorOr(String place, Function<String, ? extends T> supplierF) {
         return getSeleniumHelper().findByTechnicalSelectorOr(place, () -> supplierF.apply(place));
     }
 
@@ -2052,9 +2063,9 @@ public class BrowserTest extends SlimFixture {
         return result;
     }
 
-    protected WebElement getElementToSelectFile(String place, String container) {
-        WebElement result = null;
-        WebElement element = getElement(place, container);
+    protected T getElementToSelectFile(String place, String container) {
+        T result = null;
+        T element = getElement(place, container);
         if (element != null
                 && "input".equalsIgnoreCase(element.getTagName())
                 && "file".equalsIgnoreCase(element.getAttribute("type"))) {

@@ -5,12 +5,14 @@ import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * FirstElementBy which if no interactable element is found returns the first element matched
  * (which was originally filtered out).
+ * @param <T> type of element to return.
  */
-public class HeuristicBy extends FirstElementBy {
+public class HeuristicBy<T extends WebElement> extends FirstElementBy<T> {
     /**
      * Creates new, using {@link IsInteractableFilter}.
      * (First By is separate so compiler will ensure at least one By is passed.)
@@ -28,18 +30,19 @@ public class HeuristicBy extends FirstElementBy {
      * @param firstNested first By to be wrapped.
      * @param extraNestedBys optional extra Bys to be wrapped.
      */
-    protected HeuristicBy(IsInteractableFilter postProcessor, By firstNested, By... extraNestedBys) {
+    protected HeuristicBy(Function<? super T, ? extends T> postProcessor, By firstNested, By... extraNestedBys) {
         super(postProcessor, firstNested, extraNestedBys);
     }
 
     @Override
-    public WebElement findElement(SearchContext context) {
-        WebElement element = super.findElement(context);
+    public T findElement(SearchContext context) {
+        T element = super.findElement(context);
         if (element == null) {
             // no interactable element found
-            Function<WebElement, WebElement> postProcessor = getPostProcessor();
-            if (postProcessor instanceof IsInteractableFilter) {
-                element = ((IsInteractableFilter) postProcessor).getFirstFound();
+            Object postProcessor = getPostProcessor();
+            if (postProcessor instanceof Supplier) {
+                Supplier supplier = (Supplier) postProcessor;
+                element = (T) supplier.get();
             }
         }
         return element;

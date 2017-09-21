@@ -30,7 +30,7 @@ import java.util.function.Supplier;
 /**
  * Helper to work with Selenium.
  */
-public class SeleniumHelper {
+public class SeleniumHelper<T extends WebElement> {
     /** Default time in seconds the wait web driver waits unit throwing TimeOutException. */
     private static final int DEFAULT_TIMEOUT_SECONDS = 10;
 
@@ -56,7 +56,7 @@ public class SeleniumHelper {
 
     private final static char NON_BREAKING_SPACE = 160;
 
-    private final List<WebElement> currentIFramePath = new ArrayList<WebElement>(4);
+    private final List<T> currentIFramePath = new ArrayList<>(4);
     private int frameDepthOnLastAlertError;
     private DriverFactory factory;
     private WebDriver webDriver;
@@ -118,7 +118,7 @@ public class SeleniumHelper {
      *          first element found if no interactable element could be found,
      *          null if none could be found.
      */
-    public WebElement getElementToClick(String place) {
+    public T getElementToClick(String place) {
         return findByTechnicalSelectorOr(place, ToClickBy::heuristic);
     }
 
@@ -129,7 +129,7 @@ public class SeleniumHelper {
      *          first element found if no interactable link could be found,
      *          null if none could be found.
      */
-    public WebElement getLink(String place) {
+    public T getLink(String place) {
         return findByTechnicalSelectorOr(place, LinkBy::heuristic);
     }
 
@@ -140,11 +140,11 @@ public class SeleniumHelper {
      *          first element found if no interactable element could be found,
      *          null if none could be found.
      */
-    public WebElement getElement(String place) {
+    public T getElement(String place) {
         return findByTechnicalSelectorOr(place, ElementBy::heuristic);
     }
 
-    public WebElement findByTechnicalSelectorOr(String place, Function<String, By> byFunction) {
+    public T findByTechnicalSelectorOr(String place, Function<String, By> byFunction) {
         By by = placeToBy(place);
         if (by == null) {
             by = byFunction.apply(place);
@@ -152,8 +152,8 @@ public class SeleniumHelper {
         return findElement(by);
     }
 
-    public WebElement findByTechnicalSelectorOr(String possibleTechnicalSelector, Supplier<WebElement> supplier) {
-        WebElement element;
+    public T findByTechnicalSelectorOr(String possibleTechnicalSelector, Supplier<? extends T> supplier) {
+        T element;
         By by = placeToBy(possibleTechnicalSelector);
         if (by != null) {
             element = findElement(by);
@@ -175,12 +175,12 @@ public class SeleniumHelper {
         return IsInteractableFilter.mayPass(element);
     }
 
-    public WebElement getLabelledElement(WebElement label) {
-        return LabelBy.getLabelledElement(getCurrentContext(), label);
+    public T getLabelledElement(T label) {
+        return (T) LabelBy.getLabelledElement(getCurrentContext(), label);
     }
 
-    public WebElement getNestedElementForValue(WebElement parent) {
-        return ConstantBy.nestedElementForValue().findElement(parent);
+    public T getNestedElementForValue(T parent) {
+        return (T) ConstantBy.nestedElementForValue().findElement(parent);
     }
 
     /**
@@ -270,7 +270,7 @@ public class SeleniumHelper {
         for (WebElement element : elements) {
             if (checkVisible(element, checkOnScreen)) {
                 if ("option".equalsIgnoreCase(element.getTagName())) {
-                    WebElement select = element.findElement(By.xpath("./ancestor::select"));
+                    T select = (T) element.findElement(By.xpath("./ancestor::select"));
                     Select s = new Select(select);
                     if (s == null || s.isMultiple()) {
                         // for multi-select we count all options as visible
@@ -278,7 +278,7 @@ public class SeleniumHelper {
                         result += occurrencesInText;
                     } else {
                         // for drop down we only count only selected option
-                        WebElement selected = s.getFirstSelectedOption();
+                        T selected = (T) s.getFirstSelectedOption();
                         if (element.equals(selected)) {
                             int occurrencesInText = getOccurrencesInText(element, textToFind);
                             result += occurrencesInText;
@@ -371,7 +371,7 @@ public class SeleniumHelper {
      * @return whether input field was found.
      */
     public boolean setHiddenInputValue(String idOrName, String value) {
-        WebElement element = findElement(By.id(idOrName));
+        T element = findElement(By.id(idOrName));
         if (element == null) {
             element = findElement(By.name(idOrName));
             if (element != null) {
@@ -541,8 +541,8 @@ public class SeleniumHelper {
     /**
      * @return currently active element.
      */
-    public WebElement getActiveElement() {
-        return getTargetLocator().activeElement();
+    public T getActiveElement() {
+        return (T) getTargetLocator().activeElement();
     }
 
     /**
@@ -551,7 +551,7 @@ public class SeleniumHelper {
      * @param parameters values for placeholders.
      * @return element if found, null if none could be found.
      */
-    public WebElement findByXPath(String pattern, String... parameters) {
+    public T findByXPath(String pattern, String... parameters) {
         By by = byXpath(pattern, parameters);
         return findElement(by);
     }
@@ -561,7 +561,7 @@ public class SeleniumHelper {
      * @param by criteria.
      * @return element if found, null if none could be found.
      */
-    public WebElement findElement(By by) {
+    public T findElement(By by) {
         return findElement(getCurrentContext(), by);
     }
 
@@ -579,11 +579,11 @@ public class SeleniumHelper {
      * Perform action/supplier in context.
      * @param context context to perfom action in.
      * @param action action to perform.
-     * @param <T> type of action result.
+     * @param <R> type of action result.
      * @return action result.
      */
-    public <T> T doInContext(SearchContext context, Supplier<T> action) {
-        T result;
+    public <R> R doInContext(SearchContext context, Supplier<R> action) {
+        R result;
         if (context == null) {
             result = action.get();
         } else {
@@ -604,11 +604,11 @@ public class SeleniumHelper {
      * @param index (zero based) matching element to return.
      * @return element if found, null if none could be found.
      */
-    public WebElement findElement(By by, int index) {
-        WebElement element = null;
+    public T findElement(By by, int index) {
+        T element = null;
         List<WebElement> elements = getCurrentContext().findElements(by);
         if (elements.size() > index) {
-            element = elements.get(index);
+            element = (T) elements.get(index);
         }
         return element;
     }
@@ -739,7 +739,7 @@ public class SeleniumHelper {
      * @param by criteria.
      * @return element if found, null if none could be found.
      */
-    public WebElement findElement(SearchContext context, By by) {
+    public T findElement(SearchContext context, By by) {
         return FirstElementBy.getWebElement(by, context);
     }
 
@@ -923,7 +923,7 @@ public class SeleniumHelper {
      * Activates specified child frame of current iframe.
      * @param iframe frame to activate.
      */
-    public void switchToFrame(WebElement iframe) {
+    public void switchToFrame(T iframe) {
         getTargetLocator().frame(iframe);
         setCurrentContext(null);
         currentIFramePath.add(iframe);
@@ -936,12 +936,12 @@ public class SeleniumHelper {
     public void switchToParentFrame() {
         if (!currentIFramePath.isEmpty()) {
             // copy path since substring creates a view, not a deep copy
-            List<WebElement> newPath = currentIFramePath.subList(0, currentIFramePath.size() - 1);
-            newPath = new ArrayList<WebElement>(newPath);
+            List<T> newPath = currentIFramePath.subList(0, currentIFramePath.size() - 1);
+            newPath = new ArrayList<T>(newPath);
             // Safari and PhantomJs don't support switchTo.parentFrame, so we do this
             // it works for Phantom, but is VERY slow there (other browsers are slow but ok)
             switchToDefaultContent();
-            for (WebElement iframe : newPath) {
+            for (T iframe : newPath) {
                 switchToFrame(iframe);
             }
         }

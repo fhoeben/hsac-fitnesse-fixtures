@@ -15,12 +15,13 @@ import static nl.hsac.fitnesse.fixture.util.FirstNonNullHelper.firstNonNull;
  * By which returns the first non-null result of a sequence of nested By clauses.
  * If a nested By returns mutliple elements it uses {@link BestMatchBy#findElement(By, SearchContext)} to select
  * the element to use.
+ * @param <T> type of element to return.
  */
-public class FirstElementBy extends SingleElementOrNullBy {
+public class FirstElementBy<T extends WebElement> extends SingleElementOrNullBy<T> {
     private final List<By> byList;
-    private Function<WebElement, WebElement> postProcessor;
+    private Function<? super T, ? extends T> postProcessor;
 
-    public FirstElementBy(Function<WebElement, WebElement> postProcessor, By firstBy, By... bys) {
+    public FirstElementBy(Function<? super T, ? extends T> postProcessor, By firstBy, By... bys) {
         int size = 1;
         if (bys != null) {
             size += bys.length;
@@ -36,14 +37,14 @@ public class FirstElementBy extends SingleElementOrNullBy {
     }
 
     @Override
-    public WebElement findElement(SearchContext context) {
+    public T findElement(SearchContext context) {
         return firstNonNull(by -> postProcessor.apply(getWebElement(by, context)), byList);
     }
 
-    public static WebElement getWebElement(By by, SearchContext context) {
-        WebElement byResult;
+    public static <T extends WebElement> T getWebElement(By by, SearchContext context) {
+        T byResult;
         if (by instanceof SingleElementOrNullBy) {
-            byResult = by.findElement(context);
+            byResult = (T) by.findElement(context);
         } else {
             byResult = BestMatchBy.findElement(by, context);
         }
@@ -62,14 +63,14 @@ public class FirstElementBy extends SingleElementOrNullBy {
      * This function should return null when element should not be returned.
      * @param postProcessor function to apply to each element found to determine whether it should be returned.
      */
-    public void setPostProcessor(Function<WebElement, WebElement> postProcessor) {
+    public void setPostProcessor(Function<? super T, ? extends T> postProcessor) {
         this.postProcessor = postProcessor;
     }
 
     /**
      * @return post processor in use.
      */
-    public Function<WebElement, WebElement> getPostProcessor() {
+    public Function<? super T, ? extends T> getPostProcessor() {
         return postProcessor;
     }
 
