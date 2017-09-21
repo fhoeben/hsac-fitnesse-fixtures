@@ -1889,7 +1889,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     /**
      * @return helper to use.
      */
-    protected final SeleniumHelper<T> getSeleniumHelper() {
+    protected SeleniumHelper<T> getSeleniumHelper() {
         return seleniumHelper;
     }
 
