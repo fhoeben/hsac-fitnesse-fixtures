@@ -5,7 +5,24 @@ import fitnesse.ContextConfigurator;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.Template;
-import nl.hsac.fitnesse.fixture.util.*;
+import nl.hsac.fitnesse.fixture.util.DatesHelper;
+import nl.hsac.fitnesse.fixture.util.Formatter;
+import nl.hsac.fitnesse.fixture.util.FreeMarkerHelper;
+import nl.hsac.fitnesse.fixture.util.HtmlCleaner;
+import nl.hsac.fitnesse.fixture.util.HttpClient;
+import nl.hsac.fitnesse.fixture.util.HttpResponse;
+import nl.hsac.fitnesse.fixture.util.JsonHelper;
+import nl.hsac.fitnesse.fixture.util.JsonPathHelper;
+import nl.hsac.fitnesse.fixture.util.MapHelper;
+import nl.hsac.fitnesse.fixture.util.NamespaceContextImpl;
+import nl.hsac.fitnesse.fixture.util.ProgramHelper;
+import nl.hsac.fitnesse.fixture.util.ProgramResponse;
+import nl.hsac.fitnesse.fixture.util.ReflectionHelper;
+import nl.hsac.fitnesse.fixture.util.TextFormatter;
+import nl.hsac.fitnesse.fixture.util.TimeoutHelper;
+import nl.hsac.fitnesse.fixture.util.XMLFormatter;
+import nl.hsac.fitnesse.fixture.util.XPathHelper;
+import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 import nl.hsac.fitnesse.fixture.util.selenium.CookieConverter;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import org.apache.commons.text.StringEscapeUtils;
@@ -475,14 +492,7 @@ public class Environment {
         try {
             responseHtml = instance.getHtmlForXml(responseText);
         } catch (Exception e) {
-            responseHtml = instance.getHtml(
-                                        new Formatter() {
-                                            @Override
-                                            public String format(String value) {
-                                                return value;
-                                            }
-                                        },
-                                        responseText);
+            responseHtml = instance.getHtml(value -> value, responseText);
         }
 
         throw new FitFailureException(msg + responseHtml);
