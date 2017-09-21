@@ -76,10 +76,6 @@ public class BestMatchBy<T extends WebElement> extends SingleElementOrNullBy<T> 
         return element;
     }
 
-    private static <T extends WebElement> T getElement(List<WebElement> elements, int i) {
-        return (T) elements.get(i);
-    }
-
     private static <T extends WebElement> boolean isOnTop(JavascriptExecutor executor, T element) {
         T e = (T) JavascriptHelper.executeScript(executor, TOP_ELEMENT_AT, element);
         return element.equals(e);
