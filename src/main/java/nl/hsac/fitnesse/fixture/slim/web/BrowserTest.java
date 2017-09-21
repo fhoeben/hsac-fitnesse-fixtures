@@ -127,7 +127,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         if (isImplicitWaitForAngularEnabled()) {
             try {
                 if (ngBrowserTest == null) {
-                    ngBrowserTest = new NgBrowserTest();
+                    ngBrowserTest = new NgBrowserTest(secondsBeforeTimeout());
+                    ngBrowserTest.secondsBeforePageLoadTimeout(secondsBeforePageLoadTimeout());
                 }
                 if (ngBrowserTest.requiresWaitForAngular(method) && currentSiteUsesAngular()) {
                     try {

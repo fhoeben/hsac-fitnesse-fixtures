@@ -10,4 +10,9 @@ public class Ng2BrowserTest extends NgBrowserTestBase {
     public Ng2BrowserTest() {
         super(Ng2ClientSideScripts.WaitForAngular);
     }
+
+    public Ng2BrowserTest(int secondsBeforeTimeout) {
+        super(secondsBeforeTimeout, Ng2ClientSideScripts.WaitForAngular);
+    }
+
 }

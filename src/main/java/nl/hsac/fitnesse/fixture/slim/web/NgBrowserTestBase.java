@@ -73,6 +73,12 @@ public abstract class NgBrowserTestBase extends BrowserTest<WebElement> {
         waitForAngularScript = waitForAngular;
     }
 
+    public NgBrowserTestBase(int secondsBeforeTimeout, String waitForAngular) {
+        super(secondsBeforeTimeout);
+        setImplicitWaitForAngularTo(true);
+        waitForAngularScript = waitForAngular;
+    }
+
     @Override
     protected void waitForAngularIfNeeded(Method method) {
         if (isImplicitWaitForAngularEnabled()

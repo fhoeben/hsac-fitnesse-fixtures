@@ -22,6 +22,11 @@ public class NgBrowserTest extends NgBrowserTestBase {
         setAngularRoot("[ng-app], [ng_app], [data-ng-app], [x-ng-app], [ng\\:app]");
     }
 
+    public NgBrowserTest(int secondsBeforeTimeout) {
+        super(secondsBeforeTimeout, NgClientSideScripts.WaitForAngular);
+        setAngularRoot("[ng-app], [ng_app], [data-ng-app], [x-ng-app], [ng\\:app]");
+    }
+
     public void waitForAngularRequestsToFinish() {
         String root = getAngularRoot();
         if (root == null) {
