@@ -2,10 +2,36 @@ package nl.hsac.fitnesse.fixture.util.selenium;
 
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
-import nl.hsac.fitnesse.fixture.util.selenium.by.*;
+import nl.hsac.fitnesse.fixture.util.selenium.by.ConstantBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.CssBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.ElementBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.FirstElementBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.InputBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.IsInteractableFilter;
+import nl.hsac.fitnesse.fixture.util.selenium.by.JavascriptBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.LabelBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.LinkBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.TechnicalSelectorBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.TextBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.ToClickBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.openqa.selenium.*;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.NoSuchWindowException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.SearchContext;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.Augmenter;
@@ -993,6 +1019,10 @@ public class SeleniumHelper<T extends WebElement> {
 
     public void setDriverFactory(DriverFactory aFactory) {
         factory = aFactory;
+    }
+
+    public DriverFactory getDriverFactory() {
+        return factory;
     }
 
     /**

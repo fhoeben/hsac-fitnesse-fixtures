@@ -29,6 +29,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * Script fixture to set up webdriver to be used by Selenium tests.
@@ -36,6 +37,7 @@ import java.util.function.BiFunction;
 public class SeleniumDriverSetup extends SlimFixture {
     public static final String REMOTE_URL_KEY = "SeleniumRemoteUrl";
     private static final String LAST_RUN_SUMMARY = "SeleniumLastRunSummary";
+    private static Function<WebDriver, SeleniumHelper> HELPER_FACTORY = SeleniumDriverSetup::ensureEnvironmentHasCorrectHelper;
     protected static boolean OVERRIDE_ACTIVE = false;
 
     /**
@@ -416,8 +418,31 @@ public class SeleniumDriverSetup extends SlimFixture {
     }
 
     protected WebDriver setAndUseDriverFactory(SeleniumHelper.DriverFactory driverFactory) {
-        getHelper().setDriverFactory(driverFactory);
-        return getHelper().driver();
+        // use old helper to create driver
+        SeleniumHelper currentHelper = getHelper();
+        currentHelper.setDriverFactory(driverFactory);
+        WebDriver driver = currentHelper.driver();
+        changeSeleniumHelperInEnvironment(currentHelper, driver);
+        return driver;
+    }
+
+    protected void changeSeleniumHelperInEnvironment(SeleniumHelper currentHelper, WebDriver driver) {
+        SeleniumHelper newHelper = HELPER_FACTORY.apply(driver);
+        newHelper.setDriverFactory(currentHelper.getDriverFactory());
+        newHelper.setDefaultTimeoutSeconds(currentHelper.getDefaultTimeoutSeconds());
+
+        Environment.getInstance().setSeleniumHelper(newHelper);
+    }
+
+    /**
+     * Changing the driverFactory and/or driver might require a different (subclass of) SeleniumHelper.
+     * @param driver newly created driver
+     * @return helper to use.
+     */
+    public static SeleniumHelper ensureEnvironmentHasCorrectHelper(WebDriver driver) {
+        SeleniumHelper newHelper = new SeleniumHelper();
+        newHelper.setWebDriver(driver);
+        return newHelper;
     }
 
     private void setDriver(WebDriver webDriver) {
@@ -453,6 +478,20 @@ public class SeleniumDriverSetup extends SlimFixture {
      */
     public static void unlockConfig() {
         OVERRIDE_ACTIVE = false;
+    }
+
+    /**
+     * @return factory used to determine which SeleniumHelper to store in {@link Environment}.
+     */
+    public static Function<WebDriver, SeleniumHelper> getSeleniumHelperFactory() {
+        return HELPER_FACTORY;
+    }
+
+    /**
+     * @param factory factory used to determine which SeleniumHelper to store in {@link Environment} when a new driver is created.
+     */
+    public static void setSeleniumHelperFactory(Function<WebDriver, SeleniumHelper> factory) {
+        HELPER_FACTORY = factory;
     }
 
     protected SeleniumHelper getHelper() {
