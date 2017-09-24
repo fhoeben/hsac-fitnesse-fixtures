@@ -1,7 +1,7 @@
 package nl.hsac.fitnesse.junit.selenium;
 
-import nl.hsac.fitnesse.fixture.slim.web.SeleniumDriverSetup;
 import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverFactory;
+import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.ProjectDriverFactoryFactory;
 
 import java.util.Map;
 
@@ -22,7 +22,7 @@ public class LocalSeleniumDriverFactoryFactory extends SeleniumDriverFactoryFact
     public DriverFactory getDriverFactory() {
         final String browser = getProperty(SELENIUM_BROWSER);
         final Map<String, Object> profile = getProfile();
-        return new SeleniumDriverSetup().getBrowserDriverFactory(browser, profile);
+        return new ProjectDriverFactoryFactory().create(browser, profile);
     }
 
     protected Map<String, Object> getProfile() {

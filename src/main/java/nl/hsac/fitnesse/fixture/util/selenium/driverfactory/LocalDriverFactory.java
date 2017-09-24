@@ -19,6 +19,10 @@ public class LocalDriverFactory implements DriverFactory {
     private Class<? extends WebDriver> driverClass;
     private Map<String, Object> profile;
 
+    protected LocalDriverFactory() {
+
+    }
+
     public LocalDriverFactory(String driver, Map<String, Object> profile) {
         this.driverClassName = driver;
         this.profile = profile;
@@ -64,6 +68,18 @@ public class LocalDriverFactory implements DriverFactory {
             }
         }
         return driverClass;
+    }
+
+    public void setDriverClassName(String driverClassName) {
+        this.driverClassName = driverClassName;
+    }
+
+    public void setDriverClass(Class<? extends WebDriver> driverClass) {
+        this.driverClass = driverClass;
+    }
+
+    public void setProfile(Map<String, Object> profile) {
+        this.profile = profile;
     }
 
     /**
