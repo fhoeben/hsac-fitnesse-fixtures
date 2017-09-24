@@ -7,7 +7,6 @@ import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -25,17 +24,7 @@ public abstract class SeleniumGridWithCapabilitiesDriverFactoryFactoryBase exten
         Map<String, Object> capabilities = getCapabilities();
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities(capabilities);
         BiFunction<URL, Capabilities, RemoteWebDriver> constr = getRemoteWebDriverConstructor();
-        return () -> {
-            SeleniumDriverSetup.unlockConfig();
-            try {
-                new SeleniumDriverSetup().createAndSetRemoteWebDriver(constr, gridUrl, desiredCapabilities);
-            } catch (MalformedURLException e) {
-                throw new RuntimeException("Unable to create driver using "+ constr + " at: "
-                        + gridUrl + " with: " + capabilities, e);
-            } finally {
-                SeleniumDriverSetup.lockConfig();
-            }
-        };
+        return SeleniumDriverSetup.getDriverFactory(constr, gridUrl, desiredCapabilities);
     }
 
     protected BiFunction<URL, Capabilities, RemoteWebDriver> getRemoteWebDriverConstructor() {

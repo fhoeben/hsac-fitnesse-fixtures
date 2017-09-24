@@ -697,7 +697,7 @@ public class SeleniumHelper<T extends WebElement> {
             if (factory == null) {
                 throw new StopTestException("Cannot use Selenium before a driver is started (for instance using SeleniumDriverSetup)");
             } else {
-                factory.createDriver();
+                setWebDriver(factory.createDriver());
             }
         }
         return webDriver;
@@ -1075,6 +1075,6 @@ public class SeleniumHelper<T extends WebElement> {
     }
 
     public interface DriverFactory {
-        void createDriver();
+        WebDriver createDriver();
     }
 }

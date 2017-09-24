@@ -19,18 +19,6 @@ public class LocalSeleniumDriverClassFactoryFactory extends SeleniumDriverFactor
     @Override
     public SeleniumHelper.DriverFactory getDriverFactory() {
         final String driverClass = getProperty(SELENIUM_DRIVER_CLASS);
-        return new SeleniumHelper.DriverFactory() {
-            @Override
-            public void createDriver() {
-                SeleniumDriverSetup.unlockConfig();
-                try {
-                    new SeleniumDriverSetup().startDriver(driverClass);
-                } catch (Exception e) {
-                    throw new RuntimeException("Unable to create local driver for: " + driverClass, e);
-                } finally {
-                    SeleniumDriverSetup.lockConfig();
-                }
-            }
-        };
+        return SeleniumDriverSetup.getDriverFactory(driverClass, null);
     }
 }

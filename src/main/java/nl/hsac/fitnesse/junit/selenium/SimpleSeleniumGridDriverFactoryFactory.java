@@ -2,8 +2,9 @@ package nl.hsac.fitnesse.junit.selenium;
 
 import nl.hsac.fitnesse.fixture.slim.web.SeleniumDriverSetup;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
-
-import java.net.MalformedURLException;
+import org.openqa.selenium.Platform;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 /**
  * Creates a Selenium driver factory to override the configuration in the wiki.
@@ -18,21 +19,9 @@ public class SimpleSeleniumGridDriverFactoryFactory extends SeleniumDriverFactor
 
     @Override
     public SeleniumHelper.DriverFactory getDriverFactory() {
-        final String gridUrl = getProperty(SELENIUM_GRID_URL);
-        final String browser = getProperty(SELENIUM_BROWSER);
-        return new SeleniumHelper.DriverFactory() {
-            @Override
-            public void createDriver() {
-                SeleniumDriverSetup.unlockConfig();
-                try {
-                    new SeleniumDriverSetup().connectToDriverForAt(browser, gridUrl);
-                } catch (MalformedURLException e) {
-                    throw new RuntimeException("Unable to create driver at hub: "
-                            + gridUrl + " for: " +browser, e);
-                } finally {
-                    SeleniumDriverSetup.lockConfig();
-                }
-            }
-        };
+        String gridUrl = getProperty(SELENIUM_GRID_URL);
+        String browser = getProperty(SELENIUM_BROWSER);
+        DesiredCapabilities desiredCapabilities = new DesiredCapabilities(browser, "", Platform.ANY);
+        return SeleniumDriverSetup.getDriverFactory(RemoteWebDriver::new, gridUrl, desiredCapabilities);
     }
 }

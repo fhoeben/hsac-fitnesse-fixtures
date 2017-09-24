@@ -22,20 +22,7 @@ public class LocalSeleniumDriverFactoryFactory extends SeleniumDriverFactoryFact
     public SeleniumHelper.DriverFactory getDriverFactory() {
         final String browser = getProperty(SELENIUM_BROWSER);
         final Map<String, Object> profile = getProfile();
-        return new SeleniumHelper.DriverFactory() {
-            @Override
-            public void createDriver() {
-                SeleniumDriverSetup.unlockConfig();
-                try {
-                    new SeleniumDriverSetup().startDriverForWithProfile(browser, profile);
-                } catch (Exception e) {
-                    throw new RuntimeException("Unable to create local driver for: " + browser +
-                                                ". With profile: " + profile, e);
-                } finally {
-                    SeleniumDriverSetup.lockConfig();
-                }
-            }
-        };
+        return new SeleniumDriverSetup().getBrowserDriverFactory(browser, profile);
     }
 
     protected Map<String, Object> getProfile() {
