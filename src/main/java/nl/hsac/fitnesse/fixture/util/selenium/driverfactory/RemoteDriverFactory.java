@@ -20,10 +20,6 @@ public class RemoteDriverFactory<T extends RemoteWebDriver> implements DriverFac
     private final URL url;
     private final Capabilities capabilities;
 
-    public static RemoteDriverFactory<RemoteWebDriver> create(String url, Capabilities capabilities) {
-        return new RemoteDriverFactory<>(RemoteWebDriver::new, url, capabilities);
-    }
-
     public RemoteDriverFactory(
             BiFunction<URL, Capabilities, T> constr,
             String url,

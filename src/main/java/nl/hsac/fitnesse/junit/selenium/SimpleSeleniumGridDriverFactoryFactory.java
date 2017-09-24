@@ -4,6 +4,7 @@ import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverFactory;
 import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.RemoteDriverFactory;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 /**
  * Creates a Selenium driver factory to override the configuration in the wiki.
@@ -21,6 +22,6 @@ public class SimpleSeleniumGridDriverFactoryFactory extends SeleniumDriverFactor
         String gridUrl = getProperty(SELENIUM_GRID_URL);
         String browser = getProperty(SELENIUM_BROWSER);
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities(browser, "", Platform.ANY);
-        return RemoteDriverFactory.create(gridUrl, desiredCapabilities);
+        return new RemoteDriverFactory<>(RemoteWebDriver::new, gridUrl, desiredCapabilities);
     }
 }
