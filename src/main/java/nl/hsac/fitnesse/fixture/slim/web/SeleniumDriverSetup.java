@@ -5,18 +5,16 @@ import nl.hsac.fitnesse.fixture.slim.SlimFixture;
 import nl.hsac.fitnesse.fixture.util.selenium.SauceLabsHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverFactory;
-import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.ProjectDriverFactoryFactory;
 import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.LocalDriverFactory;
+import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.ProjectDriverFactoryFactory;
+import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.RemoteDriverFactory;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.FileDetector;
-import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.remote.UselessFileDetector;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -25,12 +23,12 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static nl.hsac.fitnesse.fixture.util.selenium.driverfactory.LocalDriverFactory.getFirefoxProfile;
+import static nl.hsac.fitnesse.fixture.util.selenium.driverfactory.RemoteDriverFactory.REMOTE_URL_KEY;
 
 /**
  * Script fixture to set up webdriver to be used by Selenium tests.
  */
 public class SeleniumDriverSetup extends SlimFixture {
-    public static final String REMOTE_URL_KEY = "SeleniumRemoteUrl";
     private static final String LAST_RUN_SUMMARY = "SeleniumLastRunSummary";
     private static Function<WebDriver, SeleniumHelper> HELPER_FACTORY = SeleniumDriverSetup::ensureEnvironmentHasCorrectHelper;
     protected static boolean OVERRIDE_ACTIVE = false;
@@ -246,29 +244,9 @@ public class SeleniumDriverSetup extends SlimFixture {
         }
 
         String cleanUrl = cleanupValue(url);
-        DriverFactory driverFactory = getDriverFactory(constr, cleanUrl, desiredCapabilities);
+        DriverFactory driverFactory = new RemoteDriverFactory(constr, cleanUrl, desiredCapabilities);
         WebDriver driver = setAndUseDriverFactory(driverFactory);
         return driver != null;
-    }
-
-    public static DriverFactory getDriverFactory(
-            BiFunction<URL, Capabilities, ? extends RemoteWebDriver> constr,
-            String cleanUrl,
-            DesiredCapabilities desiredCapabilities) {
-        try {
-            URL remoteUrl = new URL(cleanUrl);
-            return () -> {
-                RemoteWebDriver remoteWebDriver = constr.apply(remoteUrl, desiredCapabilities);
-                FileDetector fd = remoteWebDriver.getFileDetector();
-                if (fd == null || fd instanceof UselessFileDetector) {
-                    remoteWebDriver.setFileDetector(new LocalFileDetector());
-                }
-                Environment.getInstance().setSymbol(REMOTE_URL_KEY, remoteUrl.toString());
-                return remoteWebDriver;
-            };
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public static URL getLastRemoteUrl() {

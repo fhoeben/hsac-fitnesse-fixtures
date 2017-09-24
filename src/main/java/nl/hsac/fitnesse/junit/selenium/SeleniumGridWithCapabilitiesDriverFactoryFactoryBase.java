@@ -1,8 +1,8 @@
 package nl.hsac.fitnesse.junit.selenium;
 
-import nl.hsac.fitnesse.fixture.slim.web.SeleniumDriverSetup;
 import nl.hsac.fitnesse.fixture.util.LambdaMetaHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverFactory;
+import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.RemoteDriverFactory;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -24,7 +24,7 @@ public abstract class SeleniumGridWithCapabilitiesDriverFactoryFactoryBase exten
         Map<String, Object> capabilities = getCapabilities();
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities(capabilities);
         BiFunction<URL, Capabilities, RemoteWebDriver> constr = getRemoteWebDriverConstructor();
-        return SeleniumDriverSetup.getDriverFactory(constr, gridUrl, desiredCapabilities);
+        return new RemoteDriverFactory(constr, gridUrl, desiredCapabilities);
     }
 
     protected BiFunction<URL, Capabilities, RemoteWebDriver> getRemoteWebDriverConstructor() {
