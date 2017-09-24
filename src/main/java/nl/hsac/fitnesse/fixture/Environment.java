@@ -25,6 +25,7 @@ import nl.hsac.fitnesse.fixture.util.XPathHelper;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 import nl.hsac.fitnesse.fixture.util.selenium.CookieConverter;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverManager;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.http.client.CookieStore;
 import org.apache.http.impl.client.BasicCookieStore;
@@ -58,7 +59,7 @@ public class Environment {
     private TimeoutHelper timeoutHelper = new TimeoutHelper();
     private ProgramHelper programHelper;
     private DatesHelper datesHelper = new DatesHelper();
-    private SeleniumHelper seleniumHelper;
+    private DriverManager driverManager;
     private CookieConverter cookieConverter;
     private MapHelper mapHelper = new MapHelper();
     private ReflectionHelper reflectionHelper = new ReflectionHelper();
@@ -95,7 +96,7 @@ public class Environment {
         programHelper.setTimeoutHelper(timeoutHelper);
         configDatesHelper();
 
-        seleniumHelper = new SeleniumHelper();
+        driverManager = new DriverManager();
         cookieConverter = new CookieConverter();
     }
 
@@ -552,14 +553,15 @@ public class Environment {
      * @return seleniumHelper to use.
      */
     public SeleniumHelper getSeleniumHelper() {
-        return seleniumHelper;
+        return driverManager.getSeleniumHelper();
     }
 
-    /**
-     * @param seleniumHelper to be used.
-     */
-    public void setSeleniumHelper(SeleniumHelper seleniumHelper) {
-        this.seleniumHelper = seleniumHelper;
+    public DriverManager getSeleniumDriverManager() {
+        return driverManager;
+    }
+
+    public void setSeleniumDriverManager(DriverManager driverManager) {
+        this.driverManager = driverManager;
     }
 
     /**

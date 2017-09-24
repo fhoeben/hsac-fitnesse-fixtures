@@ -276,7 +276,7 @@ public class HsacFitNesseRunner extends FitNesseRunner {
 
                 if (factory != null) {
                     SeleniumDriverSetup.lockConfig();
-                    Environment.getInstance().getSeleniumHelper().setDriverFactory(factory);
+                    Environment.getInstance().getSeleniumDriverManager().setFactory(factory);
                 }
             }
 
@@ -291,7 +291,7 @@ public class HsacFitNesseRunner extends FitNesseRunner {
         if (StringUtils.isNotEmpty(propValue)) {
             try {
                 int timeoutSeconds = Integer.parseInt(propValue);
-                Environment.getInstance().getSeleniumHelper().setDefaultTimeoutSeconds(timeoutSeconds);
+                Environment.getInstance().getSeleniumDriverManager().setDefaultTimeoutSeconds(timeoutSeconds);
             } catch (NumberFormatException e) {
                 throw new RuntimeException("Bad " + SELENIUM_DEFAULT_TIMEOUT_PROP + " system property: " + propValue, e);
             }

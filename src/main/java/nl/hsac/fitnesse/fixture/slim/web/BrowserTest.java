@@ -176,7 +176,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     public BrowserTest() {
-        secondsBeforeTimeout(seleniumHelper.getDefaultTimeoutSeconds());
+        secondsBeforeTimeout(getEnvironment().getSeleniumDriverManager().getDefaultTimeoutSeconds());
         ensureActiveTabIsNotClosed();
     }
 

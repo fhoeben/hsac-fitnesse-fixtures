@@ -5,6 +5,7 @@ import nl.hsac.fitnesse.fixture.slim.SlimFixture;
 import nl.hsac.fitnesse.fixture.util.selenium.SauceLabsHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverFactory;
+import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverManager;
 import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.LocalDriverFactory;
 import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.ProjectDriverFactoryFactory;
 import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.RemoteDriverFactory;
@@ -20,7 +21,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import static nl.hsac.fitnesse.fixture.util.selenium.driverfactory.LocalDriverFactory.getFirefoxProfile;
 import static nl.hsac.fitnesse.fixture.util.selenium.driverfactory.RemoteDriverFactory.REMOTE_URL_KEY;
@@ -30,7 +30,6 @@ import static nl.hsac.fitnesse.fixture.util.selenium.driverfactory.RemoteDriverF
  */
 public class SeleniumDriverSetup extends SlimFixture {
     private static final String LAST_RUN_SUMMARY = "SeleniumLastRunSummary";
-    private static Function<WebDriver, SeleniumHelper> HELPER_FACTORY = SeleniumDriverSetup::ensureEnvironmentHasCorrectHelper;
     protected static boolean OVERRIDE_ACTIVE = false;
 
     /**
@@ -263,31 +262,9 @@ public class SeleniumDriverSetup extends SlimFixture {
     }
 
     protected WebDriver setAndUseDriverFactory(DriverFactory driverFactory) {
-        // use old helper to create driver
-        SeleniumHelper currentHelper = getHelper();
-        currentHelper.setDriverFactory(driverFactory);
-        WebDriver driver = currentHelper.driver();
-        changeSeleniumHelperInEnvironment(currentHelper, driver);
-        return driver;
-    }
-
-    protected void changeSeleniumHelperInEnvironment(SeleniumHelper currentHelper, WebDriver driver) {
-        SeleniumHelper newHelper = HELPER_FACTORY.apply(driver);
-        newHelper.setDriverFactory(currentHelper.getDriverFactory());
-        newHelper.setDefaultTimeoutSeconds(currentHelper.getDefaultTimeoutSeconds());
-
-        Environment.getInstance().setSeleniumHelper(newHelper);
-    }
-
-    /**
-     * Changing the driverFactory and/or driver might require a different (subclass of) SeleniumHelper.
-     * @param driver newly created driver
-     * @return helper to use.
-     */
-    public static SeleniumHelper ensureEnvironmentHasCorrectHelper(WebDriver driver) {
-        SeleniumHelper newHelper = new SeleniumHelper();
-        newHelper.setWebDriver(driver);
-        return newHelper;
+        DriverManager driverManager = getEnvironment().getSeleniumDriverManager();
+        driverManager.setFactory(driverFactory);
+        return driverManager.getSeleniumHelper().driver();
     }
 
     /**
@@ -301,7 +278,7 @@ public class SeleniumDriverSetup extends SlimFixture {
 
         // ensure we store summary
         runSummary();
-        getHelper().close();
+        getEnvironment().getSeleniumDriverManager().closeDriver();
         return true;
     }
 
@@ -318,20 +295,6 @@ public class SeleniumDriverSetup extends SlimFixture {
      */
     public static void unlockConfig() {
         OVERRIDE_ACTIVE = false;
-    }
-
-    /**
-     * @return factory used to determine which SeleniumHelper to store in {@link Environment}.
-     */
-    public static Function<WebDriver, SeleniumHelper> getSeleniumHelperFactory() {
-        return HELPER_FACTORY;
-    }
-
-    /**
-     * @param factory factory used to determine which SeleniumHelper to store in {@link Environment} when a new driver is created.
-     */
-    public static void setSeleniumHelperFactory(Function<WebDriver, SeleniumHelper> factory) {
-        HELPER_FACTORY = factory;
     }
 
     protected SeleniumHelper getHelper() {

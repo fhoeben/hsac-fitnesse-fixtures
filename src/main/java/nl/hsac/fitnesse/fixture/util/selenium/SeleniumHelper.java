@@ -1,6 +1,5 @@
 package nl.hsac.fitnesse.fixture.util.selenium;
 
-import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ConstantBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.CssBy;
@@ -15,7 +14,6 @@ import nl.hsac.fitnesse.fixture.util.selenium.by.TechnicalSelectorBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.TextBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ToClickBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
-import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverFactory;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.Alert;
@@ -58,9 +56,6 @@ import java.util.function.Supplier;
  * Helper to work with Selenium.
  */
 public class SeleniumHelper<T extends WebElement> {
-    /** Default time in seconds the wait web driver waits unit throwing TimeOutException. */
-    private static final int DEFAULT_TIMEOUT_SECONDS = 10;
-
     private static final String ELEMENT_ON_SCREEN_JS =
             "if (arguments[0].getBoundingClientRect) {\n" +
                     "var rect = arguments[0].getBoundingClientRect();\n" +
@@ -85,17 +80,15 @@ public class SeleniumHelper<T extends WebElement> {
 
     private final List<T> currentIFramePath = new ArrayList<>(4);
     private int frameDepthOnLastAlertError;
-    private DriverFactory factory;
     private WebDriver webDriver;
     private WebDriverWait webDriverWait;
-    private boolean shutdownHookEnabled = false;
-    private int defaultTimeoutSeconds = DEFAULT_TIMEOUT_SECONDS;
 
     /**
      * Sets up webDriver to be used.
      * @param aWebDriver web driver to use.
+     * @param defaultTimeout default timeout to wait, in seconds.
      */
-    public void setWebDriver(WebDriver aWebDriver) {
+    public void setWebDriver(WebDriver aWebDriver, int defaultTimeout) {
         if (webDriver != null && !webDriver.equals(aWebDriver)) {
             webDriver.quit();
         }
@@ -104,16 +97,7 @@ public class SeleniumHelper<T extends WebElement> {
         if (webDriver == null) {
             webDriverWait = null;
         } else {
-            webDriverWait = new WebDriverWait(webDriver, getDefaultTimeoutSeconds());
-        }
-
-        if (!shutdownHookEnabled) {
-            Runtime.getRuntime().addShutdownHook(new Thread() {
-                public void run() {
-                    close();
-                }
-            });
-            shutdownHookEnabled = true;
+            webDriverWait = new WebDriverWait(webDriver, defaultTimeout);
         }
     }
 
@@ -121,7 +105,7 @@ public class SeleniumHelper<T extends WebElement> {
      * Shuts down selenium web driver.
      */
     public void close() {
-        setWebDriver(null);
+        setWebDriver(null, 0);
     }
 
     /**
@@ -694,13 +678,6 @@ public class SeleniumHelper<T extends WebElement> {
      * @return selenium web driver.
      */
     public WebDriver driver() {
-        if (webDriver == null) {
-            if (factory == null) {
-                throw new StopTestException("Cannot use Selenium before a driver is started (for instance using SeleniumDriverSetup)");
-            } else {
-                setWebDriver(factory.createDriver());
-            }
-        }
         return webDriver;
     }
 
@@ -1016,28 +993,6 @@ public class SeleniumHelper<T extends WebElement> {
      */
     public void deleteAllCookies() {
         driver().manage().deleteAllCookies();
-    }
-
-    public void setDriverFactory(DriverFactory aFactory) {
-        factory = aFactory;
-    }
-
-    public DriverFactory getDriverFactory() {
-        return factory;
-    }
-
-    /**
-     * @param timeoutSeconds default number of seconds to wait before throwing timeout exceptions
-     */
-    public void setDefaultTimeoutSeconds(int timeoutSeconds) {
-        defaultTimeoutSeconds = timeoutSeconds;
-    }
-
-    /**
-     * @return default time for waiting (in seconds).
-     */
-    public int getDefaultTimeoutSeconds() {
-        return defaultTimeoutSeconds;
     }
 
     /**
