@@ -21,6 +21,6 @@ public class SimpleSeleniumGridDriverFactoryFactory extends SeleniumDriverFactor
         String gridUrl = getProperty(SELENIUM_GRID_URL);
         String browser = getProperty(SELENIUM_BROWSER);
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities(browser, "", Platform.ANY);
-        return new RemoteDriverFactory(gridUrl, desiredCapabilities);
+        return RemoteDriverFactory.create(gridUrl, desiredCapabilities);
     }
 }
