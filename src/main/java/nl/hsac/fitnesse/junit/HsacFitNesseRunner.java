@@ -9,7 +9,7 @@ import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.slim.web.LayoutTest;
 import nl.hsac.fitnesse.fixture.slim.web.SeleniumDriverSetup;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
-import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverFactory;
 import nl.hsac.fitnesse.junit.selenium.LocalSeleniumDriverClassFactoryFactory;
 import nl.hsac.fitnesse.junit.selenium.LocalSeleniumDriverFactoryFactory;
 import nl.hsac.fitnesse.junit.selenium.SeleniumDriverFactoryFactory;
@@ -269,7 +269,7 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     protected boolean configureSeleniumIfNeeded() {
         setSeleniumDefaultTimeOut();
         try {
-            SeleniumHelper.DriverFactory factory = null;
+            DriverFactory factory = null;
             SeleniumDriverFactoryFactory factoryFactory = getSeleniumDriverFactoryFactory();
             if (factoryFactory != null) {
                 factory = factoryFactory.getDriverFactory();

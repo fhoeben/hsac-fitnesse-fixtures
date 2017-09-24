@@ -2,17 +2,16 @@ package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
-import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import nl.hsac.fitnesse.fixture.util.selenium.SauceLabsHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverFactory;
+import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.LocalDriverFactory;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
@@ -30,6 +29,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+
+import static nl.hsac.fitnesse.fixture.util.selenium.driverfactory.LocalDriverFactory.getFirefoxProfile;
 
 /**
  * Script fixture to set up webdriver to be used by Selenium tests.
@@ -67,42 +68,9 @@ public class SeleniumDriverSetup extends SlimFixture {
             return true;
         }
 
-        SeleniumHelper.DriverFactory driverFactory = getDriverFactory(driverClassName, profile);
+        DriverFactory driverFactory = new LocalDriverFactory(driverClassName, profile);
         WebDriver driver = setAndUseDriverFactory(driverFactory);
         return driver != null;
-    }
-
-    public static SeleniumHelper.DriverFactory getDriverFactory(String driverClassName, Map<String, Object> profile) {
-        try {
-            Class<?> driverClass = Class.forName(driverClassName);
-            if (!WebDriver.class.isAssignableFrom(driverClass)) {
-                throw new SlimFixtureException(false, driverClassName + " does not implement " + WebDriver.class.getName());
-            }
-            return () -> {
-                try {
-                    Object driver;
-
-                    if ("firefoxdriver".equalsIgnoreCase(driverClass.getSimpleName())) {
-                        FirefoxProfile fxProfile = getFirefoxProfile(profile);
-                        FirefoxOptions options = new FirefoxOptions().setProfile(fxProfile);
-                        driver = new FirefoxDriver(options);
-                    } else if ("chromedriver".equalsIgnoreCase(driverClass.getSimpleName())) {
-                        DesiredCapabilities capabilities = getChromeMobileCapabilities(profile);
-                        driver = new ChromeDriver(capabilities);
-                    } else {
-                        driver = driverClass.newInstance();
-                    }
-
-                    return (WebDriver) driver;
-                } catch (RuntimeException e) {
-                    throw e;
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            };
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Unable to create " + driverClassName, e);
-        }
     }
 
     /**
@@ -129,12 +97,12 @@ public class SeleniumDriverSetup extends SlimFixture {
             return true;
         }
 
-        SeleniumHelper.DriverFactory driverFactory = getBrowserDriverFactory(browser, profile);
+        DriverFactory driverFactory = getBrowserDriverFactory(browser, profile);
         WebDriver driver = setAndUseDriverFactory(driverFactory);
         return driver != null;
     }
 
-    public SeleniumHelper.DriverFactory getBrowserDriverFactory(String browser, Map<String, Object> profile) {
+    public DriverFactory getBrowserDriverFactory(String browser, Map<String, Object> profile) {
         String driverClass;
         String browserName = browser.toLowerCase();
         switch (browserName) {
@@ -180,7 +148,7 @@ public class SeleniumDriverSetup extends SlimFixture {
             default:
                 throw new IllegalArgumentException("No defaults known for: " + browser);
         }
-        return getDriverFactory(driverClass, profile);
+        return new LocalDriverFactory(driverClass, profile);
     }
 
     public boolean startDriverFor(String browser) throws Exception {
@@ -284,33 +252,6 @@ public class SeleniumDriverSetup extends SlimFixture {
         return createAndSetRemoteDriver(url, desiredCapabilities);
     }
 
-    /**
-     * Set firefox profile. For example to make sure text/csv file is downloaded without asking (convenient if run on buildserver), do:
-     * |script           |selenium driver setup                                                                                               |
-     * |start driver for |firefox              |with profile|!{browser.download.folderList:2,browser.helperApps.neverAsk.saveToDisk:text/csv}||
-     * @param profile setting from subtable
-     * @return firefox profile with specified settings
-     */
-    private static FirefoxProfile getFirefoxProfile(Map<String, Object> profile) {
-        FirefoxProfile fxProfile = new FirefoxProfile();
-        if (profile != null) {
-            for (Map.Entry<String, Object> profileEntry : profile.entrySet()) {
-                Object value = profileEntry.getValue();
-                String valueStr = value == null ? null : value.toString();
-                fxProfile.setPreference(profileEntry.getKey(), valueStr);
-            }
-        }
-        return fxProfile;
-    }
-
-    private static DesiredCapabilities getChromeMobileCapabilities(Map<String, Object> profile) {
-        DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-        if (profile != null) {
-            capabilities.setCapability(ChromeOptions.CAPABILITY, profile);
-        }
-        return capabilities;
-    }
-
     public boolean connectToDriverAtWithJsonCapabilities(String url, String capabilitiesInJson)
             throws MalformedURLException {
         Map<String, Object> desiredCapabilities = getEnvironment().getJsonHelper().jsonStringToMap(capabilitiesInJson);
@@ -400,12 +341,12 @@ public class SeleniumDriverSetup extends SlimFixture {
         }
 
         String cleanUrl = cleanupValue(url);
-        SeleniumHelper.DriverFactory driverFactory = getDriverFactory(constr, cleanUrl, desiredCapabilities);
+        DriverFactory driverFactory = getDriverFactory(constr, cleanUrl, desiredCapabilities);
         WebDriver driver = setAndUseDriverFactory(driverFactory);
         return driver != null;
     }
 
-    public static SeleniumHelper.DriverFactory getDriverFactory(
+    public static DriverFactory getDriverFactory(
             BiFunction<URL, Capabilities, ? extends RemoteWebDriver> constr,
             String cleanUrl,
             DesiredCapabilities desiredCapabilities) {
@@ -438,7 +379,7 @@ public class SeleniumDriverSetup extends SlimFixture {
         return result;
     }
 
-    protected WebDriver setAndUseDriverFactory(SeleniumHelper.DriverFactory driverFactory) {
+    protected WebDriver setAndUseDriverFactory(DriverFactory driverFactory) {
         // use old helper to create driver
         SeleniumHelper currentHelper = getHelper();
         currentHelper.setDriverFactory(driverFactory);

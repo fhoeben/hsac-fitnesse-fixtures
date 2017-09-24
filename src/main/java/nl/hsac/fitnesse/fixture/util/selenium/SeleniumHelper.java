@@ -15,6 +15,7 @@ import nl.hsac.fitnesse.fixture.util.selenium.by.TechnicalSelectorBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.TextBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ToClickBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
+import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverFactory;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.Alert;
@@ -1072,9 +1073,5 @@ public class SeleniumHelper<T extends WebElement> {
      */
     public int getFrameDepthOnLastAlertError() {
         return frameDepthOnLastAlertError;
-    }
-
-    public interface DriverFactory {
-        WebDriver createDriver();
     }
 }

@@ -1,7 +1,7 @@
 package nl.hsac.fitnesse.junit.selenium;
 
 import nl.hsac.fitnesse.fixture.Environment;
-import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverFactory;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
@@ -21,7 +21,7 @@ public abstract class SeleniumDriverFactoryFactoryBase implements SeleniumDriver
     public abstract boolean willOverride();
 
     @Override
-    public abstract SeleniumHelper.DriverFactory getDriverFactory();
+    public abstract DriverFactory getDriverFactory();
 
     protected boolean isPropertySet(String propertyName) {
         String value = getProperty(propertyName);

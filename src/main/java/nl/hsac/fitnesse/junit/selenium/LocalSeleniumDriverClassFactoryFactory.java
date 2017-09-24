@@ -1,7 +1,7 @@
 package nl.hsac.fitnesse.junit.selenium;
 
-import nl.hsac.fitnesse.fixture.slim.web.SeleniumDriverSetup;
-import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverFactory;
+import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.LocalDriverFactory;
 
 /**
  * Creates a Selenium driver factory to override the configuration in the wiki.
@@ -17,8 +17,8 @@ public class LocalSeleniumDriverClassFactoryFactory extends SeleniumDriverFactor
     }
 
     @Override
-    public SeleniumHelper.DriverFactory getDriverFactory() {
+    public DriverFactory getDriverFactory() {
         final String driverClass = getProperty(SELENIUM_DRIVER_CLASS);
-        return SeleniumDriverSetup.getDriverFactory(driverClass, null);
+        return new LocalDriverFactory(driverClass, null);
     }
 }

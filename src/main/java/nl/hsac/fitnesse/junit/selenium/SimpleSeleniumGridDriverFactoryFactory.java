@@ -1,7 +1,7 @@
 package nl.hsac.fitnesse.junit.selenium;
 
 import nl.hsac.fitnesse.fixture.slim.web.SeleniumDriverSetup;
-import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverFactory;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -18,7 +18,7 @@ public class SimpleSeleniumGridDriverFactoryFactory extends SeleniumDriverFactor
     }
 
     @Override
-    public SeleniumHelper.DriverFactory getDriverFactory() {
+    public DriverFactory getDriverFactory() {
         String gridUrl = getProperty(SELENIUM_GRID_URL);
         String browser = getProperty(SELENIUM_BROWSER);
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities(browser, "", Platform.ANY);
