@@ -68,6 +68,21 @@ public class FirstNonNullHelper {
     }
 
     /**
+     * Gets first result of set of function which is not null.
+     *
+     * @param <T>       type of values.
+     * @param <R>       element to return.
+     * @param input     input to provide to all functions.
+     * @param function  first function to apply (separate to indicate at least one should be provided)
+     * @param functions all possible functions that might be able to supply a value.
+     * @return first result which was not null,
+     * OR <code>null</code> if result for each function's results was <code>null</code>.
+     */
+    public static <T, R> R firstNonNull(T input, Function<T, R> function, Function<T, R>... functions) {
+        return firstNonNull(f -> f.apply(input), Stream.concat(Stream.of(function), Stream.of(functions)));
+    }
+
+    /**
      * Gets first element which is not null.
      *
      * @param <T>      type of values.

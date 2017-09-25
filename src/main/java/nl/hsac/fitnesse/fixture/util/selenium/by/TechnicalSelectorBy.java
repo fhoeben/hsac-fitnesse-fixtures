@@ -1,12 +1,21 @@
 package nl.hsac.fitnesse.fixture.util.selenium.by;
 
+import nl.hsac.fitnesse.fixture.util.FirstNonNullHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
+
+import java.util.function.Function;
 
 /**
  * By to work using 'technical selectors.
  */
 public class TechnicalSelectorBy {
+    private static final Function<String, By> ID_BY = byIfStartsWith("id", By::id);
+    private static final Function<String, By> CSS_BY = byIfStartsWith("css", By::cssSelector);
+    private static final Function<String, By> NAME_BY = byIfStartsWith("name", By::name);
+    private static final Function<String, By> LINKTEXT_BY = byIfStartsWith("link", By::linkText);
+    private static final Function<String, By> PARTIALLINKTEXT_BY = byIfStartsWith("partialLink", By::partialLinkText);
+    private static final Function<String, By> XPATH_BY = byIfStartsWith("xpath", XPathBy::new);
 
     /**
      * Whether supplied place is a technical selector.
@@ -23,20 +32,18 @@ public class TechnicalSelectorBy {
      * @return By if place was a technical selector, null otherwise.
      */
     public static By forPlace(String place) {
-        By result = null;
-        if (place.startsWith("id=")) {
-            result = By.id(place.substring(3));
-        } else if (place.startsWith("css=")) {
-            result = By.cssSelector(place.substring(4));
-        } else if (place.startsWith("name=")) {
-            result = By.name(place.substring(5));
-        } else if (place.startsWith("link=")) {
-            result = By.linkText(place.substring(5));
-        } else if (place.startsWith("partialLink=")) {
-            result = By.partialLinkText(place.substring(12));
-        } else if (place.startsWith("xpath=")) {
-            result = new XPathBy(place.substring(6));
-        }
-        return result;
+        return FirstNonNullHelper.firstNonNull(place,
+                ID_BY,
+                CSS_BY,
+                NAME_BY,
+                LINKTEXT_BY,
+                PARTIALLINKTEXT_BY,
+                XPATH_BY);
+    }
+
+    public static Function<String, By> byIfStartsWith(String prefix, Function<String, By> constr) {
+        String prefixEq = prefix + "=";
+        int prefixLength = prefixEq.length();
+        return place -> place.startsWith(prefixEq) ? constr.apply(place.substring(prefixLength)) : null;
     }
 }
