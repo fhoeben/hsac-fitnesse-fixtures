@@ -1,10 +1,11 @@
 package nl.hsac.fitnesse.fixture.util.selenium.by;
 
-import nl.hsac.fitnesse.fixture.util.FirstNonNullHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 
 import java.util.function.Function;
+
+import static nl.hsac.fitnesse.fixture.util.FirstNonNullHelper.firstNonNull;
 
 /**
  * By to work using 'technical selectors.
@@ -32,7 +33,7 @@ public class TechnicalSelectorBy {
      * @return By if place was a technical selector, null otherwise.
      */
     public static By forPlace(String place) {
-        return FirstNonNullHelper.firstNonNull(place,
+        return firstNonNull(place,
                 ID_BY,
                 CSS_BY,
                 NAME_BY,
