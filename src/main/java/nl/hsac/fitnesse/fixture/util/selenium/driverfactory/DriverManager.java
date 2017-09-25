@@ -22,24 +22,34 @@ public class DriverManager {
         this.factory = factory;
     }
 
+    public DriverFactory getFactory() {
+        return factory;
+    }
+
     public void closeDriver() {
-        if (helper != null) {
-            helper.close();
-            helper = null;
-        }
+        setSeleniumHelper(null);
     }
 
     public SeleniumHelper getSeleniumHelper() {
         if (helper == null) {
-            if (factory == null) {
-                throw new StopTestException("Cannot use Selenium before a driver is started (for instance using SeleniumDriverSetup)");
+            DriverFactory currentFactory = getFactory();
+            if (currentFactory == null) {
+                throw new StopTestException("Cannot use Selenium before configuring how to start a driver (for instance using SeleniumDriverSetup)");
             } else {
-                WebDriver driver = factory.createDriver();
-                helper = createHelper(driver);
-                helper.setWebDriver(driver, getDefaultTimeoutSeconds());
+                WebDriver driver = currentFactory.createDriver();
+                SeleniumHelper newHelper = createHelper(driver);
+                newHelper.setWebDriver(driver, getDefaultTimeoutSeconds());
+                setSeleniumHelper(newHelper);
             }
         }
         return helper;
+    }
+
+    public void setSeleniumHelper(SeleniumHelper helper) {
+        if (this.helper != null) {
+            this.helper.close();
+        }
+        this.helper = helper;
     }
 
     protected SeleniumHelper createHelper(WebDriver driver) {
