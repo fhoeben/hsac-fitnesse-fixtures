@@ -18,12 +18,10 @@ public abstract class LazyPatternBy extends By {
     private By nested;
 
     /**
-     * Creates By based on xPath, supporting placeholder replacement.
-     * It also supports the fictional 'normalized()' function that does whitespace normalization, that also
-     * considers a '&nbsp;' whitespace.
-     * @param pattern basic XPATH, possibly with placeholders.
+     * Creates By based on pattern, supporting placeholder replacement.
+     * Pattern will only be filled in when By is evaluated.
+     * @param pattern basic pattern, possibly with placeholders {@link String#format}.
      * @param parameters values for placeholders.
-     * @return ByXPath.
      */
     public LazyPatternBy(String pattern, String... parameters) {
         this.pattern = pattern;
