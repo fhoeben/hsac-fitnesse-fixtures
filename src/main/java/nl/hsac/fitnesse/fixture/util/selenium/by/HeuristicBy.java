@@ -19,7 +19,7 @@ public class HeuristicBy<T extends WebElement> extends FirstElementBy<T> {
      * @param firstNested first By to be wrapped.
      * @param extraNestedBys optional extra Bys to be wrapped.
      */
-    protected HeuristicBy(By firstNested, By... extraNestedBys) {
+    public HeuristicBy(By firstNested, By... extraNestedBys) {
         this(new IsInteractableFilter(), firstNested, extraNestedBys);
     }
 
@@ -30,7 +30,7 @@ public class HeuristicBy<T extends WebElement> extends FirstElementBy<T> {
      * @param firstNested first By to be wrapped.
      * @param extraNestedBys optional extra Bys to be wrapped.
      */
-    protected HeuristicBy(Function<? super T, ? extends T> postProcessor, By firstNested, By... extraNestedBys) {
+    public HeuristicBy(Function<? super T, ? extends T> postProcessor, By firstNested, By... extraNestedBys) {
         super(postProcessor, firstNested, extraNestedBys);
     }
 
