@@ -636,7 +636,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     @WaitUntil
     public boolean selectForIn(String value, String place, String container) {
-        return doInContainer(container, () -> selectFor(value, place));
+        return Boolean.TRUE.equals(doInContainer(container, () -> selectFor(value, place)));
     }
 
     @WaitUntil
@@ -1487,11 +1487,18 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     public int numberOfTimesIsVisibleIn(String text, String container) {
-        return doInContainer(container, () -> numberOfTimesIsVisible(text));
+        return intValueOf(doInContainer(container, () -> numberOfTimesIsVisible(text)));
     }
 
     public int numberOfTimesIsVisibleOnPageIn(String text, String container) {
-        return doInContainer(container, () -> numberOfTimesIsVisibleOnPage(text));
+        return intValueOf(doInContainer(container, () -> numberOfTimesIsVisibleOnPage(text)));
+    }
+
+    protected int intValueOf(Integer count) {
+        if (count == null) {
+            count = Integer.valueOf(0);
+        }
+        return count;
     }
 
     protected int numberOfTimesIsVisibleInImpl(String text, boolean checkOnScreen) {
