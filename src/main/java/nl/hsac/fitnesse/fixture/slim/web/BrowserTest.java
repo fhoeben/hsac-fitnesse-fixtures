@@ -2111,6 +2111,23 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return repeatUntilNot(getClickUntilValueIs(clickPlace, checkPlace, expectedValue));
     }
 
+    public boolean executeJavascriptUntilIs(String script, String place, String value) {
+        return repeatUntil(getExecuteScriptUntilValueIs(script, place, value));
+    }
+
+    public boolean executeJavascriptUntilIsNot(String script, String place, String value) {
+        return repeatUntilNot(getExecuteScriptUntilValueIs(script, place, value));
+    }
+
+    protected RepeatUntilValueIsCompletion getExecuteScriptUntilValueIs(String script, String place, String expectedValue) {
+        return new RepeatUntilValueIsCompletion(place, expectedValue) {
+            @Override
+            public void repeat() {
+                executeScript(script);
+            }
+        };
+    }
+
     protected RepeatUntilValueIsCompletion getClickUntilValueIs(String clickPlace, String checkPlace, String expectedValue) {
         String place = cleanupValue(clickPlace);
         return getClickUntilCompletion(place, checkPlace, expectedValue);
