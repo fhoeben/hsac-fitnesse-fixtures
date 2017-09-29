@@ -51,7 +51,7 @@ This test ensures we can get at a page's HTML source code.
 |script|mock xml server setup|/test/|
 |stop                               |
 
-!2 Query parmas?
+!2 Query params?
 
 |script      |mock xml server setup|/test|
 |add response|${HTML}                    |
