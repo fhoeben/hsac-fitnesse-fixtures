@@ -56,13 +56,13 @@ public class PageSourceSaver {
                 addSourceReplacementsForFrame(sourceReplacements, newLocation, fullUrlOfFrame);
             }
         }
-        String html = getCurrentFrameHtml(sourceReplacements);
+        String source = getCurrentFrameSource(sourceReplacements);
         if (!framesWithFakeSources.isEmpty()) {
             // replace fake_src by src
-            html = html.replace(" " + FAKE_SRC_ATTR + "=", " src=");
+            source = source.replace(" " + FAKE_SRC_ATTR + "=", " src=");
             removeFakeSourceAttr(framesWithFakeSources);
         }
-        return saveHtmlAsPageSource(fileName, html);
+        return saveSourceAsPageSource(fileName, source);
     }
 
     protected String saveFrameSource(WebElement frame) {
@@ -81,12 +81,12 @@ public class PageSourceSaver {
         }
     }
 
-    protected String getCurrentFrameHtml(Map<String, String> sourceReplacements) {
-        String html = getSeleniumHelper().getHtml();
+    protected String getCurrentFrameSource(Map<String, String> sourceReplacements) {
+        String source = getCurrentPageSource();
         if (sourceReplacements != null && !sourceReplacements.isEmpty()) {
-            html = replaceSourceOfFrames(sourceReplacements, html);
+            source = replaceSourceOfFrames(sourceReplacements, source);
         }
-        return html;
+        return source;
     }
 
     protected String replaceSourceOfFrames(Map<String, String> sourceReplacements, String html) {
@@ -124,21 +124,36 @@ public class PageSourceSaver {
     }
 
 
-    protected String saveHtmlAsPageSource(String fileName, String html) {
+    protected String saveSourceAsPageSource(String fileName, String source) {
+        String pageSourceName = getPageSourceName(fileName);
+        String ext = getPageSourceExtension();
+        byte[] content = convertSourceToBytes(source);
+        String file = FileUtil.saveToFile(pageSourceName, ext, content);
+        String wikiUrl = getWikiUrl(file);
+
         String result;
+        if (wikiUrl != null) {
+            result = wikiUrl;
+        } else {
+            result = file;
+        }
+        return result;
+    }
+
+    protected String getPageSourceExtension() {
+        return "HTML";
+    }
+
+    protected String getCurrentPageSource() {
+        return getSeleniumHelper().getHtml();
+    }
+
+    protected byte[] convertSourceToBytes(String source) {
         try {
-            String pageSourceName = getPageSourceName(fileName);
-            String file = FileUtil.saveToFile(pageSourceName, "HTML", html.getBytes("utf-8"));
-            String wikiUrl = getWikiUrl(file);
-            if (wikiUrl != null) {
-                result = wikiUrl;
-            } else {
-                result = file;
-            }
+            return source.getBytes("utf-8");
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("Unable to save source", e);
         }
-        return result;
     }
 
     /**
