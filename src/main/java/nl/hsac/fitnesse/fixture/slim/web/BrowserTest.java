@@ -1621,12 +1621,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * @return (escaped) HTML content of current page.
      */
     public String pageSource() {
-        String result = null;
         String html = getSeleniumHelper().getHtml();
-        if (html != null) {
-            result = "<pre>" + StringEscapeUtils.escapeHtml4(html) + "</pre>";
-        }
-        return result;
+        return getEnvironment().getHtml(html);
     }
 
     /**
