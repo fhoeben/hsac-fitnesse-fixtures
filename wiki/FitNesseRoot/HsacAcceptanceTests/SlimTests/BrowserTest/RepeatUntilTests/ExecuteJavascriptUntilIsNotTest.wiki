@@ -1,0 +1,55 @@
+This test ensures that we can keep refreshing a page until a condition is met by one of its iframes.
+
+We use a mock server running to serve the HTML defined in this page.
+
+!define HTML_MAIN1 { {{{
+<html>
+<title>Start Page Title</title>
+<body>
+<iframe id="iframe1" src="1.html"></iframe>
+<iframe id="iframe2" src="2.html"></iframe>
+</body>
+</html>}}} }
+
+!define HTML_FRAME1_1 { {{{
+<html>
+<body>
+<input name="remove1" type="button" value="Remove1">
+</body>
+</html>}}} }
+
+
+!define HTML_FRAME1_2a { {{{
+<html>
+<body>
+<label id="label" for="field">Teller</label>
+<input id="field" value="1">
+</body>
+</html>}}} }
+
+!define HTML_FRAME1_2b { {{{
+<html>
+<body>
+<label id="label" for="field">Teller</label>
+<input id="field" value="2">
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML_MAIN1}        |
+|add response|${HTML_FRAME1_1}     |
+|add response|${HTML_FRAME1_2a}    |
+|add response|${HTML_FRAME1_2b}    |
+|$url=       |get mock server url  |
+
+|script                |browser test                                                                                 |
+|open                  |$url/main.html                                                                               |
+|set repeat interval to|1000                                                                   |milliseconds         |
+|repeat at most        |3                                                                      |times                |
+|execute javascript    |this.document.getElementById('iframe2').contentWindow.location.reload()|until|Teller|is not|1|
+|check                 |repeat count                                                           |1                    |
+
+|script|mock xml server setup|
+|stop                        |
+
