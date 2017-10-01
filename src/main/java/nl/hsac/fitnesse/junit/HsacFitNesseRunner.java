@@ -118,8 +118,11 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     }
 
     protected void copyFilesToOutputDir(Class<?> suiteClass, String srcFilesDir, String targetFilesDir) throws IOException {
-        FileFilter fileSectionFilter = getFileSectionCopyFilter(suiteClass);
-        FileUtils.copyDirectory(new File(srcFilesDir), new File(targetFilesDir), fileSectionFilter);
+        File srcDir = new File(srcFilesDir);
+        if (srcDir.exists()) {
+            FileFilter fileSectionFilter = getFileSectionCopyFilter(suiteClass);
+            FileUtils.copyDirectory(srcDir, new File(targetFilesDir), fileSectionFilter);
+        }
     }
 
     protected FileFilter getFileSectionCopyFilter(Class<?> suiteClass) {
