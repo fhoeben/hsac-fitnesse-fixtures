@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.fixture.util.selenium.driverfactory;
 
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.by.BestMatchBy;
 import org.openqa.selenium.WebDriver;
 
 /**
@@ -53,6 +54,8 @@ public class DriverManager {
     }
 
     protected SeleniumHelper createHelper(WebDriver driver) {
+        // set default 'Best Function'
+        BestMatchBy.setBestFunction(BestMatchBy::selectBestElement);
         return new SeleniumHelper();
     }
 
