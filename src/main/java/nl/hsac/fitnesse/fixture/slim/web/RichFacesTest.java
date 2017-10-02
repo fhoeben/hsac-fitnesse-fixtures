@@ -84,7 +84,9 @@ public class RichFacesTest extends BrowserTest<WebElement> {
             String tagName = element.getTagName();
             if ("label".equals(tagName)) {
                 WebElement labelTarget = LabelBy.getLabelledElement(getSeleniumHelper().getCurrentContext(), element);
-                result = hasRichFacesAjax(labelTarget);
+                if (labelTarget != null) {
+                    result = isAjaxEventPresent(labelTarget);
+                }
             }
         }
         if (result) {
