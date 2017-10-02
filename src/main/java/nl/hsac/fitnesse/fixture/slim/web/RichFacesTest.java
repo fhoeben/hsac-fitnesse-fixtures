@@ -6,12 +6,16 @@ import org.openqa.selenium.JavascriptException;
 import org.openqa.selenium.WebElement;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Triodos specific version of {@link BrowserTest} with added functionality to deal
  * with RichFaces, JSF pages.
  */
 public class RichFacesTest extends BrowserTest<WebElement> {
+    private final List<String> eventsThatMayRequireWaiting = new ArrayList<>(Arrays.asList("onchange", "onclick"));
     private boolean shouldWaitForAjax = false;
     private String previousLocation = null;
 
@@ -67,10 +71,7 @@ public class RichFacesTest extends BrowserTest<WebElement> {
         if (element == null) {
             return false;
         }
-        boolean result = eventTriggersAjax(element, "onchange");
-        if (!result) {
-            result = eventTriggersAjax(element, "onclick");
-        }
+        boolean result = isAjaxEventPresent(element);
         if (!result) {
             String tagName = element.getTagName();
             if ("label".equals(tagName)) {
@@ -81,6 +82,17 @@ public class RichFacesTest extends BrowserTest<WebElement> {
         if (result) {
             // store current URL so we can check against it later when waiting for Ajax
             storeLocationBeforeAction();
+        }
+        return result;
+    }
+
+    protected boolean isAjaxEventPresent(WebElement element) {
+        boolean result = false;
+        for (String event : getEventsThatMayRequireWaiting()) {
+            result = eventTriggersAjax(element, event);
+            if (result) {
+                break;
+            }
         }
         return result;
     }
@@ -117,5 +129,9 @@ public class RichFacesTest extends BrowserTest<WebElement> {
 
     protected boolean shouldWaitForAjax() {
         return shouldWaitForAjax;
+    }
+
+    public List<String> getEventsThatMayRequireWaiting() {
+        return eventsThatMayRequireWaiting;
     }
 }
