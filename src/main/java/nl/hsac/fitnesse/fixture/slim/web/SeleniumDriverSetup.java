@@ -19,6 +19,9 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
@@ -31,6 +34,7 @@ import static nl.hsac.fitnesse.fixture.util.selenium.driverfactory.RemoteDriverF
 public class SeleniumDriverSetup extends SlimFixture {
     private static final String LAST_RUN_SUMMARY = "SeleniumLastRunSummary";
     protected static boolean OVERRIDE_ACTIVE = false;
+    private final List<String> secretCapabilities = new ArrayList<>();
 
     /**
      * Sets system property (needed by the WebDriver to be set up).
@@ -207,9 +211,10 @@ public class SeleniumDriverSetup extends SlimFixture {
     }
 
     protected String describeCapabilities(RemoteWebDriver remoteDriver) {
-        StringBuilder result = new StringBuilder("<table><tbody>");
         Capabilities capabilities = remoteDriver.getCapabilities();
-        for (Map.Entry<String, ?> entry : capabilities.asMap().entrySet()) {
+        Map<String, ?> capaToShow = getCapabilitiesToDescribe(capabilities);
+        StringBuilder result = new StringBuilder("<table><tbody>");
+        for (Map.Entry<String, ?> entry : capaToShow.entrySet()) {
             result.append("<tr><th>");
             result.append(entry.getKey());
             result.append("</th><td>");
@@ -218,6 +223,21 @@ public class SeleniumDriverSetup extends SlimFixture {
         }
         result.append("</tbody></table>");
         return result.toString();
+    }
+
+    protected Map<String, ?> getCapabilitiesToDescribe(Capabilities capabilities) {
+        List<String> secrets = getSecretCapabilities();
+
+        Map<String, Object> capaToShow = new LinkedHashMap<>();
+        for (Map.Entry<String, ?> entry : capabilities.asMap().entrySet()) {
+            String key = entry.getKey();
+            if (secrets.contains(key)) {
+                capaToShow.put(key, "*****");
+            } else {
+                capaToShow.put(key, entry.getValue());
+            }
+        }
+        return capaToShow;
     }
 
     protected String extendedDriverDescription(URL lastRemoteUrl) {
@@ -280,6 +300,10 @@ public class SeleniumDriverSetup extends SlimFixture {
         runSummary();
         getEnvironment().getSeleniumDriverManager().closeDriver();
         return true;
+    }
+
+    public List<String> getSecretCapabilities() {
+        return secretCapabilities;
     }
 
     /**
