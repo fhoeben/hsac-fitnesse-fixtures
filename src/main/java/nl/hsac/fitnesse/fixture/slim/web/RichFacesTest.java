@@ -19,6 +19,14 @@ public class RichFacesTest extends BrowserTest<WebElement> {
     private boolean shouldWaitForAjax = false;
     private String previousLocation = null;
 
+    public RichFacesTest() {
+        super();
+    }
+
+    public RichFacesTest(int secondsBeforeTimeout) {
+        super(secondsBeforeTimeout);
+    }
+
     @Override
     protected void beforeInvoke(Method method, Object[] arguments) {
         setShouldWaitForAjax(false);
