@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
+import nl.hsac.fitnesse.fixture.util.SecretMasker;
 import nl.hsac.fitnesse.fixture.util.selenium.SauceLabsHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverFactory;
@@ -20,10 +21,9 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiFunction;
 
 import static nl.hsac.fitnesse.fixture.util.selenium.driverfactory.LocalDriverFactory.getFirefoxProfile;
@@ -227,35 +227,12 @@ public class SeleniumDriverSetup extends SlimFixture {
     }
 
     protected Map<String, ?> getCapabilitiesToDescribe(Capabilities capabilities) {
-        return replaceSecrets(capabilities.asMap());
-    }
-
-    protected Map<String, Object> replaceSecrets(Map<String, ?> originalMap) {
-        AtomicBoolean replaced = new AtomicBoolean(false);
-        Map<String, Object> capaToShow = null;
-        try {
-            // we need a newMap so we can use it in a lambda later on
-            Map<String, Object> newMap = new LinkedHashMap<>(originalMap);
-            capaToShow = newMap;
-            getSecretCapabilities().forEach(s -> {
-                if (newMap.containsKey(s)) {
-                    newMap.replace(s, "*****");
-                    replaced.set(true);
-                }
-            });
-            newMap.entrySet().forEach(e -> {
-                Object currentValue = e.getValue();
-                if (currentValue instanceof Map) {
-                    Map<String, Object> safeValue = replaceSecrets((Map<String, ?>) currentValue);
-                    if (currentValue != safeValue) {
-                        newMap.replace(e.getKey(), safeValue);
-                        replaced.set(true);
-                    }
-                }});
-        } catch (RuntimeException e) {
-            System.err.println("Unable to remove secrets from: " + originalMap);
+        Map<String, ?> result = capabilities.asMap();
+        Collection<String> keysToMask = getSecretCapabilities();
+        if (!keysToMask.isEmpty()) {
+            result = new SecretMasker().replaceSecrets(keysToMask, result);
         }
-        return replaced.get() ? capaToShow : (Map<String, Object>) originalMap;
+        return result;
     }
 
     protected String extendedDriverDescription(URL lastRemoteUrl) {
