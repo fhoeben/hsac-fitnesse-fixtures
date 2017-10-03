@@ -1815,17 +1815,16 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected String getSlimFixtureExceptionMessage(String screenshotBaseName, String messageBase, Throwable t) {
+        String exceptionMsg = getExceptionMessageText(messageBase, t);
         // take a screenshot of what was on screen
-        String screenShotFile = null;
-        try {
-            screenShotFile = createScreenshot(screenshotBaseName, t);
-        } catch (UnhandledAlertException e) {
-            // https://code.google.com/p/selenium/issues/detail?id=4412
-            System.err.println("Unable to take screenshot while alert is present for exception: " + messageBase);
-        } catch (Exception sse) {
-            System.err.println("Unable to take screenshot for exception: " + messageBase);
-            sse.printStackTrace();
-        }
+        String screenshotTag = getExceptionScreenshotTag(screenshotBaseName, messageBase, t);
+        String label = getExceptionPageSourceTag(screenshotBaseName, messageBase, t);
+
+        String message = String.format("<div><div>%s.</div><div>%s:%s</div></div>", exceptionMsg, label, screenshotTag);
+        return message;
+    }
+
+    protected String getExceptionMessageText(String messageBase, Throwable t) {
         String message = messageBase;
         if (message == null) {
             if (t == null) {
@@ -1834,31 +1833,44 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
                 message = ExceptionUtils.getStackTrace(t);
             }
         }
-        if (screenShotFile != null) {
-            String label = "Page content";
-            try {
-                String fileName;
-                if (t != null) {
-                    fileName = t.getClass().getName();
-                } else if (screenshotBaseName != null) {
-                    fileName = screenshotBaseName;
-                } else {
-                    fileName = "exception";
-                }
-                label = savePageSource(fileName, label);
-            } catch (UnhandledAlertException e) {
-                // https://code.google.com/p/selenium/issues/detail?id=4412
-                System.err.println("Unable to capture page source while alert is present for exception: " + messageBase);
-            } catch (Exception e) {
-                System.err.println("Unable to capture page source for exception: " + messageBase);
-                e.printStackTrace();
-            }
+        return formatExceptionMsg(message);
+    }
 
-            String exceptionMsg = formatExceptionMsg(message);
-            message = String.format("<div><div>%s.</div><div>%s:%s</div></div>",
-                    exceptionMsg, label, getScreenshotLink(screenShotFile));
+    protected String getExceptionScreenshotTag(String screenshotBaseName, String messageBase, Throwable t) {
+        String screenshotTag = "(Screenshot not available)";
+        try {
+            String screenShotFile = createScreenshot(screenshotBaseName, t);
+            screenshotTag = getScreenshotLink(screenShotFile);
+        } catch (UnhandledAlertException e) {
+            // https://code.google.com/p/selenium/issues/detail?id=4412
+            System.err.println("Unable to take screenshot while alert is present for exception: " + messageBase);
+        } catch (Exception sse) {
+            System.err.println("Unable to take screenshot for exception: " + messageBase);
+            sse.printStackTrace();
         }
-        return message;
+        return screenshotTag;
+    }
+
+    protected String getExceptionPageSourceTag(String screenshotBaseName, String messageBase, Throwable t) {
+        String label = "Page content";
+        try {
+            String fileName;
+            if (t != null) {
+                fileName = t.getClass().getName();
+            } else if (screenshotBaseName != null) {
+                fileName = screenshotBaseName;
+            } else {
+                fileName = "exception";
+            }
+            label = savePageSource(fileName, label);
+        } catch (UnhandledAlertException e) {
+            // https://code.google.com/p/selenium/issues/detail?id=4412
+            System.err.println("Unable to capture page source while alert is present for exception: " + messageBase);
+        } catch (Exception e) {
+            System.err.println("Unable to capture page source for exception: " + messageBase);
+            e.printStackTrace();
+        }
+        return label;
     }
 
     protected String formatExceptionMsg(String value) {
