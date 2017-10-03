@@ -2,7 +2,6 @@ package nl.hsac.fitnesse.fixture.slim.web;
 
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
-import nl.hsac.fitnesse.fixture.util.SecretMasker;
 import nl.hsac.fitnesse.fixture.util.selenium.SauceLabsHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverFactory;
@@ -230,7 +229,7 @@ public class SeleniumDriverSetup extends SlimFixture {
         Map<String, ?> result = capabilities.asMap();
         Collection<String> keysToMask = getSecretCapabilities();
         if (!keysToMask.isEmpty()) {
-            result = new SecretMasker().replaceSecrets(keysToMask, result);
+            result = getEnvironment().getSecretMasker().replaceSecrets(keysToMask, result);
         }
         return result;
     }

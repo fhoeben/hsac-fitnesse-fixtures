@@ -18,6 +18,7 @@ import nl.hsac.fitnesse.fixture.util.NamespaceContextImpl;
 import nl.hsac.fitnesse.fixture.util.ProgramHelper;
 import nl.hsac.fitnesse.fixture.util.ProgramResponse;
 import nl.hsac.fitnesse.fixture.util.ReflectionHelper;
+import nl.hsac.fitnesse.fixture.util.SecretMasker;
 import nl.hsac.fitnesse.fixture.util.TextFormatter;
 import nl.hsac.fitnesse.fixture.util.TimeoutHelper;
 import nl.hsac.fitnesse.fixture.util.XMLFormatter;
@@ -63,6 +64,7 @@ public class Environment {
     private CookieConverter cookieConverter;
     private MapHelper mapHelper = new MapHelper();
     private ReflectionHelper reflectionHelper = new ReflectionHelper();
+    private SecretMasker secretMasker = new SecretMasker();
 
     private Environment() {
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_23);
@@ -690,5 +692,13 @@ public class Environment {
 
     public void setCookieConverter(CookieConverter cookieConverter) {
         this.cookieConverter = cookieConverter;
+    }
+
+    public SecretMasker getSecretMasker() {
+        return secretMasker;
+    }
+
+    public void setSecretMasker(SecretMasker secretMasker) {
+        this.secretMasker = secretMasker;
     }
 }
