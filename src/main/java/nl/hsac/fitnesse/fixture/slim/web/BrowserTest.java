@@ -772,6 +772,17 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return doInContainer(container, () -> getElementToClick(place));
     }
 
+    /**
+     * Convenience method to create custom heuristics in subclasses.
+     * @param container container to use (use <code>null</code> for current container), can be a technical selector.
+     * @param place place to look for inside container, can be a technical selector.
+     * @param suppliers suppliers that will be used in turn until an element is found, IF place is not a technical selector.
+     * @return first hit of place, technical selector or result of first supplier that provided result.
+     */
+    protected T findFirstInContainer(String container, String place, Supplier<? extends T>... suppliers) {
+        return doInContainer(container, () -> getSeleniumHelper().findByTechnicalSelectorOr(place, suppliers));
+    }
+
     protected <R> R doInContainer(String container, Supplier<R> action) {
         R result = null;
         if (container == null) {
