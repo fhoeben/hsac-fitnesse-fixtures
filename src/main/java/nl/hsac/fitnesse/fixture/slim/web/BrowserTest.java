@@ -2142,8 +2142,12 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected RepeatCompletion getExecuteScriptUntilValueIs(String script, String place, String expectedValue) {
-        return new ConditionBasedRepeatUntil(false, d -> { Object r = executeScript(script); return r != null ? r : true; },
-                                            true, d -> checkValueIs(place, expectedValue));
+        return new ConditionBasedRepeatUntil(
+                false, d -> {
+                        Object r = executeScript(script);
+                        return r != null ? r : true;
+                    },
+                true, d -> checkValueIs(place, expectedValue));
     }
 
     protected RepeatCompletion getClickUntilValueIs(String clickPlace, String checkPlace, String expectedValue) {
@@ -2159,7 +2163,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return repeatUntil(new ConditionBasedRepeatUntil(true, actionCondition, finishCondition));
     }
 
-    protected boolean repeatUntilNot(ExpectedCondition<Object> actionCondition, ExpectedCondition<Boolean> finishCondition) {
+    protected boolean repeatUntilIsNot(ExpectedCondition<Object> actionCondition, ExpectedCondition<Boolean> finishCondition) {
         return repeatUntilNot(new ConditionBasedRepeatUntil(true, actionCondition, finishCondition));
     }
 
@@ -2199,44 +2203,28 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return match;
     }
 
-    protected class ConditionBasedRepeatUntil implements RepeatCompletion {
-        private final ExpectedCondition<Boolean> finishedCondition;
-        private final ExpectedCondition<? extends Object> repeatCondition;
-
-        public ConditionBasedRepeatUntil(
-                ExpectedCondition<? extends Object> repeatCondition, ExpectedCondition<Boolean> finishedCondition) {
-            this(false, repeatCondition, finishedCondition);
-        }
-
-        public ConditionBasedRepeatUntil(boolean wrap,
+    protected class ConditionBasedRepeatUntil extends FunctionalCompletion {
+        public ConditionBasedRepeatUntil(boolean wrapIfNeeded,
                                          ExpectedCondition<? extends Object> repeatCondition,
                                          ExpectedCondition<Boolean> finishedCondition) {
-            this(wrap, repeatCondition, wrap, finishedCondition);
+            this(wrapIfNeeded, repeatCondition, wrapIfNeeded, finishedCondition);
         }
 
-        public ConditionBasedRepeatUntil(boolean wrapRepeat,
+        public ConditionBasedRepeatUntil(boolean wrapRepeatIfNeeded,
                                          ExpectedCondition<? extends Object> repeatCondition,
-                                         boolean wrapFinished,
+                                         boolean wrapFinishedIfNeeded,
                                          ExpectedCondition<Boolean> finishedCondition) {
-            if (wrapRepeat) {
+            if (wrapRepeatIfNeeded) {
                 repeatCondition = wrapConditionForFramesIfNeeded(repeatCondition);
             }
-            if (wrapFinished) {
+            ExpectedCondition<?> finalRepeatCondition = repeatCondition;
+            if (wrapFinishedIfNeeded) {
                 finishedCondition = wrapConditionForFramesIfNeeded(finishedCondition);
             }
-            this.finishedCondition = finishedCondition;
-            this.repeatCondition = repeatCondition;
-        }
+            ExpectedCondition<Boolean> finalFinishedCondition = finishedCondition;
 
-        @Override
-        public boolean isFinished() {
-            Boolean exists = waitUntilOrNull(finishedCondition);
-            return Boolean.TRUE.equals(exists);
-        }
-
-        @Override
-        public void repeat() {
-            waitUntil(repeatCondition);
+            setIsFinishedSupplier(() -> waitUntilOrNull(finalFinishedCondition));
+            setRepeater(() -> waitUntil(finalRepeatCondition));
         }
     }
 

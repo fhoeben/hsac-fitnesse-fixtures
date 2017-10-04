@@ -218,11 +218,25 @@ public class SlimFixture  implements InteractionAwareFixture {
     /**
      * RepeatCompletion without repeat action, just calls function to determine whether it is completed.
      */
-    public static class PollCompletion implements RepeatCompletion {
-        private final Supplier<Boolean> isFinishedSupplier;
-
+    public static class PollCompletion extends FunctionalCompletion {
         public PollCompletion(Supplier<Boolean> isFinishedSupplier) {
-            this.isFinishedSupplier = isFinishedSupplier;
+            super(isFinishedSupplier, () -> {});
+        }
+    }
+
+    /**
+     * RepeatCompletion using Runnable in repeat, calls function to determine whether it is completed.
+     */
+    public static class FunctionalCompletion implements RepeatCompletion {
+        private Supplier<Boolean> isFinishedSupplier;
+        private Runnable repeater;
+
+        public FunctionalCompletion() {
+        }
+
+        public FunctionalCompletion(Supplier<Boolean> isFinishedSupplier, Runnable repeater) {
+            setIsFinishedSupplier(isFinishedSupplier);
+            setRepeater(repeater);
         }
 
         @Override
@@ -232,6 +246,15 @@ public class SlimFixture  implements InteractionAwareFixture {
 
         @Override
         public void repeat() {
+            repeater.run();
+        }
+
+        public void setIsFinishedSupplier(Supplier<Boolean> isFinishedSupplier) {
+            this.isFinishedSupplier = isFinishedSupplier;
+        }
+
+        public void setRepeater(Runnable repeater) {
+            this.repeater = repeater;
         }
     }
     // Polling
