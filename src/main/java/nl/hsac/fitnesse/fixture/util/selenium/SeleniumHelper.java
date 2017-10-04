@@ -52,6 +52,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static nl.hsac.fitnesse.fixture.util.FirstNonNullHelper.firstNonNull;
+
 /**
  * Helper to work with Selenium.
  */
@@ -163,13 +165,17 @@ public class SeleniumHelper<T extends WebElement> {
         return findElement(by);
     }
 
-    public T findByTechnicalSelectorOr(String possibleTechnicalSelector, Supplier<? extends T> supplier) {
+    public T findByTechnicalSelectorOr(String possibleTechnicalSelector, Supplier<? extends T>... suppliers) {
         T element;
         By by = placeToBy(possibleTechnicalSelector);
         if (by != null) {
             element = findElement(by);
         } else {
-            element = supplier.get();
+            if (suppliers.length == 1) {
+                element = suppliers[0].get();
+            } else {
+                element = firstNonNull((Supplier<T>[]) suppliers);
+            }
         }
         return element;
     }
