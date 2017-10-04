@@ -2120,13 +2120,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return repeatUntilNot(getRefreshUntilValueIs(place, expectedValue));
     }
 
-    protected RepeatUntilValueIsCompletion getRefreshUntilValueIs(String place, String expectedValue) {
-        return new RepeatUntilValueIsCompletion(place, expectedValue) {
-            @Override
-            public void repeat() {
-                refresh();
-            }
-        };
+    protected RepeatCompletion getRefreshUntilValueIs(String place, String expectedValue) {
+        return new ConditionBasedRepeatUntil(false, d-> refresh(),
+                                            true, d -> checkValueIs(place, expectedValue));
     }
 
     public boolean clickUntilValueOfIs(String clickPlace, String checkPlace, String expectedValue) {
@@ -2145,28 +2141,26 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return repeatUntilNot(getExecuteScriptUntilValueIs(script, place, value));
     }
 
-    protected RepeatUntilValueIsCompletion getExecuteScriptUntilValueIs(String script, String place, String expectedValue) {
-        return new RepeatUntilValueIsCompletion(place, expectedValue) {
-            @Override
-            public void repeat() {
-                executeScript(script);
-            }
-        };
+    protected RepeatCompletion getExecuteScriptUntilValueIs(String script, String place, String expectedValue) {
+        return new ConditionBasedRepeatUntil(false, d -> { Object r = executeScript(script); return r != null ? r : true; },
+                                            true, d -> checkValueIs(place, expectedValue));
     }
 
-    protected RepeatUntilValueIsCompletion getClickUntilValueIs(String clickPlace, String checkPlace, String expectedValue) {
+    protected RepeatCompletion getClickUntilValueIs(String clickPlace, String checkPlace, String expectedValue) {
         String place = cleanupValue(clickPlace);
         return getClickUntilCompletion(place, checkPlace, expectedValue);
     }
 
-    protected RepeatUntilValueIsCompletion getClickUntilCompletion(String place, String checkPlace, String expectedValue) {
-        ExpectedCondition<Object> condition = wrapConditionForFramesIfNeeded(webDriver -> click(place));
-        return new RepeatUntilValueIsCompletion(checkPlace, expectedValue) {
-            @Override
-            public void repeat() {
-                waitUntil(condition);
-            }
-        };
+    protected RepeatCompletion getClickUntilCompletion(String place, String checkPlace, String expectedValue) {
+        return new ConditionBasedRepeatUntil(true, d -> click(place), d -> checkValueIs(checkPlace, expectedValue));
+    }
+
+    protected boolean repeatUntil(ExpectedCondition<Object> actionCondition, ExpectedCondition<Boolean> finishCondition) {
+        return repeatUntil(new ConditionBasedRepeatUntil(true, actionCondition, finishCondition));
+    }
+
+    protected boolean repeatUntilNot(ExpectedCondition<Object> actionCondition, ExpectedCondition<Boolean> finishCondition) {
+        return repeatUntilNot(new ConditionBasedRepeatUntil(true, actionCondition, finishCondition));
     }
 
     protected <T> ExpectedCondition<T> wrapConditionForFramesIfNeeded(ExpectedCondition<T> condition) {
@@ -2194,31 +2188,55 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         }
     }
 
-    protected abstract class RepeatUntilValueIsCompletion implements RepeatCompletion {
-        private final String place;
-        private final String expectedValue;
+    protected boolean checkValueIs(String place, String expectedValue) {
+        boolean match;
+        String actual = valueOf(place);
+        if (expectedValue == null) {
+            match = actual == null;
+        } else {
+            match = cleanExpectedValue(expectedValue).equals(actual);
+        }
+        return match;
+    }
 
-        protected RepeatUntilValueIsCompletion(String place, String expectedValue) {
-            this.place = place;
-            this.expectedValue = cleanExpectedValue(expectedValue);
+    protected class ConditionBasedRepeatUntil implements RepeatCompletion {
+        private final ExpectedCondition<Boolean> finishedCondition;
+        private final ExpectedCondition<? extends Object> repeatCondition;
+
+        public ConditionBasedRepeatUntil(
+                ExpectedCondition<? extends Object> repeatCondition, ExpectedCondition<Boolean> finishedCondition) {
+            this(false, repeatCondition, finishedCondition);
+        }
+
+        public ConditionBasedRepeatUntil(boolean wrap,
+                                         ExpectedCondition<? extends Object> repeatCondition,
+                                         ExpectedCondition<Boolean> finishedCondition) {
+            this(wrap, repeatCondition, wrap, finishedCondition);
+        }
+
+        public ConditionBasedRepeatUntil(boolean wrapRepeat,
+                                         ExpectedCondition<? extends Object> repeatCondition,
+                                         boolean wrapFinished,
+                                         ExpectedCondition<Boolean> finishedCondition) {
+            if (wrapRepeat) {
+                repeatCondition = wrapConditionForFramesIfNeeded(repeatCondition);
+            }
+            if (wrapFinished) {
+                finishedCondition = wrapConditionForFramesIfNeeded(finishedCondition);
+            }
+            this.finishedCondition = finishedCondition;
+            this.repeatCondition = repeatCondition;
         }
 
         @Override
         public boolean isFinished() {
-            ExpectedCondition<Boolean> condition = wrapConditionForFramesIfNeeded(webDriver -> checkValueImpl());
-            Boolean valueFound = waitUntilOrNull(condition);
-            return valueFound != null && valueFound;
+            Boolean exists = waitUntilOrNull(finishedCondition);
+            return Boolean.TRUE.equals(exists);
         }
 
-        protected boolean checkValueImpl() {
-            boolean match;
-            String actual = valueOf(place);
-            if (expectedValue == null) {
-                match = actual == null;
-            } else {
-                match = expectedValue.equals(actual);
-            }
-            return match;
+        @Override
+        public void repeat() {
+            waitUntil(repeatCondition);
         }
     }
 
