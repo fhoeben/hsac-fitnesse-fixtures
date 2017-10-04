@@ -1,0 +1,35 @@
+This test ensures subclasses of browser test can override its heuristics.
+
+!define HTML { {{{
+<html>
+<body>
+<label for="p">Password</label>
+<input id="p" value="secret">
+<table>
+<tr><td>Name</td><td>John</td></tr>
+<tr><td>Age</td><td>33</td></tr>
+</table>
+</body>
+</html>}}} }
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+Make the custom subclass accessible to wiki, normally this would be added to suite setup.
+
+|import                 |
+|nl.hsac.fitnesse.sample|
+
+|script                |table website test      |
+|open                  |$url                    |
+|seconds before timeout|1                       |
+|                      |custom heuristic match  |
+|check                 |value of|Name    |John  |
+|check                 |value of|Age     |33    |
+|                      |standard match          |
+|check                 |value of|Password|secret|
+
+|script|mock xml server setup|
+|stop                        |
+
