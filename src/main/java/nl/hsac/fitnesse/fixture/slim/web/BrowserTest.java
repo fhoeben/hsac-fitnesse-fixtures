@@ -1519,8 +1519,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     protected T getElementToCheckVisibility(String place) {
         T result = findElement(TextBy.partial(place));
         if (result == null || !result.isDisplayed()) {
-                result = getElementToClick(place);
-            }
+            result = getElementToClick(place);
+        }
         return result;
     }
 
