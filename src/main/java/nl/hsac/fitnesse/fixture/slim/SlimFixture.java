@@ -220,7 +220,7 @@ public class SlimFixture  implements InteractionAwareFixture {
      */
     public static class PollCompletion extends FunctionalCompletion {
         public PollCompletion(Supplier<Boolean> isFinishedSupplier) {
-            super(isFinishedSupplier, () -> {});
+            super(isFinishedSupplier, null);
         }
     }
 
@@ -246,7 +246,9 @@ public class SlimFixture  implements InteractionAwareFixture {
 
         @Override
         public void repeat() {
-            repeater.run();
+            if (repeater != null) {
+                repeater.run();
+            }
         }
 
         public void setIsFinishedSupplier(Supplier<Boolean> isFinishedSupplier) {
