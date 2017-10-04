@@ -216,22 +216,17 @@ public class SlimFixture  implements InteractionAwareFixture {
     }
 
     /**
-     * RepeatCompletion without repeat action, just calls function to determine whether it is completed.
-     */
-    public static class PollCompletion extends FunctionalCompletion {
-        public PollCompletion(Supplier<Boolean> isFinishedSupplier) {
-            super(isFinishedSupplier, null);
-        }
-    }
-
-    /**
-     * RepeatCompletion using Runnable in repeat, calls function to determine whether it is completed.
+     * RepeatCompletion using optional Runnable in repeat, calls function to determine whether it is completed.
      */
     public static class FunctionalCompletion implements RepeatCompletion {
         private Supplier<Boolean> isFinishedSupplier;
         private Runnable repeater;
 
         public FunctionalCompletion() {
+        }
+
+        public FunctionalCompletion(Supplier<Boolean> isFinishedSupplier) {
+            this(isFinishedSupplier, null);
         }
 
         public FunctionalCompletion(Supplier<Boolean> isFinishedSupplier, Runnable repeater) {

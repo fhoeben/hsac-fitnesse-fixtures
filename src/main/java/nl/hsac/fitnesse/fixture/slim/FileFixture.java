@@ -188,11 +188,11 @@ public class FileFixture extends SlimFixtureWithMap {
         return repeatUntilNot(fileExistsCompletion(fullname));
     }
 
-    protected static PollCompletion fileExistsCompletion(String fullname) {
-        return new PollCompletion(() -> new File(fullname).exists());
+    protected static FunctionalCompletion fileExistsCompletion(String fullname) {
+        return new FunctionalCompletion(() -> new File(fullname).exists());
     }
 
     public boolean pollUntilSizeOfExceeds(String filename, long expectedSize) {
-        return repeatUntil(new PollCompletion(() -> exists(filename) && sizeOf(filename) > expectedSize));
+        return repeatUntil(new FunctionalCompletion(() -> exists(filename) && sizeOf(filename) > expectedSize));
     }
 }
