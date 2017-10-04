@@ -16,7 +16,6 @@ import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ContainerBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.GridBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.OptionBy;
-import nl.hsac.fitnesse.fixture.util.selenium.by.TextBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
 import org.apache.commons.io.FilenameUtils;
@@ -1517,11 +1516,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getElementToCheckVisibility(String place) {
-        T result = findElement(TextBy.partial(place));
-        if (result == null || !result.isDisplayed()) {
-            result = getElementToClick(place);
-        }
-        return result;
+        return getSeleniumHelper().getElementToCheckVisibility(place);
     }
 
     protected T getElementToCheckVisibility(String place, String container) {

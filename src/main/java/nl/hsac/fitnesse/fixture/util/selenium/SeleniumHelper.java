@@ -157,6 +157,23 @@ public class SeleniumHelper<T extends WebElement> {
         return findByTechnicalSelectorOr(place, ElementBy::heuristic);
     }
 
+    /**
+     * Finds element to determine whether it is on screen, by searching in multiple locations.
+     * @param place identifier for element.
+     * @return first interactable element found,
+     *          first element found if no interactable element could be found,
+     *          null if none could be found.
+     */
+    public T getElementToCheckVisibility(String place) {
+        return findByTechnicalSelectorOr(place, () -> {
+            T result = findElement(TextBy.partial(place));
+            if (result == null || !result.isDisplayed()) {
+                result = findElement(ToClickBy.heuristic(place));
+            }
+            return result;
+        });
+    }
+
     public T findByTechnicalSelectorOr(String place, Function<String, By> byFunction) {
         By by = placeToBy(place);
         if (by == null) {
