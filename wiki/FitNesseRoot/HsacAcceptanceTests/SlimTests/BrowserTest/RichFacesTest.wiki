@@ -1,15 +1,13 @@
 ---
-Test
 Help: Test support for RichFaces Ajax
 ---
-
 Unfortunately we can't check with local server (since we don't want to set up all javascript dependencies).
 We ensure we can properly wait for richfaces ajax to render elements.
 
 |script                |rich faces test                                                                                          |
 |open                  |http://showcase.richfaces.org/richfaces/component-sample.jsf?demo=ajax&sample=selectsUpdates&skin=classic|
 |seconds before timeout|2                                                                                                        |
-|select                |Fruits         |for|id=form:j_idt1906                                                                    |
-|select                |Banana         |for|name=form:j_idt1908                                                                  |
-|show                  |take screenshot|rf                                                                                       |
+|select                |Fruits                               |for                      |xpath=(//select)[1]                      |
+|select                |Banana                               |for                      |xpath=(//select)[2]                      |
+|show                  |take screenshot                      |rf                                                                 |
 
