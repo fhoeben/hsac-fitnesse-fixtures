@@ -49,6 +49,15 @@ public class SlimFixtureWithMap extends SlimFixture {
     }
 
     /**
+     * Stores boolean value.
+     * @param value value to be passed.
+     * @param name name to use this value for.
+     */
+    public void setBooleanValueFor(boolean value, String name) {
+        setValueFor(Boolean.valueOf(value), name);
+    }
+
+    /**
      * Stores value to be passed to template, or GET.
      * @param value value to be passed.
      * @param name name to use this value for.

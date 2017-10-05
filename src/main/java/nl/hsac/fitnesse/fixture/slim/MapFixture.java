@@ -67,6 +67,16 @@ public class MapFixture extends SlimFixtureWithMap {
     }
 
     /**
+     * Stores boolean value in map.
+     * @param value value to be passed.
+     * @param name name to use this value for.
+     * @param map map to store value in.
+     */
+    public void setBooleanValueForIn(boolean value, String name, Map<String, Object> map) {
+        setValueForIn(Boolean.valueOf(value), name, map);
+    }
+
+    /**
      * Stores value in map.
      * @param value value to be passed.
      * @param name name to use this value for.
