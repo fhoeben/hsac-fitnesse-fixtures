@@ -1590,6 +1590,14 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     /**
+     * Clears HTML5's sessionStorage (for the domain of the current open page in the browser).
+     */
+    public void clearSessionStorage() {
+        getSeleniumHelper().executeJavascript("sessionStorage.clear();");
+    }
+
+
+    /**
      * Clears HTML5's localStorage (for the domain of the current open page in the browser).
      */
     public void clearLocalStorage() {
