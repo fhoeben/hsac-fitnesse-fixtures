@@ -3,6 +3,7 @@ package nl.hsac.fitnesse.fixture.util.selenium.driverfactory;
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.by.BestMatchBy;
+import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriver;
 
 /**
@@ -37,10 +38,14 @@ public class DriverManager {
             if (currentFactory == null) {
                 throw new StopTestException("Cannot use Selenium before configuring how to start a driver (for instance using SeleniumDriverSetup)");
             } else {
-                WebDriver driver = currentFactory.createDriver();
-                SeleniumHelper newHelper = createHelper(driver);
-                newHelper.setWebDriver(driver, getDefaultTimeoutSeconds());
-                setSeleniumHelper(newHelper);
+                try {
+                    WebDriver driver = currentFactory.createDriver();
+                    SeleniumHelper newHelper = createHelper(driver);
+                    newHelper.setWebDriver(driver, getDefaultTimeoutSeconds());
+                    setSeleniumHelper(newHelper);
+                } catch (SessionNotCreatedException e) {
+                    throw new StopTestException("Unable to create selenium session using: " + currentFactory, e);
+                }
             }
         }
         return helper;
