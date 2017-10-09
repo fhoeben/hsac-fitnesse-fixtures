@@ -7,16 +7,16 @@ import java.util.function.Supplier;
 
 /**
  * Function to be used as post-processor when finding elements.
- * It will filter out non-interactable elements.
+ * It will filter out non-visible elements.
  * @param <T> type of element to return.
  */
-public class IsInteractableFilter<T extends WebElement> implements Function<T, T>, Supplier<T> {
+public class IsDisplayedFilter<T extends WebElement> implements Function<T, T>, Supplier<T> {
     private T firstFound;
 
     /**
-     * Filters out non-interactable elements.
+     * Filters out non-displayed elements.
      * @param webElement element to check.
-     * @return webElement if it is interactable, null otherwise.
+     * @return webElement if it is displayed, null otherwise.
      */
     @Override
     public T apply(T webElement) {
@@ -27,7 +27,7 @@ public class IsInteractableFilter<T extends WebElement> implements Function<T, T
     }
 
     /**
-     * @return first non-null element encountered by filter (may or may not be interactable);
+     * @return first non-null element encountered by filter (may or may not be displayed);
      */
     @Override
     public T get() {
@@ -35,11 +35,11 @@ public class IsInteractableFilter<T extends WebElement> implements Function<T, T
     }
 
     /**
-     * Checks whether element is interactable.
+     * Checks whether element is displayed.
      * @param element element to check.
-     * @return true for interactable elements, false otherwise.
+     * @return true for visible elements, false otherwise.
      */
     public static boolean mayPass(WebElement element) {
-        return IsDisplayedFilter.mayPass(element) && element.isEnabled();
+        return element != null && element.isDisplayed();
     }
 }
