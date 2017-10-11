@@ -75,6 +75,17 @@ public class RichFacesTest extends BrowserTest<WebElement> {
         return result;
     }
 
+
+    @Override
+    protected boolean repeatUntil(RepeatCompletion repeat) {
+        boolean result = super.repeatUntil(repeat);
+        if (result) {
+            // no need to wait more if condition we were waiting for was true
+            setShouldWaitForAjax(false);
+        }
+        return result;
+    }
+
     protected boolean hasRichFacesAjax(WebElement element) {
         if (element == null) {
             return false;
