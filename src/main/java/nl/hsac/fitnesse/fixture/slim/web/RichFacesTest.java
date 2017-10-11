@@ -78,12 +78,16 @@ public class RichFacesTest extends BrowserTest<WebElement> {
 
     @Override
     protected boolean repeatUntil(RepeatCompletion repeat) {
-        boolean result = super.repeatUntil(repeat);
-        if (result) {
-            // no need to wait more if condition we were waiting for was true
-            setShouldWaitForAjax(false);
+        // disable checking for ajax attributes, by indicating we already know we must wait.
+        // this method does its own waiting, irrespective of ajax calls
+        boolean previousWaitForAjax = shouldWaitForAjax();
+        setShouldWaitForAjax(true);
+        try {
+            return super.repeatUntil(repeat);
+        } finally {
+            // reset wait for ajax to original value
+            setShouldWaitForAjax(previousWaitForAjax);
         }
-        return result;
     }
 
     protected boolean willTriggerAjax(WebElement element) {
