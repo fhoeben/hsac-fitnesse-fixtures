@@ -25,6 +25,9 @@ public class CachingRemoteWebElement extends RemoteWebElement {
     private final Map<String, ObjectCache<String>> attributesCache = new HashMap<>();
     private final Function<String, ObjectCache<String>> attributeCacheCreationFunction = x -> new ObjectCache(() -> super.getAttribute(x));
 
+    private final Map<String, ObjectCache<String>> cssValuesCache = new HashMap<>();
+    private final Function<String, ObjectCache<String>> cssCacheCreationFunction = x -> new ObjectCache(() -> super.getCssValue(x));
+
     public CachingRemoteWebElement(RemoteWebElement element) {
         if (element != null) {
             setId(element.getId());
@@ -74,6 +77,12 @@ public class CachingRemoteWebElement extends RemoteWebElement {
     @Override
     public String getAttribute(String name) {
         ObjectCache<String> cache = attributesCache.computeIfAbsent(name, attributeCacheCreationFunction);
+        return cache.getValue();
+    }
+
+    @Override
+    public String getCssValue(String propertyName) {
+        ObjectCache<String> cache = cssValuesCache.computeIfAbsent(propertyName, cssCacheCreationFunction);
         return cache.getValue();
     }
 }
