@@ -13,14 +13,14 @@ import java.util.function.Function;
  * Our version of RemoteWebElement, optimizing calls to the server to obtain values.
  */
 public class CachingRemoteWebElement extends RemoteWebElement {
-    private final BooleanCache isSelectedCache = new BooleanCache(super::isSelected);
+    private BooleanCache isSelectedCache;
     private final BooleanCache isDisplayedCache = new BooleanCache(super::isDisplayed);
-    private final BooleanCache isEnabledCache = new BooleanCache(super::isEnabled);
-    private final ObjectCache<String> tagNameCache = new ObjectCache<>(super::getTagName);
-    private final ObjectCache<String> textCache = new ObjectCache<>(super::getText);
-    private final ObjectCache<Point> locationCache = new ObjectCache<>(super::getLocation);
-    private final ObjectCache<Dimension> sizeCache = new ObjectCache<>(super::getSize);
-    private final ObjectCache<Rectangle> rectCache = new ObjectCache<>(super::getRect);
+    private BooleanCache isEnabledCache = new BooleanCache(super::isEnabled);
+    private ObjectCache<String> tagNameCache;
+    private ObjectCache<String> textCache;
+    private ObjectCache<Point> locationCache;
+    private ObjectCache<Dimension> sizeCache;
+    private ObjectCache<Rectangle> rectCache;
 
     private Map<String, ObjectCache<String>> attributesCache;
     private Function<String, ObjectCache<String>> attributeCacheCreationFunction;
@@ -36,6 +36,9 @@ public class CachingRemoteWebElement extends RemoteWebElement {
 
     @Override
     public boolean isSelected() {
+        if (isSelectedCache == null) {
+            isSelectedCache = new BooleanCache(super::isSelected);
+        }
         return isSelectedCache.getBooleanValue();
     }
 
@@ -46,31 +49,49 @@ public class CachingRemoteWebElement extends RemoteWebElement {
 
     @Override
     public boolean isEnabled() {
+        if (isEnabledCache == null) {
+            isEnabledCache = new BooleanCache(super::isEnabled);
+        }
         return isEnabledCache.getBooleanValue();
     }
 
     @Override
     public String getTagName() {
+        if (tagNameCache == null) {
+            tagNameCache = new ObjectCache<>(super::getTagName);
+        }
         return tagNameCache.getValue();
     }
 
     @Override
     public String getText() {
+        if (textCache == null) {
+            textCache = new ObjectCache<>(super::getText);
+        }
         return textCache.getValue();
     }
 
     @Override
     public Point getLocation() {
+        if (locationCache == null) {
+            locationCache = new ObjectCache<>(super::getLocation);
+        }
         return locationCache.getValue();
     }
 
     @Override
     public Dimension getSize() {
+        if (sizeCache == null) {
+            sizeCache = new ObjectCache<>(super::getSize);
+        }
         return sizeCache.getValue();
     }
 
     @Override
     public Rectangle getRect() {
+        if (rectCache == null) {
+            rectCache = new ObjectCache<>(super::getRect);
+        }
         return rectCache.getValue();
     }
 
