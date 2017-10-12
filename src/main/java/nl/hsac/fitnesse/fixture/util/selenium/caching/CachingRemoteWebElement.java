@@ -5,10 +5,6 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.remote.RemoteWebElement;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
-
 /**
  * Our version of RemoteWebElement, optimizing calls to the server to obtain values.
  */
@@ -22,11 +18,8 @@ public class CachingRemoteWebElement extends RemoteWebElement {
     private ObjectCache<Dimension> sizeCache;
     private ObjectCache<Rectangle> rectCache;
 
-    private Map<String, ObjectCache<String>> attributesCache;
-    private Function<String, ObjectCache<String>> attributeCacheCreationFunction;
-
-    private Map<String, ObjectCache<String>> cssValuesCache;
-    private Function<String, ObjectCache<String>> cssCacheCreationFunction;
+    private ObjectCacheMap<String, String> attributesCache;
+    private ObjectCacheMap<String, String> cssValuesCache;
 
     public CachingRemoteWebElement(RemoteWebElement element) {
         if (element != null) {
@@ -98,20 +91,16 @@ public class CachingRemoteWebElement extends RemoteWebElement {
     @Override
     public String getAttribute(String name) {
         if (attributesCache == null) {
-            attributeCacheCreationFunction = x -> new ObjectCache<>(() -> super.getAttribute(x));
-            attributesCache = new HashMap<>();
+            attributesCache = new ObjectCacheMap<>(super::getAttribute);
         }
-        ObjectCache<String> cache = attributesCache.computeIfAbsent(name, attributeCacheCreationFunction);
-        return cache.getValue();
+        return attributesCache.getValue(name);
     }
 
     @Override
     public String getCssValue(String propertyName) {
         if (cssValuesCache == null) {
-            cssCacheCreationFunction = x -> new ObjectCache<>(() -> super.getCssValue(x));
-            cssValuesCache = new HashMap<>();
+            cssValuesCache = new ObjectCacheMap<>(super::getCssValue);
         }
-        ObjectCache<String> cache = cssValuesCache.computeIfAbsent(propertyName, cssCacheCreationFunction);
-        return cache.getValue();
+        return cssValuesCache.getValue(propertyName);
     }
 }
