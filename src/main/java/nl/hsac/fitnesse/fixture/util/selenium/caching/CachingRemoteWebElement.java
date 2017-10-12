@@ -15,7 +15,7 @@ import java.util.function.Function;
 public class CachingRemoteWebElement extends RemoteWebElement {
     private BooleanCache isSelectedCache;
     private final BooleanCache isDisplayedCache = new BooleanCache(super::isDisplayed);
-    private BooleanCache isEnabledCache = new BooleanCache(super::isEnabled);
+    private BooleanCache isEnabledCache;
     private ObjectCache<String> tagNameCache;
     private ObjectCache<String> textCache;
     private ObjectCache<Point> locationCache;
