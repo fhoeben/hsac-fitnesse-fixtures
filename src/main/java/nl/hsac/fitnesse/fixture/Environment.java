@@ -1,5 +1,16 @@
 package nl.hsac.fitnesse.fixture;
 
+import java.io.File;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+import org.apache.commons.text.StringEscapeUtils;
+import org.apache.http.client.CookieStore;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.openqa.selenium.Cookie;
+
 import fit.exception.FitFailureException;
 import fitnesse.ContextConfigurator;
 import freemarker.template.Configuration;
@@ -27,15 +38,6 @@ import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 import nl.hsac.fitnesse.fixture.util.selenium.CookieConverter;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverManager;
-import org.apache.commons.text.StringEscapeUtils;
-import org.apache.http.client.CookieStore;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.openqa.selenium.Cookie;
-
-import java.io.File;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Holds overall environment settings. Expected to be set up before actual tests
@@ -74,7 +76,7 @@ public class Environment {
         builder.setExposeFields(true);
         cfg.setObjectWrapper(builder.build());
         freemarkerConfig = cfg;
-        
+
         fmHelper = new FreeMarkerHelper();
         templateCache = new ConcurrentHashMap<String, Template>();
 
@@ -137,9 +139,9 @@ public class Environment {
      */
     public void setSymbol(String key, String value) {
         if (value == null) {
-            symbols.remove(key);
+            getSymbols().remove(key);
         } else {
-            symbols.put(key, value);
+            getSymbols().put(key, value);
         }
     }
 
@@ -149,7 +151,7 @@ public class Environment {
      * @return value stored for key.
      */
     public String getSymbol(String key) {
-        return symbols.get(key);
+        return getSymbols().get(key);
     }
 
     /**
@@ -264,7 +266,8 @@ public class Environment {
      * @param headers headers to add.
      * @param contentType contentType for request.
      */
-    public void doHttpPost(String url, String templateName, Object model, HttpResponse result, Map<String, Object> headers, String contentType) {
+    public void doHttpPost(String url, String templateName, Object model, HttpResponse result, Map<String, Object> headers,
+            String contentType) {
         String request = processTemplate(templateName, model);
         result.setRequest(request);
         doHttpPost(url, result, headers, contentType);
@@ -291,7 +294,7 @@ public class Environment {
     public void doHttpFilePost(String url, HttpResponse result, Map<String, Object> headers, File file) {
         httpClient.post(url, result, headers, file);
     }
-    
+
     /**
      * Performs PUT to supplied url of result of applying template with model.
      * @param url url to put to.
@@ -312,7 +315,8 @@ public class Environment {
      * @param headers headers to add.
      * @param contentType contentType for request.
      */
-    public void doHttpPut(String url, String templateName, Object model, HttpResponse result, Map<String, Object> headers, String contentType) {
+    public void doHttpPut(String url, String templateName, Object model, HttpResponse result, Map<String, Object> headers,
+            String contentType) {
         String request = processTemplate(templateName, model);
         result.setRequest(request);
         doHttpPut(url, result, headers, contentType);
@@ -519,7 +523,7 @@ public class Environment {
      * @return response from program.
      */
     public ProgramResponse invokeProgram(int timeout, String directory, String command,
-                                         String... arguments) {
+            String... arguments) {
         ProgramResponse result = new ProgramResponse();
         result.setDirectory(directory);
         result.setCommand(command);
@@ -700,5 +704,12 @@ public class Environment {
 
     public void setSecretMasker(SecretMasker secretMasker) {
         this.secretMasker = secretMasker;
+    }
+
+    /**
+     * @return the symbols
+     */
+    public ConcurrentMap<String, String> getSymbols() {
+        return symbols;
     }
 }
