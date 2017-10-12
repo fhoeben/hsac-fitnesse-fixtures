@@ -19,12 +19,12 @@ public class CachingRemoteWebElement extends RemoteWebElement {
 
     @Override
     public boolean isDisplayed() {
-        return isDisplayedCache.getValue();
+        return isDisplayedCache.getBooleanValue();
     }
 
     @Override
     public boolean isEnabled() {
-        return isEnabledCache.getValue();
+        return isEnabledCache.getBooleanValue();
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 /**
  * A wrapper around an object that is valid for an amount of time before its supplier must be called again.
  */
-public class ObjectCache<T> {
+public class ObjectCache<T> implements Cache<T> {
     private final static Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final Supplier<? extends T> supplier;
@@ -20,19 +20,32 @@ public class ObjectCache<T> {
         this.supplier = supplier;
     }
 
+    @Override
     public T getValue() {
         long start = ElementCache.getTime();
         if (validUntil < start) {
             LOGGER.trace("Cache miss");
-            cachedValue = getCachedValue();
-            validUntil = ElementCache.getValidityEnd(start);
+            T newValue = getNewValue();
+            setValue(newValue, ElementCache.getValidityEnd(start));
         } else {
             LOGGER.debug("Cache hit");
         }
         return cachedValue;
     }
-
-    protected T getCachedValue() {
+    
+    @Override
+    public T getNewValue() {
         return supplier.get();
+    }
+
+    @Override
+    public void setValue(T value, long validUntil) {
+        this.cachedValue = value;
+        this.validUntil = validUntil;
+    }
+
+    @Override
+    public long getValidUntil() {
+        return validUntil;
     }
 }
