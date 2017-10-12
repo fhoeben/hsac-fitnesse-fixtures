@@ -22,11 +22,11 @@ public class CachingRemoteWebElement extends RemoteWebElement {
     private final ObjectCache<Dimension> sizeCache = new ObjectCache<>(super::getSize);
     private final ObjectCache<Rectangle> rectCache = new ObjectCache<>(super::getRect);
 
-    private final Map<String, ObjectCache<String>> attributesCache = new HashMap<>();
-    private final Function<String, ObjectCache<String>> attributeCacheCreationFunction = x -> new ObjectCache(() -> super.getAttribute(x));
+    private Map<String, ObjectCache<String>> attributesCache;
+    private Function<String, ObjectCache<String>> attributeCacheCreationFunction;
 
-    private final Map<String, ObjectCache<String>> cssValuesCache = new HashMap<>();
-    private final Function<String, ObjectCache<String>> cssCacheCreationFunction = x -> new ObjectCache(() -> super.getCssValue(x));
+    private Map<String, ObjectCache<String>> cssValuesCache;
+    private Function<String, ObjectCache<String>> cssCacheCreationFunction;
 
     public CachingRemoteWebElement(RemoteWebElement element) {
         if (element != null) {
@@ -76,12 +76,20 @@ public class CachingRemoteWebElement extends RemoteWebElement {
 
     @Override
     public String getAttribute(String name) {
+        if (attributesCache == null) {
+            attributeCacheCreationFunction = x -> new ObjectCache<>(() -> super.getAttribute(x));
+            attributesCache = new HashMap<>();
+        }
         ObjectCache<String> cache = attributesCache.computeIfAbsent(name, attributeCacheCreationFunction);
         return cache.getValue();
     }
 
     @Override
     public String getCssValue(String propertyName) {
+        if (cssValuesCache == null) {
+            cssCacheCreationFunction = x -> new ObjectCache<>(() -> super.getCssValue(x));
+            cssValuesCache = new HashMap<>();
+        }
         ObjectCache<String> cache = cssValuesCache.computeIfAbsent(propertyName, cssCacheCreationFunction);
         return cache.getValue();
     }
