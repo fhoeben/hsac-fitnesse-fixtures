@@ -1,6 +1,5 @@
 ---
 Help: Fixture to assist in measuring time during test
-Prune
 Test
 ---
 Timer fixture is intended to be used as [[library][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.LibraryTable]].
