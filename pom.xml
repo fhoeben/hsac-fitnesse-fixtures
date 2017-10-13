@@ -6,7 +6,7 @@
 
 	<groupId>nl.hsac</groupId>
 	<artifactId>hsac-fitnesse-fixtures</artifactId>
-	<version>3.6.6-SNAPSHOT</version>
+	<version>3.6.7-Yarden</version>
 	<url>https://github.com/fhoeben/hsac-fitnesse-fixtures</url>
 	<name>HSAC's FitNesse Fixtures</name>
 	<description>Fixtures to assist in testing via FitNesse</description>
@@ -44,6 +44,8 @@
 		<selenium.version>3.6.0</selenium.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<apache.http.version>4.5.3</apache.http.version>
+        <apache.commons.vsf2>2.0</apache.commons.vsf2>
+        <jcraft>0.1.54</jcraft>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
 		<selenium.internetexplorerdriver.version>${selenium.version}</selenium.internetexplorerdriver.version>
@@ -122,6 +124,16 @@
 			<groupId>cglib</groupId>
 			<artifactId>cglib-nodep</artifactId>
 			<version>3.2.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-vfs2</artifactId>
+			<version>${apache.commons.vsf2}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jcraft</groupId>
+			<artifactId>jsch</artifactId>
+			<version>${jcraft}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
@@ -538,7 +550,7 @@
 			</build>
 		</profile>
 	</profiles>
-
+<!-- 
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
@@ -551,5 +563,5 @@
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
 		</repository>
 	</distributionManagement>
-
+ -->
 </project>

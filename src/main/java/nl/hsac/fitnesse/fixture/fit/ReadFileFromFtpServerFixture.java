@@ -1,10 +1,12 @@
 package nl.hsac.fitnesse.fixture.fit;
 
 import nl.hsac.fitnesse.fixture.util.FtpFileUtil;
+import nl.hsac.fitnesse.fixture.util.RemoteFileUtil;
+import nl.hsac.fitnesse.fixture.util.SftpFileUtil;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
-
 
 public class ReadFileFromFtpServerFixture extends MapColumnFixture {
     public static final String DEFAULT_NR_OF_LINES_TO_BE_READ = "10";
@@ -15,6 +17,7 @@ public class ReadFileFromFtpServerFixture extends MapColumnFixture {
     private static final String PASSWORD_KEY = "password";
     private static final String FILE_PATH_KEY = "file";
     private static final String LINES_COUNT_KEY = "nrOfLines";
+    protected static final String IS_SFTP = "sftp";
 
     private String fileAsString = null;
     private Integer fileSize = null;
@@ -22,36 +25,52 @@ public class ReadFileFromFtpServerFixture extends MapColumnFixture {
 
     @Override
     public void execute() {
-            Map<String, Object> currentRow = getCurrentRowValues();
-            String hostName = (String) currentRow.get(HOST_NAME_KEY);
-            String userName = (String) currentRow.get(USER_NAME_KEY);
-            String password = (String) currentRow.get(PASSWORD_KEY);
-            String filePath = (String) currentRow.get(FILE_PATH_KEY);
-            Integer port = null;
+        String hostName = (String) get(HOST_NAME_KEY);
+        String userName = (String) get(USER_NAME_KEY);
+        String password = (String) get(PASSWORD_KEY);
+        String filePath = (String) get(FILE_PATH_KEY);
+        Integer port = null;
 
-            // Reset errorMessage between rows.
-            errorMessage = "";
+        // Reset errorMessage between rows.
+        errorMessage = "";
 
-            if (currentRow.get(PORT_NUMBER_KEY) != null) {
-                port = Integer.valueOf((String) currentRow.get(PORT_NUMBER_KEY));
-            }
+        if (get(PORT_NUMBER_KEY) != null) {
+            port = Integer.valueOf((String) get(PORT_NUMBER_KEY));
+        }
 
-            Integer nrOfLines = Integer.valueOf((String) get(LINES_COUNT_KEY));
-            // read file from FTP server
-            fileAsString = "";
-            try {
-                fileAsString = FtpFileUtil.loadFileFromFTPServer(hostName, port, userName, password, filePath, nrOfLines);
-            } catch (Exception ex) {
-                handleException(ex, "load file from FTP server");
-            }
+        RemoteFileUtil remoteFileUtil = getRemoteFileUtil();
+        Integer nrOfLines = Integer.valueOf((String) get(LINES_COUNT_KEY));
+        // read file from FTP server
+        fileAsString = "";
+        try {
+            fileAsString = remoteFileUtil.loadFileFromServer(hostName, port, userName, password, filePath, nrOfLines);
+        } catch (Exception ex) {
+            handleException(ex, "load file from FTP server");
+        }
 
-            // get file size
-            fileSize = null;
-            try {
-                fileSize = FtpFileUtil.getFileSizeOnFTPServer(hostName, port, userName, password, filePath);
-            } catch (Exception ex) {
-                handleException(ex, "get file size");
-            }
+        // get file size
+        fileSize = null;
+        try {
+            fileSize = remoteFileUtil.getFileSizeOnServer(hostName, port, userName, password, filePath);
+        } catch (Exception ex) {
+            handleException(ex, "get file size");
+        }
+    }
+
+    protected boolean isSftp() {
+        boolean isSftp = false;
+        if (get(IS_SFTP) != null) {
+            isSftp = ((String) get(IS_SFTP)).matches("(?i:1|(true)|(yes))");
+        }
+        return isSftp;
+    }
+
+    protected RemoteFileUtil getRemoteFileUtil() {
+        RemoteFileUtil remoteFileUtil = new FtpFileUtil();
+        if (isSftp()) {
+            remoteFileUtil = new SftpFileUtil();
+        }
+        return remoteFileUtil;
     }
 
     /* (non-Javadoc)
