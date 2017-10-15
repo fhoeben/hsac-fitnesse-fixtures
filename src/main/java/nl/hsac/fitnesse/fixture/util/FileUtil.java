@@ -299,26 +299,30 @@ public final class FileUtil {
     }
 
     /**
-     * Appends content to file, in UTF-8 encoding.
-     * @param filename  file to create or overwrite.
-     * @param content   content to write.
-     * @param onNewLine whether a new line should be created before appending the content
+     * Appends the extra content to the file, in UTF-8 encoding.
+     * @param filename  file to create or append to.
+     * @param extraContent   extraContent to write.
+     * @param onNewLine whether a new line should be created before appending the extra content
      * @return file reference to file.
      */
-    public static File appendFile(String filename, String content, boolean onNewLine){
+    public static File appendToFile(String filename, String extraContent, boolean onNewLine){
         PrintWriter pw = null;
         try {
-            pw = new PrintWriter(new BufferedWriter(new FileWriter(filename, true)));
+            pw = new PrintWriter(
+                    new BufferedWriter(
+                            new OutputStreamWriter(
+                                    new FileOutputStream(filename, true),
+                                    FILE_ENCODING)
+                    )
+            );
             if (onNewLine) {
                 pw.println();
             }
-            pw.print(content);
+            pw.print(extraContent);
         } catch (FileNotFoundException e) {
             throw new IllegalArgumentException("Unable to write to: " + filename, e);
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
-        } catch (IOException ioe) {
-            throw new RuntimeException(ioe);
         } finally {
             if (pw != null) {
                 pw.close();

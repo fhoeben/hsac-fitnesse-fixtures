@@ -6,9 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class FileFixtureTest {
     private final FileFixture fixture = new FileFixture();
@@ -43,7 +41,7 @@ public class FileFixtureTest {
         } catch (SlimFixtureException sfe) {
             assertEquals("message:<<Unable to find: " + testResourcesDir + "foobar>>", sfe.getMessage());
         } catch (IOException ioe) {
-            assertFalse("Should not happen.", true);
+            fail("Should not happen.");
         }
     }
 
@@ -55,7 +53,7 @@ public class FileFixtureTest {
                 fixture.deleteIfExists(copyFilename);
             }
         } catch (SlimFixtureException sfe) {
-            assertFalse("Should not happen: " + sfe.getMessage(), true);
+            fail("Should not happen: " + sfe.getMessage());
         }
     }
 
@@ -67,7 +65,7 @@ public class FileFixtureTest {
             String res = fixture.copyTo(txtFilename, copyFilename);
             assertEquals("<a href=\"file:" + testResourcesDir + copyFilename + "\">" + copyFilename + "</a>", res);
         } catch (IOException ioe) {
-            assertFalse("Should not happen: " + ioe.getMessage(), true);
+            fail("Should not happen: " + ioe.getMessage());
         }
         assertTrue(fixture.exists(copyFilename));
     }
@@ -85,7 +83,7 @@ public class FileFixtureTest {
         } catch (SlimFixtureException sfe) {
             assertEquals("message:<<Unable to find: " + testResourcesDir + "foobar>>", sfe.getMessage());
         } catch (IOException ioe) {
-            assertFalse("Should not happen: " + ioe.getMessage(), true);
+            fail("Should not happen: " + ioe.getMessage());
         }
     }
 
@@ -94,12 +92,12 @@ public class FileFixtureTest {
         try {
             fixture.setDirectory(testResourcesDir);
             fixture.copyTo(txtFilename, copyFilename);
-            String res = fixture.appendContainingOnNewline(copyFilename, "Third line", true);
+            String res = fixture.appendToOnNewLine("Third line", copyFilename);
             assertEquals("<a href=\"file:" + testResourcesDir + copyFilename + "\">" + copyFilename + "</a>", res);
             assertEquals("# Expected as first line of text.\n# Expected as 2nd line of text.\nThird line",
                     fixture.textIn(copyFilename));
         } catch (IOException ioe) {
-            assertFalse("Should not happen: " + ioe.getMessage(), true);
+            fail("Should not happen: " + ioe.getMessage());
         }
     }
 
@@ -108,12 +106,12 @@ public class FileFixtureTest {
         try {
             fixture.setDirectory(testResourcesDir);
             fixture.copyTo(txtFilename, copyFilename);
-            String res = fixture.appendContainingOnNewline(copyFilename, "Third line", false);
+            String res = fixture.appendTo("Third line", copyFilename);
             assertEquals("<a href=\"file:" + testResourcesDir + copyFilename + "\">" + copyFilename + "</a>", res);
             assertEquals("# Expected as first line of text.\n# Expected as 2nd line of text.Third line",
                     fixture.textIn(copyFilename));
         } catch (IOException ioe) {
-            assertFalse("Should not happen: " + ioe.getMessage(), true);
+            fail("Should not happen: " + ioe.getMessage());
         }
     }
 
@@ -123,7 +121,7 @@ public class FileFixtureTest {
             fixture.setDirectory(testResourcesDir);
             fixture.delete(copyFilename);
         } catch (SlimFixtureException sfe) {
-            assertTrue("Should not happen: " + sfe.getMessage(), false);
+            fail("Should not happen: " + sfe.getMessage());
         }
     }
 }

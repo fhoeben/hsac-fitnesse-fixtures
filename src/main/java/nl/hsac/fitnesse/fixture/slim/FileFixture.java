@@ -200,10 +200,17 @@ public class FileFixture extends SlimFixtureWithMap {
         return repeatUntil(new FunctionalCompletion(() -> exists(filename) && sizeOf(filename) > expectedSize));
     }
 
-    public String appendContainingOnNewline(String filename, String content, boolean onNewLine) {
+    public String appendTo(String extraContent, String filename) {
         String fullName = getFullName(filename);
         ensureParentExists(fullName);
-        File f = FileUtil.appendFile(fullName, content, onNewLine);
+        File f = FileUtil.appendToFile(fullName, extraContent, false);
+        return linkToFile(f);
+    }
+
+    public String appendToOnNewLine(String extraContent, String filename) {
+        String fullName = getFullName(filename);
+        ensureParentExists(fullName);
+        File f = FileUtil.appendToFile(fullName, extraContent, true);
         return linkToFile(f);
     }
 }
