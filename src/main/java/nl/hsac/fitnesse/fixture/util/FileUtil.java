@@ -26,7 +26,7 @@ public final class FileUtil {
      * @param filename file to read.
      * @return file's content.
      * @throws IllegalArgumentException if file could not be found.
-     * @throws IllegalStateException if file could not be read.
+     * @throws IllegalStateException    if file could not be read.
      */
     public static String loadFile(String filename) {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -41,7 +41,7 @@ public final class FileUtil {
      * Copies UTF-8 input stream's content to a string (closes the stream).
      *
      * @param inputStream input stream (UTF-8) to read.
-     * @param fileName description for stream in error messages.
+     * @param fileName    description for stream in error messages.
      * @return content of stream
      * @throws RuntimeException if content could not be read.
      */
@@ -53,8 +53,8 @@ public final class FileUtil {
      * Copies first <numberOfLines> or all lines from UTF-8 input stream's content to a
      * string and closes the stream.
      *
-     * @param is input stream (UTF-8) to read.
-     * @param name description for stream in error messages.
+     * @param is            input stream (UTF-8) to read.
+     * @param name          description for stream in error messages.
      * @param numberOfLines number of lines to be read from input stream - if null, all lines are read
      * @return content of stream
      * @throws RuntimeException if content could not be read.
@@ -98,6 +98,7 @@ public final class FileUtil {
 
     /**
      * Copies source file to target.
+     *
      * @param source source file to copy.
      * @param target destination to copy to.
      * @return target as File.
@@ -125,7 +126,7 @@ public final class FileUtil {
      * Copy the contents of the given InputStream to the given OutputStream.
      * Closes both streams when done.
      *
-     * @param in the stream to copy from
+     * @param in  the stream to copy from
      * @param out the stream to copy to
      * @return the number of bytes copied
      * @throws java.io.IOException in case of I/O errors
@@ -159,7 +160,7 @@ public final class FileUtil {
      * Writes content to file, in UTF-8 encoding.
      *
      * @param filename file to create or overwrite.
-     * @param content content to write.
+     * @param content  content to write.
      * @return file reference to file.
      */
     public static File writeFile(String filename, String content) {
@@ -180,7 +181,7 @@ public final class FileUtil {
         return new File(filename);
     }
 
-    public static File  writeFromScanner(String filename, Scanner sc) {
+    public static File writeFromScanner(String filename, Scanner sc) {
         PrintWriter pw = null;
         try {
             pw = new PrintWriter(filename, FILE_ENCODING);
@@ -189,12 +190,12 @@ public final class FileUtil {
                 String next = sc.nextLine();
                 pw.write(next + System.getProperty("line.separator"));
             }
-        } catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             throw new IllegalArgumentException("Unable to write to: " + filename + ".tmp", e);
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
-        }  finally {
-            if(pw != null) {
+        } finally {
+            if (pw != null) {
                 pw.flush();
                 pw.close();
             }
@@ -205,11 +206,11 @@ public final class FileUtil {
     /**
      * Saves byte[] to new file.
      *
-     * @param baseName name for file created (without extension),
-     *                 if a file already exists with the supplied name an
-     *                 '_index' will be added.
+     * @param baseName  name for file created (without extension),
+     *                  if a file already exists with the supplied name an
+     *                  '_index' will be added.
      * @param extension extension for file.
-     * @param content data to store in file.
+     * @param content   data to store in file.
      * @return absolute path of created file.
      */
     public static String saveToFile(String baseName, String extension, byte[] content) {
@@ -263,6 +264,7 @@ public final class FileUtil {
      * we ensure all generated reports have .HTML extension.
      * Furthermore we update the content of the .html files, by also updating the extension there,
      * expecting to fix links between files.
+     *
      * @param dir directory to look for .html files in
      * @throws IOException when unable to
      */
@@ -287,11 +289,45 @@ public final class FileUtil {
 
     /**
      * Determines a file's relative path related to a base directory (a parent some levels up in the tree).
-     * @param base base directory.
+     *
+     * @param base  base directory.
      * @param child file to get relative path for.
      * @return relative path.
      */
     public static String getRelativePath(String base, String child) {
         return new File(base).toURI().relativize(new File(child).toURI()).getPath();
+    }
+
+    /**
+     * Appends the extra content to the file, in UTF-8 encoding.
+     * @param filename  file to create or append to.
+     * @param extraContent   extraContent to write.
+     * @param onNewLine whether a new line should be created before appending the extra content
+     * @return file reference to file.
+     */
+    public static File appendToFile(String filename, String extraContent, boolean onNewLine){
+        PrintWriter pw = null;
+        try {
+            pw = new PrintWriter(
+                    new BufferedWriter(
+                            new OutputStreamWriter(
+                                    new FileOutputStream(filename, true),
+                                    FILE_ENCODING)
+                    )
+            );
+            if (onNewLine) {
+                pw.println();
+            }
+            pw.print(extraContent);
+        } catch (FileNotFoundException e) {
+            throw new IllegalArgumentException("Unable to write to: " + filename, e);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (pw != null) {
+                pw.close();
+            }
+        }
+        return new File(filename);
     }
 }
