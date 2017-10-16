@@ -45,7 +45,7 @@ public class ReadFileFromFtpServerFixture extends MapColumnFixture {
         try {
             fileAsString = remoteFileUtil.loadFileFromServer(hostName, port, userName, password, filePath, nrOfLines);
         } catch (Exception ex) {
-            handleException(ex, "load file from FTP server");
+            handleException(ex, "to load file from FTP server");
         }
 
         // get file size
@@ -53,7 +53,7 @@ public class ReadFileFromFtpServerFixture extends MapColumnFixture {
         try {
             fileSize = remoteFileUtil.getFileSizeOnServer(hostName, port, userName, password, filePath);
         } catch (Exception ex) {
-            handleException(ex, "get file size");
+            handleException(ex, "to get file size");
         }
     }
 
