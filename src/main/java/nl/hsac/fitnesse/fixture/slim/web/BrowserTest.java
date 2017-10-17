@@ -40,6 +40,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -96,19 +98,19 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
         Object result;
         switch (waitUntil.value()) {
-            case STOP_TEST:
-                result = waitUntilOrStop(condition);
-                break;
-            case RETURN_NULL:
-                result = waitUntilOrNull(condition);
-                break;
-            case RETURN_FALSE:
-                result = waitUntilOrNull(condition) != null;
-                break;
-            case THROW:
-            default:
-                result = waitUntil(condition);
-                break;
+        case STOP_TEST:
+            result = waitUntilOrStop(condition);
+            break;
+        case RETURN_NULL:
+            result = waitUntilOrNull(condition);
+            break;
+        case RETURN_FALSE:
+            result = waitUntilOrNull(condition) != null;
+            break;
+        case THROW:
+        default:
+            result = waitUntil(condition);
+            break;
         }
         return result;
     }
@@ -917,7 +919,6 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return waitForVisibleIn(place, null);
     }
 
-
     @WaitUntil(TimeoutPolicy.STOP_TEST)
     public boolean waitForVisibleIn(String place, String container) {
         Boolean result = Boolean.FALSE;
@@ -1596,7 +1597,6 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         getSeleniumHelper().executeJavascript("sessionStorage.clear();");
     }
 
-
     /**
      * Clears HTML5's localStorage (for the domain of the current open page in the browser).
      */
@@ -2124,8 +2124,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected RepeatCompletion getRefreshUntilValueIs(String place, String expectedValue) {
-        return new ConditionBasedRepeatUntil(false, d-> refresh(),
-                                            true, d -> checkValueIs(place, expectedValue));
+        return new ConditionBasedRepeatUntil(false, d -> refresh(),
+                true, d -> checkValueIs(place, expectedValue));
     }
 
     public boolean clickUntilValueOfIs(String clickPlace, String checkPlace, String expectedValue) {
@@ -2147,9 +2147,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     protected RepeatCompletion getExecuteScriptUntilValueIs(String script, String place, String expectedValue) {
         return new ConditionBasedRepeatUntil(
                 false, d -> {
-                        Object r = executeScript(script);
-                        return r != null ? r : true;
-                    },
+                    Object r = executeScript(script);
+                    return r != null ? r : true;
+                },
                 true, d -> checkValueIs(place, expectedValue));
     }
 
@@ -2208,15 +2208,15 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     protected class ConditionBasedRepeatUntil extends FunctionalCompletion {
         public ConditionBasedRepeatUntil(boolean wrapIfNeeded,
-                                         ExpectedCondition<? extends Object> repeatCondition,
-                                         ExpectedCondition<Boolean> finishedCondition) {
+                ExpectedCondition<? extends Object> repeatCondition,
+                ExpectedCondition<Boolean> finishedCondition) {
             this(wrapIfNeeded, repeatCondition, wrapIfNeeded, finishedCondition);
         }
 
         public ConditionBasedRepeatUntil(boolean wrapRepeatIfNeeded,
-                                         ExpectedCondition<? extends Object> repeatCondition,
-                                         boolean wrapFinishedIfNeeded,
-                                         ExpectedCondition<Boolean> finishedCondition) {
+                ExpectedCondition<? extends Object> repeatCondition,
+                boolean wrapFinishedIfNeeded,
+                ExpectedCondition<Boolean> finishedCondition) {
             if (wrapRepeatIfNeeded) {
                 repeatCondition = wrapConditionForFramesIfNeeded(repeatCondition);
             }
@@ -2269,4 +2269,39 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return getSeleniumHelper().executeJavascript(statement);
     }
 
+    /**
+     * @param place to check
+     * @return true if content of place is valid (according to validation pattern)
+     */
+    public boolean valueOfIsValid(String place) {
+        T element = getElementToRetrieveValue(place, null);
+        List<T> invalidElements = findAllByCss("input:invalid");
+        Collection<String> attributesToCompare = Arrays.asList("name", "id");
+        return !containsElement(invalidElements, element, attributesToCompare);
+    }
+
+    /**
+     * Check if elementList contains an element that we consider theElement on basis of matching attributesToCompare
+     * @param elementList list of elements
+     * @param theElement we try to find in the list
+     * @param attributesToCompare list of attribute names of which we compare element with elementList entries.
+     * @return true if theElement was found in elementList (on basis of attributesToCompare)
+     */
+    boolean containsElement(List<T> elementList, T theElement, Collection<String> attributesToCompare) {
+        boolean isFound = elementList.stream().anyMatch(element -> isMatch(theElement, element, attributesToCompare));
+        return isFound;
+    }
+
+    /**
+     * Compare el1 and el2 on basis of values of attributes of interest.
+     * @param el1 element to compare with el2
+     * @param el2 element to compare with el1
+     * @param attributesToCompare list of attributes names on which we are going to compare el1 and el2
+     * @return true if el1 is considered to match el2 on basis of attributesToCompare
+     */
+    boolean isMatch(WebElement el1, WebElement el2, Collection<String> attributesToCompare) {
+        boolean isMatch = attributesToCompare.stream()
+                .allMatch(attributeName -> el1.getAttribute(attributeName).equals(el2.getAttribute(attributeName)));
+        return isMatch;
+    }
 }
