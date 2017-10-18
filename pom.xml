@@ -6,7 +6,7 @@
 
 	<groupId>nl.hsac</groupId>
 	<artifactId>hsac-fitnesse-fixtures</artifactId>
-	<version>3.6.7-Yarden</version>
+	<version>3.6.8-Yarden</version>
 	<url>https://github.com/fhoeben/hsac-fitnesse-fixtures</url>
 	<name>HSAC's FitNesse Fixtures</name>
 	<description>Fixtures to assist in testing via FitNesse</description>
@@ -550,7 +550,7 @@
 			</build>
 		</profile>
 	</profiles>
-<!-- 
+
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
@@ -563,5 +563,5 @@
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
 		</repository>
 	</distributionManagement>
- -->
+
 </project>
