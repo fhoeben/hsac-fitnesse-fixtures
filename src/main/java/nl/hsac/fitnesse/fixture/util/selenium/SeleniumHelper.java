@@ -6,6 +6,7 @@ import nl.hsac.fitnesse.fixture.util.selenium.by.CssBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ElementBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.FirstElementBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.InputBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.IsDisplayedFilter;
 import nl.hsac.fitnesse.fixture.util.selenium.by.IsInteractableFilter;
 import nl.hsac.fitnesse.fixture.util.selenium.by.JavascriptBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.LabelBy;
@@ -167,7 +168,7 @@ public class SeleniumHelper<T extends WebElement> {
     public T getElementToCheckVisibility(String place) {
         return findByTechnicalSelectorOr(place, () -> {
             T result = findElement(TextBy.partial(place));
-            if (result == null || !result.isDisplayed()) {
+            if (!IsDisplayedFilter.mayPass(result)) {
                 result = findElement(ToClickBy.heuristic(place));
             }
             return result;
@@ -346,7 +347,7 @@ public class SeleniumHelper<T extends WebElement> {
 
     public boolean checkVisible(WebElement element, boolean checkOnScreen) {
         boolean result = false;
-        if (element != null && element.isDisplayed()) {
+        if (IsDisplayedFilter.mayPass(element)) {
             if (checkOnScreen) {
                 result = isElementOnScreen(element);
             } else {

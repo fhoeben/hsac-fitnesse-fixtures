@@ -1,10 +1,14 @@
 package nl.hsac.fitnesse.fixture.util.selenium.driverfactory;
 
+import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.by.BestMatchBy;
+import nl.hsac.fitnesse.fixture.util.selenium.caching.WebElementConverter;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.internal.JsonToWebElementConverter;
 
 /**
  * Helps create and destroy selenium drivers wrapped in helpers.
@@ -40,6 +44,7 @@ public class DriverManager {
             } else {
                 try {
                     WebDriver driver = currentFactory.createDriver();
+                    postProcessDriver(driver);
                     SeleniumHelper newHelper = createHelper(driver);
                     newHelper.setWebDriver(driver, getDefaultTimeoutSeconds());
                     setSeleniumHelper(newHelper);
@@ -49,6 +54,12 @@ public class DriverManager {
             }
         }
         return helper;
+    }
+
+    private void postProcessDriver(WebDriver driver) {
+        if (driver instanceof RemoteWebDriver) {
+            setElementConverter((RemoteWebDriver) driver);
+        }
     }
 
     public void setSeleniumHelper(SeleniumHelper helper) {
@@ -70,5 +81,14 @@ public class DriverManager {
 
     public void setDefaultTimeoutSeconds(int defaultTimeoutSeconds) {
         this.defaultTimeoutSeconds = defaultTimeoutSeconds;
+    }
+
+    protected void setElementConverter(RemoteWebDriver d) {
+        JsonToWebElementConverter converter = createElementConverter(d);
+        Environment.getInstance().getReflectionHelper().setField(d, "converter", converter);
+    }
+
+    protected JsonToWebElementConverter createElementConverter(RemoteWebDriver d) {
+        return new WebElementConverter(d);
     }
 }
