@@ -44,7 +44,7 @@ public class RichFacesTest extends BrowserTest<WebElement> {
 
     @Override
     protected void sendValue(WebElement element, String value) {
-        boolean triggersAjax = hasRichFacesAjax(element);
+        boolean triggersAjax = willTriggerAjax(element);
 
         super.sendValue(element, value);
 
@@ -57,7 +57,7 @@ public class RichFacesTest extends BrowserTest<WebElement> {
 
     @Override
     protected boolean clickSelectOption(WebElement element, String optionValue) {
-        boolean triggersAjax = hasRichFacesAjax(element);
+        boolean triggersAjax = willTriggerAjax(element);
         boolean result = super.clickSelectOption(element, optionValue);
         if (triggersAjax && result) {
             setShouldWaitForAjax(true);
@@ -67,7 +67,7 @@ public class RichFacesTest extends BrowserTest<WebElement> {
 
     @Override
     protected boolean clickElement(WebElement element) {
-        boolean triggersAjax = hasRichFacesAjax(element);
+        boolean triggersAjax = willTriggerAjax(element);
         boolean result = super.clickElement(element);
         if (triggersAjax && result) {
             setShouldWaitForAjax(true);
@@ -78,12 +78,21 @@ public class RichFacesTest extends BrowserTest<WebElement> {
 
     @Override
     protected boolean repeatUntil(RepeatCompletion repeat) {
-        boolean result = super.repeatUntil(repeat);
-        if (result) {
-            // no need to wait more if condition we were waiting for was true
-            setShouldWaitForAjax(false);
+        // disable checking for ajax attributes, by indicating we already know we must wait.
+        // this method does its own waiting, irrespective of ajax calls
+        boolean previousWaitForAjax = shouldWaitForAjax();
+        setShouldWaitForAjax(true);
+        try {
+            return super.repeatUntil(repeat);
+        } finally {
+            // reset wait for ajax to original value
+            setShouldWaitForAjax(previousWaitForAjax);
         }
-        return result;
+    }
+
+    protected boolean willTriggerAjax(WebElement element) {
+        // no need to inspect element attributes if we already know we must wait
+        return shouldWaitForAjax() || hasRichFacesAjax(element);
     }
 
     protected boolean hasRichFacesAjax(WebElement element) {
@@ -93,7 +102,7 @@ public class RichFacesTest extends BrowserTest<WebElement> {
         boolean result = isAjaxEventPresent(element);
         if (!result) {
             String tagName = element.getTagName();
-            if ("label".equals(tagName)) {
+            if ("label".equalsIgnoreCase(tagName)) {
                 WebElement labelTarget = LabelBy.getLabelledElement(getSeleniumHelper().getCurrentContext(), element);
                 if (labelTarget != null) {
                     result = isAjaxEventPresent(labelTarget);

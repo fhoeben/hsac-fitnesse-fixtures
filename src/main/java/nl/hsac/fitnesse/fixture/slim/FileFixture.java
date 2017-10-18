@@ -29,6 +29,10 @@ public class FileFixture extends SlimFixtureWithMap {
         }
     }
 
+    public String getDirectory(){
+        return directory;
+    }
+
     public String createContaining(String filename, String content) {
         String fullName = getFullName(filename);
         ensureParentExists(fullName);
@@ -194,5 +198,19 @@ public class FileFixture extends SlimFixtureWithMap {
 
     public boolean pollUntilSizeOfExceeds(String filename, long expectedSize) {
         return repeatUntil(new FunctionalCompletion(() -> exists(filename) && sizeOf(filename) > expectedSize));
+    }
+
+    public String appendTo(String extraContent, String filename) {
+        String fullName = getFullName(filename);
+        ensureParentExists(fullName);
+        File f = FileUtil.appendToFile(fullName, extraContent, false);
+        return linkToFile(f);
+    }
+
+    public String appendToOnNewLine(String extraContent, String filename) {
+        String fullName = getFullName(filename);
+        ensureParentExists(fullName);
+        File f = FileUtil.appendToFile(fullName, extraContent, true);
+        return linkToFile(f);
     }
 }
