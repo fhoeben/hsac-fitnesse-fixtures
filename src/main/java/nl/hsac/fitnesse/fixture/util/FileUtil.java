@@ -14,7 +14,7 @@ import java.util.Scanner;
 public final class FileUtil {
     private static final int BUFFER_SIZE = 4096;
     private static final String FILE_ENCODING = "UTF-8";
-    private static final String[] HTML_EXTENSIONS = {"html"};
+    private static final String[] HTML_EXTENSIONS = { "html" };
 
     private FileUtil() {
         // ensure no instance is made.
@@ -105,21 +105,9 @@ public final class FileUtil {
      * @throws IOException when unable to copy.
      */
     public static File copyFile(String source, String target) throws IOException {
-        FileChannel inputChannel = null;
-        FileChannel outputChannel = null;
-        try {
-            inputChannel = new FileInputStream(source).getChannel();
-            outputChannel = new FileOutputStream(target).getChannel();
-            outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
-        } finally {
-            if (inputChannel != null) {
-                inputChannel.close();
-            }
-            if (outputChannel != null) {
-                outputChannel.close();
-            }
-        }
-        return new File(target);
+        File targetFile = new File(target);
+        FileUtils.copyFile(new File(source), targetFile);
+        return targetFile;
     }
 
     /**
@@ -305,16 +293,9 @@ public final class FileUtil {
      * @param onNewLine whether a new line should be created before appending the extra content
      * @return file reference to file.
      */
-    public static File appendToFile(String filename, String extraContent, boolean onNewLine){
-        PrintWriter pw = null;
-        try {
-            pw = new PrintWriter(
-                    new BufferedWriter(
-                            new OutputStreamWriter(
-                                    new FileOutputStream(filename, true),
-                                    FILE_ENCODING)
-                    )
-            );
+    public static File appendToFile(String filename, String extraContent, boolean onNewLine) {
+        try (PrintWriter pw = new PrintWriter(
+                new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename, true), FILE_ENCODING)))) {
             if (onNewLine) {
                 pw.println();
             }
@@ -323,10 +304,6 @@ public final class FileUtil {
             throw new IllegalArgumentException("Unable to write to: " + filename, e);
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (pw != null) {
-                pw.close();
-            }
         }
         return new File(filename);
     }

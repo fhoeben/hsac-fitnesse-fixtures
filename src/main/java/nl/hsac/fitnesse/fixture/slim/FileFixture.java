@@ -29,7 +29,7 @@ public class FileFixture extends SlimFixtureWithMap {
         }
     }
 
-    public String getDirectory(){
+    public String getDirectory() {
         return directory;
     }
 
@@ -44,8 +44,7 @@ public class FileFixture extends SlimFixtureWithMap {
         String text = "";
         String fullName = getFullName(filename);
         if (sizeOf(filename) > 0) {
-            try {
-                FileInputStream s = new FileInputStream(fullName);
+            try (FileInputStream s = new FileInputStream(fullName)) {
                 text = FileUtil.streamToString(s, fullName);
             } catch (FileNotFoundException e) {
                 throw new SlimFixtureException(false, "Unable to find: " + fullName);
@@ -55,23 +54,22 @@ public class FileFixture extends SlimFixtureWithMap {
     }
 
     public String takeFirstLineFrom(String filename) throws IOException {
-        String result;
+        String result = null;
         String fullName = getFullName(filename);
         ensureParentExists(fullName);
         File file = new File(fullName);
-        Scanner fileScanner = new Scanner(file);
-        if (fileScanner.hasNextLine()) {
-            result = fileScanner.nextLine();
-        } else {
-            throw new IOException(fullName + " is an empty file.");
+        try (Scanner fileScanner = new Scanner(file)) {
+            if (fileScanner.hasNextLine()) {
+                result = fileScanner.nextLine();
+            } else {
+                throw new IOException(fullName + " is an empty file.");
+            }
+            //Create a temporary new file, then delete the original and copy temp file to original filename
+            String tmpFilename = fullName + ".tmp";
+            File tmpFile = FileUtil.writeFromScanner(tmpFilename, fileScanner);
+            FileUtil.copyFile(tmpFilename, fullName);
+            tmpFile.delete();
         }
-
-        //Create a temporary new file, then delete the original and copy temp file to original filename
-        String tmpFilename = fullName + ".tmp";
-        File tmpFile = FileUtil.writeFromScanner(tmpFilename, fileScanner);
-        FileUtil.copyFile(tmpFilename, fullName);
-        tmpFile.delete();
-
         return result;
     }
 
@@ -157,7 +155,7 @@ public class FileFixture extends SlimFixtureWithMap {
         if (filename.startsWith(File.separator)
                 || ":\\".equals(filename.substring(1, 3))) {
             name = filename;
-        } else if (isFilesUrl(filename)){
+        } else if (isFilesUrl(filename)) {
             name = getFilePathFromWikiUrl(filename);
         } else {
             name = directory + filename;
