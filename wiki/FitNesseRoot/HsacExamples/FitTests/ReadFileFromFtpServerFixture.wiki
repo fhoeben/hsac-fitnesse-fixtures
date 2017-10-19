@@ -2,9 +2,13 @@
 
 Example (non working):
 
-|!-ReadFileFromFtpServer-!                                                                                |
-|host           |port|userName|password|file                |nrOfLines|result?          |=fileSize?|error?|
-|ftp.example.com|    |username|password|example/dir/file.csv|1        |0000000;20140401;|67848     |blank |
+|!-ReadFileFromFtpServer-!                                                                                     |
+|host           |sftp|port|userName|password|file                |nrOfLines|result?          |=fileSize?|error?|
+|ftp.example.com|    |    |username|password|example/dir/file.csv|1        |0000000;20140401;|67848     |blank |
+|ftp.example.com|true|    |username|password|example/dir/file.csv|1        |0000000;20140401;|67848     |blank |
+
 
 The port may be left empty (default value is 21). 
 The result contains the first nrOfLines (default value is 10) of the file, however newlines are removed to make it easier to compare with regex. The fileSize gives the result of the FTP command "SIZE".
+
+The column sftp is optional. If not used, left empty or not equal to yes, true, 1, ftp will be used. If used with value 1, true or yes (case insensitive), the sftp protocol will be used.

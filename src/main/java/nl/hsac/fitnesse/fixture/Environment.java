@@ -44,7 +44,7 @@ import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverManager;
  * are performed.
  */
 public class Environment {
-    private final static Environment INSTANCE = new Environment();
+    private static final Environment INSTANCE = new Environment();
     private String fitNesseRoot = ContextConfigurator.DEFAULT_ROOT;
     private Configuration freemarkerConfig;
     private FreeMarkerHelper fmHelper;

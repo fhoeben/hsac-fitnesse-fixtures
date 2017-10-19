@@ -41,6 +41,12 @@ public class ReadFileFromFtpServerFixtureTest {
 
         fixture.getCurrentRowValues().put(ReadFileFromFtpServerFixture.IS_SFTP, "TRUE");
         assertTrue(fixture.isSftp());
+
+        fixture.getCurrentRowValues().put(ReadFileFromFtpServerFixture.IS_SFTP, null);
+        assertFalse(fixture.isSftp());
+
+        fixture.getCurrentRowValues().put(ReadFileFromFtpServerFixture.IS_SFTP, "");
+        assertFalse(fixture.isSftp());
     }
 
 }

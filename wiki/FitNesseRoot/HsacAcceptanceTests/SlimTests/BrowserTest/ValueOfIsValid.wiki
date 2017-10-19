@@ -1,0 +1,59 @@
+This test ensures we can check if an entered value is valid, if a pattern attribute is specified to do the validation.
+
+!define HTML_INPUT_VALIDATION { {{{
+<html>
+<body>
+<form>
+<label for='name'>Name</label>
+<input type='text' id='name' name='aName' pattern='[A-Za-z]{2,30}'/>
+<input type='submit' value='ok'/>
+</form>
+</body>
+</html>}}} }
+
+!define HTML_INPUT_NOVALIDATION { {{{
+<html>
+<body>
+<form>
+<label for='name'>Name</label>
+<input type='text' id='name' name='aName'/>
+<input type='submit' value='ok'/>
+</form>
+</body>
+</html>}}} }
+
+
+
+|script      |mock xml server setup     |
+|add response|${HTML_INPUT_VALIDATION}  |
+|add response|${HTML_INPUT_VALIDATION}  |
+|add response|${HTML_INPUT_NOVALIDATION}|
+|$url=       |get mock server url       |
+
+|script                |browser test|
+|seconds before timeout|1           |
+
+Valid input according the pattern of 'Name'.
+|script                           |
+|open |$url                       |
+|enter|test    |as  |Name         |
+|check|value of|Name|is valid|true|
+
+Invalid input according the pattern of 'Name'.
+|script                            |
+|open |$url                        |
+|enter|123     |as  |Name          |
+|check|value of|Name|is valid|false|
+
+Check input of 'Name' but this time it has no pattern, so should always be valid.
+|script                           |
+|open |$url                       |
+|enter|123     |as  |Name         |
+|check|value of|Name|is valid|true|
+
+
+
+|script|mock xml server setup|
+|stop                        |
+
+
