@@ -7,10 +7,9 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Arrays;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,9 +20,8 @@ public class FileFixtureTest {
     private final String txtFilename = "testFileFixture.txt";
     private final String copyFilename = "temp-copy.txt";
     private final String curDir = Paths.get("").toAbsolutePath().toString();
-    private final String defaultFilesDir = curDir + File.separator + "FitNesseRoot" + File.separator + "files";
-    private final String defaultFixtureDir = defaultFilesDir + File.separator + "fileFixture" + File.separator;
-    private final String testResourcesDir = curDir + StringUtils.join(Arrays.asList("", "src", "test", "resources", ""), File.separator);
+    private final String defaultFixtureSubDir = FilenameUtils.separatorsToSystem("files/fileFixture");
+    private final String testResourcesDir = FilenameUtils.separatorsToSystem(curDir + "/src/test/resources/");
     private final String testResourcesDirUri = new File(testResourcesDir).toURI().toString();
 
     @Rule
@@ -31,7 +29,7 @@ public class FileFixtureTest {
 
     @Test
     public void testGetAndSetDirectory() {
-        assertEquals(defaultFixtureDir, fixture.getDirectory());
+        assertTrue(fixture.getDirectory().contains(defaultFixtureSubDir));
         fixture.setDirectory(testResourcesDir);
         assertEquals(testResourcesDir, fixture.getDirectory());
     }
