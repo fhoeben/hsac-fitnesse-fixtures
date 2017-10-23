@@ -19,7 +19,7 @@ public class FileFixture extends SlimFixtureWithMap {
         if (isFilesUrl(aDirectory)) {
             String url = getUrl(aDirectory);
             String relativeDir = url.substring("files".length());
-            relativeDir = relativeDir.replace('/', File.separatorChar);
+            relativeDir = FilenameUtils.separatorsToSystem(relativeDir);
             directory = filesDir + relativeDir;
         } else {
             directory = aDirectory;
