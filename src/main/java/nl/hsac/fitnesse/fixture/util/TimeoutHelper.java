@@ -19,7 +19,7 @@ public class TimeoutHelper {
      * @param <T> expected type of return value.
      * @param description description of task.
      * @param timeout timeout in milliseconds.
-     * @param task task to execture.
+     * @param task task to execute.
      * @return return value from task.
      */
     public <T> T callWithTimeout(String description, int timeout, Callable<T> task) {
@@ -31,7 +31,7 @@ public class TimeoutHelper {
      * Calls task but ensures it ends.
      * @param description description of task.
      * @param timeout timeout in milliseconds.
-     * @param task task to execture.
+     * @param task task to execute.
      */
     public void callWithTimeout(String description, int timeout, Runnable task) {
         Future<?> callFuture = threadPool.submit(task);
