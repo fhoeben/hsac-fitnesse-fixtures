@@ -1,4 +1,4 @@
-﻿---
+---
 Help: Example tests using Selenium via BrowserTest fixture.
 Suite
 ---
