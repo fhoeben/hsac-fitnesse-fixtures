@@ -709,7 +709,7 @@ public class Environment {
     /**
      * @return the symbols
      */
-    public ConcurrentMap<String, String> getSymbols() {
+    public Map<String, String> getSymbols() {
         return symbols;
     }
 }

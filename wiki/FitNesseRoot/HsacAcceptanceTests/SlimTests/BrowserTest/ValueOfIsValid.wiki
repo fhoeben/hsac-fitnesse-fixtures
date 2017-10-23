@@ -1,3 +1,7 @@
+---
+Test
+---
+
 This test ensures we can check if an entered value is valid, if a pattern attribute is specified to do the validation.
 
 !define HTML_INPUT_VALIDATION { {{{

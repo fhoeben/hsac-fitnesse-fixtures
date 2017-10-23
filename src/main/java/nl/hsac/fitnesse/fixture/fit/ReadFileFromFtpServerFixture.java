@@ -11,12 +11,12 @@ import java.util.Map;
 public class ReadFileFromFtpServerFixture extends MapColumnFixture {
     public static final String DEFAULT_NR_OF_LINES_TO_BE_READ = "10";
 
-    private static final String HOST_NAME_KEY = "host";
-    private static final String PORT_NUMBER_KEY = "port";
-    private static final String USER_NAME_KEY = "userName";
-    private static final String PASSWORD_KEY = "password";
-    private static final String FILE_PATH_KEY = "file";
-    private static final String LINES_COUNT_KEY = "nrOfLines";
+    protected static final String HOST_NAME_KEY = "host";
+    protected static final String PORT_NUMBER_KEY = "port";
+    protected static final String USER_NAME_KEY = "userName";
+    protected static final String PASSWORD_KEY = "password";
+    protected static final String FILE_PATH_KEY = "file";
+    protected static final String LINES_COUNT_KEY = "nrOfLines";
     protected static final String IS_SFTP = "sftp";
 
     private String fileAsString = null;

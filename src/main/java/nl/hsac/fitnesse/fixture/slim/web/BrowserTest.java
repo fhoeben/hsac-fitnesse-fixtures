@@ -40,8 +40,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -2274,50 +2272,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * @return true if content of place is valid (according to validation pattern)
      */
     public boolean valueOfIsValid(String place) {
-        T element = getElementToRetrieveValue(place, null);
-        if (element == null) {
-            throw new SlimFixtureException(String.format("No element found for place '%s'", place));
-        }
-
-        Collection<String> attributesToCompare = Arrays.asList("name", "id");
-
-        // Check if element has all attributes set that we use to compare it with any invalid elements
-        checkElementHasAttributes(element, attributesToCompare, place);
+        T element = waitUntil(d -> getElementToRetrieveValue(place, null));
 
         List<T> invalidElements = findAllByCss("input:invalid");
-        return !containsElement(invalidElements, element, attributesToCompare);
-    }
-
-    private void checkElementHasAttributes(T element, Collection<String> attributes, String place) {
-        if (attributes.stream().filter(attribute -> StringUtils.isNotBlank(element.getAttribute(attribute)))
-                .count() != attributes.size()) {
-            throw new SlimFixtureException(String.format("To check if '%s' is valid, it must have both id and name attributes", place));
-        }
-    }
-
-    /**
-     * Check if elementList contains an element that we consider theElement on basis of matching attributesToCompare
-     * @param elementList list of elements
-     * @param theElement we try to find in the list
-     * @param attributesToCompare list of attribute names of which we compare element with elementList entries.
-     * @return true if theElement was found in elementList (on basis of attributesToCompare)
-     */
-    protected boolean containsElement(List<T> elementList, T theElement, Collection<String> attributesToCompare) {
-        boolean isFound = elementList.stream().anyMatch(element -> isMatch(theElement, element, attributesToCompare));
-        return isFound;
-    }
-
-    /**
-     * Compare el1 and el2 on basis of values of attributes of interest.
-     * @param el1 element to compare with el2
-     * @param el2 element to compare with el1
-     * @param attributesToCompare list of attributes names on which we are going to compare el1 and el2
-     * @return true if el1 is considered to match el2 on basis of attributesToCompare
-     */
-    protected boolean isMatch(WebElement el1, WebElement el2, Collection<String> attributesToCompare) {
-        boolean isMatch = attributesToCompare.stream()
-                .allMatch(attributeName -> StringUtils.isNotBlank(el1.getAttribute(attributeName))
-                        && el1.getAttribute(attributeName).equals(el2.getAttribute(attributeName)));
-        return isMatch;
+        return !invalidElements.contains(element);
     }
 }
