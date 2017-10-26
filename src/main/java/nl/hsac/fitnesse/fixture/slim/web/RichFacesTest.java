@@ -37,7 +37,7 @@ public class RichFacesTest extends BrowserTest<WebElement> {
     protected Object invoke(FixtureInteraction interaction, Method method, Object[] arguments) throws Throwable {
         Object result = super.invoke(interaction, method, arguments);
         if (shouldWaitForAjax()) {
-            waitForJsfAjax();
+            waitForJsfAjaxImpl(true);
         }
         return result;
     }
@@ -137,10 +137,18 @@ public class RichFacesTest extends BrowserTest<WebElement> {
     }
 
     public void waitForJsfAjax() {
+        waitForJsfAjaxImpl(false);
+    }
+
+    protected void waitForJsfAjaxImpl(boolean checkLocation) {
         try {
             // if jsf is present on page, add an event listener that will be triggered when next Ajax request completes
-            waitForJavascriptCallback("if(!window.jsf || window.location.href !== arguments[0]){callback();}else{jsf.ajax.addOnEvent(function(data){if(data.status!='begin')callback();});}",
-                    previousLocation);
+            if (checkLocation) {
+                waitForJavascriptCallback("if(!window.jsf||window.location.href!==arguments[0]){callback();}else{jsf.ajax.addOnEvent(function(data){if(data.status!='begin')callback();});}",
+                        previousLocation);
+            } else {
+                waitForJavascriptCallback("if(!window.jsf){callback();}else{jsf.ajax.addOnEvent(function(data){if(data.status!='begin')callback();});}");
+            }
         } catch (JavascriptException e) {
             String msg = e.getMessage();
             if (msg.startsWith("javascript error: document unloaded while waiting for result")) {
