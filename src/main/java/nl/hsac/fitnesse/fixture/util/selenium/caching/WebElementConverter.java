@@ -8,8 +8,11 @@ import org.openqa.selenium.remote.internal.JsonToWebElementConverter;
  * Selenium element converter that ensure our {@link CachingRemoteWebElement} are used.
  */
 public class WebElementConverter extends JsonToWebElementConverter {
+    private final RemoteWebDriver driver;
+
     public WebElementConverter(RemoteWebDriver d) {
         super(d);
+        driver = d;
     }
 
     @Override
@@ -28,6 +31,10 @@ public class WebElementConverter extends JsonToWebElementConverter {
     }
 
     protected CachingRemoteWebElement createCachingWebElement(RemoteWebElement originalElement) {
-        return new CachingRemoteWebElement(originalElement);
+        CachingRemoteWebElement element = new CachingRemoteWebElement(originalElement);
+        // ensure we always set the correct parent and file detector
+        element.setParent(driver);
+        element.setFileDetector(driver.getFileDetector());
+        return element;
     }
 }
