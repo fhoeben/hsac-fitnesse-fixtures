@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 /**
  * Base class for fixtures supporting 'table' style tests, with direct access to Slim's symbols.
  */
-public abstract class SlimTableFixture extends SlimFixture implements StatementExecutorConsumer {
+public abstract class SlimTableFixture extends SlimFixtureWithMapHelper implements StatementExecutorConsumer {
     private StatementExecutorInterface context;
 
     @Override

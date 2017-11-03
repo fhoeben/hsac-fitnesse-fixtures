@@ -12,6 +12,14 @@ import java.util.Map;
 public class MapOfMapFixture extends SlimTableFixture {
     private Map<String, Map<String, Object>> maps;
 
+    public MapOfMapFixture() {
+        this(true);
+    }
+
+    public MapOfMapFixture(boolean useNestedMaps) {
+        expandPeriodsInNamesToNestedMaps(useNestedMaps);
+    }
+
     @Override
     protected List<List<String>> doTableImpl(List<List<String>> table) {
         int numberOfRows = table.size();
@@ -73,7 +81,7 @@ public class MapOfMapFixture extends SlimTableFixture {
                 String cell = row.get(i);
                 cell = replaceSymbolsInString(cell);
                 Object value = parseValue(cell);
-                map.put(key, value);
+                getMapHelper().setValueForIn(value, key, map);
             }
         }
     }

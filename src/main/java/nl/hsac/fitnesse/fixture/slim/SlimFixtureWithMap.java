@@ -1,22 +1,19 @@
 package nl.hsac.fitnesse.fixture.slim;
 
-import nl.hsac.fitnesse.fixture.util.MapHelper;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * Slim fixture base class allowing values to be set to a Map via a script or dynamic decision table.
  */
-public class SlimFixtureWithMap extends SlimFixture {
+public class SlimFixtureWithMap extends SlimFixtureWithMapHelper {
     private final Map<String, Object> currentValues;
-    private MapHelper mapHelper;
 
     /**
      * Creates new, having an empty current values collection.
      */
     public SlimFixtureWithMap() {
-        this(new LinkedHashMap<String, Object>());
+        this(new LinkedHashMap<>());
     }
 
     /**
@@ -25,9 +22,6 @@ public class SlimFixtureWithMap extends SlimFixture {
      */
     public SlimFixtureWithMap(Map<String, Object> map) {
         currentValues = map;
-        // default map helper
-        // (shared by all fixtures so default configuration can be changed by one call, if needed)
-        mapHelper = getDefaultMapHelper();
     }
 
     /**
@@ -130,46 +124,4 @@ public class SlimFixtureWithMap extends SlimFixture {
     }
 
     //// end: methods to support usage in dynamic decision tables
-
-    public void expandPeriodsInNamesToNestedMaps(boolean expand) {
-        MapHelper newMapHelper;
-        if (expand) {
-            newMapHelper = getDefaultMapHelper();
-        } else {
-            newMapHelper = new NoOpMapHelper();
-        }
-        setMapHelper(newMapHelper);
-    }
-
-    public boolean expandsPeriodsInNamesToNestedMaps() {
-        return !(getMapHelper() instanceof NoOpMapHelper);
-    }
-
-    /**
-     * @return helper to assist getting/setting (nested) values in a map.
-     */
-    public MapHelper getMapHelper() {
-        return mapHelper;
-    }
-
-    /**
-     * @param mapHelper helper to assist getting/setting (nested) values in a map.
-     */
-    public void setMapHelper(MapHelper mapHelper) {
-        this.mapHelper = mapHelper;
-    }
-
-    protected MapHelper getDefaultMapHelper() {
-        return getEnvironment().getMapHelper();
-    }
-
-    /**
-     * Map helper that does not interpret periods in names to mean nested maps.
-     */
-    private static class NoOpMapHelper extends MapHelper {
-        @Override
-        public void setValueForIn(Object value, String name, Map<String, Object> map) {
-            map.put(name, value);
-        }
-    }
 }
