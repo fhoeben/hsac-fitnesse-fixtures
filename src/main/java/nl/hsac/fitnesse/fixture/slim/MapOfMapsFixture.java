@@ -45,6 +45,10 @@ public class MapOfMapsFixture extends SlimTableFixture {
         return result;
     }
 
+    protected Map<String, Map<String, Object>> getMaps() {
+        return maps;
+    }
+
     protected void handleHeader(List<String> resultRow, List<String> header) {
         for (int i = 1; i < header.size(); i++) {
             String headerCell = header.get(i);
