@@ -9,11 +9,11 @@ This is similar to the usage of a [[!-MapFixture-!][MapFixtureTest#ddt]] as dyna
 
 We define two maps, and store these in variables.
 
-|table:map of map fixture|
-|     |NL  |EN           |
-|dog  |Hond|Dog          |
-|cat  |Kat |Cat          |
-|     |$nl=|$en=         |
+|table:map of maps fixture|
+|     |NL  |EN            |
+|dog  |Hond|Dog           |
+|cat  |Kat |Cat           |
+|     |$nl=|$en=          |
 
 We check each variable.
 
@@ -29,11 +29,11 @@ We check each variable.
 
 We define two maps, containing the values from the previous table.
 
-|table :map of map fixture|
-|      |NL   |EN          |
-|nested|$nl  |$en         |
-|duck  |Eend |Duck        |
-|      |$nl2=|$en2=       |
+|table :map of maps fixture|
+|      |NL   |EN           |
+|nested|$nl  |$en          |
+|duck  |Eend |Duck         |
+|      |$nl2=|$en2=        |
 
 We check each variable.
 
@@ -63,13 +63,13 @@ We check each original variable did not change.
 
 We define two maps, and store these in variables, the default notation is that periods indicate nested maps are to be used.
 
-|table          :map of map fixture|
-|               |NL     |EN        |
-|dog            |Hond   |Dog       |
-|chicken.mouth  |Snavel |Beak      |
-|chicken.legs[0]|Vleugel|Wing      |
-|chicken.legs[1]|Poot   |Leg       |
-|               |$nl3=  |$en3=     |
+|table          :map of maps fixture|
+|               |NL     |EN         |
+|dog            |Hond   |Dog        |
+|chicken.mouth  |Snavel |Beak       |
+|chicken.legs[0]|Vleugel|Wing       |
+|chicken.legs[1]|Poot   |Leg        |
+|               |$nl3=  |$en3=      |
 
 We check each variable.
 
@@ -94,13 +94,13 @@ We check each variable.
 
 We define two maps, and store these in variables, we override the default so that periods are just regular parts of a key.
 
-|table          :map of map fixture|false|
-|               |NL                |EN   |
-|dog            |Hond              |Dog  |
-|chicken.mouth  |Snavel            |Beak |
-|chicken.legs[0]|Vleugel           |Wing |
-|chicken.legs[1]|Poot              |Leg  |
-|               |$nl4=             |$en4=|
+|table          :map of maps fixture|false|
+|               |NL                 |EN   |
+|dog            |Hond               |Dog  |
+|chicken.mouth  |Snavel             |Beak |
+|chicken.legs[0]|Vleugel            |Wing |
+|chicken.legs[1]|Poot               |Leg  |
+|               |$nl4=              |$en4=|
 
 We check each variable.
 
