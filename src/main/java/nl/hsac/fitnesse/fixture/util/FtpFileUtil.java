@@ -17,18 +17,13 @@ import java.io.InputStream;
 /**
  * Ftp file utilities.
  */
-public class FtpFileUtil {
-    /**
-     * Get size of the FTP file.
-     * @param hostName the FTP server host name to connect
-     * @param port the port to connect
-     * @param userName the user name
-     * @param password the password
-     * @param filePath file to get size for.
-     * @return file's size if found.
-     * @throws RuntimeException in case any exception has been thrown.
+public class FtpFileUtil implements RemoteFileUtil {
+
+    /* (non-Javadoc)
+     * @see nl.hsac.fitnesse.fixture.util.RemoteFileUtil#getFileSizeOnServer(java.lang.String, java.lang.Integer, java.lang.String, java.lang.String, java.lang.String)
      */
-    public static Integer getFileSizeOnFTPServer(String hostName, Integer port,
+    @Override
+    public Integer getFileSizeOnServer(String hostName, Integer port,
             String userName, String password, String filePath) {
         Integer result = null;
 
@@ -36,7 +31,7 @@ public class FtpFileUtil {
         String replyString = executeCommandOnFTPServer(hostName, port, userName, password, "SIZE", filePath);
 
         if (replyString == null || !replyString.contains(" ")) {
-            throw new  RuntimeException(String.format(
+            throw new RuntimeException(String.format(
                     "Unable to get size of the %s file. Got [%s] reply from FTP server.", filePath, replyString));
         } else {
             result = Integer.valueOf(replyString.split(" ")[1].replaceAll("[\r\n]", ""));
@@ -84,19 +79,12 @@ public class FtpFileUtil {
         return result;
     }
 
-    /**
-     * Upload a given file to FTP server.
-     * @param hostName the FTP server host name to connect
-     * @param port the port to connect
-     * @param userName the user name
-     * @param password the password
-     * @param localFileFullName the full name (inclusive path) of the local file.
-     * @param remotePath the path to the file on the FTP.
-     * @return reply string from FTP server after the command has been executed.
-     * @throws RuntimeException in case any exception has been thrown.
+    /* (non-Javadoc)
+     * @see nl.hsac.fitnesse.fixture.util.RemoteFileUtil#uploadFileToServer(java.lang.String, java.lang.Integer, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
-    public static String uploadFileToFTPServer(String hostName, Integer port, String userName,
-                                              String password, String localFileFullName, String remotePath) {
+    @Override
+    public String uploadFileToServer(String hostName, Integer port, String userName, String password, String localFileFullName,
+            String remotePath) {
         String result = null;
 
         FTPClient ftpClient = new FTPClient();
@@ -121,28 +109,22 @@ public class FtpFileUtil {
                 result = String.format("File '%s' successfully uploaded", localFileFullName);
             } else {
                 result = String.format("Failed upload '%s' file to FTP server. Got reply: %s",
-                                                        localFileFullName, ftpClient.getReplyString());
+                        localFileFullName, ftpClient.getReplyString());
             }
-            } catch (IOException ex) {
-                throw new RuntimeException(String.format(errorMessage, remotePath, hostName), ex);
-            } finally {
-                closeInputStream(inputStream);
-                disconnectAndLogoutFromFTPServer(ftpClient, hostName);
-            }
+        } catch (IOException ex) {
+            throw new RuntimeException(String.format(errorMessage, remotePath, hostName), ex);
+        } finally {
+            closeInputStream(inputStream);
+            disconnectAndLogoutFromFTPServer(ftpClient, hostName);
+        }
         return result;
     }
 
-    /**
-     * Delete given directory from FTP server (directory must be empty).
-     * @param hostName the FTP server host name to connect
-     * @param port the port to connect
-     * @param userName the user name
-     * @param password the password
-     * @param remotePath the path to the directory on the FTP to be removed
-     * @return true if file has been removed  and false otherwise.
-     * @throws RuntimeException in case any exception has been thrown.
+    /* (non-Javadoc)
+     * @see nl.hsac.fitnesse.fixture.util.RemoteFileUtil#deleteDirectoryFromServer(java.lang.String, java.lang.Integer, java.lang.String, java.lang.String, java.lang.String)
      */
-    public static boolean deleteDirectoryFromFTPServer(String hostName, Integer port, String userName, String password, String remotePath) {
+    @Override
+    public boolean deleteDirectoryFromServer(String hostName, Integer port, String userName, String password, String remotePath) {
         boolean deleted = false;
 
         FTPClient ftpClient = new FTPClient();
@@ -159,17 +141,11 @@ public class FtpFileUtil {
         return deleted;
     }
 
-    /**
-     * Reads content of file on from FTP server to String.
-     * @param hostName the FTP server host name to connect
-     * @param port the port to connect
-     * @param userName the user name
-     * @param password the password
-     * @param filePath file to read.
-     * @return file's content.
-     * @throws RuntimeException in case any exception has been thrown.
+    /* (non-Javadoc)
+     * @see nl.hsac.fitnesse.fixture.util.RemoteFileUtil#loadFileFromServer(java.lang.String, java.lang.Integer, java.lang.String, java.lang.String, java.lang.String, int)
      */
-    public static String loadFileFromFTPServer(String hostName, Integer port,
+    @Override
+    public String loadFileFromServer(String hostName, Integer port,
             String userName, String password, String filePath, int numberOfLines) {
 
         String result = null;

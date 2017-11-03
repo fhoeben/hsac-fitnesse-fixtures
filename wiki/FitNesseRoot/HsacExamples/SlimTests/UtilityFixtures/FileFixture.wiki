@@ -63,8 +63,7 @@ last one!-!}
 |check             |text in     |$appended                   |first line                      |
 |note              |you can append content as a new line to an existing file                  |
 |append            |second line |to                          |$appended |on new line          |
-|check             |text in     |$appended                                                    |!-first line
-second line-!                |
+|check             |text in     |$appended                   |=~/first line\r?\nsecond line/  |
 |delete|$appended|
 
 Table below shows how we can use a list of non-reusable data from a file:

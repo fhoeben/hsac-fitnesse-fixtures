@@ -96,19 +96,19 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
         Object result;
         switch (waitUntil.value()) {
-            case STOP_TEST:
-                result = waitUntilOrStop(condition);
-                break;
-            case RETURN_NULL:
-                result = waitUntilOrNull(condition);
-                break;
-            case RETURN_FALSE:
-                result = waitUntilOrNull(condition) != null;
-                break;
-            case THROW:
-            default:
-                result = waitUntil(condition);
-                break;
+        case STOP_TEST:
+            result = waitUntilOrStop(condition);
+            break;
+        case RETURN_NULL:
+            result = waitUntilOrNull(condition);
+            break;
+        case RETURN_FALSE:
+            result = waitUntilOrNull(condition) != null;
+            break;
+        case THROW:
+        default:
+            result = waitUntil(condition);
+            break;
         }
         return result;
     }
@@ -917,7 +917,6 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return waitForVisibleIn(place, null);
     }
 
-
     @WaitUntil(TimeoutPolicy.STOP_TEST)
     public boolean waitForVisibleIn(String place, String container) {
         Boolean result = Boolean.FALSE;
@@ -1596,7 +1595,6 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         getSeleniumHelper().executeJavascript("sessionStorage.clear();");
     }
 
-
     /**
      * Clears HTML5's localStorage (for the domain of the current open page in the browser).
      */
@@ -2124,8 +2122,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected RepeatCompletion getRefreshUntilValueIs(String place, String expectedValue) {
-        return new ConditionBasedRepeatUntil(false, d-> refresh(),
-                                            true, d -> checkValueIs(place, expectedValue));
+        return new ConditionBasedRepeatUntil(false, d -> refresh(),
+                true, d -> checkValueIs(place, expectedValue));
     }
 
     public boolean clickUntilValueOfIs(String clickPlace, String checkPlace, String expectedValue) {
@@ -2147,9 +2145,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     protected RepeatCompletion getExecuteScriptUntilValueIs(String script, String place, String expectedValue) {
         return new ConditionBasedRepeatUntil(
                 false, d -> {
-                        Object r = executeScript(script);
-                        return r != null ? r : true;
-                    },
+                    Object r = executeScript(script);
+                    return r != null ? r : true;
+                },
                 true, d -> checkValueIs(place, expectedValue));
     }
 
@@ -2208,15 +2206,15 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     protected class ConditionBasedRepeatUntil extends FunctionalCompletion {
         public ConditionBasedRepeatUntil(boolean wrapIfNeeded,
-                                         ExpectedCondition<? extends Object> repeatCondition,
-                                         ExpectedCondition<Boolean> finishedCondition) {
+                ExpectedCondition<? extends Object> repeatCondition,
+                ExpectedCondition<Boolean> finishedCondition) {
             this(wrapIfNeeded, repeatCondition, wrapIfNeeded, finishedCondition);
         }
 
         public ConditionBasedRepeatUntil(boolean wrapRepeatIfNeeded,
-                                         ExpectedCondition<? extends Object> repeatCondition,
-                                         boolean wrapFinishedIfNeeded,
-                                         ExpectedCondition<Boolean> finishedCondition) {
+                ExpectedCondition<? extends Object> repeatCondition,
+                boolean wrapFinishedIfNeeded,
+                ExpectedCondition<Boolean> finishedCondition) {
             if (wrapRepeatIfNeeded) {
                 repeatCondition = wrapConditionForFramesIfNeeded(repeatCondition);
             }
@@ -2269,4 +2267,14 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return getSeleniumHelper().executeJavascript(statement);
     }
 
+    /**
+     * @param place to check
+     * @return true if content of place is valid (according to validation pattern)
+     */
+    public boolean valueOfIsValid(String place) {
+        T element = waitUntil(d -> getElementToRetrieveValue(place, null));
+
+        List<T> invalidElements = findAllByCss("input:invalid");
+        return !invalidElements.contains(element);
+    }
 }

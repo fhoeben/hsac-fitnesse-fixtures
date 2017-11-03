@@ -8,12 +8,13 @@ import org.apache.commons.lang3.time.StopWatch;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 /**
  * Base class for Slim fixtures.
  */
-public class SlimFixture  implements InteractionAwareFixture {
+public class SlimFixture implements InteractionAwareFixture {
     private Environment environment = Environment.getInstance();
     private int repeatInterval = 100;
     private int repeatMaxCount = Integer.MAX_VALUE;
@@ -108,12 +109,32 @@ public class SlimFixture  implements InteractionAwareFixture {
     public boolean waitMilliseconds(int i) {
         boolean result;
         try {
-            Thread.sleep(i);
+            sleepAtLeast(i);
             result = true;
         } catch (InterruptedException e) {
             result = false;
         }
         return result;
+    }
+
+    /**
+     * Thread.sleep can return earlier than the specified millis.
+     * This method will ensure it will return not sooner than the waiting time but it can return later.
+     * @param millis to wait
+     * @throws InterruptedException
+     */
+    public void sleepAtLeast(long millis) throws InterruptedException {
+        long t0 = System.nanoTime();
+        long millisLeft = millis;
+        while (millisLeft > 0) {
+            Thread.sleep(millisLeft);
+            long t1 = System.nanoTime();
+            millisLeft = millis - toMillis(t1 - t0);
+        }
+    }
+
+    private long toMillis(long nanos) {
+        return TimeUnit.NANOSECONDS.toMillis(nanos);
     }
 
     // Polling

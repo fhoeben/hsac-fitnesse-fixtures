@@ -28,8 +28,7 @@ public class XPathHelper {
     public String getXPath(NamespaceContext context, String xml, String xPathExpr) {
         return (String) evaluateXpath(context, xml, xPathExpr, null);
     }
-    
-    
+
     /**
      * Evaluates xPathExpr against xml, returning all matches.
      * @param xml xml document to apply XPath to.
@@ -38,7 +37,7 @@ public class XPathHelper {
      */
     public List<String> getAllXPath(NamespaceContext context, String xml, String xPathExpr) {
         List<String> result = null;
-        
+
         NodeList nodes = (NodeList) evaluateXpath(context, xml, xPathExpr, XPathConstants.NODESET);
         if (nodes != null) {
             result = new ArrayList<String>(nodes.getLength());
@@ -49,8 +48,16 @@ public class XPathHelper {
 
         return result;
     }
-    
-    private Object evaluateXpath(NamespaceContext context, String xml, String xPathExpr, QName returnType) {
+
+    /**
+     * Get result of xPathExpr on xml in specified returnType.
+     * @param context namespace context
+     * @param xml to perform the xpath expression on
+     * @param xPathExpr xpath expression
+     * @param returnType type you want this function to return
+     * @return result of the expression, in the returnType you specified
+     */
+    public Object evaluateXpath(NamespaceContext context, String xml, String xPathExpr, QName returnType) {
         Object result = null;
         if (xml != null) {
             if (!xml.startsWith("<")) {
