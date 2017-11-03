@@ -9,6 +9,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Fixture which allows the definition of a map of maps using a table where the each column represents a top-level map.
+ */
 public class MapOfMapsFixture extends SlimTableFixture {
     private Map<String, Map<String, Object>> maps;
 

@@ -7,6 +7,7 @@ Map Fixture allows Maps to be defined and manipulated in the wiki. It is usable 
 
 !2 Dynamic Decision Table Usage
 The first examples show usage of the fixture in [[dynamic decision tables][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.DynamicDecisionTable]].
+This allows a map to be defined based on a row of a wiki table, [[Map of Maps Fixture][MapOfMapsFixture]] allows maps to be defined based on the columns of a table.
 
 !3 Define a Map
 Here we define a map (and store it in a Slim variable) using simple values and a list (indicated by the header name ending on '[]'), using a dynamic decision table. Any output column (header name ending on '?') will receive a copy of the map defined.

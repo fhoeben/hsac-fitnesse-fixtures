@@ -1,9 +1,11 @@
 ---
-Help: This fixture allows the definition of a map of map using a table where the each column represents a top-level map.
+Help: This fixture allows the definition of a map of maps using a table where the each column represents a top-level map.
 Test
 ---
-When using the !-MapOfMapsFixture-! in a [[!-TableTable-!][.FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests.SliM.TableTable]] each column of the table defines a set of key-value pairs (or map or hash) and each row defines a key in such a map.
+When using the !-MapOfMapsFixture-! in a [["Table" table][.FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests.SliM.TableTable]] each column of the table defines a set of key-value pairs (or map or hash) and each row defines a key in such a map.
 This is similar to the usage of a [[!-MapFixture-!][MapFixtureTest#ddt]] as dynamic decisision table, only there each row is a map and the columns represent the keys.
+
+The bottom row of the table should contain assignment(s) to Slim variables to store the maps.
 
 !2 Single map created
 
