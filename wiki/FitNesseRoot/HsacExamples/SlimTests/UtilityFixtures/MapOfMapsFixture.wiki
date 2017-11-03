@@ -1,0 +1,60 @@
+---
+Help: This fixture allows the definition of a map of map using a table where the each column represents a top-level map.
+Test
+---
+When using the !-MapOfMapsFixture-! in a [[!-TableTable-!][.FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests.SliM.TableTable]] each column of the table defines a set of key-value pairs (or map or hash) and each row defines a key in such a map.
+This is similar to the usage of a [[!-MapFixture-!][MapFixtureTest#ddt]] as dynamic decisision table, only there each row is a map and the columns represent the keys.
+
+!2 One Level
+
+We define two maps, and store these in variables.
+
+|table:map of map fixture|
+|     |NL  |EN           |
+|dog  |Hond|Dog          |
+|cat  |Kat |Cat          |
+|     |$nl=|$en=         |
+
+We check each variable.
+
+|script|map fixture|$nl     |
+|check |value      |dog|Hond|
+|check |value      |cat|Kat |
+
+|script|map fixture|$en    |
+|check |value      |dog|Dog|
+|check |value      |cat|Cat|
+
+!2 Nested
+
+We define two maps, containing the values from the previous table.
+
+|table :map of map fixture|
+|      |NL   |EN          |
+|nested|$nl  |$en         |
+|duck  |Eend |Duck        |
+|      |$nl2=|$en2=       |
+
+We check each variable.
+
+|script|map fixture|$nl2           |
+|check |value      |duck      |Eend|
+|check |value      |nested.cat|Kat |
+|show  |value      |nested         |
+
+
+|script|map fixture|$en2           |
+|check |value      |duck      |Duck|
+|check |value      |nested.cat|Cat |
+|show  |value      |nested         |
+
+
+We check each original variable did not change.
+
+|script|map fixture|$nl     |
+|check |value      |dog|Hond|
+|check |value      |cat|Kat |
+
+|script|map fixture|$en    |
+|check |value      |dog|Dog|
+|check |value      |cat|Cat|
