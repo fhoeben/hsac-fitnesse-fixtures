@@ -53,9 +53,16 @@ public class MapOfMapsFixture extends SlimTableFixture {
     }
 
     protected void handleBottomRow(List<String> resultRow, List<String> header, List<String> row) {
-        if (StringUtils.isEmpty(row.get(0))) {
+        String firstCell = row.get(0);
+        if (StringUtils.isEmpty(firstCell)) {
             resultRow.add("");
-            for (int i = 1; i < header.size(); i++) {
+        } else if (assignSymbolIfApplicable(firstCell, maps)) {
+            resultRow.add("pass");
+        }
+        if (resultRow.isEmpty()) {
+            handleRow(resultRow, header, row);
+        } else {
+            for (int i = 1; i < header.size() && i < row.size(); i++) {
                 String cell = row.get(i);
                 String columnName = header.get(i);
                 Map<String, Object> map = maps.get(columnName);
@@ -65,8 +72,6 @@ public class MapOfMapsFixture extends SlimTableFixture {
                     resultRow.add("fail:expected symbol assignment");
                 }
             }
-        } else {
-            handleRow(resultRow, header, row);
         }
     }
 

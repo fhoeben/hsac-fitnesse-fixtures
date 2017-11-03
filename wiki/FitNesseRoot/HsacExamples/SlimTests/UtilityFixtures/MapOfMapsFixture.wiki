@@ -5,17 +5,42 @@ Test
 When using the !-MapOfMapsFixture-! in a [[!-TableTable-!][.FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests.SliM.TableTable]] each column of the table defines a set of key-value pairs (or map or hash) and each row defines a key in such a map.
 This is similar to the usage of a [[!-MapFixture-!][MapFixtureTest#ddt]] as dynamic decisision table, only there each row is a map and the columns represent the keys.
 
-!2 One Level
+!2 Single map created
 
-We define two maps, and store these in variables.
+We create a map consisting of two nested maps.
 
 |table:map of maps fixture|
 |     |NL  |EN            |
 |dog  |Hond|Dog           |
 |cat  |Kat |Cat           |
-|     |$nl=|$en=          |
+|$all=                    |
 
-We check each variable.
+We check the top level map.
+
+|script|map fixture|$all      |
+|check |size of    |NL    |2  |
+|check |size of    |EN    |2  |
+|check |value      |EN.dog|Dog|
+
+
+!2 Create map per column
+
+We define two maps, and store these in separate variables.
+
+|table:map of maps fixture|
+|     |NL  |EN            |
+|dog  |Hond|Dog           |
+|cat  |Kat |Cat           |
+|$all=|$nl=|$en=          |
+
+We check the top level map.
+
+|script|map fixture|$all      |
+|check |size of    |NL    |2  |
+|check |size of    |EN    |2  |
+|check |value      |EN.dog|Dog|
+
+We check each column's variable.
 
 |script|map fixture|$nl     |
 |check |value      |dog|Hond|
@@ -25,9 +50,9 @@ We check each variable.
 |check |value      |dog|Dog|
 |check |value      |cat|Cat|
 
-!2 Nested
+!2 Nested maps
 
-We define two maps, containing the values from the previous table.
+We define two maps, containing the values from the previous table. And we don't create a variable containing entire table.
 
 |table :map of maps fixture|
 |      |NL   |EN           |
@@ -90,7 +115,7 @@ We check each variable.
 |check |value      |chicken.mouth  |Beak       |
 |show  |value      |chicken                    |
 
-!2 We can choose to use nested map notation
+!2 We can choose NOT to use nested map notation
 
 We define two maps, and store these in variables, we override the default so that periods are just regular parts of a key.
 
