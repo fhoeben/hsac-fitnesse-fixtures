@@ -6,6 +6,7 @@ SymbolicLinks
 
 This page is overwritten by each run of the SuiteGenerator, do not edit manually but use that page and the template used to change its contents.
 
+!define code {EN}
 !define dog {Dog}
 !define cat {Cat}
 
