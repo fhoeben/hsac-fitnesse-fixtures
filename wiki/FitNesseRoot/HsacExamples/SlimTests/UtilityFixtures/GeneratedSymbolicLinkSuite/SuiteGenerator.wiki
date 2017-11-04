@@ -14,13 +14,9 @@ This test is 'skipped' on normal execution of the suite, only when explicitly ex
 |cat  |Kat |Cat           |
 |$all=|$nl=|$en=          |
 
-|script   |freemarker fixture                        |
-|set value|$en           |for|vars                   |
-|$enSuite=|apply template|!-PerLocaleTests.ftl.wiki-!|
-|set value|$nl           |for|vars                   |
-|$nlSuite=|apply template|!-PerLocaleTests.ftl.wiki-!|
-
 |script       |file fixture                                                                      |
 |set directory|!-FitNesseRoot/HsacExamples/SlimTests/UtilityFixtures/GeneratedSymbolicLinkSuite-!|
-|$createdEn=  |create|!-EnLocaleTests.wiki-!|containing|$enSuite                                 |
-|$createdNl=  |create|!-NlLocaleTests.wiki-!|containing|$nlSuite                                 |
+|set value    |$en   |for                   |vars                                                |
+|show         |create|!-EnLocaleTests.wiki-!|using|!-PerLocaleTests.ftl.wiki-!                   |
+|set value    |$nl   |for                   |vars                                                |
+|show         |create|!-NlLocaleTests.wiki-!|using|!-PerLocaleTests.ftl.wiki-!                   |
