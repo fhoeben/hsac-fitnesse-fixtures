@@ -24,6 +24,22 @@ We check the top level map.
 |check |size of    |EN    |2  |
 |check |value      |EN.dog|Dog|
 
+We can also have the header row be included in the nested maps.
+
+|table:map of maps fixture|
+|code |NL  |EN            |
+|dog  |Hond|Dog           |
+|cat  |Kat |Cat           |
+|$all2=                   |
+
+We check the top level map.
+
+|script|map fixture|$all2      |
+|check |size of    |NL     |3  |
+|check |size of    |EN     |3  |
+|check |value      |EN.dog |Dog|
+|check |value      |EN.code|EN |
+
 
 !2 Create map per column
 

@@ -53,9 +53,14 @@ public class MapOfMapsFixture extends SlimTableFixture {
     }
 
     protected void handleHeader(List<String> resultRow, List<String> header) {
+        String firstCell = header.get(0);
         for (int i = 1; i < header.size(); i++) {
             String headerCell = header.get(i);
-            maps.put(headerCell, new LinkedHashMap<>());
+            LinkedHashMap<String, Object> nestedMap = new LinkedHashMap<>();
+            maps.put(headerCell, nestedMap);
+            if (StringUtils.isNotEmpty(firstCell)) {
+                nestedMap.put(firstCell, headerCell);
+            }
         }
     }
 
