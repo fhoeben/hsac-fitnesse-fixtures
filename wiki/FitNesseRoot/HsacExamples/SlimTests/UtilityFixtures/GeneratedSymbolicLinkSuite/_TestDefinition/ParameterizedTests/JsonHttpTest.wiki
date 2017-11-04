@@ -8,3 +8,6 @@
 |get from|$url                |
 |check   |json path|dog|${dog}|
 |check   |json path|cat|${cat}|
+
+|script|mock xml server setup|
+|stop                        |

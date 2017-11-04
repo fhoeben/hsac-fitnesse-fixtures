@@ -42,3 +42,6 @@ And now a call which returns an error status code.
 |reject|get from       |$url  |
 |check |response status|500   |
 |check |response       |Broken|
+
+|script|mock xml server setup|
+|stop                        |
