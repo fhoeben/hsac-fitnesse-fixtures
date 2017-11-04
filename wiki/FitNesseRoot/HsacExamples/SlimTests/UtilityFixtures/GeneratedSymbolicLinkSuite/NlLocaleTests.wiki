@@ -1,0 +1,12 @@
+---
+Suite
+SymbolicLinks
+  Tests: <GeneratedSymbolicLinkSuite._TestDefinition.ParameterizedTests
+---
+
+This page is overwritten by each run of the SuiteGenerator, do not edit manually but use that page and the template used to change its contents.
+
+!define dog {Hond}
+!define cat {Kat}
+
+!contents -R2 -g -p -f -h

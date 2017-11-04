@@ -1,0 +1,26 @@
+---
+Help: Generates suites with symbolic links to real test suite.
+Prune
+Suite: no
+Test
+---
+This test should be run once after the content of the 'map of maps table' below is changed. To update the suites run per locale.
+
+This test is 'skipped' on normal execution of the suite, only when explicitly executed will it do its thing.
+
+|table:map of maps fixture|
+|     |NL  |EN            |
+|dog  |Hond|Dog           |
+|cat  |Kat |Cat           |
+|$all=|$nl=|$en=          |
+
+|script   |freemarker fixture                        |
+|set value|$en           |for|vars                   |
+|$enSuite=|apply template|!-PerLocaleTests.ftl.wiki-!|
+|set value|$nl           |for|vars                   |
+|$nlSuite=|apply template|!-PerLocaleTests.ftl.wiki-!|
+
+|script       |file fixture                                                                      |
+|set directory|!-FitNesseRoot/HsacExamples/SlimTests/UtilityFixtures/GeneratedSymbolicLinkSuite-!|
+|$createdEn=  |create|!-EnLocaleTests.wiki-!|containing|$enSuite                                 |
+|$createdNl=  |create|!-NlLocaleTests.wiki-!|containing|$nlSuite                                 |

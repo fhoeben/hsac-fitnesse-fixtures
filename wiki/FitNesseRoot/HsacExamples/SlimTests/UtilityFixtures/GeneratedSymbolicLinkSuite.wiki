@@ -1,0 +1,5 @@
+---
+Help: Suite demonstrating (nested) suites based on a single definition, but with different configuration using variables.
+Suite
+---
+!contents -R2 -g -p -f -h

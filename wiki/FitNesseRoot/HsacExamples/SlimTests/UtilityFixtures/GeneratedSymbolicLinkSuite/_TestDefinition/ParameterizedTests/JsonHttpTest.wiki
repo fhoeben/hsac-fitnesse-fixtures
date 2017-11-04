@@ -1,0 +1,10 @@
+!define jsonToTest {!-{-!"dog": "${dog}", "cat": "${cat}"!-}-!}
+
+|script      |mock xml server setup|
+|add response|${jsonToTest}        |
+|$url=       |get mock server url  |
+
+|script  |json http test      |
+|get from|$url                |
+|check   |json path|dog|${dog}|
+|check   |json path|cat|${cat}|
