@@ -1,10 +1,10 @@
 ---
-Help: Generates suites with symbolic links to real test suite.
+Help: Generates a suite per locale with symbolic links to real test suite.
 Prune
 Suite: no
 Test
 ---
-This test should be run once after the content of the 'map of maps table' below is changed. To update the suites run per locale.
+This test should be run once after the content of the 'map of maps table' below is changed to update the suites to be run per locale.
 
 This test is 'skipped' on normal execution of the suite, only when explicitly executed will it do its thing.
 
@@ -12,7 +12,7 @@ This test is 'skipped' on normal execution of the suite, only when explicitly ex
 |code |NL  |EN            |
 |dog  |Hond|Dog           |
 |cat  |Kat |Cat           |
-|$all=|$nl=|$en=          |
+|     |$nl=|$en=          |
 
 |script       |file fixture                                                                      |
 |set directory|!-FitNesseRoot/HsacExamples/SlimTests/UtilityFixtures/GeneratedSymbolicLinkSuite-!|
