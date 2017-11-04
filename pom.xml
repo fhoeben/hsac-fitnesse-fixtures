@@ -312,6 +312,7 @@
 				<version>2.20</version>
 				<executions>
 					<execution>
+						<!-- Generates suites below HsacExamples.SlimTests.UtilityFixtures.GeneratedSymbolicLinkSuite -->
 						<id>generate-suite</id>
 						<phase>test-compile</phase>
 						<goals>
