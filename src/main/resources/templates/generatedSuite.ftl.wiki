@@ -1,0 +1,14 @@
+---
+Help: Generated page to test ${vars.code}, contains actual tests as Tests using symbolic link
+Suite
+SymbolicLinks
+  Tests: ${symbolicLink}
+---
+
+'''This page is overwritten''' by each run of SuiteGenerator, '''do not edit manually''' but use that page and the template used to change this page's contents.
+
+<#list vars?keys as key>
+!define ${key} {${vars[key]}}
+</#list>
+
+!contents -R2 -g -p -f -h

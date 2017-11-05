@@ -22,7 +22,12 @@ public class FileFixture extends SlimFixtureWithMap {
             relativeDir = relativeDir.replace('/', File.separatorChar);
             directory = filesDir + relativeDir;
         } else {
-            directory = aDirectory;
+            if (new File(aDirectory).isAbsolute()) {
+                directory = aDirectory;
+            } else {
+                // relative directories are relative to the FitNesseDir
+                directory = new File(getEnvironment().getFitNesseDir(), aDirectory).getAbsolutePath();
+            }
         }
         if (!directory.endsWith(File.separator)) {
             directory += File.separator;

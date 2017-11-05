@@ -312,6 +312,21 @@
 				<version>2.20</version>
 				<executions>
 					<execution>
+						<!-- Generates suites below HsacExamples.SlimTests.UtilityFixtures.GeneratedSymbolicLinkSuite -->
+						<id>generate-suite</id>
+						<phase>test-compile</phase>
+						<goals>
+							<goal>integration-test</goal>
+						</goals>
+						<configuration>
+							<systemPropertyVariables>
+								<fitnesseSuiteToRun>HsacExamples.SlimTests.UtilityFixtures.GeneratedSymbolicLinkSuite.SuiteGenerator</fitnesseSuiteToRun>
+							</systemPropertyVariables>
+						</configuration>
+					</execution>
+					<execution>
+						<id>run-fitnesse-tests</id>
+						<phase>integration-test</phase>
 						<goals>
 							<goal>integration-test</goal>
 						</goals>

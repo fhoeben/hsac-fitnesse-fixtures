@@ -104,7 +104,9 @@ public class HsacFitNesseRunner extends FitNesseRunner {
             String outputDir = getOutputDir(suiteClass);
             new File(outputDir).mkdirs();
 
-            String srcRootDir = getFitNesseDir(suiteClass) + "/" + getFitNesseRoot(suiteClass);
+            String fitNesseDir = getFitNesseDir(suiteClass);
+            environment.setFitNesseDir(fitNesseDir);
+            String srcRootDir = fitNesseDir + "/" + getFitNesseRoot(suiteClass);
             environment.setFitNesseRoot(srcRootDir);
             String srcFilesDir = environment.getFitNesseFilesSectionDir();
 

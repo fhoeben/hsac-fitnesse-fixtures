@@ -43,6 +43,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Environment {
     private final static Environment INSTANCE = new Environment();
+    private String fitNesseDir = ".";
     private String fitNesseRoot = ContextConfigurator.DEFAULT_ROOT;
     private Configuration freemarkerConfig;
     private FreeMarkerHelper fmHelper;
@@ -564,6 +565,14 @@ public class Environment {
 
     public void setSeleniumDriverManager(DriverManager driverManager) {
         this.driverManager = driverManager;
+    }
+
+    public String getFitNesseDir() {
+        return fitNesseDir;
+    }
+
+    public void setFitNesseDir(String fitNesseDir) {
+        this.fitNesseDir = fitNesseDir;
     }
 
     /**

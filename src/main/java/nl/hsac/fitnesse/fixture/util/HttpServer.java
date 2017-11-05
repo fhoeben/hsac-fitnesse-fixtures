@@ -116,7 +116,15 @@ public class HttpServer <T extends HttpResponse> {
                 }
             }
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            try {
+                // unable to get port for public address try loopback address, which will only work on this machine
+                // better than nothing
+                InetAddress loopback = InetAddress.getLoopbackAddress();
+                server.bind(new InetSocketAddress(loopback, 0), 1);
+            } catch (IOException e) {
+                // ignore and throw new ex with original as cause
+                throw new RuntimeException(ex);
+            }
         }
     }
 

@@ -1,12 +1,16 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import nl.hsac.fitnesse.fixture.Environment;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class FileFixtureTest {
     private final FileFixture fixture = new FileFixture();
@@ -22,6 +26,15 @@ public class FileFixtureTest {
         assertEquals(defaultFixtureDir, fixture.getDirectory());
         fixture.setDirectory(testResourcesDir);
         assertEquals(testResourcesDir, fixture.getDirectory());
+    }
+
+    @Test
+    public void testGetAndSetDirectoryRelative() {
+        String childDir = "bla";
+        fixture.setDirectory(childDir);
+        String fitNesseDir = Environment.getInstance().getFitNesseDir();
+        String expected = new File(fitNesseDir, childDir).getAbsolutePath() + File.separator;
+        assertEquals(expected, fixture.getDirectory());
     }
 
     @Test

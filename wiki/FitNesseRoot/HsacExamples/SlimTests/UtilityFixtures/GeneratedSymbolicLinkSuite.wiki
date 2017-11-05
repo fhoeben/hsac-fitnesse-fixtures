@@ -1,0 +1,13 @@
+---
+Help: Suite demonstrating (nested) suites based on a single definition, but with different configuration using variables.
+Suite
+---
+This suite is quite strange, but demonstrates a powerfull concept: it contains a test (to be run manually) which updates the wiki itself, so that a whole family of test suites can be maintained from single source.
+
+The real test contents of each suites are defined by a single 'source suite' which is parameterized using wiki symbols ([[_TestDefinition.ParameterizedTests][.HsacAcceptanceTests.SlimTests.UtilityFixtures.GeneratedSymbolicLinkSuite._TestDefinition.ParameterizedTests]]).
+This suite is embedded in suites defining values for all parameters using symbolic links (>EnLocaleTests and >NlLocaleTests). These are the tests which are normally run.
+A single test page (>SuiteGenerator) contains a table definining the variables for each of these suites, so that an easy overview is available.
+Running this last test page actually overwrites the existing wiki pages for each of the suites defining the tests that are normally run (during a normal run this test page is skipped).
+This ensures all suites are consistent with the overview, and removes the need to manually edit each individual page each time a variable is added.
+
+!contents -R2 -g -p -f -h

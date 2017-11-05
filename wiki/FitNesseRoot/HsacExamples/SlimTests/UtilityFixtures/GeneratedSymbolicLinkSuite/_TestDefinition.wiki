@@ -1,0 +1,6 @@
+---
+Help: Container for generic tests, will not be executed directly, but embedded (via symbolic links in other suites)
+Prune
+Suite
+---
+!contents -R2 -g -p -f -h

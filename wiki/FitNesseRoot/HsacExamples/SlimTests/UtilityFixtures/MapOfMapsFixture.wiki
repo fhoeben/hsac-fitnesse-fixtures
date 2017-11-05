@@ -1,0 +1,162 @@
+---
+Help: This fixture allows the definition of a map of maps using a table where the each column represents a top-level map.
+Test
+---
+When using the !-MapOfMapsFixture-! in a [["Table" table][.FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests.SliM.TableTable]] each column of the table defines a set of key-value pairs (or map or hash) and each row defines a key in such a map.
+This is similar to the usage of a [[!-MapFixture-!][MapFixtureTest#ddt]] as dynamic decisision table, only there each row is a map and the columns represent the keys.
+
+The bottom row of the table should contain assignment(s) to Slim variables to store the maps.
+
+!2 Single map created
+
+We create a map consisting of two nested maps.
+
+|table:map of maps fixture|
+|     |NL  |EN            |
+|dog  |Hond|Dog           |
+|cat  |Kat |Cat           |
+|$all=                    |
+
+We check the top level map.
+
+|script|map fixture|$all      |
+|check |size of    |NL    |2  |
+|check |size of    |EN    |2  |
+|check |value      |EN.dog|Dog|
+
+We can also have the header row be included in the nested maps.
+
+|table:map of maps fixture|
+|code |NL  |EN            |
+|dog  |Hond|Dog           |
+|cat  |Kat |Cat           |
+|$all2=                   |
+
+We check the top level map.
+
+|script|map fixture|$all2      |
+|check |size of    |NL     |3  |
+|check |size of    |EN     |3  |
+|check |value      |EN.dog |Dog|
+|check |value      |EN.code|EN |
+
+
+!2 Create map per column
+
+We define two maps, and store these in separate variables.
+
+|table:map of maps fixture|
+|     |NL  |EN            |
+|dog  |Hond|Dog           |
+|cat  |Kat |Cat           |
+|$all=|$nl=|$en=          |
+
+We check the top level map.
+
+|script|map fixture|$all      |
+|check |size of    |NL    |2  |
+|check |size of    |EN    |2  |
+|check |value      |EN.dog|Dog|
+
+We check each column's variable.
+
+|script|map fixture|$nl     |
+|check |value      |dog|Hond|
+|check |value      |cat|Kat |
+
+|script|map fixture|$en    |
+|check |value      |dog|Dog|
+|check |value      |cat|Cat|
+
+!2 Nested maps
+
+We define two maps, containing the values from the previous table. And we don't create a variable containing entire table.
+
+|table :map of maps fixture|
+|      |NL   |EN           |
+|nested|$nl  |$en          |
+|duck  |Eend |Duck         |
+|      |$nl2=|$en2=        |
+
+We check each variable.
+
+|script|map fixture|$nl2           |
+|check |value      |duck      |Eend|
+|check |value      |nested.cat|Kat |
+|show  |value      |nested         |
+
+
+|script|map fixture|$en2           |
+|check |value      |duck      |Duck|
+|check |value      |nested.cat|Cat |
+|show  |value      |nested         |
+
+
+We check each original variable did not change.
+
+|script|map fixture|$nl     |
+|check |value      |dog|Hond|
+|check |value      |cat|Kat |
+
+|script|map fixture|$en    |
+|check |value      |dog|Dog|
+|check |value      |cat|Cat|
+
+!2 We can choose to use nested map notation
+
+We define two maps, and store these in variables, the default notation is that periods indicate nested maps are to be used.
+
+|table          :map of maps fixture|
+|               |NL     |EN         |
+|dog            |Hond   |Dog        |
+|chicken.mouth  |Snavel |Beak       |
+|chicken.legs[0]|Vleugel|Wing       |
+|chicken.legs[1]|Poot   |Leg        |
+|               |$nl3=  |$en3=      |
+
+We check each variable.
+
+|script|list fixture   |
+|display lists standard|
+
+|script|map fixture|$nl3                           |
+|check |value      |dog            |Hond           |
+|check |value      |chicken.legs   |[Vleugel, Poot]|
+|check |value      |chicken.legs[0]|Vleugel        |
+|check |value      |chicken.mouth  |Snavel         |
+|show  |value      |chicken                        |
+
+|script|map fixture|$en3                       |
+|check |value      |dog            |Dog        |
+|check |value      |chicken.legs   |[Wing, Leg]|
+|check |value      |chicken.legs[0]|Wing       |
+|check |value      |chicken.mouth  |Beak       |
+|show  |value      |chicken                    |
+
+!2 We can choose NOT to use nested map notation
+
+We define two maps, and store these in variables, we override the default so that periods are just regular parts of a key.
+
+|table          :map of maps fixture|false|
+|               |NL                 |EN   |
+|dog            |Hond               |Dog  |
+|chicken.mouth  |Snavel             |Beak |
+|chicken.legs[0]|Vleugel            |Wing |
+|chicken.legs[1]|Poot               |Leg  |
+|               |$nl4=              |$en4=|
+
+We check each variable.
+
+|script|map fixture|$nl4                   |
+|check |value      |dog            |Hond   |
+|check |value      |chicken.legs   |null   |
+|check |value      |chicken.legs[0]|Vleugel|
+|check |value      |chicken.mouth  |Snavel |
+|check |value      |chicken        |null   |
+
+|script|map fixture|$en4                |
+|check |value      |dog            |Dog |
+|check |value      |chicken.legs   |null|
+|check |value      |chicken.legs[0]|Wing|
+|check |value      |chicken.mouth  |Beak|
+|check |value      |chicken        |null|
