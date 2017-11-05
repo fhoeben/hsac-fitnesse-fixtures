@@ -1,0 +1,11 @@
+In this setup page we define a JSON server which contains labels translated in both in English and Dutch. The nested tests/suites check the results for each locale.
+
+!include -c .HsacExamples.SlimTests.SuiteSetUp
+
+!define jsonEN {!-{-!"dog": "Dog", "cat": "Cat"!-}-!}
+!define jsonNL {!-{-!"dog": "Hond", "cat": "Kat"!-}-!}
+
+|script      |mock xml server setup              |
+|add response|${jsonEN}|for|GET: /FitNesseMock/EN|
+|add response|${jsonNL}|for|GET: /FitNesseMock/NL|
+|$url=       |get mock server url                |

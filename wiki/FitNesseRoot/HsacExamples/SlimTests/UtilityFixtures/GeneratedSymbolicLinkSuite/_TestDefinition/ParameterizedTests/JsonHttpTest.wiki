@@ -1,15 +1,6 @@
-!define jsonEN {!-{-!"dog": "Dog", "cat": "Cat"!-}-!}
-!define jsonNL {!-{-!"dog": "Hond", "cat": "Kat"!-}-!}
-
-|script      |mock xml server setup              |
-|add response|${jsonEN}|for|GET: /FitNesseMock/EN|
-|add response|${jsonNL}|for|GET: /FitNesseMock/NL|
-|$url=       |get mock server url                |
+Get JSON for locale ${code}, and check that key's value are indeed correctly translated.
 
 |script  |json http test      |
 |get from|$url/${code}        |
 |check   |json path|dog|${dog}|
 |check   |json path|cat|${cat}|
-
-|script|mock xml server setup|
-|stop                        |

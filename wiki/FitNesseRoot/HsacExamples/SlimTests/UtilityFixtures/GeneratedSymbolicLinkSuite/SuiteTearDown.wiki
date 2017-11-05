@@ -1,0 +1,4 @@
+Stop the JSON server after the tests have run.
+
+|script|mock xml server setup|
+|stop                        |
