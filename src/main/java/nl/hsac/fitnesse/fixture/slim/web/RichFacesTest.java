@@ -211,7 +211,7 @@ public class RichFacesTest extends BrowserTest<WebElement> {
     /**
      * Exception to indicate timeout while waiting for RichFace's ajax call to complete.
      */
-    public class AjaxTimeout extends SlimFixtureException {
+    public static class AjaxTimeout extends SlimFixtureException {
         public AjaxTimeout(String message, ScriptTimeoutException e) {
             super(false, message, e);
         }
