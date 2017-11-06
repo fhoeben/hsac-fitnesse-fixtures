@@ -1,5 +1,5 @@
 ---
-Help: Test support for RichFaces Ajax (disabled because Richfaces showcase site is too unreliable/slow)
+Help: Test support for RichFaces Ajax
 ---
 Unfortunately we can't check with local server (since we don't want to set up all javascript dependencies).
 We ensure we can properly wait for richfaces ajax to render elements.
