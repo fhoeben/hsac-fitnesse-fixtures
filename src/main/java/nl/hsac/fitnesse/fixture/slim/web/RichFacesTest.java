@@ -1,8 +1,10 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
 import fitnesse.slim.fixtureInteraction.FixtureInteraction;
+import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import nl.hsac.fitnesse.fixture.util.selenium.by.LabelBy;
 import org.openqa.selenium.JavascriptException;
+import org.openqa.selenium.ScriptTimeoutException;
 import org.openqa.selenium.WebElement;
 
 import java.lang.reflect.Method;
@@ -16,6 +18,7 @@ import java.util.List;
  */
 public class RichFacesTest extends BrowserTest<WebElement> {
     private final List<String> eventsThatMayRequireWaiting = new ArrayList<>(Arrays.asList("onchange", "onclick"));
+    private boolean ignoreImplicitAjaxWaitTimeouts = true;
     private boolean shouldWaitForAjax = false;
     private String previousLocation = null;
 
@@ -37,7 +40,18 @@ public class RichFacesTest extends BrowserTest<WebElement> {
     protected Object invoke(FixtureInteraction interaction, Method method, Object[] arguments) throws Throwable {
         Object result = super.invoke(interaction, method, arguments);
         if (shouldWaitForAjax()) {
-            waitForJsfAjaxImpl(true);
+            try {
+                waitForJsfAjaxImpl(true);
+            } catch (ScriptTimeoutException e) {
+                if (ignoreImplicitAjaxWaitTimeouts) {
+                    // log message but do not throw
+                    System.err.println("Timeout while waiting for ajax call after: " + method.getName() + " with arguments: " + Arrays.toString(arguments));
+                    String msg = createAjaxTimeoutMessage(e);
+                    System.err.println("Exception not forwarded to wiki: " + msg);
+                } else {
+                    throw createAjaxTimeout(e);
+                }
+            }
         }
         return result;
     }
@@ -137,7 +151,11 @@ public class RichFacesTest extends BrowserTest<WebElement> {
     }
 
     public void waitForJsfAjax() {
-        waitForJsfAjaxImpl(false);
+        try {
+            waitForJsfAjaxImpl(false);
+        } catch (ScriptTimeoutException e) {
+            throw createAjaxTimeout(e);
+        }
     }
 
     protected void waitForJsfAjaxImpl(boolean checkLocation) {
@@ -171,5 +189,31 @@ public class RichFacesTest extends BrowserTest<WebElement> {
 
     public List<String> getEventsThatMayRequireWaiting() {
         return eventsThatMayRequireWaiting;
+    }
+
+    public void setIgnoreImplicitAjaxWaitTimeouts(boolean ignoreAjaxWaitTimeouts) {
+        ignoreImplicitAjaxWaitTimeouts = ignoreAjaxWaitTimeouts;
+    }
+
+    public boolean willIgnoreImplicitAjaxWaitTimeouts() {
+        return ignoreImplicitAjaxWaitTimeouts;
+    }
+
+    protected AjaxTimeout createAjaxTimeout(ScriptTimeoutException e) {
+        return new AjaxTimeout(createAjaxTimeoutMessage(e), e);
+    }
+
+    protected String createAjaxTimeoutMessage(ScriptTimeoutException e) {
+        String messageBase = "Did not detect completion of RichFaces ajax call: " + e.getMessage();
+        return getSlimFixtureExceptionMessage("timeouts", "rfAjaxTimeout", messageBase, e);
+    }
+
+    /**
+     * Exception to indicate timeout while waiting for RichFace's ajax call to complete.
+     */
+    public class AjaxTimeout extends SlimFixtureException {
+        public AjaxTimeout(String message, ScriptTimeoutException e) {
+            super(false, message, e);
+        }
     }
 }
