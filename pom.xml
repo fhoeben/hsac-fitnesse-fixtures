@@ -41,7 +41,7 @@
 		<hsac-fitnesse-plugin.version>1.18.3</hsac-fitnesse-plugin.version>
 		<maven-classpath-plugin.version>1.9</maven-classpath-plugin.version>
 		<fitnesse.version>20161106</fitnesse.version>
-		<selenium.version>3.6.0</selenium.version>
+		<selenium.version>3.7.0</selenium.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<apache.http.version>4.5.3</apache.http.version>
 
@@ -49,7 +49,7 @@
 		<selenium.internetexplorerdriver.version>${selenium.version}</selenium.internetexplorerdriver.version>
 		<selenium.edgedriver.version>4.15063</selenium.edgedriver.version>
 		<selenium.chromedriver.version>2.33</selenium.chromedriver.version>
-		<selenium.geckodriver.version>0.19</selenium.geckodriver.version>
+		<selenium.geckodriver.version>0.19.1</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
