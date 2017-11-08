@@ -705,6 +705,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     @WaitUntil
     public boolean doubleClickIn(String place, String container) {
+        place = cleanupValue(place);
         WebElement element = getElementToClick(place, container);
         return doubleClick(element);
     }
@@ -728,6 +729,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     @WaitUntil
     public boolean rightClickIn(String place, String container) {
+        place = cleanupValue(place);
         WebElement element = getElementToClick(place, container);
         return rightClick(element);
     }
@@ -751,6 +753,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     @WaitUntil
     public boolean shiftClickIn(String place, String container) {
+        place = cleanupValue(place);
         WebElement element = getElementToClick(place, container);
         return shiftClick(element);
     }
@@ -774,6 +777,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     @WaitUntil
     public boolean controlClickIn(String place, String container) {
+        place = cleanupValue(place);
         WebElement element = getElementToClick(place, container);
         return controlClick(element);
     }
@@ -837,6 +841,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         if (container == null) {
             result = action.get();
         } else {
+            container = cleanupValue(container);
             T containerElement = getContainerElement(container);
             if (containerElement != null) {
                 result = doInContainer(containerElement, action);
