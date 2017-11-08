@@ -17,14 +17,17 @@ import nl.hsac.fitnesse.fixture.util.selenium.by.ToClickBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
@@ -561,6 +564,15 @@ public class SeleniumHelper<T extends WebElement> {
     }
 
     /**
+     * Simulates clicking with the supplied key pressed on the supplied element.
+     * Key will be released after click.
+     * @param element element to click on
+     */
+    public void clickWithKeyDown(WebElement element, CharSequence key) {
+        getActions().keyDown(key).click(element).keyUp(key).perform();
+    }
+
+    /**
      * Simulates a drag from source element and drop to target element
      * @param source element to start the drag
      * @param target element to end the drag
@@ -695,6 +707,29 @@ public class SeleniumHelper<T extends WebElement> {
         RemoteWebDriver remoteWebDriver = (RemoteWebDriver) driver;
         String browserName = remoteWebDriver.getCapabilities().getBrowserName();
         return expectedName.equalsIgnoreCase(browserName);
+    }
+
+    /**
+     * @return Keys#COMMAND if the browser is running on a Mac, or Keys#CONTROL otherwise.
+     */
+    public Keys getControlOrCommand() {
+        return connectedToMac() ? Keys.COMMAND : Keys.CONTROL;
+    }
+
+    /**
+     * @return whether current driver connects to browser on a Mac
+     */
+    public boolean connectedToMac() {
+        boolean isMac;
+        WebDriver driver = driver();
+        if (driver instanceof RemoteWebDriver) {
+            RemoteWebDriver remoteWebDriver = (RemoteWebDriver) driver;
+            Platform platform = remoteWebDriver.getCapabilities().getPlatform();
+            isMac = Platform.MAC == platform || Platform.MAC == platform.family();
+        } else {
+            isMac = SystemUtils.IS_OS_MAC;
+        }
+        return isMac;
     }
 
     /**

@@ -114,32 +114,38 @@ function clearAll() {
 |add response|${HTML}              |
 |$url=       |get mock server url  |
 
-|script       |browser test                                                 |
-|             |seconds before timeout|1                                     |
-|open         |$url                                                         |
-|check        |value of              |Selected|in row where|Name|is|John  |O|
-|check        |value of              |Selected|in row where|Name|is|Jack  |O|
-|check        |value of              |Selected|in row where|Name|is|Michel|O|
-|check        |value of              |Selected|in row where|Name|is|Mike  |O|
-|check        |value of              |Selected|in row where|Name|is|Yke   |O|
-|click        |Jack                                                         |
-|check        |value of              |Selected|in row where|Name|is|John  |O|
-|check        |value of              |Selected|in row where|Name|is|Jack  |X|
-|check        |value of              |Selected|in row where|Name|is|Michel|O|
-|check        |value of              |Selected|in row where|Name|is|Mike  |O|
-|check        |value of              |Selected|in row where|Name|is|Yke   |O|
-|shift click  |Yke                                                          |
-|check        |value of              |Selected|in row where|Name|is|John  |O|
-|check        |value of              |Selected|in row where|Name|is|Jack  |X|
-|check        |value of              |Selected|in row where|Name|is|Michel|X|
-|check        |value of              |Selected|in row where|Name|is|Mike  |X|
-|check        |value of              |Selected|in row where|Name|is|Yke   |X|
-|control click|Michel                                                       |
-|check        |value of              |Selected|in row where|Name|is|John  |O|
-|check        |value of              |Selected|in row where|Name|is|Jack  |X|
-|check        |value of              |Selected|in row where|Name|is|Michel|O|
-|check        |value of              |Selected|in row where|Name|is|Mike  |X|
-|check        |value of              |Selected|in row where|Name|is|Yke   |X|
+|script                                |browser test                   |
+|open                                  |$url                           |
+|ensure                                |send command for control on Mac|
+|set send command for control on mac to|false                          |
+|reject                                |send command for control on Mac|
+|set send command for control on mac to|true                           |
+|seconds before timeout                |1                              |
+
+|script                                                       |
+|check        |value of|Selected|in row where|Name|is|John  |O|
+|check        |value of|Selected|in row where|Name|is|Jack  |O|
+|check        |value of|Selected|in row where|Name|is|Michel|O|
+|check        |value of|Selected|in row where|Name|is|Mike  |O|
+|check        |value of|Selected|in row where|Name|is|Yke   |O|
+|click        |Jack                                           |
+|check        |value of|Selected|in row where|Name|is|John  |O|
+|check        |value of|Selected|in row where|Name|is|Jack  |X|
+|check        |value of|Selected|in row where|Name|is|Michel|O|
+|check        |value of|Selected|in row where|Name|is|Mike  |O|
+|check        |value of|Selected|in row where|Name|is|Yke   |O|
+|shift click  |Yke                                            |
+|check        |value of|Selected|in row where|Name|is|John  |O|
+|check        |value of|Selected|in row where|Name|is|Jack  |X|
+|check        |value of|Selected|in row where|Name|is|Michel|X|
+|check        |value of|Selected|in row where|Name|is|Mike  |X|
+|check        |value of|Selected|in row where|Name|is|Yke   |X|
+|control click|Michel                                         |
+|check        |value of|Selected|in row where|Name|is|John  |O|
+|check        |value of|Selected|in row where|Name|is|Jack  |X|
+|check        |value of|Selected|in row where|Name|is|Michel|O|
+|check        |value of|Selected|in row where|Name|is|Mike  |X|
+|check        |value of|Selected|in row where|Name|is|Yke   |X|
 
 |script|mock xml server setup|
 |stop                        |

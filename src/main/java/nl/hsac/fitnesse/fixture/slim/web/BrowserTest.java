@@ -57,6 +57,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     private String screenshotHeight = "200";
     private String downloadBase = new File(filesDir, "downloads").getPath() + "/";
     private String pageSourceBase = new File(filesDir, "pagesources").getPath() + "/";
+    private boolean sendCommandForControlOnMac = true;
 
     @Override
     protected void beforeInvoke(Method method, Object[] arguments) {
@@ -589,6 +590,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         CharSequence s;
         try {
             s = Keys.valueOf(key.toUpperCase());
+            if (Keys.CONTROL.equals(s) && sendCommandForControlOnMac) {
+                s = getSeleniumHelper().getControlOrCommand();
+            }
         } catch (IllegalArgumentException e) {
             s = key;
         }
@@ -743,7 +747,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected boolean shiftClick(WebElement element) {
-        return doIfInteractable(element, () -> clickWithKeyDown(element, Keys.SHIFT));
+        return doIfInteractable(element, () -> getSeleniumHelper().clickWithKeyDown(element, Keys.SHIFT));
     }
 
     @WaitUntil
@@ -759,11 +763,19 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected boolean controlClick(WebElement element) {
-        return doIfInteractable(element, () -> clickWithKeyDown(element, Keys.CONTROL));
+        return doIfInteractable(element, () -> getSeleniumHelper().clickWithKeyDown(element, controlKey()));
     }
 
-    protected void clickWithKeyDown(WebElement element, CharSequence key) {
-        getSeleniumHelper().getActions().keyDown(key).click(element).keyUp(key).perform();
+    public void setSendCommandForControlOnMacTo(boolean sendCommand) {
+        sendCommandForControlOnMac = sendCommand;
+    }
+
+    public boolean sendCommandForControlOnMac() {
+        return sendCommandForControlOnMac;
+    }
+
+    protected Keys controlKey() {
+        return sendCommandForControlOnMac ? getSeleniumHelper().getControlOrCommand() : Keys.CONTROL;
     }
 
     @WaitUntil
@@ -826,9 +838,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     @WaitUntil
     public boolean setSearchContextTo(String container) {
-        boolean result = false;
         container = cleanupValue(container);
         WebElement containerElement = getContainerElement(container);
+        boolean result = false;
         if (containerElement != null) {
             setSearchContextTo(containerElement);
             result = true;
