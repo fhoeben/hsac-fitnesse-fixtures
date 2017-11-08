@@ -745,6 +745,56 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     @WaitUntil
+    public boolean shiftClick(String place) {
+        return shiftClickIn(place, null);
+    }
+
+    @WaitUntil
+    public boolean shiftClickIn(String place, String container) {
+        WebElement element = getElementToClick(place, container);
+        return shiftClick(element);
+    }
+
+    protected boolean shiftClick(WebElement element) {
+        boolean result = false;
+        if (element != null) {
+            scrollIfNotOnScreen(element);
+            if (isInteractable(element)) {
+                clickWithKeyDown(element, Keys.SHIFT);
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    @WaitUntil
+    public boolean controlClick(String place) {
+        return controlClickIn(place, null);
+    }
+
+    @WaitUntil
+    public boolean controlClickIn(String place, String container) {
+        WebElement element = getElementToClick(place, container);
+        return controlClick(element);
+    }
+
+    protected boolean controlClick(WebElement element) {
+        boolean result = false;
+        if (element != null) {
+            scrollIfNotOnScreen(element);
+            if (isInteractable(element)) {
+                clickWithKeyDown(element, Keys.CONTROL);
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    protected void clickWithKeyDown(WebElement element, CharSequence key) {
+        getSeleniumHelper().getActions().keyDown(key).click(element).keyUp(key).perform();
+    }
+
+    @WaitUntil
     public boolean dragAndDropTo(String source, String destination) {
         WebElement sourceElement = getElementToClick(source);
         WebElement destinationElement = getElementToClick(destination);

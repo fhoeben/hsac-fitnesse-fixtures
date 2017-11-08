@@ -1,0 +1,147 @@
+---
+Test
+---
+This test ensures that we can shift click and ctrl- (command- om mac) click on elements.
+
+We use a mock server running to serve the HTML defined in this page
+(used https://stackoverflow.com/questions/17964108/select-multiple-html-table-rows-with-ctrlclick-and-shiftclick#17966381 for sample page).
+
+
+!define HTML { {{{
+<html>
+<body>
+<table id="tableStudent" border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Selected</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr onmousedown="RowClick(this,false);">
+            <td>1</td>
+            <td>John</td>
+            <td>O</td>
+        </tr>
+         <tr onmousedown="RowClick(this,false);">
+            <td>2</td>
+            <td>Jack</td>
+            <td>O</td>
+        </tr>
+         <tr onmousedown="RowClick(this,false);">
+            <td>3</td>
+            <td>Michel</td>
+            <td>O</td>
+        </tr>
+        <tr onmousedown="RowClick(this,false);">
+            <td>4</td>
+            <td>Mike</td>
+            <td>O</td>
+        </tr>
+        <tr onmousedown="RowClick(this,false);">
+            <td>5</td>
+            <td>Yke</td>
+            <td>O</td>
+        </tr>
+    </tbody>
+</table>
+<script>
+var lastSelectedRow;
+var trs = document.getElementById('tableStudent').tBodies[0].getElementsByTagName('tr');
+
+// disable text selection
+document.onselectstart = function() {
+    return false;
+}
+
+function RowClick(currenttr, lock) {
+    if (window.event.ctrlKey) {
+        toggleRow(currenttr);
+    }
+
+    if (window.event.button === 0) {
+        if (!window.event.ctrlKey && !window.event.shiftKey) {
+            clearAll();
+            toggleRow(currenttr);
+        }
+
+        if (window.event.shiftKey) {
+            selectRowsBetweenIndexes([lastSelectedRow.rowIndex, currenttr.rowIndex])
+        }
+    }
+}
+
+function toggleRow(row) {
+    if (row.className = row.className == 'selected') {
+    	row.className = '';
+        row.cells[2].textContent = 'O';
+    } else {
+    	row.className = 'selected';
+        row.cells[2].textContent = 'X';
+    }
+    lastSelectedRow = row;
+}
+
+function selectRowsBetweenIndexes(indexes) {
+    indexes.sort(function(a, b) {
+        return a - b;
+    });
+
+    for (var i = indexes[0]; i <= indexes[1]; i++) {
+        trs[i-1].className = 'selected';
+		trs[i-1].cells[2].textContent = 'X';
+    }
+}
+
+function clearAll() {
+    for (var i = 0; i < trs.length; i++) {
+        trs[i].className = '';
+        trs[i].cells[2].textContent = 'O';
+    }
+}
+</script>
+<style>
+.selected {
+    background: lightBlue
+}
+</style>
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script       |browser test                                                 |
+|             |seconds before timeout|1                                     |
+|open         |$url                                                         |
+|check        |value of              |Selected|in row where|Name|is|John  |O|
+|check        |value of              |Selected|in row where|Name|is|Jack  |O|
+|check        |value of              |Selected|in row where|Name|is|Michel|O|
+|check        |value of              |Selected|in row where|Name|is|Mike  |O|
+|check        |value of              |Selected|in row where|Name|is|Yke   |O|
+|click        |Jack                                                         |
+|check        |value of              |Selected|in row where|Name|is|John  |O|
+|check        |value of              |Selected|in row where|Name|is|Jack  |X|
+|check        |value of              |Selected|in row where|Name|is|Michel|O|
+|check        |value of              |Selected|in row where|Name|is|Mike  |O|
+|check        |value of              |Selected|in row where|Name|is|Yke   |O|
+|shift click  |Yke                                                          |
+|check        |value of              |Selected|in row where|Name|is|John  |O|
+|check        |value of              |Selected|in row where|Name|is|Jack  |X|
+|check        |value of              |Selected|in row where|Name|is|Michel|X|
+|check        |value of              |Selected|in row where|Name|is|Mike  |X|
+|check        |value of              |Selected|in row where|Name|is|Yke   |X|
+|control click|Michel                                                       |
+|check        |value of              |Selected|in row where|Name|is|John  |O|
+|check        |value of              |Selected|in row where|Name|is|Jack  |X|
+|check        |value of              |Selected|in row where|Name|is|Michel|O|
+|check        |value of              |Selected|in row where|Name|is|Mike  |X|
+|check        |value of              |Selected|in row where|Name|is|Yke   |X|
+
+|script|mock xml server setup|
+|stop                        |
+
+
