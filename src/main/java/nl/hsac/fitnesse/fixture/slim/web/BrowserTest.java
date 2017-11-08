@@ -800,7 +800,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     @WaitUntil
     public boolean dragAndDropTo(String source, String destination) {
+        source = cleanupValue(source);
         WebElement sourceElement = getElementToClick(source);
+        destination = cleanupValue(destination);
         WebElement destinationElement = getElementToClick(destination);
         return dragAndDropTo(sourceElement, destinationElement);
     }
