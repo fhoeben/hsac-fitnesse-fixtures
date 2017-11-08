@@ -711,15 +711,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected boolean doubleClick(WebElement element) {
-        boolean result = false;
-        if (element != null) {
-            scrollIfNotOnScreen(element);
-            if (isInteractable(element)) {
-                getSeleniumHelper().doubleClick(element);
-                result = true;
-            }
-        }
-        return result;
+        return doIfInteractable(element, () -> getSeleniumHelper().doubleClick(element));
     }
 
     @WaitUntil
@@ -735,15 +727,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected boolean rightClick(WebElement element) {
-        boolean result = false;
-        if (element != null) {
-            scrollIfNotOnScreen(element);
-            if (isInteractable(element)) {
-                getSeleniumHelper().rightClick(element);
-                result = true;
-            }
-        }
-        return result;
+        return doIfInteractable(element, () -> getSeleniumHelper().rightClick(element));
     }
 
     @WaitUntil
@@ -759,15 +743,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected boolean shiftClick(WebElement element) {
-        boolean result = false;
-        if (element != null) {
-            scrollIfNotOnScreen(element);
-            if (isInteractable(element)) {
-                clickWithKeyDown(element, Keys.SHIFT);
-                result = true;
-            }
-        }
-        return result;
+        return doIfInteractable(element, () -> clickWithKeyDown(element, Keys.SHIFT));
     }
 
     @WaitUntil
@@ -783,15 +759,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected boolean controlClick(WebElement element) {
-        boolean result = false;
-        if (element != null) {
-            scrollIfNotOnScreen(element);
-            if (isInteractable(element)) {
-                clickWithKeyDown(element, Keys.CONTROL);
-                result = true;
-            }
-        }
-        return result;
+        return doIfInteractable(element, () -> clickWithKeyDown(element, Keys.CONTROL));
     }
 
     protected void clickWithKeyDown(WebElement element, CharSequence key) {
@@ -885,11 +853,15 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected boolean clickElement(WebElement element) {
+        return doIfInteractable(element, () -> element.click());
+    }
+
+    protected boolean doIfInteractable(WebElement element, Runnable action) {
         boolean result = false;
         if (element != null) {
             scrollIfNotOnScreen(element);
             if (isInteractable(element)) {
-                element.click();
+                action.run();
                 result = true;
             }
         }
