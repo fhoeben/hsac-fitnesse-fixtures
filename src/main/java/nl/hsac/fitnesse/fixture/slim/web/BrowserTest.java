@@ -859,6 +859,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     @WaitUntil
     public boolean setSearchContextTo(String container) {
         boolean result = false;
+        container = cleanupValue(container);
         WebElement containerElement = getContainerElement(container);
         if (containerElement != null) {
             setSearchContextTo(containerElement);
