@@ -2313,10 +2313,14 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     public boolean selectAll() {
         boolean result = false;
-        WebElement element = getSeleniumHelper().getActiveElement();
-        if (element != null) {
-            getSeleniumHelper().executeJavascript("arguments[0].select()", element);
-            result = true;
+        if (getSeleniumHelper().connectedToMac()) {
+            WebElement element = getSeleniumHelper().getActiveElement();
+            if (element != null) {
+                getSeleniumHelper().executeJavascript("arguments[0].select()", element);
+                result = true;
+            }
+        } else {
+            result = sendKeysToActiveElement(Keys.CONTROL, "a");
         }
         return result;
     }
@@ -2324,9 +2328,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     public boolean copy() {
         boolean result;
         if (getSeleniumHelper().connectedToMac()) {
-            result = sendKeysToActiveElement(Keys.chord(Keys.CONTROL, Keys.INSERT));
+            result = sendKeysToActiveElement(Keys.CONTROL, Keys.INSERT);
         } else {
-            result = sendKeysToActiveElement(Keys.CONTROL, "C");
+            result = sendKeysToActiveElement(Keys.CONTROL, "c");
         }
         return result;
     }
@@ -2334,9 +2338,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     public boolean cut() {
         boolean result;
         if (getSeleniumHelper().connectedToMac()) {
-            result = sendKeysToActiveElement(Keys.chord(Keys.CONTROL, Keys.INSERT), Keys.BACK_SPACE);
+            result = sendKeysToActiveElement(Keys.CONTROL, Keys.DELETE);
         } else {
-            result = sendKeysToActiveElement(Keys.CONTROL, "X");
+            result = sendKeysToActiveElement(Keys.CONTROL, "x");
         }
         return result;
     }
@@ -2344,9 +2348,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     public boolean paste() {
         boolean result;
         if (getSeleniumHelper().connectedToMac()) {
-            result = sendKeysToActiveElement(Keys.chord(Keys.SHIFT, Keys.INSERT));
+            result = sendKeysToActiveElement(Keys.SHIFT, Keys.INSERT);
         } else {
-            result = sendKeysToActiveElement(Keys.CONTROL, "V");
+            result = sendKeysToActiveElement(Keys.CONTROL, "v");
         }
         return result;
     }
