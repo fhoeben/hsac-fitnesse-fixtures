@@ -183,4 +183,12 @@ public class StringFixture extends SlimFixture {
     protected Matcher getMatcher(String regEx, String value) {
         return Pattern.compile(regEx, Pattern.DOTALL).matcher(value);
     }
+
+    public String convertLineEndingsToWindows(String input) {
+        return getEnvironment().getLineEndingHelper().convertEndingsTo(input, "\r\n");
+    }
+
+    public String convertLineEndingsToUnix(String input) {
+        return getEnvironment().getLineEndingHelper().convertEndingsTo(input, "\n");
+    }
 }
