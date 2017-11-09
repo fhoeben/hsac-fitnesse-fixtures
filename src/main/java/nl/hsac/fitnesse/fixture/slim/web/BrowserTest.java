@@ -2313,14 +2313,10 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     public boolean selectAll() {
         boolean result = false;
-        if (getSeleniumHelper().connectedToMac()) {
-            WebElement element = getSeleniumHelper().getActiveElement();
-            if (element != null) {
-                getSeleniumHelper().executeJavascript("arguments[0].select()", element);
-                result = true;
-            }
-        } else {
-            result = sendKeysToActiveElement(Keys.chord(Keys.CONTROL, "A"));
+        WebElement element = getSeleniumHelper().getActiveElement();
+        if (element != null) {
+            getSeleniumHelper().executeJavascript("arguments[0].select()", element);
+            result = true;
         }
         return result;
     }
