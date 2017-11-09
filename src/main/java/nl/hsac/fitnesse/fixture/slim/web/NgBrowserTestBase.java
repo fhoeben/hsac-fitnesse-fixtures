@@ -59,6 +59,8 @@ public abstract class NgBrowserTestBase extends BrowserTest<WebElement> {
                 "setBrowserSizeToBy",
                 "setBrowserSizeToMaximum",
                 "setGlobalValueTo",
+                "setSendCommandForControlOnMacTo",
+                "sendCommandForControlOnMac",
                 "isImplicitWaitForAngularEnabled",
                 "setImplicitWaitForAngularTo",
                 "globalValue",
