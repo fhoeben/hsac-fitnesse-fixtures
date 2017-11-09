@@ -2326,7 +2326,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         if (getSeleniumHelper().connectedToMac()) {
             result = sendKeysToActiveElement(Keys.chord(Keys.CONTROL, Keys.INSERT));
         } else {
-            result = sendKeysToActiveElement(Keys.chord(Keys.CONTROL, "C"));
+            result = sendKeysToActiveElement(Keys.CONTROL, "C");
         }
         return result;
     }
@@ -2336,7 +2336,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         if (getSeleniumHelper().connectedToMac()) {
             result = sendKeysToActiveElement(Keys.chord(Keys.CONTROL, Keys.INSERT), Keys.BACK_SPACE);
         } else {
-            result = sendKeysToActiveElement(Keys.chord(Keys.CONTROL, "X"));
+            result = sendKeysToActiveElement(Keys.CONTROL, "X");
         }
         return result;
     }
@@ -2346,7 +2346,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         if (getSeleniumHelper().connectedToMac()) {
             result = sendKeysToActiveElement(Keys.chord(Keys.SHIFT, Keys.INSERT));
         } else {
-            result = sendKeysToActiveElement(Keys.chord(Keys.CONTROL, "V"));
+            result = sendKeysToActiveElement(Keys.CONTROL, "V");
         }
         return result;
     }
