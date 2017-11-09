@@ -604,7 +604,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * @param keys keys to press.
      * @return true, if an element was active the keys could be sent to.
      */
-    protected boolean sendKeysToActiveElement(CharSequence keys) {
+    protected boolean sendKeysToActiveElement(CharSequence... keys) {
         boolean result = false;
         WebElement element = getSeleniumHelper().getActiveElement();
         if (element != null) {
@@ -2311,4 +2311,47 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return getSeleniumHelper().executeJavascript(statement);
     }
 
+    public boolean selectAll() {
+        boolean result = false;
+        if (getSeleniumHelper().connectedToMac()) {
+            WebElement element = getSeleniumHelper().getActiveElement();
+            if (element != null) {
+                getSeleniumHelper().executeJavascript("arguments[0].select()", element);
+                result = true;
+            }
+        } else {
+            result = sendKeysToActiveElement(Keys.chord(Keys.CONTROL, "A"));
+        }
+        return result;
+    }
+
+    public boolean copy() {
+        boolean result;
+        if (getSeleniumHelper().connectedToMac()) {
+            result = sendKeysToActiveElement(Keys.chord(Keys.CONTROL, Keys.INSERT));
+        } else {
+            result = sendKeysToActiveElement(Keys.chord(Keys.CONTROL, "C"));
+        }
+        return result;
+    }
+
+    public boolean cut() {
+        boolean result;
+        if (getSeleniumHelper().connectedToMac()) {
+            result = sendKeysToActiveElement(Keys.chord(Keys.CONTROL, Keys.INSERT), Keys.BACK_SPACE);
+        } else {
+            result = sendKeysToActiveElement(Keys.chord(Keys.CONTROL, "X"));
+        }
+        return result;
+    }
+
+    public boolean paste() {
+        boolean result;
+        if (getSeleniumHelper().connectedToMac()) {
+            result = sendKeysToActiveElement(Keys.chord(Keys.SHIFT, Keys.INSERT));
+        } else {
+            result = sendKeysToActiveElement(Keys.chord(Keys.CONTROL, "V"));
+        }
+        return result;
+    }
 }

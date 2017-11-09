@@ -1,0 +1,66 @@
+---
+Test
+---
+This test ensures that we can copy and paste.
+
+We use a mock server running to serve the HTML defined in this page.
+
+
+!define HTML { {{{
+<html>
+<body>
+<input id='src1' value='Bert'/>
+<input id='target1' value='Ernie'/>
+<textarea id='src2'>Elmo</textarea>
+<textarea id='target2'>Big Bird</textarea>
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script                |browser test|
+|seconds before timeout|1           |
+|open                  |$url        |
+
+|script                                     |
+|check|value of|id=src1   |Bert             |
+|check|value of|id=target1|Ernie            |
+|click|id=src1                              |
+|select all                                 |
+|copy                                       |
+|click|id=target1                           |
+|paste                                      |
+|check|value of|id=src1   |Bert             |
+|check|value of|id=target1|!-ErnieBert-!    |
+|click|id=src1                              |
+|select all                                 |
+|cut                                        |
+|check|value of|id=src1   |!--!             |
+|click|id=target1                           |
+|paste                                      |
+|check|value of|id=target1|!-ErnieBertBert-!|
+
+|script                                        |
+|check|value of|id=src2   |Elmo                |
+|check|value of|id=target2|Big Bird            |
+|click|id=src2                                 |
+|select all                                    |
+|copy                                          |
+|click|id=target2                              |
+|paste                                         |
+|check|value of|id=src2   |Elmo                |
+|check|value of|id=target2|!-Big BirdElmo-!    |
+|click|id=src2                                 |
+|select all                                    |
+|cut                                           |
+|check|value of|id=src2   |!--!                |
+|click|id=target2                              |
+|paste                                         |
+|check|value of|id=target2|!-Big BirdElmoElmo-!|
+
+|script|mock xml server setup|
+|stop                        |
+
