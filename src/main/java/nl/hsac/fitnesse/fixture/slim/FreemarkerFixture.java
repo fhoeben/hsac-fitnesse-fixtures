@@ -7,6 +7,7 @@ package nl.hsac.fitnesse.fixture.slim;
  */
 public class FreemarkerFixture extends SlimFixtureWithMap {
     private final String defaultTemplate;
+    private String targetLineEndings;
 
     /**
      * Creates new without default template.
@@ -31,6 +32,20 @@ public class FreemarkerFixture extends SlimFixtureWithMap {
      */
     public String applyTemplate(String aTemplate) {
         String result = getEnvironment().processTemplate(aTemplate, getCurrentValues());
+        result = postProcess(result);
+        result = formatResult(aTemplate, result);
+        return result;
+    }
+
+    protected String postProcess(String result) {
+        if (targetLineEndings != null) {
+            return getEnvironment().getLineEndingHelper().convertEndingsTo(result, targetLineEndings);
+        } else {
+            return result;
+        }
+    }
+
+    protected String formatResult(String aTemplate, String result) {
         try {
             if (aTemplate.contains(".xml")) {
                 result = getEnvironment().getHtmlForXml(result);
@@ -56,4 +71,16 @@ public class FreemarkerFixture extends SlimFixtureWithMap {
     }
 
     //// end: methods to support usage in dynamic decision tables
+
+    public void convertTemplateLineEndingsToWindows() {
+        targetLineEndings = "\r\n";
+    }
+
+    public void convertTemplateLineEndingsToUnix() {
+        targetLineEndings = "\n";
+    }
+
+    public void doNotconvertTemplateLineEndings() {
+        targetLineEndings = null;
+    }
 }
