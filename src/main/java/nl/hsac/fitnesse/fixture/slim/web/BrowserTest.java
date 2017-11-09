@@ -2372,4 +2372,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         }
         return result;
     }
+
+    /**
+     * @return text currently selected in browser, or empty string if no text is selected.
+     */
+    public String getSelectionText() {
+        return (String) getSeleniumHelper().executeJavascript("return window.getSelection? window.getSelection().toString() : \"\"");
+    }
 }
