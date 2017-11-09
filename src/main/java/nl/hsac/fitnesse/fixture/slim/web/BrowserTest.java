@@ -2316,17 +2316,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * @return whether an active element was found.
      */
     public boolean selectAll() {
-        boolean result = false;
-        if (getSeleniumHelper().connectedToMac()) {
-            WebElement element = getSeleniumHelper().getActiveElement();
-            if (element != null) {
-                getSeleniumHelper().executeJavascript("arguments[0].select()", element);
-                result = true;
-            }
-        } else {
-            result = sendKeysToActiveElement(Keys.CONTROL, "a");
-        }
-        return result;
+        return getSeleniumHelper().selectAll();
     }
 
     /**
@@ -2334,13 +2324,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * @return whether an active element was found.
      */
     public boolean copy() {
-        boolean result;
-        if (getSeleniumHelper().connectedToMac()) {
-            result = sendKeysToActiveElement(Keys.CONTROL, Keys.INSERT);
-        } else {
-            result = sendKeysToActiveElement(Keys.CONTROL, "c");
-        }
-        return result;
+        return getSeleniumHelper().copy();
     }
 
     /**
@@ -2349,13 +2333,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * @return whether an active element was found.
      */
     public boolean cut() {
-        boolean result;
-        if (getSeleniumHelper().connectedToMac()) {
-            result = sendKeysToActiveElement(Keys.chord(Keys.CONTROL, Keys.INSERT), Keys.BACK_SPACE);
-        } else {
-            result = sendKeysToActiveElement(Keys.CONTROL, "x");
-        }
-        return result;
+        return getSeleniumHelper().cut();
     }
 
     /**
@@ -2364,19 +2342,13 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * @return whether an active element was found.
      */
     public boolean paste() {
-        boolean result;
-        if (getSeleniumHelper().connectedToMac()) {
-            result = sendKeysToActiveElement(Keys.SHIFT, Keys.INSERT);
-        } else {
-            result = sendKeysToActiveElement(Keys.CONTROL, "v");
-        }
-        return result;
+        return getSeleniumHelper().paste();
     }
 
     /**
      * @return text currently selected in browser, or empty string if no text is selected.
      */
     public String getSelectionText() {
-        return (String) getSeleniumHelper().executeJavascript("return window.getSelection? window.getSelection().toString() : \"\"");
+        return getSeleniumHelper().getSelectionText();
     }
 }

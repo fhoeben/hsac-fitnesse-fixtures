@@ -593,6 +593,87 @@ public class SeleniumHelper<T extends WebElement> {
     }
 
     /**
+     * Simulates 'select all' (e.g. Ctrl+A on Windows) on the active element.
+     * @return whether an active element was found.
+     */
+    public boolean selectAll() {
+        boolean result = false;
+        WebElement element = getActiveElement();
+        if (element != null) {
+            if (connectedToMac()) {
+                executeJavascript("arguments[0].select()", element);
+            } else {
+                element.sendKeys(Keys.CONTROL, "a");
+            }
+            result = true;
+        }
+        return result;
+    }
+
+    /**
+     * Simulates 'copy' (e.g. Ctrl+C on Windows) on the active element, copying the current selection to the clipboard.
+     * @return whether an active element was found.
+     */
+    public boolean copy() {
+        boolean result = false;
+        WebElement element = getActiveElement();
+        if (element != null) {
+            if (connectedToMac()) {
+                element.sendKeys(Keys.CONTROL, Keys.INSERT);
+            } else {
+                element.sendKeys(Keys.CONTROL, "c");
+            }
+            result = true;
+        }
+        return result;
+    }
+
+    /**
+     * Simulates 'cut' (e.g. Ctrl+X on Windows) on the active element, copying the current selection to the clipboard
+     * and removing that selection.
+     * @return whether an active element was found.
+     */
+    public boolean cut() {
+        boolean result = false;
+        WebElement element = getActiveElement();
+        if (element != null) {
+            if (connectedToMac()) {
+                element.sendKeys(Keys.chord(Keys.CONTROL, Keys.INSERT), Keys.BACK_SPACE);
+            } else {
+                element.sendKeys(Keys.CONTROL, "x");
+            }
+            result = true;
+        }
+        return result;
+    }
+
+    /**
+     * Simulates 'paste' (e.g. Ctrl+V on Windows) on the active element, copying the current clipboard
+     * content to the currently active element.
+     * @return whether an active element was found.
+     */
+    public boolean paste() {
+        boolean result = false;
+        WebElement element = getActiveElement();
+        if (element != null) {
+            if (connectedToMac()) {
+                element.sendKeys(Keys.SHIFT, Keys.INSERT);
+            } else {
+                element.sendKeys(Keys.CONTROL, "v");
+            }
+            result = true;
+        }
+        return result;
+    }
+
+    /**
+     * @return text currently selected in browser, or empty string if no text is selected.
+     */
+    public String getSelectionText() {
+        return (String) executeJavascript("return window.getSelection? window.getSelection().toString() : \"\"");
+    }
+
+    /**
      * Finds element using xPath, supporting placeholder replacement.
      * @param pattern basic XPATH, possibly with placeholders.
      * @param parameters values for placeholders.
