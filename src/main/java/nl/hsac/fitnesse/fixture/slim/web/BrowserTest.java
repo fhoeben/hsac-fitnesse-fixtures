@@ -57,7 +57,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     private String screenshotHeight = "200";
     private String downloadBase = new File(filesDir, "downloads").getPath() + "/";
     private String pageSourceBase = new File(filesDir, "pagesources").getPath() + "/";
-    private boolean sendCommandForControlOnMac = true;
+    private boolean sendCommandForControlOnMac = false;
 
     @Override
     protected void beforeInvoke(Method method, Object[] arguments) {

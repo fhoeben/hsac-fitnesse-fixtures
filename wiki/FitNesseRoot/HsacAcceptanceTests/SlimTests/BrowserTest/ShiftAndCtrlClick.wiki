@@ -116,10 +116,11 @@ function clearAll() {
 
 |script                                |browser test                   |
 |open                                  |$url                           |
+|reject                                |send command for control on Mac|
+|set send command for control on mac to|true                           |
 |ensure                                |send command for control on Mac|
 |set send command for control on mac to|false                          |
 |reject                                |send command for control on Mac|
-|set send command for control on mac to|true                           |
 |seconds before timeout                |1                              |
 
 |script                                                       |
