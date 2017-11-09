@@ -2311,6 +2311,10 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return getSeleniumHelper().executeJavascript(statement);
     }
 
+    /**
+     * Simulates 'select all' (e.g. Ctrl+A on Windows) on the active element.
+     * @return whether an active element was found.
+     */
     public boolean selectAll() {
         boolean result = false;
         if (getSeleniumHelper().connectedToMac()) {
@@ -2325,6 +2329,10 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return result;
     }
 
+    /**
+     * Simulates 'copy' (e.g. Ctrl+C on Windows) on the active element, copying the current selection to the clipboard.
+     * @return whether an active element was found.
+     */
     public boolean copy() {
         boolean result;
         if (getSeleniumHelper().connectedToMac()) {
@@ -2335,6 +2343,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return result;
     }
 
+    /**
+     * Simulates 'cut' (e.g. Ctrl+X on Windows) on the active element, copying the current selection to the clipboard
+     * and removing that selection.
+     * @return whether an active element was found.
+     */
     public boolean cut() {
         boolean result;
         if (getSeleniumHelper().connectedToMac()) {
@@ -2345,6 +2358,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return result;
     }
 
+    /**
+     * Simulates 'paste' (e.g. Ctrl+V on Windows) on the active element, copying the current clipboard
+     * content to the currently active element.
+     * @return whether an active element was found.
+     */
     public boolean paste() {
         boolean result;
         if (getSeleniumHelper().connectedToMac()) {
