@@ -214,6 +214,8 @@ public class HsacFitNesseRunner extends FitNesseRunner {
                     shutdownSelenium();
                 }
                 catch (Exception e) {
+                    System.err.println("Error shutting down selenium");
+                    e.printStackTrace();
                 }
             }
 
@@ -232,6 +234,8 @@ public class HsacFitNesseRunner extends FitNesseRunner {
                     }
                 }
             } catch (Exception e) {
+                System.err.println("Unable to create index.html for top level suite");
+                e.printStackTrace();
             }
         }
 
