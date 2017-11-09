@@ -11,8 +11,8 @@ We use a mock server running to serve the HTML defined in this page.
 <body>
 <input id='src1' value='Bert'/>
 <input id='target1' value='Ernie'/>
-<textarea id='src2'>Elmo</textarea>
-<textarea id='target2'>Big Bird</textarea>
+<textarea id='src2' rows="4" cols="50">Elmo</textarea>
+<textarea id='target2' rows="4" cols="50">Big Bird</textarea>
 </body>
 </html>}}} }
 
