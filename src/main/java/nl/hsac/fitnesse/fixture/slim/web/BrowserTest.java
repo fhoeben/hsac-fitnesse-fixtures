@@ -2338,7 +2338,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     public boolean cut() {
         boolean result;
         if (getSeleniumHelper().connectedToMac()) {
-            result = sendKeysToActiveElement(Keys.CONTROL, Keys.DELETE);
+            result = sendKeysToActiveElement(Keys.chord(Keys.CONTROL, Keys.INSERT), Keys.BACK_SPACE);
         } else {
             result = sendKeysToActiveElement(Keys.CONTROL, "x");
         }
