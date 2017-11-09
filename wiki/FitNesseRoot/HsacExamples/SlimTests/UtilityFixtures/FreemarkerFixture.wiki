@@ -39,25 +39,3 @@ Here we render a template using [[script tables][.FitNesse.UserGuide.WritingAcce
 |$postNl3=|apply template|samplePost.ftl.xml|
 |set value|Utrecht       |for  |cityName    |
 |$postNl4=|apply template|samplePost.ftl.xml|
-
-!2 Line endings
-
-
-|script  |freemarker fixture                 |
-|$win=   |apply template|windows-file.txt.ftl|
-|$linux= |apply template|unix-file.txt.ftl   |
-|convert template line endings to Windows    |
-|$linux2=|apply template|unix-file.txt.ftl   |
-|$win2=   |apply template|windows-file.txt.ftl|
-|convert template line endings to Unix       |
-|$linux3=|apply template|unix-file.txt.ftl   |
-|$win3=  |apply template|windows-file.txt.ftl|
-
-|script|compare fixture                                                   |
-|check |count differences between                    |$win  |and|$linux |3|
-|show  |difference between                           |$win  |and|$linux   |
-|check |count differences between (ignore whitespace)|$win  |and|$linux |0|
-|check |count differences between                    |$win  |and|$win2  |0|
-|check |count differences between                    |$win  |and|$linux2|0|
-|check |count differences between                    |$win3 |and|$linux |0|
-|check |count differences between                    |$linux|and|$linux3|0|
