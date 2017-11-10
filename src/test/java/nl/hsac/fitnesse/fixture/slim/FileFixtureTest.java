@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.slim;
 
 import nl.hsac.fitnesse.fixture.Environment;
+import nl.hsac.fitnesse.fixture.util.LineEndingHelper;
 import org.junit.Test;
 
 import java.io.File;
@@ -19,7 +20,7 @@ public class FileFixtureTest {
     private final String curDir = Paths.get("").toAbsolutePath().toString();
     private final String defaultFilesDir = curDir + File.separator + "FitNesseRoot" + File.separator + "files";
     private final String defaultFixtureDir = defaultFilesDir + File.separator + "fileFixture" + File.separator;
-    private final String testResourcesDir = curDir + "/src/test/resources/";
+    private final String testResourcesDir = curDir + "/src/test/resources/".replace('/', File.separatorChar);
 
     @Test
     public void testGetAndSetDirectory() {
@@ -53,8 +54,6 @@ public class FileFixtureTest {
             fixture.textIn("foobar");
         } catch (SlimFixtureException sfe) {
             assertEquals("message:<<Unable to find: " + testResourcesDir + "foobar>>", sfe.getMessage());
-        } catch (IOException ioe) {
-            fail("Should not happen.");
         }
     }
 
@@ -76,7 +75,8 @@ public class FileFixtureTest {
         assertTrue(fixture.exists(txtFilename));
         try {
             String res = fixture.copyTo(txtFilename, copyFilename);
-            assertEquals("<a href=\"file:" + testResourcesDir + copyFilename + "\">" + copyFilename + "</a>", res);
+            String expectedPath = getExpectedUrlPath();
+            assertEquals("<a href=\"file:" + expectedPath + "\">" + copyFilename + "</a>", res);
         } catch (IOException ioe) {
             fail("Should not happen: " + ioe.getMessage());
         }
@@ -106,9 +106,10 @@ public class FileFixtureTest {
             fixture.setDirectory(testResourcesDir);
             fixture.copyTo(txtFilename, copyFilename);
             String res = fixture.appendToOnNewLine("Third line", copyFilename);
-            assertEquals("<a href=\"file:" + testResourcesDir + copyFilename + "\">" + copyFilename + "</a>", res);
+            String expectedPath = getExpectedUrlPath();
+            assertEquals("<a href=\"file:" + expectedPath + "\">" + copyFilename + "</a>", res);
             assertEquals("# Expected as first line of text.\n# Expected as 2nd line of text.\nThird line",
-                    fixture.textIn(copyFilename));
+                    new LineEndingHelper().convertEndingsTo(fixture.textIn(copyFilename), "\n"));
         } catch (IOException ioe) {
             fail("Should not happen: " + ioe.getMessage());
         }
@@ -120,12 +121,22 @@ public class FileFixtureTest {
             fixture.setDirectory(testResourcesDir);
             fixture.copyTo(txtFilename, copyFilename);
             String res = fixture.appendTo("Third line", copyFilename);
-            assertEquals("<a href=\"file:" + testResourcesDir + copyFilename + "\">" + copyFilename + "</a>", res);
+            String expectedPath = getExpectedUrlPath();
+            assertEquals("<a href=\"file:" + expectedPath + "\">" + copyFilename + "</a>", res);
             assertEquals("# Expected as first line of text.\n# Expected as 2nd line of text.Third line",
                     fixture.textIn(copyFilename));
         } catch (IOException ioe) {
             fail("Should not happen: " + ioe.getMessage());
         }
+    }
+
+    private String getExpectedUrlPath() {
+        String path = testResourcesDir + copyFilename;
+        String unixStylePath = path.replace(File.separatorChar, '/');
+        if (!unixStylePath.startsWith("/")) {
+            unixStylePath = "/" + unixStylePath ;
+        }
+        return unixStylePath;
     }
 
     @Test
