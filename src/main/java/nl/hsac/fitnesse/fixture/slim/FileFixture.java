@@ -46,7 +46,7 @@ public class FileFixture extends SlimFixtureWithMap {
         return linkToFile(f);
     }
 
-    public String textIn(String filename) throws IOException {
+    public String textIn(String filename) {
         String text = "";
         String fullName = getFullName(filename);
         if (sizeOf(filename) > 0) {
@@ -244,7 +244,7 @@ public class FileFixture extends SlimFixtureWithMap {
     }
 
     @Override
-    protected String getFileContent(String filename) throws IOException {
+    protected String getFileContent(String filename) {
         return textIn(filename);
     }
 }

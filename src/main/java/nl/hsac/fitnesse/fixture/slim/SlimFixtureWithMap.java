@@ -135,7 +135,7 @@ public class SlimFixtureWithMap extends SlimFixtureWithMapHelper {
      * @return true when file is loaded
      * @throws IOException when unable to load file's content.
      */
-    public boolean loadValuesFromPropertiesFile(String filename) throws IOException {
+    public boolean loadValuesFromPropertiesFile(String filename) {
         String propContent = getFileContent(filename);
         PropertiesHelper propHelper = getEnvironment().getPropertiesHelper();
         Properties properties = propHelper.parsePropertiesString(propContent);
@@ -144,7 +144,7 @@ public class SlimFixtureWithMap extends SlimFixtureWithMapHelper {
         return true;
     }
 
-    protected String getFileContent(String filename) throws IOException {
+    protected String getFileContent(String filename) {
         FileFixture fileFixture = new FileFixture();
         return fileFixture.textIn(filename);
     }
