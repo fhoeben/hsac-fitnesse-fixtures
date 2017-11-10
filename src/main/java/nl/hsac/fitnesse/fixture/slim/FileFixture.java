@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.slim;
 
 import nl.hsac.fitnesse.fixture.util.FileUtil;
+import nl.hsac.fitnesse.fixture.util.LineEndingHelper;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
@@ -78,6 +79,29 @@ public class FileFixture extends SlimFixtureWithMap {
         tmpFile.delete();
 
         return result;
+    }
+
+    public boolean convertLineEndingsOfToWindows(String filename) throws IOException {
+        return convertLineEndingsOf(filename, LineEndingHelper.WIN_LINE_ENDING);
+    }
+
+    public boolean convertLineEndingsOfToUnix(String filename) throws IOException {
+        return convertLineEndingsOf(filename, LineEndingHelper.UNIX_LINE_ENDING);
+    }
+
+    protected boolean convertLineEndingsOf(String filename, String lineEnding) throws IOException {
+        String fullName = getFullName(filename);
+
+        String original = textIn(fullName);
+        String converted = getEnvironment().getLineEndingHelper().convertEndingsTo(original, lineEnding);
+
+        //Create a temporary new file, then delete the original and copy temp file to original filename
+        String tmpFilename = fullName + ".tmp";
+        File tmpFile = FileUtil.writeFile(tmpFilename, converted);
+        FileUtil.copyFile(tmpFilename, fullName);
+        tmpFile.delete();
+
+        return true;
     }
 
     public String contentOf(String filename) throws IOException {

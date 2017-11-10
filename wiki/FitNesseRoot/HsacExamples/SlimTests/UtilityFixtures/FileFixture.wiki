@@ -65,7 +65,11 @@ last one!-!}
 |append            |second line |to                          |$appended |on new line          |
 |check             |text in     |$appended                                                    |!-first line
 second line-!                |
-|delete|$appended|
+|convert line endings of|$appended|to windows  |
+|check                  |size of  |$appended|23|
+|convert line endings of|$appended|to unix     |
+|check                  |size of  |$appended|22|
+|delete                 |$appended             |
 
 Table below shows how we can use a list of non-reusable data from a file:
 
