@@ -1,5 +1,7 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import nl.hsac.fitnesse.fixture.util.LineEndingHelper;
+
 /**
  * Fixture to generate strings using Freemarker templates. These strings can be stored in variables so the can
  * be passed as arguments to methods of other fixtures.
@@ -73,11 +75,11 @@ public class FreemarkerFixture extends SlimFixtureWithMap {
     //// end: methods to support usage in dynamic decision tables
 
     public void convertTemplateLineEndingsToWindows() {
-        targetLineEndings = "\r\n";
+        targetLineEndings = LineEndingHelper.WIN_LINE_ENDING;
     }
 
     public void convertTemplateLineEndingsToUnix() {
-        targetLineEndings = "\n";
+        targetLineEndings = LineEndingHelper.UNIX_LINE_ENDING;
     }
 
     public void doNotconvertTemplateLineEndings() {

@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import nl.hsac.fitnesse.fixture.util.LineEndingHelper;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.regex.Matcher;
@@ -185,10 +186,10 @@ public class StringFixture extends SlimFixture {
     }
 
     public String convertLineEndingsToWindows(String input) {
-        return getEnvironment().getLineEndingHelper().convertEndingsTo(input, "\r\n");
+        return getEnvironment().getLineEndingHelper().convertEndingsTo(input, LineEndingHelper.WIN_LINE_ENDING);
     }
 
     public String convertLineEndingsToUnix(String input) {
-        return getEnvironment().getLineEndingHelper().convertEndingsTo(input, "\n");
+        return getEnvironment().getLineEndingHelper().convertEndingsTo(input, LineEndingHelper.UNIX_LINE_ENDING);
     }
 }

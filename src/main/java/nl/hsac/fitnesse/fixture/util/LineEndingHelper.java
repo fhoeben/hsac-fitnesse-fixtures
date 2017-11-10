@@ -6,14 +6,17 @@ import java.util.regex.Pattern;
  * Helper class to deal with line endings.
  */
 public class LineEndingHelper {
-    private static final Pattern WIN_ENDING = Pattern.compile("\r\n");
-    private static final Pattern LINUX_ENDING = Pattern.compile("([^\r])\n");
+    public static final String WIN_LINE_ENDING = "\r\n";
+    public static final String UNIX_LINE_ENDING = "\n";
+
+    private static final Pattern WIN_ENDING_PATTERN = Pattern.compile("\r\n");
+    private static final Pattern LINUX_ENDING_PATTERN = Pattern.compile("([^\r])\n");
 
     public String convertEndingsTo(String input, String targetLineEndings) {
         String processed;
         switch (targetLineEndings) {
             case "\n":
-                processed = WIN_ENDING.matcher(input).replaceAll(targetLineEndings);
+                processed = WIN_ENDING_PATTERN.matcher(input).replaceAll(targetLineEndings);
                 break;
             case "\r\n":
                 // take care not to change line endings already in Windows format
@@ -32,6 +35,6 @@ public class LineEndingHelper {
     }
 
     private static String replaceWindowsLineEnding(String processed, String targetLineEndings) {
-        return LINUX_ENDING.matcher(processed).replaceAll("$1" + targetLineEndings);
+        return LINUX_ENDING_PATTERN.matcher(processed).replaceAll("$1" + targetLineEndings);
     }
 }
