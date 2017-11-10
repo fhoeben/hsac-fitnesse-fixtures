@@ -18,6 +18,7 @@ import nl.hsac.fitnesse.fixture.util.MapHelper;
 import nl.hsac.fitnesse.fixture.util.NamespaceContextImpl;
 import nl.hsac.fitnesse.fixture.util.ProgramHelper;
 import nl.hsac.fitnesse.fixture.util.ProgramResponse;
+import nl.hsac.fitnesse.fixture.util.PropertiesHelper;
 import nl.hsac.fitnesse.fixture.util.ReflectionHelper;
 import nl.hsac.fitnesse.fixture.util.SecretMasker;
 import nl.hsac.fitnesse.fixture.util.TextFormatter;
@@ -68,6 +69,7 @@ public class Environment {
     private ReflectionHelper reflectionHelper = new ReflectionHelper();
     private SecretMasker secretMasker = new SecretMasker();
     private LineEndingHelper lineEndingHelper = new LineEndingHelper();
+    private PropertiesHelper propertiesHelper = new PropertiesHelper();
 
     private Environment() {
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_23);
@@ -719,5 +721,13 @@ public class Environment {
 
     public void setLineEndingHelper(LineEndingHelper lineEndingHelper) {
         this.lineEndingHelper = lineEndingHelper;
+    }
+
+    public PropertiesHelper getPropertiesHelper() {
+        return propertiesHelper;
+    }
+
+    public void setPropertiesHelper(PropertiesHelper propertiesHelper) {
+        this.propertiesHelper = propertiesHelper;
     }
 }

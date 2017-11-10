@@ -1,11 +1,11 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import nl.hsac.fitnesse.fixture.util.PropertiesHelper;
+
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.stream.Collectors;
 
 /**
  * Slim fixture base class allowing values to be set to a Map via a script or dynamic decision table.
@@ -137,8 +137,9 @@ public class SlimFixtureWithMap extends SlimFixtureWithMapHelper {
      */
     public boolean loadValuesFromPropertiesFile(String filename) throws IOException {
         String propContent = getFileContent(filename);
-        Properties properties = parsePropertiesString(propContent);
-        Map<String, Object> propAsMap = convertPropertiesToMap(properties);
+        PropertiesHelper propHelper = getEnvironment().getPropertiesHelper();
+        Properties properties = propHelper.parsePropertiesString(propContent);
+        Map<String, Object> propAsMap = propHelper.convertPropertiesToMap(properties);
         getCurrentValues().putAll(propAsMap);
         return true;
     }
@@ -146,19 +147,5 @@ public class SlimFixtureWithMap extends SlimFixtureWithMapHelper {
     protected String getFileContent(String filename) throws IOException {
         FileFixture fileFixture = new FileFixture();
         return fileFixture.textIn(filename);
-    }
-
-    protected Properties parsePropertiesString(String propertiesAsString) throws IOException {
-        final Properties p = new Properties();
-        try (StringReader reader = new StringReader(propertiesAsString)) {
-            p.load(reader);
-        }
-        return p;
-    }
-
-    protected Map<String, Object> convertPropertiesToMap(Properties properties) {
-        return properties.entrySet().stream()
-                .collect(Collectors.toMap(e -> e.getKey().toString(),
-                                           e -> e.getValue()));
     }
 }
