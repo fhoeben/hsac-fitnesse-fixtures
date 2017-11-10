@@ -2,13 +2,10 @@ package nl.hsac.fitnesse.fixture.util;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
+
+import static nl.hsac.fitnesse.fixture.util.StreamUtil.toLinkedMap;
 
 /**
  * Helper dealing with property files.
@@ -36,17 +33,9 @@ public class PropertiesHelper {
      */
     public Map<String, Object> convertPropertiesToMap(Properties properties) {
         return properties.entrySet().stream()
-                .collect(toMap(
+                .collect(toLinkedMap(
                         e -> e.getKey().toString(),
                         e -> e.getValue()));
     }
 
-    protected static <T, K, U>  Collector<T, ?, Map<K,U>> toMap(Function<? super T, ? extends K> keyMapper,
-                                    Function<? super T, ? extends U> valueMapper) {
-        return Collectors.toMap(keyMapper, valueMapper, throwingMerger(), LinkedHashMap::new);
-    }
-
-    protected static <T> BinaryOperator<T> throwingMerger() {
-        return (u,v) -> { throw new IllegalStateException(String.format("Duplicate property %s", u)); };
-    }
 }
