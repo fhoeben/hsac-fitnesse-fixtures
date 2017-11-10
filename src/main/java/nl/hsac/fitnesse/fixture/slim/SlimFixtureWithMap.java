@@ -1,7 +1,11 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
+import java.util.stream.Collectors;
 
 /**
  * Slim fixture base class allowing values to be set to a Map via a script or dynamic decision table.
@@ -124,4 +128,37 @@ public class SlimFixtureWithMap extends SlimFixtureWithMapHelper {
     }
 
     //// end: methods to support usage in dynamic decision tables
+
+    /**
+     * Adds the properties loaded from the specified file to current values.
+     * @param filename .properties file to load
+     * @return true when file is loaded
+     * @throws IOException when unable to load file's content.
+     */
+    public boolean loadValuesFromPropertiesFile(String filename) throws IOException {
+        String propContent = getFileContent(filename);
+        Properties properties = parsePropertiesString(propContent);
+        Map<String, Object> propAsMap = convertPropertiesToMap(properties);
+        getCurrentValues().putAll(propAsMap);
+        return true;
+    }
+
+    protected String getFileContent(String filename) throws IOException {
+        FileFixture fileFixture = new FileFixture();
+        return fileFixture.textIn(filename);
+    }
+
+    protected Properties parsePropertiesString(String propertiesAsString) throws IOException {
+        final Properties p = new Properties();
+        try (StringReader reader = new StringReader(propertiesAsString)) {
+            p.load(reader);
+        }
+        return p;
+    }
+
+    protected Map<String, Object> convertPropertiesToMap(Properties properties) {
+        return properties.entrySet().stream()
+                .collect(Collectors.toMap(e -> e.getKey().toString(),
+                                           e -> e.getValue()));
+    }
 }

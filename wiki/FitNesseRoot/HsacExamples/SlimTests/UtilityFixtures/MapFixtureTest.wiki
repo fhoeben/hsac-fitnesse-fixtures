@@ -117,7 +117,20 @@ Normally when setting values '.' in a name is interpreted to mean a nested map. 
 |check                                 |value        |browser.download.folderList           |2                                     |
 |check                                 |value        |browser.helperApps.neverAsk.saveToDisk|sheetml.sheet                         |
 
+!2 Reading Map from Properties File
+The content of a map can also be obtained from a [[.properties file][https://en.wikipedia.org/wiki/.properties]].
 
+In this sample we first create a .properties file, and then read it. In real life an existing .properties is expected to be used.
 
+|script       |file fixture                                                   |
+|set directory|http://files/test                                              |
+|$props=      |create                |sample.properties|containing|wine = good|
+|append       |!-#comment = ignored-!|to               |$props    |on new line|
+|append       |beer:bad              |to               |$props    |on new line|
 
-
+|script                          |map fixture    |
+|load values from properties file|$props         |
+|show                            |copy map       |
+|check                           |value|wine|good|
+|check                           |value|beer|bad |
+|check                           |size |2        |
