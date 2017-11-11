@@ -4,17 +4,41 @@ Help: Fixture to deal with .properties files
 
 Properties files fixture is a specialization of !-FileFixture-! which allows [[.properties file][https://en.wikipedia.org/wiki/.properties]] to be read.
 
-In this sample we first create a .properties file, and then read it. In real life an existing .properties is expected to be used.
+!2 Reading
+In this sample we first create a .properties file, using !-FileFixture-!, and then read it.
 
 |script       |file fixture                                                   |
 |set directory|http://files/test                                              |
 |$props=      |create                |sample.properties|containing|wine = good|
 |append       |!-#comment = ignored-!|to               |$props    |on new line|
 |append       |beer:bad              |to               |$props    |on new line|
+|show         |content of            |$props                                  |
 
-|script          |properties file fixture   |
-|load values from|$props                    |
-|show            |values                    |
-|check           |value           |wine|good|
-|check           |value           |beer|bad |
-|check           |number of values|2        |
+|script          |properties file fixture                 |
+|load values from|$props                                  |
+|show            |values                                  |
+|check           |value           |wine|good              |
+|check           |value           |beer|bad               |
+|check           |number of values|2                      |
+|                |We can use standard file fixture methods|
+|delete          |$props                                  |
+
+!2 Writing
+We can also write properties in an easier way:
+
+|script       |properties file fixture                        |
+|set directory|http://files/test                              |
+|set value    |bad       |for               |wine             |
+|set value    |good      |for               |beer             |
+|set value    |better    |for               |cola             |
+|$sample2=    |create    |sample2.properties|containing values|
+|show         |content of|$sample2                            |
+
+|script          |properties file fixture     |
+|load values from|$sample2                    |
+|show            |values                      |
+|check           |value           |wine|bad   |
+|check           |value           |beer|good  |
+|check           |value           |cola|better|
+|check           |number of values|3          |
+|delete          |$sample2                    |

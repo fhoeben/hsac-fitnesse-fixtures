@@ -39,4 +39,25 @@ public class PropertiesFileFixture extends FileFixture {
     public int numberOfValues() {
         return getCurrentValues().size();
     }
+
+    /**
+     * Creates new .properties file, containing current values.
+     * @param filename name of file to create.
+     * @return file created.
+     */
+    public String createContainingValues(String filename) {
+        Properties p = new Properties();
+        p.putAll(getCurrentValues());
+        PropertiesHelper propHelper = getEnvironment().getPropertiesHelper();
+        String fileContent = propHelper.writePropertiesToString(p);
+        String file = createContaining(filename, fileContent);
+        try {
+            // strip creation comment
+            takeFirstLineFrom(filename);
+        } catch (IOException e) {
+            System.err.println("Unable to remove first comment line from: " + filename);
+            e.printStackTrace();
+        }
+        return file;
+    }
 }

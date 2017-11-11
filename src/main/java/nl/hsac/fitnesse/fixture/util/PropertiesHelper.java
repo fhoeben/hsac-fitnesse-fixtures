@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.fixture.util;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Map;
 import java.util.Properties;
 
@@ -38,4 +39,12 @@ public class PropertiesHelper {
                         e -> e.getValue()));
     }
 
+    public String writePropertiesToString(Properties properties) {
+        try (StringWriter sw = new StringWriter()) {
+            properties.store(sw, null);
+            return sw.toString();
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Unable to write: " + properties, e);
+        }
+    }
 }
