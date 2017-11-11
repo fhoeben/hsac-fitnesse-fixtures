@@ -2,7 +2,7 @@
 Help: Fixture to deal with .properties files
 ---
 
-Properties files fixture is a specialization of !-FileFixture-! which allows [[.properties file][https://en.wikipedia.org/wiki/.properties]] to be read.
+Properties files fixture is a specialization of FileFixture which allows [[.properties file][https://en.wikipedia.org/wiki/.properties]] to be read.
 
 !2 Reading
 In this sample we first create a .properties file, using !-FileFixture-!, and then read it.
