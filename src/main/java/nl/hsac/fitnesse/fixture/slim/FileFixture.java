@@ -242,9 +242,4 @@ public class FileFixture extends SlimFixtureWithMap {
         File f = FileUtil.appendToFile(fullName, extraContent, true);
         return linkToFile(f);
     }
-
-    @Override
-    protected String getFileContent(String filename) {
-        return textIn(filename);
-    }
 }

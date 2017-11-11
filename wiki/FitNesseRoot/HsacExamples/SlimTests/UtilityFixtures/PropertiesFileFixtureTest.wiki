@@ -1,0 +1,20 @@
+---
+Help: Fixture to deal with .properties files
+---
+
+Properties files fixture is a specialization of !-FileFixture-! which allows [[.properties file][https://en.wikipedia.org/wiki/.properties]] to be read.
+
+In this sample we first create a .properties file, and then read it. In real life an existing .properties is expected to be used.
+
+|script       |file fixture                                                   |
+|set directory|http://files/test                                              |
+|$props=      |create                |sample.properties|containing|wine = good|
+|append       |!-#comment = ignored-!|to               |$props    |on new line|
+|append       |beer:bad              |to               |$props    |on new line|
+
+|script          |properties file fixture   |
+|load values from|$props                    |
+|show            |values                    |
+|check           |value           |wine|good|
+|check           |value           |beer|bad |
+|check           |number of values|2        |

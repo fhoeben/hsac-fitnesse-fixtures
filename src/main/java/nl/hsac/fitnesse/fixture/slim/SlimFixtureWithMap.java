@@ -1,11 +1,7 @@
 package nl.hsac.fitnesse.fixture.slim;
 
-import nl.hsac.fitnesse.fixture.util.PropertiesHelper;
-
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * Slim fixture base class allowing values to be set to a Map via a script or dynamic decision table.
@@ -128,24 +124,4 @@ public class SlimFixtureWithMap extends SlimFixtureWithMapHelper {
     }
 
     //// end: methods to support usage in dynamic decision tables
-
-    /**
-     * Adds the properties loaded from the specified file to current values.
-     * @param filename .properties file to load
-     * @return true when file is loaded
-     * @throws IOException when unable to load file's content.
-     */
-    public boolean loadValuesFromPropertiesFile(String filename) {
-        String propContent = getFileContent(filename);
-        PropertiesHelper propHelper = getEnvironment().getPropertiesHelper();
-        Properties properties = propHelper.parsePropertiesString(propContent);
-        Map<String, Object> propAsMap = propHelper.convertPropertiesToMap(properties);
-        getCurrentValues().putAll(propAsMap);
-        return true;
-    }
-
-    protected String getFileContent(String filename) {
-        FileFixture fileFixture = new FileFixture();
-        return fileFixture.textIn(filename);
-    }
 }
