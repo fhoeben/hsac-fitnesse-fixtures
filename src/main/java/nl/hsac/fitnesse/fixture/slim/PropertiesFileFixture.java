@@ -50,14 +50,6 @@ public class PropertiesFileFixture extends FileFixture {
         p.putAll(getCurrentValues());
         PropertiesHelper propHelper = getEnvironment().getPropertiesHelper();
         String fileContent = propHelper.writePropertiesToString(p);
-        String file = createContaining(filename, fileContent);
-        try {
-            // strip creation comment
-            takeFirstLineFrom(filename);
-        } catch (IOException e) {
-            System.err.println("Unable to remove first comment line from: " + filename);
-            e.printStackTrace();
-        }
-        return file;
+        return createContaining(filename, fileContent);
     }
 }

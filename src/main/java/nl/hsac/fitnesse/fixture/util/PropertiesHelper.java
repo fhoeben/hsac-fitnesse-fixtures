@@ -42,7 +42,10 @@ public class PropertiesHelper {
     public String writePropertiesToString(Properties properties) {
         try (StringWriter sw = new StringWriter()) {
             properties.store(sw, null);
-            return sw.toString();
+            String content = sw.toString();
+            // strip first line containing creation date & time
+            int firstNewline = content.indexOf('\n');
+            return content.substring(firstNewline + 1);
         } catch (IOException e) {
             throw new IllegalArgumentException("Unable to write: " + properties, e);
         }
