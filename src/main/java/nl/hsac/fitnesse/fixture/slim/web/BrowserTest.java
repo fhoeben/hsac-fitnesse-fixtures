@@ -1807,7 +1807,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * @param <T> the return type of the method, which must not be Void
      * @param condition condition that caused exception.
      * @param e exception that will be thrown if condition does not return a result.
-     * @return last attempt results, if not null.
+     * @return last attempt results, if not null or false.
      * @throws SlimFixtureException throws e if last attempt returns null.
      */
     protected <T> T lastAttemptBeforeThrow(ExpectedCondition<T> condition, SlimFixtureException e) {
@@ -1819,10 +1819,10 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         } catch (Throwable t) {
             // ignore
         }
-        if (lastAttemptResult != null) {
-            return lastAttemptResult;
+        if (lastAttemptResult == null || Boolean.FALSE.equals(lastAttemptResult)) {
+            throw e;
         }
-        throw e;
+        return lastAttemptResult;
     }
 
     /**
