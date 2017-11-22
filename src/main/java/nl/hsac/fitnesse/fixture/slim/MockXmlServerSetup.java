@@ -5,6 +5,9 @@ import nl.hsac.fitnesse.fixture.util.MockXmlHttpResponseSequence;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -12,6 +15,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * Fixture allowing you to host a SOAP server inside FitNesse. This mock server can then be called by a system you
@@ -22,7 +26,7 @@ import java.util.Map;
  * Afterwards you can use this fixture to shut down the mock server.
  */
 public class MockXmlServerSetup extends SlimFixture {
-    private static final Map<String, HttpServer<? extends MockXmlHttpResponseSequence>> SERVERS = new HashMap<String, HttpServer<? extends MockXmlHttpResponseSequence>>();
+    private static final Map<String, HttpServer<? extends MockXmlHttpResponseSequence>> SERVERS = new HashMap<>();
     public static final String DEFAULT_PATH = "/FitNesseMock";
     private final String path;
     private final HttpServer<? extends MockXmlHttpResponseSequence> mockServer;
@@ -51,17 +55,39 @@ public class MockXmlServerSetup extends SlimFixture {
     }
 
     public MockXmlServerSetup(String aPath) {
+        this(aPath, () -> createMockServer(aPath));
+    }
+
+    public MockXmlServerSetup(String host, int port, String aPath) {
+        this(aPath, () -> createMockServer(host, port, aPath));
+    }
+
+    public MockXmlServerSetup(String aPath, Supplier<HttpServer<? extends MockXmlHttpResponseSequence>> creator) {
         path = cleanupValue(aPath);
         if (SERVERS.containsKey(path)) {
             mockServer = getMockServer(path);
         } else {
-            mockServer = createMockServer(path);
+            mockServer = creator.get();
             SERVERS.put(path, mockServer);
         }
     }
 
-    protected HttpServer<? extends MockXmlHttpResponseSequence> createMockServer(String aPath) {
-        return new HttpServer<MockXmlHttpResponseSequence>(aPath, new MockXmlHttpResponseSequence());
+    public static HttpServer<? extends MockXmlHttpResponseSequence> createMockServer(String host, int port, String aPath) {
+        try {
+            String h = host == null || "null".equalsIgnoreCase(host) ? "0.0.0.0" : host;
+            InetSocketAddress address = new InetSocketAddress(InetAddress.getByName(h), port);
+            return new HttpServer<>(address, aPath, createResponse());
+        } catch (UnknownHostException e) {
+            throw new SlimFixtureException(false, "Unable to resolve address: " + host);
+        }
+    }
+
+    public static HttpServer<? extends MockXmlHttpResponseSequence> createMockServer(String aPath) {
+        return new HttpServer<>(aPath, createResponse());
+    }
+
+    protected static MockXmlHttpResponseSequence createResponse() {
+        return new MockXmlHttpResponseSequence();
     }
 
     public void addResponseFor(String aResponse, String aRequest) {
@@ -156,8 +182,7 @@ public class MockXmlServerSetup extends SlimFixture {
         return mockServer.getResponse();
     }
 
-    protected static String readFile(String path, Charset encoding)throws IOException
-    {
+    protected static String readFile(String path, Charset encoding) throws IOException {
         byte[] encoded = Files.readAllBytes(Paths.get(path));
         return new String(encoded, encoding);
     }

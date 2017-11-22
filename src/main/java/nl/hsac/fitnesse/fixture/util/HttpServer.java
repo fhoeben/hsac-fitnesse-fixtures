@@ -25,11 +25,12 @@ public class HttpServer <T extends HttpResponse> {
 
     private final T response;
     private final com.sun.net.httpserver.HttpServer server;
+    private final InetSocketAddress address;
     private final AtomicInteger requestsReceived = new AtomicInteger(0);
     private final Object lock = new Object();
 
     /**
-     * Creates new.
+     * Creates new, bound to {@link InetAddress#getLocalHost} first free port 8000 or higher.
      * @param aPath context the server will serve (must start with '/').
      * @param aResponse response to send when request is received, request will
      *                  be added to it when this server receives one.
@@ -38,19 +39,42 @@ public class HttpServer <T extends HttpResponse> {
         response = aResponse;
         try {
             server = com.sun.net.httpserver.HttpServer.create();
-            bind(server);
-            server.createContext(aPath, getHandler(aResponse));
-            server.start();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+        bind(server);
+        address = server.getAddress();
+        init(server, aPath, aResponse);
+    }
+
+    /**
+     * Creates new.
+     * @param anAddress address to bind on.
+     * @param aPath context the server will serve (must start with '/').
+     * @param aResponse response to send when request is received, request will
+     *                  be added to it when this server receives one.
+     */
+    public HttpServer(InetSocketAddress anAddress, String aPath, T aResponse) {
+        response = aResponse;
+        try {
+            server = com.sun.net.httpserver.HttpServer.create(anAddress, 1);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+        address = anAddress;
+        init(server, aPath, aResponse);
+    }
+
+    protected void init(com.sun.net.httpserver.HttpServer aServer, String aPath, T aResponse) {
+        aServer.createContext(aPath, getHandler(aResponse));
+        aServer.start();
     }
 
     /**
      * @return address the server listens on.
      */
     public InetSocketAddress getAddress() {
-        return server.getAddress();
+        return address;
     }
 
     /**
