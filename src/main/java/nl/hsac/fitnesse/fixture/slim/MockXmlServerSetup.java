@@ -74,8 +74,9 @@ public class MockXmlServerSetup extends SlimFixture {
 
     public static HttpServer<? extends MockXmlHttpResponseSequence> createMockServer(String host, int port, String aPath) {
         try {
-            String h = host == null || "null".equalsIgnoreCase(host) ? "0.0.0.0" : host;
-            InetSocketAddress address = new InetSocketAddress(InetAddress.getByName(h), port);
+            InetAddress h = host == null || "null".equalsIgnoreCase(host) ?
+                                InetAddress.getLocalHost() : InetAddress.getByName(host);
+            InetSocketAddress address = new InetSocketAddress(h, port);
             return new HttpServer<>(address, aPath, createResponse());
         } catch (UnknownHostException e) {
             throw new SlimFixtureException(false, "Unable to resolve address: " + host);
