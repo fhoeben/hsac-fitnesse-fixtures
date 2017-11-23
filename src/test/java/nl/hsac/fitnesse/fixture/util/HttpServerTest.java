@@ -19,7 +19,7 @@ import static org.junit.Assert.fail;
 
 public class HttpServerTest {
     private static final String PATH = "/unitTestPath";
-    public static final int MIN_EPHEMERAL_PORT = 49152;
+    private static final RandomUtil random = new RandomUtil();
 
     private HttpResponse response;
     private HttpServer<HttpResponse> server;
@@ -27,20 +27,20 @@ public class HttpServerTest {
     @Before
     public void setUp() {
         response = new HttpResponse();
-        response.setResponse("Hallo");
+        response.setResponse(random.randomString("abcdefghijklmnopqrstuvwxyz", 500));
         response.setStatusCode(200);
     }
 
     @Test
     public void secondServerGetsNextAddress() throws Exception {
-        HttpServer<HttpResponse> server = storeNew(new HttpServer<>(PATH, response));
+        HttpServer<HttpResponse> server = storeNew(new HttpServer<>(InetAddress.getLocalHost(), 8000, HttpServer.MAX_PORT, PATH, response));
 
         HttpResponse resp = server.getResponse();
         assertSame(response, resp);
 
         int port1 = checkDefaultAddress(server);
 
-        HttpServer<HttpResponse> server2 = storeNew(new HttpServer<>(PATH, response));
+        HttpServer<HttpResponse> server2 = storeNew(new HttpServer<>(InetAddress.getLocalHost(), 8000, HttpServer.MAX_PORT, PATH, response));
         int port2 = checkDefaultAddress(server2);
 
         assertEquals(port1 + 1, port2);
@@ -48,17 +48,15 @@ public class HttpServerTest {
 
     @Test
     public void serverAtLocalPort() throws Exception {
-        HttpServer<HttpResponse> server = storeNew(new HttpServer<>(0, PATH, response));
+        HttpServer<HttpResponse> server = storeNew(new HttpServer<>(InetAddress.getLocalHost(),0, PATH, response));
 
         HttpResponse resp = server.getResponse();
         assertSame(response, resp);
 
         int port1 = checkDefaultAddress(server);
-        isEphemeralPort(port1);
 
-        HttpServer<HttpResponse> server2 = storeNew(new HttpServer<>(0, PATH, response));
+        HttpServer<HttpResponse> server2 = storeNew(new HttpServer<>(InetAddress.getLocalHost(), 0, PATH, response));
         int port2 = checkDefaultAddress(server2);
-        isEphemeralPort(port2);
 
         assertNotEquals(port1, port2);
     }
@@ -129,7 +127,6 @@ public class HttpServerTest {
         assertSame(address.getAddress(), addressOfServer.getAddress());
 
         int port = addressOfServer.getPort();
-        isEphemeralPort(port);
 
         checkGetFromIsPossible(addressOfServer);
 
@@ -162,10 +159,6 @@ public class HttpServerTest {
         assertEquals(1, server.getRequestsReceived());
     }
 
-    private void isEphemeralPort(int port) {
-        assertTrue("Unexpected port number: " + port, port >= MIN_EPHEMERAL_PORT);
-    }
-
     public HttpServer<HttpResponse> storeNew(HttpServer<HttpResponse> newServer) {
         if (server != null) {
             server.stopServer();
@@ -180,5 +173,4 @@ public class HttpServerTest {
             server.stopServer();
         }
     }
-
 }

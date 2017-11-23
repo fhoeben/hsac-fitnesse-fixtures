@@ -84,7 +84,14 @@ public class MockXmlServerSetup extends SlimFixture {
     }
 
     public static HttpServer<? extends MockXmlHttpResponseSequence> createMockServer(String aPath) {
-        return new HttpServer<>(aPath, createResponse());
+        HttpServer<MockXmlHttpResponseSequence> mockServer;
+        MockXmlHttpResponseSequence response = createResponse();
+        try {
+            mockServer = new HttpServer<>(InetAddress.getLocalHost(), 8000, HttpServer.MAX_PORT, aPath, response);
+        } catch (UnknownHostException | RuntimeException e) {
+            mockServer = new HttpServer<>(InetAddress.getLoopbackAddress(),8000, HttpServer.MAX_PORT, aPath, response);
+        }
+        return mockServer;
     }
 
     protected static MockXmlHttpResponseSequence createResponse() {
