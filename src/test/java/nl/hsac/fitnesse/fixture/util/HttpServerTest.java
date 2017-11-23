@@ -155,8 +155,6 @@ public class HttpServerTest {
         test.getFrom(url);
 
         assertEquals(response.getResponse(), test.response());
-
-        assertEquals(1, server.getRequestsReceived());
     }
 
     public HttpServer<HttpResponse> storeNew(HttpServer<HttpResponse> newServer) {
