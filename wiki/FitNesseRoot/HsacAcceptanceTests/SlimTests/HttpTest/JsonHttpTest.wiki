@@ -15,10 +15,10 @@
     }
 -!}
 
-|script      |mock xml server setup |
-|add response|${jsonToTest}         |
-|add response|Broken|with status|500|
-|$url=       |get mock server url   |
+|script      |mock xml server setup|localhost  |7000-9000|/mock|
+|add response|${jsonToTest}                                    |
+|add response|Broken               |with status|500            |
+|$url=       |get mock server url                              |
 
 |script       |json http test                                                                                 |
 |get from     |$url                                                                                           |
@@ -43,5 +43,5 @@ And now a call which returns an error status code.
 |check |response status|500   |
 |check |response       |Broken|
 
-|script|mock xml server setup|
-|stop                        |
+|script|mock xml server setup|/mock|
+|stop                              |

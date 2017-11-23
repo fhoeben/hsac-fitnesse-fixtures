@@ -11,10 +11,10 @@ Here we use !-FitNesse-! as a HTTP server so we can control which responses the 
 
 !2 Too Few Messages
 
-|script      |mock xml server setup        |
-|add response|{{{<dag/>}}}                 |
+|script      |mock xml server setup     |
+|add response|{{{<dag/>}}}              |
 |add response|{{{<dag2/>}}}|with status|201|
-|$url=       |get mock server url          |
+|$url=       |get mock server url       |
 
 |script|xml http test          |
 |post  |{{{<Hallo/>}}} |to|$url|
@@ -28,7 +28,7 @@ Here we use !-FitNesse-! as a HTTP server so we can control which responses the 
 !2 Messages As Expected
 
 |script|xml http test          |
-|post  |{{{<Hallo2/>}}}|to|$url|
+|post  |{{{<Hallo2/>            }}}|to|$url|
 |check |response status|201    |
 |show  |response               |
 
@@ -48,11 +48,11 @@ Here we use !-FitNesse-! as a HTTP server so we can control which responses the 
 |$url=       |get mock server url  |
 
 |script|xml http test                                                                                                                   |
-|post  |{{{<Hallo/>}}}                        |to                                   |$url                                               |
-|check |response status                       |200                                                                                      |
+|post  |{{{<Hallo/>}}} |to          |$url                                                                                               |
+|check |response status|200                                                                                                             |
 |note  |Posting an extra message will cause a 404 response, normally this fails a test, but we prevent this by using a 'show' line below|
-|show  |post                                  |{{{<Hallo2/>}}}                      |to                      |$url                      |
-|check |response status                       |404                                                                                      |
+|show  |post           |{{{<Hallo2/>}}}|to|$url                                                                                            |
+|check |response status|404                                                                                                             |
 |show  |response                                                                                                                        |
 
 !note The messages report table does not fail a test, it just shows the current status. It will show red lines for expected requests that never came, or extra requests received.
@@ -116,3 +116,22 @@ Here we use !-FitNesse-! as a HTTP server so we can control which responses the 
 
 |script|mock xml server setup|
 |stop                        |
+
+!2 Controlling server address
+
+The mock server can be customized to control the address, port and path it listens on.
+This is done by adding extra columns to the first row (constructor parameters).
+One can specify either a single port number, or a range (two ports separated by '-').
+When specifying a path this path must also be supplied when stopping the server.
+
+|script|mock xml server setup|localhost|58876-58878|/mock|
+|show  |get mock server url                              |
+
+
+|script|mock xml server setup|/mock|
+|stop                              |
+
+
+
+
+
