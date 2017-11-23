@@ -119,6 +119,7 @@ public class HttpServer<T extends HttpResponse> {
     }
 
     /**
+     * Waits until at least one request is received, and then stops the server.
      * @param maxWait ms to wait at most.
      * @return response with last request filled, if at least one was received.
      */
