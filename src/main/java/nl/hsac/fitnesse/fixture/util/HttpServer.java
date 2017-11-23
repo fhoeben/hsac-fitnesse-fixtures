@@ -10,6 +10,7 @@ import org.apache.http.protocol.HTTP;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.BindException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
@@ -22,6 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class HttpServer <T extends HttpResponse> {
     private static final Charset UTF8 = ContentType.parse(XmlHttpResponse.CONTENT_TYPE_XML_TEXT_UTF8).getCharset();
+    public static final int MAX_PORT = 65535;
 
     private final T response;
     private final com.sun.net.httpserver.HttpServer server;
@@ -30,20 +32,43 @@ public class HttpServer <T extends HttpResponse> {
     private final Object lock = new Object();
 
     /**
-     * Creates new, bound to {@link InetAddress#getLocalHost} first free port 8000 or higher.
+     * Creates new, bound to {@link InetAddress#getLocalHost()} or {@link InetAddress#getLoopbackAddress()}
+     * first free port 8000 or higher.
      * @param aPath context the server will serve (must start with '/').
      * @param aResponse response to send when request is received, request will
      *                  be added to it when this server receives one.
      */
     public HttpServer(String aPath, T aResponse) {
+        this(8000, MAX_PORT, aPath, aResponse);
+    }
+
+    /**
+     * Creates new, bound to {@link InetAddress#getLocalHost()} or {@link InetAddress#getLoopbackAddress()}.
+     * @param port port number to use.
+     * @param aPath context the server will serve (must start with '/').
+     * @param aResponse response to send when request is received, request will
+     *                  be added to it when this server receives one.
+     */
+    public HttpServer(int port, String aPath, T aResponse) {
+        this(port, port, aPath, aResponse);
+    }
+
+    /**
+     * Creates new, bound to {@link InetAddress#getLocalHost()} or {@link InetAddress#getLoopbackAddress()}.
+     * @param startPort minimal port number.
+     * @param maxPort max (inclusive) port number.
+     * @param aPath context the server will serve (must start with '/').
+     * @param aResponse response to send when request is received, request will
+     *                  be added to it when this server receives one.
+     */
+    public HttpServer(int startPort, int maxPort, String aPath, T aResponse) {
         response = aResponse;
-        try {
-            server = com.sun.net.httpserver.HttpServer.create();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-        bind(server);
-        address = server.getAddress();
+        server = createServer();
+        bind(server, startPort, maxPort);
+
+        InetSocketAddress serverAddress = server.getAddress();
+        int port = serverAddress.getPort();
+        address = new InetSocketAddress(serverAddress.getAddress(), port);
         init(server, aPath, aResponse);
     }
 
@@ -56,14 +81,24 @@ public class HttpServer <T extends HttpResponse> {
      */
     public HttpServer(InetSocketAddress anAddress, String aPath, T aResponse) {
         response = aResponse;
+        server = createServer();
+        bind(server, anAddress.getAddress(), anAddress.getPort(), anAddress.getPort());
+
+        InetSocketAddress serverAddress = server.getAddress();
+        if (serverAddress == null) {
+            throw new RuntimeException(new BindException("Unable to bind to: " + anAddress));
+        }
+        int port = serverAddress.getPort();
+        address = new InetSocketAddress(anAddress.getAddress(), port);
+        init(server, aPath, aResponse);
+    }
+
+    private com.sun.net.httpserver.HttpServer createServer() {
         try {
-            server = com.sun.net.httpserver.HttpServer.create(anAddress, 1);
+            return com.sun.net.httpserver.HttpServer.create();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-        int port = server.getAddress().getPort();
-        address = new InetSocketAddress(anAddress.getAddress(), port);
-        init(server, aPath, aResponse);
     }
 
     protected void init(com.sun.net.httpserver.HttpServer aServer, String aPath, T aResponse) {
@@ -125,30 +160,43 @@ public class HttpServer <T extends HttpResponse> {
 
     /**
      * Finds free port number and binds the server to it.
+     * Address used will either be localhost, or if unable to bind to localhost loopback address will be used.
+     * @param server server to bind to port found.
+     * @param startPort lowest allowed port.
+     * @param maxPort highest (inclusive) port.
      */
-    protected void bind(com.sun.net.httpserver.HttpServer server) {
+    protected void bind(com.sun.net.httpserver.HttpServer server, int startPort, int maxPort) {
         try {
-            int port = 0;
-            InetAddress address = InetAddress.getLocalHost();
-            for (int possiblePort = 8000; port == 0; possiblePort++) {
-                try {
-                    InetSocketAddress s = new InetSocketAddress(address, possiblePort);
-                    server.bind(s, 1);
-                    port = possiblePort;
-                } catch (IOException e) {
-                    // try next number
-                    continue;
-                }
-            }
+            bind(server, InetAddress.getLocalHost(), startPort, maxPort);
         } catch (Exception ex) {
             try {
                 // unable to get port for public address try loopback address, which will only work on this machine
                 // better than nothing
-                InetAddress loopback = InetAddress.getLoopbackAddress();
-                server.bind(new InetSocketAddress(loopback, 0), 1);
-            } catch (IOException e) {
+                bind(server, InetAddress.getLoopbackAddress(), startPort, maxPort);
+            } catch (Exception e) {
                 // ignore and throw new ex with original as cause
                 throw new RuntimeException(ex);
+            }
+        }
+    }
+
+    /**
+     * Finds free port number and binds the server to it.
+     * @param server server to bind to port found.
+     * @param address address to listen on.
+     * @param startPort lowest allowed port.
+     * @param maxPort highest (inclusive) port.
+     */
+    protected void bind(com.sun.net.httpserver.HttpServer server, InetAddress address, int startPort, int maxPort) {
+        int port = -1;
+        for (int possiblePort = startPort; port == -1 && possiblePort <= maxPort; possiblePort++) {
+            try {
+                InetSocketAddress s = new InetSocketAddress(address, possiblePort);
+                server.bind(s, 1);
+                port = possiblePort;
+            } catch (IOException e) {
+                // try next number
+                continue;
             }
         }
     }

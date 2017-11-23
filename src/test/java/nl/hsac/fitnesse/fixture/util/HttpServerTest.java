@@ -17,6 +17,7 @@ import static org.junit.Assert.fail;
 
 public class HttpServerTest {
     private static final String PATH = "/unitTestPath";
+    public static final int MIN_EPHEMERAL_PORT = 49152;
 
     private HttpResponse response = new HttpResponse();
     private HttpServer<HttpResponse> server;
@@ -37,6 +38,23 @@ public class HttpServerTest {
     }
 
     @Test
+    public void serverAtLocalPort() throws Exception {
+        HttpServer<HttpResponse> server = storeNew(new HttpServer<>(0, PATH, response));
+
+        HttpResponse resp = server.getResponse();
+        assertSame(response, resp);
+
+        int port1 = checkDefaultAddress(server);
+        isEphemeralPort(port1);
+
+        HttpServer<HttpResponse> server2 = storeNew(new HttpServer<>(0, PATH, response));
+        int port2 = checkDefaultAddress(server2);
+        isEphemeralPort(port2);
+
+        assertNotEquals(port1, port2);
+    }
+
+    @Test
     public void canPassExplicitAddress() throws Exception {
         checkMultipleRandomAtSameAddress("127.0.0.1");
     }
@@ -53,7 +71,7 @@ public class HttpServerTest {
 
     @Test
     public void canPassExplicitPort() throws Exception {
-        int expectedPort = 65535 - 3;
+        int expectedPort = HttpServer.MAX_PORT - 3;
         InetSocketAddress address = new InetSocketAddress(InetAddress.getByName("127.0.0.1"), expectedPort);
 
         HttpServer<HttpResponse> server = storeNew(new HttpServer<>(address, PATH, response));
@@ -74,6 +92,7 @@ public class HttpServerTest {
             fail("Expected exception");
         } catch (RuntimeException e) {
             Throwable cause = e.getCause();
+            assertNotNull("Null cause on " + e, cause);
             assertEquals(BindException.class, cause.getClass());
         }
     }
@@ -99,7 +118,7 @@ public class HttpServerTest {
         assertSame(address.getAddress(), addressOfServer.getAddress());
 
         int port = addressOfServer.getPort();
-        assertNotEquals(0, port);
+        isEphemeralPort(port);
 
         return port;
     }
@@ -115,6 +134,10 @@ public class HttpServerTest {
         assertTrue("Bad port: " + port, port >= 8000);
 
         return port;
+    }
+
+    private void isEphemeralPort(int port) {
+        assertTrue(port >= MIN_EPHEMERAL_PORT);
     }
 
     public HttpServer<HttpResponse> storeNew(HttpServer<HttpResponse> newServer) {
