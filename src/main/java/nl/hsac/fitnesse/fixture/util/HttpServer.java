@@ -1,7 +1,6 @@
 package nl.hsac.fitnesse.fixture.util;
 
 import com.sun.net.httpserver.Headers;
-import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.apache.http.ParseException;
 import org.apache.http.entity.ContentType;
@@ -21,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Receiver for a callback from application being tested.
  */
-public class HttpServer <T extends HttpResponse> {
+public class HttpServer<T extends HttpResponse> {
     private static final Charset UTF8 = ContentType.parse(XmlHttpResponse.CONTENT_TYPE_XML_TEXT_UTF8).getCharset();
     public static final int MAX_PORT = 65535;
 
@@ -35,7 +34,7 @@ public class HttpServer <T extends HttpResponse> {
     /**
      * Creates new.
      * @param anAddress address to bind on.
-     * @param aPath context the server will serve (must start with '/').
+     * @param aPath     context the server will serve (must start with '/').
      * @param aResponse response to send when request is received, request will
      *                  be added to it when this server receives one.
      */
@@ -46,8 +45,8 @@ public class HttpServer <T extends HttpResponse> {
     /**
      * Creates new.
      * @param anAddress address to bind on.
-     * @param port port to bind on.
-     * @param aPath context the server will serve (must start with '/').
+     * @param port      port to bind on.
+     * @param aPath     context the server will serve (must start with '/').
      * @param aResponse response to send when request is received, request will
      *                  be added to it when this server receives one.
      */
@@ -59,8 +58,8 @@ public class HttpServer <T extends HttpResponse> {
      * Creates new.
      * @param anAddress address to bind on.
      * @param startPort lowest port to bind on.
-     * @param maxPort highest number to bind on.
-     * @param aPath context the server will serve (must start with '/').
+     * @param maxPort   highest number to bind on.
+     * @param aPath     context the server will serve (must start with '/').
      * @param aResponse response to send when request is received, request will
      *                  be added to it when this server receives one.
      */
@@ -152,10 +151,10 @@ public class HttpServer <T extends HttpResponse> {
 
     /**
      * Finds free port number and binds the server to it.
-     * @param server server to bind to port found.
-     * @param address address to listen on.
+     * @param server    server to bind to port found.
+     * @param address   address to listen on.
      * @param startPort lowest allowed port.
-     * @param maxPort highest (inclusive) port.
+     * @param maxPort   highest (inclusive) port.
      */
     protected void bind(com.sun.net.httpserver.HttpServer server, InetAddress address, int startPort, int maxPort) {
         int port = -1;
@@ -172,9 +171,7 @@ public class HttpServer <T extends HttpResponse> {
     }
 
     protected HttpHandler getHandler(final T aResponse) {
-        HttpHandler result = new HttpHandler() {
-            @Override
-            public void handle(HttpExchange he) throws IOException {
+        return he -> {
             // ensure we never handle multiple requests at the same time
             synchronized (lock) {
                 incrementRequestsReceived();
@@ -203,8 +200,7 @@ public class HttpServer <T extends HttpResponse> {
                         Charset charset = getCharSet(heHeaders);
                         responseBytes = aResponse.getResponse().getBytes(charset);
                     }
-                    he.sendResponseHeaders(aResponse.getStatusCode(),
-                                            responseBytes.length);
+                    he.sendResponseHeaders(aResponse.getStatusCode(), responseBytes.length);
                     os = he.getResponseBody();
                     os.write(responseBytes);
                     os.flush();
@@ -214,9 +210,7 @@ public class HttpServer <T extends HttpResponse> {
                     }
                 }
             }
-            }
         };
-        return result;
     }
 
     protected Charset getCharSet(Headers heHeaders) {
