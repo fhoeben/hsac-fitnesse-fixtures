@@ -64,28 +64,19 @@ public class HttpServer<T extends HttpResponse> {
      *                  be added to it when this server receives one.
      */
     public HttpServer(InetAddress anAddress, int startPort, int maxPort, String aPath, T aResponse) {
+        if (startPort > MAX_PORT) {
+            throw new IllegalArgumentException("port must be below: " + MAX_PORT);
+        }
         response = aResponse;
         path = aPath;
-        server = createServer();
-        bind(server, anAddress, startPort, maxPort);
+        server = bind(anAddress, startPort, maxPort);
 
         InetSocketAddress serverAddress = server.getAddress();
-        if (serverAddress == null) {
-            throw new RuntimeException(new BindException("Unable to bind to: " + anAddress.getHostAddress()));
-        }
         int port = serverAddress.getPort();
         address = new InetSocketAddress(anAddress, port);
 
         server.createContext(aPath, getHandler(aResponse));
         server.start();
-    }
-
-    private com.sun.net.httpserver.HttpServer createServer() {
-        try {
-            return com.sun.net.httpserver.HttpServer.create();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
     }
 
     /**
@@ -151,23 +142,36 @@ public class HttpServer<T extends HttpResponse> {
     }
 
     /**
-     * Finds free port number and binds the server to it.
-     * @param server    server to bind to port found.
+     * Finds free port number and binds a server to it.
      * @param address   address to listen on.
      * @param startPort lowest allowed port.
      * @param maxPort   highest (inclusive) port.
+     * @return server created.
      */
-    protected void bind(com.sun.net.httpserver.HttpServer server, InetAddress address, int startPort, int maxPort) {
+    public static com.sun.net.httpserver.HttpServer bind(InetAddress address, int startPort, int maxPort) {
+        com.sun.net.httpserver.HttpServer aServer = createServer();
         int port = -1;
         for (int possiblePort = startPort; port == -1 && possiblePort <= maxPort; possiblePort++) {
             try {
                 InetSocketAddress s = new InetSocketAddress(address, possiblePort);
-                server.bind(s, 1);
+                aServer.bind(s, 1);
                 port = possiblePort;
             } catch (IOException e) {
                 // try next number
                 continue;
             }
+        }
+        if (aServer.getAddress() == null) {
+            throw new RuntimeException(new BindException("Unable to bind to: " + address.getHostAddress()));
+        }
+        return aServer;
+    }
+
+    private static com.sun.net.httpserver.HttpServer createServer() {
+        try {
+            return com.sun.net.httpserver.HttpServer.create();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
     }
 

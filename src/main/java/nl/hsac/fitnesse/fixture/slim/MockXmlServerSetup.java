@@ -57,8 +57,8 @@ public class MockXmlServerSetup extends SlimFixture {
         this(aPath, () -> createMockServer(aPath));
     }
 
-    public MockXmlServerSetup(String host, int port, String aPath) {
-        this(aPath, () -> createMockServer(host, port, aPath));
+    public MockXmlServerSetup(String host, String ports, String aPath) {
+        this(aPath, () -> createMockServer(host, ports, aPath));
     }
 
     public MockXmlServerSetup(String aPath, Supplier<HttpServer<? extends MockXmlHttpResponseSequence>> creator) {
@@ -71,12 +71,25 @@ public class MockXmlServerSetup extends SlimFixture {
         }
     }
 
-    public static HttpServer<? extends MockXmlHttpResponseSequence> createMockServer(String host, int port, String aPath) {
+    public static HttpServer<? extends MockXmlHttpResponseSequence> createMockServer(String host, String ports, String aPath) {
         InetAddress h = getInetAddress(host);
-        return new HttpServer<>(h, port, aPath, createResponse());
+        int[] portRange = getPortRange(ports);
+        return new HttpServer<>(h, portRange[0], portRange[1], aPath, createResponse());
     }
 
-    protected static InetAddress getInetAddress(String host) {
+    public static int[] getPortRange(String ports) {
+        String[] portBoundaries = ports.split("-");
+        int[] portRange = new int[2];
+        portRange[0] = parseInt(portBoundaries[0]);
+        portRange[1] = portBoundaries.length == 1 ? portRange[0] : parseInt(portBoundaries[1]);
+        return portRange;
+    }
+
+    private static int parseInt(String s) {
+        return Integer.parseInt(s.trim());
+    }
+
+    public static InetAddress getInetAddress(String host) {
         try {
             return host == null || "null".equalsIgnoreCase(host) ?
                                         InetAddress.getLocalHost() : InetAddress.getByName(host);
