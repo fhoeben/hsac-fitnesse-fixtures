@@ -61,7 +61,8 @@ public class HttpServer <T extends HttpResponse> {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-        address = anAddress;
+        int port = server.getAddress().getPort();
+        address = new InetSocketAddress(anAddress.getAddress(), port);
         init(server, aPath, aResponse);
     }
 
