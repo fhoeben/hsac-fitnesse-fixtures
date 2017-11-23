@@ -174,7 +174,6 @@ public class HttpServer<T extends HttpResponse> {
         return he -> {
             // ensure we never handle multiple requests at the same time
             synchronized (lock) {
-                incrementRequestsReceived();
                 OutputStream os = null;
                 try {
                     String request;
@@ -205,6 +204,7 @@ public class HttpServer<T extends HttpResponse> {
                     os.write(responseBytes);
                     os.flush();
                 } finally {
+                    incrementRequestsReceived();
                     if (os != null) {
                         os.close();
                     }

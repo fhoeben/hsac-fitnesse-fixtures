@@ -155,13 +155,12 @@ public class HttpServerTest {
         test.getFrom(url);
 
         assertEquals(response.getResponse(), test.response());
-
-        assertEquals(1, server.getRequestsReceived());
     }
 
     public HttpServer<HttpResponse> storeNew(HttpServer<HttpResponse> newServer) {
         if (server != null) {
-            server.stopServer();
+            server.waitForRequest(100);
+            assertEquals(1, server.getRequestsReceived());
         }
         server = newServer;
         return server;
