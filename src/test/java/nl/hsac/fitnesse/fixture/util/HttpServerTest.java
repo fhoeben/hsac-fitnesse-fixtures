@@ -84,12 +84,12 @@ public class HttpServerTest {
         HttpServer<HttpResponse> server = storeNew(new HttpServer<>(address, PATH, response));
 
         InetSocketAddress addressOfServer = server.getAddress();
-        assertSame(address.getAddress(), addressOfServer.getAddress());
+        assertEquals(address.getAddress(), addressOfServer.getAddress());
 
         int port = addressOfServer.getPort();
         assertEquals(expectedPort, port);
 
-        checkGetFromIsPossible(addressOfServer);
+        checkGetFromIsPossible();
     }
 
     @Test
@@ -124,11 +124,11 @@ public class HttpServerTest {
         assertSame(response, resp);
 
         InetSocketAddress addressOfServer = server.getAddress();
-        assertSame(address.getAddress(), addressOfServer.getAddress());
+        assertEquals(address.getAddress(), addressOfServer.getAddress());
 
         int port = addressOfServer.getPort();
 
-        checkGetFromIsPossible(addressOfServer);
+        checkGetFromIsPossible();
 
         return port;
     }
@@ -143,13 +143,13 @@ public class HttpServerTest {
         int port = address.getPort();
         assertTrue("Bad port: " + port, port >= 8000);
 
-        checkGetFromIsPossible(address);
+        checkGetFromIsPossible();
 
         return port;
     }
 
-    private void checkGetFromIsPossible(InetSocketAddress address) {
-        String url = "http://" + address.getHostName() + ":" + address.getPort() + PATH;
+    private void checkGetFromIsPossible() {
+        String url = server.getURL();
         HttpTest test = new HttpTest();
 
         test.getFrom(url);

@@ -28,6 +28,7 @@ public class HttpServer <T extends HttpResponse> {
     private final T response;
     private final com.sun.net.httpserver.HttpServer server;
     private final InetSocketAddress address;
+    private final String path;
     private final AtomicInteger requestsReceived = new AtomicInteger(0);
     private final Object lock = new Object();
 
@@ -65,16 +66,19 @@ public class HttpServer <T extends HttpResponse> {
      */
     public HttpServer(InetAddress anAddress, int startPort, int maxPort, String aPath, T aResponse) {
         response = aResponse;
+        path = aPath;
         server = createServer();
         bind(server, anAddress, startPort, maxPort);
 
         InetSocketAddress serverAddress = server.getAddress();
         if (serverAddress == null) {
-            throw new RuntimeException(new BindException("Unable to bind to: " + anAddress));
+            throw new RuntimeException(new BindException("Unable to bind to: " + anAddress.getHostAddress()));
         }
         int port = serverAddress.getPort();
         address = new InetSocketAddress(anAddress, port);
-        init(server, aPath, aResponse);
+
+        server.createContext(aPath, getHandler(aResponse));
+        server.start();
     }
 
     private com.sun.net.httpserver.HttpServer createServer() {
@@ -85,16 +89,20 @@ public class HttpServer <T extends HttpResponse> {
         }
     }
 
-    protected void init(com.sun.net.httpserver.HttpServer aServer, String aPath, T aResponse) {
-        aServer.createContext(aPath, getHandler(aResponse));
-        aServer.start();
-    }
-
     /**
      * @return address the server listens on.
      */
     public InetSocketAddress getAddress() {
         return address;
+    }
+
+    /**
+     * @return URL for requests to the server.
+     */
+    public String getURL() {
+        InetSocketAddress address = getAddress();
+        InetAddress hostAddress = address.getAddress();
+        return "http://" + hostAddress.getHostAddress() + ":" + address.getPort() + path;
     }
 
     /**

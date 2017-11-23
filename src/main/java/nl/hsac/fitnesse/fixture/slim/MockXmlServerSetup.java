@@ -159,7 +159,7 @@ public class MockXmlServerSetup extends SlimFixture {
      * @return url this server is listening on.
      */
     public String getMockServerUrl() {
-        return "http:/" + mockServer.getAddress() + path;
+        return mockServer.getURL();
     }
 
     public boolean verifyAllResponsesServed() {
