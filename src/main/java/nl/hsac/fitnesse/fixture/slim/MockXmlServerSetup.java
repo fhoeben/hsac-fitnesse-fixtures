@@ -6,7 +6,6 @@ import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -74,8 +73,7 @@ public class MockXmlServerSetup extends SlimFixture {
 
     public static HttpServer<? extends MockXmlHttpResponseSequence> createMockServer(String host, int port, String aPath) {
         InetAddress h = getInetAddress(host);
-        InetSocketAddress address = new InetSocketAddress(h, port);
-        return new HttpServer<>(address, aPath, createResponse());
+        return new HttpServer<>(h, port, aPath, createResponse());
     }
 
     protected static InetAddress getInetAddress(String host) {
