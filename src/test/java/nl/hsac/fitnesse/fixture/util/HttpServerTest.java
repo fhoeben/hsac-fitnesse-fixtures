@@ -1,6 +1,8 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import nl.hsac.fitnesse.fixture.slim.HttpTest;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.net.BindException;
@@ -19,8 +21,15 @@ public class HttpServerTest {
     private static final String PATH = "/unitTestPath";
     public static final int MIN_EPHEMERAL_PORT = 49152;
 
-    private HttpResponse response = new HttpResponse();
+    private HttpResponse response;
     private HttpServer<HttpResponse> server;
+
+    @Before
+    public void setUp() {
+        response = new HttpResponse();
+        response.setResponse("Hallo");
+        response.setStatusCode(200);
+    }
 
     @Test
     public void secondServerGetsNextAddress() throws Exception {
@@ -81,6 +90,8 @@ public class HttpServerTest {
 
         int port = addressOfServer.getPort();
         assertEquals(expectedPort, port);
+
+        checkGetFromIsPossible(addressOfServer);
     }
 
     @Test
@@ -120,6 +131,8 @@ public class HttpServerTest {
         int port = addressOfServer.getPort();
         isEphemeralPort(port);
 
+        checkGetFromIsPossible(addressOfServer);
+
         return port;
     }
 
@@ -133,11 +146,24 @@ public class HttpServerTest {
         int port = address.getPort();
         assertTrue("Bad port: " + port, port >= 8000);
 
+        checkGetFromIsPossible(address);
+
         return port;
     }
 
+    private void checkGetFromIsPossible(InetSocketAddress address) {
+        String url = "http://" + address.getHostName() + ":" + address.getPort() + PATH;
+        HttpTest test = new HttpTest();
+
+        test.getFrom(url);
+
+        assertEquals(response.getResponse(), test.response());
+
+        assertEquals(1, server.getRequestsReceived());
+    }
+
     private void isEphemeralPort(int port) {
-        assertTrue(port >= MIN_EPHEMERAL_PORT);
+        assertTrue("Unexpected port number: " + port, port >= MIN_EPHEMERAL_PORT);
     }
 
     public HttpServer<HttpResponse> storeNew(HttpServer<HttpResponse> newServer) {
