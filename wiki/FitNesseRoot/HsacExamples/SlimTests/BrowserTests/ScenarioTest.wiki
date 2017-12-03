@@ -2,7 +2,7 @@
 
 
 On this page we test whether we check the prices of a couple of houses for sale in Utrecht, The Netherlands.
-This test continues where ScriptTest left of. It uses a [[Slim scenario][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScenarioTable]] to define a parameterized script.
+It uses a [[Slim scenario][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScenarioTable]] to define a parameterized script.
 This is then invoked multiple times from a [[Decision table][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.DecisionTable]], once for each row.
 
 
