@@ -1,57 +1,48 @@
 !1 Website testing using custom subclass of !-BrowserTest-!
 
-On this page we test whether we can find a nice house which is for sale in Utrecht, The Netherlands and check how many photos are available. 
- * First we do this with ''plain !-BrowserTest-!'', 
- * then with a ''custom subclass, !-nl.hsac.fitnesse.sample.FundaTest-!'', and 
+On this page we test whether the birth date of Van Morrisson is listed correctly on [[!-AllMusic-!][https://www.allmusic.com]].
+We start by navigating to the artist's overview page on !-AllMusic-! and then perform the same check in different ways:
+ * First with ''plain !-BrowserTest-!'',
+ * then with a ''custom subclass, !-nl.hsac.fitnesse.sample.AllMusicTest-!'', and
  * finally with a [[Slim scenario][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScenarioTable]].
 The latter two approaches both make the test (i.e. the script table containing the test) more descriptive, and less fragile to HTML changes.
 
-Doing this in Java 'hides' the exact way the number of photos is determined from the test (and its result). While a scenario would have made this part of the 'test domain'.
+Doing this in Java 'hides' the exact way the birth date is determined from the test (and its result). While a scenario would have made this part of the 'test domain'.
 Hiding details can either be a good (e.g. more focus on what is relevant to test, smaller test report), or bad (e.g. 'what was done exactly in this method?') thing.
 Which approach is more suitable depends on your tests' context (and the complexity of what is to be done)...
 
-There are some things a Java method can do that a scenario cannot: for instance using conditional logic (''if'' statements), or looping (''for'' or ''while'' statements).
+There are some things a Java method can do that a scenario cannot: for instance using conditional logic (''if'' statements), or looping (''for'' or ''while'' statements), or even customize the heuristic used to find places.
+
+!2 Navigate to right page
+Navigating to the right page is done only once (all subsequent test approaches use the same browser window, which will be at the correct location already).
+
+|script                |browser test            |
+|seconds before timeout|60                      |
+|open                  |https://www.allmusic.com|
+|enter                 |Van Morrison|as|Search  |
+|press                 |enter                   |
+|click                 |Van Morrison            |
 
 !2 Using !-BrowserTest-!
 
-|script|browser test                                                                                 |
-|open  |http://www.funda.nl                                                                          |
-|select|€ 1.000.000        |for                                             |Van                     |
-|select|€ 2.000.000        |for                                             |Tot                     |
-|enter |Groenedijk, Utrecht|as                                              |Plaats, buurt, adres etc|
-|wait  |1                  |seconds                                                                  |
-|note  |select option from autocomplete                                                              |
-|press |down                                                                                         |
-|press |enter                                                                                        |
-|click |Zoek                                                                                         |
-|click |Groenedijk 57                                                                                |
-|note  |Check any element's text based on an xPath, makes test fragile to HTML changes               |
-|check |value of           |xpath=//span[@class='object-media-teaser-count']|55                      |
+|script|browser test                                                                                      |
+|check |value of|xpath=//div[h4[contains(text(),'Born')]]/div|August 31, 1945 in Belfast, Northern Ireland|
 
-Using a custom subclass, makes the script look like...
+Using a custom subclass, makes the check look like...
 
-!2 Using !-FundaTest-!
+!2 Using !-AllMusicTest-!
 
 
 We need to indicate in which package our custom class can be found.
 |import                 |
 |nl.hsac.fitnesse.sample|
 
-|script|funda test                                              |
-|open  |http://www.funda.nl                                     |
-|select|€ 1.000.000           |for   |Van                       |
-|select|€ 2.000.000           |for   |Tot                       |
-|enter |Groenedijk, Utrecht   |as    |Plaats, buurt, adres etc  |
-|note  |select option from autocomplete                         |
-|wait  |1                     |seconds                          |
-|press |down                                                    |
-|press |enter                                                   |
-|click |Zoek                                                    |
-|click |Groenedijk 57                                           |
-|note  |Use custom method to get number of photos               |
-|check |number of photos      |55                               |
-|note  |Another custom method using 'if' to determine its result|
-|check |classification        |Good                             |
+|script|all music test                                                       |
+|note  |Use custom method to birth date                                      |
+|check |birth data|August 31, 1945 in Belfast, Northern Ireland              |
+|note  |Using a customized heuristic, we can also retrieve similar fields    |
+|check |value of  |Born         |August 31, 1945 in Belfast, Northern Ireland|
+|check |value of  |Also Known As|George Ivan Morrison                        |
 
 And using a scenario
 
@@ -60,18 +51,9 @@ And using a scenario
 The scenario 'hides' the xpath from the test script, but its definition can be found (and updated) in the wiki. And the test report/result will show what was done (unlike for the custom fixture).
 No Java knowledge or development environment is needed to create and maintain a scenario, which may also be an advantage.
 
-|scenario|check number of photos|expected                                                    |
-|check   |value of              |xpath=//span[@class='object-media-teaser-count']|@{expected}|
+|scenario|check basic info value _ is _|key, expected                                             |
+|check   |value of                     |xpath=//div[h4[contains(text(),'@{key}')]]/div|@{expected}|
 
-|script                |browser test                                    |
-|open                  |http://www.funda.nl                             |
-|select                |€ 1.000.000        |for|Van                     |
-|select                |€ 2.000.000        |for|Tot                     |
-|enter                 |Groenedijk, Utrecht|as |Plaats, buurt, adres etc|
-|wait                  |1                  |seconds                     |
-|note                  |select option from autocomplete                 |
-|press                 |down                                            |
-|press                 |enter                                           |
-|click                 |Zoek                                            |
-|click                 |Groenedijk 57                                   |
-|check number of photos|55                                              |
+|script                |browser test                                                 |
+|check basic info value|Born         |is|August 31, 1945 in Belfast, Northern Ireland|
+|check basic info value|Also Known As|is|George Ivan Morrison                        |
