@@ -1,0 +1,94 @@
+---
+Help: Tests on working with tables representing a grid, nested inside another table
+---
+This test ensures we can find elements inside tables representing a grid where each column indicates a property and each row contains the values for the properties of one item. When such a table is nested in another table.
+
+
+!define HTML { {{{
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<table>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>1</td>
+<td>
+<table>
+    <thead>
+    <tr><th>Lastname</th><th>Firstname</th><th>Gender</th><th>Birth date</th><th></th></tr>
+    </thead>
+    <tbody>
+    <tr><td>Smith</td><td>Joe</td><td>Male</td><td>10-01-1975</td><td><button>Edit</button><button>Delete</button></td></tr>
+    <tr><td>Johnson</td><td>Pamela</td><td>Female</td><td>01-12-1978</td><td><button>Edit</button><button>Delete</button></td></tr>
+    <tr><td><a>Rogers<img />-Smith</a></td><td>Jack</td><td>Male</td><td>10-01-1980</td><td><button>Edit</button><button>Delete</button></td></tr>
+    </tbody>
+</table>
+</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>
+<table>
+    <thead>
+    <tr><th>Kind</th><th>Name</th><th>Color</th><th><a><img /><strong>Owner</strong></a></th><th>Birth&nbsp;date</th><th>Buttons</th></tr>
+    </thead>
+    <tbody>
+    <tr><td>Dog</td><td>Joey</td><td>Black</td><td>Unknown</td><td>11-01-1975</td><td><button>Edit</button><button>Delete</button></td></tr>
+    <tr><td>Cat&nbsp;&nbsp; Food</td><td>Pamelasi</td><td>White</td><td>Jack</td><td>02-12-1978</td><td><button title="Edit Pam's data">Edit</button><button>Delete</button></td></tr>
+    <tr><td>Cat</td><td>Pam</td><td>White</td><td>Jack</td><td>02-12-1978</td><td><button title="Edit Pam's data">Edit</button><button>Delete</button></td></tr>
+    <tr><td>Chicken</td><td>Tweety</td><td>Brown</td><td>Jill</td><td>12-01-1980</td><td><input value="Delete This"><button>Edit</button></td></tr>
+    <tr><td><input name="newKind"/></td><td><textarea name="newName" rows="4" cols="50"></textarea></td><td><input name="newColor" type="checkbox" checked="true"/></td><td>Owner name</td><td><select name="newBirthDate"><option value="volvo">Volvo</option><option value="mercedes" selected>Mercedes</option><option value="audi">Audi</option></select></td><td><button>Add</button></td></tr>
+    </tbody>
+</table>
+</td>
+</tr>
+<tr>
+<td>1</td>
+<td>
+<table>
+    <thead>
+    <tr><th>Lastname</th><th>Firstname</th><th>Gender</th><th>Birth date</th><th></th></tr>
+    </thead>
+    <tbody>
+    <tr><td>Foo</td><td>Boris</td><td>Female</td><td>11-01-1975</td><td><button>Edit</button><button>Delete</button></td></tr>
+    <tr><td>Bar</td><td>Angela</td><td>Male</td><td>11-12-1978</td><td><button>Edit</button><button>Add</button></td></tr>
+    </tbody>
+</table>
+</td>
+<td>3</td>
+<td>4</td>
+</tr>
+</table>
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script                |browser test                                                                     |
+|seconds before timeout|1                                                                                |
+|open                  |$url                                                                             |
+|check                 |value of              |Kind         |in row number|3        |Cat                 |
+|row exists where      |Birth date            |is           |02-12-1978                                  |
+|check                 |value of              |Kind         |in row where |Name     |is|Joey    |Dog     |
+|check                 |value of              |Name         |in row where |Kind     |is|Cat Food|Pamelasi|
+|click                 |Edit                  |in row number|2                                           |
+|click                 |This                  |in row where |Owner        |is       |Jill                |
+|check                 |value of              |Lastname     |in row where |Firstname|is|Pamela  |Johnson |
+|check                 |value of              |Lastname     |in row where |Firstname|is|Angela  |Bar     |
+|click                 |Add                   |in row where |Firstname    |is       |Angela              |
+
+
+|script|mock xml server setup|
+|stop                        |
