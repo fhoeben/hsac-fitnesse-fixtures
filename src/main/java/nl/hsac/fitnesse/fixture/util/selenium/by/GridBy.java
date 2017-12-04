@@ -46,7 +46,7 @@ public class GridBy {
     public static String getXPathForColumnInRowByValueInOtherColumn(String columnName, String value) {
         String selectIndex = getXPathForColumnIndex(columnName);
         String rowXPath = getXPathForRowByValueInOtherColumn(selectIndex, value);
-        return String.format("(.//table[.//tr/th/descendant-or-self::text()[normalized(.)='%3$s'] and ./%4$s])[last()]/%4$s/td",
+        return String.format("(.//table[.//tr[th/descendant-or-self::text()[normalized(.)='%3$s']] and ./%4$s])[last()]/%4$s/td",
                 selectIndex, value, columnName, rowXPath);
     }
 
