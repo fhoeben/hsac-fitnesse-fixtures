@@ -52,18 +52,15 @@ public class EmailFixture extends SlimFixture {
 
     /**
      * | ensure | mail received by | <i>receiver</i> | with subject | <i>subject</i> |
-     *
-     * @param subject
-     * @return
      */
     public String mailReceivedByWithSubject(String receiver, String subject) {
         return getMailText(new SearchParameters(subject, receiver, HOURS_BACK));
     }
 
     /**
-     * | $result= | extract text with | <i>regex</i> | from mail with | <i>subject</i> | from | <i>receiver</i> |
+     * | $result= | extract text with | <i>regex</i> | from mail received by | <i>receiver</i> | with subject | <i>subject</i> |
      */
-    public String extractTextWithFromMailWithFrom(String regex, String subject, String receiver) {
+    public String extractTextWithFromMailReceivedByWithSubject(String regex, String receiver, String subject) {
         String text = mailReceivedByWithSubject(subject, receiver);
         return getText(text, regex);
     }
