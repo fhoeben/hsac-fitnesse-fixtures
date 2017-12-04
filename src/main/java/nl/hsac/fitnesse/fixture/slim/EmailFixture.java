@@ -22,9 +22,9 @@ public class EmailFixture extends SlimFixture {
     private Store store;
 
     /**
-     * | set mail provider with host | <i>host</i> | user | <i>username</i> | password | <i>password</i> |
+     * | set imap mail provider with host | <i>host</i> | user | <i>username</i> | password | <i>password</i> |
      */
-    public void setMailProviderWithHostPortUserPassword(String host, String username, String password) {
+    public void setImapMailProviderWithHostPortUserPassword(String host, String username, String password) {
         Properties props = new Properties();
         try {
             Session session = Session.getDefaultInstance(props, null);
