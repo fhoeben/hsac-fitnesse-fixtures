@@ -1,5 +1,8 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import nl.hsac.fitnesse.fixture.slim.exceptions.CouldNotFindMessageException;
+import nl.hsac.fitnesse.fixture.slim.exceptions.RuntimeIOException;
+import nl.hsac.fitnesse.fixture.slim.exceptions.RuntimeMessageException;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +15,8 @@ import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.lang.String.format;
 
 public class EmailFixture extends SlimFixture {
     private final static Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -27,16 +32,10 @@ public class EmailFixture extends SlimFixture {
      */
     public void setMailProviderWithHostPortUserPassword(final String host, final String port, final String username, final String password) {
         final Properties props = new Properties();
-        props.setProperty("mail.smtp.host", host);
-        props.setProperty("mail.smtp.socketFactory.port", port);
-        props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        props.setProperty("mail.smtp.auth", "true");
-        props.setProperty("mail.smtp.port", port);
-
         try {
             final Session session = Session.getDefaultInstance(props, null);
             store = session.getStore("imaps");
-            store.connect("smtp.gmail.com", username, password);
+            store.connect(host, username, password);
         } catch (final MessagingException e) {
             throw new StopTestException("Cannot connect to mailserver");
         }
@@ -69,7 +68,7 @@ public class EmailFixture extends SlimFixture {
         if (isMatch) {
             return matcher.group(1);
         }
-        throw new SlimFixtureException(false, "No match found");
+        throw new SlimFixtureException(false, format("No match found in text %s with regex %s", text, regexpattern));
     }
 
     private String getMailText(SearchParameters params) {
@@ -77,8 +76,8 @@ public class EmailFixture extends SlimFixture {
             final Folder inbox = getInboxFolder();
             Message msg = getRecentMessagesMatching(inbox, params);
             return getBody(msg);
-        } catch (final Exception e) {
-            throw new SlimFixtureException(false, "No message found with search params: " + params.toString());
+        } catch (final Exception ex) {
+            throw new SlimFixtureException(false, "No message found with search params: " + params.toString(), ex);
         }
     }
 
@@ -88,43 +87,82 @@ public class EmailFixture extends SlimFixture {
         return inbox;
     }
 
-    private Message getRecentMessagesMatching(Folder inbox, SearchParameters params) throws IOException, MessagingException {
-        List<Message> mails = getMessagesMatching(inbox, params);
+    private Message getRecentMessagesMatching(Folder inbox, SearchParameters params) {
+        List<Message> mails = getMessagesMatchingAndWaitUntil(inbox, params);
         Collections.reverse(mails);
         return getMostRecentMessage(mails);
     }
 
-    private Message getMostRecentMessage(List<Message> mails) throws MessagingException {
-        for (final Message mail : mails) {
-            if (mail.getSentDate().after(HOURS_BACK)) {
-                return mail;
+    private Message getMostRecentMessage(List<Message> mails) {
+        try {
+            for (final Message mail : mails) {
+                if (mail.getSentDate().after(HOURS_BACK)) {
+                    return mail;
+                }
             }
+        } catch (MessagingException ex) {
+            throw new RuntimeMessageException(ex);
         }
-        return null;
+        throw new RuntimeIOException();
     }
 
-    private List<Message> getMessagesMatching(Folder inbox, SearchParameters params) throws IOException, MessagingException {
-        List<Message> mails = new ArrayList<>();
-        int tries = 0;
-        while ((mails.size() == 0) && (tries <= 45)) {
-            mails = getMessagesMatchingSearchCondiiton(inbox, params);
-            tries++;
+    private List<Message> getMessagesMatchingAndWaitUntil(Folder inbox, SearchParameters params) {
+        FetchEmailsStrategy fetchEmails = new FetchEmailsStrategy(inbox, params);
+        boolean pretty = repeatUntil(fetchEmails);
+        if (!pretty)
+            throw new CouldNotFindMessageException(inbox, params);
+        return fetchEmails.getResult();
+    }
+
+    private class FetchEmailsStrategy implements RepeatCompletion {
+        private final Folder inbox;
+        private final SearchParameters params;
+        private List<Message> mails;
+
+        FetchEmailsStrategy(Folder inbox, SearchParameters params) {
+            this.inbox = inbox;
+            this.params = params;
+        }
+
+        public List<Message> getResult() {
+            return mails;
+        }
+
+        @Override
+        public boolean isFinished() {
+            return mails != null && mails.size() > 0;
+        }
+
+        @Override
+        public void repeat() {
             try {
-                Thread.sleep(1000);
-            } catch (final InterruptedException e) {
-                LOGGER.debug("Mail cannot be found!: " + e.getMessage());
+                mails = getMessagesMatching(inbox, params);
+            } catch (RuntimeException ex) {
             }
         }
-        return mails;
     }
 
-    private List<Message> getMessagesMatchingSearchCondiiton(Folder inbox, SearchParameters params) throws IOException, MessagingException {
-        final SearchTerm searchCondition = params.getSearchTerm();
-        return Arrays.asList(inbox.search(searchCondition, inbox.getMessages()));
+    private List<Message> getMessagesMatching(Folder inbox, SearchParameters params) {
+        try {
+            final SearchTerm searchCondition = params.getSearchTerm();
+            return Arrays.asList(inbox.search(searchCondition, inbox.getMessages()));
+        } catch (RuntimeException | MessagingException ex) {
+            throw new RuntimeMessageException(ex);
+        }
     }
 
 
-    private String getBody(Message msg) throws IOException, MessagingException {
+    private String getBody(Message msg) {
+        try {
+            return tryBody(msg);
+        } catch (IOException ex) {
+            throw new RuntimeIOException(ex);
+        } catch (MessagingException ex) {
+            throw new RuntimeMessageException(ex);
+        }
+    }
+
+    private String tryBody(Message msg) throws IOException, MessagingException {
         String message = "";
         if (msg != null && msg.getContent() instanceof MimeMultipart) {
             final Multipart multipart = (Multipart) msg.getContent();
@@ -134,10 +172,9 @@ public class EmailFixture extends SlimFixture {
             message = msg.getContent().toString();
         }
         return message;
-
     }
 
-    private class SearchParameters {
+    public static class SearchParameters {
         private final String subject;
         private final String receiver;
         private final Date startFromDate;
@@ -167,11 +204,7 @@ public class EmailFixture extends SlimFixture {
 
         @Override
         public String toString() {
-            return "SearchParameters{" +
-                    "subject='" + subject + '\'' +
-                    ", receiver='" + receiver + '\'' +
-                    ", startFromDate=" + startFromDate +
-                    '}';
+            return format("subject='%s', receive='%s', startFromDate='%s'", subject, receiver, startFromDate);
         }
     }
 }
