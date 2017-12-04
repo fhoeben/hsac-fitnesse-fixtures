@@ -145,12 +145,14 @@ public class EmailFixture extends SlimFixture {
 
     private String tryBody(Message msg) throws IOException, MessagingException {
         String message = "";
-        if (msg != null && msg.getContent() instanceof MimeMultipart) {
-            Multipart multipart = (Multipart) msg.getContent();
-            message = IOUtils.toString(multipart.getBodyPart(0).getInputStream());
-        }
-        if ("".equals(message) && msg != null) {
-            message = msg.getContent().toString();
+        if (msg != null) {
+            Object msgContent = msg.getContent();
+            if (msgContent instanceof MimeMultipart) {
+                Multipart multipart = (Multipart) msgContent;
+                message = IOUtils.toString(multipart.getBodyPart(0).getInputStream());
+            } else {
+                message = msgContent.toString();
+            }
         }
         return message;
     }
