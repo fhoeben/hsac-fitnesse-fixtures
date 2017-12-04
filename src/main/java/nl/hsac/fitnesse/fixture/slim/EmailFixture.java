@@ -27,6 +27,9 @@ import java.util.regex.Pattern;
 
 import static java.lang.String.format;
 
+/**
+ * Fixture to check for mails received in imap mailbox.
+ */
 public class EmailFixture extends SlimFixture {
     private static Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static Date HOURS_BACK = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24);
