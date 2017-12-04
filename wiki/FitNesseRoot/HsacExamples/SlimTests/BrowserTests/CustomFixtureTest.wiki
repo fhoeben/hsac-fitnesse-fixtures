@@ -22,6 +22,7 @@ Navigating to the right page is done only once (all subsequent test approaches u
 |enter                 |Van Morrison|as|Search  |
 |press                 |enter                   |
 |click                 |Van Morrison            |
+|wait for visible      |Album Highlights        |
 
 !2 Using !-BrowserTest-!
 
