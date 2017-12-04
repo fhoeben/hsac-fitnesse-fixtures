@@ -75,10 +75,17 @@ public class GridBy {
     public static String getXPathForColumnIndex(String columnName) {
         // determine how many columns are before the column with the requested name
         // the column with the requested name will have an index of the value +1 (since XPath indexes are 1 based)
-        return String.format("count(ancestor::table[1]//tr/th[descendant-or-self::text()[normalized(.)='%s']]/preceding-sibling::th)+1", columnName);
+        String headerXPath = getXPathForHeaderCellWithText(columnName);
+        return String.format("count(ancestor::table[1]//tr/%1$s/preceding-sibling::th)+1", headerXPath);
     }
 
-
+    /**
+     * Creates an XPath expression that will find a header row, selecting the row based on the
+     * header texts present.
+     * @param columnName first header text which must be present.
+     * @param extraColumnNames name of other header texts that must be present in table's header row.
+     * @return XPath expression selecting a tr in the row
+     */
     public static String getXPathForHeaderRowByHeaders(String columnName, String... extraColumnNames) {
         String allHeadersPresent;
         if (extraColumnNames != null && extraColumnNames.length > 0) {
@@ -96,7 +103,12 @@ public class GridBy {
         return String.format("/tr[%1$s]", allHeadersPresent);
     }
 
-    public static String getXPathForHeaderCellWithText(String n) {
-        return String.format("th/descendant-or-self::text()[normalized(.)='%1$s']", n);
+    /**
+     * Creates an XPath expression that will find a header cell based on its text.
+     * @param headerText header text which must be present.
+     * @return XPath expression selecting a th which has (a sub-element with) the supplied text.
+     */
+    public static String getXPathForHeaderCellWithText(String headerText) {
+        return String.format("th[descendant-or-self::text()[normalized(.)='%1$s']]", headerText);
     }
 }

@@ -9,6 +9,7 @@ import org.openqa.selenium.WebElement;
 
 import static nl.hsac.fitnesse.fixture.util.selenium.by.GridBy.getXPathForColumnInRowByValueInOtherColumn;
 import static nl.hsac.fitnesse.fixture.util.selenium.by.GridBy.getXPathForColumnIndex;
+import static nl.hsac.fitnesse.fixture.util.selenium.by.GridBy.getXPathForHeaderRowByHeaders;
 
 /**
  * Finds elements to get value from in Grid.
@@ -42,7 +43,8 @@ public abstract class Value extends SingleElementOrNullBy {
 
         @Override
         public WebElement findElement(SearchContext context) {
-            String columnXPath = String.format("((.//table[.//tr/th/descendant-or-self::text()[normalized(.)='%s']])[last()]//tr[boolean(td)])[%s]/td", requestedColumnName, rowIndex);
+            String headerXPath = getXPathForHeaderRowByHeaders(requestedColumnName);
+            String columnXPath = String.format("((.//table[./%1$s])[last()]//tr[boolean(td)])[%2$s]/td", headerXPath, rowIndex);
             return valueInRow(context, columnXPath, requestedColumnName);
         }
     }
