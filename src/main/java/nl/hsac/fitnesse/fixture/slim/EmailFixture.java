@@ -16,6 +16,7 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.search.SearchTerm;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -117,37 +118,13 @@ public class EmailFixture extends SlimFixture {
     }
 
     private List<Message> getMessagesMatchingAndWaitUntil(Folder inbox, SearchParameters params) {
-        FetchEmailsStrategy fetchEmails = new FetchEmailsStrategy(inbox, params);
-        boolean pretty = repeatUntil(fetchEmails);
-        if (!pretty) {
+        List<Message> mails = new ArrayList<>();
+        if (!repeatUntilNot(new FunctionalCompletion(
+                        mails::isEmpty,
+                        () -> mails.addAll(getMessagesMatching(inbox, params))))) {
             throw new CouldNotFindMessageException(inbox, params);
         }
-        return fetchEmails.getResult();
-    }
-
-    private class FetchEmailsStrategy implements RepeatCompletion {
-        private Folder inbox;
-        private SearchParameters params;
-        private List<Message> mails;
-
-        FetchEmailsStrategy(Folder inbox, SearchParameters params) {
-            this.inbox = inbox;
-            this.params = params;
-        }
-
-        public List<Message> getResult() {
-            return mails;
-        }
-
-        @Override
-        public boolean isFinished() {
-            return mails != null && mails.size() > 0;
-        }
-
-        @Override
-        public void repeat() {
-            mails = getMessagesMatching(inbox, params);
-        }
+        return mails;
     }
 
     private List<Message> getMessagesMatching(Folder inbox, SearchParameters params) {
