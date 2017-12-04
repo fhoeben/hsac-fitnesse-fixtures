@@ -1,6 +1,5 @@
 package nl.hsac.fitnesse.fixture.util.selenium.by.grid;
 
-import nl.hsac.fitnesse.fixture.util.selenium.by.GridBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.SingleElementOrNullBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ValueOfBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
@@ -9,6 +8,7 @@ import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
 
 import static nl.hsac.fitnesse.fixture.util.selenium.by.GridBy.getXPathForColumnIndex;
+import static nl.hsac.fitnesse.fixture.util.selenium.by.GridBy.getXPathForRowByValueInOtherColumn;
 
 /**
  * Finds elements to get value from in Grid.
@@ -85,7 +85,9 @@ public abstract class Value extends SingleElementOrNullBy {
      */
     public static String getXPathForColumnInRowByValueInOtherColumn(String extraColumnName, String columnName, String value) {
         String selectIndex = getXPathForColumnIndex(columnName);
-        return String.format("(.//table[.//tr[th/descendant-or-self::text()[normalized(.)='%3$s'] and th/descendant-or-self::text()[normalized(.)='%4$s']]])[last()]//tr[td[%1$s]/descendant-or-self::text()[normalized(.)='%2$s']]/td",
-                selectIndex, value, columnName, extraColumnName);
+        String rowXPath = getXPathForRowByValueInOtherColumn(selectIndex, value);
+
+        return String.format("(.//table[.//tr[th/descendant-or-self::text()[normalized(.)='%3$s'] and th/descendant-or-self::text()[normalized(.)='%4$s']] and ./%5$s])[last()]/%5$s/td",
+                selectIndex, value, columnName, extraColumnName, rowXPath);
     }
 }

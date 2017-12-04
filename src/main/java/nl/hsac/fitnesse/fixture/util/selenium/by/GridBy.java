@@ -45,8 +45,20 @@ public class GridBy {
      */
     public static String getXPathForColumnInRowByValueInOtherColumn(String columnName, String value) {
         String selectIndex = getXPathForColumnIndex(columnName);
-        return String.format("(.//table[.//tr/th/descendant-or-self::text()[normalized(.)='%3$s']])[last()]//tr[td[%1$s]/descendant-or-self::text()[normalized(.)='%2$s']]/td",
-                selectIndex, value, columnName);
+        String rowXPath = getXPathForRowByValueInOtherColumn(selectIndex, value);
+        return String.format("(.//table[.//tr/th/descendant-or-self::text()[normalized(.)='%3$s'] and ./%4$s])[last()]/%4$s/td",
+                selectIndex, value, columnName, rowXPath);
+    }
+
+    /**
+     * Creates an XPath expression-segment that will find a row, selecting the row based on the
+     * text in a specific column.
+     * @param selectIndex index of the column to find value in (usually obtained via {@link #getXPathForColumnIndex(String)}).
+     * @param value text to find in the column.
+     * @return XPath expression selecting a tr in the table.
+     */
+    public static String getXPathForRowByValueInOtherColumn(String selectIndex, String value) {
+        return String.format("/tr[td[%1$s]/descendant-or-self::text()[normalized(.)='%2$s']]", selectIndex, value);
     }
 
     /**
