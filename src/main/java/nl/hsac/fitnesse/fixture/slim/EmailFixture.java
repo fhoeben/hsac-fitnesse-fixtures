@@ -117,8 +117,8 @@ public class EmailFixture extends SlimFixture {
     private List<Message> getMessagesMatchingAndWaitUntil(Folder inbox, SearchParameters params) {
         List<Message> mails = new ArrayList<>();
         if (!repeatUntilNot(new FunctionalCompletion(
-                        mails::isEmpty,
-                        () -> mails.addAll(getMessagesMatching(inbox, params))))) {
+                mails::isEmpty,
+                () -> mails.addAll(getMessagesMatching(inbox, params))))) {
             throw new CouldNotFindMessageException(inbox, params);
         }
         return mails;
@@ -132,7 +132,6 @@ public class EmailFixture extends SlimFixture {
             throw new RuntimeException("Exception retrieving mail with parameters: " + params, ex);
         }
     }
-
 
     private String getBody(Message msg) {
         try {
