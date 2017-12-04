@@ -42,14 +42,15 @@ public class GridBy {
     /**
      * Creates an XPath expression that will find a cell in a row, selecting the row based on the
      * text in a specific column (identified by its header text).
-     * @param columnName header text of the column to find value in.
      * @param value text to find in column with the supplied header.
+     * @param columnName header text of the column to find value in.
+     * @param extraColumnNames name of other header texts that must be present in table's header row
      * @return XPath expression selecting a td in the row
      */
-    public static String getXPathForColumnInRowByValueInOtherColumn(String columnName, String value) {
+    public static String getXPathForColumnInRowByValueInOtherColumn(String value, String columnName, String... extraColumnNames) {
         String selectIndex = getXPathForColumnIndex(columnName);
         String rowXPath = getXPathForRowByValueInOtherColumn(selectIndex, value);
-        String headerXPath = getXPathForHeaderRowByHeaders(columnName);
+        String headerXPath = getXPathForHeaderRowByHeaders(columnName, extraColumnNames);
         return String.format("(.//table[./%1$s and ./%2$s])[last()]/%2$s/td",
                 headerXPath, rowXPath);
     }
@@ -77,10 +78,21 @@ public class GridBy {
         return String.format("count(ancestor::table[1]//tr/th[descendant-or-self::text()[normalized(.)='%s']]/preceding-sibling::th)+1", columnName);
     }
 
-    public static String getXPathForHeaderRowByHeaders(String... columnNames) {
-        String allHeadersPresent = Stream.of(columnNames)
-                .map(GridBy::getXPathForHeaderCellWithText)
-                .collect(Collectors.joining(" and "));
+
+    public static String getXPathForHeaderRowByHeaders(String columnName, String... extraColumnNames) {
+        String allHeadersPresent;
+        if (extraColumnNames != null && extraColumnNames.length > 0) {
+            int extraCount = extraColumnNames.length;
+            String[] columnNames = new String[extraCount + 1];
+            columnNames[0] = columnName;
+            System.arraycopy(extraColumnNames, 0, columnNames, 1, extraCount);
+
+            allHeadersPresent = Stream.of(columnNames)
+                    .map(GridBy::getXPathForHeaderCellWithText)
+                    .collect(Collectors.joining(" and "));
+        } else {
+            allHeadersPresent = getXPathForHeaderCellWithText(columnName);
+        }
         return String.format("/tr[%1$s]", allHeadersPresent);
     }
 

@@ -15,7 +15,7 @@ public class Row {
 
     public static class WhereIs extends XPathBy {
         public WhereIs(String selectOnValue, String selectOnColumn) {
-            super(GridBy.getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue) + "/..");
+            super(GridBy.getXPathForColumnInRowByValueInOtherColumn(selectOnValue, selectOnColumn) + "/..");
         }
     }
 }

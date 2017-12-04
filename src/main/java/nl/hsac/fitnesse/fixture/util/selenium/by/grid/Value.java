@@ -7,9 +7,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
 
+import static nl.hsac.fitnesse.fixture.util.selenium.by.GridBy.getXPathForColumnInRowByValueInOtherColumn;
 import static nl.hsac.fitnesse.fixture.util.selenium.by.GridBy.getXPathForColumnIndex;
-import static nl.hsac.fitnesse.fixture.util.selenium.by.GridBy.getXPathForHeaderRowByHeaders;
-import static nl.hsac.fitnesse.fixture.util.selenium.by.GridBy.getXPathForRowByValueInOtherColumn;
 
 /**
  * Finds elements to get value from in Grid.
@@ -61,7 +60,7 @@ public abstract class Value extends SingleElementOrNullBy {
 
         @Override
         public WebElement findElement(SearchContext context) {
-            String columnXPath = getXPathForColumnInRowByValueInOtherColumn(requestedColumnName, selectOnColumn, selectOnValue);
+            String columnXPath = getXPathForColumnInRowByValueInOtherColumn(selectOnValue, selectOnColumn, requestedColumnName);
             return valueInRow(context, columnXPath, requestedColumnName);
         }
     }
@@ -74,22 +73,5 @@ public abstract class Value extends SingleElementOrNullBy {
     protected WebElement getValueByXPath(SearchContext context, String xpathPattern, String... params) {
         By xPathBy = new XPathBy(xpathPattern, params);
         return new ValueOfBy(xPathBy).findElement(context);
-    }
-
-    /**
-     * Creates an XPath expression that will find a cell in a row, selecting the row based on the
-     * text in a specific column (identified by its header text).
-     * @param extraColumnName name of other header text that must be present in table's header row
-     * @param columnName header text of the column to find value in.
-     * @param value text to find in column with the supplied header.
-     * @return XPath expression selecting a td in the row
-     */
-    public static String getXPathForColumnInRowByValueInOtherColumn(String extraColumnName, String columnName, String value) {
-        String selectIndex = getXPathForColumnIndex(columnName);
-        String rowXPath = getXPathForRowByValueInOtherColumn(selectIndex, value);
-        String headerRowXPath = getXPathForHeaderRowByHeaders(columnName, extraColumnName);
-
-        return String.format("(.//table[./%1$s and ./%2$s])[last()]/%2$s/td",
-                headerRowXPath, rowXPath);
     }
 }
