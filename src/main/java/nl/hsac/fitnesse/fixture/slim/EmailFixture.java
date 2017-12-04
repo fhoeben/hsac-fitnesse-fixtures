@@ -5,12 +5,22 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.mail.*;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.NoSuchProviderException;
+import javax.mail.Session;
+import javax.mail.Store;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.search.SearchTerm;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,14 +35,18 @@ public class EmailFixture extends SlimFixture {
      * | set imap mail provider with host | <i>host</i> | user | <i>username</i> | password | <i>password</i> |
      */
     public void setImapMailProviderWithHostPortUserPassword(String host, String username, String password) {
-        Properties props = new Properties();
         try {
-            Session session = Session.getDefaultInstance(props, null);
-            store = session.getStore("imaps");
+            store = getStore();
             store.connect(host, username, password);
         } catch (MessagingException e) {
             throw new StopTestException("Cannot connect to mailserver", e);
         }
+    }
+
+    protected Store getStore() throws NoSuchProviderException {
+        Properties props = new Properties();
+        Session session = Session.getDefaultInstance(props);
+        return session.getStore("imaps");
     }
 
     /**
@@ -49,7 +63,7 @@ public class EmailFixture extends SlimFixture {
      * | $result= | extract text with | <i>regex</i> | from mail with | <i>subject</i> | from | <i>receiver</i> |
      */
     public String extractTextWithFromMailWithFrom(String regex, String subject, String receiver) {
-        String text = getMailText(new SearchParameters(subject, receiver, HOURS_BACK));
+        String text = mailReceivedByWithSubject(subject, receiver);
         return getText(text, regex);
     }
 
@@ -73,7 +87,7 @@ public class EmailFixture extends SlimFixture {
             Message msg = getRecentMessagesMatching(inbox, params);
             return getBody(msg);
         } catch (Exception ex) {
-            throw new SlimFixtureException(false, "No message found with search params: " + params.toString(), ex);
+            throw new SlimFixtureException(false, "No message found with search params: " + params, ex);
         }
     }
 
@@ -97,16 +111,17 @@ public class EmailFixture extends SlimFixture {
                 }
             }
         } catch (MessagingException ex) {
-            throw new RuntimeException("Exception", ex);
+            throw new RuntimeException("Exception looking for mail sent after: " + HOURS_BACK, ex);
         }
-        throw new RuntimeException();
+        throw new SlimFixtureException(false, "No mail found sent after: " + HOURS_BACK);
     }
 
     private List<Message> getMessagesMatchingAndWaitUntil(Folder inbox, SearchParameters params) {
         FetchEmailsStrategy fetchEmails = new FetchEmailsStrategy(inbox, params);
         boolean pretty = repeatUntil(fetchEmails);
-        if (!pretty)
+        if (!pretty) {
             throw new CouldNotFindMessageException(inbox, params);
+        }
         return fetchEmails.getResult();
     }
 
@@ -139,8 +154,8 @@ public class EmailFixture extends SlimFixture {
         try {
             SearchTerm searchCondition = params.getSearchTerm();
             return Arrays.asList(inbox.search(searchCondition, inbox.getMessages()));
-        } catch (RuntimeException | MessagingException ex) {
-            throw new RuntimeException("Exception", ex);
+        } catch (MessagingException ex) {
+            throw new RuntimeException("Exception retrieving mail with parameters: " + params, ex);
         }
     }
 
@@ -161,7 +176,7 @@ public class EmailFixture extends SlimFixture {
             Multipart multipart = (Multipart) msg.getContent();
             message = IOUtils.toString(multipart.getBodyPart(0).getInputStream());
         }
-        if (message != null) {
+        if ("".equals(message) && msg != null) {
             message = msg.getContent().toString();
         }
         return message;
@@ -189,7 +204,7 @@ public class EmailFixture extends SlimFixture {
                                 && message.getReceivedDate().after(startFromDate)
                                 && message.getRecipients(Message.RecipientType.TO)[0].toString().contains(receiver);
                     } catch (MessagingException ex) {
-                        throw new IllegalStateException("No match, message not found.." + ex.getMessage());
+                        throw new IllegalStateException("No match, message not found.." + ex.getMessage(), ex);
                     }
                 }
             };
