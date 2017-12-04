@@ -8,6 +8,7 @@ import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
 
 import static nl.hsac.fitnesse.fixture.util.selenium.by.GridBy.getXPathForColumnIndex;
+import static nl.hsac.fitnesse.fixture.util.selenium.by.GridBy.getXPathForHeaderRowByHeaders;
 import static nl.hsac.fitnesse.fixture.util.selenium.by.GridBy.getXPathForRowByValueInOtherColumn;
 
 /**
@@ -86,8 +87,9 @@ public abstract class Value extends SingleElementOrNullBy {
     public static String getXPathForColumnInRowByValueInOtherColumn(String extraColumnName, String columnName, String value) {
         String selectIndex = getXPathForColumnIndex(columnName);
         String rowXPath = getXPathForRowByValueInOtherColumn(selectIndex, value);
+        String headerRowXPath = getXPathForHeaderRowByHeaders(columnName, extraColumnName);
 
-        return String.format("(.//table[.//tr[th/descendant-or-self::text()[normalized(.)='%3$s'] and th/descendant-or-self::text()[normalized(.)='%4$s']] and ./%5$s])[last()]/%5$s/td",
-                selectIndex, value, columnName, extraColumnName, rowXPath);
+        return String.format("(.//table[./%1$s and ./%2$s])[last()]/%2$s/td",
+                headerRowXPath, rowXPath);
     }
 }

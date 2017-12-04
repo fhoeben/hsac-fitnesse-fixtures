@@ -4,6 +4,9 @@ import nl.hsac.fitnesse.fixture.util.selenium.by.grid.Link;
 import nl.hsac.fitnesse.fixture.util.selenium.by.grid.Row;
 import nl.hsac.fitnesse.fixture.util.selenium.by.grid.Value;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
  * Factory for custom Bys to deal with finding elements in a table representing a grid of values.
  */
@@ -46,8 +49,9 @@ public class GridBy {
     public static String getXPathForColumnInRowByValueInOtherColumn(String columnName, String value) {
         String selectIndex = getXPathForColumnIndex(columnName);
         String rowXPath = getXPathForRowByValueInOtherColumn(selectIndex, value);
-        return String.format("(.//table[.//tr[th/descendant-or-self::text()[normalized(.)='%3$s']] and ./%4$s])[last()]/%4$s/td",
-                selectIndex, value, columnName, rowXPath);
+        String headerXPath = getXPathForHeaderRowByHeaders(columnName);
+        return String.format("(.//table[./%1$s and ./%2$s])[last()]/%2$s/td",
+                headerXPath, rowXPath);
     }
 
     /**
@@ -71,5 +75,16 @@ public class GridBy {
         // determine how many columns are before the column with the requested name
         // the column with the requested name will have an index of the value +1 (since XPath indexes are 1 based)
         return String.format("count(ancestor::table[1]//tr/th[descendant-or-self::text()[normalized(.)='%s']]/preceding-sibling::th)+1", columnName);
+    }
+
+    public static String getXPathForHeaderRowByHeaders(String... columnNames) {
+        String allHeadersPresent = Stream.of(columnNames)
+                .map(GridBy::getXPathForHeaderCellWithText)
+                .collect(Collectors.joining(" and "));
+        return String.format("/tr[%1$s]", allHeadersPresent);
+    }
+
+    public static String getXPathForHeaderCellWithText(String n) {
+        return String.format("th/descendant-or-self::text()[normalized(.)='%1$s']", n);
     }
 }
