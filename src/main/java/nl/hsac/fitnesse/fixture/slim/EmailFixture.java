@@ -131,7 +131,10 @@ public class EmailFixture extends SlimFixture {
 
         @Override
         public void repeat() {
-            mails = getMessagesMatching(inbox, params);
+            try {
+                mails = getMessagesMatching(inbox, params);
+            } catch (RuntimeException ex) {
+            }
         }
     }
 
