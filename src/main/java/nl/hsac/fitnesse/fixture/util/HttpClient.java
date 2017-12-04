@@ -85,7 +85,7 @@ public class HttpClient {
         HttpPost methodPost = new HttpPost(url);
 
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        builder.addBinaryBody(file.getName(), file,
+        builder.addBinaryBody("file", file,
                 ContentType.APPLICATION_OCTET_STREAM, file.getName());
         HttpEntity multipart = builder.build();
 
