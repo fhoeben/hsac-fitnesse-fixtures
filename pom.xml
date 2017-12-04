@@ -188,6 +188,13 @@
 			<version>4.12</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<!-- Javax mail -->
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.6.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
