@@ -6,7 +6,7 @@ Suite
 This basic functionality will suffice for many tests, but can be extended by creating a custom subclass. 
 
 The tests in this suite show example usage of this fixture:
->HttpGetTest shows how an example GET requests, specifying parameters in the query string.
+>HttpGetTest shows an example GET request, specifying parameters in the query string.
 >HttpPost1Test sends a POST request to a SOAP service, also adding an HTTP header.
 The >HttpPost2UsingScenarioTest makes multiple SOAP calls to a service, where scenario parameters are used to change an input variable's value for each call.
 >HttpPostFileTest sends a binary file.
@@ -14,6 +14,7 @@ The >HttpPost2UsingScenarioTest makes multiple SOAP calls to a service, where sc
 >JsonHttpTest shows examples with GET, POST, AND PUT, using [[!-JsonPath-!][http://goessner.net/articles/JsonPath/]] to perform checks on the response. 
 >HttpGetFollowRedirectTest shows checking the redirect sent by a server instead of following it.
 >HttpCookieHandling shows how cookie handling can be configured.
+>HttpHeadTest shows an example HEAD request, retrieving only respsonse status and headers.
 
 !2 Language
 
