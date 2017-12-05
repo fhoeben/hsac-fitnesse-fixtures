@@ -58,7 +58,7 @@ public class EmailFixture extends SlimFixture {
      */
     public String mailReceivedByWithSubject(String receiver, String subject) {
         String recv = cleanupValue(receiver);
-        return getMailText(new SearchParameters(subject, recv, HOURS_BACK));
+        return getMostRecentMessageBody(new SearchParameters(subject, recv, HOURS_BACK));
     }
 
     /**
@@ -66,28 +66,30 @@ public class EmailFixture extends SlimFixture {
      */
     public String extractTextWithFromMailReceivedByWithSubject(String regex, String receiver, String subject) {
         String text = mailReceivedByWithSubject(subject, receiver);
-        return getText(text, regex);
+        return extractFirstRegexGroup(text, regex);
     }
 
-    private String getText(String text, String regexpattern) {
+    private String extractFirstRegexGroup(String text, String regexPattern) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Text found: " + text);
-            LOGGER.debug("Regex: " + regexpattern);
+            LOGGER.debug("Regex: " + regexPattern);
         }
-        Pattern pattern = Pattern.compile(regexpattern);
+        Pattern pattern = Pattern.compile(regexPattern);
         Matcher matcher = pattern.matcher(text);
         boolean isMatch = matcher.find();
         if (isMatch) {
             return matcher.group(1);
         }
-        throw new SlimFixtureException(false, format("No match found in text %s with regex %s", text, regexpattern));
+        throw new SlimFixtureException(false, format("No match found in text %s with regex %s", text, regexPattern));
     }
 
-    private String getMailText(SearchParameters params) {
+    private String getMostRecentMessageBody(SearchParameters params) {
         try {
             Folder inbox = getInboxFolder();
-            Message msg = getRecentMessagesMatching(inbox, params);
+            Message msg = getMostRecentMessageMatching(inbox, params);
             return getBody(msg);
+        } catch (SlimFixtureException e) {
+            throw e;
         } catch (Exception ex) {
             throw new SlimFixtureException(false, "No message found with search params: " + params, ex);
         }
@@ -99,26 +101,26 @@ public class EmailFixture extends SlimFixture {
         return inbox;
     }
 
-    private Message getRecentMessagesMatching(Folder inbox, SearchParameters params) {
-        List<Message> mails = getMessagesMatchingAndWaitUntil(inbox, params);
+    private Message getMostRecentMessageMatching(Folder inbox, SearchParameters params) {
+        List<Message> mails = getMessagesUntilMatchesFound(inbox, params);
         Collections.reverse(mails);
-        return getMostRecentMessage(mails);
+        return getFirstMessageSentAfter(mails, HOURS_BACK);
     }
 
-    private Message getMostRecentMessage(List<Message> mails) {
+    private Message getFirstMessageSentAfter(List<Message> mails, Date minDate) {
         try {
             for (Message mail : mails) {
-                if (mail.getSentDate().after(HOURS_BACK)) {
+                if (mail.getSentDate().after(minDate)) {
                     return mail;
                 }
             }
         } catch (MessagingException ex) {
-            throw new RuntimeException("Exception looking for mail sent after: " + HOURS_BACK, ex);
+            throw new RuntimeException("Exception looking for mail sent after: " + minDate, ex);
         }
-        throw new SlimFixtureException(false, "No mail found sent after: " + HOURS_BACK);
+        throw new SlimFixtureException(false, "No mail found sent after: " + minDate);
     }
 
-    private List<Message> getMessagesMatchingAndWaitUntil(Folder inbox, SearchParameters params) {
+    private List<Message> getMessagesUntilMatchesFound(Folder inbox, SearchParameters params) {
         List<Message> mails = new ArrayList<>();
         if (!repeatUntilNot(new FunctionalCompletion(
                 mails::isEmpty,
@@ -139,37 +141,33 @@ public class EmailFixture extends SlimFixture {
 
     private String getBody(Message msg) {
         try {
-            return tryBody(msg);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        } catch (MessagingException ex) {
-            throw new RuntimeException("Exception", ex);
-        }
-    }
-
-    private String tryBody(Message msg) throws IOException, MessagingException {
-        String message = "";
-        if (msg != null) {
-            Object msgContent = msg.getContent();
-            if (msgContent instanceof MimeMultipart) {
-                Multipart multipart = (Multipart) msgContent;
-                message = IOUtils.toString(multipart.getBodyPart(0).getInputStream());
-            } else {
-                message = msgContent.toString();
+            String message = "";
+            if (msg != null) {
+                Object msgContent = msg.getContent();
+                if (msgContent instanceof MimeMultipart) {
+                    Multipart multipart = (Multipart) msgContent;
+                    message = IOUtils.toString(multipart.getBodyPart(0).getInputStream());
+                } else {
+                    message = msgContent.toString();
+                }
             }
+            return message;
+        } catch (IOException ex) {
+            throw new RuntimeException("Unable to get body of message", ex);
+        } catch (MessagingException ex) {
+            throw new RuntimeException("Unable to get body of message", ex);
         }
-        return message;
     }
 
     public static class SearchParameters {
         private String subject;
         private String receiver;
-        private Date startFromDate;
+        private Date receivedAfterDate;
 
-        public SearchParameters(String subject, String receiver, Date startFromDate) {
+        public SearchParameters(String subject, String receiver, Date receivedAfterDate) {
             this.subject = subject;
             this.receiver = receiver;
-            this.startFromDate = startFromDate;
+            this.receivedAfterDate = receivedAfterDate;
         }
 
         private SearchTerm getSearchTerm() {
@@ -180,7 +178,7 @@ public class EmailFixture extends SlimFixture {
                 public boolean match(Message message) {
                     try {
                         return message.getSubject().contains(subject)
-                                && message.getReceivedDate().after(startFromDate)
+                                && message.getReceivedDate().after(receivedAfterDate)
                                 && message.getRecipients(Message.RecipientType.TO)[0].toString().contains(receiver);
                     } catch (MessagingException ex) {
                         throw new IllegalStateException("No match, message not found.." + ex.getMessage(), ex);
@@ -191,7 +189,7 @@ public class EmailFixture extends SlimFixture {
 
         @Override
         public String toString() {
-            return format("subject='%s', receive='%s', startFromDate='%s'", subject, receiver, startFromDate);
+            return format("subject='%s', receiver='%s', receivedAfterDate='%s'", subject, receiver, receivedAfterDate);
         }
     }
 }
