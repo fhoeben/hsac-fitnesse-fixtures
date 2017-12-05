@@ -10,6 +10,7 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -124,6 +125,16 @@ public class HttpClient {
                                 .build();
             method.setConfig(r);
         }
+        getResponse(url, response, method, headers);
+    }
+
+    /**
+     * @param url URL of service
+     * @param response response to be filled.
+     * @param headers http headers to add
+     */
+    public void head(String url, HttpResponse response, Map<String, Object> headers) {
+        HttpHead method = new HttpHead(url);
         getResponse(url, response, method, headers);
     }
 

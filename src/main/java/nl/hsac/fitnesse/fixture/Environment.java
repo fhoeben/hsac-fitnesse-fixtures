@@ -397,6 +397,17 @@ public class Environment {
     }
 
     /**
+     * HEADs content from URL.
+     * @param url url to get from.
+     * @param response response to store url and response value in.
+     * @param headers http headers to add.
+     */
+    public void doHead(String url, HttpResponse response, Map<String, Object> headers) {
+        response.setRequest(url);
+        httpClient.head(url, response, headers);
+    }
+
+    /**
      * DELETEs content at URL.
      * @param url url to send delete to.
      * @param response response to store url and response value in.

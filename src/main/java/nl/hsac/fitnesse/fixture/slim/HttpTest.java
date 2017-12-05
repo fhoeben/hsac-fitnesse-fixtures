@@ -335,6 +335,25 @@ public class HttpTest extends SlimFixtureWithMap {
 
 
     /**
+     * Sends HTTP HEAD to service endpoint.
+     * @param serviceUrl service endpoint to delete.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean headFrom(String serviceUrl) {
+        boolean result;
+        resetResponse();
+        String url = createUrlWithParams(serviceUrl);
+        try {
+            storeLastCall("HEAD", serviceUrl);
+            getEnvironment().doHead(url, response, headerValues);
+        } catch (Throwable t) {
+            throw new StopTestException("Unable to HEAD: " + url, t);
+        }
+        result = postProcessResponse();
+        return result;
+    }
+
+    /**
      * Sends HTTP DELETE to service endpoint.
      * @param serviceUrl service endpoint to delete.
      * @return true if call could be made and response did not indicate error.
@@ -730,6 +749,9 @@ public class HttpTest extends SlimFixtureWithMap {
         switch (lastMethod) {
             case "GET":
                 getImpl(lastUrl, true);
+                break;
+            case "HEAD":
+                headFrom(lastUrl);
                 break;
             case "POST":
                 postToImpl(response.getRequest(), lastUrl);
