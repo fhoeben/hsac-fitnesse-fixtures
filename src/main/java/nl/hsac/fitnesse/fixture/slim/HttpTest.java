@@ -76,6 +76,14 @@ public class HttpTest extends SlimFixtureWithMap {
         headerValues.clear();
     }
 
+    /**
+     * Allows subclasses access to the header values.
+     * @return header values.
+     */
+    protected Map<String, Object> getHeaderValues() {
+        return headerValues;
+    }
+
     //// methods to support usage in dynamic decision tables
 
     /**
