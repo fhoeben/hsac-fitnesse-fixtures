@@ -54,7 +54,7 @@ public class EmailFixture extends SlimFixture {
     }
 
     /**
-     * | ensure | mail received by | <i>receiver</i> | with subject | <i>subject</i> |
+     * | show | mail received by | <i>receiver</i> | with subject | <i>subject</i> |
      */
     public String mailReceivedByWithSubject(String receiver, String subject) {
         String recv = cleanupValue(receiver);
