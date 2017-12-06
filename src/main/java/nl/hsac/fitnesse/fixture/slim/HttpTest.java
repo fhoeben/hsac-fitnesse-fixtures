@@ -386,7 +386,7 @@ public class HttpTest extends SlimFixtureWithMap {
         }
     }
 
-    String createUrlWithParams(String serviceUrl) {
+    protected String createUrlWithParams(String serviceUrl) {
         String baseUrl = getUrl(serviceUrl);
         if (!getCurrentValues().isEmpty()) {
             if (baseUrl.contains("?") && !baseUrl.endsWith("?")) {
