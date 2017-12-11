@@ -35,6 +35,7 @@ public class ElementBy {
             super(LabelBy.exact(place),
                     PlaceholderBy.exact(place),
                     InputBy.exactValue(place),
+                    ConstantBy.checkboxOrNothing(place),
                     new XPathBy(".//th[descendant-or-self::text()[normalized(.)='%s']]/../td", place),
                     new XPathBy(".//dt[descendant-or-self::text()[normalized(.)='%s']]/following-sibling::dd[1]", place),
                     AriaLabelBy.exact(place),

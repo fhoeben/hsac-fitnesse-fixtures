@@ -12,6 +12,7 @@ public class ConstantBy {
     private static final BestMatchBy NESTED_ELEMENT_FOR_VALUE_BY = new BestMatchBy(By.cssSelector("input:not([type='hidden']),select,textarea"));
     private static final BestMatchBy SUBMIT_BUTTON_BY = new BestMatchBy(By.cssSelector("input[type='submit']:not([value])"));
     private static final BestMatchBy RESET_BUTTON_BY = new BestMatchBy(By.cssSelector("input[type='reset']:not([value])"));
+    private static final BestMatchBy CHECKBOX_BY = new BestMatchBy(By.cssSelector("input[type='checkbox']"));
     private static final SingleElementOrNullBy NULL_BY = new FindsNothing();
 
     /**
@@ -55,6 +56,28 @@ public class ConstantBy {
      */
     public static BestMatchBy resetButton() {
         return RESET_BUTTON_BY;
+    }
+
+    /**
+     * @param placeWanted which place is requested.
+     * @return if placeWanted is checkbox the corresponding By is retruned, otherwise {@link #nothing()}.
+     */
+    public static SingleElementOrNullBy checkboxOrNothing(String placeWanted) {
+        placeWanted = placeWanted.toLowerCase();
+        SingleElementOrNullBy result;
+        if ("checkbox".equals(placeWanted)) {
+            result = checkbox();
+        } else {
+            result = nothing();
+        }
+        return result;
+    }
+
+    /**
+     * @return By which will return a checkbox created by having an input of type 'checkbox'.
+     */
+    public static BestMatchBy checkbox() {
+        return CHECKBOX_BY;
     }
 
     /**
