@@ -72,24 +72,32 @@ We check each column's variable.
 
 We define two maps, containing the values from the previous table. And we don't create a variable containing entire table.
 
-|table :map of maps fixture|
-|      |NL   |EN           |
-|nested|$nl  |$en          |
-|duck  |Eend |Duck         |
-|      |$nl2=|$en2=        |
+|table  :map of maps fixture              |
+|       |NL              |EN              |
+|nested |$nl             |$en             |
+|nested2|!{a:1, b:2}     |!{a:3, b:4}     |
+|duck   |Eend            |Duck            |
+|email  |Eend@example.com|Duck@example.com|
+|       |$nl2=           |$en2=           |
 
 We check each variable.
 
-|script|map fixture|$nl2           |
-|check |value      |duck      |Eend|
-|check |value      |nested.cat|Kat |
-|show  |value      |nested         |
+|script|map fixture|$nl2                           |
+|check |value      |duck      |Eend                |
+|check |value      |email     |!-Eend@example.com-!|
+|check |value      |nested.cat|Kat                 |
+|show  |value      |nested                         |
+|check |value      |nested2.b |2                   |
+|show  |value      |nested2                        |
 
 
-|script|map fixture|$en2           |
-|check |value      |duck      |Duck|
-|check |value      |nested.cat|Cat |
-|show  |value      |nested         |
+|script|map fixture|$en2                           |
+|check |value      |duck      |Duck                |
+|check |value      |email     |!-Duck@example.com-!|
+|check |value      |nested.cat|Cat                 |
+|show  |value      |nested                         |
+|check |value      |nested2.b |4                   |
+|show  |value      |nested2                        |
 
 
 We check each original variable did not change.

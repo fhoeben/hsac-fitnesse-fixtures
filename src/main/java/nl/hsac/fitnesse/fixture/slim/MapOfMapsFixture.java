@@ -1,7 +1,5 @@
 package nl.hsac.fitnesse.fixture.slim;
 
-import fitnesse.slim.Converter;
-import fitnesse.slim.converters.ConverterRegistry;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -97,32 +95,8 @@ public class MapOfMapsFixture extends SlimTableFixture {
                 Map<String, Object> map = maps.get(headerCell);
                 String cell = row.get(i);
                 cell = replaceSymbolsInString(cell);
-                Object value = parseValue(cell);
-                getMapHelper().setValueForIn(value, key, map);
+                getMapHelper().setValueForIn(cell, key, map);
             }
         }
-    }
-
-    protected Object parseValue(String cell) {
-        Object result = cell;
-        try {
-            Converter<Map> converter = getConverter(cell);
-            if (converter != null) {
-                result = converter.fromString(cell);
-            }
-        } catch (Throwable t) {
-            System.err.println("Unable to parse cell value: " + cell);
-            t.printStackTrace();
-        }
-        return result;
-    }
-
-    protected Converter<Map> getConverter(String cell) {
-        Converter<Map> converter = null;
-        if (cell.startsWith("<table class=\"hash_table\">")
-                && cell.endsWith("</table>")) {
-            converter = ConverterRegistry.getConverterForClass(Map.class);
-        }
-        return converter;
     }
 }
