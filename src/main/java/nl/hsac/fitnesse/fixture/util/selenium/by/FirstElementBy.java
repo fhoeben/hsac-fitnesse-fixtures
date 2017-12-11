@@ -15,6 +15,7 @@ import static nl.hsac.fitnesse.fixture.util.FirstNonNullHelper.firstNonNull;
  * By which returns the first non-null result of a sequence of nested By clauses.
  * If a nested By returns mutliple elements it uses {@link BestMatchBy#findElement(By, SearchContext)} to select
  * the element to use.
+ *
  * @param <T> type of element to return.
  */
 public class FirstElementBy<T extends WebElement> extends SingleElementOrNullBy<T> {
@@ -29,6 +30,8 @@ public class FirstElementBy<T extends WebElement> extends SingleElementOrNullBy<
         byList = new ArrayList<>(size);
         byList.add(firstBy);
         Collections.addAll(byList, bys);
+        // no need to keep by without result in list of options
+        byList.removeIf(x -> ConstantBy.nothing() == x);
         setPostProcessor(postProcessor);
     }
 
@@ -61,6 +64,7 @@ public class FirstElementBy<T extends WebElement> extends SingleElementOrNullBy<
     /**
      * Sets post processor to apply to each function's/By's result.
      * This function should return null when element should not be returned.
+     *
      * @param postProcessor function to apply to each element found to determine whether it should be returned.
      */
     public void setPostProcessor(Function<? super T, ? extends T> postProcessor) {
