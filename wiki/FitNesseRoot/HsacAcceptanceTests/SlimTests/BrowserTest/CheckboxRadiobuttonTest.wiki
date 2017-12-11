@@ -30,6 +30,11 @@ This test ensure we can check values of radiobuttons and checkboxes.
 |check |value of|Dit is een openbare of gedeelde computer              |true |
 |click |Ik wil mijn wachtwoord wijzigen nadat ik ben aangemeld               |
 |check |value of|Ik wil mijn wachtwoord wijzigen nadat ik ben aangemeld|true |
+|      |Since there is only one checkbox we can also use the place 'checkbox'|
+|check |value of|checkbox                                              |true |
+|click |checkbox                                                             |
+|check |value of|Ik wil mijn wachtwoord wijzigen nadat ik ben aangemeld|false|
+|check |value of|checkbox                                              |false|
 
 
 |script|mock xml server setup|
