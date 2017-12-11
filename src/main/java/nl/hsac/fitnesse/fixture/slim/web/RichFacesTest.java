@@ -13,8 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Triodos specific version of {@link BrowserTest} with added functionality to deal
- * with RichFaces, JSF pages.
+ * Version of {@link BrowserTest} with added functionality to deal with RichFaces, JSF pages.
  */
 public class RichFacesTest extends BrowserTest<WebElement> {
     private final List<String> eventsThatMayRequireWaiting = new ArrayList<>(Arrays.asList("onchange", "onclick"));
