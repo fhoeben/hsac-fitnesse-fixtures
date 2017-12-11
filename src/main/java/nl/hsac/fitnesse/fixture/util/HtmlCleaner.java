@@ -1,7 +1,10 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import fitnesse.slim.Converter;
+import fitnesse.slim.converters.ConverterRegistry;
 import org.apache.commons.text.StringEscapeUtils;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -83,5 +86,28 @@ public class HtmlCleaner {
             }
         }
         return result;
+    }
+
+    public Object parseValue(String value) {
+        Object result = value;
+        try {
+            Converter<Map> converter = getConverter(value);
+            if (converter != null) {
+                result = converter.fromString(value);
+            }
+        } catch (Throwable t) {
+            System.err.println("Unable to parse value: " + value);
+            t.printStackTrace();
+        }
+        return result;
+    }
+
+    protected Converter<Map> getConverter(String cell) {
+        Converter<Map> converter = null;
+        if (cell.startsWith("<table class=\"hash_table\">")
+                && cell.endsWith("</table>")) {
+            converter = ConverterRegistry.getConverterForClass(Map.class);
+        }
+        return converter;
     }
 }

@@ -52,14 +52,22 @@ public class SlimFixtureWithMap extends SlimFixtureWithMapHelper {
     }
 
     /**
-     * Stores value to be passed to template, or GET.
-     * @param value value to be passed.
+     * Stores value.
+     * @param value value to be stored.
      * @param name name to use this value for.
      */
     public void setValueFor(Object value, String name) {
         getMapHelper().setValueForIn(value, name, getCurrentValues());
     }
 
+    /**
+     * Adds value to (end of) a list.
+     * @param value value to be stored.
+     * @param name name of list to extend.
+     */
+    public void addValueTo(Object value, String name) {
+        getMapHelper().addValueToIn(value, name, getCurrentValues());
+    }
     /**
      * Stores list of values in map.
      * @param values comma separated list of values.

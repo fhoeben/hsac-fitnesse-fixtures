@@ -64,10 +64,7 @@ public class MapHelper {
                 name = name.replace("\\[]", "[]");
             }
             String cleanName = htmlCleaner.cleanupValue(name);
-            Object cleanValue = value;
-            if (value instanceof String) {
-                cleanValue = htmlCleaner.cleanupValue((String) value);
-            }
+            Object cleanValue = getCleanValue(value);
             if (map.containsKey(cleanName)) {
                 // overwrite current value
                 map.put(cleanName, cleanValue);
@@ -101,6 +98,24 @@ public class MapHelper {
     }
 
     /**
+     * Adds a value to the end of a list.
+     * @param value value to be passed.
+     * @param name name to use this value for.
+     * @param map map to store value in.
+     */
+    public void addValueToIn(Object value, String name, Map<String, Object> map) {
+        Object val = getValue(map, name);
+         if (val instanceof Collection) {
+             Object cleanValue = getCleanValue(value);
+             ((Collection) val).add(cleanValue);
+         } else if (val == null) {
+             setValueForIn(value, name + "[0]", map);
+         } else {
+            throw new SlimFixtureException(false, "name is not a list but: " + val.getClass().getSimpleName());
+         }
+    }
+
+    /**
      * Stores list of values in map.
      * @param values comma separated list of values.
      * @param name name to use this list for.
@@ -111,7 +126,7 @@ public class MapHelper {
         String[] valueArrays = values.split("\\s*,\\s*");
         List<Object> valueObjects = new ArrayList<Object>(valueArrays.length);
         for (int i = 0; i < valueArrays.length; i++) {
-            String cleanValue = htmlCleaner.cleanupValue(valueArrays[i]);
+            Object cleanValue = getCleanValue(valueArrays[i]);
             valueObjects.add(cleanValue);
         }
         setValueForIn(valueObjects, cleanName, map);
@@ -149,6 +164,17 @@ public class MapHelper {
             throw new SlimFixtureException(false, expr + " is not a collection");
         }
         return result;
+    }
+
+    public Object getCleanValue(Object value) {
+        Object cleanValue = value;
+        if (value instanceof String) {
+            cleanValue = htmlCleaner.parseValue((String) value);
+            if (cleanValue instanceof String) {
+                cleanValue = htmlCleaner.cleanupValue((String) cleanValue);
+            }
+        }
+        return cleanValue;
     }
 
     protected Object getListValue(Map<String, Object> map, String name) {
