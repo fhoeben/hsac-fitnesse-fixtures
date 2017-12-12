@@ -68,6 +68,15 @@ public class SlimFixtureWithMap extends SlimFixtureWithMapHelper {
     public void addValueTo(Object value, String name) {
         getMapHelper().addValueToIn(value, name, getCurrentValues());
     }
+
+    /**
+     * Adds all values in the supplied map to the current values.
+     * @param map to obtain values from.
+     */
+    public void copyValuesFrom(Map<String, Object> map) {
+        getMapHelper().copyValuesFromTo(map, getCurrentValues());
+    }
+
     /**
      * Stores list of values in map.
      * @param values comma separated list of values.

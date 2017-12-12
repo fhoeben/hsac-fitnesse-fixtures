@@ -97,6 +97,15 @@ public class MapFixture extends SlimFixtureWithMap {
     }
 
     /**
+     * Adds all values in the supplied map to the current values.
+     * @param otherMap to obtain values from.
+     * @param map map to store value in.
+     */
+    public void copyValuesFromTo(Map<String, Object> otherMap, Map<String, Object> map) {
+        getMapHelper().copyValuesFromTo(otherMap, map);
+    }
+
+    /**
      * Stores list of values in map.
      * @param values comma separated list of values.
      * @param name name to use this list for.

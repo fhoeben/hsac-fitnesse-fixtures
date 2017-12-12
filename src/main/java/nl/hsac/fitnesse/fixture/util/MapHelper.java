@@ -116,6 +116,15 @@ public class MapHelper {
     }
 
     /**
+     * Adds all values in the otherMap to map.
+     * @param otherMap to obtain values from.
+     * @param map map to store value in.
+     */
+    public void copyValuesFromTo(Map<String, Object> otherMap, Map<String, Object> map) {
+        map.putAll(otherMap);
+    }
+
+    /**
      * Stores list of values in map.
      * @param values comma separated list of values.
      * @param name name to use this list for.

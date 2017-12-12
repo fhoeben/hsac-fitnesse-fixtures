@@ -152,3 +152,32 @@ Normally when setting values '.' in a name is interpreted to mean a nested map. 
 |add value|Hello|to  |e |in    |$hash7|
 |add value|Bye  |to  |e |in    |$hash7|
 |check    |value|e[1]|in|$hash7|Bye   |
+
+!2 Copying of values
+
+Copying values is not the same as changing existing map (but nested values are shared)!
+
+|script          |map fixture                        |
+|copy values from|$hash1                             |
+|check           |value|a         |1                 |
+|check           |value|aliases[0]|!-mytest@hsac.nl-!|
+|set value       |Dag  |for       |aliases[0]        |
+|check           |value|aliases[0]|Dag               |
+|set value       |2    |for       |a                 |
+|check           |value|a         |in  |$hash1  |1   |
+|check           |value|aliases[0]|in  |$hash1  |Dag |
+|$hash8=         |copy map                           |
+
+Copy overwrites existing values.
+
+|script          |map fixture                    |
+|copy values from|$hash8|to        |$hash1       |
+|check           |value |aliases[0]|in|$hash1|Dag|
+
+
+
+
+
+
+
+
