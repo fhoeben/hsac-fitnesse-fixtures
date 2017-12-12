@@ -119,6 +119,10 @@ Normally when setting values '.' in a name is interpreted to mean a nested map. 
 
 !2 Adding elements to a list
 
+!note We ensure we display lists numbered, because otherwise lists of maps look quite bad in wiki.
+|script  |list fixture |
+|display lists numbered|
+
 |script    |map fixture                       |
 |          |Add to existing list              |
 |set values|7,8               |for       |a   |
@@ -138,3 +142,13 @@ Normally when setting values '.' in a name is interpreted to mean a nested map. 
 |check     |size of           |d         |2   |
 |check     |value             |d[1].mykey|1   |
 |check     |value             |d[1].key2 |2   |
+|$hash7=   |copy map                          |
+
+|script   |map fixture                |
+|         |Add to existing list       |
+|add value|6    |to  |a |in    |$hash7|
+|check    |value|a[3]|in|$hash7|6     |
+|         |Add to new list            |
+|add value|Hello|to  |e |in    |$hash7|
+|add value|Bye  |to  |e |in    |$hash7|
+|check    |value|e[1]|in|$hash7|Bye   |

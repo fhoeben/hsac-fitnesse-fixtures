@@ -87,6 +87,16 @@ public class MapFixture extends SlimFixtureWithMap {
     }
 
     /**
+     * Adds value to a list map.
+     * @param value value to be passed.
+     * @param name name to use this value for.
+     * @param map map to store value in.
+     */
+    public void addValueToIn(Object value, String name, Map<String, Object> map) {
+        getMapHelper().addValueToIn(value, name, map);
+    }
+
+    /**
      * Stores list of values in map.
      * @param values comma separated list of values.
      * @param name name to use this list for.
