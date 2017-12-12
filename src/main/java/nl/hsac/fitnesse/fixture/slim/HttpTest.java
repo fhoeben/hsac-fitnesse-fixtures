@@ -77,6 +77,14 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     /**
+     * Adds all values in the supplied map to the current header values.
+     * @param map to obtain values from.
+     */
+    public void copyHeaderValuesFrom(Map<String, Object> map) {
+        getMapHelper().copyValuesFromTo(map, headerValues);
+    }
+
+    /**
      * Allows subclasses access to the header values.
      * @return header values.
      */
