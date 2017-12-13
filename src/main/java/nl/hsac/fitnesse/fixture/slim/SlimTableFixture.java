@@ -64,7 +64,7 @@ public abstract class SlimTableFixture extends SlimFixtureWithMapHelper implemen
 
     protected Object getSymbolValue(Matcher symbolMatcher) {
         String symbolName = symbolMatcher.group(1);
-        return context.getSymbol(symbolName);
+        return context.getSymbolObject(symbolName);
     }
 
     protected boolean assignSymbolIfApplicable(String text, Object value) {
