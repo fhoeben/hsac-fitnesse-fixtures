@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -12,19 +13,25 @@ import java.util.TimeZone;
 public class DateFormatFixture extends SlimFixture {
     private String dateFormat;
     private TimeZone timezone;
+    private String locale;
     private boolean timestampHasMilliseconds = true;
 
     public DateFormatFixture() {
-        this(getDefaultFormat(), getDefaultTimeZone());
+        this(getDefaultFormat(), getDefaultTimeZone(), getDefaultLocale());
     }
 
     public DateFormatFixture(String dateformat) {
-        this(dateformat, getDefaultTimeZone());
+        this(dateformat, getDefaultTimeZone(), getDefaultLocale());
     }
 
     public DateFormatFixture(String dateformat, String timezone) {
+        this(dateformat, timezone, getDefaultLocale());
+    }
+
+    public DateFormatFixture(String dateformat, String timezone, String locale) {
         setDateFormat(dateformat);
         setTimezone(timezone);
+        setLocale(locale);
     }
 
     public void setDateFormat(String df) {
@@ -33,6 +40,10 @@ public class DateFormatFixture extends SlimFixture {
 
     public void setTimezone(String newTimezone) {
         timezone = TimeZone.getTimeZone(newTimezone);
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 
     public void timestampHasMilliseconds(boolean hasMillis) {
@@ -101,7 +112,7 @@ public class DateFormatFixture extends SlimFixture {
     }
 
     protected SimpleDateFormat getDateFormat(String dateFormat) {
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.forLanguageTag(locale));
         sdf.setTimeZone(timezone);
         return sdf;
     }
@@ -113,5 +124,7 @@ public class DateFormatFixture extends SlimFixture {
     protected static String getDefaultTimeZone() {
         return TimeZone.getDefault().getID();
     }
+
+    protected static String getDefaultLocale() { return Locale.getDefault().getLanguage(); }
 }
 
