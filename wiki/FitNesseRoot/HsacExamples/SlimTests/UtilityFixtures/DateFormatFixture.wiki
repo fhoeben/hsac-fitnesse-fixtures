@@ -91,7 +91,7 @@ It's also possible to use an locale that is not your default locale:
 
 Now we can also convert localized date strings:
 
-|script|string fixture                                                       |
-|show  |format date     |Thu, Dec 14 2017 11:50:00 UTC|as|dd-MM-yyyy HH:mm:ss|
-|show  |format timestamp|$stamp                                              |
+|script|string fixture                                                                           |
+|check |format date     |Thu, Dec 14 2017 11:50:00 UTC|as|dd-MM-yyyy HH:mm:ss|14-12-2017 11:50:00|
+|show  |format timestamp|$stamp                                                                  |
 
