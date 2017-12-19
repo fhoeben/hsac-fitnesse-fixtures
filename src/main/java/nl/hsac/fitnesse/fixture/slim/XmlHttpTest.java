@@ -108,11 +108,6 @@ public class XmlHttpTest extends HttpTest {
         }
     }
 
-    protected String createFileFromBase64(String baseName, String base64Content) {
-        Base64Fixture base64Fixture = new Base64Fixture();
-        return base64Fixture.createFrom(baseName, base64Content);
-    }
-
     @Override
     protected boolean postProcessResponse() {
         // always called after post or get, so easy place to ensure namespaces are registered

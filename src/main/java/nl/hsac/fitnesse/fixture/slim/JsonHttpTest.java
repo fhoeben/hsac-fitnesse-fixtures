@@ -51,6 +51,24 @@ public class JsonHttpTest extends HttpTest {
         return getPathHelper().getJsonPath(responseString, jsonPath);
     }
 
+    /**
+     * @param baseName base of filename to generate (a number might be added to the name to make it unique).
+     * @param jsonPath expression to evaluate.
+     * @return link to created file.
+     */
+    public String createFileFromBase64ContentOf(String baseName, String jsonPath) {
+        Object base64Content = jsonPath(jsonPath);
+        if (base64Content instanceof String) {
+            if ("".equals(base64Content)) {
+                throw new SlimFixtureException(false, "No content from json path: " + jsonPath);
+            } else {
+                return createFileFromBase64(baseName, (String) base64Content);
+            }
+        } else {
+            throw new SlimFixtureException(false, "Non string result from json path. " + jsonPath + " returned: " + base64Content);
+        }
+    }
+
     public Object elementOfJsonPath(int index, String path) {
         List<Object> all = getAllMatches(path);
         return all.get(index);

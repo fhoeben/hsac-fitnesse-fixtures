@@ -75,15 +75,16 @@ The main commands/keywords (i.e. public methods) offered by !-nl.hsac.fitnesse.f
 !3 !-JsonHttpTest-!
 The commands/keywords (i.e. public methods) added by !-nl.hsac.fitnesse.fixture.slim.JsonHttpTest-! are listed below.
 
--|Comment                                                                                                                                                                                                        |
-|post values as json to <url>                  |Sends a POST containing all values (as JSON properties) to the url.                                                                                              |
-|json path <expression>                        |Evaluates the (definite) expression against the last response received.                                                                                          |
-|json path count <expression>                  |Evaluates the (indefinite) expression against the last response received, counting the number of results.                                                        |
-|all json path matches <expression>            |Evaluates the expression against the last response received and returns all results. Intended to be used with 'show' command.                                    |
-|element <index> of json path <expression>     |Evaluates the (indefinite) expression against the last response received, and returns the index-th element of the results.                                       |
-|set json path <expression> to <value>         |Evaluates the expression against the last response received and -if exactly one key is found- replaces that key's existing value with the value that is provided.|
-|repeat until json path <expression> is <value>|If 'expression' does not evaluates to 'value' for the last response: repeats last request until it does.                                                         |
-|json path exists <expression>                 |Returns true if the expression evaluates to a value other than 'null' against the last response.                                                                 |
+-|Comment                                                                                                                                                                                                                                                  |
+|post values as json to <url>                              |Sends a POST containing all values (as JSON properties) to the url.                                                                                                                            |
+|json path <expression>                                    |Evaluates the (definite) expression against the last response received.                                                                                                                        |
+|json path count <expression>                              |Evaluates the (indefinite) expression against the last response received, counting the number of results.                                                                                      |
+|all json path matches <expression>                        |Evaluates the expression against the last response received and returns all results. Intended to be used with 'show' command.                                                                  |
+|element <index> of json path <expression>                 |Evaluates the (indefinite) expression against the last response received, and returns the index-th element of the results.                                                                     |
+|set json path <expression> to <value>                     |Evaluates the expression against the last response received and -if exactly one key is found- replaces that key's existing value with the value that is provided.                              |
+|repeat until json path <expression> is <value>            |If 'expression' does not evaluates to 'value' for the last response: repeats last request until it does.                                                                                       |
+|json path exists <expression>                             |Returns true if the expression evaluates to a value other than 'null' against the last response.                                                                                               |
+|create file <fileName>	from base64 content of <expression>|Evaluates the expression against the last response received, expecting the found element to contain a base64 encoded value. That value will be saved to a file and a link to the file returned.|
 
 !3 !-XmlHttpTest-!
 The commands/keywords (i.e. public methods) added to those of !-HttpTest-! by !-nl.hsac.fitnesse.fixture.slim.XmlHttpTest-! are listed below.
