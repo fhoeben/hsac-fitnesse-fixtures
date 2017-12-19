@@ -60,12 +60,12 @@ public class JsonHttpTest extends HttpTest {
         Object base64Content = jsonPath(jsonPath);
         if (base64Content instanceof String) {
             if ("".equals(base64Content)) {
-                throw new SlimFixtureException(false, "No content from json path: " + jsonPath);
+                throw new SlimFixtureException(false, "No content from json path: '" + getPathExpr(jsonPath) + "'");
             } else {
                 return createFileFromBase64(baseName, (String) base64Content);
             }
         } else {
-            throw new SlimFixtureException(false, "Non string result from json path. " + jsonPath + " returned: " + base64Content);
+            throw new SlimFixtureException(false, "Non string result from json path. '" + getPathExpr(jsonPath) + "' returned: " + base64Content);
         }
     }
 
