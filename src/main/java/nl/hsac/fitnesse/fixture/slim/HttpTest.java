@@ -122,6 +122,18 @@ public class HttpTest extends SlimFixtureWithMap {
     //// end: methods to support usage in dynamic decision tables
 
     /**
+     * @param file file's whose content should be base64 encoded
+     * @param key key whose value should be set.
+     */
+    public void setBase64EncodedContentOfAsValueFor(String file, String key) {
+        setValueFor(getBase64ContentOf(file), key);
+    }
+
+    protected String getBase64ContentOf(String file) {
+        return new Base64Fixture().encode(file);
+    }
+
+    /**
      * Sends HTTP POST template with current values to service endpoint.
      * @param serviceUrl service endpoint to send request to.
      * @return true if call could be made and response did not indicate error.
