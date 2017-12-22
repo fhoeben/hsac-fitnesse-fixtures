@@ -1370,11 +1370,6 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return findElements(by);
     }
 
-    protected List<T> findElements(By by) {
-        List elements = driver().findElements(by);
-        return elements;
-    }
-
     public void waitMilliSecondAfterScroll(int msToWait) {
         waitAfterScroll = msToWait;
     }
@@ -2016,6 +2011,10 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     protected T findElement(By selector) {
         return getSeleniumHelper().findElement(selector);
+    }
+
+    protected List<T> findElements(By by) {
+        return getSeleniumHelper().findElements(by);
     }
 
     public T findByTechnicalSelectorOr(String place, Function<String, ? extends T> supplierF) {

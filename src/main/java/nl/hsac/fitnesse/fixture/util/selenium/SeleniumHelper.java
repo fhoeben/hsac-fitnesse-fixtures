@@ -214,7 +214,7 @@ public class SeleniumHelper<T extends WebElement> {
     }
 
     public T getLabelledElement(T label) {
-        return (T) LabelBy.getLabelledElement(getCurrentContext(), label);
+        return doInCurrentContext(c -> (T) LabelBy.getLabelledElement(c, label));
     }
 
     public T getNestedElementForValue(T parent) {
@@ -290,20 +290,18 @@ public class SeleniumHelper<T extends WebElement> {
     }
 
     public int countVisibleOccurrences(String text, boolean checkOnScreen) {
-        SearchContext containerContext = getCurrentContext();
-
         By findAllTexts = TextBy.partial(text);
-        List<WebElement> texts = containerContext.findElements(findAllTexts);
+        List<T> texts = findElements(findAllTexts);
         int result = countDisplayedElements(texts, text, checkOnScreen);
 
         By findAllInputs = InputBy.partialNormalizedValue(text);
-        List<WebElement> inputs = containerContext.findElements(findAllInputs);
+        List<T> inputs = findElements(findAllInputs);
         result = result + countDisplayedValues(inputs, text, checkOnScreen);
 
         return result;
     }
 
-    private int countDisplayedElements(List<WebElement> elements, String textToFind, boolean checkOnScreen) {
+    private int countDisplayedElements(List<T> elements, String textToFind, boolean checkOnScreen) {
         int result = 0;
         for (WebElement element : elements) {
             if (checkVisible(element, checkOnScreen)) {
@@ -336,7 +334,7 @@ public class SeleniumHelper<T extends WebElement> {
         return countOccurrences(elementText, textToFind);
     }
 
-    private int countDisplayedValues(List<WebElement> elements, String textToFind, boolean checkOnScreen) {
+    private int countDisplayedValues(List<T> elements, String textToFind, boolean checkOnScreen) {
         int result = 0;
         for (WebElement element : elements) {
             if (checkVisible(element, checkOnScreen)) {
@@ -690,17 +688,52 @@ public class SeleniumHelper<T extends WebElement> {
      * @return element if found, null if none could be found.
      */
     public T findElement(By by) {
-        return findElement(getCurrentContext(), by);
+        return doInCurrentContext(c -> findElement(c, by));
+    }
+
+    /**
+     * Finds element matching the By supplied.
+     * @param by criteria.
+     * @return element if found, null if none could be found.
+     */
+    public List<T> findElements(By by) {
+        return doInCurrentContext(c -> (List<T>) c.findElements(by));
     }
 
     private SearchContext currentContext;
+    private boolean currentContextIsStale = false;
 
-    public void setCurrentContext(SearchContext currentContext) {
-        this.currentContext = currentContext;
+    public void setCurrentContext(SearchContext newContext) {
+        currentContext = newContext;
+        currentContextIsStale = false;
     }
 
     public SearchContext getCurrentContext() {
+        if (currentContextIsStale) {
+            throw new StaleContextException(currentContext);
+        }
         return currentContext != null? currentContext : driver();
+    }
+
+    /**
+     * Perform action/supplier in current context.
+     * @param function function to perform.
+     * @param <R> type of result.
+     * @return function result.
+     * @throws StaleContextException if function threw stale element exception (i.e. current context could not be used)
+     */
+    public <R> R doInCurrentContext(Function<SearchContext, ? extends R> function) {
+        try {
+            return function.apply(getCurrentContext());
+        } catch (WebDriverException e) {
+            if (isStaleElementException(e)) {
+                // current context was no good to search in
+                currentContextIsStale = true;
+                // by getting the context we trigger explicit exception
+                getCurrentContext();
+            }
+            throw e;
+        }
     }
 
     /**
@@ -715,12 +748,17 @@ public class SeleniumHelper<T extends WebElement> {
         if (context == null) {
             result = action.get();
         } else {
-            SearchContext currentSearchContext = getCurrentContext();
+            // store current context (without triggering exception if it was stale)
+            SearchContext currentSearchContext = currentContext;
+            boolean contextIsStale = currentContextIsStale;
+
             setCurrentContext(context);
             try {
                 result = action.get();
             } finally {
-                setCurrentContext(currentSearchContext);
+                // make original current context active again
+                currentContext = currentSearchContext;
+                currentContextIsStale = contextIsStale;
             }
         }
         return result;
@@ -734,9 +772,9 @@ public class SeleniumHelper<T extends WebElement> {
      */
     public T findElement(By by, int index) {
         T element = null;
-        List<WebElement> elements = getCurrentContext().findElements(by);
+        List<T> elements = findElements(by);
         if (elements.size() > index) {
-            element = (T) elements.get(index);
+            element = elements.get(index);
         }
         return element;
     }
