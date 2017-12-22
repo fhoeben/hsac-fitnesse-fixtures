@@ -1,0 +1,98 @@
+---
+Help: Ensure we can handle 'search context' which is updated dynamically by javascript
+Test
+---
+When the same label or link occurs on a page multiple times we can indicate which one to use by specifiying a 'search context'.
+A search context can be provided inline (using the 'in <container>') versions of methods, or be configured for all subsequent commands, until a reset.
+In the latter case, when the context is reused for multiple requests, the elements found for the context might be changed, by javascript. Tests scripts should not be bothered by that, if a context matching the same container name can still be found on the page that should be used.
+https://github.com/fhoeben/hsac-fitnesse-fixtures/issues/185
+
+
+We use a mock server running to serve the HTML defined in this page.
+
+
+!define HTML { {{{
+<html>
+<body>
+<div>
+<span id="lastButton">None</span>
+<button onclick='document.getElementById("lastButton").innerHTML = "Normal Button";'>Button</button>
+<label for="g2">Hello2</label><input id="g2" value="Hi">
+</div>
+<label>Hello4<input value="Hallo"></label>
+<label for="list1">Lijstje</label><ul id="list1"><li>one</li><li>two</li></ul>
+<ol><li>Least favorite</li><li>Favorite Todo </li></ol>
+<label for="select1">Cars</label>
+<select id="select1">
+  <option value="volvo">Volvo</option>
+  <option value="saab">Saab</option>
+  <option value="mercedes">Mercedes</option>
+  <option value="audi">Audi</option>
+</select>
+<fieldset aria-label="My fieldset">
+
+<div id="extrasParent">
+<div id="extraOptions" aria-labelledby="extraOptionsLabel">
+<h2 id="extraOptionsLabel">Extras</h2>
+<button onclick='document.getElementById("lastButton").innerHTML = "Extra Special Button";'>Button</button>
+<div>
+<label for="g10">Hello2</label><input id="g10" value="Hi4">
+</div>
+<label>Hello4<input value="Hallo4"></label>
+<label for="list5">Lijstje</label><ul id="list5"><li>5</li><li>6</li></ul>
+<ol><li>Favorite Todo </li></ol>
+<button onclick='extrasReplaced()'>Replace Extras</button>
+</div>
+
+<div id="extraOptions2" aria-labelledby="extraOptionsLabel2">
+<h2 id="extraOptionsLabel2">Extras2</h2>
+<button onclick='document.getElementById("lastButton").innerHTML = "Extra Special Button2";'>Button</button>
+<div>
+<label for="g102">Hello2</label><input id="g102" value="Hi42">
+</div>
+<label>Hello4<input value="Hallo42"></label>
+<label for="list52">Lijstje</label><ul id="list52"><li>52</li><li>62</li></ul>
+<ol><li>Favorite Todo </li></ol>
+</div>
+
+</div>
+
+<script>
+function extrasReplaced() {
+    var parent = document.getElementById("extrasParent");
+    var extras = document.getElementById("extraOptions");
+    parent.removeChild(extras);
+
+    document.getElementById("extraOptionsLabel2").innerHTML = "Extras";
+}
+</script>
+
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script|list fixture   |
+|display lists standard|
+
+
+|script                |browser test                  |
+|seconds before timeout|1                             |
+|open                  |$url                          |
+|check                 |value of|Hello2|Hi            |
+|set search context to |Extras                        |
+|check                 |value of|Hello2|Hi4           |
+|click                 |Replace Extras                |
+|check                 |value of|Hello2|Hi42          |
+|clear search context                                 |
+|check                 |value of|Hello2|in|Extras|Hi42|
+|check                 |value of|Hello2|Hi            |
+
+
+|script|mock xml server setup|
+|stop                        |
+
+

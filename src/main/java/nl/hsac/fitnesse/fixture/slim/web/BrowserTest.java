@@ -13,6 +13,7 @@ import nl.hsac.fitnesse.fixture.util.ReflectionHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.ListItemBy;
 import nl.hsac.fitnesse.fixture.util.selenium.PageSourceSaver;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.StaleContextException;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ContainerBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.GridBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.OptionBy;
@@ -45,6 +46,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class BrowserTest<T extends WebElement> extends SlimFixture {
+    private final List<String> currentSearchContextPath = new ArrayList<>();
+
     private SeleniumHelper<T> seleniumHelper = getEnvironment().getSeleniumHelper();
     private ReflectionHelper reflectionHelper = getEnvironment().getReflectionHelper();
     private NgBrowserTest ngBrowserTest;
@@ -58,6 +61,10 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     private String downloadBase = new File(filesDir, "downloads").getPath() + "/";
     private String pageSourceBase = new File(filesDir, "pagesources").getPath() + "/";
     private boolean sendCommandForControlOnMac = false;
+
+    protected List<String> getCurrentSearchContextPath() {
+        return currentSearchContextPath;
+    }
 
     @Override
     protected void beforeInvoke(Method method, Object[] arguments) {
@@ -842,6 +849,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         WebElement containerElement = getContainerElement(container);
         boolean result = false;
         if (containerElement != null) {
+            getCurrentSearchContextPath().add(container);
             setSearchContextTo(containerElement);
             result = true;
         }
@@ -853,6 +861,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     public void clearSearchContext() {
+        getCurrentSearchContextPath().clear();
         getSeleniumHelper().setCurrentContext(null);
     }
 
@@ -1837,7 +1846,31 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected <T> T waitUntilImpl(ExpectedCondition<T> condition) {
-        return getSeleniumHelper().waitUntil(secondsBeforeTimeout(), condition);
+        try {
+            return getSeleniumHelper().waitUntil(secondsBeforeTimeout(), condition);
+        } catch (StaleContextException e) {
+            // current context was no good to search in
+            if (getCurrentSearchContextPath().isEmpty()) {
+                throw e;
+            } else {
+                refreshSearchContext();
+                return waitUntilImpl(condition);
+            }
+        }
+    }
+
+    protected void refreshSearchContext() {
+        // copy path so we can retrace after clearing it
+        List<String> fullPath = new ArrayList<>(getCurrentSearchContextPath());
+        clearSearchContext();
+        for (String container : fullPath) {
+            try {
+                setSearchContextTo(container);
+            } catch (RuntimeException se) {
+                throw new SlimFixtureException("Search context is 'stale' and could not be restored. Context was: " + fullPath
+                        + ". Error when trying to restore: " + container, se);
+            }
+        }
     }
 
     protected <T> T handleTimeoutException(TimeoutException e) {
