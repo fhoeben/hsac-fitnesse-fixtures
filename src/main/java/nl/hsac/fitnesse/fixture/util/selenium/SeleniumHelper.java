@@ -857,17 +857,8 @@ public class SeleniumHelper<T extends WebElement> {
             public T apply(WebDriver webDriver) {
                 try {
                     return condition.apply(webDriver);
-                } catch (StaleElementReferenceException e) {
-                    // try again
-                    return null;
                 } catch (WebDriverException e) {
-                    String msg = e.getMessage();
-                    if (msg != null
-                            && (msg.contains("Element does not exist in cache")
-                                // Safari stale element
-                                || msg.contains("Error: element is not attached to the page document")
-                                // Alternate Chrome stale element
-                            )) {
+                    if (isStaleElementException(e)) {
                         return null;
                     } else {
                         throw e;
@@ -875,6 +866,26 @@ public class SeleniumHelper<T extends WebElement> {
                 }
             }
         };
+    }
+
+    /**
+     * Check whether exception indicates a 'stale element', not all drivers throw the exception one would expect...
+     * @param e exception caught
+     * @return true if exception indicated the element is no longer part of the page in the browser.
+     */
+    public boolean isStaleElementException(WebDriverException e) {
+        boolean result = false;
+        if (e instanceof StaleElementReferenceException) {
+            result = true;
+        } else {
+            String msg = e.getMessage();
+            if (msg != null) {
+                result = msg.contains("Element does not exist in cache") // Safari stale element
+                        || msg.contains("Error: element is not attached to the page document"); // Alternate Chrome stale element
+
+            }
+        }
+        return result;
     }
 
     /**
