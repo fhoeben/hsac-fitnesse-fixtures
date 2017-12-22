@@ -1867,8 +1867,10 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             try {
                 setSearchContextTo(container);
             } catch (RuntimeException se) {
-                throw new SlimFixtureException("Search context is 'stale' and could not be restored. Context was: " + fullPath
-                        + ". Error when trying to restore: " + container, se);
+                // not the entire context was refreshed, clear it to prevent an 'intermediate' search context
+                clearSearchContext();
+                throw new SlimFixtureException("Search context is 'stale' and could not be refreshed. Context was: " + fullPath
+                        + ". Error when trying to refresh: " + container, se);
             }
         }
     }
