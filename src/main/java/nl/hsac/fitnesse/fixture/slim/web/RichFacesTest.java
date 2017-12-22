@@ -2,7 +2,6 @@ package nl.hsac.fitnesse.fixture.slim.web;
 
 import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
-import nl.hsac.fitnesse.fixture.util.selenium.by.LabelBy;
 import org.openqa.selenium.JavascriptException;
 import org.openqa.selenium.ScriptTimeoutException;
 import org.openqa.selenium.WebElement;
@@ -116,7 +115,7 @@ public class RichFacesTest extends BrowserTest<WebElement> {
         if (!result) {
             String tagName = element.getTagName();
             if ("label".equalsIgnoreCase(tagName)) {
-                WebElement labelTarget = LabelBy.getLabelledElement(getSeleniumHelper().getCurrentContext(), element);
+                WebElement labelTarget = getSeleniumHelper().getLabelledElement(element);
                 if (labelTarget != null) {
                     result = isAjaxEventPresent(labelTarget);
                 }
