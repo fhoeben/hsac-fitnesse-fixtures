@@ -75,14 +75,24 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     @Override
     protected Object invoke(FixtureInteraction interaction, Method method, Object[] arguments)
             throws Throwable {
-        Object result;
-        WaitUntil waitUntil = reflectionHelper.getAnnotation(WaitUntil.class, method);
-        if (waitUntil == null) {
-            result = superInvoke(interaction, method, arguments);
-        } else {
-            result = invokedWrappedInWaitUntil(waitUntil, interaction, method, arguments);
+        try {
+            Object result;
+            WaitUntil waitUntil = reflectionHelper.getAnnotation(WaitUntil.class, method);
+            if (waitUntil == null) {
+                result = superInvoke(interaction, method, arguments);
+            } else {
+                result = invokedWrappedInWaitUntil(waitUntil, interaction, method, arguments);
+            }
+            return result;
+        } catch (StaleContextException e) {
+            // current context was no good to search in
+            if (getCurrentSearchContextPath().isEmpty()) {
+                throw e;
+            } else {
+                refreshSearchContext();
+                return invoke(interaction, method, arguments);
+            }
         }
-        return result;
     }
 
     protected Object invokedWrappedInWaitUntil(WaitUntil waitUntil, FixtureInteraction interaction, Method method, Object[] arguments) {
@@ -1846,17 +1856,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected <T> T waitUntilImpl(ExpectedCondition<T> condition) {
-        try {
-            return getSeleniumHelper().waitUntil(secondsBeforeTimeout(), condition);
-        } catch (StaleContextException e) {
-            // current context was no good to search in
-            if (getCurrentSearchContextPath().isEmpty()) {
-                throw e;
-            } else {
-                refreshSearchContext();
-                return waitUntilImpl(condition);
-            }
-        }
+        return getSeleniumHelper().waitUntil(secondsBeforeTimeout(), condition);
     }
 
     protected void refreshSearchContext() {
