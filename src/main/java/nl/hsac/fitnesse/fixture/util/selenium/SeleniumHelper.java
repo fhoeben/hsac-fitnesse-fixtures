@@ -852,17 +852,14 @@ public class SeleniumHelper<T extends WebElement> {
      * @return wrapped condition.
      */
     public <T> ExpectedCondition<T> getConditionIgnoringStaleElement(final ExpectedCondition<T> condition) {
-        return new ExpectedCondition<T>() {
-            @Override
-            public T apply(WebDriver webDriver) {
-                try {
-                    return condition.apply(webDriver);
-                } catch (WebDriverException e) {
-                    if (isStaleElementException(e)) {
-                        return null;
-                    } else {
-                        throw e;
-                    }
+        return d -> {
+            try {
+                return condition.apply(webDriver);
+            } catch (WebDriverException e) {
+                if (isStaleElementException(e)) {
+                    return null;
+                } else {
+                    throw e;
                 }
             }
         };
