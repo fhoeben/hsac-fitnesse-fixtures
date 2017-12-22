@@ -1859,7 +1859,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return getSeleniumHelper().waitUntil(secondsBeforeTimeout(), condition);
     }
 
-    protected void refreshSearchContext() {
+    public boolean refreshSearchContext() {
         // copy path so we can retrace after clearing it
         List<String> fullPath = new ArrayList<>(getCurrentSearchContextPath());
         clearSearchContext();
@@ -1873,6 +1873,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
                         + ". Error when trying to refresh: " + container, se);
             }
         }
+        return true;
     }
 
     protected <T> T handleTimeoutException(TimeoutException e) {
