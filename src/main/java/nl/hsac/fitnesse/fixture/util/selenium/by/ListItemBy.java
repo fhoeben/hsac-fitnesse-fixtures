@@ -1,8 +1,4 @@
-package nl.hsac.fitnesse.fixture.util.selenium;
-
-import nl.hsac.fitnesse.fixture.util.selenium.by.HeuristicBy;
-import nl.hsac.fitnesse.fixture.util.selenium.by.SingleElementOrNullBy;
-import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
+package nl.hsac.fitnesse.fixture.util.selenium.by;
 
 /**
  * By to find list item.
