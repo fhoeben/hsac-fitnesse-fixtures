@@ -2,7 +2,7 @@ package nl.hsac.fitnesse.junit;
 
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesseContext;
-import fitnesse.components.PluginsClassLoader;
+import fitnesse.components.PluginsClassLoaderFactory;
 import fitnesse.junit.FitNesseRunner;
 import fitnesse.wiki.WikiPage;
 import nl.hsac.fitnesse.fixture.Environment;
@@ -198,9 +198,11 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     protected FitNesseContext createContext(Class<?> suiteClass) throws Exception {
         // disable maven-classpath-plugin, we expect all jars to be loaded as part of this jUnit run
         System.setProperty("fitnesse.wikitext.widgets.MavenClasspathSymbolType.Disable", "true");
-        new PluginsClassLoader(getFitNesseDir(suiteClass)).addPluginsToClassLoader();
 
-        return super.createContext(suiteClass);
+        ClassLoader cl = new PluginsClassLoaderFactory().getClassLoader(getFitNesseDir(suiteClass));
+        ContextConfigurator configurator = initContextConfigurator().withClassLoader(cl);
+
+        return configurator.makeFitNesseContext();
     }
 
     @Override
