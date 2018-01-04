@@ -16,8 +16,8 @@ p {
 <body>
 <script type="text/javascript">
     window.onload = function() {
-		setTimeout(function() { document.getElementById("1").innerHTML = "Gone"; }, 500);
-        setTimeout(function() { document.getElementById("2").innerHTML = "Gone"; }, 500);
+		setTimeout(function() { document.getElementById("1").innerHTML = "Gone"; }, 1000);
+        setTimeout(function() { document.getElementById("2").innerHTML = "Gone"; }, 1000);
 		
     }
 </script>
@@ -34,6 +34,7 @@ p {
 |script|browser test                      |
 |open  |$url                              |
 |ensure|is visible         |In viewport   |
+|ensure|not visible        |Someplace else|
 |ensure|is visible on page |Someplace else|
 |ensure|not visible        |In viewport   |
 |ensure|not visible on page|Someplace else|

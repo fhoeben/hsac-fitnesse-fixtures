@@ -1559,7 +1559,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      */
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
     public boolean notVisibleIn(String place, String container) {
-        return notVisibleImpl(place, container, false);
+        return notVisibleImpl(place, container, true);
     }
 
     /**
@@ -1582,11 +1582,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      */
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
     public boolean notVisibleOnPageIn(String place, String container) {
-        return notVisibleImpl(place, container, true);
+        return notVisibleImpl(place, container, false);
     }
 
-    protected boolean notVisibleImpl(String place, String container, boolean onPage) {
-        return waitDriver().until(d -> !isVisibleImpl(place, container, onPage));
+    protected boolean notVisibleImpl(String place, String container, boolean checkOnScreen) {
+        return waitDriver().until(d -> !isVisibleImpl(place, container, checkOnScreen));
     }
 
     protected boolean isVisibleImpl(String place, String container, boolean checkOnScreen) {
