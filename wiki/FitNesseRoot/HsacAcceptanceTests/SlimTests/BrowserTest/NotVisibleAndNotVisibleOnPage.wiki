@@ -1,7 +1,7 @@
 ---
 Test
 ---
-This test ensures we can wait for elements explicitly (which means test will stop on timeout), but also implicitly (which will cause exception).
+This test ensures we can check that elements are not displayed and explicilty wait for elements to disappear.
 
 !define HTML { {{{
 <html>
