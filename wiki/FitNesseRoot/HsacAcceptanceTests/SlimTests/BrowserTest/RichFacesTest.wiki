@@ -4,13 +4,13 @@ Help: Test support for RichFaces Ajax
 Unfortunately we can't check with local server (since we don't want to set up all javascript dependencies).
 We ensure we can properly wait for richfaces ajax to render elements.
 
-|script                |rich faces test                                                                                                |
-|open                  |https://www.triodos.nl/nl/particulieren/sparen/spaarrekening-voor-mezelf/maand-sparen/form-opening-maandsparen/|
-|click                 |Vul uw gegevens in                                                                                             |
-|seconds before timeout|2                                                                                                              |
-|enter                 |f                        |as                                        |xpath=(//input[@type='text'])[2]          |
-|check                 |value of                 |xpath=(//input[@type='text'])[2]          |F.                                        |
-|enter                 |fitnesse                 |as                                        |xpath=(//input[@type='text'])[3]          |
-|check                 |value of                 |xpath=(//input[@type='text'])[3]          |Fitnesse                                  |
-|show                  |take screenshot          |rf                                                                                   |
+|script                |rich faces test                                                           |
+|open                  |https://www.triodos.nl/nl/particulieren/betaalrekening/form-opening-tibet/|
+|click                 |Vul uw gegevens in                                                        |
+|seconds before timeout|2                                                                         |
+|enter                 |f                          |as                     |Voorletters           |
+|check                 |value of                   |Voorletters            |F.                    |
+|enter                 |fitnesse                   |as                     |Achternaam            |
+|check                 |value of                   |Achternaam             |Fitnesse              |
+|show                  |take screenshot            |rf                                            |
 
