@@ -1,0 +1,42 @@
+---
+Test
+---
+This test ensures we can wait for elements explicitly (which means test will stop on timeout), but also implicitly (which will cause exception).
+
+!define HTML { {{{
+<html>
+<head>
+<style>
+p {
+    min-height: 5000px;
+}
+</style>
+<title>Test Page</title>
+</head>
+<body>
+<script type="text/javascript">
+    window.onload = function() {
+		setTimeout(function() { document.getElementById("1").innerHTML = "Gone"; }, 500);
+        setTimeout(function() { document.getElementById("2").innerHTML = "Gone"; }, 500);
+		
+    }
+</script>
+<a id="1" href="">In viewport</a>
+<p>&nbsp;</p>
+<a id="2" href="">Someplace else</a>
+</body>
+</html>}}} }
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script|browser test                      |
+|open  |$url                              |
+|ensure|is visible         |In viewport   |
+|ensure|is visible on page |Someplace else|
+|ensure|not visible        |In viewport   |
+|ensure|not visible on page|Someplace else|
+
+|script|mock xml server setup|
+|stop                        |
