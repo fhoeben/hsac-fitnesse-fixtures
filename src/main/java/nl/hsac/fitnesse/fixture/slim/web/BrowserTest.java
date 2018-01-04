@@ -1540,8 +1540,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     /**
-     * Determinse whether element is not visible (or disappears within the specified timeout)
-     *
+     * Determines whether element is not visible (or disappears within the specified timeout)
      * @param place element to check
      * @return true if the element is not displayed (anymore)
      */
@@ -1551,9 +1550,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     /**
-     * Determinse whether element is not visible (or disappears within the specified timeout)
-     *
-     * @param place     element to check.
+     * Determines whether element is not visible (or disappears within the specified timeout)
+     * @param place element to check.
      * @param container parent of place.
      * @return true if the element is not displayed (anymore)
      */
@@ -1563,8 +1561,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     /**
-     * Determinse whether element is not on the page (or disappears within the specified timeout)
-     *
+     * Determines whether element is not on the page (or disappears within the specified timeout)
      * @param place element to check.
      * @return true if element is not on the page (anymore).
      */
@@ -1574,9 +1571,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     /**
-     * * Determinse whether element is not on the page (or disappears within the specified timeout)
-     *
-     * @param place     element to check.
+     * Determines whether element is not on the page (or disappears within the specified timeout)
+     * @param place element to check.
      * @param container parent of place.
      * @return true if the element is not on teh page (anymore)
      */
