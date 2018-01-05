@@ -1557,7 +1557,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      */
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
     public boolean notVisibleIn(String place, String container) {
-        return notVisibleImpl(place, container, true);
+        return !isVisibleImpl(place, container, true);
     }
 
     /**
@@ -1574,15 +1574,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * Determines whether element is not on the page (or disappears within the specified timeout)
      * @param place element to check.
      * @param container parent of place.
-     * @return true if the element is not on teh page (anymore)
+     * @return true if the element is not on the page (anymore)
      */
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
     public boolean notVisibleOnPageIn(String place, String container) {
-        return notVisibleImpl(place, container, false);
-    }
-
-    protected boolean notVisibleImpl(String place, String container, boolean checkOnScreen) {
-        return waitDriver().until(d -> !isVisibleImpl(place, container, checkOnScreen));
+        return !isVisibleImpl(place, container, false);
     }
 
     protected boolean isVisibleImpl(String place, String container, boolean checkOnScreen) {
