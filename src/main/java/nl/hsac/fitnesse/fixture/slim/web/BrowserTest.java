@@ -1545,8 +1545,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * @return true if the element is not displayed (anymore)
      */
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
-    public boolean notVisible(String place) {
-        return notVisibleIn(place, null);
+    public boolean isNotVisible(String place) {
+        return isNotVisibleIn(place, null);
     }
 
     /**
@@ -1556,7 +1556,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * @return true if the element is not displayed (anymore)
      */
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
-    public boolean notVisibleIn(String place, String container) {
+    public boolean isNotVisibleIn(String place, String container) {
         return !isVisibleImpl(place, container, true);
     }
 
@@ -1566,8 +1566,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * @return true if element is not on the page (anymore).
      */
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
-    public boolean notVisibleOnPage(String place) {
-        return notVisibleOnPageIn(place, null);
+    public boolean isNotVisibleOnPage(String place) {
+        return isNotVisibleOnPageIn(place, null);
     }
 
     /**
@@ -1577,7 +1577,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * @return true if the element is not on the page (anymore)
      */
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
-    public boolean notVisibleOnPageIn(String place, String container) {
+    public boolean isNotVisibleOnPageIn(String place, String container) {
         return !isVisibleImpl(place, container, false);
     }
 

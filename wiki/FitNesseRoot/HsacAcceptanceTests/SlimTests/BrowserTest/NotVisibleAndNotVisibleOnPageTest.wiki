@@ -1,6 +1,3 @@
----
-Test
----
 This test ensures we can check that elements are not displayed and explicilty wait for elements to disappear.
 
 !define HTML { {{{
@@ -31,13 +28,13 @@ p {
 |add response|${HTML}              |
 |$url=       |get mock server url  |
 
-|script|browser test                      |
-|open  |$url                              |
-|ensure|is visible         |In viewport   |
-|ensure|not visible        |Someplace else|
-|ensure|is visible on page |Someplace else|
-|ensure|not visible        |In viewport   |
-|ensure|not visible on page|Someplace else|
+|script|browser test                         |
+|open  |$url                                 |
+|ensure|is visible            |In viewport   |
+|ensure|is not visible        |SomeplaceElse |
+|ensure|is visible on page    |Someplace else|
+|ensure|is not visible        |InViewport    |
+|ensure|is not visible on page|SomeplaceElse |
 
 |script|mock xml server setup|
 |stop                        |
