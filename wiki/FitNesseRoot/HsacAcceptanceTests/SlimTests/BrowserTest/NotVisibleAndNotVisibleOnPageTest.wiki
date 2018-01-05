@@ -1,0 +1,40 @@
+This test ensures we can check that elements are not displayed and explicilty wait for elements to disappear.
+
+!define HTML { {{{
+<html>
+<head>
+<style>
+p {
+    min-height: 5000px;
+}
+</style>
+<title>Test Page</title>
+</head>
+<body>
+<script type="text/javascript">
+    window.onload = function() {
+		setTimeout(function() { document.getElementById("1").innerHTML = "Gone"; }, 1000);
+        setTimeout(function() { document.getElementById("2").innerHTML = "Gone"; }, 1000);
+		
+    }
+</script>
+<a id="1" href="">In viewport</a>
+<p>&nbsp;</p>
+<a id="2" href="">Someplace else</a>
+</body>
+</html>}}} }
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script|browser test                         |
+|open  |$url                                 |
+|ensure|is visible            |In viewport   |
+|ensure|is not visible        |Someplace else|
+|ensure|is visible on page    |Someplace else|
+|ensure|is not visible        |In viewport   |
+|ensure|is not visible on page|Someplace else|
+
+|script|mock xml server setup|
+|stop                        |

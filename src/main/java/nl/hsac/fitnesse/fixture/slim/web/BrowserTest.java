@@ -1539,6 +1539,48 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return isVisibleImpl(place, container, false);
     }
 
+    /**
+     * Determines whether element is not visible (or disappears within the specified timeout)
+     * @param place element to check
+     * @return true if the element is not displayed (anymore)
+     */
+    @WaitUntil(TimeoutPolicy.RETURN_FALSE)
+    public boolean isNotVisible(String place) {
+        return isNotVisibleIn(place, null);
+    }
+
+    /**
+     * Determines whether element is not visible (or disappears within the specified timeout)
+     * @param place element to check.
+     * @param container parent of place.
+     * @return true if the element is not displayed (anymore)
+     */
+    @WaitUntil(TimeoutPolicy.RETURN_FALSE)
+    public boolean isNotVisibleIn(String place, String container) {
+        return !isVisibleImpl(place, container, true);
+    }
+
+    /**
+     * Determines whether element is not on the page (or disappears within the specified timeout)
+     * @param place element to check.
+     * @return true if element is not on the page (anymore).
+     */
+    @WaitUntil(TimeoutPolicy.RETURN_FALSE)
+    public boolean isNotVisibleOnPage(String place) {
+        return isNotVisibleOnPageIn(place, null);
+    }
+
+    /**
+     * Determines whether element is not on the page (or disappears within the specified timeout)
+     * @param place element to check.
+     * @param container parent of place.
+     * @return true if the element is not on the page (anymore)
+     */
+    @WaitUntil(TimeoutPolicy.RETURN_FALSE)
+    public boolean isNotVisibleOnPageIn(String place, String container) {
+        return !isVisibleImpl(place, container, false);
+    }
+
     protected boolean isVisibleImpl(String place, String container, boolean checkOnScreen) {
         WebElement element = getElementToCheckVisibility(place, container);
         return getSeleniumHelper().checkVisible(element, checkOnScreen);
