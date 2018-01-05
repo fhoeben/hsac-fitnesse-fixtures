@@ -31,10 +31,10 @@ p {
 |script|browser test                         |
 |open  |$url                                 |
 |ensure|is visible            |In viewport   |
-|ensure|is not visible        |SomeplaceElse |
+|ensure|is not visible        |Someplace else|
 |ensure|is visible on page    |Someplace else|
-|ensure|is not visible        |InViewport    |
-|ensure|is not visible on page|SomeplaceElse |
+|ensure|is not visible        |In viewport   |
+|ensure|is not visible on page|Someplace else|
 
 |script|mock xml server setup|
 |stop                        |
