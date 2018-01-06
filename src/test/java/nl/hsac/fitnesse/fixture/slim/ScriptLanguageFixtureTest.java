@@ -149,6 +149,32 @@ public class ScriptLanguageFixtureTest {
         assertEquals(1, fixture.get("d.i[0]"));
     }
 
+    @Test
+    public void clearVariable() {
+        fixture.setValueFor(1, "z");
+        fixture.evaluate("var d = new Object()");
+        assertNotNull(fixture.value("d"));
+        assertNotNull(fixture.value("z"));
+
+        fixture.clearValue("d");
+        assertNull(fixture.value("d"));
+
+        fixture.clearValue("z");
+        assertNull(fixture.value("z"));
+    }
+
+    @Test
+    public void clearVariables() {
+        fixture.setValueFor(4, "x");
+        fixture.evaluate("var f = new Object()");
+        assertNotNull(fixture.value("f"));
+        assertNotNull(fixture.value("x"));
+
+        fixture.clearValues();
+        assertNull(fixture.value("f"));
+        assertNull(fixture.value("x"));
+    }
+
     private static void checkSlimFixtureExceptionThrown(Supplier<Object> supplier, String expectedMsg) {
         try {
             Object result = supplier.get();

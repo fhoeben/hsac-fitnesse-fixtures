@@ -70,6 +70,19 @@ public class ScriptLanguageFixture extends SlimFixtureWithMap {
         return getMapHelper().getValue(context, key);
     }
 
+    @Override
+    public boolean clearValue(String name) {
+        getEngine().put(name, null);
+        return super.clearValue(name);
+    }
+
+    @Override
+    public void clearValues() {
+        ScriptEngine e = getEngine();
+        e.setBindings(e.createBindings(), ScriptContext.ENGINE_SCOPE);
+        super.clearValues();
+    }
+
     //// methods to support usage in dynamic decision tables
 
     /**
