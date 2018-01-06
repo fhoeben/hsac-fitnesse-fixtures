@@ -42,7 +42,7 @@ By default the !-JavaScript-! engine present in the JVM is used, but this can be
 }
 }}} }
 
-|script  |script language fixture                  |
-|evaluate|${MULTILINE}                             |
-|check   |invoke method;|obj|hello|John|Hello, John|
+|script  |script language fixture                                  |
+|evaluate|${MULTILINE}                                             |
+|check   |invoke method|hello|on|obj|with argument|John|Hello, John|
 

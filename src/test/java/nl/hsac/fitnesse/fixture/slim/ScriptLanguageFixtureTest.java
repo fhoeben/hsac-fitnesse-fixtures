@@ -87,14 +87,14 @@ public class ScriptLanguageFixtureTest {
         fixture.set("c", 12);
         Object result = fixture.evaluate("var obj = new Object(); obj.hello = function hello(name) { return 'Hello, ' + name + c; }");
         assertNotEquals(Boolean.FALSE, result);
-        result = fixture.invokeMethod("obj","hello", "Scripting!!");
+        result = fixture.invokeMethodOnWithArguments("hello", "obj","Scripting!!");
         assertEquals("Hello, Scripting!!12", result);
     }
 
     @Test
     public void invokeMethodNoObject() {
         checkSlimFixtureExceptionThrown(
-                () -> fixture.invokeMethod("b","unknown1", false),
+                () -> fixture.invokeMethodOnWithArguments("unknown1", "b",false),
                 "No object found called: b");
     }
 
@@ -102,7 +102,7 @@ public class ScriptLanguageFixtureTest {
     public void invokeMethodWithError() {
         fixture.evaluate("var obj = new Object(); obj.hello = function hello(name) { return 'Hello, ' + c.name; }");
         checkSlimFixtureExceptionThrown(
-                () -> fixture.invokeMethod("obj","hello","Boo"),
+                () -> fixture.invokeMethodOnWithArguments("hello","obj","Boo"),
                 "<eval>:1 ReferenceError: \"c\" is not defined");
     }
 
@@ -110,7 +110,7 @@ public class ScriptLanguageFixtureTest {
     public void invokeBadMethod() {
         fixture.evaluate("var a = new Object()");
         checkSlimFixtureExceptionThrown(
-                () -> fixture.invokeMethod("a","unknown2", 1),
+                () -> fixture.invokeMethodOn("unknown2","a"),
                 "No method found for this name and these arguments");
     }
 

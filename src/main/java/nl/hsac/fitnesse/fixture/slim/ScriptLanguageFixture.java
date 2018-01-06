@@ -53,7 +53,15 @@ public class ScriptLanguageFixture extends SlimFixtureWithMap {
         }
     }
 
-    public Object invokeMethod(String objName, String methodName, Object... arguments) {
+    public Object invokeMethodOn(String methodName, String objName) {
+        return invokeMethodOnWithArguments(methodName, objName);
+    }
+
+    public Object invokeMethodOnWithArgument(String methodName, String objName, Object argument) {
+        return invokeMethodOnWithArguments(methodName, objName, argument);
+    }
+
+    public Object invokeMethodOnWithArguments(String methodName, String objName, Object... arguments) {
         Object obj = value(objName);
         if (obj == null) {
             throw new SlimFixtureException(false, "No object found called: " + objName);
