@@ -127,8 +127,8 @@ public class ScriptLanguageFixtureTest {
         assertEquals("my name", fixture.value("d.name"));
         assertEquals("a", fixture.value("d.c.a"));
 
-        assertEquals(1, fixture.evaluate("d.i[0]"));
-        assertEquals(2, fixture.evaluate("d.i[1]"));
+        assertEquals(1, fixture.value("d.i[0]"));
+        assertEquals(2, fixture.value("d.i[1]"));
 
         assertEquals("my name", fixture.value("e.name"));
         assertEquals("a", fixture.value("e.c.a"));
@@ -143,14 +143,10 @@ public class ScriptLanguageFixtureTest {
 
     @Test
     public void getNestedVariableViaGet() {
-        fixture.evaluate("var d = new Object(); d.name = 'my name'; d.i = [1,2]; var c = new Object(); c.a = 'a'; d.c = c; e = Java.asJSONCompatible(d);");
+        fixture.evaluate("var d = new Object(); d.name = 'my name'; d.i = [1,2]; var c = new Object(); c.a = 'a'; d.c = c;");
         assertEquals("my name", fixture.get("d.name"));
         assertEquals("a", fixture.get("d.c.a"));
-
-        assertEquals("my name", fixture.get("e.name"));
-        assertEquals("a", fixture.get("e.c.a"));
-        assertEquals(1, fixture.get("e.i[0]"));
-        assertEquals(2, fixture.get("e.i[1]"));
+        assertEquals(1, fixture.get("d.i[0]"));
     }
 
     private static void checkSlimFixtureExceptionThrown(Supplier<Object> supplier, String expectedMsg) {

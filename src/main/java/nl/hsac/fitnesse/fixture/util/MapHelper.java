@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 
 import java.util.ArrayList;
@@ -194,6 +195,12 @@ public class MapHelper {
         Object value = null;
         String prop = getListKeyName(name);
         Object val = getValue(map, prop);
+        if (!(val instanceof List) && val instanceof ScriptObjectMirror) {
+            ScriptObjectMirror mirror = (ScriptObjectMirror) val;
+            if (mirror.isArray()) {
+                val = mirror.to(List.class);
+            }
+        }
         if (val instanceof List) {
             List list = (List) val;
             int index = getListIndex(name);
