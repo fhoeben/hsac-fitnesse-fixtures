@@ -63,7 +63,7 @@ public class ScriptLanguageFixtureTest {
         fixture.set("a", 21);
         Object result = fixture.evaluate("function hello(name) { return 'Hello, ' + name + a; }");
         assertNotEquals(Boolean.FALSE, result);
-        result = fixture.invokeFunction("hello", "Scripting!!");
+        result = fixture.invokeFunctionWithArguments("hello", "Scripting!!");
         assertEquals("Hello, Scripting!!21", result);
     }
 
@@ -71,14 +71,14 @@ public class ScriptLanguageFixtureTest {
     public void invokeFunctionWithError() {
         fixture.evaluate("function hello(name) { return 'Hello, ' + a.n; }");
         checkSlimFixtureExceptionThrown(
-                () -> fixture.invokeFunction("hello","Boo"),
+                () -> fixture.invokeFunctionWithArguments("hello","Boo"),
                 "<eval>:1 ReferenceError: \"a\" is not defined");
     }
 
     @Test
     public void invokeBadFunction() {
         checkSlimFixtureExceptionThrown(
-                () -> fixture.invokeFunction("unknown", "1"),
+                () -> fixture.invokeFunctionWithArguments("unknown", "1"),
                 "No function found for this name and these arguments");
     }
 

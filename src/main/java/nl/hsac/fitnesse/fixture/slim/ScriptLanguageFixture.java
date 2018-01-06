@@ -34,7 +34,15 @@ public class ScriptLanguageFixture extends SlimFixtureWithMap {
         }
     }
 
-    public Object invokeFunction(String functionName, Object... arguments) {
+    public Object invokeFunction(String functionName) {
+        return invokeFunctionWithArguments(functionName);
+    }
+
+    public Object invokeFunctionWithArgument(String functionName, Object argument) {
+        return invokeFunctionWithArguments(functionName, argument);
+    }
+
+    public Object invokeFunctionWithArguments(String functionName, Object... arguments) {
         putAllValues();
         try {
             return ((Invocable) getEngine()).invokeFunction(functionName, arguments);

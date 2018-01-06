@@ -23,13 +23,17 @@ By default the !-JavaScript-! engine present in the JVM is used, but this can be
 |check    |evaluate              |a[1]     |Pete|
 |check    |evaluate              |a[2].name|Duke|
 
-|script  |script language fixture                          |
-|evaluate|function hello(name) { return 'Hello, ' + name; }|
-|check   |invoke function;|hello|World|Hello, World        |
+|script  |script language fixture                        |
+|evaluate|function hello(name) { return 'Hello World!'; }|
+|check   |invoke function|hello|Hello World!             |
+
+|script  |script language fixture                               |
+|evaluate|function hello(name) { return 'Hello, ' + name; }     |
+|check   |invoke function|hello|with argument|World|Hello, World|
 
 |script  |script language fixture                                                |
 |evaluate|function hello(name, age) { return 'Hello, ' + name + ' age: ' + age; }|
-|check   |invoke function;|hello|[Duke,7]|Hello, Duke age: 7                       |
+|check   |invoke function|hello|with arguments|[Duke,7]|Hello, Duke age: 7       |
 
 !define MULTILINE { {{{
  var obj = new Object();
