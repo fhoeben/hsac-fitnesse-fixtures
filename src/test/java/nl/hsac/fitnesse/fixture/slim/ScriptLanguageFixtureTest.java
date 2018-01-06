@@ -141,6 +141,18 @@ public class ScriptLanguageFixtureTest {
         assertNull(fixture.value("x"));
     }
 
+    @Test
+    public void getNestedVariableViaGet() {
+        fixture.evaluate("var d = new Object(); d.name = 'my name'; d.i = [1,2]; var c = new Object(); c.a = 'a'; d.c = c; e = Java.asJSONCompatible(d);");
+        assertEquals("my name", fixture.get("d.name"));
+        assertEquals("a", fixture.get("d.c.a"));
+
+        assertEquals("my name", fixture.get("e.name"));
+        assertEquals("a", fixture.get("e.c.a"));
+        assertEquals(1, fixture.get("e.i[0]"));
+        assertEquals(2, fixture.get("e.i[1]"));
+    }
+
     private static void checkSlimFixtureExceptionThrown(Supplier<Object> supplier, String expectedMsg) {
         try {
             Object result = supplier.get();

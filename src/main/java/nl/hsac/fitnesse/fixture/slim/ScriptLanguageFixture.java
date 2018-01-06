@@ -70,6 +70,19 @@ public class ScriptLanguageFixture extends SlimFixtureWithMap {
         return getMapHelper().getValue(context, key);
     }
 
+    //// methods to support usage in dynamic decision tables
+
+    /**
+     * Retrieves value for output column.
+     * @param headerName header of output column (without trailing '?').
+     * @return value from engine.
+     */
+    public Object get(String headerName) {
+        return value(headerName);
+    }
+
+    //// methods to support usage in dynamic decision tables
+
     public void setEngine(String shortName) {
         engine = ENGINE_MANAGER.getEngineByName(shortName);
     }
