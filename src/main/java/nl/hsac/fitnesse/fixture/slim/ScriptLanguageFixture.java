@@ -1,5 +1,7 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import jdk.nashorn.internal.runtime.ECMAException;
+
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -26,7 +28,7 @@ public class ScriptLanguageFixture extends SlimFixtureWithMap {
         try {
             return getEngine().eval(expression);
         } catch (ScriptException e) {
-            throw new SlimFixtureException(e);
+            throw getExceptionToThrow(e);
         }
     }
 
@@ -35,7 +37,7 @@ public class ScriptLanguageFixture extends SlimFixtureWithMap {
         try {
             return ((Invocable) getEngine()).invokeFunction(functionName, arguments);
         } catch (ScriptException e) {
-            throw new SlimFixtureException(e);
+            throw getExceptionToThrow(e);
         } catch (NoSuchMethodException e) {
             throw new SlimFixtureException(false, "No function found for this name and these arguments", e);
         }
@@ -52,7 +54,7 @@ public class ScriptLanguageFixture extends SlimFixtureWithMap {
         try {
             return ((Invocable) getEngine()).invokeMethod(obj, methodName, arguments);
         } catch (ScriptException e) {
-            throw new SlimFixtureException(e);
+            throw getExceptionToThrow(e);
         } catch (NoSuchMethodException e) {
             throw new SlimFixtureException(false, "No method found for this name and these arguments", e);
         } catch (IllegalArgumentException e) {
@@ -71,6 +73,17 @@ public class ScriptLanguageFixture extends SlimFixtureWithMap {
 
     protected ScriptEngine getEngine() {
         return engine;
+    }
+
+    protected RuntimeException getExceptionToThrow(ScriptException e) {
+        Throwable cause = e.getCause();
+        String message;
+        if (cause instanceof ECMAException) {
+            message = cause.toString();
+        } else {
+            message = e.getMessage();
+        }
+        return new SlimFixtureException(false, message, e);
     }
 
     protected void putAllValues() {

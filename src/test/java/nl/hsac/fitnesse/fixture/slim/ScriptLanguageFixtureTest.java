@@ -27,6 +27,20 @@ public class ScriptLanguageFixtureTest {
     }
 
     @Test
+    public void jsExpressionWithError() {
+        checkSlimFixtureExceptionThrown(
+                () -> fixture.evaluate("doesnotexist.a"),
+                "<eval>:1 ReferenceError: \"doesnotexist\" is not defined");
+    }
+
+    @Test
+    public void multiLineExpressionWithError() {
+        checkSlimFixtureExceptionThrown(
+                () -> fixture.evaluate("<pre>var b = new Object();\nvar c = a+b; doesnotexist.a</pre>"),
+                "<eval>:2 ReferenceError: \"a\" is not defined");
+    }
+
+    @Test
     public void cleanUpExpression() {
         Object result = fixture.evaluate("<pre>'a' + 'b'</pre>");
 
@@ -52,6 +66,14 @@ public class ScriptLanguageFixtureTest {
     }
 
     @Test
+    public void invokeFunctionWithError() {
+        fixture.evaluate("function hello(name) { return 'Hello, ' + a.n; }");
+        checkSlimFixtureExceptionThrown(
+                () -> fixture.invokeFunction("hello","Boo"),
+                "<eval>:1 ReferenceError: \"a\" is not defined");
+    }
+
+    @Test
     public void invokeBadFunction() {
         checkSlimFixtureExceptionThrown(
                 () -> fixture.invokeFunction("unknown", "1"),
@@ -72,6 +94,14 @@ public class ScriptLanguageFixtureTest {
         checkSlimFixtureExceptionThrown(
                 () -> fixture.invokeMethod("b","unknown1", false),
                 "No object found called: b");
+    }
+
+    @Test
+    public void invokeMethodWithError() {
+        fixture.evaluate("var obj = new Object(); obj.hello = function hello(name) { return 'Hello, ' + c.name; }");
+        checkSlimFixtureExceptionThrown(
+                () -> fixture.invokeMethod("obj","hello","Boo"),
+                "<eval>:1 ReferenceError: \"c\" is not defined");
     }
 
     @Test
