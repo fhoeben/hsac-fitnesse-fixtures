@@ -122,6 +122,21 @@ public class ScriptLanguageFixtureTest {
     }
 
     @Test
+    public void getNestedVariable() {
+        fixture.evaluate("var d = new Object(); d.name = 'my name'; d.i = [1,2]; var c = new Object(); c.a = 'a'; d.c = c; e = Java.asJSONCompatible(d);");
+        assertEquals("my name", fixture.value("d.name"));
+        assertEquals("a", fixture.value("d.c.a"));
+
+        assertEquals(1, fixture.evaluate("d.i[0]"));
+        assertEquals(2, fixture.evaluate("d.i[1]"));
+
+        assertEquals("my name", fixture.value("e.name"));
+        assertEquals("a", fixture.value("e.c.a"));
+        assertEquals(1, fixture.value("e.i[0]"));
+        assertEquals(2, fixture.value("e.i[1]"));
+    }
+
+    @Test
     public void getUnknownVariable() {
         assertNull(fixture.value("x"));
     }

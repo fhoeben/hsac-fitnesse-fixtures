@@ -3,9 +3,11 @@ package nl.hsac.fitnesse.fixture.slim;
 import jdk.nashorn.internal.runtime.ECMAException;
 
 import javax.script.Invocable;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import java.util.Map;
 
 /**
  * Fixture to execute scripts from tests using JSR-223 engines.
@@ -64,7 +66,8 @@ public class ScriptLanguageFixture extends SlimFixtureWithMap {
 
     @Override
     public Object value(String key) {
-        return getEngine().get(key);
+        Map context = getEngine().getBindings(ScriptContext.ENGINE_SCOPE);
+        return getMapHelper().getValue(context, key);
     }
 
     public void setEngine(String shortName) {
