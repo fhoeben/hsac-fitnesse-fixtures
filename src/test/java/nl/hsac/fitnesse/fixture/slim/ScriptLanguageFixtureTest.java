@@ -3,6 +3,8 @@ package nl.hsac.fitnesse.fixture.slim;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.function.Supplier;
 
 import static org.junit.Assert.assertEquals;
@@ -173,6 +175,23 @@ public class ScriptLanguageFixtureTest {
         fixture.clearValues();
         assertNull(fixture.value("f"));
         assertNull(fixture.value("x"));
+    }
+
+    @Test
+    public void evaluateOnMap() {
+        fixture.setValueFor("hallo", "nl.greeting");
+        fixture.setValueFor("dag", "nl.bye");
+        fixture.setValueFor(Arrays.asList(1, 2, 3), "nl.list");
+
+        fixture.setValueFor("hi", "en.greeting");
+        fixture.setValueFor("bye", "en.bye");
+        fixture.setValueFor(Collections.singletonMap("a", "A"), "en.nested");
+
+        assertEquals("hi", fixture.evaluate("en.greeting"));
+        assertEquals("A", fixture.evaluate("en.nested.a"));
+        assertEquals(3, fixture.evaluate("nl.list[2]"));
+
+        assertEquals("A", fixture.evaluate("en['nested']['a']"));
     }
 
     private static void checkSlimFixtureExceptionThrown(Supplier<Object> supplier, String expectedMsg) {
