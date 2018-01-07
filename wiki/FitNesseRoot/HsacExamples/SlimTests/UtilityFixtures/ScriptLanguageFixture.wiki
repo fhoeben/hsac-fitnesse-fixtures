@@ -45,4 +45,5 @@ By default the !-JavaScript-! engine present in the JVM is used, but this can be
 |script  |script language fixture                                  |
 |evaluate|${MULTILINE}                                             |
 |check   |invoke method|hello|on|obj|with argument|John|Hello, John|
-
+|$o=     |value        |obj                                        |
+|check   |invoke method|hello|on|$o |with argument|John|Hello, John|
