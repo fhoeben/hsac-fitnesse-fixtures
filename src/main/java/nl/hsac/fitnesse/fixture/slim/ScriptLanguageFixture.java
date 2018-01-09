@@ -5,8 +5,11 @@ import jdk.nashorn.internal.runtime.ECMAException;
 import javax.script.Invocable;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
+import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -121,6 +124,28 @@ public class ScriptLanguageFixture extends SlimFixtureWithMap {
 
     protected ScriptEngine getEngine() {
         return engine;
+    }
+
+    public Map<String, Map<String, Object>> availableEngines() {
+        Map<String, Map<String, Object>> result = new LinkedHashMap<>();
+
+        List<ScriptEngineFactory> factories = ENGINE_MANAGER.getEngineFactories();
+
+        for (ScriptEngineFactory factory : factories) {
+            Map<String, Object> f = new LinkedHashMap<>();
+            String engName = factory.getEngineName();
+            String engVersion = factory.getEngineVersion();
+            List<String> engNames = factory.getNames();
+            String langName = factory.getLanguageName();
+            String langVersion = factory.getLanguageVersion();
+
+            result.put(engName, f);
+            f.put("language name", langName);
+            f.put("language version", langVersion);
+            f.put("aliases", engNames);
+            f.put("version", engVersion);
+        }
+        return result;
     }
 
     protected RuntimeException getExceptionToThrow(ScriptException e) {
