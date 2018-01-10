@@ -18,13 +18,14 @@ public class FileFixtureTest {
     private final String txtFilename = "testFileFixture.txt";
     private final String copyFilename = "temp-copy.txt";
     private final String curDir = Paths.get("").toAbsolutePath().toString();
-    private final String defaultFilesDir = curDir + File.separator + "FitNesseRoot" + File.separator + "files";
-    private final String defaultFixtureDir = defaultFilesDir + File.separator + "fileFixture" + File.separator;
     private final String testResourcesDir = curDir + "/src/test/resources/".replace('/', File.separatorChar);
 
     @Test
     public void testGetAndSetDirectory() {
+        String defaultFilesDir = Environment.getInstance().getFitNesseFilesSectionDir();
+        String defaultFixtureDir = defaultFilesDir + File.separator + "fileFixture" + File.separator;
         assertEquals(defaultFixtureDir, fixture.getDirectory());
+
         fixture.setDirectory(testResourcesDir);
         assertEquals(testResourcesDir, fixture.getDirectory());
     }
