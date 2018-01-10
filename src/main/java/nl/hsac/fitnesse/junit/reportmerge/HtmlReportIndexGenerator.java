@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
-import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -60,7 +59,7 @@ public class HtmlReportIndexGenerator {
                     (p, name) -> p.getFileName().toString().endsWith(".html"))
                     .map(p -> p.toFile())
                     .filter(this::isNotIndexHtml)
-                    .sorted(Comparator.comparing(File::lastModified))
+                    .sorted()
                     .map(reportFactory::create)
                     .collect(Collectors.toList());
     }
