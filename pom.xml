@@ -38,7 +38,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<hsac-fitnesse-plugin.version>1.20.0-SNAPSHOT</hsac-fitnesse-plugin.version>
+		<hsac-fitnesse-plugin.version>1.20.0</hsac-fitnesse-plugin.version>
 		<maven-classpath-plugin.version>1.9</maven-classpath-plugin.version>
 		<fitnesse.version>20171210</fitnesse.version>
 		<selenium.version>3.8.1</selenium.version>
