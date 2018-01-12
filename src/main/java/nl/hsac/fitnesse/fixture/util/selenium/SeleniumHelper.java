@@ -709,10 +709,16 @@ public class SeleniumHelper<T extends WebElement> {
     }
 
     public SearchContext getCurrentContext() {
-        if (currentContextIsStale) {
-            throw new StaleContextException(currentContext);
+        SearchContext result;
+        if (currentContext == null) {
+            result = driver();
+        } else {
+            if (currentContextIsStale) {
+                throw new StaleContextException(currentContext);
+            }
+            result = currentContext;
         }
-        return currentContext != null? currentContext : driver();
+        return result;
     }
 
     /**
