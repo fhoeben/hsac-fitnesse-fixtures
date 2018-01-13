@@ -11,6 +11,7 @@ The heuristic is based on what command the element is needed for. The options co
  * Input's placeholder
  * Value attribute of (visible) input
  * Textarea's placeholder
+ * Input with type 'checkbox', if place is 'checkbox'
  * Table header (th) text in row
  * Term/name in a description list ('dt' element)
  * Aria-label (either 'aria-label' attribute value or the text of an element identified by an 'aria-labelledby' attribute)
