@@ -7,7 +7,6 @@ addons:
 
 dist: trusty
 sudo: required
-group: deprecated-2017Q4
 
 matrix:
   fast_finish: true
