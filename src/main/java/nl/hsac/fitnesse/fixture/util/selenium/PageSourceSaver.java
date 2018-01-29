@@ -141,7 +141,7 @@ public class PageSourceSaver {
     }
 
     protected String getPageSourceExtension() {
-        return "HTML";
+        return "html";
     }
 
     protected String getCurrentPageSource() {

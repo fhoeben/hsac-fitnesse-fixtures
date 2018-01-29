@@ -1,11 +1,19 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.channels.FileChannel;
-import java.util.Collection;
 import java.util.Scanner;
 
 /**
@@ -14,7 +22,6 @@ import java.util.Scanner;
 public final class FileUtil {
     private static final int BUFFER_SIZE = 4096;
     private static final String FILE_ENCODING = "UTF-8";
-    private static final String[] HTML_EXTENSIONS = {"html"};
 
     private FileUtil() {
         // ensure no instance is made.
@@ -257,34 +264,6 @@ public final class FileUtil {
             output = new File(name);
         }
         return output;
-    }
-
-    /**
-     * FitNesse has an issue where .html files in the files section break the wiki server
-     * we ensure all generated reports have .HTML extension.
-     * Furthermore we update the content of the .html files, by also updating the extension there,
-     * expecting to fix links between files.
-     *
-     * @param dir directory to look for .html files in
-     * @throws IOException when unable to
-     */
-    public static void ensureNoHtmlFiles(String dir) throws IOException {
-        Collection<File> htmlFiles = FileUtils.listFiles(new File(dir), HTML_EXTENSIONS, true);
-        for (File f : htmlFiles) {
-            String htmlFile = f.getAbsolutePath();
-            String srcContent = FileUtil.streamToString(new FileInputStream(f), htmlFile);
-            if (!f.delete()) {
-                throw new IOException("Unable to delete " + htmlFile);
-            }
-
-            // fix links inside content
-            String targetContent = srcContent.replace(".html", ".HTML");
-            String targetName = htmlFile.replace(".html", ".HTML");
-            File target = FileUtil.writeFile(targetName, targetContent);
-            if (!target.exists()) {
-                throw new IOException("Unable to create " + targetName);
-            }
-        }
     }
 
     /**
