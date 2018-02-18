@@ -13,6 +13,7 @@ import java.util.Properties;
 public class PropertiesFileFixture extends ValuesFileFixture {
     /**
      * Adds the properties loaded from the specified file to current values.
+     *
      * @param filename .properties file to load
      * @return true when file is loaded
      * @throws IOException when unable to load file's content.
@@ -27,15 +28,10 @@ public class PropertiesFileFixture extends ValuesFileFixture {
         return true;
     }
 
-    /**
-     * Creates new .properties file, containing current values.
-     * @param filename name of file to create.
-     * @return file created.
-     */
     @Override
-    public String createContainingValues(String filename) {
+    protected String createContaining(String filename, Map<String, Object> map) {
         Properties p = new Properties();
-        p.putAll(getCurrentValues());
+        p.putAll(map);
         PropertiesHelper propHelper = getEnvironment().getPropertiesHelper();
         String fileContent = propHelper.writePropertiesToString(p);
         return createContaining(filename, fileContent);
