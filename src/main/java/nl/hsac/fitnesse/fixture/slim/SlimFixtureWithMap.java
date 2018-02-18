@@ -1,5 +1,9 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import org.apache.commons.io.IOUtils;
+
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -84,6 +88,34 @@ public class SlimFixtureWithMap extends SlimFixtureWithMapHelper {
      */
     public void setValuesFor(String values, String name) {
         getMapHelper().setValuesForIn(values, name, getCurrentValues());
+    }
+
+    /**
+     * @param file file's whose content should be set as byte[]
+     * @param key key whose value should be set.
+     */
+    public void setContentOfAsValueFor(String file, String key) {
+        String filePath = getFilePathFromWikiUrl(file);
+        try {
+            byte[] content = IOUtils.toByteArray(new FileInputStream(filePath));
+            setValueFor(content, key);
+        } catch (IOException e) {
+            throw new SlimFixtureException("Unable to read: " + filePath, e);
+        }
+    }
+
+    /**
+     * @param file file's whose content should be base64 encoded
+     * @param key key whose value should be set.
+     */
+    public void setBase64EncodedContentOfAsValueFor(String file, String key) {
+        Base64Fixture base64Fixture = getBase64Fixture();
+        String base64 = base64Fixture.encode(file);
+        setValueFor(base64, key);
+    }
+
+    protected Base64Fixture getBase64Fixture() {
+        return new Base64Fixture();
     }
 
     /**

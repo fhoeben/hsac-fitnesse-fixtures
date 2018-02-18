@@ -39,11 +39,52 @@ public class FileFixture extends SlimFixtureWithMap {
         return directory;
     }
 
+    public String createFileFromBase64(String baseName, String base64Content) {
+        Base64Fixture base64Fixture = getBase64Fixture();
+        byte[] bytes = base64Fixture.base64Decode(base64Content);
+        return createContaining(baseName, bytes);
+    }
+
+    /**
+     * Creates new file, containing value 'key'.
+     * @param filename name of file to create.
+     * @param key key whose value should be used to generate the file.
+     * @return file created.
+     */
+    public String createContainingValue(String filename, String key) {
+        Object data = value(key);
+        if (data == null) {
+            throw new SlimFixtureException(false, "No value for key: " + key);
+        }
+        return createContaining(filename, data);
+    }
+
+    public String createContaining(String filename, Object data) {
+        String file;
+        if (data instanceof byte[]) {
+            file = createContaining(filename, (byte[]) data);
+        } else if (data != null) {
+            file = createContaining(filename, data.toString());
+        } else {
+            throw new SlimFixtureException(false, "Unable to create file from null");
+        }
+        return file;
+    }
+
     public String createContaining(String filename, String content) {
         String fullName = getFullName(filename);
         ensureParentExists(fullName);
         File f = FileUtil.writeFile(fullName, content);
         return linkToFile(f);
+    }
+
+    protected String createContaining(String filename, byte[] content) {
+        String baseName = FilenameUtils.getBaseName(filename);
+        String target = getFullName(baseName);
+        ensureParentExists(target);
+        String ext = FilenameUtils.getExtension(filename);
+        String downloadedFile = FileUtil.saveToFile(target, ext, content);
+        return linkToFile(new File(downloadedFile));
     }
 
     public String textIn(String filename) {

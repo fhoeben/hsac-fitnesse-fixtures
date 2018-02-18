@@ -121,23 +121,9 @@ public class HttpTest extends SlimFixtureWithMap {
 
     //// end: methods to support usage in dynamic decision tables
 
-    /**
-     * @param file file's whose content should be base64 encoded
-     * @param key key whose value should be set.
-     */
-    public void setBase64EncodedContentOfAsValueFor(String file, String key) {
-        Base64Fixture base64Fixture = getBase64Fixture();
-        String base64 = base64Fixture.encode(file);
-        setValueFor(base64, key);
-    }
-
     protected String createFileFromBase64(String baseName, String base64Content) {
         Base64Fixture base64Fixture = getBase64Fixture();
         return base64Fixture.createFrom(baseName, base64Content);
-    }
-
-    protected Base64Fixture getBase64Fixture() {
-        return new Base64Fixture();
     }
 
     /**

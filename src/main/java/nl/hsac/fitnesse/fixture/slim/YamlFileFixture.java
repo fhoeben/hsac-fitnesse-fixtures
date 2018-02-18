@@ -28,35 +28,41 @@ public class YamlFileFixture extends ValuesFileFixture {
         return true;
     }
 
-    /**
-     * Creates new YAML file, containing current values.
-     * @param filename name of file to create.
-     * @return file created.
-     */
     @Override
-    public String createContainingValues(String filename) {
-        Map<String, Object> data = getCurrentValues();
-        return writeToYamlFile(filename, data);
-    }
-    /**
-     * Creates new YAML file, containing value 'key'.
-     * @param filename name of file to create.
-     * @param key key whose value should be used to generate the file.
-     * @return file created.
-     */
-    public String createContainingValue(String filename, String key) {
-        Object data = value(key);
-        return writeToYamlFile(filename, data);
-    }
-
-
-    protected String writeToYamlFile(String filename, Object data) {
-        String yamlStr;
-        if (data instanceof Map) {
-            yamlStr = yaml.dumpAsMap(data);
-        } else {
-            yamlStr = yaml.dumpAs(data, null, DumperOptions.FlowStyle.BLOCK);
-        }
+    protected String createContaining(String filename, Map<String, Object> map) {
+        String yamlStr = yaml.dumpAsMap(map);
         return createContaining(filename, yamlStr);
+    }
+
+    @Override
+    public String createContaining(String filename, Object data) {
+        String file;
+        if (data instanceof Map
+                || data instanceof byte[]
+                || data instanceof String) {
+            file = valuesFileCreateContaining(filename, data);
+        } else {
+            String yamlStr = yaml.dumpAs(data, null, DumperOptions.FlowStyle.BLOCK);
+            file = createContaining(filename, yamlStr);
+        }
+        return file;
+    }
+
+    protected String valuesFileCreateContaining(String filename, Object data) {
+        return super.createContaining(filename, data);
+    }
+
+    @Override
+    public String createContainingBase64Value(String filename, String key) {
+        String file;
+        Object value = value(key);
+        if (value instanceof byte[]) {
+            // as snake yaml already handles base64 decoding to byte[] we can just save the bytes
+            byte[] bytes = (byte[]) value;
+            file = createContaining(filename, bytes);
+        } else {
+            file = super.createContainingBase64Value(filename, key);
+        }
+        return file;
     }
 }
