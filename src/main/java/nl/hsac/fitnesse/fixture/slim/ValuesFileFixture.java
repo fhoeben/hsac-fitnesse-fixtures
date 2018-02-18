@@ -30,8 +30,12 @@ public abstract class ValuesFileFixture extends FileFixture {
         if (data instanceof Map) {
             return createContaining(filename, (Map) data);
         } else {
-            return super.createContaining(filename, data);
+            return filesCreateContaining(filename, data);
         }
+    }
+
+    protected String filesCreateContaining(String filename, Object data) {
+        return super.createContaining(filename, data);
     }
 
     protected abstract String createContaining(String filename, Map<String, Object> map);
