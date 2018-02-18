@@ -10,13 +10,14 @@ import java.util.Properties;
 /**
  * Deals with .properties files.
  */
-public class PropertiesFileFixture extends FileFixture {
+public class PropertiesFileFixture extends ValuesFileFixture {
     /**
      * Adds the properties loaded from the specified file to current values.
      * @param filename .properties file to load
      * @return true when file is loaded
      * @throws IOException when unable to load file's content.
      */
+    @Override
     public boolean loadValuesFrom(String filename) {
         String propContent = textIn(filename);
         PropertiesHelper propHelper = getEnvironment().getPropertiesHelper();
@@ -27,24 +28,11 @@ public class PropertiesFileFixture extends FileFixture {
     }
 
     /**
-     * @return copy of current values.
-     */
-    public Map<String, Object> values() {
-        return new LinkedHashMap<>(getCurrentValues());
-    }
-
-    /**
-     * @return number of values.
-     */
-    public int numberOfValues() {
-        return getCurrentValues().size();
-    }
-
-    /**
      * Creates new .properties file, containing current values.
      * @param filename name of file to create.
      * @return file created.
      */
+    @Override
     public String createContainingValues(String filename) {
         Properties p = new Properties();
         p.putAll(getCurrentValues());
