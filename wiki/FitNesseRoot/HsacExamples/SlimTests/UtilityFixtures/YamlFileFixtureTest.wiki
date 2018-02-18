@@ -79,7 +79,7 @@ The top level of a YAML file can be an array instead of a set of properties. In 
 |check           |value|elements[2]|rose |
 |delete          |$sample4               |
 
-!2 Binary content
+!2 Reading binary content
 
 |script       |file fixture                                                                                                                                                                                                                                                                                                                                                                                                |
 |set directory|http://files/test                                                                                                                                                                                                                                                                                                                                                                                           |
@@ -98,3 +98,13 @@ description:
 |$img1=          |create|arrow1.gif |containing base64 value|canonical                             |
 |$img2=          |create|arrow2.gif |containing value       |canonical                             |
 |delete          |$bin                                                                             |
+
+!2 Writing binary content
+
+|script                       |yaml file fixture                                 |
+|set content of               |$img2              |as value for|gif              |
+|set base64 encoded content of|$img2              |as value for|encoded-gif      |
+|set value                    |A small arrow image|for         |description      |
+|$sample5=                    |create             |sample5.yml |containing values|
+|show                         |content of         |$sample5                      |
+|delete                       |$sample5                                          |

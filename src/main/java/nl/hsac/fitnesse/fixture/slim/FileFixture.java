@@ -45,10 +45,6 @@ public class FileFixture extends SlimFixtureWithMap {
         return createContaining(baseName, bytes);
     }
 
-    protected Base64Fixture getBase64Fixture() {
-        return new Base64Fixture();
-    }
-
     /**
      * Creates new file, containing value 'key'.
      * @param filename name of file to create.
