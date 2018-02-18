@@ -130,6 +130,19 @@ public class StringFixture extends SlimFixture {
     }
 
     /**
+     * Removes all (sequences of) whitespace.
+     * @param value value to clean up.
+     * @return value without whitespace.
+     */
+    public String removeWhitespace(String value) {
+        String result = null;
+        if (value != null) {
+            result = replaceAllInWith("\\s+", value, "");
+        }
+        return result;
+    }
+
+    /**
      * Trims value and replaces all (sequences of) whitespace to a single space.
      * @param value value to clean up.
      * @return trimmed value with all whitespace converted to single space.
