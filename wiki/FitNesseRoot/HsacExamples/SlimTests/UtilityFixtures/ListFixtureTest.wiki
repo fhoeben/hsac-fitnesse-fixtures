@@ -43,10 +43,11 @@ By invoking !-ListFixture-!'s ''display lists numbered'' method we instruct Slim
 
 !3 List may be nested
 
-|script |list fixture|
-|add    |$list1      |
-|add    |$list1      |
-|$list2=|copy list   |
+|script          |list fixture|
+|add             |$list1      |
+|add             |$list1      |
+|copy values from|$list1      |
+|$list2=         |copy list   |
 
 !anchor ddt
 
@@ -62,14 +63,15 @@ Here we define two lists (and store them in Slim variables) using a dynamic deci
 !3 List as Argument
 We don't use lists defined in the current fixture instance, but supply the lists to work on in the rows to the script.
 
-|script   |list fixture                                           |
-|check    |value at|1     |in           |$list3|!-github@hsac.nl-!|
-|check    |size of |$list3|5                                      |
-|check    |value at|2     |in           |$list4|null              |
-|check    |value at|3     |in           |$list4|!--!              |
-|set value|Ivan    |at    |3            |in    |$list4            |
-|check    |value at|3     |in           |$list4|Ivan              |
-|ensure   |element |Ivan  |is present in|$list4                   |
-|check    |index of|Ivan  |in           |$list4|3                 |
-
+|script          |list fixture                                           |
+|check           |value at|1     |in           |$list3|!-github@hsac.nl-!|
+|check           |size of |$list3|5                                      |
+|check           |value at|2     |in           |$list4|null              |
+|check           |value at|3     |in           |$list4|!--!              |
+|set value       |Ivan    |at    |3            |in    |$list4            |
+|check           |value at|3     |in           |$list4|Ivan              |
+|ensure          |element |Ivan  |is present in|$list4                   |
+|check           |index of|Ivan  |in           |$list4|3                 |
+|copy values from|$list1  |to    |$list4                                 |
+|check           |index of|Fried |in           |$list4|5                 |
 

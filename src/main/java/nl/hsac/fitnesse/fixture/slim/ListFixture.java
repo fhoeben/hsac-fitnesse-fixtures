@@ -4,6 +4,7 @@ import fitnesse.slim.converters.ConverterRegistry;
 import nl.hsac.fitnesse.slim.converter.NumberedListConverter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -83,6 +84,14 @@ public class ListFixture extends SlimFixture {
     }
 
     /**
+     * Adds values to current list.
+     * @param source list whose values are to be copied.
+     */
+    public void copyValuesFrom(Collection<Object> source) {
+        copyValuesFromTo(source, list);
+    }
+
+    /**
      * @return number of elements in list.
      */
     public int size() {
@@ -147,6 +156,15 @@ public class ListFixture extends SlimFixture {
      */
     public boolean elementIsPresentIn(Object element, List aList){
         return aList.contains(element);
+    }
+
+    /**
+     * Adds values to list.
+     * @param source list whose values are to be copied.
+     * @param target list to get element value from.
+     */
+    public void copyValuesFromTo(Collection<Object> source, List<Object> target) {
+        target.addAll(source);
     }
 
     /**
