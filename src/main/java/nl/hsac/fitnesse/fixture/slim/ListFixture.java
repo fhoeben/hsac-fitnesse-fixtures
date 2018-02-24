@@ -58,6 +58,24 @@ public class ListFixture extends SlimFixture {
     }
 
     /**
+     * Returns index of element.
+     * @param element element to get index of.
+     * @return index (0 based).
+     */
+    public int indexOf(Object element) {
+        return indexOfIn(element, list);
+    }
+
+    /**
+     * Checks whether element is present in list.
+     * @param element element that should be present.
+     * @return true if element is present.
+     */
+    public boolean elementIsPresent(Object element){
+        return elementIsPresentIn(element, list);
+    }
+
+    /**
      * @return new list containing current values.
      */
     public ArrayList<Object> copyList() {
@@ -109,6 +127,26 @@ public class ListFixture extends SlimFixture {
         } else {
             throw new SlimFixtureException(false, "list only has " + aList.size() + " elements");
         }
+    }
+
+    /**
+     * Returns index of element.
+     * @param element element to get index of.
+     * @param aList list to get element value from.
+     * @return index (0 based).
+     */
+    public int indexOfIn(Object element, List aList) {
+        return aList.indexOf(element);
+    }
+
+    /**
+     * Checks whether element is present in list.
+     * @param element element that should be present.
+     * @param aList list to get element value from.
+     * @return true if element is present.
+     */
+    public boolean elementIsPresentIn(Object element, List aList){
+        return aList.contains(element);
     }
 
     /**
