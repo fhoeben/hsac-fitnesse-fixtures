@@ -28,6 +28,20 @@ This test ensures we can work with lists and select boxes. We use a mock server 
     <li>8th</li>
     <li><span>9th</span></li>
 </ol>
+<ol id="multiline">
+    <li><span> 10</span><span>th </span></li>
+    <li><a><i></i>
+            <span>11</span><i></i>
+            <span>th</span>
+        </a>
+    </li>
+    <li><a><span>12</span><br/>th</a></li>
+    <li><br/><span>&euro;&nbsp;13</span><span>,</span><span>--</span></li>
+    <li><div>
+        <span>&euro;&nbsp;14</span>,<span>-- </span>
+        </div>
+    </li>
+</ol>
 <label for="s">Option to&nbsp;choose</label>
 <select id="s">
     <option value="1">Option 1</option>
@@ -52,27 +66,44 @@ This test ensures we can work with lists and select boxes. We use a mock server 
 
 Ensure we use our custom list formatting.
 
-|script     |list fixture|
-|display lists numbered  |
-|add        |1st         |
-|add        |2nd         |
-|add        |4th         |
-|$ul=       |copy list   |
-|set value  |3rd  |at |1 |
-|$ol=       |copy list   |
-|reset                   |
-|add        |Option 6    |
-|add        |Option 7    |
-|$selected= |copy list   |
-|reset                   |
-|add        |Option 1    |
-|add        |Option 3    |
-|add        |Option 4    |
-|$available=|copy list   |
+|script      |list fixture|
+|display lists numbered   |
+|add         |1st         |
+|add         |2nd         |
+|add         |4th         |
+|$ul=        |copy list   |
+|set value   |3rd|at|1    |
+|$ol=        |copy list   |
+|reset                    |
+|add         |Option 6    |
+|add         |Option 7    |
+|$selected=  |copy list   |
+|reset                    |
+|add         |Option 1    |
+|add         |Option 3    |
+|add         |Option 4    |
+|$available= |copy list   |
+|reset                    |
+|add         |10th        |
+|add         |11 th       |
+|add         |!-12
+th-!   |
+|add         |€ 13,--     |
+|add         |€ 14,--     |
+|$multiline= |copy list   |
+|reset                    |
+|add         |10th        |
+|add         |11 th       |
+|add         |12 th       |
+|add         |€ 13,--     |
+|add         |€ 14,--     |
+|$multiline2=|copy list   |
 
 |script                |browser test                                            |
 |open                  |$url                                                    |
 |seconds before timeout|1                                                       |
+|check                 |values of            |id=multiline     |$multiline      |
+|check                 |normalized values of |id=multiline     |$multiline2     |
 |check                 |value of             |Option to choose |Option 3        |
 |select                |Option 1             |for              |Option to choose|
 |click if available    |Option 4                                                |

@@ -1177,6 +1177,38 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public ArrayList<String> normalizedValuesOf(String place) {
+        return normalizedValuesFor(place);
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public ArrayList<String> normalizedValuesOfIn(String place, String container) {
+        return normalizedValuesForIn(place, container);
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public ArrayList<String> normalizedValuesFor(String place) {
+        return normalizedValuesForIn(place, null);
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public ArrayList<String> normalizedValuesForIn(String place, String container) {
+        ArrayList<String> values = valuesForIn(place, container);
+        return normalizeValues(values);
+    }
+
+    protected ArrayList<String> normalizeValues(ArrayList<String> values) {
+        if (values != null) {
+            for (int i = 0; i < values.size(); i++) {
+                String value = values.get(i);
+                String normalized = XPathBy.getNormalizedText(value);
+                values.set(i, normalized);
+            }
+        }
+        return values;
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public Integer numberFor(String place) {
         Integer number = null;
         WebElement element = findElement(ListItemBy.numbered(place));
