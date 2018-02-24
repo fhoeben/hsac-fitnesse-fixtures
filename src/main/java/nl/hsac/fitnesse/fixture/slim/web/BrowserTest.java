@@ -1051,6 +1051,21 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String normalizedValueForIn(String place, String container) {
         String value = valueForIn(place, container);
+        return normalizeValue(value);
+    }
+
+    protected ArrayList<String> normalizeValues(ArrayList<String> values) {
+        if (values != null) {
+            for (int i = 0; i < values.size(); i++) {
+                String value = values.get(i);
+                String normalized = normalizeValue(value);
+                values.set(i, normalized);
+            }
+        }
+        return values;
+    }
+
+    protected String normalizeValue(String value) {
         return XPathBy.getNormalizedText(value);
     }
 
@@ -1195,17 +1210,6 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     public ArrayList<String> normalizedValuesForIn(String place, String container) {
         ArrayList<String> values = valuesForIn(place, container);
         return normalizeValues(values);
-    }
-
-    protected ArrayList<String> normalizeValues(ArrayList<String> values) {
-        if (values != null) {
-            for (int i = 0; i < values.size(); i++) {
-                String value = values.get(i);
-                String normalized = XPathBy.getNormalizedText(value);
-                values.set(i, normalized);
-            }
-        }
-        return values;
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
