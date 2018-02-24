@@ -1192,6 +1192,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return doInContainer(container, () -> numberFor(place));
     }
 
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public ArrayList<String> availableOptionsFor(String place) {
         ArrayList<String> result = null;
         WebElement element = getElementToSelectFor(place);
