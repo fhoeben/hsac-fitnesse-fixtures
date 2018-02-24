@@ -1288,6 +1288,21 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return valueFor(by);
     }
 
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public String normalizedValueOfColumnNumberInRowNumber(int columnIndex, int rowIndex) {
+        return normalizeValue(valueOfColumnNumberInRowNumber(columnIndex, rowIndex));
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public String normalizedValueOfInRowNumber(String requestedColumnName, int rowIndex) {
+        return normalizeValue(valueOfInRowNumber(requestedColumnName, rowIndex));
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public String normalizedValueOfInRowWhereIs(String requestedColumnName, String selectOnColumn, String selectOnValue) {
+        return normalizeValue(valueOfInRowWhereIs(requestedColumnName, selectOnColumn, selectOnValue));
+    }
+
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
     public boolean rowExistsWhereIs(String selectOnColumn, String selectOnValue) {
         return findElement(GridBy.rowWhereIs(selectOnColumn, selectOnValue)) != null;
