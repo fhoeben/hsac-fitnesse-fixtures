@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.entity.ContentType;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -70,19 +71,20 @@ public class JsonHttpTest extends HttpTest {
     }
 
     public Object elementOfJsonPath(int index, String path) {
-        List<Object> all = getAllMatches(path);
+        List<Object> all = listJsonPathMatches(path);
         return all.get(index);
     }
 
     public int jsonPathCount(String path) {
-        List<Object> all = getAllMatches(path);
+        List<Object> all = listJsonPathMatches(path);
         return all.size();
     }
 
-    protected List<Object> getAllMatches(String path) {
+    public ArrayList<Object> listJsonPathMatches(String path) {
         String responseString = getResponseBody();
         String jsonPath = getPathExpr(path);
-        return getPathHelper().getAllJsonPath(responseString, jsonPath);
+        List<Object> results = getPathHelper().getAllJsonPath(responseString, jsonPath);
+        return results instanceof ArrayList? (ArrayList<Object>) results : new ArrayList<>(results);
     }
 
     protected String getResponseBody() {
@@ -101,7 +103,7 @@ public class JsonHttpTest extends HttpTest {
      */
     public String allJsonPathMatches(String expr) {
         String result = null;
-        List<Object> allJsonPath = getAllMatches(expr);
+        List<Object> allJsonPath = listJsonPathMatches(expr);
         if (allJsonPath != null && !allJsonPath.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             sb.append("<div><ul>");

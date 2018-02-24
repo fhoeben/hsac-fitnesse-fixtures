@@ -3,6 +3,7 @@ package nl.hsac.fitnesse.fixture.slim;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,7 +44,7 @@ public class XmlHttpTest extends HttpTest {
      */
     public String allXPathMatches(String xPathExpr) {
         String result = null;
-        List<String> allXPath = getResponse().getAllXPath(xPathExpr);
+        List<String> allXPath = listXPathMatches(xPathExpr);
         if (allXPath != null && !allXPath.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             sb.append("<div><ul>");
@@ -56,6 +57,11 @@ public class XmlHttpTest extends HttpTest {
             result = sb.toString();
         }
         return result;
+    }
+
+    public ArrayList<String> listXPathMatches(String xPathExpr) {
+        List<String> results = getResponse().getAllXPath(xPathExpr);
+        return results instanceof ArrayList? (ArrayList<String>) results : new ArrayList<>(results);
     }
 
     /**
