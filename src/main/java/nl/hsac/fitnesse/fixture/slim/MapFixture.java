@@ -162,15 +162,15 @@ public class MapFixture extends SlimFixtureWithMap {
     /**
      * @return all values in the map.
      */
-    public List<String> allKeys() {
-        return new ArrayList<String>(getCurrentValues().keySet());
+    public ArrayList<String> allKeys() {
+        return new ArrayList<>(getCurrentValues().keySet());
     }
 
     /**
      * @return all values in the map.
      */
-    public List<Object> allValues() {
-        return new ArrayList<Object>(getCurrentValues().values());
+    public ArrayList<Object> allValues() {
+        return new ArrayList<>(getCurrentValues().values());
     }
 
     /**
