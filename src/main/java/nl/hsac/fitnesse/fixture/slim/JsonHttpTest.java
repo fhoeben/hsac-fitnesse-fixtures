@@ -15,11 +15,15 @@ public class JsonHttpTest extends HttpTest {
     public static final String JSON_CONTENT_TYPE = ContentType.APPLICATION_JSON.toString();
 
     public boolean postValuesAsJsonTo(String serviceUrl) {
-        return postToImpl(jsonEncodeCurrentValues(), serviceUrl, getContentTypeForJson());
+        return sendToImpl(jsonEncodeCurrentValues(), serviceUrl, getContentTypeForJson(), "POST");
     }
 
     public boolean putValuesAsJsonTo(String serviceUrl) {
-        return putToImpl(jsonEncodeCurrentValues(), serviceUrl, getContentTypeForJson());
+        return sendToImpl(jsonEncodeCurrentValues(), serviceUrl, getContentTypeForJson(), "PUT");
+    }
+
+    public boolean deleteValuesAsJsonTo(String serviceUrl) {
+        return sendToImpl(jsonEncodeCurrentValues(), serviceUrl, getContentTypeForJson(), "DELETE");
     }
 
     protected String jsonEncodeCurrentValues() {
