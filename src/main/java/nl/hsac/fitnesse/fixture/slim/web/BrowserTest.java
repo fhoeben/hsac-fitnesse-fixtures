@@ -11,6 +11,7 @@ import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
 import nl.hsac.fitnesse.fixture.util.ReflectionHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.PageSourceSaver;
+import nl.hsac.fitnesse.fixture.util.selenium.SelectHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.StaleContextException;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ContainerBy;
@@ -35,7 +36,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
@@ -1121,11 +1121,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         String result = null;
         if (element != null) {
             if (isSelect(element)) {
-                Select s = new Select(element);
-                List<WebElement> options = s.getAllSelectedOptions();
-                if (options.size() > 0) {
-                    result = getElementText(options.get(0));
-                }
+                WebElement selected = getFirstSelectedOption(element);
+                result = getElementText(selected);
             } else {
                 String elementType = element.getAttribute("type");
                 if ("checkbox".equals(elementType)
@@ -1144,8 +1141,18 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return result;
     }
 
-    private boolean isSelect(WebElement element) {
-        return "select".equalsIgnoreCase(element.getTagName());
+    protected WebElement getFirstSelectedOption(WebElement selectElement) {
+        SelectHelper s = new SelectHelper(selectElement);
+        return s.getFirstSelectedOption();
+    }
+
+    protected List<WebElement> getSelectedOptions(WebElement selectElement) {
+        SelectHelper s = new SelectHelper(selectElement);
+        return s.getAllSelectedOptions();
+    }
+
+    protected boolean isSelect(WebElement element) {
+        return SelectHelper.isSelect(element);
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
@@ -1179,8 +1186,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
                     }
                 }
             } else if (isSelect(element)) {
-                Select s = new Select(element);
-                List<WebElement> options = s.getAllSelectedOptions();
+                List<WebElement> options = getSelectedOptions(element);
                 for (WebElement item : options) {
                     values.add(getElementText(item));
                 }
