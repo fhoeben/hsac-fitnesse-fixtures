@@ -1,57 +1,37 @@
 package nl.hsac.fitnesse.fixture.util.selenium;
 
-import org.openqa.selenium.NoSuchElementException;
+import nl.hsac.fitnesse.fixture.util.selenium.by.ConstantBy;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
- * Customization of standard select helper.
+ * Helper to determine which value(s) of a select is currently selected.
  */
-public class SelectHelper extends Select {
+public class SelectHelper {
+    private static final By SELECTED_OPTIONS_BY = ConstantBy.getSelectedOptionsBy();
+    private final WebElement selectElement;
+
+    public SelectHelper(WebElement element) {
+        selectElement = element;
+    }
+
+    public WebElement getFirstSelectedOption() {
+        List<WebElement> selectedOptions = getAllSelectedOptions();
+        return selectedOptions.isEmpty()? null : selectedOptions.get(0);
+    }
+
+    public List<WebElement> getAllSelectedOptions() {
+        return selectElement.findElements(SELECTED_OPTIONS_BY);
+    }
+
     /**
      * @param element element to check
      * @return true if element is indeed a 'select'.
      */
     public static boolean isSelect(WebElement element) {
-        if (element == null) {
-            return false;
-        }
-
         String tagName = element.getTagName();
         return tagName != null && "select".equals(tagName.toLowerCase());
-    }
-
-    public SelectHelper(WebElement element) {
-        super(element);
-    }
-
-    @Override
-    public WebElement getFirstSelectedOption() {
-        WebElement result = null;
-        try {
-            result = super.getFirstSelectedOption();
-        } catch (NoSuchElementException e) {
-            // ignore
-        }
-        return result;
-    }
-
-    @Override
-    public List<WebElement> getAllSelectedOptions() {
-        List<WebElement> result;
-        if (isMultiple()) {
-            result = super.getAllSelectedOptions();
-        } else {
-            WebElement selectedOption = getFirstSelectedOption();
-            if (selectedOption == null) {
-                result = Collections.emptyList();
-            } else {
-                result = Collections.singletonList(selectedOption);
-            }
-        }
-        return result;
     }
 }
