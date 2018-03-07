@@ -14,6 +14,7 @@ public class ConstantBy {
     private static final BestMatchBy RESET_BUTTON_BY = new BestMatchBy(By.cssSelector("input[type='reset']:not([value])"));
     private static final BestMatchBy CHECKBOX_BY = new BestMatchBy(By.cssSelector("input[type='checkbox']"));
     private static final SingleElementOrNullBy NULL_BY = new FindsNothing();
+    private static final By SELECTED_OPTIONS_BY = By.cssSelector("option:checked");
 
     /**
      * @return By which will return all frames and iframes.
@@ -78,6 +79,13 @@ public class ConstantBy {
      */
     public static BestMatchBy checkbox() {
         return CHECKBOX_BY;
+    }
+
+    /**
+     * @return by which returns all option elements that are selected.
+     */
+    public static By getSelectedOptionsBy() {
+        return SELECTED_OPTIONS_BY;
     }
 
     /**
