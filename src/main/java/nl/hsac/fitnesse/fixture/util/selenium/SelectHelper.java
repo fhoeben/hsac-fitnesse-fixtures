@@ -32,6 +32,6 @@ public class SelectHelper {
      */
     public static boolean isSelect(WebElement element) {
         String tagName = element.getTagName();
-        return tagName != null && "select".equals(tagName.toLowerCase());
+        return "select".equalsIgnoreCase(tagName);
     }
 }
