@@ -48,6 +48,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -884,7 +885,7 @@ public class SeleniumHelper<T extends WebElement> {
      */
     public <T> T waitUntil(int maxSecondsToWait, ExpectedCondition<T> condition) {
         ExpectedCondition<T> cHandlingStale = getConditionIgnoringStaleElement(condition);
-        FluentWait<WebDriver> wait = waitDriver().withTimeout(maxSecondsToWait, TimeUnit.SECONDS);
+        FluentWait<WebDriver> wait = waitDriver().withTimeout(Duration.ofSeconds(maxSecondsToWait));
         return wait.until(cHandlingStale);
     }
 
