@@ -142,21 +142,7 @@ public class HttpTest extends SlimFixtureWithMap {
      * @return true if call could be made and response did not indicate error.
      */
     public boolean postTemplateTo(String serviceUrl, String aContentType) {
-        boolean result;
-        resetResponse();
-        if (template == null) {
-            throw new StopTestException("No template available to use in post");
-        } else {
-            String url = getUrl(serviceUrl);
-            try {
-                storeLastCall("POST", serviceUrl);
-                getEnvironment().doHttpPost(url, template, getCurrentValues(), response, headerValues, aContentType);
-            } catch (Throwable t) {
-                throw new StopTestException("Unable to get response from POST to: " + url, t);
-            }
-            result = postProcessResponse();
-        }
-        return result;
+        return sendTemplateTo(serviceUrl, aContentType, "POST");
     }
 
     /**
@@ -216,9 +202,21 @@ public class HttpTest extends SlimFixtureWithMap {
         String url = getUrl(serviceUrl);
         try {
             storeLastCall(method, serviceUrl);
-            getEnvironment().doHttpPost(url, response, headerValues, aContentType);
+            switch (method) {
+                case "POST":
+                    getEnvironment().doHttpPost(url, response, headerValues, aContentType);
+                    break;
+                case "PUT":
+                    getEnvironment().doHttpPut(url, response, headerValues, aContentType);
+                    break;
+                case "DELETE":
+                    getEnvironment().doHttpPut(url, response, headerValues, aContentType);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported method: " + method);
+            }
         } catch (Throwable t) {
-            throw new StopTestException("Unable to get response from POST to: " + url, t);
+            throw new StopTestException("Unable to get response from " + method + " to: " + url, t);
         }
         result = postProcessResponse();
         return result;
@@ -265,24 +263,36 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     /**
-     * Sends HTTP call template with current values to service endpoint.
+     * Sends HTTP method call template with current values to service endpoint.
      * @param serviceUrl service endpoint to send request to.
      * @param aContentType content type to use for post.
-     * @param method HTTP call method to use
+     * @param method HTTP method to use
      * @return true if call could be made and response did not indicate error.
      */
     public boolean sendTemplateTo(String serviceUrl, String aContentType, String method) {
         boolean result;
         resetResponse();
         if (template == null) {
-            throw new StopTestException("No template available to use in put");
+            throw new StopTestException("No template available to use in " + method);
         } else {
             String url = getUrl(serviceUrl);
             try {
                 storeLastCall(method, serviceUrl);
-                getEnvironment().doHttpPut(url, template, getCurrentValues(), response, headerValues, aContentType);
+                switch (method) {
+                    case "POST":
+                        getEnvironment().doHttpPost(url, template, getCurrentValues(), response, headerValues, aContentType);
+                        break;
+                    case "PUT":
+                        getEnvironment().doHttpPut(url, template, getCurrentValues(), response, headerValues, aContentType);
+                        break;
+                    case "DELETE":
+                        getEnvironment().doDelete(url, template, getCurrentValues(), response, headerValues, aContentType);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unsupported method: " + method);
+                }
             } catch (Throwable t) {
-                throw new StopTestException("Unable to get response from PUT to: " + url, t);
+                throw new StopTestException("Unable to get response from " + method + " to: " + url, t);
             }
             result = postProcessResponse();
         }
