@@ -793,7 +793,11 @@ public class HttpTest extends SlimFixtureWithMap {
                 putToImpl(response.getRequest(), lastUrl);
                 break;
             case "DELETE":
-                delete(lastUrl);
+                if (lastUrl.equals(response.getRequest())) {
+                    delete(lastUrl);
+                } else {
+                    deleteToImpl(response.getRequest(), lastUrl);
+                }
                 break;
             case "GET_NO_REDIRECT":
                 getImpl(lastUrl, false);
