@@ -176,7 +176,7 @@ public class HttpTestTest {
      * Test get
      */
     @Test
-    public void testGet() throws Exception {
+    public void testGet() {
         HttpTest httpTest = new HttpTest();
         XmlHttpResponse req1 = checkCall(url -> httpTest.getFrom(url));
         assertEquals("GET", httpTest.getResponse().getMethod());
@@ -188,7 +188,7 @@ public class HttpTestTest {
      * Test post
      */
     @Test
-    public void testPost() throws Exception {
+    public void testPost() {
         HttpTest httpTest = new HttpTest();
         XmlHttpResponse req1 = checkCall(url -> httpTest.postTo("a", url));
         assertEquals("POST", httpTest.getResponse().getMethod());
@@ -200,7 +200,7 @@ public class HttpTestTest {
      * Test put
      */
     @Test
-    public void testPut() throws Exception {
+    public void testPut() {
         HttpTest httpTest = new HttpTest();
         XmlHttpResponse req1 = checkCall(url -> httpTest.putTo("b", url));
         assertEquals("PUT", httpTest.getResponse().getMethod());
@@ -212,7 +212,7 @@ public class HttpTestTest {
      * Test delete with body
      */
     @Test
-    public void testDeleteWithBody() throws Exception {
+    public void testDeleteWithBody() {
         HttpTest httpTest = new HttpTest();
         XmlHttpResponse req1 = checkCall(url -> httpTest.deleteWith(url, "a=1"));
         assertEquals("DELETE", httpTest.getResponse().getMethod());
@@ -224,7 +224,7 @@ public class HttpTestTest {
      * Test delete without body
      */
     @Test
-    public void testDeleteWithoutBody() throws Exception {
+    public void testDeleteWithoutBody() {
         HttpTest httpTest = new HttpTest();
         XmlHttpResponse req1 = checkCall(url -> httpTest.delete(url));
         assertEquals("DELETE", httpTest.getResponse().getMethod());
@@ -236,7 +236,7 @@ public class HttpTestTest {
      * Test post with template
      */
     @Test
-    public void testPostWithTemplate() throws Exception {
+    public void testPostWithTemplate() {
         HttpTest httpTest = setupHttpTestWithTemplate();
 
         XmlHttpResponse req1 = checkCall(url -> httpTest.postTemplateTo(url));
@@ -248,7 +248,7 @@ public class HttpTestTest {
      * Test put with template
      */
     @Test
-    public void testPutWithTemplate() throws Exception {
+    public void testPutWithTemplate() {
         HttpTest httpTest = setupHttpTestWithTemplate();
 
         XmlHttpResponse req1 = checkCall(url -> httpTest.putTemplateTo(url));
@@ -260,7 +260,7 @@ public class HttpTestTest {
      * Test delete with template
      */
     @Test
-    public void testDeleteWithTemplate() throws Exception {
+    public void testDeleteWithTemplate() {
         HttpTest httpTest = setupHttpTestWithTemplate();
 
         XmlHttpResponse req1 = checkCall(url -> httpTest.deleteTemplateTo(url));
