@@ -1,10 +1,12 @@
 package nl.hsac.fitnesse.fixture.slim;
 
 
+import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -168,5 +170,82 @@ public class HttpTestTest {
 
         mockXmlServerSetup.addResponse("<hello/>");
         return serverUrl;
+    }
+
+    /**
+     * Test get
+     */
+    @Test
+    public void testGet() throws Exception {
+        HttpTest httpTest = new HttpTest();
+        XmlHttpResponse req1 = checkCall(url -> httpTest.getFrom(url));
+        assertEquals("GET", httpTest.getResponse().getMethod());
+        assertEquals("GET", req1.getMethod());
+        assertEquals("GET: /FitNesseMock", req1.getRequest());
+    }
+
+    /**
+     * Test post
+     */
+    @Test
+    public void testPost() throws Exception {
+        HttpTest httpTest = new HttpTest();
+        XmlHttpResponse req1 = checkCall(url -> httpTest.postTo("a", url));
+        assertEquals("POST", httpTest.getResponse().getMethod());
+        assertEquals("POST", req1.getMethod());
+        assertEquals("a", req1.getRequest());
+    }
+
+    /**
+     * Test put
+     */
+    @Test
+    public void testPut() throws Exception {
+        HttpTest httpTest = new HttpTest();
+        XmlHttpResponse req1 = checkCall(url -> httpTest.putTo("b", url));
+        assertEquals("PUT", httpTest.getResponse().getMethod());
+        assertEquals("PUT", req1.getMethod());
+        assertEquals("b", req1.getRequest());
+    }
+
+    /**
+     * Test delete with body
+     */
+    @Test
+    public void testDeleteWithBody() throws Exception {
+        HttpTest httpTest = new HttpTest();
+        XmlHttpResponse req1 = checkCall(url -> httpTest.deleteWith(url, "a=1"));
+        assertEquals("DELETE", httpTest.getResponse().getMethod());
+        assertEquals("DELETE", req1.getMethod());
+        assertEquals("a=1", req1.getRequest());
+    }
+
+    /**
+     * Test delete without body
+     */
+    @Test
+    public void testDeleteWithoutBody() throws Exception {
+        HttpTest httpTest = new HttpTest();
+        XmlHttpResponse req1 = checkCall(url -> httpTest.delete(url));
+        assertEquals("DELETE", httpTest.getResponse().getMethod());
+        assertEquals("DELETE", req1.getMethod());
+        assertEquals("DELETE: /FitNesseMock", req1.getRequest());
+    }
+
+    private XmlHttpResponse checkCall(Function<String, Boolean> call) {
+        MockXmlServerSetup mockXmlServerSetup = new MockXmlServerSetup();
+        mockXmlServerSetup.addResponse("hallo");
+
+        try {
+            String serverUrl = mockXmlServerSetup.getMockServerUrl();
+
+            boolean result = call.apply(serverUrl);
+            assertTrue(result);
+
+            return mockXmlServerSetup.getResponseList().get(0);
+        } finally {
+            mockXmlServerSetup.stop();
+        }
+
     }
 }

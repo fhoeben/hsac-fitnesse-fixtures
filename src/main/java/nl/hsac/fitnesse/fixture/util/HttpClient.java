@@ -175,6 +175,7 @@ public class HttpClient {
             }
 
             HttpContext context = createContext(response);
+            response.setMethod(method.getMethod());
 
             startTime = currentTimeMillis();
             resp = executeMethod(context, method);

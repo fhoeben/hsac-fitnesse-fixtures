@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.fixture.util;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpHandler;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.ParseException;
 import org.apache.http.entity.ContentType;
 import org.apache.http.protocol.HTTP;
@@ -182,13 +183,18 @@ public class HttpServer<T extends HttpResponse> {
                 OutputStream os = null;
                 try {
                     String request;
-                    if ("POST".equals(he.getRequestMethod()) || "PUT".equals(he.getRequestMethod())) {
-                        InputStream is = he.getRequestBody();
-                        request = FileUtil.streamToString(is, String.format("http %s request", he.getRequestMethod()));
+                    String method = he.getRequestMethod();
+                    InputStream is = he.getRequestBody();
+                    String body = IOUtils.toString(is);
+
+                    if ("POST".equals(method) || "PUT".equals(method)
+                            || ("DELETE".equals(method) && !"".equals(body))) {
+                        request = body;
                     } else {
-                        request = String.format("%s: %s", he.getRequestMethod(), he.getRequestURI().toString());
+                        request = String.format("%s: %s", method, he.getRequestURI().toString());
                     }
                     aResponse.setRequest(request);
+                    aResponse.setMethod(method);
 
                     Headers heHeaders = he.getResponseHeaders();
                     Map<String, Object> responseHeaders = aResponse.getResponseHeaders();
