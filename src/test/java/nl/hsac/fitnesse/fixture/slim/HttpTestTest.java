@@ -263,7 +263,7 @@ public class HttpTestTest {
     public void testDeleteWithTemplate() {
         HttpTest httpTest = setupHttpTestWithTemplate();
 
-        XmlHttpResponse req1 = checkCall(url -> httpTest.deleteTemplateTo(url));
+        XmlHttpResponse req1 = checkCall(url -> httpTest.deleteWithTemplate(url));
         assertEquals("DELETE", httpTest.getResponse().getMethod());
         checkTemplateRequestBody(httpTest.getResponse().getMethod(), req1);
     }

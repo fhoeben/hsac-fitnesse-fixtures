@@ -258,7 +258,7 @@ public class HttpTest extends SlimFixtureWithMap {
      * @param serviceUrl service endpoint to send request to.
      * @return true if call could be made and response did not indicate error.
      */
-    public boolean deleteTemplateTo(String serviceUrl) {
+    public boolean deleteWithTemplate(String serviceUrl) {
         return sendTemplateTo(serviceUrl, getContentType(), "DELETE");
     }
 
