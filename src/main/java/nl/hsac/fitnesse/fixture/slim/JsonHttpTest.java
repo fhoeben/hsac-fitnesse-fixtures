@@ -22,7 +22,7 @@ public class JsonHttpTest extends HttpTest {
         return sendToImpl(jsonEncodeCurrentValues(), serviceUrl, getContentTypeForJson(), "PUT");
     }
 
-    public boolean deleteValuesAsJsonTo(String serviceUrl) {
+    public boolean deleteWithValuesAsJson(String serviceUrl) {
         return sendToImpl(jsonEncodeCurrentValues(), serviceUrl, getContentTypeForJson(), "DELETE");
     }
 

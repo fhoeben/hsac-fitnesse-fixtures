@@ -268,7 +268,7 @@ public class HttpTestTest {
         checkTemplateRequestBody(httpTest.getResponse().getMethod(), req1);
     }
 
-    private XmlHttpResponse checkCall(Function<String, Boolean> call) {
+    static XmlHttpResponse checkCall(Function<String, Boolean> call) {
         MockXmlServerSetup mockXmlServerSetup = new MockXmlServerSetup();
         mockXmlServerSetup.addResponse("hallo");
 
@@ -293,7 +293,6 @@ public class HttpTestTest {
 
     private void checkTemplateRequestBody(String method, XmlHttpResponse req1) {
         assertEquals(method, req1.getMethod());
-
 
         assertEquals("<s11:Envelope xmlns:s11=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "\t<s11:Body>\n" +
