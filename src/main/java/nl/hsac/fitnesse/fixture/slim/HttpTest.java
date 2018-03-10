@@ -210,7 +210,7 @@ public class HttpTest extends SlimFixtureWithMap {
                     getEnvironment().doHttpPut(url, response, headerValues, aContentType);
                     break;
                 case "DELETE":
-                    getEnvironment().doHttpPut(url, response, headerValues, aContentType);
+                    getEnvironment().doDelete(url, response, headerValues, aContentType);
                     break;
                 default:
                     throw new IllegalArgumentException("Unsupported method: " + method);
