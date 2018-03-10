@@ -9,6 +9,7 @@ import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
@@ -26,6 +27,7 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -146,6 +148,21 @@ public class HttpClient {
     public void delete(String url, HttpResponse response, Map<String, Object> headers) {
         HttpDelete method = new HttpDelete(url);
         getResponse(url, response, method, headers);
+    }
+
+    /**
+     * @param url URL of service
+     * @param response response pre-populated with request to send. Response content and
+     *          statusCode will be filled.
+     * @param headers http headers to add
+     * @param type contentType for request.
+     */
+    public void delete(String url, HttpResponse response, Map<String, Object> headers, String type) {
+        HttpDeleteWithBody methodPost = new HttpDeleteWithBody(url);
+        ContentType contentType = ContentType.parse(type);
+        HttpEntity ent = new StringEntity(response.getRequest(), contentType);
+        methodPost.setEntity(ent);
+        getResponse(url, response, methodPost, headers);
     }
 
     protected void getResponse(String url, HttpResponse response, HttpRequestBase method, Map<String, Object> headers) {
@@ -301,5 +318,18 @@ public class HttpClient {
      */
     public void setHttpClient(org.apache.http.client.HttpClient httpClient) {
         this.httpClient = httpClient;
+    }
+
+    /**
+     * Custom DELETE entity, which allows a body to be sent.
+     */
+    public static class HttpDeleteWithBody extends HttpEntityEnclosingRequestBase {
+        public String getMethod() {
+            return HttpDelete.METHOD_NAME;
+        }
+
+        public HttpDeleteWithBody(final String uri) {
+            setURI(URI.create(uri));
+        }
     }
 }
