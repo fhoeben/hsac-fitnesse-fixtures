@@ -419,6 +419,32 @@ public class Environment {
     }
 
     /**
+     * Performs DELETE to supplied url of result of applying template with model.
+     * @param url url to delete.
+     * @param templateName name of template to use.
+     * @param model model for template.
+     * @param result result to populate with response.
+     * @param headers headers to add.
+     * @param contentType contentType for request.
+     */
+    public void doDelete(String url, String templateName, Object model, HttpResponse result, Map<String, Object> headers, String contentType) {
+        String request = processTemplate(templateName, model);
+        result.setRequest(request);
+        doDelete(url, result, headers, contentType);
+    }
+
+    /**
+     * Performs DELETE to supplied url of result's request.
+     * @param url url to delete.
+     * @param result result containing request, its response will be filled.
+     * @param headers headers to add.
+     * @param contentType contentType for request.
+     */
+    public void doDelete(String url, HttpResponse result, Map<String, Object> headers, String contentType) {
+        httpClient.delete(url, result, headers, contentType);
+    }
+
+    /**
      * @return client to use for HTTP calls.
      */
     public HttpClient getHttpClient() {

@@ -1,9 +1,11 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 import org.apache.http.entity.ContentType;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;
+import static nl.hsac.fitnesse.fixture.slim.HttpTestTest.checkCall;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -74,4 +76,38 @@ public class JsonHttpTestTest {
         contentType = fixture.getContentTypeForJson();
         assertEquals(typeSet, contentType);
     }
+
+    @Test
+    public void testPostValuesAsJson() {
+        JsonHttpTest jsonHttpTestTest = new JsonHttpTest();
+        jsonHttpTestTest.setValueFor("1", "A");
+        jsonHttpTestTest.setValueFor("2", "B");
+        XmlHttpResponse req1 = checkCall(url -> jsonHttpTestTest.postValuesAsJsonTo(url));
+        assertEquals("POST", jsonHttpTestTest.getResponse().getMethod());
+        assertEquals("POST", req1.getMethod());
+        assertEquals("{\"A\":\"1\",\"B\":\"2\"}", req1.getRequest());
+    }
+
+    @Test
+    public void testPutValuesAsJson() {
+        JsonHttpTest jsonHttpTestTest = new JsonHttpTest();
+        jsonHttpTestTest.setValueFor("g", "G");
+        jsonHttpTestTest.setValueFor("s", "S");
+        XmlHttpResponse req1 = checkCall(url -> jsonHttpTestTest.putValuesAsJsonTo(url));
+        assertEquals("PUT", jsonHttpTestTest.getResponse().getMethod());
+        assertEquals("PUT", req1.getMethod());
+        assertEquals("{\"S\":\"s\",\"G\":\"g\"}", req1.getRequest());
+    }
+
+    @Test
+    public void testDeleteValuesAsJson() {
+        JsonHttpTest jsonHttpTestTest = new JsonHttpTest();
+        jsonHttpTestTest.setValueFor("3", "C");
+        jsonHttpTestTest.setValueFor("4", "d");
+        XmlHttpResponse req1 = checkCall(url -> jsonHttpTestTest.deleteWithValuesAsJson(url));
+        assertEquals("DELETE", jsonHttpTestTest.getResponse().getMethod());
+        assertEquals("DELETE", req1.getMethod());
+        assertEquals("{\"C\":\"3\",\"d\":\"4\"}", req1.getRequest());
+    }
+
 }

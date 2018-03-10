@@ -14,6 +14,7 @@ public class HttpResponse {
     private final static Map<String, HttpResponse> INSTANCES = new ConcurrentHashMap<>();
 
     private Map<String, Object> responseHeaders = new LinkedHashMap<>();
+    private String method;
     private String request;
     protected String response;
     private int statusCode;
@@ -126,6 +127,14 @@ public class HttpResponse {
      */
     public void setResponseTime(long responseTime) {
         this.responseTime = responseTime;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
     }
 
     @Override

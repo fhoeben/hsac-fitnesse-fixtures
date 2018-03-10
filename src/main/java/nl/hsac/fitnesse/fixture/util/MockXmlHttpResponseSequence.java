@@ -148,6 +148,16 @@ public class MockXmlHttpResponseSequence extends HttpResponse {
         return currentResponse().getResponseHeaders();
     }
 
+    @Override
+    public String getMethod() {
+        return currentResponse().getMethod();
+    }
+
+    @Override
+    public void setMethod(String method) {
+        currentResponse().setMethod(method);
+    }
+
     protected XmlHttpResponse currentResponse() {
         if (currentIndex < 0) {
             throw new IllegalStateException("No 'current' response available. No requests received yet.");

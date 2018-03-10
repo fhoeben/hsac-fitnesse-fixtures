@@ -142,21 +142,7 @@ public class HttpTest extends SlimFixtureWithMap {
      * @return true if call could be made and response did not indicate error.
      */
     public boolean postTemplateTo(String serviceUrl, String aContentType) {
-        boolean result;
-        resetResponse();
-        if (template == null) {
-            throw new StopTestException("No template available to use in post");
-        } else {
-            String url = getUrl(serviceUrl);
-            try {
-                storeLastCall("POST", serviceUrl);
-                getEnvironment().doHttpPost(url, template, getCurrentValues(), response, headerValues, aContentType);
-            } catch (Throwable t) {
-                throw new StopTestException("Unable to get response from POST to: " + url, t);
-            }
-            result = postProcessResponse();
-        }
-        return result;
+        return sendTemplateTo(serviceUrl, aContentType, "POST");
     }
 
     /**
@@ -168,6 +154,17 @@ public class HttpTest extends SlimFixtureWithMap {
     public boolean postTo(String body, String serviceUrl) {
         String cleanedBody = cleanupBody(body);
         return postToImpl(cleanedBody, serviceUrl);
+    }
+
+    /**
+     * Sends HTTP DELETE body to service endpoint.
+     * @param body content to delete
+     * @param serviceUrl service endpoint to send body to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean deleteWith(String serviceUrl, String body) {
+        String cleanedBody = cleanupBody(body);
+        return deleteToImpl(cleanedBody, serviceUrl);
     }
 
     /**
@@ -191,19 +188,35 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     protected boolean postToImpl(String body, String serviceUrl) {
-        return postToImpl(body, serviceUrl, getContentType());
+        return sendToImpl(body, serviceUrl, getContentType(), "POST");
     }
 
-    protected boolean postToImpl(String body, String serviceUrl, String aContentType) {
+    protected boolean deleteToImpl(String body, String serviceUrl) {
+        return sendToImpl(body, serviceUrl, getContentType(), "DELETE");
+    }
+
+    protected boolean sendToImpl(String body, String serviceUrl, String aContentType, String method) {
         boolean result;
         resetResponse();
         response.setRequest(body);
         String url = getUrl(serviceUrl);
         try {
-            storeLastCall("POST", serviceUrl);
-            getEnvironment().doHttpPost(url, response, headerValues, aContentType);
+            storeLastCall(method, serviceUrl);
+            switch (method) {
+                case "POST":
+                    getEnvironment().doHttpPost(url, response, headerValues, aContentType);
+                    break;
+                case "PUT":
+                    getEnvironment().doHttpPut(url, response, headerValues, aContentType);
+                    break;
+                case "DELETE":
+                    getEnvironment().doDelete(url, response, headerValues, aContentType);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported method: " + method);
+            }
         } catch (Throwable t) {
-            throw new StopTestException("Unable to get response from POST to: " + url, t);
+            throw new StopTestException("Unable to get response from " + method + " to: " + url, t);
         }
         result = postProcessResponse();
         return result;
@@ -237,27 +250,49 @@ public class HttpTest extends SlimFixtureWithMap {
      * @return true if call could be made and response did not indicate error.
      */
     public boolean putTemplateTo(String serviceUrl) {
-        return putTemplateTo(serviceUrl, getContentType());
+        return sendTemplateTo(serviceUrl, getContentType(), "PUT");
     }
 
     /**
-     * Sends HTTP PUT template with current values to service endpoint.
+     * Sends HTTP DELETE template with current values to service endpoint.
      * @param serviceUrl service endpoint to send request to.
-     * @param aContentType content type to use for post.
      * @return true if call could be made and response did not indicate error.
      */
-    public boolean putTemplateTo(String serviceUrl, String aContentType) {
+    public boolean deleteWithTemplate(String serviceUrl) {
+        return sendTemplateTo(serviceUrl, getContentType(), "DELETE");
+    }
+
+    /**
+     * Sends HTTP method call template with current values to service endpoint.
+     * @param serviceUrl service endpoint to send request to.
+     * @param aContentType content type to use for post.
+     * @param method HTTP method to use
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean sendTemplateTo(String serviceUrl, String aContentType, String method) {
         boolean result;
         resetResponse();
         if (template == null) {
-            throw new StopTestException("No template available to use in put");
+            throw new StopTestException("No template available to use in " + method);
         } else {
             String url = getUrl(serviceUrl);
             try {
-                storeLastCall("PUT", serviceUrl);
-                getEnvironment().doHttpPut(url, template, getCurrentValues(), response, headerValues, aContentType);
+                storeLastCall(method, serviceUrl);
+                switch (method) {
+                    case "POST":
+                        getEnvironment().doHttpPost(url, template, getCurrentValues(), response, headerValues, aContentType);
+                        break;
+                    case "PUT":
+                        getEnvironment().doHttpPut(url, template, getCurrentValues(), response, headerValues, aContentType);
+                        break;
+                    case "DELETE":
+                        getEnvironment().doDelete(url, template, getCurrentValues(), response, headerValues, aContentType);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unsupported method: " + method);
+                }
             } catch (Throwable t) {
-                throw new StopTestException("Unable to get response from PUT to: " + url, t);
+                throw new StopTestException("Unable to get response from " + method + " to: " + url, t);
             }
             result = postProcessResponse();
         }
@@ -286,22 +321,7 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     protected boolean putToImpl(String body, String serviceUrl) {
-        return putToImpl(body, serviceUrl, getContentType());
-    }
-
-    protected boolean putToImpl(String body, String serviceUrl, String aContentType) {
-        boolean result;
-        resetResponse();
-        response.setRequest(body);
-        String url = getUrl(serviceUrl);
-        try {
-            storeLastCall("PUT", serviceUrl);
-            getEnvironment().doHttpPut(url, response, headerValues, aContentType);
-        } catch (Throwable t) {
-            throw new StopTestException("Unable to get response from PUT to: " + url, t);
-        }
-        result = postProcessResponse();
-        return result;
+        return sendToImpl(body, serviceUrl, getContentType(), "PUT");
     }
 
     protected String cleanupBody(String body) {
@@ -773,7 +793,11 @@ public class HttpTest extends SlimFixtureWithMap {
                 putToImpl(response.getRequest(), lastUrl);
                 break;
             case "DELETE":
-                delete(lastUrl);
+                if (lastUrl.equals(response.getRequest())) {
+                    delete(lastUrl);
+                } else {
+                    deleteToImpl(response.getRequest(), lastUrl);
+                }
                 break;
             case "GET_NO_REDIRECT":
                 getImpl(lastUrl, false);
