@@ -232,6 +232,42 @@ public class HttpTestTest {
         assertEquals("DELETE: /FitNesseMock", req1.getRequest());
     }
 
+    /**
+     * Test post with template
+     */
+    @Test
+    public void testPostWithTemplate() throws Exception {
+        HttpTest httpTest = setupHttpTestWithTemplate();
+
+        XmlHttpResponse req1 = checkCall(url -> httpTest.postTemplateTo(url));
+        assertEquals("POST", httpTest.getResponse().getMethod());
+        checkTemplateRequestBody(httpTest.getResponse().getMethod(), req1);
+    }
+
+    /**
+     * Test put with template
+     */
+    @Test
+    public void testPutWithTemplate() throws Exception {
+        HttpTest httpTest = setupHttpTestWithTemplate();
+
+        XmlHttpResponse req1 = checkCall(url -> httpTest.putTemplateTo(url));
+        assertEquals("PUT", httpTest.getResponse().getMethod());
+        checkTemplateRequestBody(httpTest.getResponse().getMethod(), req1);
+    }
+
+    /**
+     * Test delete with template
+     */
+    @Test
+    public void testDeleteWithTemplate() throws Exception {
+        HttpTest httpTest = setupHttpTestWithTemplate();
+
+        XmlHttpResponse req1 = checkCall(url -> httpTest.deleteTemplateTo(url));
+        assertEquals("DELETE", httpTest.getResponse().getMethod());
+        checkTemplateRequestBody(httpTest.getResponse().getMethod(), req1);
+    }
+
     private XmlHttpResponse checkCall(Function<String, Boolean> call) {
         MockXmlServerSetup mockXmlServerSetup = new MockXmlServerSetup();
         mockXmlServerSetup.addResponse("hallo");
@@ -246,6 +282,25 @@ public class HttpTestTest {
         } finally {
             mockXmlServerSetup.stop();
         }
+    }
 
+    private HttpTest setupHttpTestWithTemplate() {
+        HttpTest httpTest = new HttpTest();
+        httpTest.template("samplePost.ftl.xml");
+        httpTest.setValueFor("Oosterhout", "countryName");
+        return httpTest;
+    }
+
+    private void checkTemplateRequestBody(String method, XmlHttpResponse req1) {
+        assertEquals(method, req1.getMethod());
+
+
+        assertEquals("<s11:Envelope xmlns:s11=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+                "\t<s11:Body>\n" +
+                "\t\t<ns1:GetWeather xmlns:ns1=\"http://www.webserviceX.NET\">\n" +
+                "\t\t\t\t\t\t<ns1:CountryName>Oosterhout</ns1:CountryName>\n" +
+                "\t\t</ns1:GetWeather>\n" +
+                "\t</s11:Body>\n" +
+                "</s11:Envelope>\n", req1.getRequest());
     }
 }
