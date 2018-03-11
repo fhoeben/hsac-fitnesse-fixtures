@@ -186,6 +186,18 @@ public class HttpTestTest {
     }
 
     /**
+     * Test head
+     */
+    @Test
+    public void testHead() {
+        HttpTest httpTest = new HttpTest();
+        XmlHttpResponse req1 = checkCall(url -> httpTest.headFrom(url));
+        assertEquals("HEAD", httpTest.getResponse().getMethod());
+        assertEquals("HEAD", req1.getMethod());
+        assertEquals("HEAD: /FitNesseMock", req1.getRequest());
+    }
+
+    /**
      * Test post
      */
     @Test
@@ -314,6 +326,18 @@ public class HttpTestTest {
         assertEquals("GET", httpTest.getResponse().getMethod());
         assertEquals("GET", req1.getMethod());
         assertEquals("GET: /FitNesseMock", req1.getRequest());
+    }
+
+    /**
+     * Test head, with retry
+     */
+    @Test
+    public void testHeadRetry() {
+        HttpTest httpTest = new HttpTest();
+        XmlHttpResponse req1 = checkCallWithRetry(httpTest, url -> httpTest.headFrom(url));
+        assertEquals("HEAD", httpTest.getResponse().getMethod());
+        assertEquals("HEAD", req1.getMethod());
+        assertEquals("HEAD: /FitNesseMock", req1.getRequest());
     }
 
     /**
