@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -301,5 +302,87 @@ public class HttpTestTest {
                 "\t\t</ns1:GetWeather>\n" +
                 "\t</s11:Body>\n" +
                 "</s11:Envelope>\n", req1.getRequest());
+    }
+
+    /**
+     * Test get, with retry
+     */
+    @Test
+    public void testGetRetry() {
+        HttpTest httpTest = new HttpTest();
+        XmlHttpResponse req1 = checkCallWithRetry(httpTest, url -> httpTest.getFrom(url));
+        assertEquals("GET", httpTest.getResponse().getMethod());
+        assertEquals("GET", req1.getMethod());
+        assertEquals("GET: /FitNesseMock", req1.getRequest());
+    }
+
+    /**
+     * Test post, with retry
+     */
+    @Test
+    public void testPostRetry() {
+        HttpTest httpTest = new HttpTest();
+        XmlHttpResponse req1 = checkCallWithRetry(httpTest, url -> httpTest.postTo("a", url));
+        assertEquals("POST", httpTest.getResponse().getMethod());
+        assertEquals("POST", req1.getMethod());
+        assertEquals("a", req1.getRequest());
+    }
+
+    /**
+     * Test put, with retry
+     */
+    @Test
+    public void testPutRetry() {
+        HttpTest httpTest = new HttpTest();
+        XmlHttpResponse req1 = checkCallWithRetry(httpTest, url -> httpTest.putTo("b", url));
+        assertEquals("PUT", httpTest.getResponse().getMethod());
+        assertEquals("PUT", req1.getMethod());
+        assertEquals("b", req1.getRequest());
+    }
+
+    /**
+     * Test delete with body, with retry
+     */
+    @Test
+    public void testDeleteWithBodyRetry() {
+        HttpTest httpTest = new HttpTest();
+        XmlHttpResponse req1 = checkCallWithRetry(httpTest, url -> httpTest.deleteWith(url, "a=1"));
+        assertEquals("DELETE", httpTest.getResponse().getMethod());
+        assertEquals("DELETE", req1.getMethod());
+        assertEquals("a=1", req1.getRequest());
+    }
+
+    /**
+     * Test delete without body, with retry
+     */
+    @Test
+    public void testDeleteWithoutBodyRetry() {
+        HttpTest httpTest = new HttpTest();
+        XmlHttpResponse req1 = checkCallWithRetry(httpTest, url -> httpTest.delete(url));
+        assertEquals("DELETE", httpTest.getResponse().getMethod());
+        assertEquals("DELETE", req1.getMethod());
+        assertEquals("DELETE: /FitNesseMock", req1.getRequest());
+    }
+
+    static XmlHttpResponse checkCallWithRetry(HttpTest httpTest, Function<String, Boolean> call) {
+        MockXmlServerSetup mockXmlServerSetup = new MockXmlServerSetup();
+        mockXmlServerSetup.addResponseWithStatus("error1", 500);
+        mockXmlServerSetup.addResponseWithStatus("error2", 500);
+        mockXmlServerSetup.addResponse("hi");
+
+        try {
+            String serverUrl = mockXmlServerSetup.getMockServerUrl();
+
+            boolean result = call.apply(serverUrl);
+            assertFalse(result);
+
+            result = httpTest.repeatUntilResponseStatusIs(200);
+            assertTrue(result);
+            assertEquals(2, httpTest.repeatCount());
+
+            return mockXmlServerSetup.getResponseList().get(2);
+        } finally {
+            mockXmlServerSetup.stop();
+        }
     }
 }
