@@ -169,7 +169,7 @@ public class HttpTestTest {
         headers.put("Location", serverUrl + "/a");
         mockXmlServerSetup.addResponseWithStatusAndHeaders("", 301, headers);
 
-        mockXmlServerSetup.addResponse("<hello/>");
+        mockXmlServerSetup.addResponseFor("<hello/>", "GET: /FitNesseMock/a");
         return serverUrl;
     }
 
