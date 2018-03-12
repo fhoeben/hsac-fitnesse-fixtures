@@ -84,7 +84,7 @@ public class FileFixture extends SlimFixtureWithMap {
         ensureParentExists(target);
         String ext = FilenameUtils.getExtension(filename);
         String downloadedFile = FileUtil.saveToFile(target, ext, content);
-        return linkToFile(new File(downloadedFile));
+        return linkToFile(downloadedFile);
     }
 
     public String textIn(String filename) {
@@ -242,14 +242,6 @@ public class FileFixture extends SlimFixtureWithMap {
 
     private String cleanupPath(String fullPath) {
         return FilenameUtils.separatorsToSystem(fullPath);
-    }
-
-    protected String linkToFile(File f) {
-        String url = getWikiUrl(f.getAbsolutePath());
-        if (url == null) {
-            url = f.toURI().toString();
-        }
-        return String.format("<a href=\"%s\">%s</a>", url, f.getName());
     }
 
     public boolean pollUntilExists(String filename) {

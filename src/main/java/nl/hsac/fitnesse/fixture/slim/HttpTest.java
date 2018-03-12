@@ -1,7 +1,9 @@
 package nl.hsac.fitnesse.fixture.slim;
 
 import freemarker.template.Template;
+import nl.hsac.fitnesse.fixture.util.BinaryHttpResponse;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
@@ -24,6 +26,7 @@ public class HttpTest extends SlimFixtureWithMap {
     /** Default content type for posts and puts. */
     public final static String DEFAULT_POST_CONTENT_TYPE = "application/x-www-form-urlencoded; charset=UTF-8";
 
+    private String downloadBase = new File(filesDir, "downloads").getPath() + "/";
     private final Map<String, Object> headerValues = new LinkedHashMap<>();
     private boolean storeCookies = false;
     private HttpResponse response = createResponse();
@@ -366,6 +369,34 @@ public class HttpTest extends SlimFixtureWithMap {
         return result;
     }
 
+    /**
+     * Downloads binary content from specified url.
+     * @param serviceUrl url to download from
+     * @return link to downloaded file
+     */
+    public String getFileFrom(String serviceUrl) {
+        resetResponse();
+        String url = createUrlWithParams(serviceUrl);
+
+        BinaryHttpResponse resp = new BinaryHttpResponse();
+        resp.setCookieStore(response.getCookieStore());
+        getEnvironment().doGet(url, resp, headerValues);
+        response.cloneValues(resp);
+
+        byte[] content = resp.getResponseContent();
+        if (content == null) {
+            try {
+                content = resp.getResponse().getBytes("utf-8");
+            } catch (UnsupportedEncodingException e) {
+                // will not happen
+            }
+        }
+        String fileName = resp.getFileName();
+        if (StringUtils.isEmpty(fileName)) {
+            fileName = "download";
+        }
+        return createFile(downloadBase, fileName, content);
+    }
 
     /**
      * Sends HTTP HEAD to service endpoint.

@@ -7,7 +7,6 @@ import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.TimeoutPolicy;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.WaitUntil;
 import nl.hsac.fitnesse.fixture.util.BinaryHttpResponse;
-import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
 import nl.hsac.fitnesse.fixture.util.ReflectionHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.PageSourceSaver;
@@ -20,7 +19,6 @@ import nl.hsac.fitnesse.fixture.util.selenium.by.ListItemBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.OptionBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.text.StringEscapeUtils;
@@ -2192,16 +2190,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
                 if (StringUtils.isEmpty(fileName)) {
                     fileName = "download";
                 }
-                String baseName = FilenameUtils.getBaseName(fileName);
-                String ext = FilenameUtils.getExtension(fileName);
-                String downloadedFile = FileUtil.saveToFile(getDownloadName(baseName), ext, content);
-                String wikiUrl = getWikiUrl(downloadedFile);
-                if (wikiUrl != null) {
-                    // make href to file
-                    result = String.format("<a href=\"%s\">%s</a>", wikiUrl, fileName);
-                } else {
-                    result = downloadedFile;
-                }
+                result = createFile(downloadBase, fileName, content);
             }
         }
         return result;
@@ -2262,10 +2251,6 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             result = element;
         }
         return result;
-    }
-
-    private String getDownloadName(String baseName) {
-        return downloadBase + baseName;
     }
 
     /**

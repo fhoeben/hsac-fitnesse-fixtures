@@ -137,6 +137,16 @@ public class HttpResponse {
         this.method = method;
     }
 
+    public void cloneValues(HttpResponse resp) {
+        setCookieStore(resp.getCookieStore());
+        setRequest(resp.getRequest());
+        setMethod(resp.getMethod());
+        getResponseHeaders().putAll(resp.getResponseHeaders());
+        setStatusCode(resp.getStatusCode());
+        setResponse(resp.getResponse());
+        setResponseTime(resp.getResponseTime());
+    }
+
     @Override
     public String toString() {
         // toString() is not normally called on responses,
