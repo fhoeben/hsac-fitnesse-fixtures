@@ -25,7 +25,13 @@ public class JsonHelper implements Formatter {
     public String format(String json) {
         String result = null;
         if (json != null){
-            result = new JSONObject(json).toString(4);
+            if (json.startsWith("{")) {
+                result = new JSONObject(json).toString(4);
+            } else if (json.startsWith("[")) {
+                JSONObject jsonObject = new JSONObject("{'a': " + json + "}");
+                org.json.JSONArray array = (org.json.JSONArray) jsonObject.get("a");
+                result = array.toString(4);
+            }
         }
         return result;
     }
