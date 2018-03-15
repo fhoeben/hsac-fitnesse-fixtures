@@ -77,6 +77,18 @@ public class JsonHttpTest extends HttpTest {
         }
     }
 
+    @Override
+    protected String createFileFromBase64(String baseName, String base64Content) {
+        if (base64Content.startsWith("data:")
+                && base64Content.contains(";base64,")) {
+            // content is 'data-uri'
+            // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
+            int indexOfComma = base64Content.indexOf(',');
+            base64Content = base64Content.substring(indexOfComma);
+        }
+        return super.createFileFromBase64(baseName, base64Content);
+    }
+
     public Object elementOfJsonPath(int index, String path) {
         List<Object> all = listJsonPathMatches(path);
         return all.get(index);
