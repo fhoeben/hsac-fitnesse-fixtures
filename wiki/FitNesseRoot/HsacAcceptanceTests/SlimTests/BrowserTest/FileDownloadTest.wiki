@@ -1,0 +1,27 @@
+This test ensures we can download the target of links.
+
+!define HTML { {{{
+<html>
+<body>
+<a href="/FitNesseMock/mytest.txt">my test</a>
+</body>
+</html>}}} }
+
+|script      |mock xml server setup                  |
+|add response|${HTML}                                |
+|add response|Hallo|for|GET: /FitNesseMock/mytest.txt|
+|$url=       |get mock server url                    |
+
+
+
+|script|browser test    |
+|open  |$url            |
+|$file=|download|my test|
+
+|script|file fixture       |
+|check |text in|$file|Hallo|
+
+|script|mock xml server setup|
+|stop                        |
+
+

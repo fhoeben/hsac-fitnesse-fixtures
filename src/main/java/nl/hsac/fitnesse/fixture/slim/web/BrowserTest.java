@@ -1,13 +1,12 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
 import fitnesse.slim.fixtureInteraction.FixtureInteraction;
+import nl.hsac.fitnesse.fixture.slim.HttpTest;
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.TimeoutPolicy;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.WaitUntil;
-import nl.hsac.fitnesse.fixture.util.BinaryHttpResponse;
-import nl.hsac.fitnesse.fixture.util.HttpResponse;
 import nl.hsac.fitnesse.fixture.util.ReflectionHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.PageSourceSaver;
 import nl.hsac.fitnesse.fixture.util.selenium.SelectHelper;
@@ -56,7 +55,6 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     private int waitAfterScroll = 150;
     private String screenshotBase = new File(filesDir, "screenshots").getPath() + "/";
     private String screenshotHeight = "200";
-    private String downloadBase = new File(filesDir, "downloads").getPath() + "/";
     private String pageSourceBase = new File(filesDir, "pagesources").getPath() + "/";
     private boolean sendCommandForControlOnMac = false;
 
@@ -2179,19 +2177,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     public String downloadContentFrom(String urlOrLink) {
         String result = null;
         if (urlOrLink != null) {
-            String url = getUrl(urlOrLink);
-            BinaryHttpResponse resp = new BinaryHttpResponse();
-            getUrlContent(url, resp);
-            byte[] content = resp.getResponseContent();
-            if (content == null) {
-                result = resp.getResponse();
-            } else {
-                String fileName = resp.getFileName();
-                if (StringUtils.isEmpty(fileName)) {
-                    fileName = "download";
-                }
-                result = createFile(downloadBase, fileName, content);
-            }
+            HttpTest httpTest = new HttpTest();
+            httpTest.copyBrowserCookies();
+            result = httpTest.getFileFrom(urlOrLink);
         }
         return result;
     }
@@ -2251,16 +2239,6 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             result = element;
         }
         return result;
-    }
-
-    /**
-     * GETs content of specified URL, using the browsers cookies.
-     * @param url url to retrieve content from
-     * @param resp response to store content in
-     */
-    protected void getUrlContent(String url, HttpResponse resp) {
-        getEnvironment().addSeleniumCookies(resp);
-        getEnvironment().doGet(url, resp);
     }
 
     /**
