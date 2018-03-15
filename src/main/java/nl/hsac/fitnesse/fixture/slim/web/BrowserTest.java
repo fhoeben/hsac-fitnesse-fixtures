@@ -1085,6 +1085,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         String target = null;
         if (linkElement != null) {
             target = linkElement.getAttribute("href");
+            if (target == null) {
+                target = linkElement.getAttribute("src");
+            }
         }
         return target;
     }
