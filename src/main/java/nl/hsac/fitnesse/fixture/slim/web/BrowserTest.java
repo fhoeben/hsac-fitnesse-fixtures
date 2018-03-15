@@ -12,6 +12,7 @@ import nl.hsac.fitnesse.fixture.util.selenium.PageSourceSaver;
 import nl.hsac.fitnesse.fixture.util.selenium.SelectHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.StaleContextException;
+import nl.hsac.fitnesse.fixture.util.selenium.by.AltBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ContainerBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.GridBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ListItemBy;
@@ -2129,8 +2130,16 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      */
     @WaitUntil
     public String download(String place) {
-        WebElement element = getSeleniumHelper().getLink(place);
+        WebElement element = getElementToDownload(place);
         return downloadLinkTarget(element);
+    }
+
+    protected WebElement getElementToDownload(String place) {
+        SeleniumHelper<T> helper = getSeleniumHelper();
+        return helper.findByTechnicalSelectorOr(place,
+                () -> helper.getLink(place),
+                () -> helper.findElement(AltBy.exact(place)),
+                () -> helper.findElement(AltBy.partial(place)));
     }
 
     /**

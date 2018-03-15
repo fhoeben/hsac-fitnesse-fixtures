@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.util.selenium.by;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
 
@@ -61,7 +62,12 @@ public class LinkBy {
         public WebElement findElement(SearchContext context) {
             WebElement element = super.findElement(context);
             if (element != null && !"a".equalsIgnoreCase(element.getTagName())) {
-                element = FIND_PARENT_A_BY.findElement(element);
+                try {
+                    element = FIND_PARENT_A_BY.findElement(element);
+                } catch (NoSuchElementException e) {
+                    // element we found is not in a link
+                    element = null;
+                }
             }
             return element;
         }
