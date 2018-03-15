@@ -50,9 +50,11 @@ public class LinkBy {
             super(exactText(place),
                     AriaLabelBy.exact(place),
                     TitleBy.exact(place),
+                    AltBy.exact(place),
                     partialText(place),
                     AriaLabelBy.partial(place),
-                    TitleBy.partial(place));
+                    TitleBy.partial(place),
+                    AltBy.partial(place));
         }
 
         @Override

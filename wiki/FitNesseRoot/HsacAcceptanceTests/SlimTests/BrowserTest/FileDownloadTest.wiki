@@ -3,8 +3,8 @@ This test ensures we can download the target of links.
 !define HTML { {{{
 <html>
 <body>
-<a href="/FitNesseMock/mytest.txt">my test</a>
-<img id="smile" src="/FitNesseMock/smiley.gif" alt="Smiley face">
+<a href="/FitNesseMock/mytest.txt">my test
+<img id="smile" src="/FitNesseMock/smiley.gif" alt="Smiley face"></a>
 </body>
 </html>}}} }
 
@@ -16,14 +16,16 @@ This test ensures we can download the target of links.
 
 
 
-|script |browser test     |
-|open   |$url             |
-|$file= |download|my test |
-|$file2=|download|id=smile|
+|script |browser test        |
+|open   |$url                |
+|$file= |download|my test    |
+|$file2=|download|id=smile   |
+|$file3=|download|Smiley face|
 
 |script|file fixture        |
 |check |text in|$file |Hallo|
 |check |text in|$file2|Smile|
+|check |text in|$file3|Hallo|
 
 |script|mock xml server setup|
 |stop                        |
