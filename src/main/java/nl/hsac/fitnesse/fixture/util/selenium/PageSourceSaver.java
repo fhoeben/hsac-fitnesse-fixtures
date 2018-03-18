@@ -106,17 +106,21 @@ public class PageSourceSaver {
 
         sourceReplacements.put(fullUrlOfFrame, savedLocation);
         sourceReplacements.put(relativeUrlOfFrame, savedLocation);
-        String framePath = getPath(fullUrlOfFrame);
-        if (framePath != null) {
-            sourceReplacements.put(framePath, savedLocation);
+        String framePathAndQuery = getPathAndQuery(fullUrlOfFrame);
+        if (framePathAndQuery != null) {
+            sourceReplacements.put(framePathAndQuery, savedLocation);
         }
     }
 
-    protected String getPath(String urlString) {
+    protected String getPathAndQuery(String urlString) {
         String path = null;
         try {
             URL url = new URL(urlString);
             path = url.getPath();
+            String query = url.getQuery();
+            if (query != null) {
+                path += "?" + query;
+            }
         } catch (MalformedURLException e) {
             // leave path null
         }
