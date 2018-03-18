@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import nl.hsac.fitnesse.fixture.util.DataUrlHelper;
 import nl.hsac.fitnesse.fixture.util.JsonPathHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.entity.ContentType;
@@ -79,12 +80,8 @@ public class JsonHttpTest extends HttpTest {
 
     @Override
     protected String createFileFromBase64(String baseName, String base64Content) {
-        if (base64Content.startsWith("data:")
-                && base64Content.contains(";base64,")) {
-            // content is 'data-uri'
-            // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
-            int indexOfComma = base64Content.indexOf(',');
-            base64Content = base64Content.substring(indexOfComma);
+        if (DataUrlHelper.isDataUrl(base64Content)) {
+            base64Content = DataUrlHelper.getData(base64Content);
         }
         return super.createFileFromBase64(baseName, base64Content);
     }
