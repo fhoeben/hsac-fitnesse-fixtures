@@ -7,6 +7,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.util.Map;
@@ -43,6 +45,9 @@ public class LocalDriverFactory implements DriverFactory {
             } else if ("chromedriver".equalsIgnoreCase(driverClass.getSimpleName())) {
                 DesiredCapabilities capabilities = getChromeMobileCapabilities(profile);
                 driver = new ChromeDriver(capabilities);
+            } else if ("internetexplorerdriver".equalsIgnoreCase(driverClass.getSimpleName())) {
+                InternetExplorerOptions ieOptions = getInternetExplorerOptions(profile);
+                driver = new InternetExplorerDriver(ieOptions);
             } else {
                 driver = driverClass.newInstance();
             }
@@ -107,5 +112,15 @@ public class LocalDriverFactory implements DriverFactory {
             capabilities.setCapability(ChromeOptions.CAPABILITY, profile);
         }
         return capabilities;
+    }
+
+    public static InternetExplorerOptions getInternetExplorerOptions(Map<String, Object> profile) {
+        InternetExplorerOptions ieOptions = new InternetExplorerOptions();
+        if (profile != null) {
+            for (Map.Entry<String, Object> profileEntry : profile.entrySet()) {
+                ieOptions.setCapability(profileEntry.getKey(), profileEntry.getValue());
+            }
+        }
+        return ieOptions;
     }
 }
