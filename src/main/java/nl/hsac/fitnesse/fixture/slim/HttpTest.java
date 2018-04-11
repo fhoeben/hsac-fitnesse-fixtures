@@ -12,6 +12,7 @@ import org.apache.http.impl.cookie.BasicClientCookie;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -747,6 +748,12 @@ public class HttpTest extends SlimFixtureWithMap {
     public void setContentType(String aContentType) {
         explicitContentTypeSet = true;
         contentType = aContentType;
+    }
+
+    public void setBasicAuthorizationHeaderForUserAndPassword(String user, String password) {
+        String credential = user + ":" + password;
+        String base64credential = Base64.getEncoder().encodeToString(credential.getBytes());
+        setValueForHeader("Basic " + base64credential, "Authorization");
     }
 
     public boolean isExplicitContentTypeSet() {

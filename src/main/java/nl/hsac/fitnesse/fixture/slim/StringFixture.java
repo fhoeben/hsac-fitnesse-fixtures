@@ -195,24 +195,6 @@ public class StringFixture extends SlimFixture {
         return result;
     }
 
-    /**
-     * Base64 encodes a String
-     * @param value input string.
-     * @return base64 encoded representation of value.
-     */
-    public String base64Encode(String value) {
-        return Base64.getEncoder().encodeToString(value.getBytes());
-    }
-
-    /**
-     * Base64 decodes a String
-     * @param base64value input string.
-     * @return result string of decoding the base64 encoded input value
-     */
-    public String base64Decode(String base64value) {
-        return new String(Base64.getDecoder().decode(base64value));
-    }
-
     protected Matcher getMatcher(String regEx, String value) {
         return Pattern.compile(regEx, Pattern.DOTALL).matcher(value);
     }
