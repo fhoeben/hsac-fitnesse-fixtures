@@ -752,8 +752,12 @@ public class HttpTest extends SlimFixtureWithMap {
 
     public void setBasicAuthorizationHeaderForUserAndPassword(String user, String password) {
         String credential = user + ":" + password;
-        String base64credential = Base64.getEncoder().encodeToString(credential.getBytes());
-        setValueForHeader("Basic " + base64credential, "Authorization");
+        try {
+            String base64credential = Base64.getEncoder().encodeToString(credential.getBytes("ISO-8859-1"));
+            setValueForHeader("Basic " + base64credential, "Authorization");
+        } catch (UnsupportedEncodingException e) {
+            throw new SlimFixtureException("ISO-8859-1 encoding unavailable!", e);
+        }
     }
 
     public boolean isExplicitContentTypeSet() {
