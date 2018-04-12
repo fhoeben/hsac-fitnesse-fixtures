@@ -3,7 +3,6 @@ package nl.hsac.fitnesse.fixture.slim;
 import nl.hsac.fitnesse.fixture.util.LineEndingHelper;
 import org.apache.commons.lang.StringUtils;
 
-import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
