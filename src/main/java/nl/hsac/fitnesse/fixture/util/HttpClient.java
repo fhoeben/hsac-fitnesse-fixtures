@@ -20,6 +20,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.NoConnectionReuseStrategy;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -38,20 +39,11 @@ import java.util.Map;
 public class HttpClient {
     /** Default HttpClient instance used. */
     public final static org.apache.http.client.HttpClient DEFAULT_HTTP_CLIENT;
+    public static org.apache.http.client.HttpClient COMPRESSION_HTTP_CLIENT;
     private org.apache.http.client.HttpClient httpClient;
 
     static {
-        RequestConfig rc = RequestConfig.custom()
-                            .setCookieSpec(CookieSpecs.STANDARD)
-                            .build();
-
-        DEFAULT_HTTP_CLIENT = HttpClients.custom()
-                .useSystemProperties()
-                .disableContentCompression()
-                .setConnectionReuseStrategy(NoConnectionReuseStrategy.INSTANCE)
-                .setUserAgent(HttpClient.class.getName())
-                .setDefaultRequestConfig(rc)
-                .build();
+        DEFAULT_HTTP_CLIENT = buildHttpClient(false);
     }
 
     /**
@@ -163,6 +155,58 @@ public class HttpClient {
         HttpEntity ent = new StringEntity(response.getRequest(), contentType);
         methodPost.setEntity(ent);
         getResponse(url, response, methodPost, headers);
+    }
+
+    /**
+     * Ensures the apache HttpClient used supports content compression
+     */
+    public void enableCompression() {
+        if (httpClient == DEFAULT_HTTP_CLIENT) {
+            httpClient = getCompressionHttpClient();
+        }
+    }
+
+    /**
+     * Ensures the apache HttpClient used does not support content compression
+     */
+    public void disableCompression() {
+        if (httpClient != DEFAULT_HTTP_CLIENT) {
+            httpClient = DEFAULT_HTTP_CLIENT;
+        }
+    }
+
+    /**
+     * Returns an apache HttpClient with content compression support (builds it only on first call)
+     * @return an apache HttpClient with content compression support
+     */
+    protected org.apache.http.client.HttpClient getCompressionHttpClient() {
+        if (COMPRESSION_HTTP_CLIENT == null) {
+            COMPRESSION_HTTP_CLIENT = buildHttpClient(true);
+        }
+        return COMPRESSION_HTTP_CLIENT;
+    }
+
+    /**
+     * Builds an apache HttpClient instance
+     * @param contentCompression if true, the returned instance will support content compression
+     * @return an apache HttpClient instance
+     */
+    protected static org.apache.http.client.HttpClient buildHttpClient(boolean contentCompression) {
+        RequestConfig rc = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.STANDARD)
+                .build();
+
+        HttpClientBuilder builder = HttpClients.custom()
+                .useSystemProperties();
+
+        if (!contentCompression) {
+            builder.disableContentCompression();
+        }
+
+        return builder.setConnectionReuseStrategy(NoConnectionReuseStrategy.INSTANCE)
+                .setUserAgent(HttpClient.class.getName())
+                .setDefaultRequestConfig(rc)
+                .build();
     }
 
     protected void getResponse(String url, HttpResponse response, HttpRequestBase method, Map<String, Object> headers) {

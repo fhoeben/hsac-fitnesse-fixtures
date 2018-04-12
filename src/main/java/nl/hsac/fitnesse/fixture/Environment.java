@@ -767,4 +767,18 @@ public class Environment {
     public void setPropertiesHelper(PropertiesHelper propertiesHelper) {
         this.propertiesHelper = propertiesHelper;
     }
+
+    /**
+     * Enables content compression support on this environment's HttpClient
+     */
+    public void enableHttpClientCompression() {
+        httpClient.enableCompression();
+    }
+
+    /**
+     * Disables content compression support on this environment's HttpClient
+     */
+    public void disableHttpClientCompression() {
+        httpClient.disableCompression();
+    }
 }
