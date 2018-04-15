@@ -53,6 +53,20 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     /**
+     * Enables content compression support in the current environment (i.e. for the entire test run)
+     */
+    public void enableCompression() {
+        getEnvironment().enableHttpClientCompression();
+    }
+
+    /**
+     * Disables content compression support in the current environment (i.e. for the entire test run)
+     */
+    public void disableCompression() {
+        getEnvironment().disableHttpClientCompression();
+    }
+
+    /**
      * Stores value to be passed as headers.
      * @param value value to be passed.
      * @param name name to use this value for.

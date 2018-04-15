@@ -14,14 +14,15 @@ The >HttpPost2UsingScenarioTest makes multiple SOAP calls to a service, where sc
 >JsonHttpTest shows examples with GET, POST, AND PUT, using [[!-JsonPath-!][http://goessner.net/articles/JsonPath/]] to perform checks on the response.
 >HttpGetFollowRedirectTest shows checking the redirect sent by a server instead of following it.
 >HttpCookieHandling shows how cookie handling can be configured.
->HttpHeadTest shows an example HEAD request, retrieving only respsonse status and headers.
+>HttpHeadTest shows an example HEAD request, retrieving only response status and headers.
+>HttpCompressionTest shows an example GET request with gzip compression support.
 
 !2 Language
 
 !3 !-HttpTest-!
 The main commands/keywords (i.e. public methods) offered by !-nl.hsac.fitnesse.fixture.slim.HttpTest-! are listed below.
 
--|Comment                                                                                                                                                                                                                                         |
+-|Comment                                                                                                                                                                                                                                                       |
 |get from <url>                                                        |Sends a GET to the specified url (parameters can be added using 'set value(s) for').                                                                                                    |
 |get from <url> no redirect                                            |Sends a GET to the specified url not following redirects sent by the server.                                                                                                            |
 |get file from <url>                                                   |Sends a GET to the specified url, saving the response as file.                                                                                                                          |
@@ -74,7 +75,8 @@ The main commands/keywords (i.e. public methods) offered by !-nl.hsac.fitnesse.f
 |repeat at most	times                                                  |Returns the maximum number of requests sent by 'repeat until ...' commands.                                                                                                             |
 |set repeat interval to <interval> milliseconds                        |Sets the number of milliseconds between requests sent by 'repeat until ...' commands.                                                                                                   |
 |repeat interval                                                       |Returns the number of milliseconds between requests sent by 'repeat until ...' commands.                                                                                                |
-
+|enable compression                                                    |Enables content compression support (e.g. gzip) for all subsequent requests until the end of the test run                                                                               |
+|disable compression                                                   |Disables content compression support for all subsequent requests until the end of the test run (this is the default state)                                                              |
 
 !3 !-JsonHttpTest-!
 The commands/keywords (i.e. public methods) added by !-nl.hsac.fitnesse.fixture.slim.JsonHttpTest-! are listed below.
