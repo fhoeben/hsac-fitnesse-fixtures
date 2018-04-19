@@ -53,8 +53,6 @@ public class ProjectDriverFactoryFactory {
                 break;
             }
             case "phantomjs": {
-                String driverPath = getExecutable("phantomjs");
-                setPropertyValue("phantomjs.binary.path", driverPath);
                 driverClass = PhantomJSDriver.class.getName();
                 break;
             }
