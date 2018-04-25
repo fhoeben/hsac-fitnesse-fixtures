@@ -722,18 +722,14 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     protected boolean clickExceptionIsAboutHiddenByOtherElement(Exception e) {
         String msg = e.getMessage();
-        if (msg != null) {
-            return
-                    msg.contains(CHROME_HIDDEN_BY_OTHER_ELEMENT_ERROR)
+        return msg != null
+                && (msg.contains(CHROME_HIDDEN_BY_OTHER_ELEMENT_ERROR)
                             || msg.contains(EDGE_HIDDEN_BY_OTHER_ELEMENT_ERROR)
                             || FIREFOX_HIDDEN_BY_OTHER_ELEMENT_ERROR_PATTERN.matcher(msg).find()
                             // IE does not throw an exception, so no need to detect any
                             // Safari does throw an exception, but not one specific to this event. Too bad :/
                             // PhantomJS just clicks the element whether it's hidden or not, so no exception either
-                    ;
-        }
-
-        return false;
+                    );
     }
 
     @WaitUntil
