@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 
 public class BrowserTest<T extends WebElement> extends SlimFixture {
     private final List<String> currentSearchContextPath = new ArrayList<>();
@@ -58,6 +59,10 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     private String screenshotHeight = "200";
     private String pageSourceBase = new File(filesDir, "pagesources").getPath() + "/";
     private boolean sendCommandForControlOnMac = false;
+    private static final String CHROME_HIDDEN_BY_OTHER_ELEMENT_ERROR = "Other element would receive the click",
+            EDGE_HIDDEN_BY_OTHER_ELEMENT_ERROR = "Element is obscured";
+    private static final Pattern FIREFOX_HIDDEN_BY_OTHER_ELEMENT_ERROR_PATTERN =
+            Pattern.compile("Element.+is not clickable.+because another element.+obscures it");
 
     protected List<String> getCurrentSearchContextPath() {
         return currentSearchContextPath;
@@ -707,13 +712,28 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             WebElement element = getElementToClick(place, container);
             result = clickElement(element);
         } catch (WebDriverException e) {
-            // if other element hides the element (in Chrome) an exception is thrown
-            String msg = e.getMessage();
-            if (msg == null || !msg.contains("Other element would receive the click")) {
+            // if other element hides the element, hold back the exception so WaitUntil is not interrupted
+            if (!clickExceptionIsAboutHiddenByOtherElement(e)) {
                 throw e;
             }
         }
         return result;
+    }
+
+    protected boolean clickExceptionIsAboutHiddenByOtherElement(Exception e) {
+        String msg = e.getMessage();
+        if (msg != null) {
+            return
+                    msg.contains(CHROME_HIDDEN_BY_OTHER_ELEMENT_ERROR)
+                            || msg.contains(EDGE_HIDDEN_BY_OTHER_ELEMENT_ERROR)
+                            || FIREFOX_HIDDEN_BY_OTHER_ELEMENT_ERROR_PATTERN.matcher(msg).find()
+                            // IE does not throw an exception, so no need to detect any
+                            // Safari does throw an exception, but not one specific to this event. Too bad :/
+                            // PhantomJS just clicks the element whether it's hidden or not, so no exception either
+                    ;
+        }
+
+        return false;
     }
 
     @WaitUntil
