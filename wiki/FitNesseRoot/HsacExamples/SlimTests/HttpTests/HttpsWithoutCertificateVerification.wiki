@@ -1,0 +1,20 @@
+---
+Test
+---
+!2 Https without certificate verification
+
+Performs HTTPS GET on domains that would normally throw an exception because of bad SSL certificates.
+
+'''''Use at your own risk, this makes https potentially as unsafe as http!'''''
+
+|script  |http test                         |
+|disable SSL verification                   |
+|get from|https://expired.badssl.com/       |
+|get from|https://wrong.host.badssl.com/    |
+|get from|https://self-signed.badssl.com/   |
+|get from|https://untrusted-root.badssl.com/|
+
+Note that 'disable SSL verification' lasts for the rest of the test run, or until you call 'enable SSL verification', like this:
+
+|script    |http test   |
+|enable SSL verification|

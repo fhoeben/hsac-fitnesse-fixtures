@@ -781,4 +781,18 @@ public class Environment {
     public void disableHttpClientCompression() {
         httpClient.disableCompression();
     }
+
+    /**
+     * Disables SSL certificate verification on this environment's HttpClient
+     */
+    public void disableHttpClientSSLVerification() {
+        httpClient.disableSSLVerification();
+    }
+
+    /**
+     * Enables SSL certificate verification on this environment's HttpClient
+     */
+    public void enableHttpClientSSLVerification() {
+        httpClient.enableSSLVerification();
+    }
 }

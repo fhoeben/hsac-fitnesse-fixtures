@@ -16,6 +16,7 @@ The >HttpPost2UsingScenarioTest makes multiple SOAP calls to a service, where sc
 >HttpCookieHandling shows how cookie handling can be configured.
 >HttpHeadTest shows an example HEAD request, retrieving only response status and headers.
 >HttpCompressionTest shows an example GET request with gzip compression support.
+>HttpsWithoutCertificateVerification shows example GET requests without SSL certificate verification
 
 !2 Language
 
@@ -77,6 +78,8 @@ The main commands/keywords (i.e. public methods) offered by !-nl.hsac.fitnesse.f
 |repeat interval                                                       |Returns the number of milliseconds between requests sent by 'repeat until ...' commands.                                                                                                |
 |enable compression                                                    |Enables content compression support (e.g. gzip) for all subsequent requests until the end of the test run                                                                               |
 |disable compression                                                   |Disables content compression support for all subsequent requests until the end of the test run (this is the default state)                                                              |
+|disable SSL verification                                              |Use at your own risk! Disables SSL certificate verification for all subsequent requests until the end of the test run. This makes https potentially as unsafe as http!                  |
+|enable SSL verification                                               |Enables SSL certificate verification for all subsequent requests until the end of the test run (this is the default state)                                                              |
 
 !3 !-JsonHttpTest-!
 The commands/keywords (i.e. public methods) added by !-nl.hsac.fitnesse.fixture.slim.JsonHttpTest-! are listed below.

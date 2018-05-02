@@ -16,6 +16,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -24,8 +25,10 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 
+import javax.net.ssl.SSLContext;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -39,11 +42,12 @@ import java.util.Map;
 public class HttpClient {
     /** Default HttpClient instance used. */
     public final static org.apache.http.client.HttpClient DEFAULT_HTTP_CLIENT;
-    public static org.apache.http.client.HttpClient COMPRESSION_HTTP_CLIENT;
     private org.apache.http.client.HttpClient httpClient;
+    private boolean contentCompression = false,
+            sslVerification = true;
 
     static {
-        DEFAULT_HTTP_CLIENT = buildHttpClient(false);
+        DEFAULT_HTTP_CLIENT = buildHttpClient(false, true);
     }
 
     /**
@@ -161,8 +165,9 @@ public class HttpClient {
      * Ensures the apache HttpClient used supports content compression
      */
     public void enableCompression() {
-        if (httpClient == DEFAULT_HTTP_CLIENT) {
-            httpClient = getCompressionHttpClient();
+        if (!this.contentCompression) {
+            this.contentCompression = true;
+            updateHttpClient();
         }
     }
 
@@ -170,20 +175,41 @@ public class HttpClient {
      * Ensures the apache HttpClient used does not support content compression
      */
     public void disableCompression() {
-        if (httpClient != DEFAULT_HTTP_CLIENT) {
-            httpClient = DEFAULT_HTTP_CLIENT;
+        if (this.contentCompression) {
+            this.contentCompression = false;
+            updateHttpClient();
         }
     }
 
     /**
-     * Returns an apache HttpClient with content compression support (builds it only on first call)
-     * @return an apache HttpClient with content compression support
+     * Ensures the apache HttpClient used does not verify SSL certificates
      */
-    protected org.apache.http.client.HttpClient getCompressionHttpClient() {
-        if (COMPRESSION_HTTP_CLIENT == null) {
-            COMPRESSION_HTTP_CLIENT = buildHttpClient(true);
+    public void disableSSLVerification() {
+        if (this.sslVerification) {
+            this.sslVerification = false;
+            updateHttpClient();
         }
-        return COMPRESSION_HTTP_CLIENT;
+    }
+
+    /**
+     * Ensures the apache HttpClient used verifies SSL certificates
+     */
+    public void enableSSLVerification() {
+        if (!this.sslVerification) {
+            this.sslVerification = true;
+            updateHttpClient();
+        }
+    }
+
+    /**
+     * Sets the apache HttpClient to one matching the current contentCompression and sslVerification values
+     */
+    protected void updateHttpClient() {
+        if (!contentCompression && sslVerification) {
+            this.httpClient = DEFAULT_HTTP_CLIENT;
+        } else {
+            this.httpClient = buildHttpClient(this.contentCompression, this.sslVerification);
+        }
     }
 
     /**
@@ -191,7 +217,7 @@ public class HttpClient {
      * @param contentCompression if true, the returned instance will support content compression
      * @return an apache HttpClient instance
      */
-    protected static org.apache.http.client.HttpClient buildHttpClient(boolean contentCompression) {
+    protected static org.apache.http.client.HttpClient buildHttpClient(boolean contentCompression, boolean sslVerification) {
         RequestConfig rc = RequestConfig.custom()
                 .setCookieSpec(CookieSpecs.STANDARD)
                 .build();
@@ -203,10 +229,26 @@ public class HttpClient {
             builder.disableContentCompression();
         }
 
+        if (!sslVerification) {
+            try {
+                builder.setSSLSocketFactory(generateAllTrustingSSLConnectionSocketFactory());
+            } catch (Exception e) {
+                throw new RuntimeException("Unable to create all-trusting SSLConnectionSocketFactory", e);
+            }
+
+        }
+
         return builder.setConnectionReuseStrategy(NoConnectionReuseStrategy.INSTANCE)
                 .setUserAgent(HttpClient.class.getName())
                 .setDefaultRequestConfig(rc)
                 .build();
+    }
+
+    protected static SSLConnectionSocketFactory generateAllTrustingSSLConnectionSocketFactory() throws Exception {
+        SSLContext allTrustingSSLContext = SSLContexts.custom()
+                .loadTrustMaterial(null, (a, b) -> true)
+                .build();
+        return new SSLConnectionSocketFactory(allTrustingSSLContext, (a, b) -> true);
     }
 
     protected void getResponse(String url, HttpResponse response, HttpRequestBase method, Map<String, Object> headers) {
