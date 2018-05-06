@@ -34,4 +34,6 @@ Some extra Wiki symbols that can be used:
 |random Iban (country code, bank code)                                            |{{{!-!randomIBAN (NL) (ABNA)    -! }}}                                   |!randomIBAN (NL) (ABNA)                                       |
 |random Postal Code (using default NL)                                            |{{{!-!randomPostalCode-! }}}                                             |!randomPostalCode                                             |
 |random Postal Code (possible: AU, BE, BR, CA, CH, DE, GL, FR, IT, NL, NO, US)    |{{{!-!randomPostalCode (FR)-! }}}                                        |!randomPostalCode (FR)                                        |
-
+|random Dutch license plate (using default category and sidecode)                 |{{{!-!randomDutchLicensePlate-! }}}                                      |!randomDutchLicensePlate                                      |
+|random Dutch license plate (category f.e. M, V, B, D)                            |{{{!-!randomDutchLicensePlate (M)-! }}}                                  |!randomDutchLicensePlate (M)                                  |
+|random Dutch license plate (category) (sidecode 1 - 14)                          |{{{!-!randomDutchLicensePlate (V) (5)-! }}}                              |!randomDutchLicensePlate (V) (5)                              |
