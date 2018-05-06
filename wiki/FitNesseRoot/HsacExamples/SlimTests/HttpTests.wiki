@@ -108,4 +108,5 @@ The commands/keywords (i.e. public methods) added to those of !-HttpTest-! by !-
 
 
 Address of web service used by multiple tests in this suite:
-!define URL {http://wsf.cdyne.com/WeatherWS/Weather.asmx}
+!define URL {!-http://www.crcind.com/csp/samples/SOAP.Demo.cls-!}
+!define ACTION {http://tempuri.org/SOAP.Demo.AddInteger}

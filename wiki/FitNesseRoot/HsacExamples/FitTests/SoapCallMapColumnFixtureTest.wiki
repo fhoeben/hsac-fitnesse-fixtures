@@ -3,38 +3,40 @@ Help: Example test using SoapCallMapColumnFixture to call SOAP service
 ---
 By extending !-SoapCallMapColumnFixture-! a Fit test can easily make SOAP calls. The request to send is created using a Freemarker template, all input column's values can be used in template, without requiring Java fields or properties in the fixture class. Output columns (columns whose name ends on a '?') require Java methods to be defined, generally performing a XPath expression on the service's response.
 This page outlines the main features of this class: [[calling a service][#callService]], [[performing an extra call to validate the result of the call][#checkCall]], [[dealing with asynchronous services][#asyncService]] and [[standard methods to access 'meta information' on the exchange][#standardMethods]].
- 
+
 !anchor callService
 !2 Call Service
 The first example below calls a weather service, similar to [[Slim !-HttpPost-! using Freemarker example][.HsacExamples.SlimTests.HttpTests.HttpPost3UsingFreemarkerTemplateTest]]. On this page we use an instance of !-SymbolsFixture-! to configure the URL of the service to call. This is a best practice, allowing the url to be configured without changing Java code but not requiring it to be repeated for each table calling the same service. Normally the symbols fixture is placed on a !-SuiteSetup-! page, accessible to all tests in the suite.
 
-|Symbols                                                 |
-|key       |value                                        |
-|weatherUrl|http://www.webservicex.com/globalweather.asmx|
+|Symbols                                            |
+|key|value                                          |
+|url|http://www.crcind.com/csp/samples/SOAP.Demo.cls|
 
-|Get Weather                                                       |
-|countryName|cityName                               |weatherResult?|
-|Canada     |Vancouver International Air-Port, B. C.|              |
+|Add Integer      |
+|arg1|arg2|result?|
+|10  |12  |22     |
 
-The Java code for the 'Get Weather' fixture is a single class: {{{
-public class GetWeatherFixture extends SoapCallMapColumnFixture<XmlHttpResponse> {
+The Java code for the 'Add Integer' fixture is a single class: {{{
+public class AddIntegerFixture extends SoapCallMapColumnFixture<XmlHttpResponse> {
     static {
-        registerNs("wsX", "http://www.webserviceX.NET");
+        registerNs("tempuri", "http://tempuri.org");
     }
 
-    public GetWeatherFixture() {
+    /**
+     * Creates new.
+     */
+    public AddIntegerFixture() {
         super(XmlHttpResponse.class);
         setTemplateName("samplePost.ftl.xml");
     }
 
     @Override
     protected XmlHttpResponse callService() {
-        return callServiceImpl("weatherUrl", "http://www.webserviceX.NET/GetWeather");
+        return callServiceImpl("url", "http://tempuri.org/SOAP.Demo.AddInteger");
     }
 
-    public String weatherResult() {
-        String result = getRawResponse().getXPath("//wsX:GetWeatherResult/text()");
-        return xmlAsHtml(result);
+    public String result() {
+        return getRawResponse().getXPath("//tempuri:AddIntegerResult/text()");
     }
 }
 }}}
@@ -50,38 +52,36 @@ Sometimes it is desirable to add one or more result values from the original ser
 
 !3 Triggering the Check Call
 Validating the check call gives the expected response is similar to checking the service's response. A method needs to be defined that extracts a value from the check call's response and the test table needs to be extended with an output column mapping to this method.
-'''Please note:''' The check call is only executed when its response is needed (i.e. 'getRawCheckResponse()' is called), so if no output column refers to a method needing this response the call is not made. 
+'''Please note:''' The check call is only executed when its response is needed (i.e. 'getRawCheckResponse()' is called), so if no output column refers to a method needing this response the call is not made.
 
 !3 Example With Check Call
 
-In the example below we call a service offered by the Bank of Lithuania to check the exchange rate returned by a currency conversion web service, we ensure the two rates returned are within 10% (for US dollars) or 1% (for Euros).
+In the example below we call a service offered by the Bank of Lithuania twice to check its own response (a bit useless but demonstrates the point).
 
 |Symbols                                                                        |
 |key              |value                                                        |
-|conversionUrl    |http://www.webservicex.net/CurrencyConvertor.asmx            |
 |lbExchangeRateUrl|http://www.lb.lt/webservices/ExchangeRates/ExchangeRates.asmx|
 
-|To Lithuanian Lita                                 |
-|from|conversionRate?|exchangeRate?|margin?         |
-|USD |               |             |-0.50 < _ < 1.10|
-|EUR |               |             |-0.5 < _ < 1.01 |
+|To Lithuanian Lita                                |
+|from|exchangeRate1?|exchangeRate2?|margin?        |
+|USD |              |              |0.99 < _ < 1.01|
+|EUR |              |              |0.99 < _ < 1.01|
 
 The Java code for the 'To Lithuanian Lita' fixture is another single class: {{{
 public class ToLithuanianLitaFixture extends SoapCallMapColumnFixture<XmlHttpResponse> {
     static {
-        registerNs("wsXCR", "http://www.webserviceX.NET/");
         registerNs("lbER", "http://webservices.lb.lt/ExchangeRates");
     }
 
     public ToLithuanianLitaFixture() {
         super(XmlHttpResponse.class);
-        setTemplateName("ConversionRate.ftl.xml");
+        setTemplateName("LBExchangeRate.ftl.xml");
         setCheckTemplateName("LBExchangeRate.ftl.xml");
     }
 
     @Override
     protected XmlHttpResponse callService() {
-        return callServiceImpl("conversionUrl", "http://www.webserviceX.NET/ConversionRate");
+        return callServiceImpl("lbExchangeRateUrl", "http://webservices.lb.lt/ExchangeRates/getExchangeRate");
     }
 
     @Override
@@ -90,14 +90,14 @@ public class ToLithuanianLitaFixture extends SoapCallMapColumnFixture<XmlHttpRes
     }
 
     public Double margin() {
-        return conversionRate()/exchangeRate();
+        return exchangeRate1()/exchangeRate2();
     }
 
-    public Double conversionRate() {
-        return getRawResponse().getXPathDouble("//wsXCR:ConversionRateResult/text()");
+    public Double exchangeRate1() {
+        return getRawResponse().getXPathDouble("//lbER:getExchangeRateResult/text()");
     }
 
-    public Double exchangeRate() {
+    public Double exchangeRate2() {
         return getRawCheckResponse().getXPathDouble("//lbER:getExchangeRateResult/text()");
     }
 }
@@ -113,16 +113,16 @@ Configuring this retry behavior involves three things: how to determine whether 
 Whether another call to the check service is needed is defined by overriding the method 'isRetryDesirable()', which is passed the response from the last check call.
 Configuring the maximum number of calls and the wait time between calls is done using [[Fit's fixture parameter feature][.FitNesse.UserGuide.WritingAcceptanceTests.FitFramework.ParametersInFixtures]] (i.e. by adding cells to the first row of the table, after the fixture name). The first parameter is the maximum number of tries, the second is the wait time between calls (in milliseconds).
 
-Below is an example table which uses a subclass of the 'To Lithuanian Lita' fixture which retries retrieving the rate from the central bank for at most 4 times, with a 100ms interval, until the two rates retrieved are identical. (This is a bit contrived, even non-sensical, example as we don't expect the result from the check call to change, but it shows the concept of the retry mechanism.) 
-|To Lithuanian Lita Retrying|4              |100          |
-|from                       |conversionRate?|exchangeRate?|
-|USD                        |               |             |
+Below is an example table which uses a subclass of the 'To Lithuanian Lita' fixture which retries retrieving the rate from the central bank for at most 4 times, with a 100ms interval, until the two rates retrieved are identical. (This is a bit contrived, even non-sensical, example as we don't expect the result from the check call to change, but it shows the concept of the retry mechanism.)
+|To Lithuanian Lita Retrying|4             |100           |
+|from                       |exchangeRate1?|exchangeRate2?|
+|USD                        |              |              |
 
 The Java code for the 'To Lithuanian Lita Retrying' fixture is: {{{
 public class ToLithuanianLitaRetryingFixture extends ToLithuanianLitaFixture {
     @Override
     protected boolean isRetryDesirable() {
-        return !conversionRate().equals(exchangeRate());
+        return !exchangeRate1().equals(exchangeRate2());
     }
 }
 }}}
@@ -130,9 +130,9 @@ public class ToLithuanianLitaRetryingFixture extends ToLithuanianLitaFixture {
 !anchor standardMethods
 !2 Standard Methods
 
-!-SoapCallMapColumnFixture-! offers a set of methods to retrieve information on the SOAP exchange(s). Any fixture derived from this fixture also has these methods, so output columns displaying this information may be added to all tables using these fixtures, without custom Java code. 
+!-SoapCallMapColumnFixture-! offers a set of methods to retrieve information on the SOAP exchange(s). Any fixture derived from this fixture also has these methods, so output columns displaying this information may be added to all tables using these fixtures, without custom Java code.
 
 The table below shows some of this standard information in its output columns: the request sent, the time (in milliseconds) the call took, the full response sent by the server for both the service and check calls, and how often the check call was executed.
 |To Lithuanian Lita Retrying|4       |50                                                                       |
 |from                       |request?|responseTime?|response?|checkRequest?|checkTime?|checkResponse?|tryCount?|
-|USD                        |        |             |         |             |          |              |4        |
+|USD                        |        |             |         |             |          |              |1        |

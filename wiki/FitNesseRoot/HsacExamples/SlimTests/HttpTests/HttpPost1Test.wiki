@@ -1,21 +1,23 @@
 !2 Body in Wiki
 
-Send a HTTP POST supplying the content to post in a variable so the script table does not have newlines in its cells. 
+Send a HTTP POST supplying the content to post in a variable so the script table does not have newlines in its cells.
 
 !define POST_BODY { {{{
 <s11:Envelope xmlns:s11="http://schemas.xmlsoap.org/soap/envelope/">
   <s11:Body>
-    <ns1:GetCityWeatherByZIP xmlns:ns1="http://ws.cdyne.com/WeatherWS/">
-      <ns1:ZIP>90210</ns1:ZIP>
-    </ns1:GetCityWeatherByZIP>
+    <ns1:AddInteger xmlns:ns1="http://tempuri.org">
+      <ns1:Arg1>10</ns1:Arg1>
+      <ns1:Arg2>11</ns1:Arg2>
+    </ns1:AddInteger>
   </s11:Body>
 </s11:Envelope>
 }}} }
 
-|script         |xml http test                                                       |
-|post           |${POST_BODY}   |to                   |${URL}                        |
-|check          |response status|200                                                 |
-|show           |response                                                            |
-|show           |response headers                                                    |
-|register prefix|weather        |for namespace        |http://ws.cdyne.com/WeatherWS/|
-|check          |xPath          |//weather:City/text()|Beverly Hills                 |
+|script         |xml http test                                                           |
+|set value      |${ACTION}      |for header                           |SOAPAction        |
+|post           |${POST_BODY}   |to                                   |${URL}            |
+|check          |response status|200                                                     |
+|show           |response                                                                |
+|show           |response headers                                                        |
+|register prefix|tempuri        |for namespace                        |http://tempuri.org|
+|check          |xPath          |!-//tempuri:AddIntegerResult/text()-!|21                |

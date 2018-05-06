@@ -5,7 +5,6 @@ import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 
 public class ToLithuanianLitaFixture extends SoapCallMapColumnFixture<XmlHttpResponse> {
     static {
-        registerNs("wsXCR", "http://www.webserviceX.NET/");
         registerNs("lbER", "http://webservices.lb.lt/ExchangeRates");
     }
 
@@ -14,13 +13,13 @@ public class ToLithuanianLitaFixture extends SoapCallMapColumnFixture<XmlHttpRes
      */
     public ToLithuanianLitaFixture() {
         super(XmlHttpResponse.class);
-        setTemplateName("ConversionRate.ftl.xml");
+        setTemplateName("LBExchangeRate.ftl.xml");
         setCheckTemplateName("LBExchangeRate.ftl.xml");
     }
 
     @Override
     protected XmlHttpResponse callService() {
-        return callServiceImpl("conversionUrl", "http://www.webserviceX.NET/ConversionRate");
+        return callServiceImpl("lbExchangeRateUrl", "http://webservices.lb.lt/ExchangeRates/getExchangeRate");
     }
 
     @Override
@@ -29,14 +28,14 @@ public class ToLithuanianLitaFixture extends SoapCallMapColumnFixture<XmlHttpRes
     }
 
     public Double margin() {
-        return conversionRate()/exchangeRate();
+        return exchangeRate1()/exchangeRate2();
     }
 
-    public Double conversionRate() {
-        return getRawResponse().getXPathDouble("//wsXCR:ConversionRateResult/text()");
+    public Double exchangeRate1() {
+        return getRawResponse().getXPathDouble("//lbER:getExchangeRateResult/text()");
     }
 
-    public Double exchangeRate() {
+    public Double exchangeRate2() {
         return getRawCheckResponse().getXPathDouble("//lbER:getExchangeRateResult/text()");
     }
 }
