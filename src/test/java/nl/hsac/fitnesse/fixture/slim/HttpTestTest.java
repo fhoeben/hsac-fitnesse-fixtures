@@ -309,10 +309,7 @@ public class HttpTestTest {
 
         assertEquals("<s11:Envelope xmlns:s11=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "\t<s11:Body>\n" +
-                "\t\t<ns1:GetWeather xmlns:ns1=\"http://www.webserviceX.NET\">\n" +
-                "\t\t\t\t\t\t<ns1:CountryName>Oosterhout</ns1:CountryName>\n" +
-                "\t\t</ns1:GetWeather>\n" +
-                "\t</s11:Body>\n" +
+                "\t\t\t</s11:Body>\n" +
                 "</s11:Envelope>\n", req1.getRequest());
     }
 
