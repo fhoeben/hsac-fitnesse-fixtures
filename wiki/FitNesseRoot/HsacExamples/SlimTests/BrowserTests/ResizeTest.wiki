@@ -5,11 +5,11 @@ This test shows some manipulation of the browser window.
 |$height1=          |current browser height            |
 |open               |http://stackoverflow.com          |
 |scroll to          |recent questions feed             |
-|set browser width  |400                               |
-|check              |current browser width |400        |
+|set browser width  |420                               |
+|check              |current browser width |420        |
 |check              |current browser height|$height1   |
 |set browser height |600                               |
-|check              |current browser width |400        |
+|check              |current browser width |420        |
 |check              |current browser height|600        |
 |set browser size to|$width1               |by|$height1|
 |check              |current browser width |$width1    |
