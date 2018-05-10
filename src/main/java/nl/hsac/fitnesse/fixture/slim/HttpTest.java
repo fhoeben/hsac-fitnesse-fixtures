@@ -67,6 +67,20 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     /**
+     * Disables SSL certificate verification in the current environment (i.e. for the entire test run)
+     */
+    public void disableSSLVerification() {
+        getEnvironment().disableHttpClientSSLVerification();
+    }
+
+    /**
+     * Enables SSL certificate verification in the current environment (i.e. for the entire test run)
+     */
+    public void enableSSLVerification() {
+        getEnvironment().enableHttpClientSSLVerification();
+    }
+
+    /**
      * Stores value to be passed as headers.
      * @param value value to be passed.
      * @param name name to use this value for.
