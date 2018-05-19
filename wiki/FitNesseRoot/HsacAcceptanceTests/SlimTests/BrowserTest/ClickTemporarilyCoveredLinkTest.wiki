@@ -28,10 +28,12 @@ This test ensures a link is still clicked when it is covered by another element,
 
 *!
 
-|script                |browser test|
-|open                  |$url        |
-|seconds before timeout|4           |
-|click                 |The Link    |
+|script                |browser test               |
+|open                  |$url                       |
+|seconds before timeout|1                          |
+|reject                |click if available|The Link|
+|seconds before timeout|4                          |
+|click                 |The Link                   |
 
 |script|mock xml server setup|
 |stop                        |
