@@ -41,7 +41,7 @@
 		<hsac-fitnesse-plugin.version>1.22.0</hsac-fitnesse-plugin.version>
 		<maven-classpath-plugin.version>1.9</maven-classpath-plugin.version>
 		<fitnesse.version>20180127</fitnesse.version>
-		<selenium.version>3.11.0</selenium.version>
+		<selenium.version>3.12.0</selenium.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<apache.http.version>4.5.5</apache.http.version>
 		<surefire.version>2.21.0</surefire.version>
