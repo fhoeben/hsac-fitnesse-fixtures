@@ -47,8 +47,8 @@
 		<surefire.version>2.21.0</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
-		<selenium.internetexplorerdriver.version>3.11.1</selenium.internetexplorerdriver.version>
-		<selenium.edgedriver.version>5.16299</selenium.edgedriver.version>
+		<selenium.internetexplorerdriver.version>3.12.0</selenium.internetexplorerdriver.version>
+		<selenium.edgedriver.version>6.17134</selenium.edgedriver.version>
 		<selenium.chromedriver.version>2.38</selenium.chromedriver.version>
 		<selenium.geckodriver.version>0.20.1</selenium.geckodriver.version>
 
