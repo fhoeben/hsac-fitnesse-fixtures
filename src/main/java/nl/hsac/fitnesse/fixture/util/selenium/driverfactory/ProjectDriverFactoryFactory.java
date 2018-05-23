@@ -65,9 +65,11 @@ public class ProjectDriverFactoryFactory {
     }
 
     protected String getExecutable(String basename) {
-        String name = getExecutableForOs(basename);
+        String name = null;
+
         for (int bit : new int[] {32, 64}) {
-            String exec = String.format(name, bit);
+            name = getExecutableForOs(basename, bit);
+            String exec = String.format(name);
             String execPath = getAbsoluteWebDriverPath(exec);
             if (execPath != null) {
                 name = execPath;
@@ -91,15 +93,15 @@ public class ProjectDriverFactoryFactory {
         return path;
     }
 
-    protected String getExecutableForOs(String basename) {
+    protected String getExecutableForOs(String basename, int bit) {
         String name = basename;
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("win")) {
-            name = basename + "-windows-%dbit.exe";
+            name = basename + "-windows-"+bit+"bit.exe";
         } else if (os.contains("mac")) {
-            name = basename + "-mac-%dbit";
+            name = basename + "-mac-"+bit+"bit";
         } else if (os.contains("linux")) {
-            name = basename + "-linux-%dbit";
+            name = basename + "-linux-"+bit+"bit";
         }
         return name;
     }
