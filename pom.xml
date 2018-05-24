@@ -316,6 +316,12 @@
 							<bit>64</bit>
 							<version>${selenium.geckodriver.version}</version>
 						</driver>
+						<driver>
+							<name>geckodriver</name>
+							<platform>linux</platform>
+							<bit>64</bit>
+							<version>${selenium.geckodriver.version}</version>
+						</driver>
 					</drivers>
 					<skip>${webdriver.download.skip}</skip>
 				</configuration>
