@@ -149,8 +149,9 @@ public class SlimFixture  implements InteractionAwareFixture {
         repeatTimer.start();
         StopWatch loopTimer = new StopWatch();
         loopTimer.start();
-        boolean result = repeat.isFinished();
+        boolean result;
         try {
+            result = repeat.isFinished();
             for (repeatCount = 0; !result && repeatCount < repeatMaxCount; repeatCount++) {
                 int nextInterval = getNextInterval(loopTimer);
                 waitMilliseconds(nextInterval);
