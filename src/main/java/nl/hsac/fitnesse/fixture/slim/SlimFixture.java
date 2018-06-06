@@ -7,6 +7,8 @@ import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.time.StopWatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -17,6 +19,7 @@ import java.util.function.Supplier;
  * Base class for Slim fixtures.
  */
 public class SlimFixture  implements InteractionAwareFixture {
+    protected final Logger logger;
     private Environment environment = Environment.getInstance();
     private int repeatInterval = 100;
     private int repeatMaxCount = Integer.MAX_VALUE;
@@ -24,6 +27,10 @@ public class SlimFixture  implements InteractionAwareFixture {
     private int repeatCount = 0;
     private long repeatTime = 0;
     protected final String filesDir = getEnvironment().getFitNesseFilesSectionDir();
+
+    public SlimFixture() {
+        logger = LoggerFactory.getLogger(getClass());
+    }
 
     @Override
     public Object aroundSlimInvoke(FixtureInteraction interaction, Method method, Object... arguments)
@@ -149,16 +156,30 @@ public class SlimFixture  implements InteractionAwareFixture {
         repeatTimer.start();
         StopWatch loopTimer = new StopWatch();
         loopTimer.start();
-        boolean result;
+        boolean result = false;
         try {
-            result = repeat.isFinished();
+            try {
+                result = repeat.isFinished();
+            } catch (Throwable t) {
+                logger.warn("Error while checking we can stop repeating before starting loop", t);
+            }
             for (repeatCount = 0; !result && repeatCount < repeatMaxCount; repeatCount++) {
                 int nextInterval = getNextInterval(loopTimer);
                 waitMilliseconds(nextInterval);
 
                 loopTimer.start();
-                repeat.repeat();
-                result = repeat.isFinished();
+                try {
+                    repeat.repeat();
+                } catch (Throwable t) {
+                    logger.warn("Error while repeating, loop count {} of {}",
+                            repeatCount, repeatMaxCount, t);
+                }
+                try {
+                    result = repeat.isFinished();
+                } catch (Throwable t) {
+                    logger.warn("Error while checking whether we can stop repeating, loop count {} of {}",
+                            repeatCount, repeatMaxCount, t);
+                }
             }
         } finally {
             repeatTime = repeatTimer.getTime();
