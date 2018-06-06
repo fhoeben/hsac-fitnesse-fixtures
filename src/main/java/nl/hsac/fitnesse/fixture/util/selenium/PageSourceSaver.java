@@ -14,11 +14,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Saves page source to disk.
  */
 public class PageSourceSaver {
+    private static final Pattern BASE_TAG_EXPR = Pattern.compile("<base\\s+href=.+?>", Pattern.CASE_INSENSITIVE);
     private static final String FAKE_SRC_ATTR = "data-fake_src";
     private final String pageSourceBase;
     private final Environment environment = Environment.getInstance();
@@ -85,6 +88,14 @@ public class PageSourceSaver {
         String source = getCurrentPageSource();
         if (sourceReplacements != null && !sourceReplacements.isEmpty()) {
             source = replaceSourceOfFrames(sourceReplacements, source);
+
+            // base tag changes behavior of relative src refs, we comment it out SO:
+            // - relative links to nested iframes work
+            // - it it still visible in saved html
+            Matcher matcher = BASE_TAG_EXPR.matcher(source);
+            if (matcher.find()) {
+                source = matcher.replaceAll("<!--Commented out when saving page source $0-->");
+            }
         }
         return source;
     }
@@ -93,7 +104,7 @@ public class PageSourceSaver {
         for (Map.Entry<String, String> entry : sourceReplacements.entrySet()) {
             String originalLocation = entry.getKey();
             String newLocation = entry.getValue();
-            html = html.replace("src=\"" + originalLocation + "\"", "src=\"/" + newLocation + "\"");
+            html = html.replace("src=\"" + originalLocation + "\"", "src=\"" + newLocation + "\"");
         }
         return html;
     }
@@ -104,11 +115,12 @@ public class PageSourceSaver {
         String baseUrl = fullUrlOfParent.substring(0, lastSlash + 1);
         String relativeUrlOfFrame = fullUrlOfFrame.replace(baseUrl, "");
 
-        sourceReplacements.put(fullUrlOfFrame, savedLocation);
-        sourceReplacements.put(relativeUrlOfFrame, savedLocation);
+        String relativePathToSaved = savedLocation.replace("files/pagesources/", "");
+        sourceReplacements.put(fullUrlOfFrame, relativePathToSaved);
+        sourceReplacements.put(relativeUrlOfFrame, relativePathToSaved);
         String framePathAndQuery = getPathAndQuery(fullUrlOfFrame);
         if (framePathAndQuery != null) {
-            sourceReplacements.put(framePathAndQuery, savedLocation);
+            sourceReplacements.put(framePathAndQuery, relativePathToSaved);
         }
     }
 
