@@ -323,7 +323,7 @@ public class SlimFixture  implements InteractionAwareFixture {
         if (url == null) {
             url = f.toURI().toString();
         }
-        return String.format("<a href=\"%s\">%s</a>", url, f.getName());
+        return String.format("<a href=\"%s\" target=\"_blank\">%s</a>", url, f.getName());
     }
 
     /**

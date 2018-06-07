@@ -1825,7 +1825,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         PageSourceSaver saver = getSeleniumHelper().getPageSourceSaver(pageSourceBase);
         // make href to file
         String url = saver.savePageSource(fileName);
-        return String.format("<a href=\"%s\">%s</a>", url, linkText);
+        return String.format("<a href=\"%s\" target=\"_blank\">%s</a>", url, linkText);
     }
 
     /**
@@ -1860,10 +1860,10 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             // make href to screenshot
 
             if ("".equals(screenshotHeight)) {
-                wikiUrl = String.format("<a href=\"%s\">%s</a>",
+                wikiUrl = String.format("<a href=\"%s\" target=\"_blank\">%s</a>",
                         wikiUrl, screenshotFile);
             } else {
-                wikiUrl = String.format("<a href=\"%1$s\"><img src=\"%1$s\" title=\"%2$s\" height=\"%3$s\"/></a>",
+                wikiUrl = String.format("<a href=\"%1$s\" target=\"_blank\"><img src=\"%1$s\" title=\"%2$s\" height=\"%3$s\"/></a>",
                         wikiUrl, screenshotFile, screenshotHeight);
             }
             screenshotFile = wikiUrl;
