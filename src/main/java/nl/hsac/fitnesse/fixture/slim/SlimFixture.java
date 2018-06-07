@@ -160,25 +160,20 @@ public class SlimFixture  implements InteractionAwareFixture {
         try {
             try {
                 result = repeat.isFinished();
-            } catch (Throwable t) {
-                logger.warn("Error while checking we can stop repeating before starting loop", t);
+            } catch (RuntimeException e) {
+                logger.warn("Error while checking we can stop repeating before starting loop", e);
             }
             for (repeatCount = 0; !result && repeatCount < repeatMaxCount; repeatCount++) {
                 int nextInterval = getNextInterval(loopTimer);
                 waitMilliseconds(nextInterval);
 
                 loopTimer.start();
-                try {
-                    repeat.repeat();
-                } catch (Throwable t) {
-                    logger.warn("Error while repeating, loop count {} of {}",
-                            repeatCount, repeatMaxCount, t);
-                }
+                repeat.repeat();
                 try {
                     result = repeat.isFinished();
-                } catch (Throwable t) {
+                } catch (RuntimeException e) {
                     logger.warn("Error while checking whether we can stop repeating, loop count {} of {}",
-                            repeatCount, repeatMaxCount, t);
+                            repeatCount, repeatMaxCount, e);
                 }
             }
         } finally {
