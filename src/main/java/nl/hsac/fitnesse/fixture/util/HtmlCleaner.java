@@ -63,7 +63,7 @@ public class HtmlCleaner {
         if (rawValue != null) {
             Matcher matcher = LINKPATTERN.matcher(rawValue);
             if (matcher.matches()) {
-                result = matcher.group(2) + matcher.group(3);
+                result = matcher.group(3) + matcher.group(4);
             } else {
                 result = cleanupPreFormatted(rawValue);
             }

@@ -39,4 +39,10 @@ public class HtmlCleanerTest {
         assertEquals("http://hallo.com/test4", cleaner.getUrl("<img \t  src=\"http://hallo.com/test4\" />"));
         assertEquals("http://hallo.com/test4", cleaner.getUrl("<img  title=\"image\"   target=\"_blank\"  src=\"http://hallo.com/test4\" height=\"200\"/>"));
     }
+
+    @Test
+    public void testCleanupValueMailAddress() {
+        assertEquals("hallo@example.com", cleaner.cleanupValue("<a href=\"mailto:hallo@example.com\">hallo@example.com</a>"));
+        assertEquals("hallo2@example.com", cleaner.cleanupValue("hallo2@example.com"));
+    }
 }
