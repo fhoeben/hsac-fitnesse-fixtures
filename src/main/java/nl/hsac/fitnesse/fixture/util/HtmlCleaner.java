@@ -12,8 +12,8 @@ import java.util.regex.Pattern;
  * Helper to remove wiki formatting from strings.
  */
 public class HtmlCleaner {
-    private static final Pattern LINKPATTERN = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>(.*)", Pattern.CASE_INSENSITIVE);
-    private static final Pattern IMAGEPATTERN = Pattern.compile("<img src=\"(.*?)\"/>", Pattern.CASE_INSENSITIVE);
+    private static final Pattern LINKPATTERN = Pattern.compile("<a(\\s+.*?)?\\s+href=\"(.*?)\".*?>(.*?)</a>(.*)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern IMAGEPATTERN = Pattern.compile("<img(\\s+.*?)?\\s+src=\"(.*?)\".*?/>", Pattern.CASE_INSENSITIVE);
     private static final Pattern PRE_FORMATTED_PATTERN = Pattern.compile("<pre>\\s*(.*?)\\s*</pre>", Pattern.DOTALL);
 
     /**
@@ -27,11 +27,11 @@ public class HtmlCleaner {
             Matcher linkMatcher = LINKPATTERN.matcher(htmlLink);
             Matcher imgMatcher = IMAGEPATTERN.matcher(htmlLink);
             if (linkMatcher.matches()) {
-                String href = linkMatcher.group(1);
+                String href = linkMatcher.group(2);
                 href = StringEscapeUtils.unescapeHtml4(href);
-                result = href + linkMatcher.group(3);
+                result = href + linkMatcher.group(4);
             } else if (imgMatcher.matches()) {
-                String src = imgMatcher.group(1);
+                String src = imgMatcher.group(2);
                 result = StringEscapeUtils.unescapeHtml4(src);
             }
         }
