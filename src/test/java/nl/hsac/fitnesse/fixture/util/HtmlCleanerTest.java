@@ -15,6 +15,8 @@ public class HtmlCleanerTest {
         assertEquals("http://hallo.com/test3?testparam=1", cleaner.getUrl("<a href=\"http://hallo.com/test3?testparam=1\">Hallo2</a>"));
         assertEquals("http://hallo.com/test3?testparam=1&param2=3", cleaner.getUrl("<a href=\"http://hallo.com/test3?testparam=1&amp;param2=3\">Hallo3</a>"));
 
+        assertEquals("http://hallo.com/test2123", cleaner.getUrl("<a href=\"http://hallo.com/test2\">Hallo</a>123"));
+
         assertNull(cleaner.getUrl(null));
     }
 }
