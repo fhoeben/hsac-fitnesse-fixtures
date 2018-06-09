@@ -1,0 +1,20 @@
+---
+Help: Fixture to work with XML content
+Test
+---
+
+!-XmlFixture-! allows checks on XML, similar to what is supported by !-XmlHttpTest-!, obtained from other sources than HTTP calls.
+
+|script|xml fixture                                                         |
+|load  |!-<xml><nested><sub_nested a="1">Hello</sub_nested></nested></xml>-!|
+|show  |document                                                            |
+|check |xPath|//sub_nested/@a|1                                             |
+
+
+|script         |xml fixture                                                                                                                       |
+|load           |!-<nested xmlns="http://ws.cdyne.com/WeatherWS/"><sub_nested a="1">Hello</sub_nested><sub_nested a="2">Bye</sub_nested></nested>-!|
+|show           |document                                                                                                                          |
+|register prefix|ws                |for namespace     |http://ws.cdyne.com/WeatherWS/                                                              |
+|check          |xPath             |//sub_nested/@a   |null                                                                                        |
+|check          |xPath             |//ws:sub_nested/@a|1                                                                                           |
+|show           |list xPath matches|//ws:sub_nested/@a                                                                                             |
