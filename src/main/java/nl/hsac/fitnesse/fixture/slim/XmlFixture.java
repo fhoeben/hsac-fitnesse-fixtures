@@ -81,6 +81,10 @@ public class XmlFixture extends SlimFixture {
         }
     }
 
+    protected String getContent() {
+        return content;
+    }
+
     protected String createFileFromBase64(String baseName, String base64Content) {
         Base64Fixture base64Fixture = getBase64Fixture();
         return base64Fixture.createFrom(baseName, base64Content);
