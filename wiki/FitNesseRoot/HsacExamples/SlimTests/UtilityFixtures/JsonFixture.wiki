@@ -1,0 +1,18 @@
+---
+Help: Fixture to work with JSON content
+Test
+---
+!-JsonFixture-! allows checks on JSON, similar to what is supported by !-JsonHttpTest-!, obtained from other sources than HTTP calls.
+
+|script|json fixture       |
+|load  |!-{"a":"b","b":1}-!|
+|show  |object             |
+|check |json path  |b  |1  |
+
+
+|script|json fixture                          |
+|load  |{{{[{"a": [1,2]},{"a": "b","b": 1}]}}}|
+|show  |object                                |
+|check |json path               |[0].a[1]  |2 |
+|check |json path               |[1].a     |b |
+|show  |list json path matches  |$..a         |
