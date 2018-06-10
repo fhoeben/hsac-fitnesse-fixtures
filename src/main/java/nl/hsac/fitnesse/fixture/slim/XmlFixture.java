@@ -16,6 +16,15 @@ public class XmlFixture extends SlimFixture {
     private String content;
 
     /**
+     * @param filename XML file to be loaded.
+     * @return true
+     */
+    public boolean loadFile(String filename) {
+        content = getFileFixture().textIn(filename);
+        return true;
+    }
+
+    /**
      * @param xml XML content to be loaded.
      * @return true
      */
@@ -92,5 +101,9 @@ public class XmlFixture extends SlimFixture {
 
     protected Base64Fixture getBase64Fixture() {
         return new Base64Fixture();
+    }
+
+    protected FileFixture getFileFixture() {
+        return new FileFixture();
     }
 }
