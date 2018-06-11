@@ -1,0 +1,23 @@
+---
+Help: Library fixture to add/subtract timeunits from a given date or time
+Test
+---
+We can calculate times relative to a given date using:
+
+{{{| add | x | [timeunits] to | [given date] |}}}
+
+Suppported timeunits are: ''seconds, minutes, hours, days, months, years''
+''x'' can be a negative number to subtract instead of add.
+The fixture needs to be initialized with the date format used in your test.
+
+|script         |date time calculator fixture|dd-MM-yyyy                          |
+|check          |add                         |1  |days to   |12-05-2001|13-05-2001|
+|check          |add                         |-1 |days to   |12-05-2001|11-05-2001|
+|check          |add                         |18 |months to |12-05-2001|12-11-2002|
+|check          |add                         |-5 |years to  |01-01-2000|01-01-1995|
+|check          |add                         |-48|hours to  |01-01-2018|30-12-2017|
+|# Change the expected format                                                     |
+|set date format|HH:mm:ss                                                         |
+|check          |add                         |42 |minutes to|11:03:00  |11:45:00  |
+|check          |add                         |3  |hours to  |00:00:11  |03:00:11  |
+|check          |add                         |90 |seconds to|15:30:10  |15:31:40  |
