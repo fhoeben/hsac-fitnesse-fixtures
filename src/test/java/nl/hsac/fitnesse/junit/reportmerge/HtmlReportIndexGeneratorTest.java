@@ -50,7 +50,7 @@ public class HtmlReportIndexGeneratorTest {
             assertTrue("File does not have expected CSS link:\n" + contents, contents.contains("href='Fit/css/fitnesse.css'"));
             assertTrue("File does not have Overview Pages section:\n" + contents, contents.contains("<h2>Overview Pages</h2>"));
             String[] rows = contents.split("</tr>\\s*<tr");
-            assertEquals("Unexpected number of rows: \n" + String.join("\n", rows), 29, rows.length);
+            assertEquals("Unexpected number of rows: \n" + String.join("\n", rows), 42, rows.length);
         }
     }
 

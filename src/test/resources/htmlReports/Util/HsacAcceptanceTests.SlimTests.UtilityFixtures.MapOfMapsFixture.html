@@ -1,0 +1,649 @@
+<html><head><title>HsacAcceptanceTests.SlimTests.UtilityFixtures.MapOfMapsFixture</title><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='css/fitnesse.css'/><script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script><script src='javascript/fitnesse.js' type='text/javascript'></script></head><body><header><h2>HsacAcceptanceTests.SlimTests.UtilityFixtures.MapOfMapsFixture</h2></header><article><br/>When using the MapOfMapsFixture in a <a href="FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests.SliM.TableTable">"Table" table</a> each column of the table defines a set of key-value pairs (or map or hash) and each row defines a key in such a map.<br/>This is similar to the usage of a <a href="HsacAcceptanceTests.SlimTests.UtilityFixtures.MapFixtureTest#ddt">MapFixture</a> as dynamic decisision table, only there each row is a map and the columns represent the keys.<br/><br/>The bottom row of the table should contain assignment(s) to Slim variables to store the maps.<br/><br/><h2 id="Singlemapcreated">Single map created</h2>
+<br/>We create a map consisting of two nested maps.<br/><br/><table>
+	<tr>
+		<td colspan="3"><span class="pass">table:map of maps fixture</span></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>NL</td>
+		<td>EN</td>
+	</tr>
+	<tr>
+		<td>dog</td>
+		<td>Hond</td>
+		<td>Dog</td>
+	</tr>
+	<tr>
+		<td>cat</td>
+		<td>Kat</td>
+		<td>Cat</td>
+	</tr>
+	<tr>
+		<td colspan="3"><span class="pass">$all=</span></td>
+	</tr>
+</table>
+<br/>We check the top level map.<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td><span class="pass">map fixture</span></td>
+		<td colspan="2">$all</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>size of</td>
+		<td>NL</td>
+		<td><span class="pass">2</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>size of</td>
+		<td>EN</td>
+		<td><span class="pass">2</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>EN.dog</td>
+		<td><span class="pass">Dog</span></td>
+	</tr>
+</table>
+<br/>We can also have the header row be included in the nested maps.<br/><br/><table>
+	<tr>
+		<td colspan="3"><span class="pass">table:map of maps fixture</span></td>
+	</tr>
+	<tr>
+		<td>code</td>
+		<td>NL</td>
+		<td>EN</td>
+	</tr>
+	<tr>
+		<td>dog</td>
+		<td>Hond</td>
+		<td>Dog</td>
+	</tr>
+	<tr>
+		<td>cat</td>
+		<td>Kat</td>
+		<td>Cat</td>
+	</tr>
+	<tr>
+		<td colspan="3"><span class="pass">$all2=</span></td>
+	</tr>
+</table>
+<br/>We check the top level map.<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td><span class="pass">map fixture</span></td>
+		<td colspan="2">$all2</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>size of</td>
+		<td>NL</td>
+		<td><span class="pass">3</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>size of</td>
+		<td>EN</td>
+		<td><span class="pass">3</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>EN.dog</td>
+		<td><span class="pass">Dog</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>EN.code</td>
+		<td><span class="pass">EN</span></td>
+	</tr>
+</table>
+<br/><br/><h2 id="Createmappercolumn">Create map per column</h2>
+<br/>We define two maps, and store these in separate variables.<br/><br/><table>
+	<tr>
+		<td colspan="3"><span class="pass">table:map of maps fixture</span></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>NL</td>
+		<td>EN</td>
+	</tr>
+	<tr>
+		<td>dog</td>
+		<td>Hond</td>
+		<td>Dog</td>
+	</tr>
+	<tr>
+		<td>cat</td>
+		<td>Kat</td>
+		<td>Cat</td>
+	</tr>
+	<tr>
+		<td><span class="pass">$all=</span></td>
+		<td><span class="pass">$nl=</span></td>
+		<td><span class="pass">$en=</span></td>
+	</tr>
+</table>
+<br/>We check the top level map.<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td><span class="pass">map fixture</span></td>
+		<td colspan="2">$all</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>size of</td>
+		<td>NL</td>
+		<td><span class="pass">2</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>size of</td>
+		<td>EN</td>
+		<td><span class="pass">2</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>EN.dog</td>
+		<td><span class="pass">Dog</span></td>
+	</tr>
+</table>
+<br/>We check each column's variable.<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td><span class="pass">map fixture</span></td>
+		<td colspan="2">$nl</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>dog</td>
+		<td><span class="pass">Hond</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>cat</td>
+		<td><span class="pass">Kat</span></td>
+	</tr>
+</table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td><span class="pass">map fixture</span></td>
+		<td colspan="2">$en</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>dog</td>
+		<td><span class="pass">Dog</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>cat</td>
+		<td><span class="pass">Cat</span></td>
+	</tr>
+</table>
+<br/><h2 id="Nestedmaps">Nested maps</h2>
+<br/>We define two maps, containing the values from the previous table. And we don't create a variable containing entire table.<br/><br/><table>
+	<tr>
+		<td colspan="3"><span class="pass">table  :map of maps fixture</span></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>NL</td>
+		<td>EN</td>
+	</tr>
+	<tr>
+		<td>nested</td>
+		<td>$nl</td>
+		<td>$en</td>
+	</tr>
+	<tr>
+		<td>nested2</td>
+		<td><table class="hash_table">
+	<tr class="hash_row">
+		<td class="hash_key">a</td>
+		<td class="hash_value">1</td>
+	</tr>
+	<tr class="hash_row">
+		<td class="hash_key">b</td>
+		<td class="hash_value">2</td>
+	</tr>
+</table></td>
+		<td><table class="hash_table">
+	<tr class="hash_row">
+		<td class="hash_key">a</td>
+		<td class="hash_value">3</td>
+	</tr>
+	<tr class="hash_row">
+		<td class="hash_key">b</td>
+		<td class="hash_value">4</td>
+	</tr>
+</table></td>
+	</tr>
+	<tr>
+		<td>duck</td>
+		<td>Eend</td>
+		<td>Duck</td>
+	</tr>
+	<tr>
+		<td>email</td>
+		<td><a href="mailto:Eend@example.com">Eend@example.com</a></td>
+		<td><a href="mailto:Duck@example.com">Duck@example.com</a></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><span class="pass">$nl2=</span></td>
+		<td><span class="pass">$en2=</span></td>
+	</tr>
+</table>
+<br/>We check each variable.<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td><span class="pass">map fixture</span></td>
+		<td colspan="2">$nl2</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>duck</td>
+		<td><span class="pass">Eend</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>email</td>
+		<td><span class="pass">Eend@example.com</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>nested.cat</td>
+		<td><span class="pass">Kat</span></td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>value</td>
+		<td colspan="2">nested</td>
+	<td><table class="hash_table">
+	<tr class="hash_row">
+		<td class="hash_key">dog</td>
+		<td class="hash_value">Hond</td>
+	</tr>
+	<tr class="hash_row">
+		<td class="hash_key">cat</td>
+		<td class="hash_value">Kat</td>
+	</tr>
+</table></td></tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>nested2.b</td>
+		<td><span class="pass">2</span></td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>value</td>
+		<td colspan="2">nested2</td>
+	<td><table class="hash_table">
+	<tr class="hash_row">
+		<td class="hash_key">a</td>
+		<td class="hash_value">1</td>
+	</tr>
+	<tr class="hash_row">
+		<td class="hash_key">b</td>
+		<td class="hash_value">2</td>
+	</tr>
+</table></td></tr>
+</table>
+<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td><span class="pass">map fixture</span></td>
+		<td colspan="2">$en2</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>duck</td>
+		<td><span class="pass">Duck</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>email</td>
+		<td><span class="pass">Duck@example.com</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>nested.cat</td>
+		<td><span class="pass">Cat</span></td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>value</td>
+		<td colspan="2">nested</td>
+	<td><table class="hash_table">
+	<tr class="hash_row">
+		<td class="hash_key">dog</td>
+		<td class="hash_value">Dog</td>
+	</tr>
+	<tr class="hash_row">
+		<td class="hash_key">cat</td>
+		<td class="hash_value">Cat</td>
+	</tr>
+</table></td></tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>nested2.b</td>
+		<td><span class="pass">4</span></td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>value</td>
+		<td colspan="2">nested2</td>
+	<td><table class="hash_table">
+	<tr class="hash_row">
+		<td class="hash_key">a</td>
+		<td class="hash_value">3</td>
+	</tr>
+	<tr class="hash_row">
+		<td class="hash_key">b</td>
+		<td class="hash_value">4</td>
+	</tr>
+</table></td></tr>
+</table>
+<br/><br/>We check each original variable did not change.<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td><span class="pass">map fixture</span></td>
+		<td colspan="2">$nl</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>dog</td>
+		<td><span class="pass">Hond</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>cat</td>
+		<td><span class="pass">Kat</span></td>
+	</tr>
+</table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td><span class="pass">map fixture</span></td>
+		<td colspan="2">$en</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>dog</td>
+		<td><span class="pass">Dog</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>cat</td>
+		<td><span class="pass">Cat</span></td>
+	</tr>
+</table>
+<br/><h2 id="Wecanchoosetousenestedmapnotation">We can choose to use nested map notation</h2>
+<br/>We define two maps, and store these in variables, the default notation is that periods indicate nested maps are to be used.<br/><br/><table>
+	<tr>
+		<td colspan="3"><span class="pass">table          :map of maps fixture</span></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>NL</td>
+		<td>EN</td>
+	</tr>
+	<tr>
+		<td>dog</td>
+		<td>Hond</td>
+		<td>Dog</td>
+	</tr>
+	<tr>
+		<td>chicken.mouth</td>
+		<td>Snavel</td>
+		<td>Beak</td>
+	</tr>
+	<tr>
+		<td>chicken.legs[0]</td>
+		<td>Vleugel</td>
+		<td>Wing</td>
+	</tr>
+	<tr>
+		<td>chicken.legs[1]</td>
+		<td>Poot</td>
+		<td>Leg</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><span class="pass">$nl3=</span></td>
+		<td><span class="pass">$en3=</span></td>
+	</tr>
+</table>
+<br/>We check each variable.<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td><span class="pass">list fixture</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td colspan="2">display lists standard</td>
+	</tr>
+</table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td><span class="pass">map fixture</span></td>
+		<td colspan="2">$nl3</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>dog</td>
+		<td><span class="pass">Hond</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>chicken.legs</td>
+		<td><span class="pass">[Vleugel, Poot]</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>chicken.legs[0]</td>
+		<td><span class="pass">Vleugel</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>chicken.mouth</td>
+		<td><span class="pass">Snavel</span></td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>value</td>
+		<td colspan="2">chicken</td>
+	<td><table class="hash_table">
+	<tr class="hash_row">
+		<td class="hash_key">mouth</td>
+		<td class="hash_value">Snavel</td>
+	</tr>
+	<tr class="hash_row">
+		<td class="hash_key">legs</td>
+		<td class="hash_value">[Vleugel, Poot]</td>
+	</tr>
+</table></td></tr>
+</table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td><span class="pass">map fixture</span></td>
+		<td colspan="2">$en3</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>dog</td>
+		<td><span class="pass">Dog</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>chicken.legs</td>
+		<td><span class="pass">[Wing, Leg]</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>chicken.legs[0]</td>
+		<td><span class="pass">Wing</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>chicken.mouth</td>
+		<td><span class="pass">Beak</span></td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>value</td>
+		<td colspan="2">chicken</td>
+	<td><table class="hash_table">
+	<tr class="hash_row">
+		<td class="hash_key">mouth</td>
+		<td class="hash_value">Beak</td>
+	</tr>
+	<tr class="hash_row">
+		<td class="hash_key">legs</td>
+		<td class="hash_value">[Wing, Leg]</td>
+	</tr>
+</table></td></tr>
+</table>
+<br/><h2 id="WecanchooseNOTtousenestedmapnotation">We can choose NOT to use nested map notation</h2>
+<br/>We define two maps, and store these in variables, we override the default so that periods are just regular parts of a key.<br/><br/><table>
+	<tr>
+		<td><span class="pass">table          :map of maps fixture</span></td>
+		<td colspan="2">false</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>NL</td>
+		<td>EN</td>
+	</tr>
+	<tr>
+		<td>dog</td>
+		<td>Hond</td>
+		<td>Dog</td>
+	</tr>
+	<tr>
+		<td>chicken.mouth</td>
+		<td>Snavel</td>
+		<td>Beak</td>
+	</tr>
+	<tr>
+		<td>chicken.legs[0]</td>
+		<td>Vleugel</td>
+		<td>Wing</td>
+	</tr>
+	<tr>
+		<td>chicken.legs[1]</td>
+		<td>Poot</td>
+		<td>Leg</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><span class="pass">$nl4=</span></td>
+		<td><span class="pass">$en4=</span></td>
+	</tr>
+</table>
+<br/>We check each variable.<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td><span class="pass">map fixture</span></td>
+		<td colspan="2">$nl4</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>dog</td>
+		<td><span class="pass">Hond</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>chicken.legs</td>
+		<td><span class="pass">null</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>chicken.legs[0]</td>
+		<td><span class="pass">Vleugel</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>chicken.mouth</td>
+		<td><span class="pass">Snavel</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>chicken</td>
+		<td><span class="pass">null</span></td>
+	</tr>
+</table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td><span class="pass">map fixture</span></td>
+		<td colspan="2">$en4</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>dog</td>
+		<td><span class="pass">Dog</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>chicken.legs</td>
+		<td><span class="pass">null</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>chicken.legs[0]</td>
+		<td><span class="pass">Wing</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>chicken.mouth</td>
+		<td><span class="pass">Beak</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>chicken</td>
+		<td><span class="pass">null</span></td>
+	</tr>
+</table>
+</article></body></html>

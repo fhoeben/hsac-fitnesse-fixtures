@@ -1,0 +1,67 @@
+<html><head><title>HsacAcceptanceTests.SlimTests.UtilityFixtures.XmlFixture</title><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='css/fitnesse.css'/><script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script><script src='javascript/fitnesse.js' type='text/javascript'></script></head><body><header><h2>HsacAcceptanceTests.SlimTests.UtilityFixtures.XmlFixture</h2></header><article><br/>XmlFixture allows checks on XML, similar to what is supported by XmlHttpTest, obtained from other sources than HTTP calls.<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="3"><span class="pass">xml fixture</span></td>
+	</tr>
+	<tr class="slimRowColor6">
+		<td><span class="pass">load</span></td>
+		<td colspan="3"><xml><nested><sub_nested a="1">Hello</sub_nested></nested></xml></td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td colspan="3">document</td>
+	<td><pre>&lt;xml&gt;
+    &lt;nested&gt;
+        &lt;sub_nested a=&quot;1&quot;&gt;Hello&lt;/sub_nested&gt;
+    &lt;/nested&gt;
+&lt;/xml&gt;
+</pre></td></tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>xPath</td>
+		<td>//sub_nested/@a</td>
+		<td><span class="pass">1</span></td>
+	</tr>
+</table>
+<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="3"><span class="pass">xml fixture</span></td>
+	</tr>
+	<tr class="slimRowColor6">
+		<td><span class="pass">load</span></td>
+		<td colspan="3"><pre>&lt;nested xmlns="http://ws.cdyne.com/WeatherWS/"&gt;&lt;sub_nested a="1"&gt;Hello&lt;/sub_nested&gt;&lt;sub_nested a="2"&gt;Bye&lt;/sub_nested&gt;&lt;/nested&gt;</pre></td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td colspan="3">document</td>
+	<td><pre>&lt;nested xmlns=&quot;http://ws.cdyne.com/WeatherWS/&quot;&gt;
+    &lt;sub_nested a=&quot;1&quot;&gt;Hello&lt;/sub_nested&gt;
+    &lt;sub_nested a=&quot;2&quot;&gt;Bye&lt;/sub_nested&gt;
+&lt;/nested&gt;
+</pre></td></tr>
+	<tr class="slimRowColor5">
+		<td>register prefix</td>
+		<td>ws</td>
+		<td>for namespace</td>
+		<td><a href="http://ws.cdyne.com/WeatherWS/">http://ws.cdyne.com/WeatherWS/</a></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>xPath</td>
+		<td>//sub_nested/@a</td>
+		<td><span class="pass">null</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>xPath</td>
+		<td>//ws:sub_nested/@a</td>
+		<td><span class="pass">1</span></td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>list xPath matches</td>
+		<td colspan="2">//ws:sub_nested/@a</td>
+	<td>[1, 2]</td></tr>
+</table>
+</article></body></html>

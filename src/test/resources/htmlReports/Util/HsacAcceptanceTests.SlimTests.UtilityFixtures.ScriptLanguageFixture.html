@@ -1,0 +1,224 @@
+<html><head><title>HsacAcceptanceTests.SlimTests.UtilityFixtures.ScriptLanguageFixture</title><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='css/fitnesse.css'/><script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script><script src='javascript/fitnesse.js' type='text/javascript'></script></head><body><header><h2>HsacAcceptanceTests.SlimTests.UtilityFixtures.ScriptLanguageFixture</h2></header><article><br/><br/>We can execute scripts if an engine for the script's language is available to the Java virtual machine (via JSR-223).<br/>By default the JavaScript engine present in the JVM is used, but this can be changed via a constructor parameter of 'set engine'.<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="3"><span class="pass">script language fixture</span></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set value</td>
+		<td>1</td>
+		<td>for</td>
+		<td>a</td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set value</td>
+		<td>2</td>
+		<td>for</td>
+		<td>b</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>evaluate</td>
+		<td>a+b</td>
+		<td><span class="pass">12</span></td>
+	</tr>
+</table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="3"><span class="pass">script language fixture</span></td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td>set int value</td>
+		<td>1</td>
+		<td>for</td>
+		<td>a</td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td>set int value</td>
+		<td>2</td>
+		<td>for</td>
+		<td>b</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>evaluate</td>
+		<td>a+b</td>
+		<td><span class="pass">3.0</span></td>
+	</tr>
+</table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="3"><span class="pass">script language fixture</span></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set value</td>
+		<td>John</td>
+		<td>for</td>
+		<td>a[0]</td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set value</td>
+		<td>Pete</td>
+		<td>for</td>
+		<td>a[1]</td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set value</td>
+		<td><table class="hash_table">
+	<tr class="hash_row">
+		<td class="hash_key">name</td>
+		<td class="hash_value">Duke</td>
+	</tr>
+	<tr class="hash_row">
+		<td class="hash_key">age</td>
+		<td class="hash_value">10</td>
+	</tr>
+</table></td>
+		<td>for</td>
+		<td>a[2]</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>evaluate</td>
+		<td>a[1]</td>
+		<td><span class="pass">Pete</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>evaluate</td>
+		<td>a[2].name</td>
+		<td><span class="pass">Duke</span></td>
+	</tr>
+</table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="3"><span class="pass">script language fixture</span></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>evaluate</td>
+		<td colspan="3">function hello(name) { return 'Hello World!'; }</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>invoke function</td>
+		<td>hello</td>
+		<td><span class="pass">Hello World!</span></td>
+	</tr>
+</table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="5"><span class="pass">script language fixture</span></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>evaluate</td>
+		<td colspan="5">function hello(name) { return 'Hello, ' + name; }</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>invoke function</td>
+		<td>hello</td>
+		<td>with argument</td>
+		<td>World</td>
+		<td><span class="pass">Hello, World</span></td>
+	</tr>
+</table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="5"><span class="pass">script language fixture</span></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>evaluate</td>
+		<td colspan="5">function hello(name, age) { return 'Hello, ' + name + ' age: ' + age; }</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>invoke function</td>
+		<td>hello</td>
+		<td>with arguments</td>
+		<td>[Duke,7]</td>
+		<td><span class="pass">Hello, Duke age: 7</span></td>
+	</tr>
+</table>
+<br/><span class="meta">variable defined: MULTILINE= {{{
+ var obj = new Object();
+ obj.hello = function hello(name) {
+    return 'Hello, ' + name;
+}
+}}} </span>
+<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="7"><span class="pass">script language fixture</span></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>evaluate</td>
+		<td colspan="7"><pre>
+ var obj = new Object();
+ obj.hello = function hello(name) {
+    return 'Hello, ' + name;
+}
+</pre></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>invoke method</td>
+		<td>hello</td>
+		<td>on</td>
+		<td>obj</td>
+		<td>with argument</td>
+		<td>John</td>
+		<td><span class="pass">Hello, John</span></td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td>$o&lt;-[[object Object]]</td>
+		<td>value</td>
+		<td colspan="6">obj</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>invoke method</td>
+		<td>hello</td>
+		<td>on</td>
+		<td>$o->[[object Object]]</td>
+		<td>with argument</td>
+		<td>John</td>
+		<td><span class="pass">Hello, John</span></td>
+	</tr>
+</table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td><span class="pass">script language fixture</span></td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>available engines</td>
+	<td><table class="hash_table">
+	<tr class="hash_row">
+		<td class="hash_key">Oracle Nashorn</td>
+		<td class="hash_value"><table class="hash_table">
+	<tr class="hash_row">
+		<td class="hash_key">language name</td>
+		<td class="hash_value">ECMAScript</td>
+	</tr>
+	<tr class="hash_row">
+		<td class="hash_key">language version</td>
+		<td class="hash_value">ECMA - 262 Edition 5.1</td>
+	</tr>
+	<tr class="hash_row">
+		<td class="hash_key">aliases</td>
+		<td class="hash_value">[nashorn, Nashorn, js, JS, JavaScript, javascript, ECMAScript, ecmascript]</td>
+	</tr>
+	<tr class="hash_row">
+		<td class="hash_key">version</td>
+		<td class="hash_value">1.8.0_131</td>
+	</tr>
+</table></td>
+	</tr>
+</table></td></tr>
+</table>
+</article></body></html>

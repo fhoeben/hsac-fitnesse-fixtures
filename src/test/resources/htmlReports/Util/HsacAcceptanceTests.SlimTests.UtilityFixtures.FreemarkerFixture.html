@@ -1,63 +1,47 @@
-<html><head><title>HsacAcceptanceTests.SlimTests.UtilityFixtures.FreemarkerFixture</title><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='css/fitnesse.css'/><script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script><script src='javascript/fitnesse.js' type='text/javascript'></script></head><body><header><h2>HsacAcceptanceTests.SlimTests.UtilityFixtures.FreemarkerFixture</h2></header><article><br/>The Freemarker Fixture allows a <a href="http://freemarker.org">Freemarker</a> template to be rendered to the wiki. This allows the template result to be sent to an application being tested, or saved as a mock server's response. It is usable both in <a href="#scripts">script tables</a> and <a href="#ddt">dynamic decision tables</a>.<br/>The templates are loaded from the 'template' directory on the class path (e.g. /fixtures/template in a standalone installation).<br/><br/>If the template's name contains <span class="code">.xml</span> or <span class="code">.json</span> the template's output will be formatted and shown as XML or JSON in the wiki.<br/><a name="ddt"> </a><br/><br/><h2>Dynamic Decision Table Usage</h2>
+<html><head><title>HsacAcceptanceTests.SlimTests.UtilityFixtures.FreemarkerFixture</title><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='css/fitnesse.css'/><script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script><script src='javascript/fitnesse.js' type='text/javascript'></script></head><body><header><h2>HsacAcceptanceTests.SlimTests.UtilityFixtures.FreemarkerFixture</h2></header><article><br/>The Freemarker Fixture allows a <a href="http://freemarker.org">Freemarker</a> template to be rendered to the wiki. This allows the template result to be sent to an application being tested, or saved as a mock server's response. It is usable both in <a href="#scripts">script tables</a> and <a href="#ddt">dynamic decision tables</a>.<br/><br/>The templates are loaded from the 'templates' directory on the class path (e.g. <span class="code">fixtures/templates</span> in a standalone installation, or <span class="code">wiki/fixtures/templates</span> in a Maven project based on the <a href="https://github.com/fhoeben/sample-fitnesse-project">sample project</a> or <a href="https://github.com/fhoeben/fitnesse-project-archetype">archetype</a>). This location cannot be changed, but subdirectories can be used (by starting a template name with <span class="code">subdirectoryname/</span>).<br/><br/>To edit/add templates, modify/place them in the <span class="code">src/main/resources/templates</span> folder and rebuild the project using <span class="code">mvn compile</span> (or your IDE). This will allow the fixture to find the files.<br/><p class="note">When debugging a template you can, of course, directly edit the files below <span class="code">fixtures/templates</span>. But <b>be warned</b>: that location is not normally under version control and your changes will be overwritten when a new build is performed.</p><br/>If the template's name contains <span class="code">.xml</span> or <span class="code">.json</span> the template's output will be formatted and shown as XML or JSON in the wiki.<br/><a name="ddt"> </a><br/><br/><h2 id="DynamicDecisionTableUsage">Dynamic Decision Table Usage</h2>
 <br/>The template to use can either be supplied using a constructor parameter in the table's first row, or by the name of the output column.<br/><br/><table>
-	<tr class="slimRowTitle">
+	<tr>
 		<td><span class="pass">ddt: freemarker fixture</span></td>
 		<td>samplePost.ftl.xml</td>
 	</tr>
-	<tr class="slimRowTitle">
+	<tr>
 		<td>countryName</td>
 		<td>post?</td>
 	</tr>
-	<tr class="slimRowColor1">
+	<tr>
 		<td>United States</td>
 		<td>$postUs&lt;-[<pre>&lt;s11:Envelope xmlns:s11=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
-    &lt;s11:Body&gt;
-        &lt;ns1:GetWeather xmlns:ns1=&quot;http://www.webserviceX.NET&quot;&gt;
-            &lt;ns1:CountryName&gt;United States&lt;/ns1:CountryName&gt;
-        &lt;/ns1:GetWeather&gt;
-    &lt;/s11:Body&gt;
+    &lt;s11:Body/&gt;
 &lt;/s11:Envelope&gt;
 </pre>]</td>
 	</tr>
-	<tr class="slimRowColor0">
+	<tr>
 		<td>Netherlands</td>
 		<td>$postNl&lt;-[<pre>&lt;s11:Envelope xmlns:s11=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
-    &lt;s11:Body&gt;
-        &lt;ns1:GetWeather xmlns:ns1=&quot;http://www.webserviceX.NET&quot;&gt;
-            &lt;ns1:CountryName&gt;Netherlands&lt;/ns1:CountryName&gt;
-        &lt;/ns1:GetWeather&gt;
-    &lt;/s11:Body&gt;
+    &lt;s11:Body/&gt;
 &lt;/s11:Envelope&gt;
 </pre>]</td>
 	</tr>
 </table>
 <br/>or<br/><br/><table>
-	<tr class="slimRowTitle">
+	<tr>
 		<td colspan="2"><span class="pass">ddt: freemarker fixture</span></td>
 	</tr>
-	<tr class="slimRowTitle">
+	<tr>
 		<td>countryName</td>
 		<td>samplePost.ftl.xml?</td>
 	</tr>
-	<tr class="slimRowColor1">
+	<tr>
 		<td>United States</td>
 		<td>$postUs2&lt;-[<pre>&lt;s11:Envelope xmlns:s11=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
-    &lt;s11:Body&gt;
-        &lt;ns1:GetWeather xmlns:ns1=&quot;http://www.webserviceX.NET&quot;&gt;
-            &lt;ns1:CountryName&gt;United States&lt;/ns1:CountryName&gt;
-        &lt;/ns1:GetWeather&gt;
-    &lt;/s11:Body&gt;
+    &lt;s11:Body/&gt;
 &lt;/s11:Envelope&gt;
 </pre>]</td>
 	</tr>
-	<tr class="slimRowColor0">
+	<tr>
 		<td>Netherlands</td>
 		<td>$postNl2&lt;-[<pre>&lt;s11:Envelope xmlns:s11=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
-    &lt;s11:Body&gt;
-        &lt;ns1:GetWeather xmlns:ns1=&quot;http://www.webserviceX.NET&quot;&gt;
-            &lt;ns1:CountryName&gt;Netherlands&lt;/ns1:CountryName&gt;
-        &lt;/ns1:GetWeather&gt;
-    &lt;/s11:Body&gt;
+    &lt;s11:Body/&gt;
 &lt;/s11:Envelope&gt;
 </pre>]</td>
 	</tr>
@@ -71,19 +55,11 @@
 		<td>check</td>
 		<td>value of</td>
 		<td>$postUs->[<pre>&lt;s11:Envelope xmlns:s11=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
-    &lt;s11:Body&gt;
-        &lt;ns1:GetWeather xmlns:ns1=&quot;http://www.webserviceX.NET&quot;&gt;
-            &lt;ns1:CountryName&gt;United States&lt;/ns1:CountryName&gt;
-        &lt;/ns1:GetWeather&gt;
-    &lt;/s11:Body&gt;
+    &lt;s11:Body/&gt;
 &lt;/s11:Envelope&gt;
 </pre>]</td>
 		<td><span class="pass">$postUs2-&gt;[<pre>&lt;s11:Envelope xmlns:s11=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
-    &lt;s11:Body&gt;
-        &lt;ns1:GetWeather xmlns:ns1=&quot;http://www.webserviceX.NET&quot;&gt;
-            &lt;ns1:CountryName&gt;United States&lt;/ns1:CountryName&gt;
-        &lt;/ns1:GetWeather&gt;
-    &lt;/s11:Body&gt;
+    &lt;s11:Body/&gt;
 &lt;/s11:Envelope&gt;
 </pre>]</span></td>
 	</tr>
@@ -91,24 +67,16 @@
 		<td>check</td>
 		<td>value of</td>
 		<td>$postNl->[<pre>&lt;s11:Envelope xmlns:s11=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
-    &lt;s11:Body&gt;
-        &lt;ns1:GetWeather xmlns:ns1=&quot;http://www.webserviceX.NET&quot;&gt;
-            &lt;ns1:CountryName&gt;Netherlands&lt;/ns1:CountryName&gt;
-        &lt;/ns1:GetWeather&gt;
-    &lt;/s11:Body&gt;
+    &lt;s11:Body/&gt;
 &lt;/s11:Envelope&gt;
 </pre>]</td>
 		<td><span class="pass">$postNl2-&gt;[<pre>&lt;s11:Envelope xmlns:s11=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
-    &lt;s11:Body&gt;
-        &lt;ns1:GetWeather xmlns:ns1=&quot;http://www.webserviceX.NET&quot;&gt;
-            &lt;ns1:CountryName&gt;Netherlands&lt;/ns1:CountryName&gt;
-        &lt;/ns1:GetWeather&gt;
-    &lt;/s11:Body&gt;
+    &lt;s11:Body/&gt;
 &lt;/s11:Envelope&gt;
 </pre>]</span></td>
 	</tr>
 </table>
-<br/><br/><a name="scripts"> </a><br/><br/><h2>Script Usage</h2>
+<br/><br/><a name="scripts"> </a><br/><br/><h2 id="ScriptUsage">Script Usage</h2>
 Here we render a template using <a href="FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScriptTable">script tables</a>. <br/><br/><table>
 	<tr class="slimRowTitle">
 		<td>script</td>
@@ -122,11 +90,7 @@ Here we render a template using <a href="FitNesse.UserGuide.WritingAcceptanceTes
 	</tr>
 	<tr class="slimRowColor8">
 		<td>$postNl3&lt;-[<pre>&lt;s11:Envelope xmlns:s11=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
-    &lt;s11:Body&gt;
-        &lt;ns1:GetWeather xmlns:ns1=&quot;http://www.webserviceX.NET&quot;&gt;
-            &lt;ns1:CountryName&gt;Netherlands&lt;/ns1:CountryName&gt;
-        &lt;/ns1:GetWeather&gt;
-    &lt;/s11:Body&gt;
+    &lt;s11:Body/&gt;
 &lt;/s11:Envelope&gt;
 </pre>]</td>
 		<td>apply template</td>
@@ -140,12 +104,7 @@ Here we render a template using <a href="FitNesse.UserGuide.WritingAcceptanceTes
 	</tr>
 	<tr class="slimRowColor9">
 		<td>$postNl4&lt;-[<pre>&lt;s11:Envelope xmlns:s11=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
-    &lt;s11:Body&gt;
-        &lt;ns1:GetWeather xmlns:ns1=&quot;http://www.webserviceX.NET&quot;&gt;
-            &lt;ns1:CityName&gt;Utrecht&lt;/ns1:CityName&gt;
-            &lt;ns1:CountryName&gt;Netherlands&lt;/ns1:CountryName&gt;
-        &lt;/ns1:GetWeather&gt;
-    &lt;/s11:Body&gt;
+    &lt;s11:Body/&gt;
 &lt;/s11:Envelope&gt;
 </pre>]</td>
 		<td>apply template</td>

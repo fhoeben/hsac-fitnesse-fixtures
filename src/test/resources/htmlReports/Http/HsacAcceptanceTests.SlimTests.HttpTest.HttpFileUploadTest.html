@@ -4,7 +4,7 @@
 		<td colspan="4"><span class="pass">file fixture</span></td>
 	</tr>
 	<tr class="slimRowColor9">
-		<td>$createdFile&lt;-[<a href="files/fileFixture/upload.txt">upload.txt</a>]</td>
+		<td>$createdFile&lt;-[<a href="files/fileFixture/upload.txt" target="_blank">upload.txt</a>]</td>
 		<td>create</td>
 		<td>upload.txt</td>
 		<td>containing</td>
@@ -21,7 +21,7 @@
 		<td><pre>&lt;binary/&gt;</pre></td>
 	</tr>
 	<tr class="slimRowColor6">
-		<td>$url&lt;-[http://192.168.0.112:8000/FitNesseMock]</td>
+		<td>$url&lt;-[http://127.0.0.1:8000/FitNesseMock]</td>
 		<td>get mock server url</td>
 	</tr>
 </table>
@@ -32,22 +32,22 @@
 	</tr>
 	<tr class="slimRowColor2">
 		<td><span class="pass">post file</span></td>
-		<td>$createdFile->[<a href="files/fileFixture/upload.txt">upload.txt</a>]</td>
+		<td>$createdFile->[<a href="files/fileFixture/upload.txt" target="_blank">upload.txt</a>]</td>
 		<td>to</td>
-		<td>$url->[http://192.168.0.112:8000/FitNesseMock]</td>
+		<td>$url->[http://127.0.0.1:8000/FitNesseMock]</td>
 	</tr>
 </table>
 <br/><table>
-	<tr class="slimRowTitle">
+	<tr>
 		<td><span class="pass">table: Mock Server Message Report</span></td>
 	</tr>
-<tr><td><table><tbody><tr class="scenario closed"><td class="green">Expected and received 1 requests</td></tr><tr class="scenario-detail closed-detail"><td><table><tbody><tr><td class="green">1</td><td><div class="collapsible closed"><p class="title">request</p><div>--N6IqL8xFpurDZPRuNG6D6f0kxhGRefZSoBVza6dY
-Content-Disposition: form-data; name="upload.txt"; filename="upload.txt"
+<tr><td><table><tbody><tr class="scenario closed"><td class="green">Expected and received 1 requests</td></tr><tr class="scenario-detail closed-detail"><td><table><tbody><tr><td class="green">1</td><td><div class="collapsible closed"><p class="title">request</p><div>--RAzl9XzNRe42ChIippw82SipsGRtkpkE0ES_pVr
+Content-Disposition: form-data; name="file"; filename="upload.txt"
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: binary
 
 This is a file to test the file upload
---N6IqL8xFpurDZPRuNG6D6f0kxhGRefZSoBVza6dY--
+--RAzl9XzNRe42ChIippw82SipsGRtkpkE0ES_pVr--
 </div></div></td><td><div class="collapsible closed"><p class="title">response</p><div><pre>&lt;binary/&gt;
 </pre></div></div></td></tr></tbody></table></td></tr></tbody></table></td></tr></table>
 <br/><table>

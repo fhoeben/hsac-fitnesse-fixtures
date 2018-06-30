@@ -17,11 +17,14 @@
 <br/><br/><table>
 	<tr class="slimRowTitle">
 		<td>script</td>
-		<td colspan="3"><span class="pass">mock xml server setup</span></td>
+		<td><span class="pass">mock xml server setup</span></td>
+		<td>localhost</td>
+		<td>7000-9000</td>
+		<td>/mock</td>
 	</tr>
 	<tr class="slimRowColor8">
 		<td>add response</td>
-		<td colspan="3">{
+		<td colspan="4">{
 	"airplanes": [{
 		"id": "001",
 		"type": "747",
@@ -42,11 +45,11 @@
 		<td>add response</td>
 		<td>Broken</td>
 		<td>with status</td>
-		<td>500</td>
+		<td colspan="2">500</td>
 	</tr>
 	<tr class="slimRowColor6">
-		<td>$url&lt;-[http://192.168.0.112:8000/FitNesseMock]</td>
-		<td colspan="3">get mock server url</td>
+		<td>$url&lt;-[http://127.0.0.1:7000/mock]</td>
+		<td colspan="4">get mock server url</td>
 	</tr>
 </table>
 <br/><table>
@@ -56,7 +59,7 @@
 	</tr>
 	<tr class="slimRowColor8">
 		<td><span class="pass">get from</span></td>
-		<td colspan="5">$url->[http://192.168.0.112:8000/FitNesseMock]</td>
+		<td colspan="5">$url->[http://127.0.0.1:7000/mock]</td>
 	</tr>
 	<tr class="slimRowColor0">
 		<td>check</td>
@@ -154,7 +157,7 @@
 	<tr class="slimRowColor7">
 		<td><span class="pass">reject</span></td>
 		<td>get from</td>
-		<td>$url->[http://192.168.0.112:8000/FitNesseMock]</td>
+		<td>$url->[http://127.0.0.1:7000/mock]</td>
 	</tr>
 	<tr class="slimRowColor0">
 		<td>check</td>
@@ -165,6 +168,16 @@
 		<td>check</td>
 		<td>response</td>
 		<td><span class="pass">Broken</span></td>
+	</tr>
+</table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td><span class="pass">mock xml server setup</span></td>
+		<td>/mock</td>
+	</tr>
+	<tr class="slimRowColor4">
+		<td colspan="3">stop</td>
 	</tr>
 </table>
 </article></body></html>
