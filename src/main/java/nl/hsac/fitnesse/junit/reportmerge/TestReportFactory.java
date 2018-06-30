@@ -16,7 +16,7 @@ import static nl.hsac.fitnesse.junit.reportmerge.TestReportHtml.PASS_STATUS;
  * Factory to create TestReportHtml instances.
  */
 public class TestReportFactory {
-    protected static final String OVERVIEW_TABLE_START = "<table><tr><td>Name</td><td>Right</td><td>Wrong</td><td>Exceptions</td></tr>";
+    protected static final String OVERVIEW_TABLE_START = "<table><tr><td>Name</td><td>Right</td><td>Wrong</td><td>Exceptions</td><td>Runtime (in milliseconds)</td></tr>";
     protected final File rootDir;
 
     public TestReportFactory(File rootDir) {
