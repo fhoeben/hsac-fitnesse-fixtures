@@ -8,7 +8,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class HtmlReportIndexGeneratorTest {
     private HtmlReportIndexGenerator generator = new HtmlReportIndexGenerator();
@@ -45,6 +48,7 @@ public class HtmlReportIndexGeneratorTest {
             assertTrue("File does not start with expected content, but was:\n" + contents, contents.startsWith("<html><head>"));
             assertTrue("File does not end with expected content, but was:\n" + contents, contents.endsWith("</body></html>"));
             assertTrue("File does not have expected CSS link:\n" + contents, contents.contains("href='Fit/css/fitnesse.css'"));
+            assertTrue("File does not have Overview Pages section:\n" + contents, contents.contains("<h2>Overview Pages</h2>"));
             String[] rows = contents.split("</tr>\\s*<tr");
             assertEquals("Unexpected number of rows: \n" + String.join("\n", rows), 29, rows.length);
         }
