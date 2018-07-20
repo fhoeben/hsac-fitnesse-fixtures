@@ -2,8 +2,14 @@ package nl.hsac.fitnesse.fixture.util;
 
 import fit.exception.FitFailureException;
 import nl.hsac.fitnesse.fixture.Environment;
+import org.apache.commons.io.IOUtils;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 import javax.xml.namespace.NamespaceContext;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -233,6 +239,31 @@ public class XmlHttpResponse extends HttpResponse {
     protected List<String> getRawAllXPath(String soapResponse, String xPathExpr, Object... params) {
         String expr = String.format(xPathExpr, params);
         return getXPathHelper().getAllXPath(namespaceContext, soapResponse, expr);
+    }
+
+    /**
+     * Select the part of a multimime response. This can only be done once per request, the response
+     * is modified.
+     *
+     * @param part Which part number.
+     * @return True if the part exists.
+     */
+    public boolean selectPartOfResponse(int part) {
+        try {
+            // Avoid exceptions when there are no multiparts
+            System.setProperty("mail.mime.multipart.allowempty", "true");
+            MimeMultipart mp = new MimeMultipart(new ByteArrayDataSource(getResponse(), "application/soap+xml"));
+
+            int count = mp.getCount();
+            if (count > part) {
+                String xml = IOUtils.toString((InputStream) mp.getBodyPart(part).getContent());
+                setResponse(xml);
+                return true;
+            }
+        } catch (MessagingException | IOException e) {
+            throw new RuntimeException("unparseble response", e);
+        }
+        return false;
     }
 
     /**

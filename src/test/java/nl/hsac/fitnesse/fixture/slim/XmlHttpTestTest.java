@@ -3,10 +3,13 @@ package nl.hsac.fitnesse.fixture.slim;
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.util.ReflectionHelper;
 import nl.hsac.fitnesse.fixture.util.XMLFormatter;
+import nl.hsac.fitnesse.fixture.util.XmlHttpResponseTest;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests XmlHttpTest.
@@ -44,5 +47,14 @@ public class XmlHttpTestTest {
         } finally {
             helper.setField(Environment.getInstance(), "xmlFormatter", originalFormatter);
         }
+    }
+
+    @Test
+    public void testSelectBodypart() {
+        xmlHttpTest.getResponse().setResponse("<OK/>");
+        assertFalse(xmlHttpTest.selectPartOfResponse(0));
+        xmlHttpTest.getResponse().setResponse(XmlHttpResponseTest.MULTIPART_RESPONSE);
+        assertTrue(xmlHttpTest.selectPartOfResponse(0));
+        assertFalse(xmlHttpTest.selectPartOfResponse(0));
     }
 }
