@@ -3,6 +3,14 @@ package nl.hsac.fitnesse.fixture.fit;
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 
+import javax.mail.BodyPart;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
+import javax.mail.util.SharedByteArrayInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.Map;
 
@@ -57,6 +65,7 @@ public abstract class SoapCallMapColumnFixture<Response extends XmlHttpResponse>
         String url = getSymbol(urlSymbolKey).toString();
         Response response = getEnvironment().createInstance(getResponseClass());
         callSoapService(url, getTemplateName(), soapAction, response);
+        correctResponse(response);
         return response;
     }
 
@@ -70,6 +79,7 @@ public abstract class SoapCallMapColumnFixture<Response extends XmlHttpResponse>
         String url = getSymbol(urlSymbolKey).toString();
         XmlHttpResponse response = getEnvironment().createInstance(getCheckResponseClass());
         callSoapService(url, getCheckTemplateName(), soapAction, response);
+        correctResponse(response);
         return response;
     }
 
@@ -131,4 +141,32 @@ public abstract class SoapCallMapColumnFixture<Response extends XmlHttpResponse>
         return getEnvironment().getHtmlForXml(xml);
     }
 
+    private void correctResponse(XmlHttpResponse response) {
+        try {
+            // Avoid exceptions when there are no multiparts
+            System.setProperty("mail.mime.multipart.allowempty", "true");
+            MimeMultipart mp = new MimeMultipart(new ByteArrayDataSource(response.getResponse(), "application/soap+xml"));
+
+            int count = mp.getCount();
+            if (count > 0) {
+                String xml = getBodypartString(mp.getBodyPart(0));
+                response.setResponse(xml);
+            }
+        } catch (MessagingException | IOException e) {
+            throw new RuntimeException("unparseble response", e);
+        }
+    }
+
+    private String getBodypartString(BodyPart bp) throws IOException, MessagingException {
+        SharedByteArrayInputStream stream = (SharedByteArrayInputStream) bp.getContent();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+            StringBuilder xml = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                xml.append(line);
+                xml.append('\n');
+            }
+            return xml.toString();
+        }
+    }
 }
