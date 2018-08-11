@@ -222,6 +222,42 @@ public class HttpTestTest {
     }
 
     /**
+     * Test post values
+     */
+    @Test
+    public void testPostValues() {
+        HttpTest httpTest = new HttpTest();
+        String expectedBody = setupValuesToEncodeInBody(httpTest);
+
+        XmlHttpResponse req1 = checkCall(url -> httpTest.postValuesTo(url));
+        assertEquals("POST", httpTest.getResponse().getMethod());
+        assertEquals("POST", req1.getMethod());
+        assertEquals(expectedBody, req1.getRequest());
+    }
+
+    /**
+     * Test put values
+     */
+    @Test
+    public void testPutValues() {
+        HttpTest httpTest = new HttpTest();
+        String expectedBody = setupValuesToEncodeInBody(httpTest);
+        XmlHttpResponse req1 = checkCall(url -> httpTest.putValuesTo(url));
+        assertEquals("PUT", httpTest.getResponse().getMethod());
+        assertEquals("PUT", req1.getMethod());
+        assertEquals(expectedBody, req1.getRequest());
+    }
+
+    private String setupValuesToEncodeInBody(HttpTest httpTest) {
+        httpTest.setValueFor(1, "a");
+        httpTest.setValueFor("one two", "b");
+        httpTest.setValueFor("één twee", "c");
+        httpTest.setValueFor("12", "één");
+
+        return "a=1&b=one+two&c=%C3%A9%C3%A9n+twee&%C3%A9%C3%A9n=12";
+    }
+
+    /**
      * Test delete with body
      */
     @Test
