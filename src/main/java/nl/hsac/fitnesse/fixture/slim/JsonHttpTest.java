@@ -183,12 +183,6 @@ public class JsonHttpTest extends HttpTest {
         return jsonPath;
     }
 
-    @Override
-    protected String urlEncode(String str) {
-        String strNoSpaces = str.replace(" ", "+");
-        return super.urlEncode(strNoSpaces);
-    }
-
     protected JsonPathHelper getPathHelper() {
         return getEnvironment().getJsonPathHelper();
     }

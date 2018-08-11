@@ -488,9 +488,15 @@ public class HttpTest extends SlimFixtureWithMap {
             if (!baseUrl.contains("?")) {
                 baseUrl += "?";
             }
-            baseUrl += urlEncodeCurrentValues();
+            baseUrl += urlEncodeCurrentValuesForQueryString();
         }
         return baseUrl;
+    }
+
+    protected String urlEncodeCurrentValuesForQueryString() {
+        // in request BODY a '+' should be used for application/x-www-form-urlencoded
+        // but in query string one should use '%20'
+        return urlEncodeCurrentValues().replace("+", "%20");
     }
 
     protected String urlEncodeCurrentValues() {

@@ -63,6 +63,12 @@ public class HttpTestTest {
         assertEquals("https://mysite.nl/test?age=12&name=John%26Pete", getUrl);
 
         client.clearValues();
+        client.setValueFor("John and Pete", "name");
+        client.setValueFor("13", "age");
+        getUrl = client.createUrlWithParams("http://mysite.nl/test");
+        assertEquals("http://mysite.nl/test?name=John%20and%20Pete&age=13", getUrl);
+
+        client.clearValues();
         client.setValueFor("12", "één");
         getUrl = client.createUrlWithParams("http://mysite.nl:8080/test");
         assertEquals("http://mysite.nl:8080/test?%C3%A9%C3%A9n=12", getUrl);
