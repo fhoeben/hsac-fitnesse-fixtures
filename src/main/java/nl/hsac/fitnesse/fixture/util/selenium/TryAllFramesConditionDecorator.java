@@ -39,7 +39,7 @@ class TryAllFramesConditionDecorator<T> implements ExpectedCondition<T> {
 
     private T invokeInFrames(WebDriver webDriver) {
         T result = null;
-        List<WebElement> frames = webDriver.findElements(ConstantBy.frames());
+        List<WebElement> frames = helper.findElements(ConstantBy.frames());
         for (WebElement frame : frames) {
             helper.switchToFrame(frame);
             try {
