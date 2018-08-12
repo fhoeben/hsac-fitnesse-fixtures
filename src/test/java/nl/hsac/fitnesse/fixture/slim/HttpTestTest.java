@@ -64,9 +64,9 @@ public class HttpTestTest {
 
         client.clearValues();
         client.setValueFor("John and Pete", "name");
-        client.setValueFor("13", "age");
+        client.setValueFor("13+12", "age");
         getUrl = client.createUrlWithParams("http://mysite.nl/test");
-        assertEquals("http://mysite.nl/test?name=John%20and%20Pete&age=13", getUrl);
+        assertEquals("http://mysite.nl/test?name=John%20and%20Pete&age=13%2B12", getUrl);
 
         client.clearValues();
         client.setValueFor("12", "één");
@@ -259,8 +259,9 @@ public class HttpTestTest {
         httpTest.setValueFor("one two", "b");
         httpTest.setValueFor("één twee", "c");
         httpTest.setValueFor("12", "één");
+        httpTest.setValueFor("1+2=3", "sum");
 
-        return "a=1&b=one+two&c=%C3%A9%C3%A9n+twee&%C3%A9%C3%A9n=12";
+        return "a=1&b=one+two&c=%C3%A9%C3%A9n+twee&%C3%A9%C3%A9n=12&sum=1%2B2%3D3";
     }
 
     /**
