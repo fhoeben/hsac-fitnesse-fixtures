@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.util.selenium;
 
 import nl.hsac.fitnesse.fixture.util.selenium.by.ConstantBy;
+import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -41,6 +42,7 @@ class TryAllFramesConditionDecorator<T> implements ExpectedCondition<T> {
         T result = null;
         List<WebElement> frames = helper.findElements(ConstantBy.frames());
         for (WebElement frame : frames) {
+            SearchContext currentContext = helper.getCurrentContext();
             helper.switchToFrame(frame);
             try {
                 result = decorated.apply(webDriver);
@@ -58,6 +60,8 @@ class TryAllFramesConditionDecorator<T> implements ExpectedCondition<T> {
                     int depthOnAlert = helper.getCurrentFrameDepth();
                     try {
                         helper.switchToParentFrame();
+                        // restore search context
+                        helper.setCurrentContext(currentContext);
                     } catch (UnhandledAlertException e) {
                         // we can't go up if there is an alert open.
                         // we store the current depth so we might go back up when the alert is handled
