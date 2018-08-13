@@ -43,6 +43,9 @@ class TryAllFramesConditionDecorator<T> implements ExpectedCondition<T> {
         List<WebElement> frames = helper.findElements(ConstantBy.frames());
         for (WebElement frame : frames) {
             SearchContext currentContext = helper.getCurrentContext();
+            if (currentContext == helper.driver()) {
+                currentContext = null;
+            }
             helper.switchToFrame(frame);
             try {
                 result = decorated.apply(webDriver);
@@ -61,7 +64,9 @@ class TryAllFramesConditionDecorator<T> implements ExpectedCondition<T> {
                     try {
                         helper.switchToParentFrame();
                         // restore search context
-                        helper.setCurrentContext(currentContext);
+                        if (currentContext != null) {
+                            helper.setCurrentContext(currentContext);
+                        }
                     } catch (UnhandledAlertException e) {
                         // we can't go up if there is an alert open.
                         // we store the current depth so we might go back up when the alert is handled
