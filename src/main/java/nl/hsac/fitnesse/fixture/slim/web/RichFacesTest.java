@@ -145,7 +145,7 @@ public class RichFacesTest extends BrowserTest<WebElement> {
 
     protected boolean eventTriggersAjax(WebElement element, String attribute) {
         String eventHandler = element.getAttribute(attribute);
-        return eventHandler != null && eventHandler.startsWith("RichFaces.ajax(");
+        return eventHandler != null && eventHandler.contains("RichFaces.ajax(");
     }
 
     public void waitForJsfAjax() {
