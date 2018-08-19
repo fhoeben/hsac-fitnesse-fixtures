@@ -98,9 +98,17 @@ public class LocalDriverFactory implements DriverFactory {
         FirefoxProfile fxProfile = new FirefoxProfile();
         if (profile != null) {
             for (Map.Entry<String, Object> profileEntry : profile.entrySet()) {
+                String key = profileEntry.getKey();
                 Object value = profileEntry.getValue();
-                String valueStr = value == null ? null : value.toString();
-                fxProfile.setPreference(profileEntry.getKey(), valueStr);
+                if (value instanceof Boolean) {
+                    fxProfile.setPreference(key, (Boolean) value);
+                } else if (value instanceof Integer) {
+                    fxProfile.setPreference(key, (Integer) value);
+                } else if (value == null) {
+                    fxProfile.setPreference(key, null);
+                } else {
+                    fxProfile.setPreference(key, value.toString());
+                }
             }
         }
         return fxProfile;
