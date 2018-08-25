@@ -15,7 +15,9 @@ import java.util.List;
  * Version of {@link BrowserTest} with added functionality to deal with RichFaces, JSF pages.
  */
 public class RichFacesTest extends BrowserTest<WebElement> {
+    protected static final String RICH_FACES_AJAX_CALL = "RichFaces.ajax(";
     private final List<String> eventsThatMayRequireWaiting = new ArrayList<>(Arrays.asList("onchange", "onclick"));
+    private boolean ajaxStartWithOnly = false;
     private boolean ignoreImplicitAjaxWaitTimeouts = true;
     private boolean shouldWaitForAjax = false;
     private String previousLocation = null;
@@ -26,6 +28,14 @@ public class RichFacesTest extends BrowserTest<WebElement> {
 
     public RichFacesTest(int secondsBeforeTimeout) {
         super(secondsBeforeTimeout);
+    }
+
+    public boolean onlyWaitIfEventHandlerStartsWithAjaxCall() {
+        return ajaxStartWithOnly;
+    }
+
+    public void setOnlyWaitIfEventHandlerStartsWithAjaxCall(boolean newValue) {
+        ajaxStartWithOnly = newValue;
     }
 
     @Override
@@ -145,7 +155,9 @@ public class RichFacesTest extends BrowserTest<WebElement> {
 
     protected boolean eventTriggersAjax(WebElement element, String attribute) {
         String eventHandler = element.getAttribute(attribute);
-        return eventHandler != null && eventHandler.contains("RichFaces.ajax(");
+        return eventHandler != null
+                && ajaxStartWithOnly? eventHandler.startsWith(RICH_FACES_AJAX_CALL)
+                                    : eventHandler.contains(RICH_FACES_AJAX_CALL);
     }
 
     public void waitForJsfAjax() {
