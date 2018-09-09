@@ -28,6 +28,7 @@ import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.SearchContext;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
@@ -1978,15 +1979,24 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     public boolean refreshSearchContext() {
         // copy path so we can retrace after clearing it
         List<String> fullPath = new ArrayList<>(getCurrentSearchContextPath());
+        return refreshSearchContext(fullPath, Math.min(fullPath.size(), 5));
+    }
+
+    protected boolean refreshSearchContext(List<String> fullPath, int maxRetries) {
         clearSearchContext();
         for (String container : fullPath) {
             try {
                 setSearchContextTo(container);
             } catch (RuntimeException se) {
-                // not the entire context was refreshed, clear it to prevent an 'intermediate' search context
-                clearSearchContext();
-                throw new SlimFixtureException("Search context is 'stale' and could not be refreshed. Context was: " + fullPath
-                        + ". Error when trying to refresh: " + container, se);
+                if (maxRetries < 1 || !(se instanceof StaleElementReferenceException)) {
+                    // not the entire context was refreshed, clear it to prevent an 'intermediate' search context
+                    clearSearchContext();
+                    throw new SlimFixtureException("Search context is 'stale' and could not be refreshed. Context was: " + fullPath
+                            + ". Error when trying to refresh: " + container, se);
+                } else {
+                    // search context went stale while setting, retry
+                    return refreshSearchContext(fullPath, maxRetries - 1);
+                }
             }
         }
         return true;
