@@ -521,9 +521,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
                 result = clickSelectOption(element, value);
             } else {
                 if (shouldClear) {
-                    clear(element);
+                    result = clear(element);
                 }
-                sendValue(element, value);
+                if (result) {
+                    sendValue(element, value);
+                }
             }
         }
         return result;
@@ -1272,14 +1274,19 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         boolean result = false;
         WebElement element = getElementToClear(place, container);
         if (element != null) {
-            clear(element);
-            result = true;
+            result = clear(element);
         }
         return result;
     }
 
-    protected void clear(WebElement element) {
-        element.clear();
+    protected boolean clear(WebElement element) {
+        boolean result = false;
+        String tagName = element.getTagName();
+        if ("input".equalsIgnoreCase(tagName) || "textarea".equalsIgnoreCase(tagName)) {
+            element.clear();
+            result = true;
+        }
+        return result;
     }
 
     protected T getElementToClear(String place, String container) {
