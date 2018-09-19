@@ -28,7 +28,6 @@ import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.SearchContext;
-import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
@@ -1995,7 +1994,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             try {
                 setSearchContextTo(container);
             } catch (RuntimeException se) {
-                if (maxRetries < 1 || !(se instanceof StaleElementReferenceException)) {
+                if (maxRetries < 1 || !(se instanceof WebDriverException)
+                        || !getSeleniumHelper().isStaleElementException((WebDriverException) se)) {
                     // not the entire context was refreshed, clear it to prevent an 'intermediate' search context
                     clearSearchContext();
                     throw new SlimFixtureException("Search context is 'stale' and could not be refreshed. Context was: " + fullPath
