@@ -67,6 +67,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     protected List<String> getCurrentSearchContextPath() {
         return currentSearchContextPath;
     }
+    protected int minStaleContextRefreshCount = 5;
 
     @Override
     protected void beforeInvoke(Method method, Object[] arguments) {
@@ -855,12 +856,27 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         if (container == null) {
             result = action.get();
         } else {
-            container = cleanupValue(container);
-            T containerElement = getContainerElement(container);
-            if (containerElement != null) {
-                result = doInContainer(containerElement, action);
-            }
+            String cleanContainer = cleanupValue(container);
+            result = doInContainer(() -> getContainerElement(cleanContainer), action);
         }
+        return result;
+    }
+
+    protected <R> R doInContainer(Supplier<T> containerSupplier, Supplier<R> action) {
+        R result = null;
+        int retryCount = minStaleContextRefreshCount;
+        do {
+            try {
+                T containerElement = containerSupplier.get();
+                if (containerElement != null) {
+                    result = doInContainer(containerElement, action);
+                }
+                retryCount = 0;
+            } catch (StaleContextException e) {
+                // containerElement went stale
+                retryCount--;
+            }
+        } while (retryCount > 0);
         return result;
     }
 
@@ -1350,12 +1366,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected boolean clickInRow(By rowBy, String place) {
-        boolean result = false;
-        T row = findElement(rowBy);
-        if (row != null) {
-            result = doInContainer(row, () -> click(place));
-        }
-        return result;
+        return doInContainer(() -> findElement(rowBy), () -> click(place));
     }
 
     /**
@@ -1985,7 +1996,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     public boolean refreshSearchContext() {
         // copy path so we can retrace after clearing it
         List<String> fullPath = new ArrayList<>(getCurrentSearchContextPath());
-        return refreshSearchContext(fullPath, Math.min(fullPath.size(), 5));
+        return refreshSearchContext(fullPath, Math.min(fullPath.size(), minStaleContextRefreshCount));
     }
 
     protected boolean refreshSearchContext(List<String> fullPath, int maxRetries) {
