@@ -1369,7 +1369,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected boolean clickInRow(By rowBy, String place) {
-        return doInContainer(() -> findElement(rowBy), () -> click(place));
+        return Boolean.TRUE.equals(doInContainer(() -> findElement(rowBy), () -> click(place)));
     }
 
     /**
