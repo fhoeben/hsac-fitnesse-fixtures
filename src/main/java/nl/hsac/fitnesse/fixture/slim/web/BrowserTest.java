@@ -875,6 +875,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             } catch (StaleContextException e) {
                 // containerElement went stale
                 retryCount--;
+                if (retryCount < 1) {
+                    throw e;
+                }
             }
         } while (retryCount > 0);
         return result;
