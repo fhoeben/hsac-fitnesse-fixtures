@@ -680,9 +680,21 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
                 optionValue = cleanupValue(optionValue);
                 By optionBy = new OptionBy(optionValue);
                 WebElement option = optionBy.findElement(element);
-                if (option != null) {
-                    result = clickElement(option);
-                }
+                result = clickSelectOption(element, option);
+            }
+        }
+        return result;
+    }
+
+    protected boolean clickSelectOption(WebElement element, WebElement option) {
+        boolean result = false;
+        if (option != null) {
+            // we scroll containing select into view (not the option)
+            // based on behavior for option in https://www.w3.org/TR/webdriver/#element-click
+            scrollIfNotOnScreen(element);
+            if (isInteractable(option)) {
+                option.click();
+                result = true;
             }
         }
         return result;
