@@ -124,10 +124,11 @@ Tested to reproduce the bug with window sizes of 1366x768 and 1600x1200.
 |add response|${HTML}              |
 |$url=       |get mock server url  |
 
-|script             |browser test       |
-|set browser size to|1366|by |768       |
-|open               |$url               |
-|select             |100 |for|css=select|
+|script             |browser test                  |
+|set browser size to|1366    |by        |768       |
+|open               |$url                          |
+|select             |100     |for       |css=select|
+|check              |value of|css=select|100       |
 
 |script|mock xml server setup|
 |stop                        |

@@ -643,10 +643,11 @@ Test
 
 Ensure we use our custom list formatting.
 
-|script             |browser test       |
-|set browser size to|1366|by |768       |
-|open               |$url               |
-|select             |507 |for|css=select|
+|script             |browser test                  |
+|set browser size to|1366    |by        |768       |
+|open               |$url                          |
+|select             |507     |for       |css=select|
+|check              |value of|css=select|507       |
 
 
 |script|mock xml server setup|
