@@ -356,6 +356,40 @@ public class HttpTest extends SlimFixtureWithMap {
         return sendToImpl(body, serviceUrl, getContentType(), "PUT");
     }
 
+    /**
+     * Sends a file by HTTP PUT body to service endpoint.
+     * @param fileName fileName to post
+     * @param serviceUrl service endpoint to send body to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean putFileTo(String fileName, String serviceUrl) {
+        return putFileToImpl(fileName, serviceUrl);
+    }
+
+
+    protected boolean putFileToImpl(String fileName, String serviceUrl) {
+        boolean result;
+        resetResponse();
+        String url = getUrl(serviceUrl);
+
+        String filePath = getFilePathFromWikiUrl(fileName);
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new StopTestException(false, "File " + filePath + " not found.");
+        }
+
+        try {
+            response.setRequest(fileName);
+            storeLastCall("PUT_FILE", serviceUrl);
+            getEnvironment().doHttpFilePut(url, response, headerValues, file);
+        } catch (Throwable t) {
+            throw new StopTestException("Unable to get response from PUT to: " + url, t);
+        }
+        result = postProcessResponse();
+        return result;
+    }
+
+
     protected String cleanupBody(String body) {
         return getEnvironment().getHtmlCleaner().cleanupPreFormatted(body);
     }
