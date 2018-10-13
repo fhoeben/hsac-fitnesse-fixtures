@@ -79,7 +79,9 @@ public class PageSourceSaver {
                 return savePageSource(fileName);
             } finally {
                 helper.switchToParentFrame();
-                helper.setCurrentContext(currentContext);
+                if (currentContext != null) {
+                    helper.setCurrentContext(currentContext);
+                }
             }
         } catch (Exception e) {
             System.err.println("Error saving sources of nested (i)frame: " + frame);
