@@ -4,6 +4,7 @@ import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ConstantBy;
 import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -69,13 +70,16 @@ public class PageSourceSaver {
     }
 
     protected String saveFrameSource(WebElement frame) {
+        SeleniumHelper helper = getSeleniumHelper();
+        SearchContext currentContext = helper.getCurrentContext();
         try {
-            getSeleniumHelper().switchToFrame(frame);
+            helper.switchToFrame(frame);
             try {
-                String fileName = getSeleniumHelper().getResourceNameFromLocation();
+                String fileName = helper.getResourceNameFromLocation();
                 return savePageSource(fileName);
             } finally {
-                getSeleniumHelper().switchToParentFrame();
+                helper.switchToParentFrame();
+                helper.setCurrentContext(currentContext);
             }
         } catch (Exception e) {
             System.err.println("Error saving sources of nested (i)frame: " + frame);

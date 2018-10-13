@@ -1,0 +1,42 @@
+---
+Help: Ensure finding in search context does not find elements outside of that context
+Test
+---
+
+Saving page source should not reset search context, even if iframe is present
+
+We use a mock server running to serve the HTML defined in this page.
+
+
+!define HTML { {{{
+<html>
+<body>
+<iframe src="test.html"></iframe>
+<div id="div1" aria-label="container">
+Hello
+</div>
+Bye bye
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script                |browser test                       |
+|seconds before timeout|1                                  |
+|open                  |$url                               |
+|ensure                |is visible    |Bye bye             |
+|ensure                |is not visible|Bye bye|in|container|
+|show                  |save page source                   |
+|ensure                |is not visible|Bye bye|in|container|
+|set search context to |container                          |
+|reject                |is visible    |Bye bye             |
+|show                  |save page source                   |
+|reject                |is visible    |Bye bye             |
+
+|script|mock xml server setup|
+|stop                        |
+
+
