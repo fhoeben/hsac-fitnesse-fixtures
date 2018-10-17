@@ -255,25 +255,7 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     protected boolean postFileToImpl(String fileName, String serviceUrl) {
-        boolean result;
-        resetResponse();
-        String url = getUrl(serviceUrl);
-
-        String filePath = getFilePathFromWikiUrl(fileName);
-        File file = new File(filePath);
-        if (!file.exists()) {
-            throw new StopTestException(false, "File " + filePath + " not found.");
-        }
-
-        try {
-            response.setRequest(fileName);
-            storeLastCall("POST_FILE", serviceUrl);
-            getEnvironment().doHttpFilePost(url, response, headerValues, file);
-        } catch (Throwable t) {
-            throw new StopTestException("Unable to get response from POST to: " + url, t);
-        }
-        result = postProcessResponse();
-        return result;
+        return sendFileImpl(fileName, serviceUrl, "POST");
     }
 
     /**
@@ -355,6 +337,52 @@ public class HttpTest extends SlimFixtureWithMap {
     protected boolean putToImpl(String body, String serviceUrl) {
         return sendToImpl(body, serviceUrl, getContentType(), "PUT");
     }
+
+    /**
+     * Sends a file by HTTP PUT body to service endpoint.
+     * @param fileName fileName to post
+     * @param serviceUrl service endpoint to send body to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean putFileTo(String fileName, String serviceUrl) {
+        return putFileToImpl(fileName, serviceUrl);
+    }
+
+
+    protected boolean putFileToImpl(String fileName, String serviceUrl) {
+        return sendFileImpl(fileName, serviceUrl, "PUT");
+    }
+
+    protected boolean sendFileImpl(String fileName, String serviceUrl, String method) {
+        boolean result;
+        resetResponse();
+        String url = getUrl(serviceUrl);
+
+        String filePath = getFilePathFromWikiUrl(fileName);
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new StopTestException(false, "File " + filePath + " not found.");
+        }
+
+        try {
+            response.setRequest(fileName);
+            storeLastCall(method + "_FILE", serviceUrl);
+            switch (method) {
+                case "POST":
+                    getEnvironment().doHttpFilePost(url, response, headerValues, file);
+                    break;
+                case "PUT":
+                    getEnvironment().doHttpFilePut(url, response, headerValues, file);
+                    break;
+            }
+
+        } catch (Throwable t) {
+            throw new StopTestException("Unable to get response from " + method + " to: " + url, t);
+        }
+        result = postProcessResponse();
+        return result;
+    }
+
 
     protected String cleanupBody(String body) {
         return getEnvironment().getHtmlCleaner().cleanupPreFormatted(body);
@@ -880,6 +908,9 @@ public class HttpTest extends SlimFixtureWithMap {
                 break;
             case "POST_FILE":
                 postFileToImpl(response.getRequest(), lastUrl);
+                break;
+            case "PUT_FILE":
+                putFileToImpl(response.getRequest(), lastUrl);
                 break;
             default:
                 throw new SlimFixtureException(false, "Repeat of method: " + lastMethod + " not configured.");

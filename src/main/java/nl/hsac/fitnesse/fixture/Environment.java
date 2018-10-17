@@ -296,6 +296,17 @@ public class Environment {
     public void doHttpFilePost(String url, HttpResponse result, Map<String, Object> headers, File file) {
         httpClient.post(url, result, headers, file);
     }
+
+    /**
+     * Performs PUT to supplied url of a file as binary data.
+     * @param url url to post to.
+     * @param result result containing request, its response will be filled.
+     * @param headers headers to add.
+     * @param file file containing binary data to post.
+     */
+    public void doHttpFilePut(String url, HttpResponse result, Map<String, Object> headers, File file) {
+        httpClient.put(url, result, headers, file);
+    }
     
     /**
      * Performs PUT to supplied url of result of applying template with model.

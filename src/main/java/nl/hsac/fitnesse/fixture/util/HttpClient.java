@@ -82,19 +82,12 @@ public class HttpClient {
      */
     public void post(String url, HttpResponse response, Map<String, Object> headers, File file) {
         HttpPost methodPost = new HttpPost(url);
-
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        builder.addBinaryBody("file", file,
-                ContentType.APPLICATION_OCTET_STREAM, file.getName());
-        HttpEntity multipart = builder.build();
-
+        HttpEntity multipart = buildBodyWithFile(file);
         methodPost.setEntity(multipart);
-
         getResponse(url, response, methodPost, headers);
     }
 
 
-    
     /**
      * @param url URL of service
      * @param response response pre-populated with request to send. Response content and
@@ -109,6 +102,35 @@ public class HttpClient {
         methodPut.setEntity(ent);
         getResponse(url, response, methodPut, headers);
     }
+
+
+    /**
+     * Put file as 'application/octet-stream'.
+     * @param url URL of service
+     * @param response response pre-populated with request to send. Response content and
+     *          statusCode will be filled.
+     * @param headers http headers to add
+     * @param file file containing binary data to put.
+     */
+    public void put(String url, HttpResponse response, Map<String, Object> headers, File file) {
+        HttpPut methodPut = new HttpPut(url);
+        HttpEntity multipart = buildBodyWithFile(file);
+        methodPut.setEntity(multipart);
+        getResponse(url, response, methodPut, headers);
+    }
+
+    /**
+     * Builds request body with a given file
+     * @param file file containing binary data.
+     */
+    private HttpEntity buildBodyWithFile(File file) {
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.addBinaryBody("file", file,
+                ContentType.APPLICATION_OCTET_STREAM, file.getName());
+        HttpEntity multipart = builder.build();
+        return multipart;
+    }
+
 
     /**
      * @param url URL of service
