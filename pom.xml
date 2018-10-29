@@ -44,7 +44,7 @@
 		<selenium.version>3.14.0</selenium.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<apache.http.version>4.5.6</apache.http.version>
-		<surefire.version>2.22.0</surefire.version>
+		<surefire.version>2.22.1</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
 		<selenium.internetexplorerdriver.version>3.14.0</selenium.internetexplorerdriver.version>
@@ -107,12 +107,12 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-text</artifactId>
-			<version>1.4</version>
+			<version>1.6</version>
 		</dependency>
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib-nodep</artifactId>
-			<version>3.2.8</version>
+			<version>3.2.9</version>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
