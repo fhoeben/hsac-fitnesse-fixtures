@@ -3,7 +3,9 @@ package nl.hsac.fitnesse.junit;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesseContext;
 import fitnesse.components.PluginsClassLoaderFactory;
+import fitnesse.junit.DescriptionFactory;
 import fitnesse.junit.FitNesseRunner;
+import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.wiki.WikiPage;
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.slim.web.LayoutTest;
@@ -241,6 +243,19 @@ public class HsacFitNesseRunner extends FitNesseRunner {
             }
         }
 
+    }
+
+    @Override
+    protected void addTestSystemListeners(RunNotifier notifier, MultipleTestsRunner testRunner, Class<?> suiteClass, DescriptionFactory descriptionFactory) {
+        super.addTestSystemListeners(notifier, testRunner, suiteClass, descriptionFactory);
+
+        try {
+            String fitNesseRootDir = getFitNesseDir(suiteClass) + "/" + getFitNesseRoot(suiteClass);
+            String fileToCreate = fitNesseRootDir + "/ReRunLastFailures.wiki";
+            testRunner.addTestSystemListener(new ReRunSuiteTestSystemListener(fileToCreate));
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to create re-run suite generator", e);
+        }
     }
 
     @Override
