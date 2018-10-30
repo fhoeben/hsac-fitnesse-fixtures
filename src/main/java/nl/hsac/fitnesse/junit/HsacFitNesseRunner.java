@@ -86,7 +86,8 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     public final static String SUITE_FILTER_STRATEGY_OVERRIDE_VARIABLE_NAME = "suiteFilterStrategy";
     public final static String SUITE_FILTER_OVERRIDE_VARIABLE_NAME = "suiteFilter";
     public final static String EXCLUDE_SUITE_FILTER_OVERRIDE_VARIABLE_NAME = "excludeSuiteFilter";
-    private final static String SELENIUM_DEFAULT_TIMEOUT_PROP = "seleniumDefaultTimeout";
+    public final static String SELENIUM_DEFAULT_TIMEOUT_PROP = "seleniumDefaultTimeout";
+    public final static String RE_RUN_SUITE_LOCATION_OVERRIDE_VARIABLE_NAME = "reRunSuiteLocation";
     protected final List<SeleniumDriverFactoryFactory> factoryFactories = new ArrayList<>();
 
     public HsacFitNesseRunner(Class<?> suiteClass) throws InitializationError {
@@ -250,12 +251,20 @@ public class HsacFitNesseRunner extends FitNesseRunner {
         super.addTestSystemListeners(notifier, testRunner, suiteClass, descriptionFactory);
 
         try {
-            String fitNesseRootDir = getFitNesseDir(suiteClass) + "/" + getFitNesseRoot(suiteClass);
+            String fitNesseRootDir = getReRunSuiteLocation(suiteClass);
             String fileToCreate = fitNesseRootDir + "/ReRunLastFailures.wiki";
             testRunner.addTestSystemListener(new ReRunSuiteTestSystemListener(fileToCreate));
         } catch (Exception e) {
             throw new RuntimeException("Unable to create re-run suite generator", e);
         }
+    }
+
+    protected String getReRunSuiteLocation(Class<?> suiteClass) throws InitializationError {
+        String reRunSuiteLocation = System.getProperty(RE_RUN_SUITE_LOCATION_OVERRIDE_VARIABLE_NAME);
+        if (StringUtils.isEmpty(reRunSuiteLocation)) {
+            reRunSuiteLocation = getFitNesseDir(suiteClass) + "/" + getFitNesseRoot(suiteClass);
+        }
+        return reRunSuiteLocation;
     }
 
     @Override
