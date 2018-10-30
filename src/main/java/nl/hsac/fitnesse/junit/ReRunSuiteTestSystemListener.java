@@ -25,6 +25,8 @@ public class ReRunSuiteTestSystemListener implements TestSystemListener, Closeab
         wikiFile = new File(path);
         if (!wikiFile.getParentFile().exists()) {
             wikiFile.getParentFile().mkdirs();
+        } else if (wikiFile.exists()) {
+            wikiFile.delete();
         }
         pw = new PrintWriter(wikiFile, "utf-8");
     }
@@ -83,7 +85,6 @@ public class ReRunSuiteTestSystemListener implements TestSystemListener, Closeab
         if (!"SuiteSetUp".equals(testPageName)
                 && !"SuiteTearDown".equals(testPageName)) {
             if (!hasContent) {
-
                 pw.append(
                         "---\n" +
                                 "Suite\n" +
