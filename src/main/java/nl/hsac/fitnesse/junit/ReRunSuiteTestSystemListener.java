@@ -42,7 +42,6 @@ public class ReRunSuiteTestSystemListener implements TestSystemListener, Closeab
 
     @Override
     public void close() {
-        pw.flush();
         pw.close();
         // no content -> remove file
         if (!hasContent && wikiFile.exists()) {
@@ -96,6 +95,7 @@ public class ReRunSuiteTestSystemListener implements TestSystemListener, Closeab
             pw.append("!see .");
             pw.append(pagePath);
             pw.append('\n');
+            pw.flush();
         }
     }
 }
