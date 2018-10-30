@@ -38,3 +38,4 @@ wiki/FitNesseRoot/files/base64
 wiki/webdrivers
 /src/test/resources/htmlReports/index.html
 wiki/FitNesseRoot/HsacExamples/SlimTests/UtilityFixtures/GeneratedSymbolicLinkSuite/*LocaleTests.wiki
+wiki/FitNesseRoot/ReRunLastFailures.wiki
