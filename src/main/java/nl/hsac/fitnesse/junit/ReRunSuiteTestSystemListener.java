@@ -92,9 +92,11 @@ public class ReRunSuiteTestSystemListener implements TestSystemListener, Closeab
                 hasContent = true;
             }
             String pagePath = testPage.getFullPath();
-            pw.append("!see .");
+            pw.append("!see [[");
             pw.append(pagePath);
-            pw.append('\n');
+            pw.append("][.");
+            pw.append(pagePath);
+            pw.append("]]\n");
             pw.flush();
         }
     }
