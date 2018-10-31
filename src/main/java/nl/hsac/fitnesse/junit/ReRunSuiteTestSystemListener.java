@@ -84,11 +84,11 @@ public class ReRunSuiteTestSystemListener implements TestSystemListener, Closeab
         if (!"SuiteSetUp".equals(testPageName)
                 && !"SuiteTearDown".equals(testPageName)) {
             if (!hasContent) {
-                pw.append(
+                pw.append("---\n" +
+                        "Help: Lists tests failed on last run. So they can be re-run to determine whether the failure is consistent.\n" +
+                        "Suite\n" +
                         "---\n" +
-                                "Suite\n" +
-                                "---\n" +
-                                "\n");
+                        "\n");
                 hasContent = true;
             }
             String pagePath = testPage.getFullPath();
