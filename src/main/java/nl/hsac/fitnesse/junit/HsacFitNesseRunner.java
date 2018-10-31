@@ -255,7 +255,7 @@ public class HsacFitNesseRunner extends FitNesseRunner {
             String fileToCreate = fitNesseRootDir + "/ReRunLastFailures.wiki";
             testRunner.addTestSystemListener(new ReRunSuiteTestSystemListener(fileToCreate));
         } catch (Exception e) {
-            throw new RuntimeException("Unable to create re-run suite generator", e);
+            System.err.println("Unable to create re-run suite generator: " + e);
         }
     }
 
