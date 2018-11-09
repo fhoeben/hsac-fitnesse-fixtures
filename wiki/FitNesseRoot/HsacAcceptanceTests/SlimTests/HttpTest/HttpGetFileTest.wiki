@@ -1,7 +1,6 @@
 ---
 Help: Ensure we can download from a url to file
 ---
-
 |script      |mock xml server setup|
 |add response|Downloaded text      |
 |$url=       |get mock server url  |
@@ -15,10 +14,9 @@ Help: Ensure we can download from a url to file
 |check |base name of|$file|!-FitNesseMock-!|
 |check |extension of|$file|txt             |
 |check |text in     |$file|Downloaded text |
-
+|delete|$file                              |
 
 |table: Mock Server Message Report|
 
 |script|mock xml server setup|
 |stop                        |
-
