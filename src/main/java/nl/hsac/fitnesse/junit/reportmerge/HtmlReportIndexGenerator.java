@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -21,6 +22,8 @@ import static nl.hsac.fitnesse.junit.reportmerge.TestReportHtml.PASS_STATUS;
  * This is useful to generate a combined result page when multiple suites were run separately (e.g. in parallel).
  */
 public class HtmlReportIndexGenerator {
+    private final NumberFormat nf = NumberFormat.getIntegerInstance();
+
     public static void main(String[] arguments) throws IOException {
         String path = HsacFitNesseRunner.FITNESSE_RESULTS_PATH;
         if (arguments != null && arguments.length > 0) {
@@ -187,7 +190,7 @@ public class HtmlReportIndexGenerator {
         pw.write("\">");
         pw.write(testName);
         pw.write("</a></td><td>");
-        pw.write(Long.toString(time));
+        pw.write(time < 0? "unknown" : nf.format(time));
         pw.write("</td></tr>");
     }
 
