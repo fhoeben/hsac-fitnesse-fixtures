@@ -23,8 +23,8 @@ public class PieChartWriter {
         pw.write("<script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script>");
     }
 
-    public void writeChartGenerators(List<TestReportHtml> htmls,
-                                        BiConsumer<PieChartWriter, List<TestReportHtml>> bodyFunction) {
+    public <T> void writeChartGenerators(List<T> htmls,
+                                     BiConsumer<PieChartWriter, List<T>> bodyFunction) {
         pw.write("<script type='text/javascript'>" +
                 "if(window.google){google.charts.load('current',{'packages':['corechart']});" +
                 "google.charts.setOnLoadCallback(drawChart);" +
@@ -33,15 +33,15 @@ public class PieChartWriter {
         pw.write("}}</script>");
     }
 
-    public void writePieChartGenerator(String title,
-                                          String chartId,
-                                          List<TestReportHtml> htmls,
-                                          Collector<TestReportHtml, ?, Long> groupValueCollector) {
+    public <T> void writePieChartGenerator(String title,
+                                       String chartId,
+                                       List<T> values,
+                                       Function<T, String> keyFunction,
+                                       Collector<T, ?, Long> groupValueCollector) {
         List<Map.Entry<String, Long>> sums = sortBy(
-                HtmlReportIndexGenerator.filterBy(htmls,
-                        r -> !r.isOverviewPage()).stream()
+                values.stream()
                         .collect(Collectors.groupingBy(
-                                r -> r.getRunName(),
+                                keyFunction,
                                 groupValueCollector))
                         .entrySet(),
                 r -> r.getKey());
@@ -51,11 +51,11 @@ public class PieChartWriter {
     }
 
     public <T> void writePieChartGenerator(String title,
-                                              String chartElementId,
-                                              String extraOptions,
-                                              Function<T, String> keyFunction,
-                                              Function<T, Number> valueFunction,
-                                              Iterable<T> groups) {
+                                           String chartElementId,
+                                           String extraOptions,
+                                           Function<T, String> keyFunction,
+                                           Function<T, Number> valueFunction,
+                                           Iterable<T> groups) {
         StringBuilder data = new StringBuilder("[['Group',''],");
         groups.forEach(r -> {
             data.append("['");

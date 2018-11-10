@@ -158,9 +158,12 @@ public class HtmlReportIndexGenerator {
     }
 
     protected void writePieChartGeneratorBody(PieChartWriter writer, List<TestReportHtml> htmls) {
-        writeStatusPieChartGenerator(writer, htmls);
-        writer.writePieChartGenerator("Count", TESTCOUNT_CHART_ID, htmls, Collectors.counting());
-        writer.writePieChartGenerator("Time", RUNTIME_CHART_ID, htmls, Collectors.summingLong(r -> r.getTime()));
+        List<TestReportHtml> nonOverviews = filterBy(htmls, r -> !r.isOverviewPage());
+        writeStatusPieChartGenerator(writer, nonOverviews);
+        writer.writePieChartGenerator("Count", TESTCOUNT_CHART_ID, nonOverviews,
+                r -> r.getRunName(), Collectors.counting());
+        writer.writePieChartGenerator("Time", RUNTIME_CHART_ID, nonOverviews,
+                r -> r.getRunName(), Collectors.summingLong(r -> r.getTime() < 0 ? 0 : r.getTime()));
     }
 
     protected void writeStatusPieChartGenerator(PieChartWriter writer, List<TestReportHtml> htmls) {
@@ -244,7 +247,7 @@ public class HtmlReportIndexGenerator {
     }
 
     protected Map<String, Long> getStatusMap(List<TestReportHtml> htmls) {
-        Map<String, Long> statuses = filterBy(htmls, r -> !r.isOverviewPage()).stream()
+        Map<String, Long> statuses = htmls.stream()
                 .collect(Collectors.groupingBy(TestReportHtml::getStatus, Collectors.counting()));
 
         Map<String, Long> displayedStatus = new LinkedHashMap<>();
