@@ -161,7 +161,7 @@ public class HtmlReportIndexGenerator {
     }
 
     protected void writeTestsTable(PrintWriter pw, List<TestReportHtml> htmls) {
-        pw.write("<table><tr><th>Run</th><th>Name</th></tr>");
+        pw.write("<table><tr><th>Run</th><th>Name</th><th>Runtime (in milliseconds)</th></tr>");
         for (TestReportHtml test : htmls) {
             writeTestRow(pw, test);
         }
@@ -173,6 +173,7 @@ public class HtmlReportIndexGenerator {
         String status = html.getStatus();
         String run = html.getRunName();
         String testName = html.getTestName();
+        long time = html.getTime();
         pw.write("<tr class=\"");
         pw.write(status);
         pw.write("\">");
@@ -183,7 +184,9 @@ public class HtmlReportIndexGenerator {
         pw.write(testPageName);
         pw.write("\">");
         pw.write(testName);
-        pw.write("</a></td></tr>");
+        pw.write("</a></td><td>");
+        pw.write(Long.toString(time));
+        pw.write("</td></tr>");
     }
 
     protected static List<TestReportHtml> filterByStatus(List<TestReportHtml> htmls, String desiredStatus) {
