@@ -24,20 +24,23 @@ public class PieChartWriter {
     }
 
     public <T> void writeChartGenerators(List<T> htmls,
-                                     BiConsumer<PieChartWriter, List<T>> bodyFunction) {
+                                         BiConsumer<PieChartWriter, List<T>> bodyFunction,
+                                         String extraJs) {
         pw.write("<script type='text/javascript'>" +
                 "if(window.google){google.charts.load('current',{'packages':['corechart']});" +
                 "google.charts.setOnLoadCallback(drawChart);" +
                 "function drawChart() {");
         bodyFunction.accept(this, htmls);
-        pw.write("}}</script>");
+        pw.write("};");
+        pw.write(extraJs);
+        pw.write("}</script>");
     }
 
     public <T> void writePieChartGenerator(String title,
-                                       String chartId,
-                                       List<T> values,
-                                       Function<T, String> keyFunction,
-                                       Collector<T, ?, Long> groupValueCollector) {
+                                           String chartId,
+                                           List<T> values,
+                                           Function<T, String> keyFunction,
+                                           Collector<T, ?, Long> groupValueCollector) {
         List<Map.Entry<String, Long>> sums = sortBy(
                 values.stream()
                         .collect(Collectors.groupingBy(

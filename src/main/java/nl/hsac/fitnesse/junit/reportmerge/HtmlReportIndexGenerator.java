@@ -128,7 +128,7 @@ public class HtmlReportIndexGenerator {
         List<TestReportHtml> testHtmls = filterBy(htmls,
                 x -> !x.isOverviewPage()
                         && !NO_TEST_STATUS.equals(x.getStatus()));
-        pw.write("<table style='width:100%;text-align:center;'><tr>");
+        pw.write("<table style='width:100%;text-align:center;' id='simpleStatusGraph'><tr>");
         writeGraphCell(pw, ERROR_STATUS, testHtmls);
         writeGraphCell(pw, FAIL_STATUS, testHtmls);
         writeGraphCell(pw, IGNORE_STATUS, testHtmls);
@@ -153,7 +153,10 @@ public class HtmlReportIndexGenerator {
         PieChartWriter pieChartWriter = getPieWriter(pw);
         pw.write("<div style='display:flex;flex-wrap:wrap;justify-content:center;'>");
         writePieChartElements(pw, htmls);
-        pieChartWriter.writeChartGenerators(htmls, this::writePieChartGeneratorBody);
+        pieChartWriter.writeChartGenerators(
+                htmls,
+                this::writePieChartGeneratorBody,
+                "document.getElementById('simpleStatusGraph').outerHTML=''");
         pw.write("</div>");
     }
 
