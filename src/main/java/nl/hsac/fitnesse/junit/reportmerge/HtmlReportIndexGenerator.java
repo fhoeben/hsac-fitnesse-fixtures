@@ -55,13 +55,21 @@ public class HtmlReportIndexGenerator {
     protected List<TestReportHtml> findTestResultPages(File parentDir) throws IOException {
         TestReportFactory reportFactory = getReportFactory(parentDir);
 
-        return Files.find(parentDir.toPath(), 2,
-                    (p, name) -> p.getFileName().toString().endsWith(".html"))
-                    .map(p -> p.toFile())
-                    .filter(this::isNotIndexHtml)
-                    .sorted()
-                    .map(reportFactory::create)
-                    .collect(Collectors.toList());
+        List<TestReportHtml> reportHtmls = Files.find(parentDir.toPath(), 2,
+                (p, name) -> p.getFileName().toString().endsWith(".html"))
+                .map(p -> p.toFile())
+                .filter(this::isNotIndexHtml)
+                .sorted()
+                .map(reportFactory::create)
+                .collect(Collectors.toList());
+        for (TestReportHtml html : reportHtmls) {
+            String runName = html.getRunName();
+            long time = html.isOverviewPage() ?
+                    reportFactory.getTime(runName)
+                    : reportFactory.getTime(runName, html.getTestName());
+            html.setTime(time);
+        }
+        return reportHtmls;
     }
 
     protected TestReportFactory getReportFactory(File parentDir) {
@@ -102,8 +110,8 @@ public class HtmlReportIndexGenerator {
 
     protected void writeOverviewGraph(PrintWriter pw, List<TestReportHtml> htmls) {
         List<TestReportHtml> testHtmls = filterBy(htmls,
-                                                    x -> !x.isOverviewPage()
-                                                            && !NO_TEST_STATUS.equals(x.getStatus()));
+                x -> !x.isOverviewPage()
+                        && !NO_TEST_STATUS.equals(x.getStatus()));
         pw.write("<table style=\"width:100%;text-align:center;\"><tr>");
         writeGraphCell(pw, ERROR_STATUS, testHtmls);
         writeGraphCell(pw, FAIL_STATUS, testHtmls);

@@ -61,6 +61,16 @@ public class HtmlReportIndexGeneratorTest {
         assertEquals("Unexpected number of run: " + overviews, 3, overviews.size());
         assertEquals("Unexpected number of results", 41, reports.size());
 
+        assertEquals(-1, getActual(reports, "MockXmlServerTest").getTime());
+        assertTrue(reports.stream().filter(r -> !"MockXmlServerTest".equals(r.getRunName())).noneMatch(r -> r.getTime() == -1));
+
+        assertEquals(0, getActual(overviews, "Fit").getTime());
+        assertEquals(2979, getActual(overviews, "Http").getTime());
+        assertEquals(2435, getActual(overviews, "Util").getTime());
+    }
+
+    private TestReportHtml getActual(List<TestReportHtml> list, String runName) {
+        return list.stream().filter(r -> runName.equals(r.getRunName())).findFirst().get();
     }
 
     private String getTestReportsPath() {
