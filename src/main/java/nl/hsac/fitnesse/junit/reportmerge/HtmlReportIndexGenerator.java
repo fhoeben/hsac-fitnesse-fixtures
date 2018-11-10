@@ -162,6 +162,8 @@ public class HtmlReportIndexGenerator {
 
     protected void writeTestsTable(PrintWriter pw, List<TestReportHtml> htmls) {
         pw.write("<table><tr><th>Run</th><th>Name</th><th>Runtime (in milliseconds)</th></tr>");
+        // slowest times at top
+        htmls.sort((o1, o2) -> Long.compare(o2.getTime(), o1.getTime()));
         for (TestReportHtml test : htmls) {
             writeTestRow(pw, test);
         }
