@@ -163,9 +163,9 @@ public class HtmlReportIndexGenerator {
     protected void writePieChartGeneratorBody(PieChartWriter writer, List<TestReportHtml> htmls) {
         List<TestReportHtml> nonOverviews = filterBy(htmls, r -> !r.isOverviewPage());
         writeStatusPieChartGenerator(writer, nonOverviews);
-        writer.writePieChartGenerator("Count", TESTCOUNT_CHART_ID, nonOverviews,
+        writer.writePieChartGenerator("Tests / Run", TESTCOUNT_CHART_ID, nonOverviews,
                 r -> r.getRunName(), Collectors.counting());
-        writer.writePieChartGenerator("Time", RUNTIME_CHART_ID, nonOverviews,
+        writer.writePieChartGenerator("Time / Run", RUNTIME_CHART_ID, nonOverviews,
                 r -> r.getRunName(), Collectors.summingLong(r -> r.getTime() < 0 ? 0 : r.getTime()));
     }
 
