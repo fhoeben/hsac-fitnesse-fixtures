@@ -73,7 +73,7 @@ public class PieChartWriter {
         pw.write(dataArray);
         pw.write("),{title:'");
         pw.write(title);
-        pw.write("',sliceVisibilityThreshold:0,pieSliceTextStyle:{color:'black'}");
+        pw.write("',sliceVisibilityThreshold:0,is3D:true,pieSliceTextStyle:{color:'black'}");
         pw.write(extraOptions);
         pw.write("});");
     }
