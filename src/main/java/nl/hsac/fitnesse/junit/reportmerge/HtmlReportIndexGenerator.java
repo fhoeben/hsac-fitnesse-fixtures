@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static nl.hsac.fitnesse.junit.reportmerge.TestReportHtml.ERROR_STATUS;
@@ -137,7 +138,7 @@ public class HtmlReportIndexGenerator {
         writeGraphCell(pw, PASS_STATUS, testHtmls);
         pw.write("</tr></table>");
 
-        writePieChartsElements(pw, htmls);
+        writePieChartsElement(pw, htmls);
         pw.write("</div>");
     }
 
@@ -151,8 +152,14 @@ public class HtmlReportIndexGenerator {
         }
     }
 
-    protected void writePieChartsElements(PrintWriter pw, List<TestReportHtml> htmls) {
+    protected void writePieChartsElement(PrintWriter pw, List<TestReportHtml> htmls) {
         pw.write("<div style='display:flex;flex-wrap:wrap;justify-content:center;'>");
+        writePieChartElements(pw, htmls);
+        writeChartGenerators(pw, htmls);
+        pw.write("</div>");
+    }
+
+    protected void writePieChartElements(PrintWriter pw, List<TestReportHtml> htmls) {
         pw.write("<div id='");
         pw.write(STATUS_CHART_ID);
         pw.write("'></div>");
@@ -162,8 +169,6 @@ public class HtmlReportIndexGenerator {
         pw.write("<div id='");
         pw.write(RUNTIME_CHART_ID);
         pw.write("'></div>");
-        writeChartGenerators(pw, htmls);
-        pw.write("</div>");
     }
 
     protected void writeChartGenerators(PrintWriter pw, List<TestReportHtml> htmls) {
@@ -171,33 +176,45 @@ public class HtmlReportIndexGenerator {
                 "if(window.google){google.charts.load('current',{'packages':['corechart']});" +
                 "google.charts.setOnLoadCallback(drawChart);" +
                 "function drawChart() {");
+        writePieChartGeneratorBody(pw, htmls);
+        pw.write("}}</script>");
+    }
 
+    protected void writePieChartGeneratorBody(PrintWriter pw, List<TestReportHtml> htmls) {
+        writeStatusPieChartGenerator(pw, htmls);
+        writePieChartGenerator(pw, "Count", TESTCOUNT_CHART_ID, htmls, Collectors.counting());
+        writePieChartGenerator(pw, "Time", RUNTIME_CHART_ID, htmls, Collectors.summingLong(r -> r.getTime()));
+    }
+
+    protected void writeStatusPieChartGenerator(PrintWriter pw, List<TestReportHtml> htmls) {
         Map<String, Long> displayedStatus = getStatusMap(htmls);
-
         writePieChartGenerator(pw, "Status", STATUS_CHART_ID,
                 ",slices:[{color:'#ffffaa'},{color:'#FF6666'},{color:'orange'},{color:'#28B463'},{color:'lightgray'}]",
                 r -> r.getKey(), r -> r.getValue(), displayedStatus.entrySet());
+    }
 
-        List<Map.Entry<String, Long>> counts = sortBy(
+    protected void writePieChartGenerator(PrintWriter pw,
+                                          String title,
+                                          String chartId,
+                                          List<TestReportHtml> htmls,
+                                          Collector<TestReportHtml, ?, Long> groupValueCollector) {
+        List<Map.Entry<String, Long>> sums = sortBy(
                 filterBy(htmls,
                         r -> !r.isOverviewPage()).stream()
-                        .collect(Collectors.groupingBy(TestReportHtml::getRunName, Collectors.counting())).entrySet(),
+                        .collect(Collectors.groupingBy(
+                                r -> r.getRunName(),
+                                groupValueCollector))
+                        .entrySet(),
                 r -> r.getKey());
-        writePieChartGenerator(pw, "Count", TESTCOUNT_CHART_ID, "",
-                r -> r.getKey(), r -> r.getValue(), counts);
-
-        List<TestReportHtml> overviewPages = sortBy(
-                filterBy(htmls, TestReportHtml::isOverviewPage),
-                r -> r.getRunName());
-        writePieChartGenerator(pw, "Time", RUNTIME_CHART_ID, "",
-                r -> r.getRunName(), r -> r.getTime(), overviewPages);
-        pw.write("}}</script>");
+        writePieChartGenerator(pw, title, chartId,
+                "",
+                r -> r.getKey(), r -> r.getValue(), sums);
     }
 
     protected <T> void writePieChartGenerator(PrintWriter pw,
                                               String title,
                                               String chartElementId,
-                                              String slicesProperty,
+                                              String extraOptions,
                                               Function<T, String> keyFunction,
                                               Function<T, Number> valueFunction,
                                               Iterable<T> htmls) {
@@ -219,7 +236,7 @@ public class HtmlReportIndexGenerator {
         pw.write("),{title:'");
         pw.write(title);
         pw.write("',sliceVisibilityThreshold:0,pieSliceTextStyle:{color:'black'}");
-        pw.write(slicesProperty);
+        pw.write(extraOptions);
         pw.write("});");
     }
 
