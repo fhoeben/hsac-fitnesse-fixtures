@@ -37,7 +37,7 @@ public class TestReportHtml {
     }
 
     public String getTestName() {
-        return splitPageName(relativePath)[1];
+        return splitPageName(relativePath)[1].replace(".html", "");
     }
 
     protected String[] splitPageName(String testPageName) {
