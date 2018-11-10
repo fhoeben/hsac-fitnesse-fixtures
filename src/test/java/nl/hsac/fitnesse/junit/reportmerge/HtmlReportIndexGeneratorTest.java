@@ -7,6 +7,8 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -29,17 +31,14 @@ public class HtmlReportIndexGeneratorTest {
 
     @Test
     public void testCreateFrom() throws Exception {
-        String path = "src/test/resources/htmlReports";
-        File pathFile = new File(path);
-        assertTrue(pathFile.getAbsolutePath() + " does not exist", pathFile.exists());
-        assertTrue(pathFile.getAbsolutePath() + " is not a directory", pathFile.isDirectory());
+        String path = getTestReportsPath();
 
         String resultFile = generator.createFrom(path);
         assertNotNull(resultFile);
 
         File report = new File(resultFile);
         assertEquals("index.html", FilenameUtils.getName(resultFile));
-        assertEquals(pathFile.getAbsolutePath(), report.getParentFile().getAbsolutePath());
+        assertEquals(new File(path).getAbsolutePath(), report.getParentFile().getAbsolutePath());
         assertTrue(report.getAbsolutePath() + " does not exist", report.exists());
 
         try (FileInputStream s = new FileInputStream(report)) {
@@ -52,6 +51,24 @@ public class HtmlReportIndexGeneratorTest {
             String[] rows = contents.split("</tr>\\s*<tr");
             assertEquals("Unexpected number of rows: \n" + String.join("\n", rows), 42, rows.length);
         }
+    }
+
+    @Test
+    public void testFindTestResultPages() throws Exception {
+        String path = getTestReportsPath();
+        List<TestReportHtml> reports = generator.findTestResultPages(new File(path));
+        List<TestReportHtml> overviews = reports.stream().filter(TestReportHtml::isOverviewPage).collect(Collectors.toList());
+        assertEquals("Unexpected number of run: " + overviews, 3, overviews.size());
+        assertEquals("Unexpected number of results", 41, reports.size());
+
+    }
+
+    private String getTestReportsPath() {
+        String path = "src/test/resources/htmlReports";
+        File pathFile = new File(path);
+        assertTrue(pathFile.getAbsolutePath() + " does not exist", pathFile.exists());
+        assertTrue(pathFile.getAbsolutePath() + " is not a directory", pathFile.isDirectory());
+        return path;
     }
 
 }

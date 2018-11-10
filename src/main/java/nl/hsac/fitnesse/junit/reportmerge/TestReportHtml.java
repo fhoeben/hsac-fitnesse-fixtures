@@ -65,4 +65,9 @@ public class TestReportHtml {
     public boolean isOverviewPage() {
         return isOverviewPage;
     }
+
+    @Override
+    public String toString() {
+        return getRunName() + " " + (isOverviewPage()? "overview" : getTestName());
+    }
 }
