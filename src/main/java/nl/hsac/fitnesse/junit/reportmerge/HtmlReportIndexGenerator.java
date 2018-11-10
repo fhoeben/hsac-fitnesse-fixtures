@@ -7,13 +7,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.text.NumberFormat;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static nl.hsac.fitnesse.junit.reportmerge.TestReportHtml.ERROR_STATUS;
@@ -106,7 +103,7 @@ public class HtmlReportIndexGenerator {
     }
 
     protected void writeExtraHeaderContent(PrintWriter pw, List<TestReportHtml> htmls) {
-        pw.write("<script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script>");
+        getPieWriter(pw).writeLoadScriptTag();
     }
 
     protected void writeFooter(PrintWriter pw, List<TestReportHtml> htmls) {
@@ -153,10 +150,24 @@ public class HtmlReportIndexGenerator {
     }
 
     protected void writePieChartsElement(PrintWriter pw, List<TestReportHtml> htmls) {
+        PieChartWriter pieChartWriter = getPieWriter(pw);
         pw.write("<div style='display:flex;flex-wrap:wrap;justify-content:center;'>");
         writePieChartElements(pw, htmls);
-        writeChartGenerators(pw, htmls);
+        pieChartWriter.writeChartGenerators(htmls, this::writePieChartGeneratorBody);
         pw.write("</div>");
+    }
+
+    protected void writePieChartGeneratorBody(PieChartWriter writer, List<TestReportHtml> htmls) {
+        writeStatusPieChartGenerator(writer, htmls);
+        writer.writePieChartGenerator("Count", TESTCOUNT_CHART_ID, htmls, Collectors.counting());
+        writer.writePieChartGenerator("Time", RUNTIME_CHART_ID, htmls, Collectors.summingLong(r -> r.getTime()));
+    }
+
+    protected void writeStatusPieChartGenerator(PieChartWriter writer, List<TestReportHtml> htmls) {
+        Map<String, Long> displayedStatus = getStatusMap(htmls);
+        writer.writePieChartGenerator("Status", STATUS_CHART_ID,
+                ",slices:[{color:'#ffffaa'},{color:'#FF6666'},{color:'orange'},{color:'#28B463'},{color:'lightgray'}]",
+                r -> r.getKey(), r -> r.getValue(), displayedStatus.entrySet());
     }
 
     protected void writePieChartElements(PrintWriter pw, List<TestReportHtml> htmls) {
@@ -169,75 +180,6 @@ public class HtmlReportIndexGenerator {
         pw.write("<div id='");
         pw.write(RUNTIME_CHART_ID);
         pw.write("'></div>");
-    }
-
-    protected void writeChartGenerators(PrintWriter pw, List<TestReportHtml> htmls) {
-        pw.write("<script type='text/javascript'>" +
-                "if(window.google){google.charts.load('current',{'packages':['corechart']});" +
-                "google.charts.setOnLoadCallback(drawChart);" +
-                "function drawChart() {");
-        writePieChartGeneratorBody(pw, htmls);
-        pw.write("}}</script>");
-    }
-
-    protected void writePieChartGeneratorBody(PrintWriter pw, List<TestReportHtml> htmls) {
-        writeStatusPieChartGenerator(pw, htmls);
-        writePieChartGenerator(pw, "Count", TESTCOUNT_CHART_ID, htmls, Collectors.counting());
-        writePieChartGenerator(pw, "Time", RUNTIME_CHART_ID, htmls, Collectors.summingLong(r -> r.getTime()));
-    }
-
-    protected void writeStatusPieChartGenerator(PrintWriter pw, List<TestReportHtml> htmls) {
-        Map<String, Long> displayedStatus = getStatusMap(htmls);
-        writePieChartGenerator(pw, "Status", STATUS_CHART_ID,
-                ",slices:[{color:'#ffffaa'},{color:'#FF6666'},{color:'orange'},{color:'#28B463'},{color:'lightgray'}]",
-                r -> r.getKey(), r -> r.getValue(), displayedStatus.entrySet());
-    }
-
-    protected void writePieChartGenerator(PrintWriter pw,
-                                          String title,
-                                          String chartId,
-                                          List<TestReportHtml> htmls,
-                                          Collector<TestReportHtml, ?, Long> groupValueCollector) {
-        List<Map.Entry<String, Long>> sums = sortBy(
-                filterBy(htmls,
-                        r -> !r.isOverviewPage()).stream()
-                        .collect(Collectors.groupingBy(
-                                r -> r.getRunName(),
-                                groupValueCollector))
-                        .entrySet(),
-                r -> r.getKey());
-        writePieChartGenerator(pw, title, chartId,
-                "",
-                r -> r.getKey(), r -> r.getValue(), sums);
-    }
-
-    protected <T> void writePieChartGenerator(PrintWriter pw,
-                                              String title,
-                                              String chartElementId,
-                                              String extraOptions,
-                                              Function<T, String> keyFunction,
-                                              Function<T, Number> valueFunction,
-                                              Iterable<T> htmls) {
-        StringBuilder data = new StringBuilder("[['Group',''],");
-        htmls.forEach(r -> {
-            data.append("['");
-            data.append(keyFunction.apply(r));
-            data.append("',");
-            data.append(valueFunction.apply(r));
-            data.append("],");
-        });
-        data.append("]");
-        String dataArray = data.toString();
-
-        pw.write("new google.visualization.PieChart(document.getElementById('");
-        pw.write(chartElementId);
-        pw.write("')).draw(google.visualization.arrayToDataTable(");
-        pw.write(dataArray);
-        pw.write("),{title:'");
-        pw.write(title);
-        pw.write("',sliceVisibilityThreshold:0,pieSliceTextStyle:{color:'black'}");
-        pw.write(extraOptions);
-        pw.write("});");
     }
 
     protected void writeTestResultsSection(PrintWriter pw, List<TestReportHtml> htmls) {
@@ -322,16 +264,15 @@ public class HtmlReportIndexGenerator {
         return filterBy(htmls, x -> desiredStatus.equals(x.getStatus()));
     }
 
-    protected static <T> List<T> sortBy(Collection<T> values, Function<T, ? extends Comparable> function) {
-        return values.stream().sorted((o1, o2) -> function.apply(o1).compareTo(function.apply(o2)))
-                .collect(Collectors.toList());
-    }
-
     protected static <T> List<T> filterBy(List<T> list, Predicate<T> predicate) {
         return list.stream().filter(predicate).collect(Collectors.toList());
     }
 
     protected boolean isNotIndexHtml(File file) {
         return !"index.html".equals(file.getName());
+    }
+
+    protected PieChartWriter getPieWriter(PrintWriter pw) {
+        return new PieChartWriter(pw);
     }
 }
