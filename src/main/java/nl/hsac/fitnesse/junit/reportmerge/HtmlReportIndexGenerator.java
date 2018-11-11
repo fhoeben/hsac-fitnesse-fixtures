@@ -29,6 +29,31 @@ public class HtmlReportIndexGenerator {
     private static final String RUNTIME_CHART_ID = "runtimePie";
     private static final String STATUS_CHART_ID = "statusPie";
     private static final String TIME_PER_TEST_CHART_ID = "timePerTestChart";
+    private static final String COPY_TO_CLIPBOARD_JS =
+            "function elementContentsToClipboard(el) {" +
+                "var selected = document.getSelection().rangeCount > 0? document.getSelection().getRangeAt(0):false;" +
+                "var body = document.body, range, sel;" +
+                "if (document.createRange && window.getSelection) {" +
+                    "range = document.createRange();" +
+                    "sel = window.getSelection();" +
+                    "sel.removeAllRanges();" +
+                    "try {" +
+                        "range.selectNodeContents(el);" +
+                        "sel.addRange(range);" +
+                    "} catch (e) {" +
+                        "range.selectNode(el);" +
+                        "sel.addRange(range);" +
+                    "}" +
+                    "document.execCommand('copy');" +
+                "} else if (body.createTextRange) {" +
+                    "range = body.createTextRange();" +
+                    "range.moveToElementText(el);" +
+                    "range.select();" +
+                    "range.execCommand('copy');" +
+                "}" +
+                "document.getSelection().removeAllRanges();" +
+                "if (selected) document.getSelection().addRange(selected);" +
+            "}";
 
     private final NumberFormat nf = NumberFormat.getIntegerInstance();
 
@@ -118,6 +143,9 @@ public class HtmlReportIndexGenerator {
         pw.write("<html><head><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='");
         pw.write(firstRunCssDir);
         pw.write("/css/fitnesse.css'/>");
+        pw.write("<script type='text/javascript'>");
+        pw.write(COPY_TO_CLIPBOARD_JS);
+        pw.write("</script>");
         writeExtraHeaderContent(pw, htmls);
         pw.write("</head><body>");
     }
@@ -236,19 +264,27 @@ public class HtmlReportIndexGenerator {
 
     protected void writeSection(PrintWriter pw, String header, List<TestReportHtml> htmls) {
         if (!htmls.isEmpty()) {
+            String id = header.replaceAll("\\s", "");
             pw.write("<div id=\"");
-            pw.write(header.replaceAll("\\s", ""));
+            pw.write(id);
             pw.write("\">");
             pw.write("<h2>");
             pw.write(header);
             pw.write("</h2>");
-            writeTestsTable(pw, htmls);
+            String tableId = id + "Table";
+            pw.write("<input type='button' value='to clipboard' ");
+            pw.write("onclick=\"elementContentsToClipboard(document.getElementById('");
+            pw.write(tableId);
+            pw.write("'));\">");
+            writeTestsTable(pw, tableId, htmls);
             pw.write("</div>");
         }
     }
 
-    protected void writeTestsTable(PrintWriter pw, List<TestReportHtml> htmls) {
-        pw.write("<table><tr><th>Run</th><th>Name</th><th>Runtime (in milliseconds)</th></tr>");
+    protected void writeTestsTable(PrintWriter pw, String id, List<TestReportHtml> htmls) {
+        pw.write("<table id='");
+        pw.write(id);
+        pw.write("'><tr><th>Run</th><th>Name</th><th>Runtime (in milliseconds)</th></tr>");
         // slowest times at top
         htmls.sort((o1, o2) -> Long.compare(o2.getTime(), o1.getTime()));
         for (TestReportHtml test : htmls) {
