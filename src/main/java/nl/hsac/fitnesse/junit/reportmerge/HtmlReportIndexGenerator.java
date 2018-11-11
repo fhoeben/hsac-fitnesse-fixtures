@@ -27,6 +27,8 @@ public class HtmlReportIndexGenerator {
     private static final String TESTCOUNT_CHART_ID = "countPie";
     private static final String RUNTIME_CHART_ID = "runtimePie";
     private static final String STATUS_CHART_ID = "statusPie";
+    private static final String TIME_PER_TEST_CHART_ID = "timePerTestChart";
+
     private final NumberFormat nf = NumberFormat.getIntegerInstance();
 
     public static void main(String[] arguments) throws IOException {
@@ -103,7 +105,7 @@ public class HtmlReportIndexGenerator {
     }
 
     protected void writeExtraHeaderContent(PrintWriter pw, List<TestReportHtml> htmls) {
-        getPieWriter(pw).writeLoadScriptTag();
+        getChartWriter(pw).writeLoadScriptTag();
     }
 
     protected void writeFooter(PrintWriter pw, List<TestReportHtml> htmls) {
@@ -150,7 +152,7 @@ public class HtmlReportIndexGenerator {
     }
 
     protected void writePieChartsElement(PrintWriter pw, List<TestReportHtml> htmls) {
-        PieChartWriter pieChartWriter = getPieWriter(pw);
+        ChartWriter pieChartWriter = getChartWriter(pw);
         pw.write("<div style='display:flex;flex-wrap:wrap;justify-content:center;'>");
         writePieChartElements(pw, htmls);
         pieChartWriter.writeChartGenerators(
@@ -160,16 +162,20 @@ public class HtmlReportIndexGenerator {
         pw.write("</div>");
     }
 
-    protected void writePieChartGeneratorBody(PieChartWriter writer, List<TestReportHtml> htmls) {
+    protected void writePieChartGeneratorBody(ChartWriter writer, List<TestReportHtml> htmls) {
         List<TestReportHtml> nonOverviews = filterBy(htmls, r -> !r.isOverviewPage());
         writeStatusPieChartGenerator(writer, nonOverviews);
         writer.writePieChartGenerator("Tests / Run", TESTCOUNT_CHART_ID, nonOverviews,
                 r -> r.getRunName(), Collectors.counting());
         writer.writePieChartGenerator("Time / Run", RUNTIME_CHART_ID, nonOverviews,
                 r -> r.getRunName(), Collectors.summingLong(r -> r.getTime() < 0 ? 0 : r.getTime()));
+
+        writer.writeBarChartGenerator("ms / Test", TIME_PER_TEST_CHART_ID,
+                ",hAxis:{textPosition:'none'}",
+                "'Test','Runtime (ms)'", r -> r.getTestName(), r -> r.getTime(), nonOverviews);
     }
 
-    protected void writeStatusPieChartGenerator(PieChartWriter writer, List<TestReportHtml> htmls) {
+    protected void writeStatusPieChartGenerator(ChartWriter writer, List<TestReportHtml> htmls) {
         Map<String, Long> displayedStatus = getStatusMap(htmls);
         writer.writePieChartGenerator("Status", STATUS_CHART_ID,
                 ",slices:[{color:'#ffffaa'},{color:'#FF6666'},{color:'orange'},{color:'#28B463'},{color:'lightgray'}]",
@@ -190,7 +196,7 @@ public class HtmlReportIndexGenerator {
 
     protected void writeTestResultsSection(PrintWriter pw, List<TestReportHtml> htmls) {
         List<TestReportHtml> testHtmls = filterBy(htmls, x -> !x.isOverviewPage());
-        pw.write("<div id=\"TestResults\">");
+        pw.write("<div id='TestResults' style='width:100%;'>");
         List<TestReportHtml> erroredTests = filterByStatus(testHtmls, ERROR_STATUS);
         writeSection(pw, "Errored Tests", erroredTests);
         List<TestReportHtml> failedTests = filterByStatus(testHtmls, FAIL_STATUS);
@@ -198,6 +204,11 @@ public class HtmlReportIndexGenerator {
 
         List<TestReportHtml> ignoredTests = filterByStatus(testHtmls, IGNORE_STATUS);
         writeSection(pw, "Ignored Tests", ignoredTests);
+
+        pw.write("<div id='");
+        pw.write(TIME_PER_TEST_CHART_ID);
+        pw.write("' style='height: 300px;'></div>");
+
         List<TestReportHtml> passedTests = filterByStatus(testHtmls, PASS_STATUS);
         writeSection(pw, "Passed Tests", passedTests);
         List<TestReportHtml> noTests = filterByStatus(testHtmls, NO_TEST_STATUS);
@@ -278,7 +289,7 @@ public class HtmlReportIndexGenerator {
         return !"index.html".equals(file.getName());
     }
 
-    protected PieChartWriter getPieWriter(PrintWriter pw) {
-        return new PieChartWriter(pw);
+    protected ChartWriter getChartWriter(PrintWriter pw) {
+        return new ChartWriter(pw);
     }
 }

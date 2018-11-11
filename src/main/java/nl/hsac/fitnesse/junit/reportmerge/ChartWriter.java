@@ -10,12 +10,12 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
- * Helper to use Google Pie Chart.
+ * Helper to use Google Chart.
  */
-public class PieChartWriter {
+public class ChartWriter {
     protected final PrintWriter pw;
 
-    public PieChartWriter(PrintWriter pw) {
+    public ChartWriter(PrintWriter pw) {
         this.pw = pw;
     }
 
@@ -24,7 +24,7 @@ public class PieChartWriter {
     }
 
     public <T> void writeChartGenerators(List<T> htmls,
-                                         BiConsumer<PieChartWriter, List<T>> bodyFunction,
+                                         BiConsumer<ChartWriter, List<T>> bodyFunction,
                                          String extraJs) {
         pw.write("<script type='text/javascript'>" +
                 "if(window.google){google.charts.load('current',{'packages':['corechart']});" +
@@ -57,18 +57,9 @@ public class PieChartWriter {
                                            String chartElementId,
                                            String extraOptions,
                                            Function<T, String> keyFunction,
-                                           Function<T, Number> valueFunction,
+                                           Function<T, Object> valueFunction,
                                            Iterable<T> groups) {
-        StringBuilder data = new StringBuilder("[['Group',''],");
-        groups.forEach(r -> {
-            data.append("['");
-            data.append(keyFunction.apply(r));
-            data.append("',");
-            data.append(valueFunction.apply(r));
-            data.append("],");
-        });
-        data.append("]");
-        String dataArray = data.toString();
+        String dataArray = createDataArray("'Group',''", keyFunction, valueFunction, groups);
 
         pw.write("new google.visualization.PieChart(document.getElementById('");
         pw.write(chartElementId);
@@ -79,6 +70,41 @@ public class PieChartWriter {
         pw.write("',sliceVisibilityThreshold:0,is3D:true,pieSliceTextStyle:{color:'black'}");
         pw.write(extraOptions);
         pw.write("});");
+    }
+
+    public <T> void writeBarChartGenerator(String title,
+                                           String chartElementId,
+                                           String extraOptions,
+                                           String headers,
+                                           Function<T, String> keyFunction,
+                                           Function<T, Object> valueFunction,
+                                           Iterable<T> groups) {
+        String dataArray = createDataArray(headers, keyFunction, valueFunction, groups);
+
+        pw.write("new google.visualization.ColumnChart(document.getElementById('");
+        pw.write(chartElementId);
+        pw.write("')).draw(google.visualization.arrayToDataTable(");
+        pw.write(dataArray);
+        pw.write("),{title:'");
+        pw.write(title);
+        pw.write("',bar: {groupWidth: '80%'},legend:{position: 'none'}");
+        pw.write(extraOptions);
+        pw.write("});");
+    }
+
+    protected <T> String createDataArray(String firstElement, Function<T, String> keyFunction, Function<T, Object> valueFunction, Iterable<T> groups) {
+        StringBuilder data = new StringBuilder("[[");
+        data.append(firstElement);
+        data.append("],");
+        groups.forEach(r -> {
+            data.append("['");
+            data.append(keyFunction.apply(r));
+            data.append("',");
+            data.append(valueFunction.apply(r));
+            data.append("],");
+        });
+        data.append("]");
+        return data.toString();
     }
 
     protected static <T> List<T> sortBy(Collection<T> values, Function<T, ? extends Comparable> function) {
