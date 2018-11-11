@@ -61,11 +61,22 @@ public class ChartWriter {
                                            Iterable<T> groups) {
         String dataArray = createDataArray("'Group',''", keyFunction, valueFunction, groups);
 
-        pw.write("new google.visualization.PieChart(document.getElementById('");
+        pw.write("var ");
         pw.write(chartElementId);
-        pw.write("')).draw(google.visualization.arrayToDataTable(");
+        pw.write("Data = google.visualization.arrayToDataTable(");
         pw.write(dataArray);
-        pw.write("),{title:'");
+        pw.write(");");
+
+        pw.write("var ");
+        pw.write(chartElementId);
+        pw.write("Chart = new google.visualization.PieChart(document.getElementById('");
+        pw.write(chartElementId);
+        pw.write("'));");
+        pw.write(chartElementId);
+        pw.write("Chart.draw(");
+        pw.write(chartElementId);
+        pw.write("Data");
+        pw.write(",{title:'");
         pw.write(title);
         pw.write("',sliceVisibilityThreshold:0,is3D:true,pieSliceTextStyle:{color:'black'}");
         pw.write(extraOptions);
@@ -81,11 +92,22 @@ public class ChartWriter {
                                            Iterable<T> groups) {
         String dataArray = createDataArray(headers, keyFunction, valueFunction, groups);
 
-        pw.write("new google.visualization.ColumnChart(document.getElementById('");
+        pw.write("var ");
         pw.write(chartElementId);
-        pw.write("')).draw(google.visualization.arrayToDataTable(");
+        pw.write("Data = google.visualization.arrayToDataTable(");
         pw.write(dataArray);
-        pw.write("),{title:'");
+        pw.write(");");
+
+        pw.write("var ");
+        pw.write(chartElementId);
+        pw.write("Chart = new google.visualization.ColumnChart(document.getElementById('");
+        pw.write(chartElementId);
+        pw.write("'));");
+        pw.write(chartElementId);
+        pw.write("Chart.draw(");
+        pw.write(chartElementId);
+        pw.write("Data");
+        pw.write(",{title:'");
         pw.write(title);
         pw.write("',bar: {groupWidth: '80%'},legend:{position: 'none'}");
         pw.write(extraOptions);
