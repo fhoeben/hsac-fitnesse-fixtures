@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.junit.reportmerge;
 
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import org.apache.commons.io.FilenameUtils;
+import org.json.JSONObject;
 import org.junit.Test;
 
 import java.io.File;
@@ -16,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class HtmlReportIndexGeneratorTest {
+    private static final int EXPECTED_TEST_COUNT = 41;
     private HtmlReportIndexGenerator generator = new HtmlReportIndexGenerator();
 
     @Test
@@ -51,6 +53,16 @@ public class HtmlReportIndexGeneratorTest {
             String[] rows = contents.split("</tr>\\s*<tr");
             assertEquals("Unexpected number of rows: \n" + String.join("\n", rows), 42, rows.length);
         }
+
+        File jsonReport = new File(path, "test-results.json");
+        assertTrue(jsonReport.exists());
+        try (FileInputStream s = new FileInputStream(jsonReport)) {
+            String contents = FileUtil.streamToString(s, jsonReport.getName());
+            assertTrue(contents, contents.startsWith("["));
+            JSONObject jsonObject = new JSONObject("{'a': " + contents + "}");
+            org.json.JSONArray array = (org.json.JSONArray) jsonObject.get("a");
+            assertEquals(EXPECTED_TEST_COUNT, array.length());
+        }
     }
 
     @Test
@@ -59,7 +71,7 @@ public class HtmlReportIndexGeneratorTest {
         List<TestReportHtml> reports = generator.findTestResultPages(new File(path));
         List<TestReportHtml> overviews = reports.stream().filter(TestReportHtml::isOverviewPage).collect(Collectors.toList());
         assertEquals("Unexpected number of run: " + overviews, 3, overviews.size());
-        assertEquals("Unexpected number of results", 41, reports.size());
+        assertEquals("Unexpected number of results", EXPECTED_TEST_COUNT, reports.size());
 
         assertEquals(-1, getActual(reports, "MockXmlServerTest").getTime());
         assertTrue(reports.stream().filter(r -> !"MockXmlServerTest".equals(r.getRunName())).noneMatch(r -> r.getTime() == -1));

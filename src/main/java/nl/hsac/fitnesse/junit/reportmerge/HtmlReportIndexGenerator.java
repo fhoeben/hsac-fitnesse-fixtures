@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.junit.reportmerge;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.hsac.fitnesse.junit.HsacFitNesseRunner;
 
 import java.io.File;
@@ -51,15 +52,7 @@ public class HtmlReportIndexGenerator {
         if (reportHtmls.isEmpty()) {
             throw new IllegalArgumentException("No results found below: " + parentDir.getAbsolutePath());
         }
-
-        return createOverviewFile(parentDir, reportHtmls);
-    }
-
-    protected String createOverviewFile(File parentDir, List<TestReportHtml> htmls) throws IOException {
-        File newIndex = new File(parentDir, "index.html");
-        createOverview(newIndex, htmls);
-
-        return newIndex.getAbsolutePath();
+        return createOverviewFiles(parentDir, reportHtmls);
     }
 
     protected List<TestReportHtml> findTestResultPages(File parentDir) throws IOException {
@@ -86,7 +79,32 @@ public class HtmlReportIndexGenerator {
         return new TestReportFactory(parentDir);
     }
 
-    protected void createOverview(File index, List<TestReportHtml> htmls) throws IOException {
+    protected String createOverviewFiles(File parentDir, List<TestReportHtml> reportHtmls) throws IOException {
+        createJsonOverviewFile(parentDir, reportHtmls);
+        return createHtmlOverviewFile(parentDir, reportHtmls);
+    }
+
+    protected String createJsonOverviewFile(File parentDir, List<TestReportHtml> reportHtmls) throws IOException {
+        File newFile = new File(parentDir, "test-results.json");
+        createJsonOverview(newFile, reportHtmls);
+        return newFile.getAbsolutePath();
+    }
+
+    protected String createHtmlOverviewFile(File parentDir, List<TestReportHtml> htmls) throws IOException {
+        File newIndex = new File(parentDir, "index.html");
+        createHtmlOverview(newIndex, htmls);
+
+        return newIndex.getAbsolutePath();
+    }
+
+    protected void createJsonOverview(File newFile, List<TestReportHtml> reportHtmls) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        try (PrintWriter pw = new PrintWriter(newFile, "utf-8")) {
+            mapper.writeValue(pw, reportHtmls);
+        }
+    }
+
+    protected void createHtmlOverview(File index, List<TestReportHtml> htmls) throws IOException {
         try (PrintWriter pw = new PrintWriter(index, "utf-8")) {
             writeHeader(pw, htmls);
             writeBody(pw, htmls);

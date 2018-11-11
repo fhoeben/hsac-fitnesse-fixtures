@@ -37,5 +37,6 @@ wiki/FitNesseRoot/files/test
 wiki/FitNesseRoot/files/base64
 wiki/webdrivers
 /src/test/resources/htmlReports/index.html
+/src/test/resources/htmlReports/test-results.json
 wiki/FitNesseRoot/HsacExamples/SlimTests/UtilityFixtures/GeneratedSymbolicLinkSuite/*LocaleTests.wiki
 wiki/FitNesseRoot/ReRunLastFailures.wiki
