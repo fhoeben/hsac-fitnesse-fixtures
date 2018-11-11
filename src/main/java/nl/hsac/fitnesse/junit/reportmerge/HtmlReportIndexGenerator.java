@@ -106,12 +106,19 @@ public class HtmlReportIndexGenerator {
 
     protected String createOverviewFiles(File parentDir, List<TestReportHtml> reportHtmls) throws IOException {
         createJsonOverviewFile(parentDir, reportHtmls);
+        createCsvOverviewFile(parentDir, reportHtmls);
         return createHtmlOverviewFile(parentDir, reportHtmls);
     }
 
     protected String createJsonOverviewFile(File parentDir, List<TestReportHtml> reportHtmls) throws IOException {
         File newFile = new File(parentDir, "test-results.json");
         createJsonOverview(newFile, reportHtmls);
+        return newFile.getAbsolutePath();
+    }
+
+    protected String createCsvOverviewFile(File parentDir, List<TestReportHtml> reportHtmls) throws IOException {
+        File newFile = new File(parentDir, "test-results.csv");
+        createCsvOverview(newFile, reportHtmls);
         return newFile.getAbsolutePath();
     }
 
@@ -126,6 +133,33 @@ public class HtmlReportIndexGenerator {
         ObjectMapper mapper = new ObjectMapper();
         try (PrintWriter pw = new PrintWriter(newFile, "utf-8")) {
             mapper.writeValue(pw, reportHtmls);
+        }
+    }
+
+    protected void createCsvOverview(File newFile, List<TestReportHtml> reportHtmls) throws IOException {
+        try (PrintWriter pw = new PrintWriter(newFile, "utf-8")) {
+            pw.write("Run name");
+            pw.write("\t");
+            pw.write("Test name");
+            pw.write("\t");
+            pw.write("Status");
+            pw.write("\t");
+            pw.write("Runtime (in milliseconds)");
+            pw.write("\t");
+            pw.write("Relative Path");
+            pw.write("\n");
+            for (TestReportHtml report : reportHtmls) {
+                pw.write(report.getRunName());
+                pw.write("\t");
+                pw.write(report.getTestName());
+                pw.write("\t");
+                pw.write(report.getStatus());
+                pw.write("\t");
+                pw.write(report.getTime() < 0 ? "unknown" : Long.toString(report.getTime()));
+                pw.write("\t");
+                pw.write(report.getRelativePath());
+                pw.write("\n");
+            }
         }
     }
 

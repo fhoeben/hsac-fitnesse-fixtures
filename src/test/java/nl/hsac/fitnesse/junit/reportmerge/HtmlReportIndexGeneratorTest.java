@@ -63,6 +63,13 @@ public class HtmlReportIndexGeneratorTest {
             org.json.JSONArray array = (org.json.JSONArray) jsonObject.get("a");
             assertEquals(EXPECTED_TEST_COUNT, array.length());
         }
+
+        File csvReport = new File(path, "test-results.csv");
+        assertTrue(csvReport.exists());
+        try (FileInputStream s = new FileInputStream(csvReport)) {
+            String contents = FileUtil.streamToString(s, csvReport.getName());
+            assertEquals(EXPECTED_TEST_COUNT + 1, contents.split("\n").length);
+        }
     }
 
     @Test
