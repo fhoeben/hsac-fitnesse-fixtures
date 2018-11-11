@@ -190,7 +190,7 @@ public class HtmlReportIndexGenerator {
 
         writer.writeBarChartGenerator("ms / Test", TIME_PER_TEST_CHART_ID,
                 ",hAxis:{textPosition:'none'}",
-                "'Test','Runtime (ms)'", r -> r.getTestName(), r -> r.getTime(), nonOverviews);
+                "'Test','Runtime (ms)'", r -> r.getTestName(), r -> r.getTime(), r -> r.getRelativePath(), nonOverviews);
     }
 
     protected void writeStatusPieChartGenerator(ChartWriter writer, List<TestReportHtml> htmls) {

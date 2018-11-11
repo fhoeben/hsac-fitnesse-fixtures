@@ -89,7 +89,18 @@ public class ChartWriter {
                                            String headers,
                                            Function<T, String> keyFunction,
                                            Function<T, Object> valueFunction,
+                                           Function<T, String> urlFunction,
                                            Iterable<T> groups) {
+        pw.write("var ");
+        pw.write(chartElementId);
+        pw.write("Urls = [");
+        for (T group: groups) {
+            pw.write("'");
+            pw.write(urlFunction.apply(group));
+            pw.write("',");
+        }
+        pw.write("];");
+
         String dataArray = createDataArray(headers, keyFunction, valueFunction, groups);
 
         pw.write("var ");
@@ -112,6 +123,19 @@ public class ChartWriter {
         pw.write("',bar: {groupWidth: '80%'},legend:{position: 'none'}");
         pw.write(extraOptions);
         pw.write("});");
+        pw.write("google.visualization.events.addListener(");
+        pw.write(chartElementId);
+        pw.write("Chart,'select',function myClickHandler(event) {");
+        pw.write("var selection = ");
+        pw.write(chartElementId);
+        pw.write("Chart.getSelection();");
+        pw.write("for (var i = 0; i < selection.length; i++) {");
+        pw.write("var item = selection[i];");
+        pw.write("if (item.row != null && item.column != null) {");
+        pw.write("window.location=");
+        pw.write(chartElementId);
+        pw.write("Urls[item.row];");
+        pw.write("}}});");
     }
 
     protected <T> String createDataArray(String firstElement, Function<T, String> keyFunction, Function<T, Object> valueFunction, Iterable<T> groups) {
