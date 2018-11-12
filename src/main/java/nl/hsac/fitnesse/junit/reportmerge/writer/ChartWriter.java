@@ -1,4 +1,4 @@
-package nl.hsac.fitnesse.junit.reportmerge;
+package nl.hsac.fitnesse.junit.reportmerge.writer;
 
 import java.io.PrintWriter;
 import java.util.Collection;

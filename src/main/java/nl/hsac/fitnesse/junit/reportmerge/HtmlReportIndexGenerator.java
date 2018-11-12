@@ -1,6 +1,9 @@
 package nl.hsac.fitnesse.junit.reportmerge;
 
 import nl.hsac.fitnesse.junit.HsacFitNesseRunner;
+import nl.hsac.fitnesse.junit.reportmerge.writer.CsvOverviewFileWriter;
+import nl.hsac.fitnesse.junit.reportmerge.writer.HtmlOverviewFileWriter;
+import nl.hsac.fitnesse.junit.reportmerge.writer.JsonOverviewFileWriter;
 
 import java.io.File;
 import java.io.IOException;

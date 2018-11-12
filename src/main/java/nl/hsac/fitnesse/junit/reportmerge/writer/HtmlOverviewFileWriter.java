@@ -1,4 +1,6 @@
-package nl.hsac.fitnesse.junit.reportmerge;
+package nl.hsac.fitnesse.junit.reportmerge.writer;
+
+import nl.hsac.fitnesse.junit.reportmerge.TestReportHtml;
 
 import java.io.File;
 import java.io.PrintWriter;

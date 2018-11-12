@@ -1,6 +1,7 @@
-package nl.hsac.fitnesse.junit.reportmerge;
+package nl.hsac.fitnesse.junit.reportmerge.writer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import nl.hsac.fitnesse.junit.reportmerge.TestReportHtml;
 
 import java.io.File;
 import java.io.IOException;
