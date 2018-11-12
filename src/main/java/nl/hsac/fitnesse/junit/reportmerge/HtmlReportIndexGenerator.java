@@ -4,9 +4,7 @@ import nl.hsac.fitnesse.junit.HsacFitNesseRunner;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Creates a (single) overview page based on a pre-existing set of FitNesse result HTML pages.
@@ -37,27 +35,7 @@ public class HtmlReportIndexGenerator {
     }
 
     protected List<TestReportHtml> findTestResultPages(File parentDir) throws IOException {
-        TestReportFactory reportFactory = getReportFactory(parentDir);
-
-        List<TestReportHtml> reportHtmls = Files.find(parentDir.toPath(), 2,
-                (p, name) -> p.getFileName().toString().endsWith(".html"))
-                .map(p -> p.toFile())
-                .filter(this::isNotIndexHtml)
-                .sorted()
-                .map(reportFactory::create)
-                .collect(Collectors.toList());
-        for (TestReportHtml html : reportHtmls) {
-            String runName = html.getRunName();
-            long time = html.isOverviewPage() ?
-                    reportFactory.getTime(runName)
-                    : reportFactory.getTime(runName, html.getTestName());
-            html.setTime(time);
-        }
-        return reportHtmls;
-    }
-
-    protected TestReportFactory getReportFactory(File parentDir) {
-        return new TestReportFactory(parentDir);
+        return new ReportFinder().findTestResultPages(parentDir);
     }
 
     protected String createOverviewFiles(File parentDir, List<TestReportHtml> reportHtmls) throws IOException {
@@ -76,9 +54,5 @@ public class HtmlReportIndexGenerator {
 
     protected String createHtmlOverviewFile(File parentDir, List<TestReportHtml> htmls) throws IOException {
         return new HtmlOverviewFileWriter(parentDir).write(htmls);
-    }
-
-    protected boolean isNotIndexHtml(File file) {
-        return !"index.html".equals(file.getName());
     }
 }
