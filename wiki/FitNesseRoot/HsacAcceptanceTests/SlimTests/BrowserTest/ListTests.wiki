@@ -56,6 +56,13 @@ This test ensures we can work with lists and select boxes. We use a mock server 
     <option value="3" selected>Option 7</option>
     <option value="4">Option 8</option>
 </select>
+<label for="s3">Option to choose with whitespace</label>
+<select id="s3">
+    <option value="1">Option &nbsp;1</option>
+    <option value="2" disabled>Option 2</option>
+    <option value="3" selected>Option 3&nbsp;</option>
+    <option value="4"> Option   4</option>
+</select>
 
 </body>
 </html>}}} }
@@ -99,28 +106,29 @@ th-!   |
 |add         |€ 14,--     |
 |$multiline2=|copy list   |
 
-|script                |browser test                                            |
-|open                  |$url                                                    |
-|seconds before timeout|1                                                       |
-|check                 |values of            |id=multiline     |$multiline      |
-|check                 |normalized values of |id=multiline     |$multiline2     |
-|check                 |value of             |Option to choose |Option 3        |
-|select                |Option 1             |for              |Option to choose|
-|click if available    |Option 4                                                |
-|reject                |click if available   |Option 2                          |
-|check                 |value of             |xpath=//ul/li[2] |2nd             |
-|check                 |value of             |xpath=//ol/li[4] |4th             |
-|check                 |values of            |xpath=//ul       |$ul             |
-|check                 |values of            |xpath=//ol[1]    |$ol             |
-|check                 |values of            |Options to choose|$selected       |
-|check                 |number for           |1st              |5               |
-|check                 |number for           |2nd              |null            |
-|check                 |number for           |4th              |7               |
-|check                 |number for           |6th              |2               |
-|check                 |number for           |5t               |1               |
-|check                 |number for           |8th              |11              |
-|check                 |number for           |9t               |12              |
-|check                 |available options for|Option to choose |$available      |
+|script                |browser test                                                                       |
+|open                  |$url                                                                               |
+|seconds before timeout|1                                                                                  |
+|check                 |values of                       |id=multiline                     |$multiline      |
+|check                 |normalized values of            |id=multiline                     |$multiline2     |
+|check                 |value of                        |Option to choose                 |Option 3        |
+|select                |Option 1                        |for                              |Option to choose|
+|click if available    |Option 4                                                                           |
+|reject                |click if available              |Option 2                                          |
+|check                 |value of                        |xpath=//ul/li[2]                 |2nd             |
+|check                 |value of                        |xpath=//ol/li[4]                 |4th             |
+|check                 |values of                       |xpath=//ul                       |$ul             |
+|check                 |values of                       |xpath=//ol[1]                    |$ol             |
+|check                 |values of                       |Options to choose                |$selected       |
+|check                 |number for                      |1st                              |5               |
+|check                 |number for                      |2nd                              |null            |
+|check                 |number for                      |4th                              |7               |
+|check                 |number for                      |6th                              |2               |
+|check                 |number for                      |5t                               |1               |
+|check                 |number for                      |8th                              |11              |
+|check                 |number for                      |9t                               |12              |
+|check                 |available options for           |Option to choose                 |$available      |
+|check                 |normalized available options for|Option to choose with whitespace|$available      |
 
 
 |script|mock xml server setup|

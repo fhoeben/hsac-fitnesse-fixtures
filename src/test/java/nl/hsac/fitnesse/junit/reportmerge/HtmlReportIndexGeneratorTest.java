@@ -2,11 +2,14 @@ package nl.hsac.fitnesse.junit.reportmerge;
 
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import org.apache.commons.io.FilenameUtils;
+import org.json.JSONObject;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -14,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class HtmlReportIndexGeneratorTest {
+    private static final int EXPECTED_TEST_COUNT = 41;
     private HtmlReportIndexGenerator generator = new HtmlReportIndexGenerator();
 
     @Test
@@ -29,17 +33,14 @@ public class HtmlReportIndexGeneratorTest {
 
     @Test
     public void testCreateFrom() throws Exception {
-        String path = "src/test/resources/htmlReports";
-        File pathFile = new File(path);
-        assertTrue(pathFile.getAbsolutePath() + " does not exist", pathFile.exists());
-        assertTrue(pathFile.getAbsolutePath() + " is not a directory", pathFile.isDirectory());
+        String path = getTestReportsPath();
 
         String resultFile = generator.createFrom(path);
         assertNotNull(resultFile);
 
         File report = new File(resultFile);
         assertEquals("index.html", FilenameUtils.getName(resultFile));
-        assertEquals(pathFile.getAbsolutePath(), report.getParentFile().getAbsolutePath());
+        assertEquals(new File(path).getAbsolutePath(), report.getParentFile().getAbsolutePath());
         assertTrue(report.getAbsolutePath() + " does not exist", report.exists());
 
         try (FileInputStream s = new FileInputStream(report)) {
@@ -52,6 +53,51 @@ public class HtmlReportIndexGeneratorTest {
             String[] rows = contents.split("</tr>\\s*<tr");
             assertEquals("Unexpected number of rows: \n" + String.join("\n", rows), 42, rows.length);
         }
+
+        File jsonReport = new File(path, "test-results.json");
+        assertTrue(jsonReport.exists());
+        try (FileInputStream s = new FileInputStream(jsonReport)) {
+            String contents = FileUtil.streamToString(s, jsonReport.getName());
+            assertTrue(contents, contents.startsWith("["));
+            JSONObject jsonObject = new JSONObject("{'a': " + contents + "}");
+            org.json.JSONArray array = (org.json.JSONArray) jsonObject.get("a");
+            assertEquals(EXPECTED_TEST_COUNT, array.length());
+        }
+
+        File csvReport = new File(path, "test-results.csv");
+        assertTrue(csvReport.exists());
+        try (FileInputStream s = new FileInputStream(csvReport)) {
+            String contents = FileUtil.streamToString(s, csvReport.getName());
+            assertEquals(EXPECTED_TEST_COUNT + 1, contents.split("\n").length);
+        }
+    }
+
+    @Test
+    public void testFindTestResultPages() throws Exception {
+        String path = getTestReportsPath();
+        List<TestReportHtml> reports = generator.findTestResultPages(new File(path));
+        List<TestReportHtml> overviews = reports.stream().filter(TestReportHtml::isOverviewPage).collect(Collectors.toList());
+        assertEquals("Unexpected number of run: " + overviews, 3, overviews.size());
+        assertEquals("Unexpected number of results", EXPECTED_TEST_COUNT, reports.size());
+
+        assertEquals(-1, getActual(reports, "MockXmlServerTest").getTime());
+        assertTrue(reports.stream().filter(r -> !"MockXmlServerTest".equals(r.getRunName())).noneMatch(r -> r.getTime() == -1));
+
+        assertEquals(0, getActual(overviews, "Fit").getTime());
+        assertEquals(2979, getActual(overviews, "Http").getTime());
+        assertEquals(2435, getActual(overviews, "Util").getTime());
+    }
+
+    private TestReportHtml getActual(List<TestReportHtml> list, String runName) {
+        return list.stream().filter(r -> runName.equals(r.getRunName())).findFirst().get();
+    }
+
+    private String getTestReportsPath() {
+        String path = "src/test/resources/htmlReports";
+        File pathFile = new File(path);
+        assertTrue(pathFile.getAbsolutePath() + " does not exist", pathFile.exists());
+        assertTrue(pathFile.getAbsolutePath() + " is not a directory", pathFile.isDirectory());
+        return path;
     }
 
 }

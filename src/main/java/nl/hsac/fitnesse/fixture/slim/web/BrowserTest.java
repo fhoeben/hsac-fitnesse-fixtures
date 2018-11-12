@@ -59,6 +59,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     private String screenshotHeight = "200";
     private String pageSourceBase = new File(filesDir, "pagesources").getPath() + "/";
     private boolean sendCommandForControlOnMac = false;
+    private boolean trimOnNormalize = true;
     private static final String CHROME_HIDDEN_BY_OTHER_ELEMENT_ERROR = "Other element would receive the click",
             EDGE_HIDDEN_BY_OTHER_ELEMENT_ERROR = "Element is obscured";
     private static final Pattern FIREFOX_HIDDEN_BY_OTHER_ELEMENT_ERROR_PATTERN =
@@ -1112,7 +1113,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected String normalizeValue(String value) {
-        return XPathBy.getNormalizedText(value);
+        String text = XPathBy.getNormalizedText(value);
+        if (text != null && trimOnNormalize) {
+            text = text.trim();
+        }
+        return text;
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
@@ -1292,6 +1297,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             result = getSeleniumHelper().getAvailableOptions(element);
         }
         return result;
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public ArrayList<String> normalizedAvailableOptionsFor(String place) {
+        return normalizeValues(availableOptionsFor(place));
     }
 
     @WaitUntil
@@ -2519,5 +2529,19 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      */
     public String getSelectionText() {
         return getSeleniumHelper().getSelectionText();
+    }
+
+    /**
+     * @return should 'normalized' functions remove starting and trailing whitespace?
+     */
+    public boolean trimOnNormalize() {
+        return trimOnNormalize;
+    }
+
+    /**
+     * @param trimOnNormalize should 'normalized' functions remove starting and trailing whitespace?
+     */
+    public void setTrimOnNormalize(boolean trimOnNormalize) {
+        this.trimOnNormalize = trimOnNormalize;
     }
 }

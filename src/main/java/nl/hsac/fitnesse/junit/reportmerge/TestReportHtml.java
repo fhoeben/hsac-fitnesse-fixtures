@@ -16,6 +16,7 @@ public class TestReportHtml {
     private final String relativePath;
     private final boolean isOverviewPage;
     private final String status;
+    private long time = -2;
 
     protected TestReportHtml(File parentDir, File htmlFile, boolean isOverviewPage, String status) {
         this.htmlFile = htmlFile;
@@ -37,7 +38,7 @@ public class TestReportHtml {
     }
 
     public String getTestName() {
-        return splitPageName(relativePath)[1];
+        return splitPageName(relativePath)[1].replace(".html", "");
     }
 
     protected String[] splitPageName(String testPageName) {
@@ -64,5 +65,18 @@ public class TestReportHtml {
 
     public boolean isOverviewPage() {
         return isOverviewPage;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
+    @Override
+    public String toString() {
+        return getRunName() + " " + (isOverviewPage()? "overview" : getTestName());
     }
 }
