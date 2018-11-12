@@ -138,25 +138,31 @@ public class HtmlReportIndexGenerator {
 
     protected void createCsvOverview(File newFile, List<TestReportHtml> reportHtmls) throws IOException {
         try (PrintWriter pw = new PrintWriter(newFile, "utf-8")) {
+            String fieldSeparator = "\t";
+
             pw.write("Run name");
-            pw.write("\t");
+            pw.write(fieldSeparator);
             pw.write("Test name");
-            pw.write("\t");
+            pw.write(fieldSeparator);
+            pw.write("Is overview");
+            pw.write(fieldSeparator);
             pw.write("Status");
-            pw.write("\t");
+            pw.write(fieldSeparator);
             pw.write("Runtime (in milliseconds)");
-            pw.write("\t");
+            pw.write(fieldSeparator);
             pw.write("Relative Path");
             pw.write("\n");
             for (TestReportHtml report : reportHtmls) {
                 pw.write(report.getRunName());
-                pw.write("\t");
+                pw.write(fieldSeparator);
                 pw.write(report.getTestName());
-                pw.write("\t");
+                pw.write(fieldSeparator);
+                pw.write(Boolean.toString(report.isOverviewPage()));
+                pw.write(fieldSeparator);
                 pw.write(report.getStatus());
-                pw.write("\t");
+                pw.write(fieldSeparator);
                 pw.write(report.getTime() < 0 ? "unknown" : Long.toString(report.getTime()));
-                pw.write("\t");
+                pw.write(fieldSeparator);
                 pw.write(report.getRelativePath());
                 pw.write("\n");
             }

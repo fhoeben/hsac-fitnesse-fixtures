@@ -68,7 +68,12 @@ public class HtmlReportIndexGeneratorTest {
         assertTrue(csvReport.exists());
         try (FileInputStream s = new FileInputStream(csvReport)) {
             String contents = FileUtil.streamToString(s, csvReport.getName());
-            assertEquals(EXPECTED_TEST_COUNT + 1, contents.split("\n").length);
+            String[] lines = contents.split("\n");
+            assertEquals(EXPECTED_TEST_COUNT + 1, lines.length);
+            for (String line : lines) {
+                String[] fields = line.split("\t");
+                assertEquals("Unexpected number of fields in: " + line, 6, fields.length);
+            }
         }
     }
 
