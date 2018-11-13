@@ -85,29 +85,36 @@ public class ChartWriter {
 
     public <T> void writeBarChartGenerator(String title,
                                            String chartElementId,
-                                           String extraOptions,
-                                           String headers,
-                                           Function<T, String> keyFunction,
-                                           Function<T, Object> valueFunction,
-                                           Function<T, String> urlFunction,
-                                           Iterable<T> groups) {
+                                           String extraOptions) {
+        pw.write("var xhr = new XMLHttpRequest();");
+        pw.write("xhr.open('GET', 'test-results.json', true);");
+        pw.write("xhr.responseType = 'json';");
+        pw.write("xhr.onload = function() {");
+        pw.write("var status = xhr.status;");
+        pw.write("if (status === 200) {");
+
         pw.write("var ");
         pw.write(chartElementId);
-        pw.write("Urls = [");
-        for (T group: groups) {
-            pw.write("'");
-            pw.write(urlFunction.apply(group));
-            pw.write("',");
-        }
-        pw.write("];");
+        pw.write("Array = [['Test','Runtime (ms)']];");
+        pw.write("var ");
+        pw.write(chartElementId);
+        pw.write("Urls = [];");
+        pw.write("var testResults = xhr.response;");
 
-        String dataArray = createDataArray(headers, keyFunction, valueFunction, groups);
+        pw.write("for (var index = 0; index < testResults.length; ++index) {");
+        pw.write("var testResult = testResults[index];");
+        pw.write("if (!testResult.overviewPage) {");
+        pw.write(chartElementId);
+        pw.write("Array.push([testResult.testName, testResult.time]);");
+        pw.write(chartElementId);
+        pw.write("Urls.push(testResult.relativePath);");
+        pw.write("}}");
 
         pw.write("var ");
         pw.write(chartElementId);
         pw.write("Data = google.visualization.arrayToDataTable(");
-        pw.write(dataArray);
-        pw.write(");");
+        pw.write(chartElementId);
+        pw.write("Array);");
 
         pw.write("var ");
         pw.write(chartElementId);
@@ -136,6 +143,9 @@ public class ChartWriter {
         pw.write(chartElementId);
         pw.write("Urls[item.row];");
         pw.write("}}});");
+
+        pw.write("}};");
+        pw.write("xhr.send();");
     }
 
     protected <T> String createDataArray(String firstElement, Function<T, String> keyFunction, Function<T, Object> valueFunction, Iterable<T> groups) {

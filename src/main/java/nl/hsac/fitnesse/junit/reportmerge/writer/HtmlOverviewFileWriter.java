@@ -141,8 +141,7 @@ public class HtmlOverviewFileWriter extends OverviewFileWriter {
                 r -> r.getRunName(), Collectors.summingLong(r -> r.getTime() < 0 ? 0 : r.getTime()));
 
         writer.writeBarChartGenerator("ms / Test", TIME_PER_TEST_CHART_ID,
-                ",hAxis:{textPosition:'none'}",
-                "'Test','Runtime (ms)'", r -> r.getTestName(), r -> r.getTime(), r -> r.getRelativePath(), nonOverviews);
+                ",hAxis:{textPosition:'none'}");
     }
 
     protected void writeStatusPieChartGenerator(ChartWriter writer, List<TestReportHtml> htmls) {
