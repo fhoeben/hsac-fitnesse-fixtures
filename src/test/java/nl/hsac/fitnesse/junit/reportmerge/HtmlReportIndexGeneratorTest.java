@@ -8,8 +8,6 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -17,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class HtmlReportIndexGeneratorTest {
-    private static final int EXPECTED_TEST_COUNT = 41;
+    static final int EXPECTED_TEST_COUNT = 41;
     private HtmlReportIndexGenerator generator = new HtmlReportIndexGenerator();
 
     @Test
@@ -68,31 +66,16 @@ public class HtmlReportIndexGeneratorTest {
         assertTrue(csvReport.exists());
         try (FileInputStream s = new FileInputStream(csvReport)) {
             String contents = FileUtil.streamToString(s, csvReport.getName());
-            assertEquals(EXPECTED_TEST_COUNT + 1, contents.split("\n").length);
+            String[] lines = contents.split("\n");
+            assertEquals(EXPECTED_TEST_COUNT + 1, lines.length);
+            for (String line : lines) {
+                String[] fields = line.split("\t");
+                assertEquals("Unexpected number of fields in: " + line, 6, fields.length);
+            }
         }
     }
 
-    @Test
-    public void testFindTestResultPages() throws Exception {
-        String path = getTestReportsPath();
-        List<TestReportHtml> reports = generator.findTestResultPages(new File(path));
-        List<TestReportHtml> overviews = reports.stream().filter(TestReportHtml::isOverviewPage).collect(Collectors.toList());
-        assertEquals("Unexpected number of run: " + overviews, 3, overviews.size());
-        assertEquals("Unexpected number of results", EXPECTED_TEST_COUNT, reports.size());
-
-        assertEquals(-1, getActual(reports, "MockXmlServerTest").getTime());
-        assertTrue(reports.stream().filter(r -> !"MockXmlServerTest".equals(r.getRunName())).noneMatch(r -> r.getTime() == -1));
-
-        assertEquals(0, getActual(overviews, "Fit").getTime());
-        assertEquals(2979, getActual(overviews, "Http").getTime());
-        assertEquals(2435, getActual(overviews, "Util").getTime());
-    }
-
-    private TestReportHtml getActual(List<TestReportHtml> list, String runName) {
-        return list.stream().filter(r -> runName.equals(r.getRunName())).findFirst().get();
-    }
-
-    private String getTestReportsPath() {
+    static String getTestReportsPath() {
         String path = "src/test/resources/htmlReports";
         File pathFile = new File(path);
         assertTrue(pathFile.getAbsolutePath() + " does not exist", pathFile.exists());
