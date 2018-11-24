@@ -8,6 +8,7 @@ import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.TimeoutPolicy;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.WaitUntil;
 import nl.hsac.fitnesse.fixture.util.ReflectionHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.AllFramesDecorator;
 import nl.hsac.fitnesse.fixture.util.selenium.PageSourceSaver;
 import nl.hsac.fitnesse.fixture.util.selenium.SelectHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
@@ -40,6 +41,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
@@ -1727,7 +1729,20 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected int numberOfTimesIsVisibleInImpl(String text, boolean checkOnScreen) {
-        return getSeleniumHelper().countVisibleOccurrences(text, checkOnScreen);
+        int result;
+        SeleniumHelper<T> helper = getSeleniumHelper();
+        if (implicitFindInFrames) {
+            // sum over iframes
+            AtomicInteger count = new AtomicInteger();
+            new AllFramesDecorator<>(helper,
+                    wd -> count.addAndGet(helper.countVisibleOccurrences(text, checkOnScreen)),
+                    x -> false)
+                    .apply(driver());
+            result = count.get();
+        } else {
+            result = helper.countVisibleOccurrences(text, checkOnScreen);
+        }
+        return result;
     }
 
     protected T getElementToCheckVisibility(String place) {
