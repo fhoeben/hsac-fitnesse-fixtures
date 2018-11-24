@@ -3,45 +3,54 @@ package nl.hsac.fitnesse.fixture.util.selenium;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ConstantBy;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.UnhandledAlertException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Applies a function to all frames and iframes nested
  * inside the current page (or active iframe).
- * @param <T> type of condition result.
+ * @param <T> type of result.
  */
-public class AllFramesDecorator<T> implements Function<WebDriver, T> {
+public class AllFramesDecorator<T> {
     private final SeleniumHelper helper;
-    private final Function<WebDriver, T> decorated;
     private final Function<T, Boolean> isFinished;
     private int frameDepthOnStart;
 
     /**
      * Creates new, working inside the aHelper's current (i)frame.
+     * Will visit all (i)frames, this will mean apply() will return null.
+     */
+    public AllFramesDecorator(SeleniumHelper aHelper) {
+        this(aHelper, null);
+    }
+
+    /**
+     * Creates new, working inside the aHelper's current (i)frame.
+     * @param anIsFinishedFunction function to indicate when visiting (i)frames should be stopped.
      */
     public AllFramesDecorator(SeleniumHelper aHelper,
-                              Function<WebDriver, T> aFunction,
                               Function<T, Boolean> anIsFinishedFunction) {
         helper = aHelper;
-        decorated = aFunction;
         isFinished = anIsFinishedFunction;
     }
 
-    @Override
-    public T apply(WebDriver webDriver) {
-        T result = decorated.apply(webDriver);
+    /**
+     * @param aSupplier supplier to provide a value per (i)frame
+     * @return supplier's value for (i)frame where finished function returned true, or null if it always returned false
+     */
+    public T apply(Supplier<T> aSupplier) {
+        T result = aSupplier.get();
         if (!isFinished(result)) {
             frameDepthOnStart = helper.getCurrentFrameDepth();
-            result = invokeInFrames(webDriver);
+            result = invokeInFrames(aSupplier);
         }
         return result;
     }
 
-    private T invokeInFrames(WebDriver webDriver) {
+    private T invokeInFrames(Supplier<T> aSupplier) {
         T result = null;
         List<WebElement> frames = helper.findElements(ConstantBy.frames());
         for (WebElement frame : frames) {
@@ -51,11 +60,11 @@ public class AllFramesDecorator<T> implements Function<WebDriver, T> {
             }
             helper.switchToFrame(frame);
             try {
-                result = decorated.apply(webDriver);
+                result = aSupplier.get();
                 if (isFinished(result)) {
                     break;
                 } else {
-                    result = invokeInFrames(webDriver);
+                    result = invokeInFrames(aSupplier);
                     if (isFinished(result)) {
                         break;
                     }
@@ -83,6 +92,6 @@ public class AllFramesDecorator<T> implements Function<WebDriver, T> {
     }
 
     private boolean isFinished(T result) {
-        return isFinished.apply(result);
+        return isFinished != null && isFinished.apply(result);
     }
 }

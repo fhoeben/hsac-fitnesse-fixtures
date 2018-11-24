@@ -1734,10 +1734,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         if (implicitFindInFrames) {
             // sum over iframes
             AtomicInteger count = new AtomicInteger();
-            new AllFramesDecorator<>(helper,
-                    wd -> count.addAndGet(helper.countVisibleOccurrences(text, checkOnScreen)),
-                    x -> false)
-                    .apply(driver());
+            new AllFramesDecorator<Integer>(helper)
+                    .apply(() -> count.addAndGet(helper.countVisibleOccurrences(text, checkOnScreen)));
             result = count.get();
         } else {
             result = helper.countVisibleOccurrences(text, checkOnScreen);
