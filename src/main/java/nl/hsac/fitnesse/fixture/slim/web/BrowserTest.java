@@ -2507,6 +2507,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * Simulates 'select all' (e.g. Ctrl+A on Windows) on the active element.
      * @return whether an active element was found.
      */
+    @WaitUntil
     public boolean selectAll() {
         return getSeleniumHelper().selectAll();
     }
@@ -2515,6 +2516,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * Simulates 'copy' (e.g. Ctrl+C on Windows) on the active element, copying the current selection to the clipboard.
      * @return whether an active element was found.
      */
+    @WaitUntil
     public boolean copy() {
         return getSeleniumHelper().copy();
     }
@@ -2524,6 +2526,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * and removing that selection.
      * @return whether an active element was found.
      */
+    @WaitUntil
     public boolean cut() {
         return getSeleniumHelper().cut();
     }
@@ -2533,6 +2536,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * content to the currently active element.
      * @return whether an active element was found.
      */
+    @WaitUntil
     public boolean paste() {
         return getSeleniumHelper().paste();
     }
