@@ -5,7 +5,7 @@ import fit.Fixture;
 import fit.Parse;
 import fit.exception.FitFailureException;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;

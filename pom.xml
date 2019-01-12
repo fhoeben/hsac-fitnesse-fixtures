@@ -6,7 +6,7 @@
 
 	<groupId>nl.hsac</groupId>
 	<artifactId>hsac-fitnesse-fixtures</artifactId>
-	<version>3.31.3-SNAPSHOT</version>
+	<version>3.32.0-SNAPSHOT</version>
 	<url>https://github.com/fhoeben/hsac-fitnesse-fixtures</url>
 	<name>HSAC's FitNesse Fixtures</name>
 	<description>Fixtures to assist in testing via FitNesse</description>
@@ -40,7 +40,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<hsac-fitnesse-plugin.version>1.24.0</hsac-fitnesse-plugin.version>
 		<maven-classpath-plugin.version>1.9</maven-classpath-plugin.version>
-		<fitnesse.version>20190110</fitnesse.version>
+		<fitnesse.version>20190112</fitnesse.version>
 		<selenium.version>3.141.59</selenium.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<apache.http.version>4.5.6</apache.http.version>
@@ -70,11 +70,6 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
 
@@ -430,7 +425,7 @@
 					<includes>**/*</includes>
 					<excludes>META-INF,META-INF/**</excludes>
 					<includeScope>runtime</includeScope>
-					<excludeArtifactIds>fitnesse,junit</excludeArtifactIds>
+					<excludeArtifactIds>fitnesse,slf4j-api</excludeArtifactIds>
 					<outputDirectory>${standalone.classpath}</outputDirectory>
 				</configuration>
 				<executions>
