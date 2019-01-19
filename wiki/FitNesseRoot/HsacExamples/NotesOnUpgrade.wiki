@@ -1,6 +1,9 @@
 ---
 Help: Information on impact of upgrading to a newer version of this project
 ---
+!2 Version 3 to 4
+The main difference between versions 3 and 4 is that the Maven classpath plugin is no longer included. The plugin did not always work reliably, was no longer being maintained, faster disks make copying dependencies to 'wiki/fixtures' less of an issue and dependency change occur very infrequently.
+
 !2 Version 1.10 to 2.0
 The main differences between version 1.10 and 2.0 are in the way elements are found by !-BrowserTest-!. That is also why this is a major version upgrade: the changes will likely impact both the wiki test page content and any fixture subclasses created for test suites using this project.
 
