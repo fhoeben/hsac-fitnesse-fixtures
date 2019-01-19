@@ -37,6 +37,7 @@
             <excludes>
                 <!-- linux webdriver is only included for use by Travis-ci, we don't expect standalone.zip user to run linux -->
                 <exclude>webdrivers/*-linux-*</exclude>
+                <exclude>target/**</exclude>
                 <exclude>copy/**</exclude>
                 <exclude>files/**</exclude>
                 <exclude>bye.txt</exclude>
