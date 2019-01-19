@@ -10,7 +10,6 @@ The baseline FitNesse installation offers the following features:
 * Run FitNesse tests on a build server, reporting the results in both JUnit XML format and HTML.
 * FitNesse installation for test/fixture developers containing:
     - the fixture base classes (and Selenium drivers for _Chrome_, _Internet Explorer_, _Edge_ and _Firefox_),
-    - Maven classpath plugin (such that tests can use all dependencies from `pom.xml`),
     - HSAC's fitnesse-plugin to add additional Wiki features (random values, calculating relative dates,
       Slim scenarios without need to specify all parameters, Slim scripts that take a screenshot after each step),
     - easy fixture debugging,
@@ -75,10 +74,10 @@ Example reports for Windows using a Sauce Labs Selenium driver (https://fhoeben.
 ## Fixture developer installation:
 Import this project in your favorite Java IDE (with Maven support).
 
-To start FitNesse: have the IDE execute `mvn compile exec:exec`. The port used by FitNesse can be controlled by changing the `fitnesse.port` property's value in pom.xml.
+To start FitNesse: have the IDE execute `mvn compile dependency:copy-dependencies exec:exec`. The port used by FitNesse can be controlled by changing the `fitnesse.port` property's value in pom.xml.
 FitNesse will be available at `http://localhost:<fitnesse.port>/`, example usage of the symbols and fixtures can be seen in `http://localhost:<fitnesse.port>/HsacExamples`.
 
-To debug a fixture used in a FitNesse page: change the `@Suite` annotation's value to contain page name in `nl.hsac.fitnesse.fixture.FixtureDebugTest`, then just debug this test.
+To debug a fixture used in a FitNesse page: change the `@Suite` annotation's value in `nl.hsac.fitnesse.fixture.FixtureDebugTest` to contain the page name, then just debug this test.
 
 ## Documentation
 More information about this project can be found on its [GitHub Wiki](https://github.com/fhoeben/hsac-fitnesse-fixtures/wiki)

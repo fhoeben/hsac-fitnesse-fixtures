@@ -16,7 +16,6 @@ The baseline !-FitNesse-! installation offers the following features:
  2. Run !-FitNesse-! tests on a build server, reporting the results in both JUnit XML format and HTML.
  3. !-FitNesse-! installation for test/fixture developers containing:
   * the fixture base classes (and Selenium drivers for Chrome, Internet Explorer, Edge and !-Firefox-!),
-  * Maven classpath plugin (such that tests can use all dependencies from pom.xml),
   * HSAC's fitnesse-plugin to add additional Wiki features (random values, calculating relative dates, Slim scenarios without need to specify all parameters, Slim scripts that take a screenshot after each step),
   * easy fixture debugging,
 
@@ -76,26 +75,22 @@ Example reports for [[Windows using a Sauce Labs Selenium driver][https://fhoebe
 !3 3. Fixture developer installation
 Import this project in your favorite Java IDE (with Maven support).
 
-To start !-FitNesse-!: have the IDE execute {{{ mvn compile exec:exec }}}The port used by !-FitNesse-! can be controlled by changing the !style_code[fitnesse.port] property's value in pom.xml.
+To start !-FitNesse-!: have the IDE execute {{{ mvn compile dependency:copy-dependencies exec:exec }}}The port used by !-FitNesse-! can be controlled by changing the !style_code[fitnesse.port] property's value in pom.xml.
 !-FitNesse-! will be available at !- http://localhost:&lt;fitnesse.port>/ -!
 
-To debug a fixture used in a !-FitNesse-! page: change !style_code[@Suite]'s value to contain page name in !style_code[nl.hsac.fitnesse.fixture.FixtureDebugTest], then just debug this test.
+To debug a fixture used in a !-FitNesse-! page: change !style_code[@Suite]'s value in !style_code[nl.hsac.fitnesse.fixture.FixtureDebugTest] to contain the page name, then just debug this test.
 
 !anchor classpath
 
 !4 Making fixtures accessible
-To ensure the fixtures (and all dependencies as specified in the project's pom.xml) are available, add the following lines to the root Wiki page containing the tests.
+To ensure the fixtures are available, add the following lines to the root Wiki page containing the tests.
 {{{
 !path fixtures
 !path fixtures/*.jar
-!pomFile ../pom.xml@compile
-}}} The first two will ensure all classes are accessible when working standalone, the last will be used by Java developers changing fixtures (with a Maven installation).
+}}} These will ensure all classes are accessible.
 
 !*> Class path for these examples
 The location when working standalone:
 !path fixtures
 !path fixtures/*.jar
-
-When developing and changing the fixtures, we will work based on the pom.xml:
-!pomFile ../pom.xml@compile
 *!
