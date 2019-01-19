@@ -420,7 +420,7 @@
 					<includes>**/*</includes>
 					<excludes>META-INF,META-INF/**</excludes>
 					<includeScope>runtime</includeScope>
-					<excludeArtifactIds>fitnesse,slf4j-api</excludeArtifactIds>
+					<excludeArtifactIds>fitnesse,slf4j-api,commons-lang3</excludeArtifactIds>
 					<outputDirectory>${standalone.classpath}</outputDirectory>
 				</configuration>
 				<executions>
