@@ -13,6 +13,8 @@ Workaround for https://github.com/unclebob/fitnesse/issues/989
 
 !define TEST_SYSTEM {slim}
 
+!define slim.flags {-i fitnesse.slim.fixtureInteraction.CachedInteraction}
+
 !*> variables to use in examples
 !define URL_THAT_SENDS_COOKIES {https://outlook.live.com/owa/}
 
