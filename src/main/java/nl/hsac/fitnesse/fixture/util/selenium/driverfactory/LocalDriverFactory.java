@@ -43,8 +43,8 @@ public class LocalDriverFactory implements DriverFactory {
                 FirefoxOptions options = new FirefoxOptions().setProfile(fxProfile);
                 driver = new FirefoxDriver(options);
             } else if ("chromedriver".equalsIgnoreCase(driverClass.getSimpleName())) {
-                DesiredCapabilities capabilities = getChromeMobileCapabilities(profile);
-                driver = new ChromeDriver(capabilities);
+                ChromeOptions chromeOptions = getChromeMobileOptions(profile);
+                driver = new ChromeDriver(chromeOptions);
             } else if ("internetexplorerdriver".equalsIgnoreCase(driverClass.getSimpleName())) {
                 InternetExplorerOptions ieOptions = getInternetExplorerOptions(profile);
                 driver = new InternetExplorerDriver(ieOptions);
@@ -114,12 +114,12 @@ public class LocalDriverFactory implements DriverFactory {
         return fxProfile;
     }
 
-    public static DesiredCapabilities getChromeMobileCapabilities(Map<String, Object> profile) {
-        DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+    public static ChromeOptions getChromeMobileOptions(Map<String, Object> profile) {
+        ChromeOptions chromeOptions = new ChromeOptions();
         if (profile != null) {
-            capabilities.setCapability(ChromeOptions.CAPABILITY, profile);
+            chromeOptions.merge(new DesiredCapabilities(profile));
         }
-        return capabilities;
+        return chromeOptions;
     }
 
     public static InternetExplorerOptions getInternetExplorerOptions(Map<String, Object> profile) {
