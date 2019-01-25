@@ -35,6 +35,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
@@ -653,7 +654,17 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     @WaitUntil
     public boolean selectAs(String value, String place) {
-        return selectFor(value, place);
+        WebElement element = getElementToSelectFor(place);
+        Select select = new Select(element);
+        if (select.isMultiple()) {
+            select.deselectAll();
+        }
+        return clickSelectOption(element, value);
+    }
+
+    @WaitUntil
+    public boolean selectAsIn(String value, String place, String container) {
+        return Boolean.TRUE.equals(doInContainer(container, () -> selectAs(value, place)));
     }
 
     @WaitUntil
