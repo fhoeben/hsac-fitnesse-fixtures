@@ -1,8 +1,8 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import nl.hsac.fitnesse.fixture.util.XMLValidator;
 import nl.hsac.fitnesse.fixture.util.XPathHelper;
 import org.apache.commons.lang3.StringUtils;
-
 import javax.xml.namespace.NamespaceContext;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class XmlFixture extends SlimFixture {
 
     /**
      * Register a prefix to use in XPath expressions.
-     * @param prefix prefix to be used in xPath expressions.
+     * @param prefix    prefix to be used in xPath expressions.
      * @param namespace XML namespace the prefix should point to.
      */
     public void registerPrefixForNamespace(String prefix, String namespace) {
@@ -73,12 +73,12 @@ public class XmlFixture extends SlimFixture {
      */
     public ArrayList<String> listXPathMatches(String xPathExpr) {
         List<String> results = xPathHelper.getAllXPath(namespaceContext, content, xPathExpr);
-        return results instanceof ArrayList? (ArrayList<String>) results : new ArrayList<>(results);
+        return results instanceof ArrayList ? (ArrayList<String>) results : new ArrayList<>(results);
     }
 
     /**
      * @param baseName base of filename to generate (a number might be added to the name to make it unique).
-     * @param xPath expression to evaluate.
+     * @param xPath    expression to evaluate.
      * @return link to created file.
      */
     public String createFileFromBase64ContentOf(String baseName, String xPath) {
@@ -88,6 +88,15 @@ public class XmlFixture extends SlimFixture {
         } else {
             return createFileFromBase64(baseName, base64Content);
         }
+    }
+
+    /**
+     * Validat the loaded xml against a schema in file xsdFileName
+     * @param xsdFileName filename of the xsd to use
+     * @return true if the xml validates against the schema. Throws a descriptive exception otherwise
+     */
+    public boolean validateAgainst(String xsdFileName) {
+        return new XMLValidator().validateAgainst(content, xsdFileName);
     }
 
     protected String getContent() {
