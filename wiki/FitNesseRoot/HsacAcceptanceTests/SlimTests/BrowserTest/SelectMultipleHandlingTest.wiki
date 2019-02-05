@@ -22,6 +22,9 @@ This test ensures we can work with multi select boxes. We use a mock server runn
 </body>
 </html>}}} }
 
+|script|list fixture   |
+|display lists standard|
+
 |script      |mock xml server setup|
 |add response|${HTML}              |
 |$url=       |get mock server url  |
