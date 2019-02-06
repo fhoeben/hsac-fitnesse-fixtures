@@ -77,7 +77,7 @@ public class XMLValidatorTest {
         expectedEx.expectMessage("Attribute 'orderid' must appear on element 'shiporder'");
 
         String xml = FileUtil.loadFile("invalid_shiporder.xml");
-        String schema = testResourcesDir + "shiporder_schema.xsd";
+        String schema = FileUtil.loadFile("shiporder_schema.xsd");
         validator.validateAgainst(xml, schema);
     }
 }
