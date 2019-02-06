@@ -72,9 +72,8 @@ public class XMLValidator {
      * @return true if the xml validates against the schema.
      * Throws a descriptive SlimFixtureException when validation fails
      */
-    public boolean validateAgainst(String xmlContent, String xsdFileName) {
+    public boolean validateAgainst(String xmlContent, String xsdContent) {
         try {
-            String xsdContent = new FileFixture().textIn(xsdFileName);
             Source xsd = new SAXSource(new InputSource(new StringReader(xsdContent)));
             Source xml = new SAXSource(new InputSource(new StringReader(xmlContent)));
 

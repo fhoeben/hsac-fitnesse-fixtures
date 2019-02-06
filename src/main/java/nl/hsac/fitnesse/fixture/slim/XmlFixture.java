@@ -91,13 +91,25 @@ public class XmlFixture extends SlimFixture {
     }
 
     /**
-     * Validat the loaded xml against a schema in file xsdFileName
+     * Validate the loaded xml against a schema in file xsdFileName
      * @param xsdFileName filename of the xsd to use
      * @return true if the xml validates against the schema. Throws a descriptive exception otherwise
      */
-    public boolean validateAgainst(String xsdFileName) {
-        return new XMLValidator().validateAgainst(content, xsdFileName);
+    public boolean validateAgainstXsdFile(String xsdFileName) {
+        String xsdContent = new FileFixture().textIn(xsdFileName);
+        return new XMLValidator().validateAgainst(content, xsdContent);
     }
+
+    /**
+     * Validate the loaded xml against a schema provided from the wiki
+     * @param xsdSchema xsd schema to use
+     * @return true if the xml validates against the schema. Throws a descriptive exception otherwise
+     */
+    public boolean validateAgainstXsd(String xsdSchema) {
+        String xsdContent = cleanupValue(xsdSchema);
+        return new XMLValidator().validateAgainst(content, xsdContent);
+    }
+
 
     protected String getContent() {
         return content;
