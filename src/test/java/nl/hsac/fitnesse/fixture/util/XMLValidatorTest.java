@@ -64,7 +64,7 @@ public class XMLValidatorTest {
     @Test
     public void validXmlValidationReturnsTrue() {
         String xml = FileUtil.loadFile("valid_shiporder.xml");
-        String schemaFile = testResourcesDir + "shiporder_schema.xsd";
+        String schemaFile = FileUtil.loadFile("shiporder_schema.xsd");
         assertTrue(validator.validateAgainst(xml, schemaFile));
     }
 
