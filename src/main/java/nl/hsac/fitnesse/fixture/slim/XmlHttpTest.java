@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import nl.hsac.fitnesse.fixture.util.XMLValidator;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 import org.apache.commons.lang3.StringUtils;
 
@@ -112,6 +113,26 @@ public class XmlHttpTest extends HttpTest {
         } else {
             return createFileFromBase64(baseName, base64Content);
         }
+    }
+
+    /**
+     * Validate the loaded xml against a schema in file xsdFileName
+     * @param xsdFileName filename of the xsd to use
+     * @return true if the response xml validates against the schema. Throws a descriptive exception otherwise
+     */
+    public boolean validateResponseAgainstXsdFile(String xsdFileName) {
+        String xsdContent = new FileFixture().textIn(xsdFileName);
+        return new XMLValidator().validateAgainst(getResponse().getResponse(), xsdContent);
+    }
+
+    /**
+     * Validate the loaded xml against a schema provided from the wiki page
+     * @param xsdSchema xsd schema to use
+     * @return true if the response xml validates against the schema. Throws a descriptive exception otherwise
+     */
+    public boolean validateResponseAgainstXsd(String xsdSchema) {
+        String xsdContent = cleanupValue(xsdSchema);
+        return new XMLValidator().validateAgainst(getResponse().getResponse(), xsdContent);
     }
 
     @Override

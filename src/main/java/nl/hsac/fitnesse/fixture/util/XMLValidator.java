@@ -1,8 +1,20 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import nl.hsac.fitnesse.fixture.slim.FileFixture;
+import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import javax.xml.XMLConstants;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.transform.Source;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+import java.io.IOException;
 import java.io.StringReader;
 
 /**
@@ -51,6 +63,31 @@ public class XMLValidator {
                 }
             }
             reader.close();
+        }
+    }
+
+    /**
+     * Validate currently loaded xml against an xsd
+     * @param xsdFileName the XSD schema file to use for validation
+     * @return true if the xml validates against the schema.
+     * Throws a descriptive SlimFixtureException when validation fails
+     */
+    public boolean validateAgainst(String xmlContent, String xsdContent) {
+        try {
+            Source xsd = new SAXSource(new InputSource(new StringReader(xsdContent)));
+            Source xml = new SAXSource(new InputSource(new StringReader(xmlContent)));
+
+            SchemaFactory schemaFactory = SchemaFactory
+                    .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = schemaFactory.newSchema(xsd);
+
+            Validator validator = schema.newValidator();
+            validator.validate(xml);
+            return true;
+        } catch (SAXException e) {
+            throw new SlimFixtureException(false, "XML Validation failed: " + e.getMessage());
+        } catch (IOException e) {
+            throw new SlimFixtureException(e);
         }
     }
 }
