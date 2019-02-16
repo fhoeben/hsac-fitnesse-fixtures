@@ -40,7 +40,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<hsac-fitnesse-plugin.version>1.24.0</hsac-fitnesse-plugin.version>
 		<maven-classpath-plugin.version>1.9</maven-classpath-plugin.version>
-		<fitnesse.version>20190127</fitnesse.version>
+		<fitnesse.version>20190202</fitnesse.version>
 		<selenium.version>3.141.59</selenium.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<apache.http.version>4.5.6</apache.http.version>
