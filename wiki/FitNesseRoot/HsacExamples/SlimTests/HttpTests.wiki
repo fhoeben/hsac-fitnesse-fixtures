@@ -17,7 +17,6 @@ The >HttpPost2UsingScenarioTest makes multiple SOAP calls to a service, where sc
 >HttpHeadTest shows an example HEAD request, retrieving only response status and headers.
 >HttpCompressionTest shows an example GET request with gzip compression support.
 >HttpsWithoutCertificateVerification shows example GET requests without SSL certificate verification
->XmlHttpTestResponseSchemaValidation shows an example of how we can validate response xml agains a given XSD schema
 
 !2 Language
 

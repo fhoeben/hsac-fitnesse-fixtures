@@ -1,4 +1,5 @@
 ---
+Help: can validate response xml agains a given XSD schema
 Test
 ---
 |script           |mock xml server setup                             |
