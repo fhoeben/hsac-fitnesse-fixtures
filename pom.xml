@@ -47,9 +47,9 @@
 		<surefire.version>2.22.1</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
-		<selenium.internetexplorerdriver.version>3.14.0</selenium.internetexplorerdriver.version>
+		<selenium.internetexplorerdriver.version>3.141.5</selenium.internetexplorerdriver.version>
 		<selenium.edgedriver.version>6.17134</selenium.edgedriver.version>
-		<selenium.chromedriver.version>2.45.0</selenium.chromedriver.version>
+		<selenium.chromedriver.version>73.0.3683.20</selenium.chromedriver.version>
 		<selenium.geckodriver.version>0.24.0</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
@@ -269,6 +269,7 @@
 							<platform>windows</platform>
 							<bit>32</bit>
 							<version>${selenium.internetexplorerdriver.version}</version>
+							<url>http://selenium-release.storage.googleapis.com/3.141/IEDriverServer_Win32_${selenium.internetexplorerdriver.version}.zip</url>
 						</driver>
 						<driver>
 							<name>edgedriver</name>
@@ -281,30 +282,35 @@
 							<platform>windows</platform>
 							<bit>32</bit>
 							<version>${selenium.chromedriver.version}</version>
+							<url>http://chromedriver.storage.googleapis.com/${selenium.chromedriver.version}/chromedriver_win32.zip</url>
 						</driver>
 						<driver>
 							<name>chromedriver</name>
 							<platform>mac</platform>
 							<bit>64</bit>
 							<version>${selenium.chromedriver.version}</version>
+							<url>http://chromedriver.storage.googleapis.com/${selenium.chromedriver.version}/chromedriver_mac64.zip</url>
 						</driver>
 						<driver>
 							<name>chromedriver</name>
 							<platform>linux</platform>
 							<bit>64</bit>
 							<version>${selenium.chromedriver.version}</version>
+							<url>http://chromedriver.storage.googleapis.com/${selenium.chromedriver.version}/chromedriver_linux64.zip</url>
 						</driver>
 						<driver>
 							<name>geckodriver</name>
 							<platform>windows</platform>
 							<bit>64</bit>
 							<version>${selenium.geckodriver.version}</version>
+							<url>https://github.com/mozilla/geckodriver/releases/download/v${selenium.geckodriver.version}/geckodriver-v${selenium.geckodriver.version}-win64.zip</url>
 						</driver>
 						<driver>
 							<name>geckodriver</name>
 							<platform>mac</platform>
 							<bit>64</bit>
 							<version>${selenium.geckodriver.version}</version>
+							<url>https://github.com/mozilla/geckodriver/releases/download/v${selenium.geckodriver.version}/geckodriver-v${selenium.geckodriver.version}-macos.tar.gz</url>
 						</driver>
 					</drivers>
 					<skip>${webdriver.download.skip}</skip>
