@@ -39,6 +39,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -843,15 +844,32 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         WebElement sourceElement = getElementToClick(source);
         destination = cleanupValue(destination);
         WebElement destinationElement = getElementToClick(destination);
-        return dragAndDropTo(sourceElement, destinationElement);
+        return dragAndDropTo(sourceElement, destinationElement, false);
     }
 
-    protected boolean dragAndDropTo(WebElement sourceElement, WebElement destinationElement) {
+    @WaitUntil
+    public boolean html5DragAndDropTo(String source, String destination) {
+        source = cleanupValue(source);
+        WebElement sourceElement = getElementToClick(source);
+        destination = cleanupValue(destination);
+        WebElement destinationElement = getElementToClick(destination);
+        return dragAndDropTo(sourceElement, destinationElement, true);
+    }
+
+    protected boolean dragAndDropTo(WebElement sourceElement, WebElement destinationElement, boolean html5) {
         boolean result = false;
         if ((sourceElement != null) && (destinationElement != null)) {
             scrollIfNotOnScreen(sourceElement);
             if (isInteractable(sourceElement) && destinationElement.isDisplayed()) {
-                getSeleniumHelper().dragAndDrop(sourceElement, destinationElement);
+                if (html5) {
+                    try {
+                        getSeleniumHelper().html5DragAndDrop(sourceElement, destinationElement);
+                    } catch (IOException e) {
+                        throw new SlimFixtureException(false, "The drag and drop simulator javascript could not be found.", e);
+                    }
+                } else {
+                    getSeleniumHelper().dragAndDrop(sourceElement, destinationElement);
+                }
                 result = true;
             }
         }

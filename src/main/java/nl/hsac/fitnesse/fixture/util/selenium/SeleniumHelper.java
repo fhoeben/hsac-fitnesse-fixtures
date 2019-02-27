@@ -1,5 +1,7 @@
 package nl.hsac.fitnesse.fixture.util.selenium;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ConstantBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.CssBy;
@@ -46,6 +48,7 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
@@ -82,7 +85,7 @@ public class SeleniumHelper<T extends WebElement> {
                     "    text += node.textContent.trim();\n" +
                     "}\n" +
                     "return text;";
-
+    private static final String DRAG_AND_DROP_SIM_JS_RESOURCE = "js/dragDropSim.js";
     private final static char NON_BREAKING_SPACE = 160;
 
     private final List<T> currentIFramePath = new ArrayList<>(4);
@@ -578,6 +581,20 @@ public class SeleniumHelper<T extends WebElement> {
      */
     public void dragAndDrop(WebElement source, WebElement target) {
         getActions().dragAndDrop(source, target).perform();
+    }
+
+    /**
+     * Simulates a drag from source element and drop to target element. HTML5 draggable-compatible
+     * Workaround for https://github.com/seleniumhq/selenium-google-code-issue-archive/issues/3604
+     * Uses https://github.com/Photonios/JS-DragAndDrop-Simulator for maximum compatibility
+     * @param source element to start the drag
+     * @param target element to end the drag
+     * @throws IOException when the simulator javascript is not found on the classpath
+     */
+    public void html5DragAndDrop(WebElement source, WebElement target) throws IOException {
+        URL url = Resources.getResource(DRAG_AND_DROP_SIM_JS_RESOURCE);
+        String js = Resources.toString(url, Charsets.UTF_8);
+        executeJavascript(js + " DndSimulator.simulate(arguments[0], arguments[1]);" , source, target);
     }
 
     public Actions getActions() {
