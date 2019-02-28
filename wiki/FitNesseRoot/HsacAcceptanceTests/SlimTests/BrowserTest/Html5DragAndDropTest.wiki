@@ -34,6 +34,7 @@ function drop(ev) {
 
 |script      |mock xml server setup|
 |add response|${HTML}              |
+|add response|${HTML}              |
 |$url=       |get mock server url  |
 
 |script                |browser test                        |
@@ -41,4 +42,13 @@ function drop(ev) {
 |seconds before timeout|1                                   |
 |check                 |normalized value of|id=div1|!--!    |
 |html5 drag and drop   |id=drag1           |to     |id=div1 |
+|check                 |normalized value of|id=div1|drag me!|
+
+Drag and drop will use the html5 version automatically if the source element has the attribute !style_code[draggable] with value !style_code[true]:
+
+|script                                                     |
+|refresh                                                    |
+|seconds before timeout|1                                   |
+|check                 |normalized value of|id=div1|!--!    |
+|drag and drop         |id=drag1           |to     |id=div1 |
 |check                 |normalized value of|id=div1|drag me!|

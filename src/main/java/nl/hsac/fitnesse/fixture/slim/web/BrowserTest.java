@@ -840,28 +840,25 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     @WaitUntil
     public boolean dragAndDropTo(String source, String destination) {
-        source = cleanupValue(source);
-        WebElement sourceElement = getElementToClick(source);
-        destination = cleanupValue(destination);
-        WebElement destinationElement = getElementToClick(destination);
-        return dragAndDropTo(sourceElement, destinationElement, false);
+        return dragAndDropImpl(source, destination, false);
     }
 
     @WaitUntil
     public boolean html5DragAndDropTo(String source, String destination) {
+        return dragAndDropImpl(source, destination, true);
+    }
+
+    protected boolean dragAndDropImpl(String source, String destination, boolean html5) {
+        boolean result = false;
         source = cleanupValue(source);
         WebElement sourceElement = getElementToClick(source);
         destination = cleanupValue(destination);
         WebElement destinationElement = getElementToClick(destination);
-        return dragAndDropTo(sourceElement, destinationElement, true);
-    }
 
-    protected boolean dragAndDropTo(WebElement sourceElement, WebElement destinationElement, boolean html5) {
-        boolean result = false;
         if ((sourceElement != null) && (destinationElement != null)) {
             scrollIfNotOnScreen(sourceElement);
             if (isInteractable(sourceElement) && destinationElement.isDisplayed()) {
-                if (html5) {
+                if (html5 || sourceElement.getAttribute("draggable").equalsIgnoreCase("true")) {
                     try {
                         getSeleniumHelper().html5DragAndDrop(sourceElement, destinationElement);
                     } catch (IOException e) {
