@@ -39,6 +39,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -839,19 +840,33 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     @WaitUntil
     public boolean dragAndDropTo(String source, String destination) {
+        return dragAndDropImpl(source, destination, false);
+    }
+
+    @WaitUntil
+    public boolean html5DragAndDropTo(String source, String destination) {
+        return dragAndDropImpl(source, destination, true);
+    }
+
+    protected boolean dragAndDropImpl(String source, String destination, boolean html5) {
+        boolean result = false;
         source = cleanupValue(source);
         WebElement sourceElement = getElementToClick(source);
         destination = cleanupValue(destination);
         WebElement destinationElement = getElementToClick(destination);
-        return dragAndDropTo(sourceElement, destinationElement);
-    }
 
-    protected boolean dragAndDropTo(WebElement sourceElement, WebElement destinationElement) {
-        boolean result = false;
         if ((sourceElement != null) && (destinationElement != null)) {
             scrollIfNotOnScreen(sourceElement);
             if (isInteractable(sourceElement) && destinationElement.isDisplayed()) {
-                getSeleniumHelper().dragAndDrop(sourceElement, destinationElement);
+                if (html5 || sourceElement.getAttribute("draggable").equalsIgnoreCase("true")) {
+                    try {
+                        getSeleniumHelper().html5DragAndDrop(sourceElement, destinationElement);
+                    } catch (IOException e) {
+                        throw new SlimFixtureException(false, "The drag and drop simulator javascript could not be found.", e);
+                    }
+                } else {
+                    getSeleniumHelper().dragAndDrop(sourceElement, destinationElement);
+                }
                 result = true;
             }
         }
