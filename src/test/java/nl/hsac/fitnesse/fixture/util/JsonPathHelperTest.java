@@ -12,44 +12,45 @@ import static org.junit.Assert.fail;
 public class JsonPathHelperTest {
     private JsonPathHelper helper = new JsonPathHelper();
 
+    //language=json
     private static String JSON =
             "{\n" +
-            "    \"store\": {\n" +
-            "        \"book\": [\n" +
-            "            {\n" +
-            "                \"category\": \"reference\",\n" +
-            "                \"author\": \"Nigel Rees\",\n" +
-            "                \"title\": \"Sayings of the Century\",\n" +
-            "                \"price\": 8.95\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"category\": \"fiction\",\n" +
-            "                \"author\": \"Evelyn Waugh\",\n" +
-            "                \"title\": \"Sword of Honour\",\n" +
-            "                \"price\": 12.99\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"category\": \"fiction\",\n" +
-            "                \"author\": \"Herman Melville\",\n" +
-            "                \"title\": \"Moby Dick\",\n" +
-            "                \"isbn\": \"0-553-21311-3\",\n" +
-            "                \"price\": 8.99\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"category\": \"fiction\",\n" +
-            "                \"author\": \"J. R. R. Tolkien\",\n" +
-            "                \"title\": \"The Lord of the Rings\",\n" +
-            "                \"isbn\": \"0-395-19395-8\",\n" +
-            "                \"price\": 22.99\n" +
-            "            }\n" +
-            "        ],\n" +
-            "        \"bicycle\": {\n" +
-            "            \"color\": \"red\",\n" +
-            "            \"price\": 19.95\n" +
-            "        }\n" +
-            "    },\n" +
-            "    \"expensive\": 10\n" +
-            "}\n";
+                    "    \"store\": {\n" +
+                    "        \"book\": [\n" +
+                    "            {\n" +
+                    "                \"category\": \"reference\",\n" +
+                    "                \"author\": \"Nigel Rees\",\n" +
+                    "                \"title\": \"Sayings of the Century\",\n" +
+                    "                \"price\": 8.95\n" +
+                    "            },\n" +
+                    "            {\n" +
+                    "                \"category\": \"fiction\",\n" +
+                    "                \"author\": \"Evelyn Waugh\",\n" +
+                    "                \"title\": \"Sword of Honour\",\n" +
+                    "                \"price\": 12.99\n" +
+                    "            },\n" +
+                    "            {\n" +
+                    "                \"category\": \"fiction\",\n" +
+                    "                \"author\": \"Herman Melville\",\n" +
+                    "                \"title\": \"Moby Dick\",\n" +
+                    "                \"isbn\": \"0-553-21311-3\",\n" +
+                    "                \"price\": 8.99\n" +
+                    "            },\n" +
+                    "            {\n" +
+                    "                \"category\": \"fiction\",\n" +
+                    "                \"author\": \"J. R. R. Tolkien\",\n" +
+                    "                \"title\": \"The Lord of the Rings\",\n" +
+                    "                \"isbn\": \"0-395-19395-8\",\n" +
+                    "                \"price\": 22.99\n" +
+                    "            }\n" +
+                    "        ],\n" +
+                    "        \"bicycle\": {\n" +
+                    "            \"color\": \"red\",\n" +
+                    "            \"price\": 19.95\n" +
+                    "        }\n" +
+                    "    },\n" +
+                    "    \"expensive\": 10\n" +
+                    "}\n";
 
     @Test
     public void testJsonPathNoResult() {
@@ -75,11 +76,17 @@ public class JsonPathHelperTest {
     @Test
     public void testJsonPathException() {
         try {
-            Object result = helper.getJsonPath(JSON, "$..book[2].author");
+            Object result = helper.getJsonPath(JSON, "$..book[*].author");
             fail("Expected exception, got: " + result);
         } catch (RuntimeException e) {
-            assertTrue(e.getMessage().contains("$..book[2].author"));
+            assertTrue(e.getMessage().contains("$..book[*].author"));
         }
+    }
+
+    @Test
+    public void testJsonPathListOfOne() {
+        Object result = helper.getJsonPath(JSON, "$..book[2].author");
+        assertEquals("Herman Melville", result);
     }
 
     @Test

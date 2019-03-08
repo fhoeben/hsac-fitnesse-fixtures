@@ -12,13 +12,14 @@ import java.util.List;
 
 /**
  * Helper to evaluate JsonPath expressions against a JSON object.
+ *
  * @link https://github.com/jayway/JsonPath
  * @link http://jsonpath.herokuapp.com/
  */
 public class JsonPathHelper {
     private final static Configuration CONF = Configuration
-                                                .defaultConfiguration()
-                                                .addOptions(Option.SUPPRESS_EXCEPTIONS);
+            .defaultConfiguration()
+            .addOptions(Option.SUPPRESS_EXCEPTIONS);
     private final static ParseContext CONTEXT = JsonPath.using(CONF);
 
     private String lastJson;
@@ -26,21 +27,26 @@ public class JsonPathHelper {
 
     /**
      * Evaluates a JsonPath expression returning a single element.
-     * @param json JSON value.
+     *
+     * @param json     JSON value.
      * @param jsonPath expression to evaluate.
      * @return result result of expression.
      * @throws java.lang.RuntimeException if jsonPath would return multiple elements.
      */
     public Object getJsonPath(String json, String jsonPath) {
-        if (!JsonPath.isPathDefinite(jsonPath)) {
+        if (!JsonPath.isPathDefinite(jsonPath) && getAllJsonPath(json, jsonPath).size() != 1) {
             throw new RuntimeException(jsonPath + " returns multiple results, not a single.");
+        }
+        if (!JsonPath.isPathDefinite(jsonPath)) {
+            return getAllJsonPath(json, jsonPath).get(0);
         }
         return parseJson(json).read(jsonPath);
     }
 
     /**
      * Evaluates a JsonPath expression returning a multiple elements.
-     * @param json JSON value.
+     *
+     * @param json     JSON value.
      * @param jsonPath expression to evaluate.
      * @return result results of expression.
      * @throws java.lang.RuntimeException if jsonPath would return a single element.
@@ -61,7 +67,7 @@ public class JsonPathHelper {
     }
 
     public String updateJsonPathWithValue(String json, String jsonPath, Object value) {
-        if(null != getJsonPath(json, jsonPath)) {
+        if (null != getJsonPath(json, jsonPath)) {
             return parseJson(json).set(jsonPath, value).jsonString();
         } else {
             throw new PathNotFoundException("No result for: " + jsonPath + " IN: " + json);
