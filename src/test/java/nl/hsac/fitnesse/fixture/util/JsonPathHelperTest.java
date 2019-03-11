@@ -78,7 +78,7 @@ public class JsonPathHelperTest {
             Object result = helper.getJsonPath(JSON, "$..book[2].author");
             fail("Expected exception, got: " + result);
         } catch (RuntimeException e) {
-            assertTrue(e.getMessage().contains("$..book[2].author"));
+            assertTrue(e.getMessage().equals("$..book[2].author returns a list of results, not a single."));
         }
     }
 
