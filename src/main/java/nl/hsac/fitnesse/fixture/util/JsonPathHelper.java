@@ -33,7 +33,7 @@ public class JsonPathHelper {
      */
     public Object getJsonPath(String json, String jsonPath) {
         if (!JsonPath.isPathDefinite(jsonPath)) {
-            throw new RuntimeException(jsonPath + " returns multiple results, not a single.");
+            throw new RuntimeException(jsonPath + " returns a list of results, not a single.");
         }
         return parseJson(json).read(jsonPath);
     }
@@ -73,7 +73,7 @@ public class JsonPathHelper {
         try {
             result = null != getJsonPath(json, jsonPath);
         } catch (RuntimeException e) {
-            if (e.getMessage().contains("multiple")) {
+            if (e.getMessage().contains("not a single")) {
                 result = getAllJsonPath(json, jsonPath).size() > 0;
             }
         }
