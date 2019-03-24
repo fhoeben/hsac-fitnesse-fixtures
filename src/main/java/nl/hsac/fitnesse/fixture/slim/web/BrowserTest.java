@@ -202,12 +202,20 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     public BrowserTest() {
         secondsBeforeTimeout(getEnvironment().getSeleniumDriverManager().getDefaultTimeoutSeconds());
-        ensureActiveTabIsNotClosed();
+        if (!ensureActiveTabIsNotClosed()) {
+            confirmAlertIfAvailable();
+        }
     }
 
     public BrowserTest(int secondsBeforeTimeout) {
+        this(secondsBeforeTimeout, true);
+    }
+
+    public BrowserTest(int secondsBeforeTimeout, boolean confirmAlertIfAvailable) {
         secondsBeforeTimeout(secondsBeforeTimeout);
-        ensureActiveTabIsNotClosed();
+        if (!ensureActiveTabIsNotClosed() && confirmAlertIfAvailable) {
+            confirmAlertIfAvailable();
+        }
     }
 
     public boolean open(String address) {
@@ -290,6 +298,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return result;
     }
 
+    @WaitUntil(TimeoutPolicy.RETURN_FALSE)
+    public boolean confirmAlertIfAvailable() {
+        return confirmAlert();
+    }
+
     @WaitUntil
     public boolean dismissAlert() {
         Alert alert = getAlert();
@@ -300,6 +313,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             result = true;
         }
         return result;
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_FALSE)
+    public boolean dismissAlertIfAvailable() {
+        return dismissAlert();
     }
 
     /**

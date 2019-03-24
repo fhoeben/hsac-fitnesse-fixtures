@@ -11,7 +11,7 @@ This test ensures we can deal with alerts.
 |add response|${HTML}              |
 |$url=       |get mock server url  |
 
-|storyboard            |browser test    |
+|script                |browser test    |
 |open                  |$url            |
 |seconds before timeout|1               |
 |check                 |alert text|null |
@@ -62,21 +62,21 @@ We have to go back when the alert has been handled.
 |script                |browser test                                                      |
 |open                  |$url/main                                                         |
 |seconds before timeout|2                                                                 |
-|check                 |alert text                             |null                      |
+|check                 |alert text        |null                                           |
 |click                 |Open alert 2                                                      |
-|check                 |alert text                             |Bye                       |
+|check                 |alert text        |Bye                                            |
 |confirm alert                                                                            |
 |note                  |we should be able to click Remove because we are back at top level|
 |click                 |Remove                                                            |
 |switch to frame       |id=iframe1                                                        |
 |click                 |Open alert 2                                                      |
-|check                 |alert text                             |Bye                       |
+|check                 |alert text        |Bye                                            |
 |dismiss alert                                                                            |
 |note                  |we should be unable to click Remove because we are back at level 1|
-|reject                |click if available                     |Remove                    |
+|reject                |click if available|Remove                                         |
 |switch to default content                                                                |
 |click                 |Open alert                                                        |
-|check                 |alert text                             |Hello                     |
+|check                 |alert text        |Hello                                          |
 |dismiss alert                                                                            |
 |note                  |we should be able to click Remove because we are back at top level|
 |click                 |Remove                                                            |
