@@ -73,7 +73,7 @@ public class JsonPathHelper {
         try {
             result = null != getJsonPath(json, jsonPath);
         } catch (RuntimeException e) {
-            if (e.getMessage().contains("multiple")) {
+            if (e.getMessage().contains("not a single")) {
                 result = getAllJsonPath(json, jsonPath).size() > 0;
             }
         }
