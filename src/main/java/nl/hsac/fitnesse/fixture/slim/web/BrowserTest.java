@@ -1661,6 +1661,27 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     /**
+     * Determines whether element is NOT enabled (i.e. can not be clicked).
+     * @param place element to check.
+     * @return true if element is disabled.
+     */
+    @WaitUntil(TimeoutPolicy.RETURN_FALSE)
+    public boolean isDisabled(String place) {
+        return isDisabledIn(place, null);
+    }
+
+    /**
+     * Determines whether element is NOT enabled (i.e. can not be clicked).
+     * @param place element to check.
+     * @param container parent of place.
+     * @return true if element is disabled.
+     */
+    @WaitUntil(TimeoutPolicy.RETURN_FALSE)
+    public boolean isDisabledIn(String place, String container) {
+        return !isEnabledIn(place, container);
+    }
+
+    /**
      * Determines whether element can be see in browser's window.
      * @param place element to check.
      * @return true if element is displayed and in viewport.
