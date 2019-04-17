@@ -202,7 +202,7 @@ public class HsacFitNesseRunner extends FitNesseRunner {
         // disable maven-classpath-plugin, we expect all jars to be loaded as part of this jUnit run
         System.setProperty("fitnesse.wikitext.widgets.MavenClasspathSymbolType.Disable", "true");
 
-        ClassLoader cl = new PluginsClassLoaderFactory().getClassLoader(getFitNesseDir(suiteClass));
+        ClassLoader cl = PluginsClassLoaderFactory.getClassLoader(getFitNesseDir(suiteClass));
         ContextConfigurator configurator = initContextConfigurator().withClassLoader(cl);
 
         return configurator.makeFitNesseContext();
