@@ -5,6 +5,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.components.PluginsClassLoaderFactory;
 import fitnesse.junit.DescriptionFactory;
 import fitnesse.junit.FitNesseRunner;
+import fitnesse.reporting.RerunSuiteFormatter;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.wiki.WikiPage;
 import nl.hsac.fitnesse.fixture.Environment;
@@ -252,8 +253,7 @@ public class HsacFitNesseRunner extends FitNesseRunner {
 
         try {
             String fitNesseRootDir = getReRunSuiteLocation(suiteClass);
-            String fileToCreate = fitNesseRootDir + "/ReRunLastFailures.wiki";
-            testRunner.addTestSystemListener(new ReRunSuiteTestSystemListener(fileToCreate));
+            testRunner.addTestSystemListener(new RerunSuiteFormatter(new File(fitNesseRootDir, "ReRunLastFailures.wiki")));
         } catch (Exception e) {
             System.err.println("Unable to create re-run suite generator: " + e);
         }
