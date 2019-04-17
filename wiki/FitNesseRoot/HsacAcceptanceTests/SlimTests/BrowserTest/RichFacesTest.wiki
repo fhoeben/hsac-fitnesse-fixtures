@@ -5,7 +5,7 @@ Unfortunately we can't check with local server (since we don't want to set up al
 We ensure we can properly wait for richfaces ajax to render elements.
 
 |script                |rich faces test                                                           |
-|open                  |https://www.triodos.nl/internet-betaalrekening                            |
+|open                  |https://www.triodos.nl/sparen/kinder-toekomst-plan                          |
 |click                 |Direct openen                                                             |
 |seconds before timeout|2                                                                         |
 |enter                 |f                          |as                     |Voorletters           |
