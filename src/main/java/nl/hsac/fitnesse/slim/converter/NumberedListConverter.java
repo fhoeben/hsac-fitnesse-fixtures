@@ -3,6 +3,7 @@ package nl.hsac.fitnesse.slim.converter;
 import fitnesse.slim.Converter;
 import fitnesse.slim.converters.ConverterRegistry;
 import fitnesse.slim.converters.ElementConverterHelper;
+import fitnesse.slim.converters.GenericCollectionConverter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +15,7 @@ import java.util.regex.Pattern;
  * Slim Converter which works with HTML ordered lists (i.e. numbered lists) instead of the standard Java
  * toString() representation for lists.
  */
-public class NumberedListConverter extends fitnesse.slim.converters.GenericCollectionConverter<Object, List<Object>> {
+public class NumberedListConverter extends GenericCollectionConverter<Object, List<Object>> {
     private static final Pattern LIST_PATTERN = Pattern.compile(
                                                             "<ol( start=\"\\d+\")?\\s*>\\s*((<li>\\s*.*?\\s*</li>\\s*)*)</ol>",
                                                             Pattern.DOTALL);
@@ -27,7 +28,7 @@ public class NumberedListConverter extends fitnesse.slim.converters.GenericColle
         try {
             Class<? extends List<Object>> listObjectClass;
             listObjectClass = (Class<List<Object>>) NumberedListConverter.class
-                                .getMethod("toString", List.class).getParameterTypes()[0];
+                                .getMethod("getString", List.class).getParameterTypes()[0];
             NumberedListConverter converter = new NumberedListConverter();
             ConverterRegistry.addConverter(listObjectClass, converter);
             ConverterRegistry.addConverter(ArrayList.class, new NumberedArrayListConverter(converter));
@@ -56,7 +57,7 @@ public class NumberedListConverter extends fitnesse.slim.converters.GenericColle
 
         @Override
         public ArrayList fromString(String arg) {
-            return numberedListConverter.fromString(arg);
+            return (ArrayList) numberedListConverter.fromString(arg);
         }
     }
 
@@ -65,11 +66,7 @@ public class NumberedListConverter extends fitnesse.slim.converters.GenericColle
     }
 
     @Override
-    public String toString(List<Object> list) {
-        if (list == null) {
-            return super.toString(list);
-        }
-
+    public String getString(List<Object> list) {
         StringBuilder messageList = new StringBuilder("<ol start=\"0\">");
         for (Object element : list) {
             messageList.append("<li>");
@@ -82,11 +79,11 @@ public class NumberedListConverter extends fitnesse.slim.converters.GenericColle
     }
 
     @Override
-    public ArrayList<Object> fromString(String arg) {
+    public ArrayList<Object> getObject(String arg) {
         ArrayList<Object> result;
         Matcher matcher = LIST_PATTERN.matcher(arg);
         if (matcher.matches()) {
-            result = new ArrayList<Object>();
+            result = new ArrayList<>();
             String items = matcher.group(2);
             if (!"".equals(items)) {
                 items = items.replaceFirst("^\\s*<li>\\s*", "");
@@ -95,7 +92,7 @@ public class NumberedListConverter extends fitnesse.slim.converters.GenericColle
                 result.addAll(Arrays.asList(elements));
             }
         } else {
-            result = new ArrayList<Object>(super.fromString(arg));
+            result = new ArrayList<>(super.getObject(arg));
         }
         return result;
     }
