@@ -1,0 +1,24 @@
+---
+Help: can validate response xml agains a given XSD schema
+Test
+---
+|script           |mock xml server setup                             |
+|add response file|http://files/xmlTestExamples/valid_shiporder.xml  |
+|add response file|http://files/xmlTestExamples/invalid_shiporder.xml|
+|$url=            |get mock server url                               |
+
+!*> XSD String definition
+|script     |file fixture                                                |
+|$xsdSchema=|content of|http://files/xmlTestExamples/shiporder_schema.xsd|
+*!
+
+|script                            |xml http test                                    |
+|get from                          |$url                                             |
+|validate response against xsd file|http://files/xmlTestExamples/shiporder_schema.xsd|
+|validate response against xsd     |$xsdSchema                                       |
+
+!4 An XML that is not schema valid gives a descriptive exception
+
+|script                                                                                                                                                                |
+|get from|$url                                                                                                                                                         |
+|check   |validate response against xsd file|http://files/xmlTestExamples/shiporder_schema.xsd|EXCEPTION:=~/.*Attribute 'orderid' must appear on element 'shiporder'.*/|

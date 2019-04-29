@@ -8,6 +8,7 @@ import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.TimeoutPolicy;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.WaitUntil;
 import nl.hsac.fitnesse.fixture.util.ReflectionHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.AllFramesDecorator;
 import nl.hsac.fitnesse.fixture.util.selenium.PageSourceSaver;
 import nl.hsac.fitnesse.fixture.util.selenium.SelectHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
@@ -34,12 +35,15 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
@@ -198,12 +202,20 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     public BrowserTest() {
         secondsBeforeTimeout(getEnvironment().getSeleniumDriverManager().getDefaultTimeoutSeconds());
-        ensureActiveTabIsNotClosed();
+        if (!ensureActiveTabIsNotClosed()) {
+            confirmAlertIfAvailable();
+        }
     }
 
     public BrowserTest(int secondsBeforeTimeout) {
+        this(secondsBeforeTimeout, true);
+    }
+
+    public BrowserTest(int secondsBeforeTimeout, boolean confirmAlertIfAvailable) {
         secondsBeforeTimeout(secondsBeforeTimeout);
-        ensureActiveTabIsNotClosed();
+        if (!ensureActiveTabIsNotClosed() && confirmAlertIfAvailable) {
+            confirmAlertIfAvailable();
+        }
     }
 
     public boolean open(String address) {
@@ -286,6 +298,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return result;
     }
 
+    @WaitUntil(TimeoutPolicy.RETURN_FALSE)
+    public boolean confirmAlertIfAvailable() {
+        return confirmAlert();
+    }
+
     @WaitUntil
     public boolean dismissAlert() {
         Alert alert = getAlert();
@@ -296,6 +313,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             result = true;
         }
         return result;
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_FALSE)
+    public boolean dismissAlertIfAvailable() {
+        return dismissAlert();
     }
 
     /**
@@ -651,7 +673,17 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     @WaitUntil
     public boolean selectAs(String value, String place) {
-        return selectFor(value, place);
+        WebElement element = getElementToSelectFor(place);
+        Select select = new Select(element);
+        if (select.isMultiple()) {
+            select.deselectAll();
+        }
+        return clickSelectOption(element, value);
+    }
+
+    @WaitUntil
+    public boolean selectAsIn(String value, String place, String container) {
+        return Boolean.TRUE.equals(doInContainer(container, () -> selectAs(value, place)));
     }
 
     @WaitUntil
@@ -826,19 +858,33 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     @WaitUntil
     public boolean dragAndDropTo(String source, String destination) {
+        return dragAndDropImpl(source, destination, false);
+    }
+
+    @WaitUntil
+    public boolean html5DragAndDropTo(String source, String destination) {
+        return dragAndDropImpl(source, destination, true);
+    }
+
+    protected boolean dragAndDropImpl(String source, String destination, boolean html5) {
+        boolean result = false;
         source = cleanupValue(source);
         WebElement sourceElement = getElementToClick(source);
         destination = cleanupValue(destination);
         WebElement destinationElement = getElementToClick(destination);
-        return dragAndDropTo(sourceElement, destinationElement);
-    }
 
-    protected boolean dragAndDropTo(WebElement sourceElement, WebElement destinationElement) {
-        boolean result = false;
         if ((sourceElement != null) && (destinationElement != null)) {
             scrollIfNotOnScreen(sourceElement);
             if (isInteractable(sourceElement) && destinationElement.isDisplayed()) {
-                getSeleniumHelper().dragAndDrop(sourceElement, destinationElement);
+                if (html5 || sourceElement.getAttribute("draggable").equalsIgnoreCase("true")) {
+                    try {
+                        getSeleniumHelper().html5DragAndDrop(sourceElement, destinationElement);
+                    } catch (IOException e) {
+                        throw new SlimFixtureException(false, "The drag and drop simulator javascript could not be found.", e);
+                    }
+                } else {
+                    getSeleniumHelper().dragAndDrop(sourceElement, destinationElement);
+                }
                 result = true;
             }
         }
@@ -1615,6 +1661,27 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     /**
+     * Determines whether element is NOT enabled (i.e. can not be clicked).
+     * @param place element to check.
+     * @return true if element is disabled.
+     */
+    @WaitUntil(TimeoutPolicy.RETURN_FALSE)
+    public boolean isDisabled(String place) {
+        return isDisabledIn(place, null);
+    }
+
+    /**
+     * Determines whether element is NOT enabled (i.e. can not be clicked).
+     * @param place element to check.
+     * @param container parent of place.
+     * @return true if element is disabled.
+     */
+    @WaitUntil(TimeoutPolicy.RETURN_FALSE)
+    public boolean isDisabledIn(String place, String container) {
+        return !isEnabledIn(place, container);
+    }
+
+    /**
      * Determines whether element can be see in browser's window.
      * @param place element to check.
      * @return true if element is displayed and in viewport.
@@ -1727,7 +1794,18 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected int numberOfTimesIsVisibleInImpl(String text, boolean checkOnScreen) {
-        return getSeleniumHelper().countVisibleOccurrences(text, checkOnScreen);
+        int result;
+        SeleniumHelper<T> helper = getSeleniumHelper();
+        if (implicitFindInFrames) {
+            // sum over iframes
+            AtomicInteger count = new AtomicInteger();
+            new AllFramesDecorator<Integer>(helper)
+                    .apply(() -> count.addAndGet(helper.countVisibleOccurrences(text, checkOnScreen)));
+            result = count.get();
+        } else {
+            result = helper.countVisibleOccurrences(text, checkOnScreen);
+        }
+        return result;
     }
 
     protected T getElementToCheckVisibility(String place) {
@@ -2494,6 +2572,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * Simulates 'select all' (e.g. Ctrl+A on Windows) on the active element.
      * @return whether an active element was found.
      */
+    @WaitUntil
     public boolean selectAll() {
         return getSeleniumHelper().selectAll();
     }
@@ -2502,6 +2581,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * Simulates 'copy' (e.g. Ctrl+C on Windows) on the active element, copying the current selection to the clipboard.
      * @return whether an active element was found.
      */
+    @WaitUntil
     public boolean copy() {
         return getSeleniumHelper().copy();
     }
@@ -2511,6 +2591,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * and removing that selection.
      * @return whether an active element was found.
      */
+    @WaitUntil
     public boolean cut() {
         return getSeleniumHelper().cut();
     }
@@ -2520,6 +2601,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * content to the currently active element.
      * @return whether an active element was found.
      */
+    @WaitUntil
     public boolean paste() {
         return getSeleniumHelper().paste();
     }

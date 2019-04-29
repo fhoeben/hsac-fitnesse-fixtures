@@ -77,8 +77,10 @@ This test ensures we can find elements inside frames.
 |click                         |Remove3                                     |
 |click                         |Remove4                                     |
 |click                         |Remove2                                     |
+|check                         |number of times   |Remove     |is visible|3 |
 |set implicit find in frames to|false                                       |
 |reject                        |click if available|Remove2                  |
+|check                         |number of times   |Remove     |is visible|0 |
 |set implicit find in frames to|true                                        |
 |select file                   |$file             |for        |Upload button|
 |scroll to                     |Add3                                        |

@@ -1,4 +1,4 @@
-We ensure drag and drop using jQuery works ([[html5 drag and drop is not yet supported by Selenium][https://github.com/seleniumhq/selenium-google-code-issue-archive/issues/3604]]).
+We ensure drag and drop using jQuery works ([[html5 drag and drop is not yet supported by Selenium][https://github.com/seleniumhq/selenium-google-code-issue-archive/issues/3604]] use [[html5 drag and drop method][Html5DragAndDropTest]] as a workaround).
 
 We use a mock server running to serve the HTML (which was copied from https://jqueryui.com/droppable/) defined in this page.
 

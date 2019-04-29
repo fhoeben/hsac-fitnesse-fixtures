@@ -28,19 +28,24 @@ public class NumberedListConverterTest {
     }
 
     @Test
+    public void testFromStringNull() {
+        assertNull(converter.fromString(null));
+    }
+
+    @Test
     public void testToStringEmpty() {
         assertEquals("<ol start=\"0\"></ol>", converter.toString(new ArrayList<Object>()));
     }
 
     @Test
     public void testToStringFilled() {
-        ArrayList<Object> list = new ArrayList<Object>(Arrays.asList("b", "c", "d", null));
+        ArrayList<Object> list = new ArrayList<>(Arrays.asList("b", "c", "d", null));
         assertEquals("<ol start=\"0\"><li>b</li><li>c</li><li>d</li><li>null</li></ol>", converter.toString(list));
     }
 
     @Test
     public void testFromStringEmpty() {
-        assertEquals(new ArrayList<Object>(), converter.fromString("<ol> </ol>"));
+        assertEquals(new ArrayList<>(), converter.fromString("<ol> </ol>"));
     }
 
     @Test
@@ -61,7 +66,7 @@ public class NumberedListConverterTest {
         NumberedListConverter.register();
 
         Map<String, List<String>> map = new HashMap<String, List<String>>();
-        map.put("test", new LinkedList<String>(Arrays.asList("b", "c", null)));
+        map.put("test", new LinkedList<>(Arrays.asList("b", "c", null)));
         assertEquals(
                 "<table class=\"hash_table\">\n" +
                 "\t<tr class=\"hash_row\">\n" +
@@ -72,7 +77,7 @@ public class NumberedListConverterTest {
                 ConverterRegistry.getConverterForClass(Map.class).toString(map).replace("\r", ""));
 
         Map<String, List<Integer>> map2 = new HashMap<String, List<Integer>>();
-        map2.put("test", new LinkedList<Integer>(Arrays.asList(1, null, 3)));
+        map2.put("test", new LinkedList<>(Arrays.asList(1, null, 3)));
         assertEquals(
                 "<table class=\"hash_table\">\n" +
                         "\t<tr class=\"hash_row\">\n" +
@@ -83,7 +88,7 @@ public class NumberedListConverterTest {
                 ConverterRegistry.getConverterForClass(Map.class).toString(map2).replace("\r", ""));
 
         Map<String, ArrayList<Object>> map3 = new HashMap<String, ArrayList<Object>>();
-        map3.put("test", new ArrayList<Object>(Arrays.asList(1, null, "test")));
+        map3.put("test", new ArrayList<>(Arrays.asList(1, null, "test")));
         assertEquals(
                 "<table class=\"hash_table\">\n" +
                         "\t<tr class=\"hash_row\">\n" +

@@ -90,6 +90,8 @@ public class HtmlOverviewFileWriter extends OverviewFileWriter {
     protected void writeOverviewSection(PrintWriter pw, List<TestReportHtml> htmls) {
         writeOverviewGraph(pw, htmls);
 
+        writeLinks(pw, htmls);
+
         List<TestReportHtml> overviewPages = filterBy(htmls, TestReportHtml::isOverviewPage);
         writeSection(pw, "Overview Pages", overviewPages);
     }
@@ -161,6 +163,13 @@ public class HtmlOverviewFileWriter extends OverviewFileWriter {
         pw.write("<div id='");
         pw.write(RUNTIME_CHART_ID);
         pw.write("'></div>");
+    }
+
+    protected void writeLinks(PrintWriter pw, List<TestReportHtml> htmls) {
+        pw.write("<div style='position:absolute;right:0;'>");
+        pw.write("Test results in:&nbsp;");
+        pw.write("<a href='test-results.csv'>CSV</a>&nbsp;<a href='test-results.json'>JSON</a>");
+        pw.write("</div>");
     }
 
     protected void writeTestResultsSection(PrintWriter pw, List<TestReportHtml> htmls) {

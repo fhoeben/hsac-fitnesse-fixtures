@@ -6,7 +6,7 @@
 
 	<groupId>nl.hsac</groupId>
 	<artifactId>hsac-fitnesse-fixtures</artifactId>
-	<version>3.30.2-SNAPSHOT</version>
+	<version>4.4-SNAPSHOT</version>
 	<url>https://github.com/fhoeben/hsac-fitnesse-fixtures</url>
 	<name>HSAC's FitNesse Fixtures</name>
 	<description>Fixtures to assist in testing via FitNesse</description>
@@ -38,19 +38,18 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<hsac-fitnesse-plugin.version>1.24.0</hsac-fitnesse-plugin.version>
-		<maven-classpath-plugin.version>1.9</maven-classpath-plugin.version>
-		<fitnesse.version>20180127</fitnesse.version>
-		<selenium.version>3.141.5</selenium.version>
+		<hsac-fitnesse-plugin.version>1.27</hsac-fitnesse-plugin.version>
+		<fitnesse.version>20190428</fitnesse.version>
+		<selenium.version>3.141.59</selenium.version>
 		<slf4j.version>1.7.25</slf4j.version>
-		<apache.http.version>4.5.6</apache.http.version>
+		<apache.http.version>4.5.8</apache.http.version>
 		<surefire.version>2.22.1</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
-		<selenium.internetexplorerdriver.version>3.14.0</selenium.internetexplorerdriver.version>
+		<selenium.internetexplorerdriver.version>3.141.5</selenium.internetexplorerdriver.version>
 		<selenium.edgedriver.version>6.17134</selenium.edgedriver.version>
-		<selenium.chromedriver.version>2.43.0</selenium.chromedriver.version>
-		<selenium.geckodriver.version>0.23.0</selenium.geckodriver.version>
+		<selenium.chromedriver.version>74.0.3729.6</selenium.chromedriver.version>
+		<selenium.geckodriver.version>0.24.0</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
@@ -70,11 +69,6 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
 
@@ -101,18 +95,13 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.8.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-text</artifactId>
 			<version>1.6</version>
 		</dependency>
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib-nodep</artifactId>
-			<version>3.2.9</version>
+			<version>3.2.11</version>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
@@ -159,7 +148,7 @@
 		<dependency>
 			<groupId>com.galenframework</groupId>
 			<artifactId>galen-core</artifactId>
-			<version>2.4.0</version>
+			<version>2.4.4</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.seleniumhq.selenium</groupId>
@@ -200,7 +189,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.23</version>
+            <version>1.24</version>
         </dependency>
 		<dependency>
 			<groupId>commons-net</groupId>
@@ -279,6 +268,7 @@
 							<platform>windows</platform>
 							<bit>32</bit>
 							<version>${selenium.internetexplorerdriver.version}</version>
+							<url>http://selenium-release.storage.googleapis.com/3.141/IEDriverServer_Win32_${selenium.internetexplorerdriver.version}.zip</url>
 						</driver>
 						<driver>
 							<name>edgedriver</name>
@@ -291,30 +281,35 @@
 							<platform>windows</platform>
 							<bit>32</bit>
 							<version>${selenium.chromedriver.version}</version>
+							<url>http://chromedriver.storage.googleapis.com/${selenium.chromedriver.version}/chromedriver_win32.zip</url>
 						</driver>
 						<driver>
 							<name>chromedriver</name>
 							<platform>mac</platform>
 							<bit>64</bit>
 							<version>${selenium.chromedriver.version}</version>
+							<url>http://chromedriver.storage.googleapis.com/${selenium.chromedriver.version}/chromedriver_mac64.zip</url>
 						</driver>
 						<driver>
 							<name>chromedriver</name>
 							<platform>linux</platform>
 							<bit>64</bit>
 							<version>${selenium.chromedriver.version}</version>
+							<url>http://chromedriver.storage.googleapis.com/${selenium.chromedriver.version}/chromedriver_linux64.zip</url>
 						</driver>
 						<driver>
 							<name>geckodriver</name>
 							<platform>windows</platform>
 							<bit>64</bit>
 							<version>${selenium.geckodriver.version}</version>
+							<url>https://github.com/mozilla/geckodriver/releases/download/v${selenium.geckodriver.version}/geckodriver-v${selenium.geckodriver.version}-win64.zip</url>
 						</driver>
 						<driver>
 							<name>geckodriver</name>
 							<platform>mac</platform>
 							<bit>64</bit>
 							<version>${selenium.geckodriver.version}</version>
+							<url>https://github.com/mozilla/geckodriver/releases/download/v${selenium.geckodriver.version}/geckodriver-v${selenium.geckodriver.version}-macos.tar.gz</url>
 						</driver>
 					</drivers>
 					<skip>${webdriver.download.skip}</skip>
@@ -430,7 +425,7 @@
 					<includes>**/*</includes>
 					<excludes>META-INF,META-INF/**</excludes>
 					<includeScope>runtime</includeScope>
-					<excludeArtifactIds>fitnesse,junit</excludeArtifactIds>
+					<excludeArtifactIds>fitnesse,slf4j-api,commons-lang3</excludeArtifactIds>
 					<outputDirectory>${standalone.classpath}</outputDirectory>
 				</configuration>
 				<executions>
@@ -465,13 +460,6 @@
 									<groupId>nl.hsac</groupId>
 									<artifactId>hsac-fitnesse-plugin</artifactId>
 									<version>${hsac-fitnesse-plugin.version}</version>
-									<overWrite>true</overWrite>
-								</artifactItem>
-								<artifactItem>
-									<groupId>org.fitnesse.plugins</groupId>
-									<artifactId>maven-classpath-plugin</artifactId>
-									<version>${maven-classpath-plugin.version}</version>
-									<classifier>jar-with-dependencies</classifier>
 									<overWrite>true</overWrite>
 								</artifactItem>
 							</artifactItems>

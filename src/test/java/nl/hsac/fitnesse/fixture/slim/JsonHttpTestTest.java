@@ -114,7 +114,7 @@ public class JsonHttpTestTest {
         XmlHttpResponse req1 = checkCall(url -> jsonHttpTestTest.putValuesAsJsonTo(url));
         assertEquals("PUT", jsonHttpTestTest.getResponse().getMethod());
         assertEquals("PUT", req1.getMethod());
-        assertEquals("{\"S\":\"s\",\"G\":\"g\"}", req1.getRequest());
+        assertEquals("{\"G\":\"g\",\"S\":\"s\"}", req1.getRequest());
     }
 
     @Test
@@ -125,7 +125,7 @@ public class JsonHttpTestTest {
         XmlHttpResponse req1 = checkCall(url -> jsonHttpTestTest.deleteWithValuesAsJson(url));
         assertEquals("DELETE", jsonHttpTestTest.getResponse().getMethod());
         assertEquals("DELETE", req1.getMethod());
-        assertEquals("{\"C\":\"3\",\"d\":\"4\"}", req1.getRequest());
+        assertEquals("{\"d\":\"4\",\"C\":\"3\"}", req1.getRequest());
     }
 
 }
