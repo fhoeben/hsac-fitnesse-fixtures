@@ -62,16 +62,24 @@ public class HtmlOverviewFileWriter extends OverviewFileWriter {
     }
 
     protected void writeHeader(PrintWriter pw, List<TestReportHtml> htmls) {
-        TestReportHtml firstTestPage = htmls.get(0);
-        String firstRunCssDir = firstTestPage.getDirectory();
-        pw.write("<html><head><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='");
-        pw.write(firstRunCssDir);
-        pw.write("/css/fitnesse.css'/>");
+        pw.write("<html><head><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/>");
+        writeCssLink(pw, htmls);
         pw.write("<script type='text/javascript'>");
         pw.write(COPY_TO_CLIPBOARD_JS);
         pw.write("</script>");
         writeExtraHeaderContent(pw, htmls);
         pw.write("</head><body>");
+    }
+
+    protected void writeCssLink(PrintWriter pw, List<TestReportHtml> htmls) {
+        pw.write("<link rel='stylesheet' type='text/css' href='");
+        TestReportHtml firstTestPage = htmls.get(0);
+        String firstRunCssDir = firstTestPage.getDirectory();
+        if (!"".equals(firstRunCssDir)) {
+            pw.write(firstRunCssDir);
+            pw.write('/');
+        }
+        pw.write("css/fitnesse.css'/>");
     }
 
     protected void writeExtraHeaderContent(PrintWriter pw, List<TestReportHtml> htmls) {
