@@ -20,7 +20,7 @@ First we go to the Discography page for Van Morrison.
 
 Then we check some entries.
 
-|scenario |album details _|album, year, label                  |
+|scenario |album details _|album, year?, label?                  |
 |scroll to|@{album}                                            |
 |$year=   |value of       |Year |in row where|Album|is|@{album}|
 |$label=  |value of       |Label|in row where|Album|is|@{album}|
