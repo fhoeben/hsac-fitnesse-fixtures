@@ -25,7 +25,6 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |                      |wait for cover to appear                                       |
 |wait                  |1              |seconds                                        |
 |show                  |take screenshot|cover                                          |
-|click                 |CLOSE                                                          |
 
 
 When multiple similar sequences of steps are needed a script can be generalized using a scenario, which is show in ScenarioTest.
