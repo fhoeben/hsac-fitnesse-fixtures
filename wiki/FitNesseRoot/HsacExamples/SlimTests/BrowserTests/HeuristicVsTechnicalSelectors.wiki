@@ -1,5 +1,6 @@
 ---
 Help: Highlight difference between using our heuristics in tests vs 'normal' Selenium (i.e. technical) selectors
+Prune
 Test
 ---
 This page shows the same test twice: once using the [[heuristics in !-BrowserTest-!][FindingByHeuristics]], and then using [[technical selectors][TechnicalSelectors]]. In both cases we will be booking a trip using Expedia. Because Expedia is not the fastest of sites, both scripts also showcase that !-BrowserTest-! waits for elements to appear, without the need for explicit 'wait' operations. Unfortunately the speed of Expedia also means this page is quite slow to complete.
