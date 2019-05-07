@@ -674,9 +674,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     @WaitUntil
     public boolean selectAs(String value, String place) {
         WebElement element = getElementToSelectFor(place);
-        Select select = new Select(element);
-        if (select.isMultiple()) {
-            select.deselectAll();
+        if (element != null) {
+            Select select = new Select(element);
+            if (select.isMultiple()) {
+                select.deselectAll();
+            }
         }
         return clickSelectOption(element, value);
     }
