@@ -174,7 +174,7 @@ public class HtmlOverviewFileWriter extends OverviewFileWriter {
     }
 
     protected void writeLinks(PrintWriter pw, List<TestReportHtml> htmls) {
-        pw.write("<div style='position:absolute;right:0;'>");
+        pw.write("<div style='position:absolute;right:0;margin-right:2em;'>");
         pw.write("Test results in:&nbsp;");
         pw.write("<a href='test-results.csv'>CSV</a>&nbsp;<a href='test-results.json'>JSON</a>");
         pw.write("</div>");
