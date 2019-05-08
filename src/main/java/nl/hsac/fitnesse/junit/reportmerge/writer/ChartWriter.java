@@ -86,6 +86,15 @@ public class ChartWriter {
     public <T> void writeBarChartGenerator(String title,
                                            String chartElementId,
                                            String extraOptions) {
+        pw.write("var ");
+        pw.write(chartElementId);
+        pw.write("Element = document.getElementById('");
+        pw.write(chartElementId);
+        pw.write("');");
+
+        // do not show graph until loaded, it will not be loaded if page is accessed from file URL
+        writeHideElement(chartElementId);
+
         pw.write("var xhr = new XMLHttpRequest();");
         pw.write("xhr.open('GET', 'test-results.json', true);");
         pw.write("xhr.responseType = 'json';");
@@ -96,10 +105,30 @@ public class ChartWriter {
         pw.write("var testResults = xhr.response;");
         pw.write("xhr.response = null;");
 
+        // show graph element when successfully loaded, do this before having it filled so charts API can detect size
+        writeUnhideElement(chartElementId);
+
         writeBarChartContentGenerator(title, chartElementId, extraOptions);
 
         pw.write("}};");
         pw.write("xhr.send();");
+    }
+
+    protected void writeHideElement(String chartElementId) {
+        pw.write("var ");
+        pw.write(chartElementId);
+        pw.write("CurrentStyle = ");
+        pw.write(chartElementId);
+        pw.write("Element.getAttribute('style');");
+        pw.write(chartElementId);
+        pw.write("Element.setAttribute('style', 'display: none;');");
+    }
+
+    protected void writeUnhideElement(String chartElementId) {
+        pw.write(chartElementId);
+        pw.write("Element.setAttribute('style', ");
+        pw.write(chartElementId);
+        pw.write("CurrentStyle);");
     }
 
     protected void writeBarChartContentGenerator(String title, String chartElementId, String extraOptions) {
@@ -130,9 +159,9 @@ public class ChartWriter {
 
         pw.write("var ");
         pw.write(chartElementId);
-        pw.write("Chart = new google.visualization.ColumnChart(document.getElementById('");
+        pw.write("Chart = new google.visualization.ColumnChart(");
         pw.write(chartElementId);
-        pw.write("'));");
+        pw.write("Element);");
         pw.write(chartElementId);
         pw.write("Chart.draw(");
         pw.write(chartElementId);
