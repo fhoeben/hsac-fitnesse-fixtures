@@ -192,8 +192,11 @@ public class HttpServer<T extends HttpResponse> {
                     InputStream is = he.getRequestBody();
                     String body = IOUtils.toString(is);
 
-                    if ("POST".equals(method) || "PUT".equals(method)
-                            || ("DELETE".equals(method) && !"".equals(body))) {
+                    if ("POST".equals(method)
+                            || "PUT".equals(method)
+                            || ("DELETE".equals(method) && !"".equals(body))
+                            || "PATCH".equals(method)
+                    ) {
                         request = body;
                     } else {
                         request = String.format("%s: %s", method, uri);
