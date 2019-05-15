@@ -7,6 +7,7 @@ import nl.hsac.fitnesse.junit.reportmerge.writer.JsonOverviewFileWriter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -42,6 +43,7 @@ public class HtmlReportIndexGenerator {
     }
 
     protected String createOverviewFiles(File parentDir, List<TestReportHtml> reportHtmls) throws IOException {
+        Collections.sort(reportHtmls);
         createJsonOverviewFile(parentDir, reportHtmls);
         createCsvOverviewFile(parentDir, reportHtmls);
         return createHtmlOverviewFile(parentDir, reportHtmls);

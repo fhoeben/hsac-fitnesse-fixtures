@@ -1,0 +1,163 @@
+<html><head><title>HsacAcceptanceTests.SlimTests.HttpTest.XmlHttpTestResponseSchemaValidation</title><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='css/fitnesse.css'/><script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script><script src='javascript/fitnesse.js' type='text/javascript'></script></head><body><header><h2>HsacAcceptanceTests.SlimTests.HttpTest.XmlHttpTestResponseSchemaValidation</h2></header><article><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td><span class="pass">mock xml server setup</span></td>
+	</tr>
+	<tr class="slimRowColor6">
+		<td>add response file</td>
+		<td><a href="files/xmlTestExamples/valid_shiporder.xml">http://files/xmlTestExamples/valid_shiporder.xml</a></td>
+	</tr>
+	<tr class="slimRowColor6">
+		<td>add response file</td>
+		<td><a href="files/xmlTestExamples/invalid_shiporder.xml">http://files/xmlTestExamples/invalid_shiporder.xml</a></td>
+	</tr>
+	<tr class="slimRowColor6">
+		<td>$url&lt;-[http://127.0.0.1:8000/FitNesseMock]</td>
+		<td>get mock server url</td>
+	</tr>
+</table>
+<br/><div class="collapsible closed"><ul><li><a href='#' class='expandall'>Expand</a></li><li><a href='#' class='collapseall'>Collapse</a></li></ul>
+	<p class="title">XSD String definition</p>
+	<div><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="2"><span class="pass">file fixture</span></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>$xsdSchema&lt;-[<pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;xs:schema xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+
+&lt;xs:element name=&quot;shiporder&quot;&gt;
+  &lt;xs:complexType&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name=&quot;orderperson&quot; type=&quot;xs:string&quot;/&gt;
+      &lt;xs:element name=&quot;shipto&quot;&gt;
+        &lt;xs:complexType&gt;
+          &lt;xs:sequence&gt;
+            &lt;xs:element name=&quot;name&quot; type=&quot;xs:string&quot;/&gt;
+            &lt;xs:element name=&quot;address&quot; type=&quot;xs:string&quot;/&gt;
+            &lt;xs:element name=&quot;city&quot; type=&quot;xs:string&quot;/&gt;
+            &lt;xs:element name=&quot;country&quot; type=&quot;xs:string&quot;/&gt;
+          &lt;/xs:sequence&gt;
+        &lt;/xs:complexType&gt;
+      &lt;/xs:element&gt;
+      &lt;xs:element name=&quot;item&quot; maxOccurs=&quot;unbounded&quot;&gt;
+        &lt;xs:complexType&gt;
+          &lt;xs:sequence&gt;
+            &lt;xs:element name=&quot;title&quot; type=&quot;xs:string&quot;/&gt;
+            &lt;xs:element name=&quot;note&quot; type=&quot;xs:string&quot; minOccurs=&quot;0&quot;/&gt;
+            &lt;xs:element name=&quot;quantity&quot; type=&quot;xs:positiveInteger&quot;/&gt;
+            &lt;xs:element name=&quot;price&quot; type=&quot;xs:decimal&quot;/&gt;
+          &lt;/xs:sequence&gt;
+        &lt;/xs:complexType&gt;
+      &lt;/xs:element&gt;
+    &lt;/xs:sequence&gt;
+    &lt;xs:attribute name=&quot;orderid&quot; type=&quot;xs:string&quot; use=&quot;required&quot;/&gt;
+  &lt;/xs:complexType&gt;
+&lt;/xs:element&gt;
+
+&lt;/xs:schema&gt;</pre>]</td>
+		<td>content of</td>
+		<td><a href="files/xmlTestExamples/shiporder_schema.xsd">http://files/xmlTestExamples/shiporder_schema.xsd</a></td>
+	</tr>
+</table>
+</div>
+</div>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td><span class="pass">xml http test</span></td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td><span class="pass">get from</span></td>
+		<td>$url->[http://127.0.0.1:8000/FitNesseMock]</td>
+	</tr>
+	<tr class="slimRowColor3">
+		<td><span class="pass">validate response against xsd file</span></td>
+		<td><a href="files/xmlTestExamples/shiporder_schema.xsd">http://files/xmlTestExamples/shiporder_schema.xsd</a></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td><span class="pass">validate response against xsd</span></td>
+		<td>$xsdSchema->[<pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;xs:schema xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+
+&lt;xs:element name=&quot;shiporder&quot;&gt;
+  &lt;xs:complexType&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name=&quot;orderperson&quot; type=&quot;xs:string&quot;/&gt;
+      &lt;xs:element name=&quot;shipto&quot;&gt;
+        &lt;xs:complexType&gt;
+          &lt;xs:sequence&gt;
+            &lt;xs:element name=&quot;name&quot; type=&quot;xs:string&quot;/&gt;
+            &lt;xs:element name=&quot;address&quot; type=&quot;xs:string&quot;/&gt;
+            &lt;xs:element name=&quot;city&quot; type=&quot;xs:string&quot;/&gt;
+            &lt;xs:element name=&quot;country&quot; type=&quot;xs:string&quot;/&gt;
+          &lt;/xs:sequence&gt;
+        &lt;/xs:complexType&gt;
+      &lt;/xs:element&gt;
+      &lt;xs:element name=&quot;item&quot; maxOccurs=&quot;unbounded&quot;&gt;
+        &lt;xs:complexType&gt;
+          &lt;xs:sequence&gt;
+            &lt;xs:element name=&quot;title&quot; type=&quot;xs:string&quot;/&gt;
+            &lt;xs:element name=&quot;note&quot; type=&quot;xs:string&quot; minOccurs=&quot;0&quot;/&gt;
+            &lt;xs:element name=&quot;quantity&quot; type=&quot;xs:positiveInteger&quot;/&gt;
+            &lt;xs:element name=&quot;price&quot; type=&quot;xs:decimal&quot;/&gt;
+          &lt;/xs:sequence&gt;
+        &lt;/xs:complexType&gt;
+      &lt;/xs:element&gt;
+    &lt;/xs:sequence&gt;
+    &lt;xs:attribute name=&quot;orderid&quot; type=&quot;xs:string&quot; use=&quot;required&quot;/&gt;
+  &lt;/xs:complexType&gt;
+&lt;/xs:element&gt;
+
+&lt;/xs:schema&gt;</pre>]</td>
+	</tr>
+</table>
+<br/><h4 id="AnXMLthatisnotschemavalidgivesadescriptiveexception">An XML that is not schema valid gives a descriptive exception</h4>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td colspan="4">script</td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td><span class="pass">get from</span></td>
+		<td colspan="3">$url->[http://127.0.0.1:8000/FitNesseMock]</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>validate response against xsd file</td>
+		<td><a href="files/xmlTestExamples/shiporder_schema.xsd">http://files/xmlTestExamples/shiporder_schema.xsd</a></td>
+		<td><span class="pass">/.*Attribute 'orderid' must appear on element 'shiporder'.*/ found in: __EXCEPTION__:nl.hsac.fitnesse.fixture.slim.SlimFixtureException: message:&lt;&lt;XML Validation failed: cvc-complex-type.4: Attribute 'orderid' must appear on element 'shiporder'.&gt;&gt;
+	at nl.hsac.fitnesse.fixture.util.XMLValidator.validateAgainst(XMLValidator.java:88) [file:/Users/fried/dev/hsac-fitnesse-fixtures/wiki/fixtures/]
+	at nl.hsac.fitnesse.fixture.slim.XmlHttpTest.validateResponseAgainstXsdFile(XmlHttpTest.java:125) [file:/Users/fried/dev/hsac-fitnesse-fixtures/wiki/fixtures/]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) [rt.jar:1.8.0_181]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) [rt.jar:1.8.0_181]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) [rt.jar:1.8.0_181]
+	at java.lang.reflect.Method.invoke(Method.java:498) [rt.jar:1.8.0_181]
+	at fitnesse.slim.fixtureInteraction.SimpleInteraction.methodInvoke(SimpleInteraction.java:256) [fitnesse-20190508.jar:20190508]
+	at nl.hsac.fitnesse.fixture.slim.SlimFixture.invoke(SlimFixture.java:61) [file:/Users/fried/dev/hsac-fitnesse-fixtures/wiki/fixtures/]
+	at nl.hsac.fitnesse.fixture.slim.SlimFixture.aroundSlimInvoke(SlimFixture.java:41) [file:/Users/fried/dev/hsac-fitnesse-fixtures/wiki/fixtures/]
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source) [n/a]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) [rt.jar:1.8.0_181]
+	at java.lang.reflect.Method.invoke(Method.java:498) [rt.jar:1.8.0_181]
+	at fitnesse.slim.fixtureInteraction.SimpleInteraction.methodInvoke(SimpleInteraction.java:256) [fitnesse-20190508.jar:20190508]
+	at fitnesse.slim.fixtureInteraction.SimpleInteraction.callMethod(SimpleInteraction.java:239) [fitnesse-20190508.jar:20190508]
+	at fitnesse.slim.fixtureInteraction.SimpleInteraction.invokeMethod(SimpleInteraction.java:223) [fitnesse-20190508.jar:20190508]
+	at fitnesse.slim.fixtureInteraction.SimpleInteraction.findAndInvoke(SimpleInteraction.java:185) [fitnesse-20190508.jar:20190508]
+	at fitnesse.slim.MethodExecutor.findAndInvoke(MethodExecutor.java:18) [fitnesse-20190508.jar:20190508]
+	at fitnesse.slim.FixtureMethodExecutor.execute(FixtureMethodExecutor.java:18) [fitnesse-20190508.jar:20190508]
+	at fitnesse.slim.StatementExecutor.getMethodExecutionResult(StatementExecutor.java:139) [fitnesse-20190508.jar:20190508]
+	at fitnesse.slim.StatementExecutor.call(StatementExecutor.java:112) [fitnesse-20190508.jar:20190508]
+	at fitnesse.slim.instructions.CallInstruction.executeInternal(CallInstruction.java:35) [fitnesse-20190508.jar:20190508]
+	at fitnesse.slim.instructions.Instruction.execute(Instruction.java:29) [fitnesse-20190508.jar:20190508]
+	at fitnesse.slim.ListExecutor$Executive.executeStatement(ListExecutor.java:49) [fitnesse-20190508.jar:20190508]
+	at fitnesse.slim.ListExecutor$Executive.executeStatements(ListExecutor.java:43) [fitnesse-20190508.jar:20190508]
+	at fitnesse.slim.ListExecutor.execute(ListExecutor.java:85) [fitnesse-20190508.jar:20190508]
+	at fitnesse.slim.SlimServer.executeInstructions(SlimServer.java:82) [fitnesse-20190508.jar:20190508]
+	at fitnesse.slim.SlimServer.processOneSetOfInstructions(SlimServer.java:75) [fitnesse-20190508.jar:20190508]
+	at fitnesse.slim.SlimServer.tryProcessInstructions(SlimServer.java:62) [fitnesse-20190508.jar:20190508]
+	at fitnesse.slim.SlimServer.serve(SlimServer.java:47) [fitnesse-20190508.jar:20190508]
+	at fitnesse.testsystems.slim.InProcessSlimClient$1.run(InProcessSlimClient.java:55) [fitnesse-20190508.jar:20190508]
+	at java.lang.Thread.run(Thread.java:748) [rt.jar:1.8.0_181]</span></td>
+	</tr>
+</table>
+</article></body></html>
