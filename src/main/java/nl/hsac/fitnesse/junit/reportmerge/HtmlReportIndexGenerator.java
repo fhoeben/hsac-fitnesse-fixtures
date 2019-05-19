@@ -4,9 +4,11 @@ import nl.hsac.fitnesse.junit.HsacFitNesseRunner;
 import nl.hsac.fitnesse.junit.reportmerge.writer.CsvOverviewFileWriter;
 import nl.hsac.fitnesse.junit.reportmerge.writer.HtmlOverviewFileWriter;
 import nl.hsac.fitnesse.junit.reportmerge.writer.JsonOverviewFileWriter;
+import nl.hsac.fitnesse.junit.reportmerge.writer.JsonWriter;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,7 +52,11 @@ public class HtmlReportIndexGenerator {
     }
 
     protected String createJsonOverviewFile(File parentDir, List<TestReportHtml> reportHtmls) throws IOException {
-        return new JsonOverviewFileWriter(parentDir).write(reportHtmls);
+        return new JsonOverviewFileWriter(parentDir, this::createJsonWriter).write(reportHtmls);
+    }
+
+    protected JsonWriter createJsonWriter(PrintWriter pw) {
+        return new JsonWriter(pw);
     }
 
     protected String createCsvOverviewFile(File parentDir, List<TestReportHtml> reportHtmls) throws IOException {
@@ -58,6 +64,6 @@ public class HtmlReportIndexGenerator {
     }
 
     protected String createHtmlOverviewFile(File parentDir, List<TestReportHtml> htmls) throws IOException {
-        return new HtmlOverviewFileWriter(parentDir).write(htmls);
+        return new HtmlOverviewFileWriter(parentDir, this::createJsonWriter).write(htmls);
     }
 }

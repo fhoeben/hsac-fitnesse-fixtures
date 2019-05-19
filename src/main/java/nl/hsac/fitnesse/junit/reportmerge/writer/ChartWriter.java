@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -87,26 +88,18 @@ public class ChartWriter {
         pw.write("});");
     }
 
-    public <T> void writeBarChartGenerator(String title,
+    public <T> void writeBarChartGenerator(Consumer<PrintWriter> testResultsWriter,
+                                           String title,
                                            String chartElementId,
                                            String extraOptions) {
-        pw.write("var xhr = new XMLHttpRequest();");
-        pw.write("xhr.open('GET', 'test-results.json', true);");
-        pw.write("xhr.responseType = 'json';");
-        pw.write("xhr.onload = function() {");
-        pw.write("var status = xhr.status;");
-        pw.write("if (status === 200) {");
-
-        pw.write("var testResults = xhr.response;");
-        pw.write("xhr.response = null;");
+        pw.write("var testResults=");
+        testResultsWriter.accept(pw);
+        pw.write(";");
 
         // show graph element when successfully loaded, do this before having it filled so charts API can detect size
         writeUnhideElement(chartElementId);
 
         writeBarChartContentGenerator(title, chartElementId, extraOptions);
-
-        pw.write("}};");
-        pw.write("xhr.send();");
     }
 
     protected <T> void writeLoadAndCallback(List<T> htmls, BiConsumer<ChartWriter, List<T>> bodyFunction) {

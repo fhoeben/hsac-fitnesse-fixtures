@@ -8,6 +8,7 @@ import java.text.NumberFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -49,9 +50,11 @@ public class HtmlOverviewFileWriter extends OverviewFileWriter {
                     "}";
 
     private final NumberFormat nf = NumberFormat.getIntegerInstance();
+    protected Function<PrintWriter, JsonWriter> jsonWriterFunction;
 
-    public HtmlOverviewFileWriter(File parentDir) {
+    public HtmlOverviewFileWriter(File parentDir, Function<PrintWriter, JsonWriter> jsonWriterFunction) {
         super(parentDir, "index.html");
+        this.jsonWriterFunction = jsonWriterFunction;
     }
 
     @Override
@@ -146,8 +149,11 @@ public class HtmlOverviewFileWriter extends OverviewFileWriter {
         writer.writePieChartGenerator("Time / Run", RUNTIME_CHART_ID, nonOverviews,
                 r -> r.getRunName(), Collectors.summingLong(r -> r.getTime() < 0 ? 0 : r.getTime()));
 
-        writer.writeBarChartGenerator("ms / Test", TIME_PER_TEST_CHART_ID,
-                ",hAxis:{textPosition:'none'}");
+        writer.writeBarChartGenerator(
+                pw -> jsonWriterFunction.apply(pw).writeContent(htmls),
+                "ms / Test", TIME_PER_TEST_CHART_ID,
+                ",hAxis:{textPosition:'none'}"
+        );
     }
 
     protected void writeStatusPieChartGenerator(ChartWriter writer, List<TestReportHtml> htmls) {
