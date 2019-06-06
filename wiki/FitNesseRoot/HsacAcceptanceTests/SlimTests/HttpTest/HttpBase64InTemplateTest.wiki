@@ -1,0 +1,18 @@
+|script       |file fixture                                                       |
+|$createdFile=|create|upload.txt|containing|This is a file to test the file upload|
+
+|script      |mock xml server setup|
+|add response|ok                   |
+|$url=       |get mock server url  |
+
+|script                       |http test                                                              |
+|template                     |greeting.ftl                                                           |
+|set base64 encoded content of|$createdFile|as value for|name                                         |
+|post template to             |$url                                                                   |
+|check                        |request     |Hello VGhpcyBpcyBhIGZpbGUgdG8gdGVzdCB0aGUgZmlsZSB1cGxvYWQ=|
+
+|table: Mock Server Message Report|
+
+|script|mock xml server setup|
+|stop                        |
+

@@ -58,7 +58,7 @@ Incomplete address: no zip code&lt;/PO:confirmation&gt;
 		<td colspan="3"><pre>&lt;binary/&gt;</pre></td>
 	</tr>
 	<tr class="slimRowColor6">
-		<td>$url&lt;-[http://192.168.0.112:8000/FitNesseMock]</td>
+		<td>$url&lt;-[http://127.0.0.1:8000/FitNesseMock]</td>
 		<td colspan="3">get mock server url</td>
 	</tr>
 </table>
@@ -76,7 +76,7 @@ Incomplete address: no zip code&lt;/PO:confirmation&gt;
 		<td><span class="pass">post</span></td>
 		<td><pre>&lt;Hallo/&gt;</pre></td>
 		<td>to</td>
-		<td colspan="2">$url->[http://192.168.0.112:8000/FitNesseMock]</td>
+		<td colspan="2">$url->[http://127.0.0.1:8000/FitNesseMock]</td>
 	</tr>
 	<tr class="slimRowColor0">
 		<td>check</td>
@@ -87,14 +87,14 @@ Incomplete address: no zip code&lt;/PO:confirmation&gt;
 	<tr class="slimRowColor0">
 		<td>check</td>
 		<td>response time</td>
-		<td colspan="3"><span class="pass">4&gt;0</span></td>
+		<td colspan="3"><span class="pass">2&gt;0</span></td>
 	</tr>
 	<tr class="slimRowColor7">
 		<td><span class="pass">reject</span></td>
 		<td>post</td>
 		<td><pre>&lt;ClientFault/&gt;</pre></td>
 		<td>to</td>
-		<td>$url->[http://192.168.0.112:8000/FitNesseMock]</td>
+		<td>$url->[http://127.0.0.1:8000/FitNesseMock]</td>
 	</tr>
 	<tr class="slimRowColor9">
 		<td>show</td>
@@ -131,7 +131,7 @@ Incomplete address: no zip code&lt;/PO:confirmation&gt;
 	<td><table class="hash_table">
 	<tr class="hash_row">
 		<td class="hash_key">Date</td>
-		<td class="hash_value">Thu, 14 Sep 2017 19:23:15 GMT</td>
+		<td class="hash_value">Mon, 13 May 2019 06:30:26 GMT</td>
 	</tr>
 	<tr class="hash_row">
 		<td class="hash_key">Content-length</td>
@@ -160,7 +160,7 @@ Incomplete address: no zip code&lt;/PO:confirmation&gt;
 		<td>post</td>
 		<td><pre>&lt;ServerFault/&gt;</pre></td>
 		<td>to</td>
-		<td>$url->[http://192.168.0.112:8000/FitNesseMock]</td>
+		<td>$url->[http://127.0.0.1:8000/FitNesseMock]</td>
 	</tr>
 	<tr class="slimRowColor9">
 		<td>show</td>
@@ -207,7 +207,7 @@ Incomplete address: no zip code&lt;/PO:confirmation&gt;
 		<td>post</td>
 		<td><pre>&lt;NoXml/&gt;</pre></td>
 		<td>to</td>
-		<td>$url->[http://192.168.0.112:8000/FitNesseMock]</td>
+		<td>$url->[http://127.0.0.1:8000/FitNesseMock]</td>
 	</tr>
 	<tr class="slimRowColor0">
 		<td>check</td>
@@ -246,7 +246,7 @@ Incomplete address: no zip code&lt;/PO:confirmation&gt;
 	</tr>
 </table>
 <br/><br/><br/><table>
-	<tr class="slimRowTitle">
+	<tr>
 		<td><span class="pass">table: Mock Server Message Report</span></td>
 	</tr>
 <tr><td><table><tbody><tr class="scenario"><td class="diff">1 (of 5) request(s) did not match expectation</td></tr><tr class="scenario-detail"><td><table><tbody><tr><td class="green">1</td><td><div class="collapsible closed"><p class="title">request</p><div><pre>&lt;Hallo/&gt;

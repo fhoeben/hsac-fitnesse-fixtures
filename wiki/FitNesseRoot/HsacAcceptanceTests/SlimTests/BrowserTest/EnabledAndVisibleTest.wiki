@@ -24,6 +24,7 @@ This test ensures we can check whether elements are enabled and visible on a pag
 |open                  |$url                                             |
 |seconds before timeout|1                                                |
 |reject                |is enabled                |name=a                |
+|ensure                |is disabled               |name=a                |
 |ensure                |is visible                |name=a                |
 |reject                |is enabled                |LabelA                |
 |ensure                |is visible                |LabelA                |

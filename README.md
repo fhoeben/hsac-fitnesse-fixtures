@@ -10,7 +10,6 @@ The baseline FitNesse installation offers the following features:
 * Run FitNesse tests on a build server, reporting the results in both JUnit XML format and HTML.
 * FitNesse installation for test/fixture developers containing:
     - the fixture base classes (and Selenium drivers for _Chrome_, _Internet Explorer_, _Edge_ and _Firefox_),
-    - Maven classpath plugin (such that tests can use all dependencies from `pom.xml`),
     - HSAC's fitnesse-plugin to add additional Wiki features (random values, calculating relative dates,
       Slim scenarios without need to specify all parameters, Slim scripts that take a screenshot after each step),
     - easy fixture debugging,
@@ -43,7 +42,10 @@ This standalone installation can be started using `java -jar fitnesse-standalone
 A zip file containing released versions of this project can be downloaded from the [Releases](https://github.com/fhoeben/hsac-fitnesse-fixtures/releases/latest) or [Maven Central](https://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&g=nl.hsac&a=hsac-fitnesse-fixtures&c=standalone&p=zip&v=RELEASE).
 A similar zip file containing the latest *snapshot* (i.e. not released but based on the most recent code) version is published as part of the automated build of this project at https://fhoeben.github.io/hsac-fitnesse-fixtures-test-results/hsac-fitnesse-fixtures-snapshot-standalone.zip.
 
-## To run the tests on a build server:
+## To run the tests on a build server
+Tests can be run on a build (or Continuous Integration) server in two ways. One can either gather the dependencies, compile and run tests using a build tool such as Maven or Gradle. Or one can use a docker container which contains a compiled version of the project, add the wiki page to that and have it run tests.
+
+### Running using Maven
 Have the build server checkout the project and execute `mvn clean test-compile failsafe:integration-test`. Append `failsafe:verify` to the command if you want the build to fail in case of test failures.
 The result in JUnit XML results can be found in: `target/failsafe-reports` (most build servers will pick these up automatically)
 The HTML results can be found in: `target/fitnesse-results/index.html`
@@ -54,16 +56,28 @@ By using the `@SuiteFilter` and `@ExcludeSuiteFilter` annotations, or (preferabl
 The Selenium configuration (e.g. what browser on what platform) to use when testing websites can be overridden by using system properties (i.e. `seleniumGridUrl` and either `seleniumBrowser` or `seleniumCapabilities`).
 This allows different configurations on the build server to test with different browsers, without requiring different Wiki content, but only requiring a different build configuration.
 
+### Running using Docker
+Using docker one can start a container (i.e. virtual machine) containing a compiled version of the project and have it execute the tests defined. The main advantage of this approach is there is no need to gather dependencies and compile on each test run. This can be quite advantages when running builds on fully virtualized infrastructure where no state is maintained between runs, and all dependencies have to be downloaded afresh each run.
+
+The way the actual tests are run is quite similar inside a docker container to what was described above for 'Running using Maven' in that a jUnit test is executed to run a suite of wiki pages.
+Which suite is executed, filters to include and exclude, and Selenium can be configured without modifing the images provided.
+
+Two images are provided on Docker Hub to run tests (or to be used as base for custom images, of course):
+ * [hsac/fitnesse-fixtures-test-jre8](https://hub.docker.com/r/hsac/fitnesse-fixtures-test-jre8/) which contains a Java runtime and this project, which can be used to run tests that either do not need Selenium (i.e. do not test using BrowserTest) or use an existing/external Selenium Grid.
+ * [hsac/fitnesse-fixtures-test-jre8-chrome](https://hub.docker.com/r/hsac/fitnesse-fixtures-test-jre8-chrome/) which adds this project to a Selenium standalone Chrome image and can be used to run tests with a Chrome browser (without the need to have/maintain a Selenium Grid).
+
+Detailed instructions on how to use the images are provided in each image's description.
+
 ### Reports
 Example reports for Windows using a Sauce Labs Selenium driver (https://fhoeben.github.io/hsac-fitnesse-fixtures-test-results/examples-results/) and Linux with Chrome Headless (https://fhoeben.github.io/hsac-fitnesse-fixtures-test-results/acceptance-test-results/) are generated in the automated build process of this project.
 
 ## Fixture developer installation:
 Import this project in your favorite Java IDE (with Maven support).
 
-To start FitNesse: have the IDE execute `mvn compile exec:exec`. The port used by FitNesse can be controlled by changing the `fitnesse.port` property's value in pom.xml.
+To start FitNesse: have the IDE execute `mvn compile dependency:copy-dependencies exec:exec`. The port used by FitNesse can be controlled by changing the `fitnesse.port` property's value in pom.xml.
 FitNesse will be available at `http://localhost:<fitnesse.port>/`, example usage of the symbols and fixtures can be seen in `http://localhost:<fitnesse.port>/HsacExamples`.
 
-To debug a fixture used in a FitNesse page: change the `@Suite` annotation's value to contain page name in `nl.hsac.fitnesse.fixture.FixtureDebugTest`, then just debug this test.
+To debug a fixture used in a FitNesse page: change the `@Suite` annotation's value in `nl.hsac.fitnesse.fixture.FixtureDebugTest` to contain the page name, then just debug this test.
 
 ## Documentation
 More information about this project can be found on its [GitHub Wiki](https://github.com/fhoeben/hsac-fitnesse-fixtures/wiki)

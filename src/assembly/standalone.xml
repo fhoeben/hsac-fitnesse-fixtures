@@ -37,6 +37,7 @@
             <excludes>
                 <!-- linux webdriver is only included for use by Travis-ci, we don't expect standalone.zip user to run linux -->
                 <exclude>webdrivers/*-linux-*</exclude>
+                <exclude>target/**</exclude>
                 <exclude>copy/**</exclude>
                 <exclude>files/**</exclude>
                 <exclude>bye.txt</exclude>
@@ -48,6 +49,8 @@
                 <exclude>FitNesseRoot/PageHeader/**</exclude>
                 <exclude>FitNesseRoot/RecentChanges/**</exclude>
                 <exclude>FitNesseRoot/RecentChanges.wiki</exclude>
+                <exclude>FitNesseRoot/ReRunLastFailures.wiki</exclude>
+                <exclude>FitNesseRoot/RerunLastFailures.wiki</exclude>
                 <exclude>FitNesseRoot/TemplateLibrary/**</exclude>
                 <exclude>FitNesseRoot/properties</exclude>
                 <exclude>FitNesseRoot/updateList</exclude>
@@ -61,6 +64,7 @@
             <includes>
                 <include>FitNesseRoot/files/httpPostExamples/**</include>
                 <include>FitNesseRoot/files/galenExamples/**</include>
+                <include>FitNesseRoot/files/xmlTestExamples/**</include>
             </includes>
         </fileSet>
     </fileSets>

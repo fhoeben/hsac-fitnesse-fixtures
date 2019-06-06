@@ -1,0 +1,26 @@
+|script      |mock xml server setup                                                                      |
+|add response|<root>VGhpcyBpcyBhIGZpbGUgdG8gdGVzdCB0aGUgZmlsZSB1cGxvYWQ=</root>                          |
+|add response|{"encoded" : "VGhpcyBpcyBhIGZpbGUgdG8gdGVzdCB0aGUgZmlsZSB1cGxvYWQ="}                       |
+|add response|{"encoded" : "data:text/plain;base64,VGhpcyBpcyBhIGZpbGUgdG8gdGVzdCB0aGUgZmlsZSB1cGxvYWQ="}|
+|$url=       |get mock server url                                                                        |
+
+|script      |xml http test                                              |
+|get from    |$url                                                       |
+|$xmlCreated=|create file|createdFromXml.txt|from base64 content of|/root|
+
+|script       |json http test                                                |
+|get from     |$url                                                          |
+|$jsonCreated=|create file|createdFromJson.txt|from base64 content of|encoded|
+
+|script        |json http test                                                       |
+|get from      |$url                                                                 |
+|$jsonCreated2=|create file|createdFromJsonDataUrl.txt|from base64 content of|encoded|
+
+|script|file fixture                                                |
+|check |text in|$xmlCreated  |This is a file to test the file upload|
+|check |text in|$jsonCreated |This is a file to test the file upload|
+|check |text in|$jsonCreated2|This is a file to test the file upload|
+
+|script|mock xml server setup|
+|stop                        |
+

@@ -1,0 +1,185 @@
+<html><head><title>HsacAcceptanceTests.SlimTests.UtilityFixtures.PropertiesFileFixtureTest</title><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='css/fitnesse.css'/><script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script><script src='javascript/fitnesse.js' type='text/javascript'></script></head><body><header><h2>HsacAcceptanceTests.SlimTests.UtilityFixtures.PropertiesFileFixtureTest</h2></header><article><br/><br/>Properties files fixture is a specialization of <a href="HsacAcceptanceTests.SlimTests.UtilityFixtures.FileFixture">FileFixture</a> which allows <a href="https://en.wikipedia.org/wiki/.properties">.properties file</a> to be read.<br/><br/><h2 id="Reading">Reading</h2>
+In this sample we first create a .properties file, using FileFixture, and then read it.<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="4"><span class="pass">file fixture</span></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set directory</td>
+		<td colspan="4"><a href="files/test">http://files/test</a></td>
+	</tr>
+	<tr class="slimRowColor1">
+		<td>$props&lt;-[<a href="files/test/sample.properties" target="_blank">sample.properties</a>]</td>
+		<td>create</td>
+		<td>sample.properties</td>
+		<td>containing</td>
+		<td>wine = good</td>
+	</tr>
+	<tr class="slimRowColor2">
+		<td>append</td>
+		<td>#comment = ignored</td>
+		<td>to</td>
+		<td>$props->[<a href="files/test/sample.properties" target="_blank">sample.properties</a>]</td>
+		<td>on new line</td>
+	</tr>
+	<tr class="slimRowColor2">
+		<td>append</td>
+		<td>beer:bad</td>
+		<td>to</td>
+		<td>$props->[<a href="files/test/sample.properties" target="_blank">sample.properties</a>]</td>
+		<td>on new line</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>content of</td>
+		<td colspan="3">$props->[<a href="files/test/sample.properties" target="_blank">sample.properties</a>]</td>
+	<td><pre>wine = good
+#comment = ignored
+beer:bad</pre></td></tr>
+</table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="3"><span class="pass">properties file fixture</span></td>
+	</tr>
+	<tr class="slimRowColor2">
+		<td><span class="pass">load values from</span></td>
+		<td colspan="3">$props->[<a href="files/test/sample.properties" target="_blank">sample.properties</a>]</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td colspan="3">values</td>
+	<td><table class="hash_table">
+	<tr class="hash_row">
+		<td class="hash_key">wine</td>
+		<td class="hash_value">good</td>
+	</tr>
+	<tr class="hash_row">
+		<td class="hash_key">beer</td>
+		<td class="hash_value">bad</td>
+	</tr>
+</table></td></tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>wine</td>
+		<td><span class="pass">good</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>beer</td>
+		<td><span class="pass">bad</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>number of values</td>
+		<td colspan="2"><span class="pass">2</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td></td>
+		<td colspan="3">We can use standard file fixture methods</td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td><span class="pass">delete</span></td>
+		<td colspan="3">$props->[<a href="files/test/sample.properties" target="_blank">sample.properties</a>]</td>
+	</tr>
+</table>
+<br/><h2 id="Writing">Writing</h2>
+We can also write properties in an easier way:<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="3"><span class="pass">properties file fixture</span></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set directory</td>
+		<td colspan="3"><a href="files/test">http://files/test</a></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set value</td>
+		<td>bad</td>
+		<td>for</td>
+		<td>wine</td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set value</td>
+		<td>good</td>
+		<td>for</td>
+		<td>beer</td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set value</td>
+		<td>better</td>
+		<td>for</td>
+		<td>cola</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>$sample2&lt;-[<a href="files/test/sample2.properties" target="_blank">sample2.properties</a>]</td>
+		<td>create</td>
+		<td>sample2.properties</td>
+		<td>containing values</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>content of</td>
+		<td colspan="2">$sample2->[<a href="files/test/sample2.properties" target="_blank">sample2.properties</a>]</td>
+	<td><pre>wine=bad
+cola=better
+beer=good
+</pre></td></tr>
+</table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="3"><span class="pass">properties file fixture</span></td>
+	</tr>
+	<tr class="slimRowColor2">
+		<td><span class="pass">load values from</span></td>
+		<td colspan="3">$sample2->[<a href="files/test/sample2.properties" target="_blank">sample2.properties</a>]</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td colspan="3">values</td>
+	<td><table class="hash_table">
+	<tr class="hash_row">
+		<td class="hash_key">wine</td>
+		<td class="hash_value">bad</td>
+	</tr>
+	<tr class="hash_row">
+		<td class="hash_key">cola</td>
+		<td class="hash_value">better</td>
+	</tr>
+	<tr class="hash_row">
+		<td class="hash_key">beer</td>
+		<td class="hash_value">good</td>
+	</tr>
+</table></td></tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>wine</td>
+		<td><span class="pass">bad</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>beer</td>
+		<td><span class="pass">good</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>cola</td>
+		<td><span class="pass">better</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>number of values</td>
+		<td colspan="2"><span class="pass">3</span></td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td><span class="pass">delete</span></td>
+		<td colspan="3">$sample2->[<a href="files/test/sample2.properties" target="_blank">sample2.properties</a>]</td>
+	</tr>
+</table>
+</article></body></html>

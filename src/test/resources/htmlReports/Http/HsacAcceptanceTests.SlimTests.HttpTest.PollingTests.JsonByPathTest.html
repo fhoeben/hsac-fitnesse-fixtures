@@ -72,7 +72,7 @@
 		<td>300</td>
 	</tr>
 	<tr class="slimRowColor6">
-		<td>$url&lt;-[http://192.168.0.112:8000/FitNesseMock]</td>
+		<td>$url&lt;-[http://127.0.0.1:8000/FitNesseMock]</td>
 		<td colspan="3">get mock server url</td>
 	</tr>
 </table>
@@ -84,10 +84,9 @@
 		<td colspan="4"><span class="pass">json http test</span></td>
 	</tr>
 	<tr class="slimRowColor5">
-		<td>set repeat interval to <span class="error">Method setRepeatIntervalTo[2] not found in nl.hsac.fitnesse.fixture.slim.JsonHttpTest.</span></td>
+		<td>set repeat interval to</td>
 		<td>50</td>
-		<td></td>
-		<td colspan="2">milliseconds</td>
+		<td colspan="3">milliseconds</td>
 	</tr>
 	<tr class="slimRowColor9">
 		<td>repeat at most</td>
@@ -98,7 +97,7 @@
 		<td><span class="pass">post</span></td>
 		<td>0 request</td>
 		<td>to</td>
-		<td colspan="2">$url->[http://192.168.0.112:8000/FitNesseMock]</td>
+		<td colspan="2">$url->[http://127.0.0.1:8000/FitNesseMock]</td>
 	</tr>
 	<tr class="slimRowColor4">
 		<td><span class="pass">repeat until json path</span></td>
@@ -126,7 +125,7 @@
 		<td><span class="pass">post</span></td>
 		<td>1 request</td>
 		<td>to</td>
-		<td colspan="2">$url->[http://192.168.0.112:8000/FitNesseMock]</td>
+		<td colspan="2">$url->[http://127.0.0.1:8000/FitNesseMock]</td>
 	</tr>
 	<tr class="slimRowColor4">
 		<td><span class="pass">repeat until json path</span></td>
@@ -152,7 +151,7 @@
 	</tr>
 	<tr class="slimRowColor8">
 		<td><span class="pass">get from</span></td>
-		<td colspan="4">$url->[http://192.168.0.112:8000/FitNesseMock]</td>
+		<td colspan="4">$url->[http://127.0.0.1:8000/FitNesseMock]</td>
 	</tr>
 	<tr class="slimRowColor4">
 		<td><span class="pass">repeat until json path</span></td>
@@ -180,7 +179,7 @@
 		<td><span class="pass">put</span></td>
 		<td>6 request</td>
 		<td>to</td>
-		<td colspan="2">$url->[http://192.168.0.112:8000/FitNesseMock]</td>
+		<td colspan="2">$url->[http://127.0.0.1:8000/FitNesseMock]</td>
 	</tr>
 	<tr class="slimRowColor0">
 		<td>check</td>
@@ -216,7 +215,7 @@
 	</tr>
 	<tr class="slimRowColor7">
 		<td><span class="pass">delete</span></td>
-		<td colspan="4">$url->[http://192.168.0.112:8000/FitNesseMock]</td>
+		<td colspan="4">$url->[http://127.0.0.1:8000/FitNesseMock]</td>
 	</tr>
 	<tr class="slimRowColor7">
 		<td><span class="pass">reject</span></td>
@@ -244,13 +243,13 @@
 	<tr class="slimRowColor0">
 		<td>check</td>
 		<td>time spent repeating</td>
-		<td colspan="3"><span class="pass">107&gt;= 50</span></td>
+		<td colspan="3"><span class="pass">51&gt;= 50</span></td>
 	</tr>
 </table>
 <br/><br/><br/><br/><br/><br/><br/><div class="collapsible closed"><ul><li><a href='#' class='expandall'>Expand</a></li><li><a href='#' class='collapseall'>Collapse</a></li></ul>
 	<p class="title">Stop Server</p>
 	<div><table>
-	<tr class="slimRowTitle">
+	<tr>
 		<td><span class="pass">table: Mock Server Message Report</span></td>
 	</tr>
 <tr><td><table><tbody><tr class="scenario closed"><td class="green">Expected and received 11 requests</td></tr><tr class="scenario-detail closed-detail"><td><table><tbody><tr><td class="green">1</td><td><div class="collapsible closed"><p class="title">request</p><div>0 request</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div>{body:"0 response"}</div></div></td></tr><tr><td class="green">2</td><td><div class="collapsible closed"><p class="title">request</p><div>1 request</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div>{body:"1 response"}</div></div></td></tr><tr><td class="green">3</td><td><div class="collapsible closed"><p class="title">request</p><div>1 request</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div>{body:"2 response"}</div></div></td></tr><tr><td class="green">4</td><td><div class="collapsible closed"><p class="title">request</p><div>GET: /FitNesseMock</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div>{body:"3 response"}</div></div></td></tr><tr><td class="green">5</td><td><div class="collapsible closed"><p class="title">request</p><div>GET: /FitNesseMock</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div>{body:"4 response"}</div></div></td></tr><tr><td class="green">6</td><td><div class="collapsible closed"><p class="title">request</p><div>GET: /FitNesseMock</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div>{body:"5 response"}</div></div></td></tr><tr><td class="green">7</td><td><div class="collapsible closed"><p class="title">request</p><div>6 request</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div>{body:"6 response"}</div></div></td></tr><tr><td class="green">8</td><td><div class="collapsible closed"><p class="title">request</p><div>6 request</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div>{body:"7 response"}</div></div></td></tr><tr><td class="green">9</td><td><div class="collapsible closed"><p class="title">request</p><div>6 request</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div>{body:8}</div></div></td></tr><tr><td class="green">10</td><td><div class="collapsible closed"><p class="title">request</p><div>DELETE: /FitNesseMock</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div>{body:"9 response"}</div></div></td></tr><tr><td class="green">11</td><td><div class="collapsible closed"><p class="title">request</p><div>DELETE: /FitNesseMock</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div>{body:"10 response"}</div></div></td></tr></tbody></table></td></tr></tbody></table></td></tr></table>

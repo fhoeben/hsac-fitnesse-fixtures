@@ -1,5 +1,7 @@
 package nl.hsac.fitnesse.fixture.util.selenium;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ConstantBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.CssBy;
@@ -46,8 +48,10 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -81,7 +85,7 @@ public class SeleniumHelper<T extends WebElement> {
                     "    text += node.textContent.trim();\n" +
                     "}\n" +
                     "return text;";
-
+    private static final String DRAG_AND_DROP_SIM_JS_RESOURCE = "js/dragDropSim.js";
     private final static char NON_BREAKING_SPACE = 160;
 
     private final List<T> currentIFramePath = new ArrayList<>(4);
@@ -214,7 +218,7 @@ public class SeleniumHelper<T extends WebElement> {
     }
 
     public T getLabelledElement(T label) {
-        return (T) LabelBy.getLabelledElement(getCurrentContext(), label);
+        return doInCurrentContext(c -> (T) LabelBy.getLabelledElement(c, label));
     }
 
     public T getNestedElementForValue(T parent) {
@@ -290,20 +294,18 @@ public class SeleniumHelper<T extends WebElement> {
     }
 
     public int countVisibleOccurrences(String text, boolean checkOnScreen) {
-        SearchContext containerContext = getCurrentContext();
-
         By findAllTexts = TextBy.partial(text);
-        List<WebElement> texts = containerContext.findElements(findAllTexts);
+        List<T> texts = findElements(findAllTexts);
         int result = countDisplayedElements(texts, text, checkOnScreen);
 
         By findAllInputs = InputBy.partialNormalizedValue(text);
-        List<WebElement> inputs = containerContext.findElements(findAllInputs);
+        List<T> inputs = findElements(findAllInputs);
         result = result + countDisplayedValues(inputs, text, checkOnScreen);
 
         return result;
     }
 
-    private int countDisplayedElements(List<WebElement> elements, String textToFind, boolean checkOnScreen) {
+    private int countDisplayedElements(List<T> elements, String textToFind, boolean checkOnScreen) {
         int result = 0;
         for (WebElement element : elements) {
             if (checkVisible(element, checkOnScreen)) {
@@ -336,7 +338,7 @@ public class SeleniumHelper<T extends WebElement> {
         return countOccurrences(elementText, textToFind);
     }
 
-    private int countDisplayedValues(List<WebElement> elements, String textToFind, boolean checkOnScreen) {
+    private int countDisplayedValues(List<T> elements, String textToFind, boolean checkOnScreen) {
         int result = 0;
         for (WebElement element : elements) {
             if (checkVisible(element, checkOnScreen)) {
@@ -581,6 +583,20 @@ public class SeleniumHelper<T extends WebElement> {
         getActions().dragAndDrop(source, target).perform();
     }
 
+    /**
+     * Simulates a drag from source element and drop to target element. HTML5 draggable-compatible
+     * Workaround for https://github.com/seleniumhq/selenium-google-code-issue-archive/issues/3604
+     * Uses https://github.com/Photonios/JS-DragAndDrop-Simulator for maximum compatibility
+     * @param source element to start the drag
+     * @param target element to end the drag
+     * @throws IOException when the simulator javascript is not found on the classpath
+     */
+    public void html5DragAndDrop(WebElement source, WebElement target) throws IOException {
+        URL url = Resources.getResource(DRAG_AND_DROP_SIM_JS_RESOURCE);
+        String js = Resources.toString(url, Charsets.UTF_8);
+        executeJavascript(js + " DndSimulator.simulate(arguments[0], arguments[1]);" , source, target);
+    }
+
     public Actions getActions() {
         return new Actions(driver());
     }
@@ -690,17 +706,58 @@ public class SeleniumHelper<T extends WebElement> {
      * @return element if found, null if none could be found.
      */
     public T findElement(By by) {
-        return findElement(getCurrentContext(), by);
+        return doInCurrentContext(c -> findElement(c, by));
+    }
+
+    /**
+     * Finds element matching the By supplied.
+     * @param by criteria.
+     * @return element if found, null if none could be found.
+     */
+    public List<T> findElements(By by) {
+        return doInCurrentContext(c -> (List<T>) c.findElements(by));
     }
 
     private SearchContext currentContext;
+    private boolean currentContextIsStale = false;
 
-    public void setCurrentContext(SearchContext currentContext) {
-        this.currentContext = currentContext;
+    public void setCurrentContext(SearchContext newContext) {
+        currentContext = newContext;
+        currentContextIsStale = false;
     }
 
     public SearchContext getCurrentContext() {
-        return currentContext != null? currentContext : driver();
+        SearchContext result;
+        if (currentContext == null) {
+            result = driver();
+        } else {
+            if (currentContextIsStale) {
+                throw new StaleContextException(currentContext);
+            }
+            result = currentContext;
+        }
+        return result;
+    }
+
+    /**
+     * Perform action/supplier in current context.
+     * @param function function to perform.
+     * @param <R> type of result.
+     * @return function result.
+     * @throws StaleContextException if function threw stale element exception (i.e. current context could not be used)
+     */
+    public <R> R doInCurrentContext(Function<SearchContext, ? extends R> function) {
+        try {
+            return function.apply(getCurrentContext());
+        } catch (WebDriverException e) {
+            if (isStaleElementException(e)) {
+                // current context was no good to search in
+                currentContextIsStale = true;
+                // by getting the context we trigger explicit exception
+                getCurrentContext();
+            }
+            throw e;
+        }
     }
 
     /**
@@ -715,12 +772,17 @@ public class SeleniumHelper<T extends WebElement> {
         if (context == null) {
             result = action.get();
         } else {
-            SearchContext currentSearchContext = getCurrentContext();
+            // store current context (without triggering exception if it was stale)
+            SearchContext currentSearchContext = currentContext;
+            boolean contextIsStale = currentContextIsStale;
+
             setCurrentContext(context);
             try {
                 result = action.get();
             } finally {
-                setCurrentContext(currentSearchContext);
+                // make original current context active again
+                currentContext = currentSearchContext;
+                currentContextIsStale = contextIsStale;
             }
         }
         return result;
@@ -734,9 +796,9 @@ public class SeleniumHelper<T extends WebElement> {
      */
     public T findElement(By by, int index) {
         T element = null;
-        List<WebElement> elements = getCurrentContext().findElements(by);
+        List<T> elements = findElements(by);
         if (elements.size() > index) {
-            element = (T) elements.get(index);
+            element = elements.get(index);
         }
         return element;
     }
@@ -840,7 +902,7 @@ public class SeleniumHelper<T extends WebElement> {
      */
     public <T> T waitUntil(int maxSecondsToWait, ExpectedCondition<T> condition) {
         ExpectedCondition<T> cHandlingStale = getConditionIgnoringStaleElement(condition);
-        FluentWait<WebDriver> wait = waitDriver().withTimeout(maxSecondsToWait, TimeUnit.SECONDS);
+        FluentWait<WebDriver> wait = waitDriver().withTimeout(Duration.ofSeconds(maxSecondsToWait));
         return wait.until(cHandlingStale);
     }
 
@@ -852,29 +914,38 @@ public class SeleniumHelper<T extends WebElement> {
      * @return wrapped condition.
      */
     public <T> ExpectedCondition<T> getConditionIgnoringStaleElement(final ExpectedCondition<T> condition) {
-        return new ExpectedCondition<T>() {
-            @Override
-            public T apply(WebDriver webDriver) {
-                try {
-                    return condition.apply(webDriver);
-                } catch (StaleElementReferenceException e) {
-                    // try again
+        return d -> {
+            try {
+                return condition.apply(webDriver);
+            } catch (WebDriverException e) {
+                if (isStaleElementException(e)) {
                     return null;
-                } catch (WebDriverException e) {
-                    String msg = e.getMessage();
-                    if (msg != null
-                            && (msg.contains("Element does not exist in cache")
-                                // Safari stale element
-                                || msg.contains("Error: element is not attached to the page document")
-                                // Alternate Chrome stale element
-                            )) {
-                        return null;
-                    } else {
-                        throw e;
-                    }
+                } else {
+                    throw e;
                 }
             }
         };
+    }
+
+    /**
+     * Check whether exception indicates a 'stale element', not all drivers throw the exception one would expect...
+     * @param e exception caught
+     * @return true if exception indicated the element is no longer part of the page in the browser.
+     */
+    public boolean isStaleElementException(WebDriverException e) {
+        boolean result = false;
+        if (e instanceof StaleElementReferenceException) {
+            result = true;
+        } else {
+            String msg = e.getMessage();
+            if (msg != null) {
+                result = msg.contains("Element does not exist in cache") // Safari stale element
+                        || msg.contains("unknown error: unhandled inspector error: {\"code\":-32000,\"message\":\"Cannot find context with specified id\"}") // chrome error
+                        || msg.contains("Error: element is not attached to the page document") // Alternate Chrome stale element
+                        || msg.contains("can't access dead object"); // Firefox stale element
+            }
+        }
+        return result;
     }
 
     /**

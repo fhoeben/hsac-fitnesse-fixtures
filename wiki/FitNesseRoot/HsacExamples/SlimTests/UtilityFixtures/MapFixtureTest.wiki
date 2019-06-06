@@ -95,7 +95,7 @@ Here we supply no map to the constructor, but pass the one to use in each script
 
 !2 Not Expanding . in Name to Nested Map
 
-Normally when setting values '.' in a name is interpreted to mean a nested map. But this can be disabled. 
+Normally when setting values '.' in a name is interpreted to mean a nested map. But this can be disabled.
 
 |script   |map fixture                                                                                |
 |ensure   |expands periods in names to nested maps                                                    |
@@ -116,3 +116,68 @@ Normally when setting values '.' in a name is interpreted to mean a nested map. 
 |check                                 |value        |browser                               |null                                  |
 |check                                 |value        |browser.download.folderList           |2                                     |
 |check                                 |value        |browser.helperApps.neverAsk.saveToDisk|sheetml.sheet                         |
+
+!2 Adding elements to a list
+
+!note We ensure we display lists numbered, because otherwise lists of maps look quite bad in wiki.
+|script  |list fixture |
+|display lists numbered|
+
+|script    |map fixture                       |
+|          |Add to existing list              |
+|set values|7,8               |for       |a   |
+|add value |9                 |to        |a   |
+|check     |value             |a[2]      |9   |
+|          |Add to new list                   |
+|add value |1                 |to        |b   |
+|add value |2                 |to        |b   |
+|check     |value             |b[1]      |2   |
+|          |Add a map to an existing list     |
+|set value |$hash1            |for       |c[0]|
+|add value |$hash2            |to        |c   |
+|check     |value             |c[1].map.a|1   |
+|          |Add a map to new list             |
+|add value |$hash2            |to        |d   |
+|add value |!{mykey:1, key2:2}|to        |d   |
+|check     |size of           |d         |2   |
+|check     |value             |d[1].mykey|1   |
+|check     |value             |d[1].key2 |2   |
+|$hash7=   |copy map                          |
+
+|script   |map fixture                |
+|         |Add to existing list       |
+|add value|6    |to  |a |in    |$hash7|
+|check    |value|a[3]|in|$hash7|6     |
+|         |Add to new list            |
+|add value|Hello|to  |e |in    |$hash7|
+|add value|Bye  |to  |e |in    |$hash7|
+|check    |value|e[1]|in|$hash7|Bye   |
+
+!2 Copying of values
+
+Copying values is not the same as changing existing map (but nested values are shared)!
+
+|script          |map fixture                        |
+|copy values from|$hash1                             |
+|check           |value|a         |1                 |
+|check           |value|aliases[0]|!-mytest@hsac.nl-!|
+|set value       |Dag  |for       |aliases[0]        |
+|check           |value|aliases[0]|Dag               |
+|set value       |2    |for       |a                 |
+|check           |value|a         |in  |$hash1  |1   |
+|check           |value|aliases[0]|in  |$hash1  |Dag |
+|$hash8=         |copy map                           |
+
+Copy overwrites existing values.
+
+|script          |map fixture                    |
+|copy values from|$hash8|to        |$hash1       |
+|check           |value |aliases[0]|in|$hash1|Dag|
+
+
+
+
+
+
+
+

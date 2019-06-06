@@ -4,6 +4,7 @@ import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ConstantBy;
 import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -14,11 +15,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Saves page source to disk.
  */
 public class PageSourceSaver {
+    private static final Pattern BASE_TAG_EXPR = Pattern.compile("<base\\s+href=.+?>", Pattern.CASE_INSENSITIVE);
     private static final String FAKE_SRC_ATTR = "data-fake_src";
     private final String pageSourceBase;
     private final Environment environment = Environment.getInstance();
@@ -66,13 +70,18 @@ public class PageSourceSaver {
     }
 
     protected String saveFrameSource(WebElement frame) {
+        SeleniumHelper helper = getSeleniumHelper();
+        SearchContext currentContext = helper.getCurrentContext();
         try {
-            getSeleniumHelper().switchToFrame(frame);
+            helper.switchToFrame(frame);
             try {
-                String fileName = getSeleniumHelper().getResourceNameFromLocation();
+                String fileName = helper.getResourceNameFromLocation();
                 return savePageSource(fileName);
             } finally {
-                getSeleniumHelper().switchToParentFrame();
+                helper.switchToParentFrame();
+                if (currentContext != null) {
+                    helper.setCurrentContext(currentContext);
+                }
             }
         } catch (Exception e) {
             System.err.println("Error saving sources of nested (i)frame: " + frame);
@@ -85,6 +94,14 @@ public class PageSourceSaver {
         String source = getCurrentPageSource();
         if (sourceReplacements != null && !sourceReplacements.isEmpty()) {
             source = replaceSourceOfFrames(sourceReplacements, source);
+
+            // base tag changes behavior of relative src refs, we comment it out SO:
+            // - relative links to nested iframes work
+            // - it it still visible in saved html
+            Matcher matcher = BASE_TAG_EXPR.matcher(source);
+            if (matcher.find()) {
+                source = matcher.replaceAll("<!--Commented out when saving page source $0-->");
+            }
         }
         return source;
     }
@@ -93,7 +110,7 @@ public class PageSourceSaver {
         for (Map.Entry<String, String> entry : sourceReplacements.entrySet()) {
             String originalLocation = entry.getKey();
             String newLocation = entry.getValue();
-            html = html.replace("src=\"" + originalLocation + "\"", "src=\"/" + newLocation + "\"");
+            html = html.replace("src=\"" + originalLocation + "\"", "src=\"" + newLocation + "\"");
         }
         return html;
     }
@@ -104,19 +121,24 @@ public class PageSourceSaver {
         String baseUrl = fullUrlOfParent.substring(0, lastSlash + 1);
         String relativeUrlOfFrame = fullUrlOfFrame.replace(baseUrl, "");
 
-        sourceReplacements.put(fullUrlOfFrame, savedLocation);
-        sourceReplacements.put(relativeUrlOfFrame, savedLocation);
-        String framePath = getPath(fullUrlOfFrame);
-        if (framePath != null) {
-            sourceReplacements.put(framePath, savedLocation);
+        String relativePathToSaved = savedLocation.replace("files/pagesources/", "");
+        sourceReplacements.put(fullUrlOfFrame, relativePathToSaved);
+        sourceReplacements.put(relativeUrlOfFrame, relativePathToSaved);
+        String framePathAndQuery = getPathAndQuery(fullUrlOfFrame);
+        if (framePathAndQuery != null) {
+            sourceReplacements.put(framePathAndQuery, relativePathToSaved);
         }
     }
 
-    protected String getPath(String urlString) {
+    protected String getPathAndQuery(String urlString) {
         String path = null;
         try {
             URL url = new URL(urlString);
             path = url.getPath();
+            String query = url.getQuery();
+            if (query != null) {
+                path += "?" + query;
+            }
         } catch (MalformedURLException e) {
             // leave path null
         }
@@ -141,7 +163,7 @@ public class PageSourceSaver {
     }
 
     protected String getPageSourceExtension() {
-        return "HTML";
+        return "html";
     }
 
     protected String getCurrentPageSource() {

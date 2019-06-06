@@ -18,13 +18,14 @@ public class FileFixtureTest {
     private final String txtFilename = "testFileFixture.txt";
     private final String copyFilename = "temp-copy.txt";
     private final String curDir = Paths.get("").toAbsolutePath().toString();
-    private final String defaultFilesDir = curDir + File.separator + "FitNesseRoot" + File.separator + "files";
-    private final String defaultFixtureDir = defaultFilesDir + File.separator + "fileFixture" + File.separator;
     private final String testResourcesDir = curDir + "/src/test/resources/".replace('/', File.separatorChar);
 
     @Test
     public void testGetAndSetDirectory() {
+        String defaultFilesDir = Environment.getInstance().getFitNesseFilesSectionDir();
+        String defaultFixtureDir = defaultFilesDir + File.separator + "fileFixture" + File.separator;
         assertEquals(defaultFixtureDir, fixture.getDirectory());
+
         fixture.setDirectory(testResourcesDir);
         assertEquals(testResourcesDir, fixture.getDirectory());
     }
@@ -76,7 +77,7 @@ public class FileFixtureTest {
         try {
             String res = fixture.copyTo(txtFilename, copyFilename);
             String expectedPath = getExpectedUrlPath();
-            assertEquals("<a href=\"file:" + expectedPath + "\">" + copyFilename + "</a>", res);
+            assertEquals("<a href=\"file:" + expectedPath + "\" target=\"_blank\">" + copyFilename + "</a>", res);
         } catch (IOException ioe) {
             fail("Should not happen: " + ioe.getMessage());
         }
@@ -107,7 +108,7 @@ public class FileFixtureTest {
             fixture.copyTo(txtFilename, copyFilename);
             String res = fixture.appendToOnNewLine("Third line", copyFilename);
             String expectedPath = getExpectedUrlPath();
-            assertEquals("<a href=\"file:" + expectedPath + "\">" + copyFilename + "</a>", res);
+            assertEquals("<a href=\"file:" + expectedPath + "\" target=\"_blank\">" + copyFilename + "</a>", res);
             assertEquals("# Expected as first line of text.\n# Expected as 2nd line of text.\nThird line",
                     new LineEndingHelper().convertEndingsTo(fixture.textIn(copyFilename), "\n"));
         } catch (IOException ioe) {
@@ -122,7 +123,7 @@ public class FileFixtureTest {
             fixture.copyTo(txtFilename, copyFilename);
             String res = fixture.appendTo("Third line", copyFilename);
             String expectedPath = getExpectedUrlPath();
-            assertEquals("<a href=\"file:" + expectedPath + "\">" + copyFilename + "</a>", res);
+            assertEquals("<a href=\"file:" + expectedPath + "\" target=\"_blank\">" + copyFilename + "</a>", res);
             assertEquals("# Expected as first line of text.\n# Expected as 2nd line of text.Third line",
                     fixture.textIn(copyFilename));
         } catch (IOException ioe) {

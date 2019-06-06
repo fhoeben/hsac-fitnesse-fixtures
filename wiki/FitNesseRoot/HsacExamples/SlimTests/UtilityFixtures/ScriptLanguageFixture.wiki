@@ -1,0 +1,52 @@
+---
+Test
+Help: Fixture to allow expressions/scripts to be executed via scripting languages, using Java's ScriptEngine.
+---
+
+We can execute scripts if an engine for the script's language is available to the Java virtual machine (via JSR-223).
+By default the !-JavaScript-! engine present in the JVM is used, but this can be changed via a constructor parameter of 'set engine'.
+
+|script   |script language fixture|
+|set value|1       |for|a         |
+|set value|2       |for|b         |
+|check    |evaluate|a+b|12        |
+
+|script       |script language fixture|
+|set int value|1       |for|a         |
+|set int value|2       |for|b         |
+|check        |evaluate|a+b|3.0       |
+
+|script   |script language fixture              |
+|set value|John                  |for      |a[0]|
+|set value|Pete                  |for      |a[1]|
+|set value|!{name: Duke, age: 10}|for      |a[2]|
+|check    |evaluate              |a[1]     |Pete|
+|check    |evaluate              |a[2].name|Duke|
+
+|script  |script language fixture                        |
+|evaluate|function hello(name) { return 'Hello World!'; }|
+|check   |invoke function|hello|Hello World!             |
+
+|script  |script language fixture                               |
+|evaluate|function hello(name) { return 'Hello, ' + name; }     |
+|check   |invoke function|hello|with argument|World|Hello, World|
+
+|script  |script language fixture                                                |
+|evaluate|function hello(name, age) { return 'Hello, ' + name + ' age: ' + age; }|
+|check   |invoke function|hello|with arguments|[Duke,7]|Hello, Duke age: 7       |
+
+!define MULTILINE { {{{
+ var obj = new Object();
+ obj.hello = function hello(name) {
+    return 'Hello, ' + name;
+}
+}}} }
+
+|script  |script language fixture                                  |
+|evaluate|${MULTILINE}                                             |
+|check   |invoke method|hello|on|obj|with argument|John|Hello, John|
+|$o=     |value        |obj                                        |
+|check   |invoke method|hello|on|$o |with argument|John|Hello, John|
+
+|script|script language fixture|
+|show  |available engines      |

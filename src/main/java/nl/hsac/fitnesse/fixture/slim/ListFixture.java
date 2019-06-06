@@ -4,6 +4,7 @@ import fitnesse.slim.converters.ConverterRegistry;
 import nl.hsac.fitnesse.slim.converter.NumberedListConverter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -58,10 +59,36 @@ public class ListFixture extends SlimFixture {
     }
 
     /**
+     * Returns index of element.
+     * @param element element to get index of.
+     * @return index (0 based).
+     */
+    public int indexOf(Object element) {
+        return indexOfIn(element, list);
+    }
+
+    /**
+     * Checks whether element is present in list.
+     * @param element element that should be present.
+     * @return true if element is present.
+     */
+    public boolean elementIsPresent(Object element){
+        return elementIsPresentIn(element, list);
+    }
+
+    /**
      * @return new list containing current values.
      */
     public ArrayList<Object> copyList() {
         return copyList(list);
+    }
+
+    /**
+     * Adds values to current list.
+     * @param source list whose values are to be copied.
+     */
+    public void copyValuesFrom(Collection<Object> source) {
+        copyValuesFromTo(source, list);
     }
 
     /**
@@ -109,6 +136,35 @@ public class ListFixture extends SlimFixture {
         } else {
             throw new SlimFixtureException(false, "list only has " + aList.size() + " elements");
         }
+    }
+
+    /**
+     * Returns index of element.
+     * @param element element to get index of.
+     * @param aList list to get element value from.
+     * @return index (0 based).
+     */
+    public int indexOfIn(Object element, List aList) {
+        return aList.indexOf(element);
+    }
+
+    /**
+     * Checks whether element is present in list.
+     * @param element element that should be present.
+     * @param aList list to get element value from.
+     * @return true if element is present.
+     */
+    public boolean elementIsPresentIn(Object element, List aList){
+        return aList.contains(element);
+    }
+
+    /**
+     * Adds values to list.
+     * @param source list whose values are to be copied.
+     * @param target list to get element value from.
+     */
+    public void copyValuesFromTo(Collection<Object> source, List<Object> target) {
+        target.addAll(source);
     }
 
     /**

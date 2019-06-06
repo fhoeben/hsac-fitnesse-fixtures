@@ -1,30 +1,29 @@
 !1 Website testing using ''table template'' and !-BrowserTest-!
 
 
-On this page we test whether we check the prices of a couple of houses for sale in Utrecht, The Netherlands. 
+On this page we test retrieving record details using [[!-MusicBrainz-!][https://musicbrainz.org]].
 This test continues where StoryboardTest left off and combines it with TableTemplateTest.
 
 The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
 
-|table template|check original price                                        |
-|open          |http://www.funda.nl                                         |
-|select        |€ 1.000.000        |for            |Van                     |
-|select        |€ 2.000.000        |for            |Tot                     |
-|enter         |@{address}, @{city}|as             |Plaats, buurt, adres etc|
-|press         |tab                                                         |
-|click         |Zoek                                                        |
-|click         |@{address}                                                  |
-|$price=       |value of           |Vraagprijs                              |
-|$volume=      |value of           |Inhoud                                  |
-|check         |value of           |Woonoppervlakte|@{squareMeters} m²      |
-|$yearBuilt=   |value of           |Bouwjaar                                |
+First we go to the Discography page for Van Morrison.
+
+|storyboard|browser test                           |
+|open      |https://musicbrainz.org/set-language/en|
+|enter     |Van Morrison|as|Search                 |
+|press     |enter                                  |
+|click     |Van Morrison                           |
+
+Then we check some entries.
+
+|table template|album details                                   |
+|$year=        |value of|Year    |in row where|Title|is|@{album}|
+|$releases=    |value of|Releases|in row where|Title|is|@{album}|
 
 
-|storyboard|browser test|
-
-|check original price                                                       |
-|address        |city   |price?          |square meters|year built?|volume? |
-|Groenedijk 57  |Utrecht|€ 1.475.000 k.k.|442          |1999       |1.830 m³|
-|Nieuwegracht 42|Utrecht|€ 1.400.000 k.k.|348          |1700       |1.828 m³|
+|album details               |
+|album       |year?|releases?|
+|Astral Weeks|1968 |13       |
+|Moondance   |1970 |24       |
 
 

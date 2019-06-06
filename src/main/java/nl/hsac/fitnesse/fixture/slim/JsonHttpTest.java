@@ -1,10 +1,12 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import nl.hsac.fitnesse.fixture.util.DataUrlHelper;
 import nl.hsac.fitnesse.fixture.util.JsonPathHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.entity.ContentType;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,11 +16,15 @@ public class JsonHttpTest extends HttpTest {
     public static final String JSON_CONTENT_TYPE = ContentType.APPLICATION_JSON.toString();
 
     public boolean postValuesAsJsonTo(String serviceUrl) {
-        return postToImpl(jsonEncodeCurrentValues(), serviceUrl, getContentTypeForJson());
+        return sendToImpl(jsonEncodeCurrentValues(), serviceUrl, getContentTypeForJson(), "POST");
     }
 
     public boolean putValuesAsJsonTo(String serviceUrl) {
-        return putToImpl(jsonEncodeCurrentValues(), serviceUrl, getContentTypeForJson());
+        return sendToImpl(jsonEncodeCurrentValues(), serviceUrl, getContentTypeForJson(), "PUT");
+    }
+
+    public boolean deleteWithValuesAsJson(String serviceUrl) {
+        return sendToImpl(jsonEncodeCurrentValues(), serviceUrl, getContentTypeForJson(), "DELETE");
     }
 
     protected String jsonEncodeCurrentValues() {
@@ -39,8 +45,11 @@ public class JsonHttpTest extends HttpTest {
     @Override
     protected String formatValue(String value) {
         String formatted = super.formatValue(value);
-        if (value != null && value.trim().startsWith("{")) {
-            formatted = getEnvironment().getHtmlForJson(value);
+        if (value != null) {
+            String trimmed = value.trim();
+            if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+                formatted = getEnvironment().getHtmlForJson(trimmed);
+            }
         }
         return formatted;
     }
@@ -51,20 +60,47 @@ public class JsonHttpTest extends HttpTest {
         return getPathHelper().getJsonPath(responseString, jsonPath);
     }
 
+    /**
+     * @param baseName base of filename to generate (a number might be added to the name to make it unique).
+     * @param jsonPath expression to evaluate.
+     * @return link to created file.
+     */
+    public String createFileFromBase64ContentOf(String baseName, String jsonPath) {
+        Object base64Content = jsonPath(jsonPath);
+        if (base64Content instanceof String) {
+            if ("".equals(base64Content)) {
+                throw new SlimFixtureException(false, "No content from json path: '" + getPathExpr(jsonPath) + "'");
+            } else {
+                return createFileFromBase64(baseName, (String) base64Content);
+            }
+        } else {
+            throw new SlimFixtureException(false, "Non string result from json path. '" + getPathExpr(jsonPath) + "' returned: " + base64Content);
+        }
+    }
+
+    @Override
+    protected String createFileFromBase64(String baseName, String base64Content) {
+        if (DataUrlHelper.isDataUrl(base64Content)) {
+            base64Content = DataUrlHelper.getData(base64Content);
+        }
+        return super.createFileFromBase64(baseName, base64Content);
+    }
+
     public Object elementOfJsonPath(int index, String path) {
-        List<Object> all = getAllMatches(path);
+        List<Object> all = listJsonPathMatches(path);
         return all.get(index);
     }
 
     public int jsonPathCount(String path) {
-        List<Object> all = getAllMatches(path);
+        List<Object> all = listJsonPathMatches(path);
         return all.size();
     }
 
-    protected List<Object> getAllMatches(String path) {
+    public ArrayList<Object> listJsonPathMatches(String path) {
         String responseString = getResponseBody();
         String jsonPath = getPathExpr(path);
-        return getPathHelper().getAllJsonPath(responseString, jsonPath);
+        List<Object> results = getPathHelper().getAllJsonPath(responseString, jsonPath);
+        return results instanceof ArrayList? (ArrayList<Object>) results : new ArrayList<>(results);
     }
 
     protected String getResponseBody() {
@@ -83,7 +119,7 @@ public class JsonHttpTest extends HttpTest {
      */
     public String allJsonPathMatches(String expr) {
         String result = null;
-        List<Object> allJsonPath = getAllMatches(expr);
+        List<Object> allJsonPath = listJsonPathMatches(expr);
         if (allJsonPath != null && !allJsonPath.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             sb.append("<div><ul>");
@@ -145,12 +181,6 @@ public class JsonHttpTest extends HttpTest {
             }
         }
         return jsonPath;
-    }
-
-    @Override
-    protected String urlEncode(String str) {
-        String strNoSpaces = str.replace(" ", "+");
-        return super.urlEncode(strNoSpaces);
     }
 
     protected JsonPathHelper getPathHelper() {

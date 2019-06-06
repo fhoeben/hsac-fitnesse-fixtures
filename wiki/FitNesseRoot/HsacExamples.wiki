@@ -16,7 +16,6 @@ The baseline !-FitNesse-! installation offers the following features:
  2. Run !-FitNesse-! tests on a build server, reporting the results in both JUnit XML format and HTML.
  3. !-FitNesse-! installation for test/fixture developers containing:
   * the fixture base classes (and Selenium drivers for Chrome, Internet Explorer, Edge and !-Firefox-!),
-  * Maven classpath plugin (such that tests can use all dependencies from pom.xml),
   * HSAC's fitnesse-plugin to add additional Wiki features (random values, calculating relative dates, Slim scenarios without need to specify all parameters, Slim scripts that take a screenshot after each step),
   * easy fixture debugging,
 
@@ -46,6 +45,9 @@ A similar [[zip file containing the latest 'snapshot' (i.e. not released but bas
 
 
 !3 2. Run on build server
+Tests can be run on a build (or Continuous Integration) server in two ways. One can either gather the dependencies, compile and run tests using a build tool such as Maven or Gradle. Or one can use a docker container which contains a compiled version of the project, add the wiki page to that and have it run tests.
+
+!4 Running using Maven
 To run the tests on a build server have the build server checkout the project and execute {{{ mvn clean test-compile failsafe:integration-test }}}. To fail the build in case of test failures append: {{{failsafe:verify}}}
 The result in JUnit XML results can be found in: target/failsafe-reports (most build servers will pick these up automatically)
 The HTML results can be found in: target/fitnesse-results/index.html
@@ -56,31 +58,39 @@ By using the !style_code[@SuiteFilter] and !style_code[@ExcludeSuiteFilter] anno
 
 The Selenium configuration (e.g. what browser on what platform) to use when testing websites can be overridden by using system properties. This allows different configurations on the build server to test with different browsers, without requiring different Wiki content, but only requiring a different build configuration. More details can be found in >SlimTests.BrowserTests.OverridingSeleniumSetup
 
+!4 Running using Docker
+Using docker one can start a container (i.e. virtual machine) containing a compiled version of the project and have it execute the tests defined. The main advantage of this approach is there is no need to gather dependencies and compile on each test run. This can be quite advantages when running builds on fully virtualized infrastructure where no state is maintained between runs, and all dependencies have to be downloaded afresh each run.
+
+The way the actual tests are run is quite similar inside a docker container to what was described above for 'Running using Maven' in that a jUnit test is executed to run a suite of wiki pages. Which suite is executed, filters to include and exclude, and Selenium can be configured without modifing the images provided.
+
+Two images are provided on Docker Hub to run tests (or to be used as base for custom images, of course):
+ * [[hsac/fitnesse-fixtures-test-jre8][https://hub.docker.com/r/hsac/fitnesse-fixtures-test-jre8/]] which contains a Java runtime and this project, which can be used to run tests that either do not need Selenium (i.e. do not test using !-BrowserTest-!) or use an existing/external Selenium Grid.
+ * [[hsac/fitnesse-fixtures-test-jre8-chrome][https://hub.docker.com/r/hsac/fitnesse-fixtures-test-jre8-chrome/]] which adds this project to a Selenium standalone Chrome image and can be used to run tests with a Chrome browser (without the need to have/maintain a Selenium Grid).
+
+Detailed instructions on how to use the images are provided in each image's description.
+
+!4 Example Reports
 Example reports for [[Windows using a Sauce Labs Selenium driver][https://fhoeben.github.io/hsac-fitnesse-fixtures-test-results/examples-results/]] and [[Linux with !-Chrome Headless-!][https://fhoeben.github.io/hsac-fitnesse-fixtures-test-results/acceptance-test-results/]] are generated in the automated build process of this project.
 
 !3 3. Fixture developer installation
 Import this project in your favorite Java IDE (with Maven support).
 
-To start !-FitNesse-!: have the IDE execute {{{ mvn compile exec:exec }}}The port used by !-FitNesse-! can be controlled by changing the !style_code[fitnesse.port] property's value in pom.xml.
+To start !-FitNesse-!: have the IDE execute {{{ mvn compile dependency:copy-dependencies exec:exec }}}The port used by !-FitNesse-! can be controlled by changing the !style_code[fitnesse.port] property's value in pom.xml.
 !-FitNesse-! will be available at !- http://localhost:&lt;fitnesse.port>/ -!
 
-To debug a fixture used in a !-FitNesse-! page: change !style_code[@Suite]'s value to contain page name in !style_code[nl.hsac.fitnesse.fixture.FixtureDebugTest], then just debug this test.
+To debug a fixture used in a !-FitNesse-! page: change !style_code[@Suite]'s value in !style_code[nl.hsac.fitnesse.fixture.FixtureDebugTest] to contain the page name, then just debug this test.
 
 !anchor classpath
 
 !4 Making fixtures accessible
-To ensure the fixtures (and all dependencies as specified in the project's pom.xml) are available, add the following lines to the root Wiki page containing the tests.
+To ensure the fixtures are available, add the following lines to the root Wiki page containing the tests.
 {{{
 !path fixtures
 !path fixtures/*.jar
-!pomFile ../pom.xml@compile
-}}} The first two will ensure all classes are accessible when working standalone, the last will be used by Java developers changing fixtures (with a Maven installation).
+}}} These will ensure all classes are accessible.
 
 !*> Class path for these examples
 The location when working standalone:
 !path fixtures
 !path fixtures/*.jar
-
-When developing and changing the fixtures, we will work based on the pom.xml:
-!pomFile ../pom.xml@compile
 *!

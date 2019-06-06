@@ -1,0 +1,40 @@
+<html><head><title>HsacAcceptanceTests.SlimTests.UtilityFixtures.GeneratedSymbolicLinkSuite.SuiteSetUp</title><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='css/fitnesse.css'/><script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script><script src='javascript/fitnesse.js' type='text/javascript'></script></head><body><header><h2>HsacAcceptanceTests.SlimTests.UtilityFixtures.GeneratedSymbolicLinkSuite.SuiteSetUp</h2></header><article><br/>In this setup page we define a JSON server which contains labels translated in both in English and Dutch. The nested tests/suites check the results for each locale.<br/><br/><div class="collapsible closed"><ul><li><a href='#' class='expandall'>Expand</a></li><li><a href='#' class='collapseall'>Collapse</a></li></ul>
+	<p class="title">Included page: <a href="HsacExamples.SlimTests.SuiteSetUp">.HsacExamples.SlimTests.SuiteSetUp</a> <a href="HsacExamples.SlimTests.SuiteSetUp?edit&amp;redirectToReferer=true&amp;redirectAction=" class="edit">(edit)</a></p>
+	<div>An <a href="FitNesse.UserGuide.WritingAcceptanceTests.SliM.ImportTable">import table</a> defines which Java packages may contain fixture classes. <br/><br/>For these examples the following packages are required:<br/><table>
+	<tr class="slimRowTitle">
+		<td>Import</td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td><span class="pass">nl.hsac.fitnesse.fixture</span></td>
+	</tr>
+	<tr class="slimRowColor1">
+		<td><span class="pass">nl.hsac.fitnesse.fixture.slim</span></td>
+	</tr>
+</table>
+</div>
+</div>
+<br/><span class="meta">variable defined: jsonEN=!-{-!"dog": "Dog", "cat": "Cat"!-}-!</span>
+<br/><span class="meta">variable defined: jsonNL=!-{-!"dog": "Hond", "cat": "Kat"!-}-!</span>
+<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="3"><span class="pass">mock xml server setup</span></td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td>add response</td>
+		<td>{"dog": "Dog", "cat": "Cat"}</td>
+		<td>for</td>
+		<td>GET: /FitNesseMock/EN</td>
+	</tr>
+	<tr class="slimRowColor8">
+		<td>add response</td>
+		<td>{"dog": "Hond", "cat": "Kat"}</td>
+		<td>for</td>
+		<td>GET: /FitNesseMock/NL</td>
+	</tr>
+	<tr class="slimRowColor6">
+		<td>$url&lt;-[http://127.0.0.1:8000/FitNesseMock]</td>
+		<td colspan="3">get mock server url</td>
+	</tr>
+</table>
+</article></body></html>

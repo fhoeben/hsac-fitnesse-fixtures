@@ -296,6 +296,17 @@ public class Environment {
     public void doHttpFilePost(String url, HttpResponse result, Map<String, Object> headers, File file) {
         httpClient.post(url, result, headers, file);
     }
+
+    /**
+     * Performs PUT to supplied url of a file as binary data.
+     * @param url url to post to.
+     * @param result result containing request, its response will be filled.
+     * @param headers headers to add.
+     * @param file file containing binary data to post.
+     */
+    public void doHttpFilePut(String url, HttpResponse result, Map<String, Object> headers, File file) {
+        httpClient.put(url, result, headers, file);
+    }
     
     /**
      * Performs PUT to supplied url of result of applying template with model.
@@ -397,6 +408,17 @@ public class Environment {
     }
 
     /**
+     * HEADs content from URL.
+     * @param url url to get from.
+     * @param response response to store url and response value in.
+     * @param headers http headers to add.
+     */
+    public void doHead(String url, HttpResponse response, Map<String, Object> headers) {
+        response.setRequest(url);
+        httpClient.head(url, response, headers);
+    }
+
+    /**
      * DELETEs content at URL.
      * @param url url to send delete to.
      * @param response response to store url and response value in.
@@ -405,6 +427,58 @@ public class Environment {
     public void doDelete(String url, HttpResponse response, Map<String, Object> headers) {
         response.setRequest(url);
         httpClient.delete(url, response, headers);
+    }
+
+    /**
+     * Performs DELETE to supplied url of result of applying template with model.
+     * @param url url to delete.
+     * @param templateName name of template to use.
+     * @param model model for template.
+     * @param result result to populate with response.
+     * @param headers headers to add.
+     * @param contentType contentType for request.
+     */
+    public void doDelete(String url, String templateName, Object model, HttpResponse result, Map<String, Object> headers, String contentType) {
+        String request = processTemplate(templateName, model);
+        result.setRequest(request);
+        doDelete(url, result, headers, contentType);
+    }
+
+    /**
+     * Performs DELETE to supplied url of result's request.
+     * @param url url to delete.
+     * @param result result containing request, its response will be filled.
+     * @param headers headers to add.
+     * @param contentType contentType for request.
+     */
+    public void doDelete(String url, HttpResponse result, Map<String, Object> headers, String contentType) {
+        httpClient.delete(url, result, headers, contentType);
+    }
+
+    /**
+     * Performs PATCH to supplied url of result of applying template with model.
+     * @param url url to patch.
+     * @param templateName name of template to use.
+     * @param model model for template.
+     * @param result result to populate with response.
+     * @param headers headers to add.
+     * @param contentType contentType for request.
+     */
+    public void doHttpPatch(String url, String templateName, Object model, HttpResponse result, Map<String, Object> headers, String contentType) {
+        String request = processTemplate(templateName, model);
+        result.setRequest(request);
+        doHttpPatch(url, result, headers, contentType);
+    }
+
+    /**
+     * Performs PATCH to supplied url of result's request.
+     * @param url url to patch.
+     * @param result result containing request, its response will be filled.
+     * @param headers headers to add.
+     * @param contentType contentType for request.
+     */
+    public void doHttpPatch(String url, HttpResponse result, Map<String, Object> headers, String contentType) {
+        httpClient.patch(url, result, headers, contentType);
     }
 
     /**
@@ -729,5 +803,33 @@ public class Environment {
 
     public void setPropertiesHelper(PropertiesHelper propertiesHelper) {
         this.propertiesHelper = propertiesHelper;
+    }
+
+    /**
+     * Enables content compression support on this environment's HttpClient
+     */
+    public void enableHttpClientCompression() {
+        httpClient.enableCompression();
+    }
+
+    /**
+     * Disables content compression support on this environment's HttpClient
+     */
+    public void disableHttpClientCompression() {
+        httpClient.disableCompression();
+    }
+
+    /**
+     * Disables SSL certificate verification on this environment's HttpClient
+     */
+    public void disableHttpClientSSLVerification() {
+        httpClient.disableSSLVerification();
+    }
+
+    /**
+     * Enables SSL certificate verification on this environment's HttpClient
+     */
+    public void enableHttpClientSSLVerification() {
+        httpClient.enableSSLVerification();
     }
 }

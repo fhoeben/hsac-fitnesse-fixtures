@@ -3,10 +3,10 @@
 Performs HTTP GET adding values as parameters in the query string.
 
 |script         |xml http test                                                       |
-|set value      |90210          |for                  |ZIP                           |
-|get from       |${URL}/GetCityWeatherByZIP                                          |
+|set value      |1          |for                  |wsdl                           |
+|get from       |${URL}                                          |
 |check          |response status|200                                                 |
 |show           |request                                                             |
 |show           |response                                                            |
-|register prefix|weather        |for namespace        |http://ws.cdyne.com/WeatherWS/|
-|check          |xPath          |//weather:City/text()|Beverly Hills                 |
+|register prefix|soap        |for namespace        |http://schemas.xmlsoap.org/wsdl/soap/|
+|check          |xPath          |//soap:address/@location|${URL}                 |

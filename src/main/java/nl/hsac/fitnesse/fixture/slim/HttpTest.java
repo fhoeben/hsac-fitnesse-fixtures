@@ -1,7 +1,9 @@
 package nl.hsac.fitnesse.fixture.slim;
 
 import freemarker.template.Template;
+import nl.hsac.fitnesse.fixture.util.BinaryHttpResponse;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
@@ -10,6 +12,7 @@ import org.apache.http.impl.cookie.BasicClientCookie;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -24,6 +27,7 @@ public class HttpTest extends SlimFixtureWithMap {
     /** Default content type for posts and puts. */
     public final static String DEFAULT_POST_CONTENT_TYPE = "application/x-www-form-urlencoded; charset=UTF-8";
 
+    private String downloadBase = new File(filesDir, "downloads").getPath() + "/";
     private final Map<String, Object> headerValues = new LinkedHashMap<>();
     private boolean storeCookies = false;
     private HttpResponse response = createResponse();
@@ -46,6 +50,34 @@ public class HttpTest extends SlimFixtureWithMap {
             result = true;
         }
         return result;
+    }
+
+    /**
+     * Enables content compression support in the current environment (i.e. for the entire test run)
+     */
+    public void enableCompression() {
+        getEnvironment().enableHttpClientCompression();
+    }
+
+    /**
+     * Disables content compression support in the current environment (i.e. for the entire test run)
+     */
+    public void disableCompression() {
+        getEnvironment().disableHttpClientCompression();
+    }
+
+    /**
+     * Disables SSL certificate verification in the current environment (i.e. for the entire test run)
+     */
+    public void disableSSLVerification() {
+        getEnvironment().disableHttpClientSSLVerification();
+    }
+
+    /**
+     * Enables SSL certificate verification in the current environment (i.e. for the entire test run)
+     */
+    public void enableSSLVerification() {
+        getEnvironment().enableHttpClientSSLVerification();
     }
 
     /**
@@ -74,6 +106,22 @@ public class HttpTest extends SlimFixtureWithMap {
      */
     public void clearHeaderValues() {
         headerValues.clear();
+    }
+
+    /**
+     * Adds all values in the supplied map to the current header values.
+     * @param map to obtain values from.
+     */
+    public void copyHeaderValuesFrom(Map<String, Object> map) {
+        getMapHelper().copyValuesFromTo(map, headerValues);
+    }
+
+    /**
+     * Allows subclasses access to the header values.
+     * @return header values.
+     */
+    protected Map<String, Object> getHeaderValues() {
+        return headerValues;
     }
 
     //// methods to support usage in dynamic decision tables
@@ -105,6 +153,11 @@ public class HttpTest extends SlimFixtureWithMap {
 
     //// end: methods to support usage in dynamic decision tables
 
+    protected String createFileFromBase64(String baseName, String base64Content) {
+        Base64Fixture base64Fixture = getBase64Fixture();
+        return base64Fixture.createFrom(baseName, base64Content);
+    }
+
     /**
      * Sends HTTP POST template with current values to service endpoint.
      * @param serviceUrl service endpoint to send request to.
@@ -121,21 +174,7 @@ public class HttpTest extends SlimFixtureWithMap {
      * @return true if call could be made and response did not indicate error.
      */
     public boolean postTemplateTo(String serviceUrl, String aContentType) {
-        boolean result;
-        resetResponse();
-        if (template == null) {
-            throw new StopTestException("No template available to use in post");
-        } else {
-            String url = getUrl(serviceUrl);
-            try {
-                storeLastCall("POST", serviceUrl);
-                getEnvironment().doHttpPost(url, template, getCurrentValues(), response, headerValues, aContentType);
-            } catch (Throwable t) {
-                throw new StopTestException("Unable to get response from POST to: " + url, t);
-            }
-            result = postProcessResponse();
-        }
-        return result;
+        return sendTemplateTo(serviceUrl, aContentType, "POST");
     }
 
     /**
@@ -147,6 +186,17 @@ public class HttpTest extends SlimFixtureWithMap {
     public boolean postTo(String body, String serviceUrl) {
         String cleanedBody = cleanupBody(body);
         return postToImpl(cleanedBody, serviceUrl);
+    }
+
+    /**
+     * Sends HTTP DELETE body to service endpoint.
+     * @param body content to delete
+     * @param serviceUrl service endpoint to send body to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean deleteWith(String serviceUrl, String body) {
+        String cleanedBody = cleanupBody(body);
+        return deleteToImpl(cleanedBody, serviceUrl);
     }
 
     /**
@@ -170,44 +220,49 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     protected boolean postToImpl(String body, String serviceUrl) {
-        return postToImpl(body, serviceUrl, getContentType());
+        return sendToImpl(body, serviceUrl, getContentType(), "POST");
     }
 
-    protected boolean postToImpl(String body, String serviceUrl, String aContentType) {
+    protected boolean deleteToImpl(String body, String serviceUrl) {
+        return sendToImpl(body, serviceUrl, getContentType(), "DELETE");
+    }
+
+    protected boolean patchWithImpl(String body, String serviceUrl) {
+        return sendToImpl(body, serviceUrl, getContentType(), "PATCH");
+    }
+
+    protected boolean sendToImpl(String body, String serviceUrl, String aContentType, String method) {
         boolean result;
         resetResponse();
         response.setRequest(body);
         String url = getUrl(serviceUrl);
         try {
-            storeLastCall("POST", serviceUrl);
-            getEnvironment().doHttpPost(url, response, headerValues, aContentType);
+            storeLastCall(method, serviceUrl);
+            switch (method) {
+                case "POST":
+                    getEnvironment().doHttpPost(url, response, headerValues, aContentType);
+                    break;
+                case "PUT":
+                    getEnvironment().doHttpPut(url, response, headerValues, aContentType);
+                    break;
+                case "DELETE":
+                    getEnvironment().doDelete(url, response, headerValues, aContentType);
+                    break;
+                case "PATCH":
+                    getEnvironment().doHttpPatch(url, response, headerValues, aContentType);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported method: " + method);
+            }
         } catch (Throwable t) {
-            throw new StopTestException("Unable to get response from POST to: " + url, t);
+            throw new StopTestException("Unable to get response from " + method + " to: " + url, t);
         }
         result = postProcessResponse();
         return result;
     }
 
     protected boolean postFileToImpl(String fileName, String serviceUrl) {
-        boolean result;
-        resetResponse();
-        String url = getUrl(serviceUrl);
-
-        String filePath = getFilePathFromWikiUrl(fileName);
-        File file = new File(filePath);
-        if (!file.exists()) {
-            throw new StopTestException(false, "File " + filePath + " not found.");
-        }
-
-        try {
-            response.setRequest(fileName);
-            storeLastCall("POST_FILE", serviceUrl);
-            getEnvironment().doHttpFilePost(url, response, headerValues, file);
-        } catch (Throwable t) {
-            throw new StopTestException("Unable to get response from POST to: " + url, t);
-        }
-        result = postProcessResponse();
-        return result;
+        return sendFileImpl(fileName, serviceUrl, "POST");
     }
 
     /**
@@ -216,27 +271,61 @@ public class HttpTest extends SlimFixtureWithMap {
      * @return true if call could be made and response did not indicate error.
      */
     public boolean putTemplateTo(String serviceUrl) {
-        return putTemplateTo(serviceUrl, getContentType());
+        return sendTemplateTo(serviceUrl, getContentType(), "PUT");
     }
 
     /**
-     * Sends HTTP PUT template with current values to service endpoint.
+     * Sends HTTP DELETE template with current values to service endpoint.
      * @param serviceUrl service endpoint to send request to.
-     * @param aContentType content type to use for post.
      * @return true if call could be made and response did not indicate error.
      */
-    public boolean putTemplateTo(String serviceUrl, String aContentType) {
+    public boolean deleteWithTemplate(String serviceUrl) {
+        return sendTemplateTo(serviceUrl, getContentType(), "DELETE");
+    }
+
+    /**
+     * Sends HTTP PATCH template with current values to service endpoint.
+     * @param serviceUrl service endpoint to send request to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean patchWithTemplate(String serviceUrl) {
+        return sendTemplateTo(serviceUrl, getContentType(), "PATCH");
+    }
+
+    /**
+     * Sends HTTP method call template with current values to service endpoint.
+     * @param serviceUrl service endpoint to send request to.
+     * @param aContentType content type to use for post.
+     * @param method HTTP method to use
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean sendTemplateTo(String serviceUrl, String aContentType, String method) {
         boolean result;
         resetResponse();
         if (template == null) {
-            throw new StopTestException("No template available to use in put");
+            throw new StopTestException("No template available to use in " + method);
         } else {
             String url = getUrl(serviceUrl);
             try {
-                storeLastCall("PUT", serviceUrl);
-                getEnvironment().doHttpPut(url, template, getCurrentValues(), response, headerValues, aContentType);
+                storeLastCall(method, serviceUrl);
+                switch (method) {
+                    case "POST":
+                        getEnvironment().doHttpPost(url, template, getCurrentValues(), response, headerValues, aContentType);
+                        break;
+                    case "PUT":
+                        getEnvironment().doHttpPut(url, template, getCurrentValues(), response, headerValues, aContentType);
+                        break;
+                    case "DELETE":
+                        getEnvironment().doDelete(url, template, getCurrentValues(), response, headerValues, aContentType);
+                        break;
+                    case "PATCH":
+                        getEnvironment().doHttpPatch(url, template, getCurrentValues(), response, headerValues, aContentType);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unsupported method: " + method);
+                }
             } catch (Throwable t) {
-                throw new StopTestException("Unable to get response from PUT to: " + url, t);
+                throw new StopTestException("Unable to get response from " + method + " to: " + url, t);
             }
             result = postProcessResponse();
         }
@@ -254,6 +343,11 @@ public class HttpTest extends SlimFixtureWithMap {
         return putToImpl(cleanedBody, serviceUrl);
     }
 
+    public boolean patchWith(String serviceUrl, String body) {
+        String cleanedBody = cleanupBody(body);
+        return patchWithImpl(cleanedBody, serviceUrl);
+    }
+
     /**
      * Sends all values (url encoded) using put.
      * @param serviceUrl service endpoint to send values to.
@@ -265,23 +359,54 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     protected boolean putToImpl(String body, String serviceUrl) {
-        return putToImpl(body, serviceUrl, getContentType());
+        return sendToImpl(body, serviceUrl, getContentType(), "PUT");
     }
 
-    protected boolean putToImpl(String body, String serviceUrl, String aContentType) {
+    /**
+     * Sends a file by HTTP PUT body to service endpoint.
+     * @param fileName fileName to post
+     * @param serviceUrl service endpoint to send body to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean putFileTo(String fileName, String serviceUrl) {
+        return putFileToImpl(fileName, serviceUrl);
+    }
+
+
+    protected boolean putFileToImpl(String fileName, String serviceUrl) {
+        return sendFileImpl(fileName, serviceUrl, "PUT");
+    }
+
+    protected boolean sendFileImpl(String fileName, String serviceUrl, String method) {
         boolean result;
         resetResponse();
-        response.setRequest(body);
         String url = getUrl(serviceUrl);
+
+        String filePath = getFilePathFromWikiUrl(fileName);
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new StopTestException(false, "File " + filePath + " not found.");
+        }
+
         try {
-            storeLastCall("PUT", serviceUrl);
-            getEnvironment().doHttpPut(url, response, headerValues, aContentType);
+            response.setRequest(fileName);
+            storeLastCall(method + "_FILE", serviceUrl);
+            switch (method) {
+                case "POST":
+                    getEnvironment().doHttpFilePost(url, response, headerValues, file);
+                    break;
+                case "PUT":
+                    getEnvironment().doHttpFilePut(url, response, headerValues, file);
+                    break;
+            }
+
         } catch (Throwable t) {
-            throw new StopTestException("Unable to get response from PUT to: " + url, t);
+            throw new StopTestException("Unable to get response from " + method + " to: " + url, t);
         }
         result = postProcessResponse();
         return result;
     }
+
 
     protected String cleanupBody(String body) {
         return getEnvironment().getHtmlCleaner().cleanupPreFormatted(body);
@@ -325,6 +450,53 @@ public class HttpTest extends SlimFixtureWithMap {
         return result;
     }
 
+    /**
+     * Downloads binary content from specified url.
+     * @param serviceUrl url to download from
+     * @return link to downloaded file
+     */
+    public String getFileFrom(String serviceUrl) {
+        resetResponse();
+        String url = createUrlWithParams(serviceUrl);
+
+        BinaryHttpResponse resp = new BinaryHttpResponse();
+        resp.setCookieStore(response.getCookieStore());
+        getEnvironment().doGet(url, resp, headerValues);
+        response.cloneValues(resp);
+
+        byte[] content = resp.getResponseContent();
+        if (content == null) {
+            try {
+                content = resp.getResponse().getBytes("utf-8");
+            } catch (UnsupportedEncodingException e) {
+                // will not happen
+            }
+        }
+        String fileName = resp.getFileName();
+        if (StringUtils.isEmpty(fileName)) {
+            fileName = "download";
+        }
+        return createFile(downloadBase, fileName, content);
+    }
+
+    /**
+     * Sends HTTP HEAD to service endpoint.
+     * @param serviceUrl service endpoint to delete.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean headFrom(String serviceUrl) {
+        boolean result;
+        resetResponse();
+        String url = createUrlWithParams(serviceUrl);
+        try {
+            storeLastCall("HEAD", serviceUrl);
+            getEnvironment().doHead(url, response, headerValues);
+        } catch (Throwable t) {
+            throw new StopTestException("Unable to HEAD: " + url, t);
+        }
+        result = postProcessResponse();
+        return result;
+    }
 
     /**
      * Sends HTTP DELETE to service endpoint.
@@ -359,7 +531,7 @@ public class HttpTest extends SlimFixtureWithMap {
         }
     }
 
-    String createUrlWithParams(String serviceUrl) {
+    protected String createUrlWithParams(String serviceUrl) {
         String baseUrl = getUrl(serviceUrl);
         if (!getCurrentValues().isEmpty()) {
             if (baseUrl.contains("?") && !baseUrl.endsWith("?")) {
@@ -368,9 +540,15 @@ public class HttpTest extends SlimFixtureWithMap {
             if (!baseUrl.contains("?")) {
                 baseUrl += "?";
             }
-            baseUrl += urlEncodeCurrentValues();
+            baseUrl += urlEncodeCurrentValuesForQueryString();
         }
         return baseUrl;
+    }
+
+    protected String urlEncodeCurrentValuesForQueryString() {
+        // in request BODY a '+' should be used for application/x-www-form-urlencoded
+        // but in query string one should use '%20'
+        return urlEncodeCurrentValues().replace("+", "%20");
     }
 
     protected String urlEncodeCurrentValues() {
@@ -658,6 +836,16 @@ public class HttpTest extends SlimFixtureWithMap {
         contentType = aContentType;
     }
 
+    public void setBasicAuthorizationHeaderForUserAndPassword(String user, String password) {
+        String credential = user + ":" + password;
+        try {
+            String base64credential = Base64.getEncoder().encodeToString(credential.getBytes("ISO-8859-1"));
+            setValueForHeader("Basic " + base64credential, "Authorization");
+        } catch (UnsupportedEncodingException e) {
+            throw new SlimFixtureException("ISO-8859-1 encoding unavailable!", e);
+        }
+    }
+
     public boolean isExplicitContentTypeSet() {
         return explicitContentTypeSet;
     }
@@ -723,20 +911,33 @@ public class HttpTest extends SlimFixtureWithMap {
             case "GET":
                 getImpl(lastUrl, true);
                 break;
+            case "HEAD":
+                headFrom(lastUrl);
+                break;
             case "POST":
                 postToImpl(response.getRequest(), lastUrl);
                 break;
             case "PUT":
                 putToImpl(response.getRequest(), lastUrl);
                 break;
+            case "PATCH":
+                patchWithImpl(response.getRequest(), lastUrl);
+                break;
             case "DELETE":
-                delete(lastUrl);
+                if (lastUrl.equals(response.getRequest())) {
+                    delete(lastUrl);
+                } else {
+                    deleteToImpl(response.getRequest(), lastUrl);
+                }
                 break;
             case "GET_NO_REDIRECT":
                 getImpl(lastUrl, false);
                 break;
             case "POST_FILE":
                 postFileToImpl(response.getRequest(), lastUrl);
+                break;
+            case "PUT_FILE":
+                putFileToImpl(response.getRequest(), lastUrl);
                 break;
             default:
                 throw new SlimFixtureException(false, "Repeat of method: " + lastMethod + " not configured.");

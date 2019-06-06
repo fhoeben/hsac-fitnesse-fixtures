@@ -67,7 +67,16 @@ public abstract class NgBrowserTestBase extends BrowserTest<WebElement> {
                 "clearSearchContext",
                 "setAngularRoot",
                 "getAngularRoot",
-                "executeScript");
+                "executeScript",
+                "secondsBeforeTimeout",
+                "secondsBeforePageLoadTimeout",
+                "trimOnNormalize",
+                "setImplicitFindInFramesTo",
+                "setTrimOnNormalize",
+                "setRepeatIntervalToMilliseconds",
+                "repeatAtMostTimes",
+                "repeatAtMostTimes",
+                "timeSpentRepeating");
     }
 
     public NgBrowserTestBase(String waitForAngular) {

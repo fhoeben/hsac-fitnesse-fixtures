@@ -1,6 +1,6 @@
-<html><head><title>HsacAcceptanceTests.FitTests.ArraysAndSymbolsComparison</title><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='css/fitnesse.css'/><script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script><script src='javascript/fitnesse.js' type='text/javascript'></script></head><body><header><h2>HsacAcceptanceTests.FitTests.ArraysAndSymbolsComparison</h2></header><article><br/><h1>Symbol and array comparison</h1>
-To use the symbol and array behavior, one must start by adding a $ to the end of the columnname.<br/><br/><h2>Compare result with symbol</h2>
-This functionality was added when we wanted to compare a returning value with a value that was earlier returned in the same testpage. How to use this functionality is demonstrated with the use of the CompareValues fixture. However this will work for all fixtures extending the nl.hsac.fitnesse.fixture.fit.MapColumnFixture.<br/><br/><h3>Demonstration of comparing with symbol:</h3>
+<html><head><title>HsacAcceptanceTests.FitTests.ArraysAndSymbolsComparison</title><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='css/fitnesse.css'/><script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script><script src='javascript/fitnesse.js' type='text/javascript'></script></head><body><header><h2>HsacAcceptanceTests.FitTests.ArraysAndSymbolsComparison</h2></header><article><br/><h1 id="Symbolandarraycomparison">Symbol and array comparison</h1>
+To use the symbol and array behavior, one must start by adding a $ to the end of the columnname.<br/><br/><h2 id="Compareresultwithsymbol">Compare result with symbol</h2>
+This functionality was added when we wanted to compare a returning value with a value that was earlier returned in the same testpage. How to use this functionality is demonstrated with the use of the CompareValues fixture. However this will work for all fixtures extending the nl.hsac.fitnesse.fixture.fit.MapColumnFixture.<br/><br/><h3 id="Demonstrationofcomparingwithsymbol">Demonstration of comparing with symbol:</h3>
 <br/>First store value1 and value2 in symbols so we can compare with them later.<br/><table>
 	<tr>
 		<td colspan="4">CompareValues</td>
@@ -35,8 +35,8 @@ This functionality was added when we wanted to compare a returning value with a 
 		<td class="pass">2 (symbolValue2)</td>
 	</tr>
 </table>
-Tip: to see how the output is in case of a failure, change value1 and/or value2.<br/><br/><h2>Compare result with an array</h2>
-Functionality is added to compare the returning value of a column fixture with an array of values. The array of values can consist out of literal values, symbols or a combination of the two. If the array contains symbols, the symbols need to be prefixed with a $.  While the symbol comparison (discussed above) works for all fixtures extending from the nl.hsac.fitnesse.fixture.fit.MapColumnFixture, for comparing with array one need to implement a method that returns the array of values as a string, separated by a delimiter. For an example, see the asDelimiterSepList method of the CompareValuesFixture class.<br/><br/><h3>Demonstration of comparing with an array:</h3>
+Tip: to see how the output is in case of a failure, change value1 and/or value2.<br/><br/><h2 id="Compareresultwithanarray">Compare result with an array</h2>
+Functionality is added to compare the returning value of a column fixture with an array of values. The array of values can consist out of literal values, symbols or a combination of the two. If the array contains symbols, the symbols need to be prefixed with a $.  While the symbol comparison (discussed above) works for all fixtures extending from the nl.hsac.fitnesse.fixture.fit.MapColumnFixture, for comparing with array one need to implement a method that returns the array of values as a string, separated by a delimiter. For an example, see the asDelimiterSepList method of the CompareValuesFixture class.<br/><br/><h3 id="Demonstrationofcomparingwithanarray">Demonstration of comparing with an array:</h3>
 <br/>Compare value1 and value2 with values and symbols in an array.<br/><table>
 	<tr>
 		<td>CompareValues</td>
@@ -79,8 +79,8 @@ Tip: to see how the output is in case of a failure, change value1 and/or value2.
 		<td class="pass">1//2 (Array[$symbolValue1//$symbolValue2])</td>
 	</tr>
 </table>
-<br/><h2>Compare result with string containing a symbol</h2>
-This was added to be able to compare the returning value of a column fixture with a string that contains a symbol.<br/>The symbol in the string must be place in $[..].<br/><br/><h3>Demonstration of comparing with text that contains one symbol:</h3>
+<br/><h2 id="Compareresultwithstringcontainingasymbol">Compare result with string containing a symbol</h2>
+This was added to be able to compare the returning value of a column fixture with a string that contains a symbol.<br/>The symbol in the string must be place in $[..].<br/><br/><h3 id="Demonstrationofcomparingwithtextthatcontainsonesymbol">Demonstration of comparing with text that contains one symbol:</h3>
 <table>
 	<tr>
 		<td>CompareValues</td>

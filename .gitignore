@@ -11,6 +11,9 @@ wiki/FitNesseRoot/PageFooter
 wiki/FitNesseRoot/PageHeader
 wiki/FitNesseRoot/RecentChanges*
 wiki/FitNesseRoot/TemplateLibrary
+wiki/FitNesseRoot/content.txt
+wiki/FitNesseRoot/properties.xml
+wiki/FitNesseRoot/PlugIns/content.txt
 wiki/fixtures/
 properties
 updateDoNotCopyOverList
@@ -31,6 +34,15 @@ copy/greetingCopy.txt
 greeting.html
 wiki/FitNesseRoot/files/fileFixture
 wiki/FitNesseRoot/files/test
+wiki/FitNesseRoot/files/base64
 wiki/webdrivers
 /src/test/resources/htmlReports/index.html
+/src/test/resources/htmlReports/test-results.json
+/src/test/resources/htmlReports/test-results.csv
+/src/test/resources/htmlReports/*/css/*
+!/src/test/resources/htmlReports/Fit/css/*
+/src/test/resources/htmlReports/*/files/*
+/src/test/resources/htmlReports/*/images/*
+/src/test/resources/htmlReports/*/javascript/*
 wiki/FitNesseRoot/HsacExamples/SlimTests/UtilityFixtures/GeneratedSymbolicLinkSuite/*LocaleTests.wiki
+wiki/FitNesseRoot/ReRunLastFailures.wiki

@@ -1,6 +1,17 @@
 ---
 Help: Information on impact of upgrading to a newer version of this project
 ---
+!2 Version 3 to 4
+The main difference between versions 3 and 4 is that the Maven classpath plugin is no longer included. The plugin did not always work reliably, was no longer being maintained, faster disks make copying dependencies to 'wiki/fixtures' less of an issue and dependency change occur very infrequently.
+
+The impact of no longer bundling this plugin:
+ * When running the wiki via Maven one now has to explicitly add ''dependency:copy-dependencies'' to the command line.
+  * So instead of using !style_code[mvn compile exec:exec] one should do !style_code[mvn compile dependency:copy-dependencies exec:exec].
+  * If dependencies in the !style_code[pom.xml] file are changed, the wiki must be restarted before they are picked up.
+  * (The wiki can be started as before when using the standalone.zip version, or an own project based on either the archetype or sample project.)
+ * For the wiki pages: the line !style_code[!pomFile ../pom.xml@compile] can be removed (usually present on the top-level suite page).
+ * In the !style_code[wiki/plugins.properties] file, the line !style_code[!-SymbolTypes = fitnesse.wikitext.widgets.MavenClasspathSymbolType-!] can be removed.
+
 !2 Version 1.10 to 2.0
 The main differences between version 1.10 and 2.0 are in the way elements are found by !-BrowserTest-!. That is also why this is a major version upgrade: the changes will likely impact both the wiki test page content and any fixture subclasses created for test suites using this project.
 

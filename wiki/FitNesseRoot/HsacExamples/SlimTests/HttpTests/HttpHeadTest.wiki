@@ -1,0 +1,9 @@
+!2 Http HEAD
+
+Performs HTTP HEAD, which requests only the status code and headers of a server (i.e. no body).
+
+|script   |json http test              |
+|head from|https://httpbin.org/anything|
+|check    |response status|200         |
+|show     |response headers            |
+|check    |response       |null        |

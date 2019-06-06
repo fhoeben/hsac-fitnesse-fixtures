@@ -1,0 +1,40 @@
+This test ensures a link is still clicked when it is covered by another element, but is uncovered before the timout expires. This is a common pattern where AJAX is involved, when a loading spinner covers a clickable element until the AJAX request has finished.
+
+!define HTML { {{{
+<html>
+<body onload="startRemoveCoverTimer()">
+<div style="width: 200px; height: 200px; position: relative">
+	<a href="">The Link</a>
+	<div id="cover" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.5)"></div>
+</div>
+<script type="text/javascript">
+	function startRemoveCoverTimer() {
+    	setTimeout(removeCover, 2000);
+    }
+
+    function removeCover() {
+    	document.getElementById('cover').style.display = 'none';
+    }
+</script>
+</body>
+</html>}}} }
+
+!*> Mock server
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+*!
+
+|script                |browser test               |
+|open                  |$url                       |
+|seconds before timeout|1                          |
+|reject                |click if available|The Link|
+|seconds before timeout|4                          |
+|click                 |The Link                   |
+
+|script|mock xml server setup|
+|stop                        |
+

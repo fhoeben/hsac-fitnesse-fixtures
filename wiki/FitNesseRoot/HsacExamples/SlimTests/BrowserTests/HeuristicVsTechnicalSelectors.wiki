@@ -1,5 +1,6 @@
 ---
 Help: Highlight difference between using our heuristics in tests vs 'normal' Selenium (i.e. technical) selectors
+Prune
 Test
 ---
 This page shows the same test twice: once using the [[heuristics in !-BrowserTest-!][FindingByHeuristics]], and then using [[technical selectors][TechnicalSelectors]]. In both cases we will be booking a trip using Expedia. Because Expedia is not the fastest of sites, both scripts also showcase that !-BrowserTest-! waits for elements to appear, without the need for explicit 'wait' operations. Unfortunately the speed of Expedia also means this page is quite slow to complete.
@@ -7,12 +8,10 @@ This page shows the same test twice: once using the [[heuristics in !-BrowserTes
 We believe this comparison will highlight the benefits of using the heuristics over technical selectors. The result is a more readable (and maintainable) test without the need for custom code (like 'page objects') or extensive 'scenario libraries' just to make test scripts readable. Tests using the heuristics are easier to write, to understand, ''and'' do not require a completed implementation before they can be written.
 
 !*> Some common setup
-|scenario              |open Expedia.com                                                |
-|seconds before timeout|20                                                              |
-|open                  |http://expedia.com                                              |
-|set browser width     |1200                                                            |
-|note                  |!note Expedia might route us to a localized version of the site |
-|show                  |click if available|link=Continue to the U.S. site at Expedia.com|
+|scenario              |open Expedia.com                                                                                                                     |
+|seconds before timeout|20                                                                                                                                   |
+|open                  |https://www.expedia.com/IpSniffRedir?forceNoRedir=1&userTpid=1&targetUrl=https%3A%2F%2Fwww.expedia.com%2F%3Frfrr%3DHeader.POSRedirect|
+|set browser width     |1200                                                                                                                                 |
 
 |scenario|cleanup for next test                     |
 |note    |!note Cleanup for fresh start of next test|
@@ -39,6 +38,7 @@ This version shows a test can be understood, and even written, by people without
 |seconds before timeout|60                                                                                                       |
 |click                 |Search                                                                                                   |
 |wait for visible      |Start by choosing your hotel                                                                             |
+|show                  |click if available                                  |Reset                                               |
 |click                 |Neighborhood                                                                                             |
 |click                 |Broadway - Times Square                             |in                   |Neighborhood                  |
 |click                 |Guest Rating                                                                                             |
@@ -50,6 +50,7 @@ This version shows a test can be understood, and even written, by people without
 |click                 |Select Junior, Executive Suite                                                                           |
 |wait for visible      |Select your departure to New York                                                                        |
 |cleanup for next test                                                                                                           |
+
 !2 Technical Selector Based
 
 The test using technical selectors require knowledge on the various way an element can be selected using Selenium and can only be created after implementation, because only then will implementation details like ids and classes be known. Writing tests using technical selectors takes quite a bit of puzzeling through the site's HTML and therefore creation of a test using this approach takes more time. Furthermore, technical changes without real end-user impact, will probably require maintenance effort to ensure the test keeps working. On the other hand: the execution time of this type of test will be a bit shorter than for the heuristics one (especially in other browsers than Chrome), as !-BrowserTest-! does not have to try various options to locate elements, the test's authors have done that work.
@@ -67,6 +68,7 @@ Although the identifiers used inside Expedia's HTML are quite descriptive, this 
 |seconds before timeout|60                                                                    |
 |click                 |id=search-button-hp-package                                           |
 |wait for visible      |id=hotelResultTitle                                                   |
+|show                  |click if available               |css=.resetFilterButton              |
 |click                 |id=neighborhood-legend                                                |
 |click                 |id=neighborhood1                                                      |
 |click                 |xpath=//button[@aria-label='Sort by: Guest Rating']                   |

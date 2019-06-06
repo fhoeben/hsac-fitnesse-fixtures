@@ -1,0 +1,49 @@
+This test ensures we can deal with alerts that may or may not exist.
+
+!define HTML { {{{
+<html>
+<body>
+<button onclick="confirm('Hello');">Open alert</button>
+<label>Name<input value="John"/></label>
+</body>
+</html>}}} }
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script                |browser test              |
+|open                  |$url                      |
+|seconds before timeout|1                         |
+|click                 |Open alert                |
+|check                 |alert text|Hello          |
+|ensure                |dismiss alert if available|
+|check                 |alert text|null           |
+|reject                |dismiss alert if available|
+|click                 |Open alert                |
+|check                 |alert text|Hello          |
+|ensure                |confirm alert if available|
+|check                 |alert text|null           |
+|reject                |confirm alert if available|
+|click                 |Open alert                |
+|check                 |alert text|Hello          |
+
+Selenium cannot do anything with a browser window, except interact with the alert, when an alert is present.
+If a new instance of browser test is started we don't want it to be blocked, just because a previous test left open an alert.
+So the open alert should be closed automatically (by confirm).
+
+|script|browser test|1        |
+|check |alert text  |null     |
+|check |value of    |Name|John|
+|click |Open alert            |
+|check |alert text  |Hello    |
+
+But this automatic confirm can be disabled...
+
+|script|browser test|1|false|
+|check |alert text  |Hello  |
+|confirm alert              |
+
+|script|mock xml server setup|
+|stop                        |
+

@@ -1,8 +1,10 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import nl.hsac.fitnesse.fixture.util.XMLValidator;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,7 +45,7 @@ public class XmlHttpTest extends HttpTest {
      */
     public String allXPathMatches(String xPathExpr) {
         String result = null;
-        List<String> allXPath = getResponse().getAllXPath(xPathExpr);
+        List<String> allXPath = listXPathMatches(xPathExpr);
         if (allXPath != null && !allXPath.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             sb.append("<div><ul>");
@@ -56,6 +58,11 @@ public class XmlHttpTest extends HttpTest {
             result = sb.toString();
         }
         return result;
+    }
+
+    public ArrayList<String> listXPathMatches(String xPathExpr) {
+        List<String> results = getResponse().getAllXPath(xPathExpr);
+        return results instanceof ArrayList? (ArrayList<String>) results : new ArrayList<>(results);
     }
 
     /**
@@ -108,9 +115,24 @@ public class XmlHttpTest extends HttpTest {
         }
     }
 
-    protected String createFileFromBase64(String baseName, String base64Content) {
-        Base64Fixture base64Fixture = new Base64Fixture();
-        return base64Fixture.createFrom(baseName, base64Content);
+    /**
+     * Validate the loaded xml against a schema in file xsdFileName
+     * @param xsdFileName filename of the xsd to use
+     * @return true if the response xml validates against the schema. Throws a descriptive exception otherwise
+     */
+    public boolean validateResponseAgainstXsdFile(String xsdFileName) {
+        String xsdContent = new FileFixture().textIn(xsdFileName);
+        return new XMLValidator().validateAgainst(getResponse().getResponse(), xsdContent);
+    }
+
+    /**
+     * Validate the loaded xml against a schema provided from the wiki page
+     * @param xsdSchema xsd schema to use
+     * @return true if the response xml validates against the schema. Throws a descriptive exception otherwise
+     */
+    public boolean validateResponseAgainstXsd(String xsdSchema) {
+        String xsdContent = cleanupValue(xsdSchema);
+        return new XMLValidator().validateAgainst(getResponse().getResponse(), xsdContent);
     }
 
     @Override

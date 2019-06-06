@@ -2,8 +2,11 @@ package nl.hsac.fitnesse.junit;
 
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesseContext;
-import fitnesse.components.PluginsClassLoader;
+import fitnesse.components.PluginsClassLoaderFactory;
+import fitnesse.junit.DescriptionFactory;
 import fitnesse.junit.FitNesseRunner;
+import fitnesse.reporting.RerunSuiteFormatter;
+import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.wiki.WikiPage;
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.slim.web.LayoutTest;
@@ -84,7 +87,8 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     public final static String SUITE_FILTER_STRATEGY_OVERRIDE_VARIABLE_NAME = "suiteFilterStrategy";
     public final static String SUITE_FILTER_OVERRIDE_VARIABLE_NAME = "suiteFilter";
     public final static String EXCLUDE_SUITE_FILTER_OVERRIDE_VARIABLE_NAME = "excludeSuiteFilter";
-    private final static String SELENIUM_DEFAULT_TIMEOUT_PROP = "seleniumDefaultTimeout";
+    public final static String SELENIUM_DEFAULT_TIMEOUT_PROP = "seleniumDefaultTimeout";
+    public final static String RE_RUN_SUITE_LOCATION_OVERRIDE_VARIABLE_NAME = "reRunSuiteLocation";
     protected final List<SeleniumDriverFactoryFactory> factoryFactories = new ArrayList<>();
 
     public HsacFitNesseRunner(Class<?> suiteClass) throws InitializationError {
@@ -198,9 +202,11 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     protected FitNesseContext createContext(Class<?> suiteClass) throws Exception {
         // disable maven-classpath-plugin, we expect all jars to be loaded as part of this jUnit run
         System.setProperty("fitnesse.wikitext.widgets.MavenClasspathSymbolType.Disable", "true");
-        new PluginsClassLoader(getFitNesseDir(suiteClass)).addPluginsToClassLoader();
 
-        return super.createContext(suiteClass);
+        ClassLoader cl = PluginsClassLoaderFactory.getClassLoader(getFitNesseDir(suiteClass));
+        ContextConfigurator configurator = initContextConfigurator().withClassLoader(cl);
+
+        return configurator.makeFitNesseContext();
     }
 
     @Override
@@ -239,6 +245,26 @@ public class HsacFitNesseRunner extends FitNesseRunner {
             }
         }
 
+    }
+
+    @Override
+    protected void addTestSystemListeners(RunNotifier notifier, MultipleTestsRunner testRunner, Class<?> suiteClass, DescriptionFactory descriptionFactory) {
+        super.addTestSystemListeners(notifier, testRunner, suiteClass, descriptionFactory);
+
+        try {
+            String fitNesseRootDir = getReRunSuiteLocation(suiteClass);
+            testRunner.addTestSystemListener(new RerunSuiteFormatter(new File(fitNesseRootDir, "ReRunLastFailures.wiki")));
+        } catch (Exception e) {
+            System.err.println("Unable to create re-run suite generator: " + e);
+        }
+    }
+
+    protected String getReRunSuiteLocation(Class<?> suiteClass) throws InitializationError {
+        String reRunSuiteLocation = System.getProperty(RE_RUN_SUITE_LOCATION_OVERRIDE_VARIABLE_NAME);
+        if (StringUtils.isEmpty(reRunSuiteLocation)) {
+            reRunSuiteLocation = getFitNesseDir(suiteClass) + "/" + getFitNesseRoot(suiteClass);
+        }
+        return reRunSuiteLocation;
     }
 
     @Override

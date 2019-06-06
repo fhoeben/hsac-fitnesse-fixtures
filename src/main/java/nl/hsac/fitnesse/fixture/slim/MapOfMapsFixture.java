@@ -1,13 +1,13 @@
 package nl.hsac.fitnesse.fixture.slim;
 
-import fitnesse.slim.Converter;
-import fitnesse.slim.converters.ConverterRegistry;
+import fitnesse.slim.SlimSymbol;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 
 /**
  * Fixture which allows the definition of a map of maps using a table where the each column represents a top-level map.
@@ -96,33 +96,17 @@ public class MapOfMapsFixture extends SlimTableFixture {
                 String headerCell = header.get(i);
                 Map<String, Object> map = maps.get(headerCell);
                 String cell = row.get(i);
-                cell = replaceSymbolsInString(cell);
-                Object value = parseValue(cell);
+                Object value = cell;
+                if (StringUtils.isNotEmpty(cell)) {
+                    Matcher symbolMatcher = SlimSymbol.SYMBOL_PATTERN.matcher(cell);
+                    if (symbolMatcher.matches()) {
+                        value = getSymbolValue(symbolMatcher);
+                    } else {
+                        value = replaceSymbolsInString(cell);
+                    }
+                }
                 getMapHelper().setValueForIn(value, key, map);
             }
         }
-    }
-
-    protected Object parseValue(String cell) {
-        Object result = cell;
-        try {
-            Converter<Map> converter = getConverter(cell);
-            if (converter != null) {
-                result = converter.fromString(cell);
-            }
-        } catch (Throwable t) {
-            System.err.println("Unable to parse cell value: " + cell);
-            t.printStackTrace();
-        }
-        return result;
-    }
-
-    protected Converter<Map> getConverter(String cell) {
-        Converter<Map> converter = null;
-        if (cell.startsWith("<table class=\"hash_table\">")
-                && cell.endsWith("</table>")) {
-            converter = ConverterRegistry.getConverterForClass(Map.class);
-        }
-        return converter;
     }
 }

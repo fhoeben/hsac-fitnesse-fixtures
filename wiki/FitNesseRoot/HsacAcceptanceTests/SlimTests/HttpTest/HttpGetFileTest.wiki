@@ -1,0 +1,22 @@
+---
+Help: Ensure we can download from a url to file
+---
+|script      |mock xml server setup|
+|add response|Downloaded text      |
+|$url=       |get mock server url  |
+
+|script|http test                           |
+|$file=|get file from  |$url.txt            |
+|check |response status|200                 |
+|check |response       |RG93bmxvYWRlZCB0ZXh0|
+
+|script|file fixture                       |
+|check |base name of|$file|!-FitNesseMock-!|
+|check |extension of|$file|txt             |
+|check |text in     |$file|Downloaded text |
+|delete|$file                              |
+
+|table: Mock Server Message Report|
+
+|script|mock xml server setup|
+|stop                        |

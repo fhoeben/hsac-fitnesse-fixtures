@@ -28,6 +28,20 @@ This test ensures we can work with lists and select boxes. We use a mock server 
     <li>8th</li>
     <li><span>9th</span></li>
 </ol>
+<ol id="multiline">
+    <li><span> 10</span><span>th </span></li>
+    <li><a><i></i>
+            <span>11</span><i></i>
+            <span>th</span>
+        </a>
+    </li>
+    <li><a><span>12</span><br/>th</a></li>
+    <li><br/><span>&euro;&nbsp;13</span><span>,</span><span>--</span></li>
+    <li><div>
+        <span>&euro;&nbsp;14</span>,<span>-- </span>
+        </div>
+    </li>
+</ol>
 <label for="s">Option to&nbsp;choose</label>
 <select id="s">
     <option value="1">Option 1</option>
@@ -42,6 +56,13 @@ This test ensures we can work with lists and select boxes. We use a mock server 
     <option value="3" selected>Option 7</option>
     <option value="4">Option 8</option>
 </select>
+<label for="s3">Option to choose with whitespace</label>
+<select id="s3">
+    <option value="1">Option &nbsp;1</option>
+    <option value="2" disabled>Option 2</option>
+    <option value="3" selected>Option 3&nbsp;</option>
+    <option value="4"> Option   4</option>
+</select>
 
 </body>
 </html>}}} }
@@ -52,44 +73,62 @@ This test ensures we can work with lists and select boxes. We use a mock server 
 
 Ensure we use our custom list formatting.
 
-|script     |list fixture|
-|display lists numbered  |
-|add        |1st         |
-|add        |2nd         |
-|add        |4th         |
-|$ul=       |copy list   |
-|set value  |3rd  |at |1 |
-|$ol=       |copy list   |
-|reset                   |
-|add        |Option 6    |
-|add        |Option 7    |
-|$selected= |copy list   |
-|reset                   |
-|add        |Option 1    |
-|add        |Option 3    |
-|add        |Option 4    |
-|$available=|copy list   |
+|script      |list fixture|
+|display lists numbered   |
+|add         |1st         |
+|add         |2nd         |
+|add         |4th         |
+|$ul=        |copy list   |
+|set value   |3rd|at|1    |
+|$ol=        |copy list   |
+|reset                    |
+|add         |Option 6    |
+|add         |Option 7    |
+|$selected=  |copy list   |
+|reset                    |
+|add         |Option 1    |
+|add         |Option 3    |
+|add         |Option 4    |
+|$available= |copy list   |
+|reset                    |
+|add         |10th        |
+|add         |11 th       |
+|add         |!-12
+th-!   |
+|add         |€ 13,--     |
+|add         |€ 14,--     |
+|$multiline= |copy list   |
+|reset                    |
+|add         |10th        |
+|add         |11 th       |
+|add         |12 th       |
+|add         |€ 13,--     |
+|add         |€ 14,--     |
+|$multiline2=|copy list   |
 
-|script                |browser test                                            |
-|open                  |$url                                                    |
-|seconds before timeout|1                                                       |
-|check                 |value of             |Option to choose |Option 3        |
-|select                |Option 1             |for              |Option to choose|
-|click if available    |Option 4                                                |
-|reject                |click if available   |Option 2                          |
-|check                 |value of             |xpath=//ul/li[2] |2nd             |
-|check                 |value of             |xpath=//ol/li[4] |4th             |
-|check                 |values of            |xpath=//ul       |$ul             |
-|check                 |values of            |xpath=//ol[1]    |$ol             |
-|check                 |values of            |Options to choose|$selected       |
-|check                 |number for           |1st              |5               |
-|check                 |number for           |2nd              |null            |
-|check                 |number for           |4th              |7               |
-|check                 |number for           |6th              |2               |
-|check                 |number for           |5t               |1               |
-|check                 |number for           |8th              |11              |
-|check                 |number for           |9t               |12              |
-|check                 |available options for|Option to choose |$available      |
+|script                |browser test                                                                       |
+|open                  |$url                                                                               |
+|seconds before timeout|1                                                                                  |
+|check                 |values of                       |id=multiline                     |$multiline      |
+|check                 |normalized values of            |id=multiline                     |$multiline2     |
+|check                 |value of                        |Option to choose                 |Option 3        |
+|select                |Option 1                        |for                              |Option to choose|
+|click if available    |Option 4                                                                           |
+|reject                |click if available              |Option 2                                          |
+|check                 |value of                        |xpath=//ul/li[2]                 |2nd             |
+|check                 |value of                        |xpath=//ol/li[4]                 |4th             |
+|check                 |values of                       |xpath=//ul                       |$ul             |
+|check                 |values of                       |xpath=//ol[1]                    |$ol             |
+|check                 |values of                       |Options to choose                |$selected       |
+|check                 |number for                      |1st                              |5               |
+|check                 |number for                      |2nd                              |null            |
+|check                 |number for                      |4th                              |7               |
+|check                 |number for                      |6th                              |2               |
+|check                 |number for                      |5t                               |1               |
+|check                 |number for                      |8th                              |11              |
+|check                 |number for                      |9t                               |12              |
+|check                 |available options for           |Option to choose                 |$available      |
+|check                 |normalized available options for|Option to choose with whitespace|$available      |
 
 
 |script|mock xml server setup|

@@ -3,7 +3,11 @@ Help: Renders Freemarker template to wiki
 Test
 ---
 The Freemarker Fixture allows a [[Freemarker][http://freemarker.org]] template to be rendered to the wiki. This allows the template result to be sent to an application being tested, or saved as a mock server's response. It is usable both in [[script tables][#scripts]] and [[dynamic decision tables][#ddt]].
-The templates are loaded from the 'template' directory on the class path (e.g. /fixtures/template in a standalone installation).
+
+The templates are loaded from the 'templates' directory on the class path (e.g. !style_code[fixtures/templates] in a standalone installation, or !style_code[wiki/fixtures/templates] in a Maven project based on the [[sample project][https://github.com/fhoeben/sample-fitnesse-project]] or [[archetype][https://github.com/fhoeben/fitnesse-project-archetype]]). This location cannot be changed, but subdirectories can be used (by starting a template name with !style_code[subdirectoryname/]).
+
+To edit/add templates, modify/place them in the !style_code[src/main/resources/templates] folder and rebuild the project using !style_code[mvn compile] (or your IDE). This will allow the fixture to find the files.
+!note When debugging a template you can, of course, directly edit the files below !style_code[fixtures/templates]. But '''be warned''': that location is not normally under version control and your changes will be overwritten when a new build is performed.
 
 If the template's name contains !style_code[.xml] or !style_code[.json] the template's output will be formatted and shown as XML or JSON in the wiki.
 !anchor ddt

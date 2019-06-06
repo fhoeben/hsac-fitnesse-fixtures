@@ -87,6 +87,25 @@ public class MapFixture extends SlimFixtureWithMap {
     }
 
     /**
+     * Adds value to a list map.
+     * @param value value to be passed.
+     * @param name name to use this value for.
+     * @param map map to store value in.
+     */
+    public void addValueToIn(Object value, String name, Map<String, Object> map) {
+        getMapHelper().addValueToIn(value, name, map);
+    }
+
+    /**
+     * Adds all values in the supplied map to the current values.
+     * @param otherMap to obtain values from.
+     * @param map map to store value in.
+     */
+    public void copyValuesFromTo(Map<String, Object> otherMap, Map<String, Object> map) {
+        getMapHelper().copyValuesFromTo(otherMap, map);
+    }
+
+    /**
      * Stores list of values in map.
      * @param values comma separated list of values.
      * @param name name to use this list for.
@@ -143,15 +162,15 @@ public class MapFixture extends SlimFixtureWithMap {
     /**
      * @return all values in the map.
      */
-    public List<String> allKeys() {
-        return new ArrayList<String>(getCurrentValues().keySet());
+    public ArrayList<String> allKeys() {
+        return new ArrayList<>(getCurrentValues().keySet());
     }
 
     /**
      * @return all values in the map.
      */
-    public List<Object> allValues() {
-        return new ArrayList<Object>(getCurrentValues().values());
+    public ArrayList<Object> allValues() {
+        return new ArrayList<>(getCurrentValues().values());
     }
 
     /**

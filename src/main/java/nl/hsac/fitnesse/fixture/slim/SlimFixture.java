@@ -3,9 +3,14 @@ package nl.hsac.fitnesse.fixture.slim;
 import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 import fitnesse.slim.fixtureInteraction.InteractionAwareFixture;
 import nl.hsac.fitnesse.fixture.Environment;
+import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.time.StopWatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.function.Supplier;
@@ -14,6 +19,7 @@ import java.util.function.Supplier;
  * Base class for Slim fixtures.
  */
 public class SlimFixture  implements InteractionAwareFixture {
+    protected final Logger logger;
     private Environment environment = Environment.getInstance();
     private int repeatInterval = 100;
     private int repeatMaxCount = Integer.MAX_VALUE;
@@ -21,6 +27,10 @@ public class SlimFixture  implements InteractionAwareFixture {
     private int repeatCount = 0;
     private long repeatTime = 0;
     protected final String filesDir = getEnvironment().getFitNesseFilesSectionDir();
+
+    public SlimFixture() {
+        logger = LoggerFactory.getLogger(getClass());
+    }
 
     @Override
     public Object aroundSlimInvoke(FixtureInteraction interaction, Method method, Object... arguments)
@@ -146,15 +156,25 @@ public class SlimFixture  implements InteractionAwareFixture {
         repeatTimer.start();
         StopWatch loopTimer = new StopWatch();
         loopTimer.start();
-        boolean result = repeat.isFinished();
+        boolean result = false;
         try {
+            try {
+                result = repeat.isFinished();
+            } catch (RuntimeException e) {
+                logger.warn("Error while checking we can stop repeating before starting loop", e);
+            }
             for (repeatCount = 0; !result && repeatCount < repeatMaxCount; repeatCount++) {
                 int nextInterval = getNextInterval(loopTimer);
                 waitMilliseconds(nextInterval);
 
                 loopTimer.start();
                 repeat.repeat();
-                result = repeat.isFinished();
+                try {
+                    result = repeat.isFinished();
+                } catch (RuntimeException e) {
+                    logger.warn("Error while checking whether we can stop repeating, loop count {} of {}",
+                            repeatCount, repeatMaxCount, e);
+                }
             }
         } finally {
             repeatTime = repeatTimer.getTime();
@@ -257,12 +277,48 @@ public class SlimFixture  implements InteractionAwareFixture {
     // Polling
 
     /**
+     * Creates a file using the supplied content.
+     * @param dir directory to create file in.
+     * @param fileName name for file.
+     * @param content content to save.
+     * @return link to created file.
+     */
+    protected String createFile(String dir, String fileName, byte[] content) {
+        String baseName = FilenameUtils.getBaseName(fileName);
+        String ext = FilenameUtils.getExtension(fileName);
+        String downloadedFile = FileUtil.saveToFile(dir + baseName, ext, content);
+        return linkToFile(downloadedFile);
+    }
+
+    /**
      * Converts a file path into a relative wiki path, if the path is insides the wiki's 'files' section.
      * @param filePath path to file.
      * @return relative URL pointing to the file (so a hyperlink to it can be created).
      */
     protected String getWikiUrl(String filePath) {
         return getEnvironment().getWikiUrl(filePath);
+    }
+
+    /**
+     * Creates a wiki link to a file.
+     * @param f file.
+     * @return link referencing the file.
+     */
+    protected String linkToFile(String f) {
+        return linkToFile(new File(f));
+    }
+
+    /**
+     * Creates a wiki link to a file.
+     * @param f file.
+     * @return link referencing the file.
+     */
+    protected String linkToFile(File f) {
+        String url = getWikiUrl(f.getAbsolutePath());
+        if (url == null) {
+            url = f.toURI().toString();
+        }
+        return String.format("<a href=\"%s\" target=\"_blank\">%s</a>", url, f.getName());
     }
 
     /**

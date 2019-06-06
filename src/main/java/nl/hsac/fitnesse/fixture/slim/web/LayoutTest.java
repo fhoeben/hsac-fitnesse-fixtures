@@ -19,7 +19,14 @@ import org.openqa.selenium.WebDriver;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Fixture to check web page layout using Galen Framework.
@@ -192,7 +199,7 @@ public class LayoutTest extends SlimFixtureWithMap {
 
     protected String createLinkToGalenReport(int testCount, GalenTestInfo last) {
         String baseName = GalenUtils.convertToFileName(last.getName());
-        String fileName = String.format("%s-%s.HTML", testCount, baseName);
+        String fileName = String.format("%s-%s.html", testCount, baseName);
         String testPath = new File(getReportBase(), fileName).getPath();
         return String.format("<a href=\"%s\">%s</a>", getWikiUrl(testPath), fileName);
     }
@@ -200,13 +207,12 @@ public class LayoutTest extends SlimFixtureWithMap {
     protected void generateHtmlReports() throws IOException {
         String dir = getReportBase();
         new HtmlReportBuilder().build(ALL_TESTS, dir);
-        FileUtil.ensureNoHtmlFiles(dir);
         String link = createRelativeLinkToOverallReport(dir);
         getEnvironment().setSymbol(REPORT_OVERVIEW_SYMBOL, link);
     }
 
     protected String createRelativeLinkToOverallReport(String dir) {
-        String report = new File(dir, "report.HTML").getPath();
+        String report = new File(dir, "report.html").getPath();
         String rootDir = getEnvironment().getFitNesseRootDir();
         return FileUtil.getRelativePath(rootDir, report);
     }

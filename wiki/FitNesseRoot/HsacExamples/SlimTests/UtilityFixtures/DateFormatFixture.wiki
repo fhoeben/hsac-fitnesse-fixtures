@@ -84,3 +84,14 @@ Now the calls to the formatting methods behave differently again (the date might
 |show  |format timestamp|$stamp|as|yyyy/MM/dd HH:mm:ss|
 |show  |format timestamp|$stamp                       |
 
+It's also possible to use an locale that is not your default locale:
+
+|library                                                  |
+|date format fixture|EEE, MMM dd yyyy HH:mm:ss z|UTC|en_US|
+
+Now we can also convert localized date strings:
+
+|script|string fixture                                                                           |
+|check |format date     |Thu, Dec 14 2017 11:50:00 UTC|as|dd-MM-yyyy HH:mm:ss|14-12-2017 11:50:00|
+|show  |format timestamp|$stamp                                                                  |
+

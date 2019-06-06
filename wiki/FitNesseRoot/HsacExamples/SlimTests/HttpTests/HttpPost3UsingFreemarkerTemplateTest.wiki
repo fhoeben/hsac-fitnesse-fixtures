@@ -2,37 +2,36 @@
 
 By using a Freemarker template we can have more dynamic body content.
 
-!define GLOBAL_WEATHER_URL {http://www.webservicex.com/globalweather.asmx}
-!define GLOBAL_WEATHER_TEMPLATE_NAME {samplePost.ftl.xml}
+!define ADD_TEMPLATE_NAME {samplePost.ftl.xml}
 
-!3 Don't send a cityName element: error
+!3 Don't send a second argument element: error
 
-The Freemarker template will not send a cityName element if no value is supplied (the whole element will be omitted, as can be seen in the request below). The service will not like this.
+The Freemarker template will not send a arg2 element if no value is supplied (the whole element will be omitted, as can be seen in the request below). The service will not like this.
 Omitting the element on a null value could not be done when the body was in the scenario content.
 
 |script   |xml http test                                                                                                |
-|template |${GLOBAL_WEATHER_TEMPLATE_NAME}                                                                              |
-|set value|http://www.webserviceX.NET/GetWeather                 |for header                |SOAPAction                 |
-|set value|Canada                                                |for                       |countryName                |
+|template |${ADD_TEMPLATE_NAME}                                                                                         |
+|set value|${ACTION}       |for header|SOAPAction                                                                       |
+|set value|10              |for       |arg1                                                                             |
 |note     |the following 'post' is prefixed with 'reject' as the fixture will return false when a soap fault is returned|
-|reject   |post template to                                      |${GLOBAL_WEATHER_URL}                                 |
-|check    |response status                                       |500                                                   |
+|reject   |post template to|${URL}                                                                                      |
+|check    |response status |400                                                                                         |
 |show     |request                                                                                                      |
 |show     |response                                                                                                     |
 
-!3 Send a cityName element: success
+!3 Send a second argument element: success
 
-When a cityName value is set the enclosing element is sent by the Freemarker template (as visible in the shown request content below), and the SOAP call will succeed.
+When a second argument value is set the enclosing element is sent by the Freemarker template (as visible in the shown request content below), and the SOAP call will succeed.
 
-|script          |xml http test                                                                   |
-|template        |${GLOBAL_WEATHER_TEMPLATE_NAME}                                                 |
-|set value       |http://www.webserviceX.NET/GetWeather  |for header   |SOAPAction                |
-|set value       |Canada                                 |for          |countryName               |
-|set value       |Vancouver International Air-Port, B. C.|for          |cityName                  |
-|post template to|${GLOBAL_WEATHER_URL}                                                           |
-|check           |response status                        |200                                     |
-|show            |request                                                                         |
-|show            |response headers                                                                |
-|show            |response                                                                        |
-|register prefix |wsX                                    |for namespace|http://www.webserviceX.NET|
-|show            |xPath                                  |!-//wsX:GetWeatherResult/text()-!       |
+|script          |xml http test                                                           |
+|template        |${ADD_TEMPLATE_NAME}                                                    |
+|set value       |${ACTION}      |for header                           |SOAPAction        |
+|set value       |10             |for                                  |arg1              |
+|set value       |30             |for                                  |arg2              |
+|post template to|${URL}                                                                  |
+|check           |response status|200                                                     |
+|show            |request                                                                 |
+|show            |response headers                                                        |
+|show            |response                                                                |
+|register prefix |tempuri        |for namespace                        |http://tempuri.org|
+|check           |xPath          |!-//tempuri:AddIntegerResult/text()-!|40                |

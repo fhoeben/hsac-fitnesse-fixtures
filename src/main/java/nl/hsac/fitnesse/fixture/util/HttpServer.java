@@ -2,9 +2,12 @@ package nl.hsac.fitnesse.fixture.util;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpHandler;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.ParseException;
 import org.apache.http.entity.ContentType;
 import org.apache.http.protocol.HTTP;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Receiver for a callback from application being tested.
  */
 public class HttpServer<T extends HttpResponse> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HttpServer.class);
     private static final Charset UTF8 = ContentType.parse(XmlHttpResponse.CONTENT_TYPE_XML_TEXT_UTF8).getCharset();
     public static final int MAX_PORT = 65535;
 
@@ -179,16 +183,26 @@ public class HttpServer<T extends HttpResponse> {
         return he -> {
             // ensure we never handle multiple requests at the same time
             synchronized (lock) {
+                String method = he.getRequestMethod();
+                String uri = he.getRequestURI().toString();
+                LOGGER.debug("Handling {} request for {}", method, uri);
                 OutputStream os = null;
                 try {
                     String request;
-                    if ("POST".equals(he.getRequestMethod()) || "PUT".equals(he.getRequestMethod())) {
-                        InputStream is = he.getRequestBody();
-                        request = FileUtil.streamToString(is, String.format("http %s request", he.getRequestMethod()));
+                    InputStream is = he.getRequestBody();
+                    String body = IOUtils.toString(is);
+
+                    if ("POST".equals(method)
+                            || "PUT".equals(method)
+                            || ("DELETE".equals(method) && !"".equals(body))
+                            || "PATCH".equals(method)
+                    ) {
+                        request = body;
                     } else {
-                        request = String.format("%s: %s", he.getRequestMethod(), he.getRequestURI().toString());
+                        request = String.format("%s: %s", method, uri);
                     }
                     aResponse.setRequest(request);
+                    aResponse.setMethod(method);
 
                     Headers heHeaders = he.getResponseHeaders();
                     Map<String, Object> responseHeaders = aResponse.getResponseHeaders();
@@ -208,6 +222,8 @@ public class HttpServer<T extends HttpResponse> {
                     os = he.getResponseBody();
                     os.write(responseBytes);
                     os.flush();
+                } catch (RuntimeException e) {
+                    LOGGER.error("Error handling {} request for {}", method, uri, e);
                 } finally {
                     incrementRequestsReceived();
                     if (os != null) {

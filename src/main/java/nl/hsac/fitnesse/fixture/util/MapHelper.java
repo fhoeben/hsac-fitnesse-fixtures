@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 
 import java.util.ArrayList;
@@ -64,10 +65,7 @@ public class MapHelper {
                 name = name.replace("\\[]", "[]");
             }
             String cleanName = htmlCleaner.cleanupValue(name);
-            Object cleanValue = value;
-            if (value instanceof String) {
-                cleanValue = htmlCleaner.cleanupValue((String) value);
-            }
+            Object cleanValue = getCleanValue(value);
             if (map.containsKey(cleanName)) {
                 // overwrite current value
                 map.put(cleanName, cleanValue);
@@ -101,6 +99,33 @@ public class MapHelper {
     }
 
     /**
+     * Adds a value to the end of a list.
+     * @param value value to be passed.
+     * @param name name to use this value for.
+     * @param map map to store value in.
+     */
+    public void addValueToIn(Object value, String name, Map<String, Object> map) {
+        Object val = getValue(map, name);
+         if (val instanceof Collection) {
+             Object cleanValue = getCleanValue(value);
+             ((Collection) val).add(cleanValue);
+         } else if (val == null) {
+             setValueForIn(value, name + "[0]", map);
+         } else {
+            throw new SlimFixtureException(false, "name is not a list but: " + val.getClass().getSimpleName());
+         }
+    }
+
+    /**
+     * Adds all values in the otherMap to map.
+     * @param otherMap to obtain values from.
+     * @param map map to store value in.
+     */
+    public void copyValuesFromTo(Map<String, Object> otherMap, Map<String, Object> map) {
+        map.putAll(otherMap);
+    }
+
+    /**
      * Stores list of values in map.
      * @param values comma separated list of values.
      * @param name name to use this list for.
@@ -111,7 +136,7 @@ public class MapHelper {
         String[] valueArrays = values.split("\\s*,\\s*");
         List<Object> valueObjects = new ArrayList<Object>(valueArrays.length);
         for (int i = 0; i < valueArrays.length; i++) {
-            String cleanValue = htmlCleaner.cleanupValue(valueArrays[i]);
+            Object cleanValue = getCleanValue(valueArrays[i]);
             valueObjects.add(cleanValue);
         }
         setValueForIn(valueObjects, cleanName, map);
@@ -151,6 +176,17 @@ public class MapHelper {
         return result;
     }
 
+    public Object getCleanValue(Object value) {
+        Object cleanValue = value;
+        if (value instanceof String) {
+            cleanValue = htmlCleaner.parseValue((String) value);
+            if (cleanValue instanceof String) {
+                cleanValue = htmlCleaner.cleanupValue((String) cleanValue);
+            }
+        }
+        return cleanValue;
+    }
+
     protected Object getListValue(Map<String, Object> map, String name) {
         return getValue(map, stripListIndicator(name));
     }
@@ -159,6 +195,12 @@ public class MapHelper {
         Object value = null;
         String prop = getListKeyName(name);
         Object val = getValue(map, prop);
+        if (!(val instanceof List) && val instanceof ScriptObjectMirror) {
+            ScriptObjectMirror mirror = (ScriptObjectMirror) val;
+            if (mirror.isArray()) {
+                val = mirror.to(List.class);
+            }
+        }
         if (val instanceof List) {
             List list = (List) val;
             int index = getListIndex(name);

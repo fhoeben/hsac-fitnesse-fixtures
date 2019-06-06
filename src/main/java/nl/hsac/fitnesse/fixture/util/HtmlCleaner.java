@@ -1,7 +1,10 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import fitnesse.slim.Converter;
+import fitnesse.slim.converters.ConverterRegistry;
 import org.apache.commons.text.StringEscapeUtils;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,8 +12,8 @@ import java.util.regex.Pattern;
  * Helper to remove wiki formatting from strings.
  */
 public class HtmlCleaner {
-    private static final Pattern LINKPATTERN = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>(.*)", Pattern.CASE_INSENSITIVE);
-    private static final Pattern IMAGEPATTERN = Pattern.compile("<img src=\"(.*?)\"/>", Pattern.CASE_INSENSITIVE);
+    private static final Pattern LINKPATTERN = Pattern.compile("<a(\\s+.*?)?\\s+href=\"(.*?)\".*?>(.*?)</a>(.*)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern IMAGEPATTERN = Pattern.compile("<img(\\s+.*?)?\\s+src=\"(.*?)\".*?/>", Pattern.CASE_INSENSITIVE);
     private static final Pattern PRE_FORMATTED_PATTERN = Pattern.compile("<pre>\\s*(.*?)\\s*</pre>", Pattern.DOTALL);
 
     /**
@@ -24,11 +27,11 @@ public class HtmlCleaner {
             Matcher linkMatcher = LINKPATTERN.matcher(htmlLink);
             Matcher imgMatcher = IMAGEPATTERN.matcher(htmlLink);
             if (linkMatcher.matches()) {
-                String href = linkMatcher.group(1);
+                String href = linkMatcher.group(2);
                 href = StringEscapeUtils.unescapeHtml4(href);
-                result = href + linkMatcher.group(3);
+                result = href + linkMatcher.group(4);
             } else if (imgMatcher.matches()) {
-                String src = imgMatcher.group(1);
+                String src = imgMatcher.group(2);
                 result = StringEscapeUtils.unescapeHtml4(src);
             }
         }
@@ -60,7 +63,7 @@ public class HtmlCleaner {
         if (rawValue != null) {
             Matcher matcher = LINKPATTERN.matcher(rawValue);
             if (matcher.matches()) {
-                result = matcher.group(2) + matcher.group(3);
+                result = matcher.group(3) + matcher.group(4);
             } else {
                 result = cleanupPreFormatted(rawValue);
             }
@@ -83,5 +86,28 @@ public class HtmlCleaner {
             }
         }
         return result;
+    }
+
+    public Object parseValue(String value) {
+        Object result = value;
+        try {
+            Converter<Map> converter = getConverter(value);
+            if (converter != null) {
+                result = converter.fromString(value);
+            }
+        } catch (Throwable t) {
+            System.err.println("Unable to parse value: " + value);
+            t.printStackTrace();
+        }
+        return result;
+    }
+
+    protected Converter<Map> getConverter(String cell) {
+        Converter<Map> converter = null;
+        if (cell.startsWith("<table class=\"hash_table\">")
+                && cell.endsWith("</table>")) {
+            converter = ConverterRegistry.getConverterForClass(Map.class);
+        }
+        return converter;
     }
 }

@@ -3,6 +3,8 @@ package nl.hsac.fitnesse.junit.selenium;
 import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverFactory;
 import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.LocalDriverFactory;
 
+import java.util.Map;
+
 /**
  * Creates a Selenium driver factory to override the configuration in the wiki.
  * This factory is configured by setting the system property 'seleniumDriverClass' and
@@ -19,6 +21,11 @@ public class LocalSeleniumDriverClassFactoryFactory extends SeleniumDriverFactor
     @Override
     public DriverFactory getDriverFactory() {
         final String driverClass = getProperty(SELENIUM_DRIVER_CLASS);
-        return new LocalDriverFactory(driverClass, null);
+        final Map<String, Object> profile = getProfile();
+        return new LocalDriverFactory(driverClass, profile);
+    }
+
+    protected Map<String, Object> getProfile() {
+        return parseJsonProperty(SELENIUM_JSONPROFILE);
     }
 }

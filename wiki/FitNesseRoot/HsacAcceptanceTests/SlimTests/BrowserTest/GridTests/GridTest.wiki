@@ -1,7 +1,7 @@
 ---
 Help: Tests on working with tables representing a grid
 ---
-This test ensures we can find elements inside tables representing a grid where each column indicates a property and each row contains the values for the properties of one item. 
+This test ensures we can find elements inside tables representing a grid where each column indicates a property and each row contains the values for the properties of one item.
 
 
 !define HTML { {{{
@@ -16,6 +16,7 @@ This test ensures we can find elements inside tables representing a grid where e
     <tr><td>Smith</td><td>Joe</td><td>Male</td><td>10-01-1975</td><td><button>Edit</button><button>Delete</button></td></tr>
     <tr><td>Johnson</td><td>Pamela</td><td>Female</td><td>01-12-1978</td><td><button>Edit</button><button>Delete</button></td></tr>
     <tr><td><a>Rogers<img />-Smith</a></td><td>Jack</td><td>Male</td><td>10-01-1980</td><td><button>Edit</button><button>Delete</button></td></tr>
+    <tr><td>Tracy</td><td>Joe<br/>y</td><td>Male</td><td>10-01-1965</td><td><button>Edit</button><button>Delete</button></td></tr>
     </tbody>
 </table>
 <table>
@@ -38,31 +39,34 @@ This test ensures we can find elements inside tables representing a grid where e
 |add response|${HTML}              |
 |$url=       |get mock server url  |
 
-|script                |browser test                                                                               |
-|seconds before timeout|1                                                                                          |
-|open                  |$url                                                                                       |
-|check                 |value of column number|1            |in row number|2           |Johnson                    |
-|check                 |value of              |Gender       |in row number|2           |Female                     |
-|check                 |value of              |Kind         |in row number|3           |Cat                        |
-|row exists where      |Birth date            |is           |02-12-1978                                            |
-|reject                |row exists where      |Birth date   |is           |03-12-1978                              |
-|check                 |value of              |Kind         |in row where |Name        |is   |Joey      |Dog       |
-|check                 |value of              |Name         |in row where |Kind        |is   |Cat Food  |Pamelasi  |
-|check                 |value of              |Birth date   |in row where |Name        |is   |Joey      |11-01-1975|
-|check                 |value of              |Firstname    |in row where |Lastname    |is   |Rogers    |Jack      |
-|check                 |value of              |Birth date   |in row where |Lastname    |is   |Rogers    |10-01-1980|
-|click                 |Edit                  |in row number|2                                                     |
-|click                 |This                  |in row where |Owner        |is          |Jill                       |
-|click                 |Edit Pam's data       |in row where |Name         |is          |Pam                        |
-|enter                 |Sheep                 |as           |Kind         |in row where|Owner|is        |Owner name|
-|enter                 |John2                 |as           |Name         |in row where|Owner|is        |Owner name|
-|check                 |value of              |Color        |in row where |Kind        |is   |Cat       |White     |
-|check                 |value of              |Kind         |in row where |Owner       |is   |Owner name|Sheep     |
-|check                 |value of              |Name         |in row where |Owner       |is   |Owner name|John2     |
-|check                 |value of              |Color        |in row where |Owner       |is   |Owner name|true      |
-|check                 |value of              |Birth date   |in row where |Owner       |is   |Owner name|Mercedes  |
-|enter                 |Volvo                 |as           |Birth date   |in row where|Owner|is        |Owner name|
-|check                 |value of              |Birth date   |in row where |Owner       |is   |Owner name|Volvo     |
+|script                |browser test                                                                                          |
+|seconds before timeout|1                                                                                                     |
+|open                  |$url                                                                                                  |
+|check                 |value of column number           |1            |in row number|2           |Johnson                    |
+|check                 |normalized value of column number|2            |in row number|4           |Joe y                      |
+|check                 |value of                         |Gender       |in row number|2           |Female                     |
+|check                 |value of                         |Kind         |in row number|3           |Cat                        |
+|check                 |normalized value of              |Firstname    |in row number|4           |Joe y                      |
+|row exists where      |Birth date                       |is           |02-12-1978                                            |
+|reject                |row exists where                 |Birth date   |is           |03-12-1978                              |
+|check                 |value of                         |Kind         |in row where |Name        |is   |Joey      |Dog       |
+|check                 |value of                         |Name         |in row where |Kind        |is   |Cat Food  |Pamelasi  |
+|check                 |value of                         |Birth date   |in row where |Name        |is   |Joey      |11-01-1975|
+|check                 |value of                         |Firstname    |in row where |Lastname    |is   |Rogers    |Jack      |
+|check                 |value of                         |Birth date   |in row where |Lastname    |is   |Rogers    |10-01-1980|
+|check                 |normalized value of              |Firstname    |in row where |Lastname    |is   |Tracy     |Joe y     |
+|click                 |Edit                             |in row number|2                                                     |
+|click                 |This                             |in row where |Owner        |is          |Jill                       |
+|click                 |Edit Pam's data                  |in row where |Name         |is          |Pam                        |
+|enter                 |Sheep                            |as           |Kind         |in row where|Owner|is        |Owner name|
+|enter                 |John2                            |as           |Name         |in row where|Owner|is        |Owner name|
+|check                 |value of                         |Color        |in row where |Kind        |is   |Cat       |White     |
+|check                 |value of                         |Kind         |in row where |Owner       |is   |Owner name|Sheep     |
+|check                 |value of                         |Name         |in row where |Owner       |is   |Owner name|John2     |
+|check                 |value of                         |Color        |in row where |Owner       |is   |Owner name|true      |
+|check                 |value of                         |Birth date   |in row where |Owner       |is   |Owner name|Mercedes  |
+|enter                 |Volvo                            |as           |Birth date   |in row where|Owner|is        |Owner name|
+|check                 |value of                         |Birth date   |in row where |Owner       |is   |Owner name|Volvo     |
 
 
 |script|mock xml server setup|

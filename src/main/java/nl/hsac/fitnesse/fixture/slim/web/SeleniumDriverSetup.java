@@ -54,7 +54,7 @@ public class SeleniumDriverSetup extends SlimFixture {
     /**
      * Creates an instance of the specified class an injects it into SeleniumHelper, so other fixtures can use it.
      * @param driverClassName name of Java class of WebDriver to use.
-     * @param profile profile to use (for firefox only for now)
+     * @param profile profile to use (for firefox, chrome mobile and IE only for now)
      * @return true if instance was created and injected into SeleniumHelper.
      * @throws Exception if no instance could be created.
      */
@@ -83,7 +83,7 @@ public class SeleniumDriverSetup extends SlimFixture {
      * (using defaults to determine the correct class and configuration properties).
      * and injects it into SeleniumHelper, so other fixtures can use it.
      * @param browser name of browser to connect to.
-     * @param profile setting of the browser (works now only for firefox)
+     * @param profile setting of the browser (for firefox, chrome mobile and IE only for now)
      * @return true if instance was created and injected into SeleniumHelper.
      * @throws Exception if no instance could be created.
      */

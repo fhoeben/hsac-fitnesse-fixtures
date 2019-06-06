@@ -23,7 +23,7 @@ public class Link extends HeuristicBy {
 
     public static class InRowWhereIs extends Link {
         public InRowWhereIs(String place, String selectOnValue, String selectOnColumn) {
-            super(place, GridBy.getXPathForColumnInRowByValueInOtherColumn(selectOnColumn, selectOnValue));
+            super(place, GridBy.getXPathForColumnInRowByValueInOtherColumn(selectOnValue, selectOnColumn));
         }
     }
 }

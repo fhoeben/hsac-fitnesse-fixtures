@@ -1,0 +1,456 @@
+<html><head><title>HsacAcceptanceTests.SlimTests.UtilityFixtures.YamlFileFixtureTest</title><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/><link rel='stylesheet' type='text/css' href='css/fitnesse.css'/><script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script><script src='javascript/fitnesse.js' type='text/javascript'></script></head><body><header><h2>HsacAcceptanceTests.SlimTests.UtilityFixtures.YamlFileFixtureTest</h2></header><article><br/><br/>Yaml files fixture is a specialization of <a href="HsacAcceptanceTests.SlimTests.UtilityFixtures.FileFixture">FileFixture</a> which allows <a href="https://en.wikipedia.org/wiki/YAML">YAML files</a> to be read.<br/>It supports <a href="http://yaml.org/spec/1.1/">YAML specification version 1.1</a>.<br/><br/><h2 id="Reading">Reading</h2>
+In this sample we first create a .yml file, using FileFixture, and then read it.<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="4"><span class="pass">file fixture</span></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set directory</td>
+		<td colspan="4"><a href="files/test">http://files/test</a></td>
+	</tr>
+	<tr class="slimRowColor2">
+		<td>$yaml&lt;-[<a href="files/test/sample.yml" target="_blank">sample.yml</a>]</td>
+		<td>create</td>
+		<td>sample.yml</td>
+		<td>containing</td>
+		<td>wine: good</td>
+	</tr>
+	<tr class="slimRowColor2">
+		<td>append</td>
+		<td>#comment: ignored</td>
+		<td>to</td>
+		<td>$yaml->[<a href="files/test/sample.yml" target="_blank">sample.yml</a>]</td>
+		<td>on new line</td>
+	</tr>
+	<tr class="slimRowColor2">
+		<td>append</td>
+		<td>beer: "bad"</td>
+		<td>to</td>
+		<td>$yaml->[<a href="files/test/sample.yml" target="_blank">sample.yml</a>]</td>
+		<td>on new line</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>content of</td>
+		<td colspan="3">$yaml->[<a href="files/test/sample.yml" target="_blank">sample.yml</a>]</td>
+	<td><pre>wine: good
+#comment: ignored
+beer: &quot;bad&quot;</pre></td></tr>
+</table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="3"><span class="pass">yaml file fixture</span></td>
+	</tr>
+	<tr class="slimRowColor2">
+		<td><span class="pass">load values from</span></td>
+		<td colspan="3">$yaml->[<a href="files/test/sample.yml" target="_blank">sample.yml</a>]</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td colspan="3">values</td>
+	<td><table class="hash_table">
+	<tr class="hash_row">
+		<td class="hash_key">wine</td>
+		<td class="hash_value">good</td>
+	</tr>
+	<tr class="hash_row">
+		<td class="hash_key">beer</td>
+		<td class="hash_value">bad</td>
+	</tr>
+</table></td></tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>wine</td>
+		<td><span class="pass">good</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>beer</td>
+		<td><span class="pass">bad</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>number of values</td>
+		<td colspan="2"><span class="pass">2</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td></td>
+		<td colspan="3">We can use standard file fixture methods</td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td><span class="pass">delete</span></td>
+		<td colspan="3">$yaml->[<a href="files/test/sample.yml" target="_blank">sample.yml</a>]</td>
+	</tr>
+</table>
+<br/><h2 id="Writing">Writing</h2>
+We can also write in an easier way:<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="3"><span class="pass">yaml file fixture</span></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set directory</td>
+		<td colspan="3"><a href="files/test">http://files/test</a></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set value</td>
+		<td>bad</td>
+		<td>for</td>
+		<td>wine</td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set value</td>
+		<td>good</td>
+		<td>for</td>
+		<td>beer</td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set value</td>
+		<td>better</td>
+		<td>for</td>
+		<td>cola</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>$sample2&lt;-[<a href="files/test/sample2.yml" target="_blank">sample2.yml</a>]</td>
+		<td>create</td>
+		<td>sample2.yml</td>
+		<td>containing values</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>content of</td>
+		<td colspan="2">$sample2->[<a href="files/test/sample2.yml" target="_blank">sample2.yml</a>]</td>
+	<td><pre>wine: bad
+beer: good
+cola: better
+</pre></td></tr>
+</table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="3"><span class="pass">yaml file fixture</span></td>
+	</tr>
+	<tr class="slimRowColor2">
+		<td><span class="pass">load values from</span></td>
+		<td colspan="3">$sample2->[<a href="files/test/sample2.yml" target="_blank">sample2.yml</a>]</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td colspan="3">values</td>
+	<td><table class="hash_table">
+	<tr class="hash_row">
+		<td class="hash_key">wine</td>
+		<td class="hash_value">bad</td>
+	</tr>
+	<tr class="hash_row">
+		<td class="hash_key">beer</td>
+		<td class="hash_value">good</td>
+	</tr>
+	<tr class="hash_row">
+		<td class="hash_key">cola</td>
+		<td class="hash_value">better</td>
+	</tr>
+</table></td></tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>wine</td>
+		<td><span class="pass">bad</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>beer</td>
+		<td><span class="pass">good</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>cola</td>
+		<td><span class="pass">better</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>number of values</td>
+		<td colspan="2"><span class="pass">3</span></td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td><span class="pass">delete</span></td>
+		<td colspan="3">$sample2->[<a href="files/test/sample2.yml" target="_blank">sample2.yml</a>]</td>
+	</tr>
+</table>
+<br/><h2 id="Readingarray">Reading array</h2>
+The top level of a YAML file can be an array instead of a set of properties. In that case the fixture will create a 'root value' called elements.<br/><br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="4"><span class="pass">file fixture</span></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set directory</td>
+		<td colspan="4"><a href="files/test">http://files/test</a></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>$sample3&lt;-[<a href="files/test/sample3.yml" target="_blank">sample3.yml</a>]</td>
+		<td>create</td>
+		<td>sample3.yml</td>
+		<td>containing</td>
+		<td>- wine</td>
+	</tr>
+	<tr class="slimRowColor2">
+		<td>append</td>
+		<td>- beer</td>
+		<td>to</td>
+		<td>$sample3->[<a href="files/test/sample3.yml" target="_blank">sample3.yml</a>]</td>
+		<td>on new line</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>content of</td>
+		<td colspan="3">$sample3->[<a href="files/test/sample3.yml" target="_blank">sample3.yml</a>]</td>
+	<td><pre>- wine
+- beer</pre></td></tr>
+</table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="3"><span class="pass">yaml file fixture</span></td>
+	</tr>
+	<tr class="slimRowColor2">
+		<td><span class="pass">load values from</span></td>
+		<td colspan="3">$sample3->[<a href="files/test/sample3.yml" target="_blank">sample3.yml</a>]</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td colspan="3">values</td>
+	<td><table class="hash_table">
+	<tr class="hash_row">
+		<td class="hash_key">elements</td>
+		<td class="hash_value">[wine, beer]</td>
+	</tr>
+</table></td></tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>elements[0]</td>
+		<td><span class="pass">wine</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>elements[1]</td>
+		<td><span class="pass">beer</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>number of values</td>
+		<td colspan="2"><span class="pass">1</span></td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td><span class="pass">delete</span></td>
+		<td colspan="3">$sample3->[<a href="files/test/sample3.yml" target="_blank">sample3.yml</a>]</td>
+	</tr>
+</table>
+<br/><h2 id="Writingnestedvalue">Writing nested value</h2>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="4"><span class="pass">yaml file fixture</span></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set directory</td>
+		<td colspan="4"><a href="files/test">http://files/test</a></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set value</td>
+		<td>white</td>
+		<td>for</td>
+		<td colspan="2">wine[0]</td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set value</td>
+		<td>red</td>
+		<td>for</td>
+		<td colspan="2">wine[1]</td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set value</td>
+		<td>rose</td>
+		<td>for</td>
+		<td colspan="2">wine[2]</td>
+	</tr>
+	<tr class="slimRowColor1">
+		<td>$sample4&lt;-[<a href="files/test/sample4.yml" target="_blank">sample4.yml</a>]</td>
+		<td>create</td>
+		<td>sample4.yml</td>
+		<td>containing value</td>
+		<td>wine</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>content of</td>
+		<td colspan="3">$sample4->[<a href="files/test/sample4.yml" target="_blank">sample4.yml</a>]</td>
+	<td><pre>- white
+- red
+- rose
+</pre></td></tr>
+</table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="3"><span class="pass">yaml file fixture</span></td>
+	</tr>
+	<tr class="slimRowColor2">
+		<td><span class="pass">load values from</span></td>
+		<td colspan="3">$sample4->[<a href="files/test/sample4.yml" target="_blank">sample4.yml</a>]</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td colspan="3">values</td>
+	<td><table class="hash_table">
+	<tr class="hash_row">
+		<td class="hash_key">elements</td>
+		<td class="hash_value">[white, red, rose]</td>
+	</tr>
+</table></td></tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>elements[0]</td>
+		<td><span class="pass">white</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>elements[1]</td>
+		<td><span class="pass">red</span></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>elements[2]</td>
+		<td><span class="pass">rose</span></td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td><span class="pass">delete</span></td>
+		<td colspan="3">$sample4->[<a href="files/test/sample4.yml" target="_blank">sample4.yml</a>]</td>
+	</tr>
+</table>
+<br/><h2 id="Readingbinarycontent">Reading binary content</h2>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="4"><span class="pass">file fixture</span></td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set directory</td>
+		<td colspan="4"><a href="files/test">http://files/test</a></td>
+	</tr>
+	<tr class="slimRowColor0">
+		<td>$bin&lt;-[<a href="files/test/sample-bin.yml" target="_blank">sample-bin.yml</a>]</td>
+		<td>create</td>
+		<td>sample-bin.yml</td>
+		<td>containing</td>
+		<td>canonical: !!binary "\
+ R0lGODlhDAAMAIQAAP//9/X17unp5WZmZgAAAOfn515eXvPz7Y6OjuDg4J+fn5\
+ OTk6enp56enmlpaWNjY6Ojo4SEhP/++f/++f/++f/++f/++f/++f/++f/++f/+\
+ +f/++f/++f/++f/++f/++SH+Dk1hZGUgd2l0aCBHSU1QACwAAAAADAAMAAAFLC\
+ AgjoEwnuNAFOhpEMTRiggcz4BNJHrv/zCFcLiwMWYNG84BwwEeECcgggoBADs="
+description:
+ The binary value above is a tiny arrow encoded as a gif image.</td>
+	</tr>
+</table>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="4"><span class="pass">yaml file fixture</span></td>
+	</tr>
+	<tr class="slimRowColor2">
+		<td><span class="pass">load values from</span></td>
+		<td colspan="4">$bin->[<a href="files/test/sample-bin.yml" target="_blank">sample-bin.yml</a>]</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td colspan="4">values</td>
+	<td><table class="hash_table">
+	<tr class="hash_row">
+		<td class="hash_key">canonical</td>
+		<td class="hash_value">[71, 73, 70, 56, 57, 97, 12, 0, 12, 0, -124, 0, 0, -1, -1, -9, -11, -11, -18, -23, -23, -27, 102, 102, 102, 0, 0, 0, -25, -25, -25, 94, 94, 94, -13, -13, -19, -114, -114, -114, -32, -32, -32, -97, -97, -97, -109, -109, -109, -89, -89, -89, -98, -98, -98, 105, 105, 105, 99, 99, 99, -93, -93, -93, -124, -124, -124, -1, -2, -7, -1, -2, -7, -1, -2, -7, -1, -2, -7, -1, -2, -7, -1, -2, -7, -1, -2, -7, -1, -2, -7, -1, -2, -7, -1, -2, -7, -1, -2, -7, -1, -2, -7, -1, -2, -7, -1, -2, -7, 33, -2, 14, 77, 97, 100, 101, 32, 119, 105, 116, 104, 32, 71, 73, 77, 80, 0, 44, 0, 0, 0, 0, 12, 0, 12, 0, 0, 5, 44, 32, 32, -114, -127, 48, -98, -29, 64, 20, -24, 105, 16, -60, -47, -118, 8, 28, -49, -128, 77, 36, 122, -17, -1, 48, -123, 112, -72, -80, 49, 102, 13, 27, -50, 1, -61, 1, 30, 16, 39, 32, -126, 10, 1, 0, 59]</td>
+	</tr>
+	<tr class="hash_row">
+		<td class="hash_key">description</td>
+		<td class="hash_value">The binary value above is a tiny arrow encoded as a gif image.</td>
+	</tr>
+</table></td></tr>
+	<tr class="slimRowColor0">
+		<td>check</td>
+		<td>value</td>
+		<td>description</td>
+		<td colspan="2"><span class="pass">The binary value above is a tiny arrow encoded as a gif image.</span></td>
+	</tr>
+	<tr class="slimRowColor3">
+		<td>$img1&lt;-[<a href="files/fileFixture/arrow1.gif" target="_blank">arrow1.gif</a>]</td>
+		<td>create</td>
+		<td>arrow1.gif</td>
+		<td>containing base64 value</td>
+		<td>canonical</td>
+	</tr>
+	<tr class="slimRowColor4">
+		<td>$img2&lt;-[<a href="files/fileFixture/arrow2.gif" target="_blank">arrow2.gif</a>]</td>
+		<td>create</td>
+		<td>arrow2.gif</td>
+		<td>containing value</td>
+		<td>canonical</td>
+	</tr>
+	<tr class="slimRowColor7">
+		<td><span class="pass">delete</span></td>
+		<td colspan="4">$bin->[<a href="files/test/sample-bin.yml" target="_blank">sample-bin.yml</a>]</td>
+	</tr>
+</table>
+<br/><h2 id="Writingbinarycontent">Writing binary content</h2>
+<br/><table>
+	<tr class="slimRowTitle">
+		<td>script</td>
+		<td colspan="3"><span class="pass">yaml file fixture</span></td>
+	</tr>
+	<tr class="slimRowColor2">
+		<td>set content of</td>
+		<td>$img2->[<a href="files/fileFixture/arrow2.gif" target="_blank">arrow2.gif</a>]</td>
+		<td>as value for</td>
+		<td>gif</td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set base64 encoded content of</td>
+		<td>$img2->[<a href="files/fileFixture/arrow2.gif" target="_blank">arrow2.gif</a>]</td>
+		<td>as value for</td>
+		<td>encoded-gif</td>
+	</tr>
+	<tr class="slimRowColor5">
+		<td>set value</td>
+		<td>A small arrow image</td>
+		<td>for</td>
+		<td>description</td>
+	</tr>
+	<tr class="slimRowColor2">
+		<td>$sample5&lt;-[<a href="files/fileFixture/sample5.yml" target="_blank">sample5.yml</a>]</td>
+		<td>create</td>
+		<td>sample5.yml</td>
+		<td>containing values</td>
+	</tr>
+	<tr class="slimRowColor9">
+		<td>show</td>
+		<td>content of</td>
+		<td colspan="2">$sample5->[<a href="files/fileFixture/sample5.yml" target="_blank">sample5.yml</a>]</td>
+	<td><pre>gif: !!binary |-
+  R0lGODlhDAAMAIQAAP//9/X17unp5WZmZgAAAOfn515eXvPz7Y6OjuDg4J+fn5OTk6enp56enmlpaWNjY6Ojo4SEhP/++f/++f/++f/++f/++f/++f/++f/++f/++f/++f/++f/++f/++f/++SH+Dk1hZGUgd2l0aCBHSU1QACwAAAAADAAMAAAFLCAgjoEwnuNAFOhpEMTRiggcz4BNJHrv/zCFcLiwMWYNG84BwwEeECcgggoBADs=
+encoded-gif: R0lGODlhDAAMAIQAAP//9/X17unp5WZmZgAAAOfn515eXvPz7Y6OjuDg4J+fn5OTk6enp56enmlpaWNjY6Ojo4SEhP/++f/++f/++f/++f/++f/++f/++f/++f/++f/++f/++f/++f/++f/++SH+Dk1hZGUgd2l0aCBHSU1QACwAAAAADAAMAAAFLCAgjoEwnuNAFOhpEMTRiggcz4BNJHrv/zCFcLiwMWYNG84BwwEeECcgggoBADs=
+description: A small arrow image
+</pre></td></tr>
+	<tr class="slimRowColor7">
+		<td><span class="pass">delete</span></td>
+		<td colspan="3">$sample5->[<a href="files/fileFixture/sample5.yml" target="_blank">sample5.yml</a>]</td>
+	</tr>
+</table>
+</article></body></html>

@@ -7,24 +7,24 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.*;
 import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.NoConnectionReuseStrategy;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 
+import javax.net.ssl.SSLContext;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,19 +36,11 @@ public class HttpClient {
     /** Default HttpClient instance used. */
     public final static org.apache.http.client.HttpClient DEFAULT_HTTP_CLIENT;
     private org.apache.http.client.HttpClient httpClient;
+    private boolean contentCompression = false,
+            sslVerification = true;
 
     static {
-        RequestConfig rc = RequestConfig.custom()
-                            .setCookieSpec(CookieSpecs.STANDARD)
-                            .build();
-
-        DEFAULT_HTTP_CLIENT = HttpClients.custom()
-                .useSystemProperties()
-                .disableContentCompression()
-                .setConnectionReuseStrategy(NoConnectionReuseStrategy.INSTANCE)
-                .setUserAgent(HttpClient.class.getName())
-                .setDefaultRequestConfig(rc)
-                .build();
+        DEFAULT_HTTP_CLIENT = buildHttpClient(false, true);
     }
 
     /**
@@ -83,19 +75,11 @@ public class HttpClient {
      */
     public void post(String url, HttpResponse response, Map<String, Object> headers, File file) {
         HttpPost methodPost = new HttpPost(url);
-
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        builder.addBinaryBody(file.getName(), file,
-                ContentType.APPLICATION_OCTET_STREAM, file.getName());
-        HttpEntity multipart = builder.build();
-
+        HttpEntity multipart = buildBodyWithFile(file);
         methodPost.setEntity(multipart);
-
         getResponse(url, response, methodPost, headers);
     }
 
-
-    
     /**
      * @param url URL of service
      * @param response response pre-populated with request to send. Response content and
@@ -109,6 +93,48 @@ public class HttpClient {
         HttpEntity ent = new StringEntity(response.getRequest(), contentType);
         methodPut.setEntity(ent);
         getResponse(url, response, methodPut, headers);
+    }
+
+    /**
+     * Put file as 'application/octet-stream'.
+     * @param url URL of service
+     * @param response response pre-populated with request to send. Response content and
+     *          statusCode will be filled.
+     * @param headers http headers to add
+     * @param file file containing binary data to put.
+     */
+    public void put(String url, HttpResponse response, Map<String, Object> headers, File file) {
+        HttpPut methodPut = new HttpPut(url);
+        HttpEntity multipart = buildBodyWithFile(file);
+        methodPut.setEntity(multipart);
+        getResponse(url, response, methodPut, headers);
+    }
+
+    /**
+     * @param url URL of service
+     * @param response response pre-populated with request to send. Response content and
+     *          statusCode will be filled.
+     * @param headers http headers to add
+     * @param type contentType for request.
+     */
+    public void patch(String url, HttpResponse response, Map<String, Object> headers, String type){
+        HttpPatch methodPatch = new HttpPatch(url);
+        ContentType contentType = ContentType.parse(type);
+        HttpEntity ent = new StringEntity(response.getRequest(), contentType);
+        methodPatch.setEntity(ent);
+        getResponse(url,response,methodPatch, headers);
+    }
+
+    /**
+     * Builds request body with a given file
+     * @param file file containing binary data.
+     */
+    private HttpEntity buildBodyWithFile(File file) {
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.addBinaryBody("file", file,
+                ContentType.APPLICATION_OCTET_STREAM, file.getName());
+        HttpEntity multipart = builder.build();
+        return multipart;
     }
 
     /**
@@ -128,6 +154,16 @@ public class HttpClient {
     }
 
     /**
+     * @param url URL of service
+     * @param response response to be filled.
+     * @param headers http headers to add
+     */
+    public void head(String url, HttpResponse response, Map<String, Object> headers) {
+        HttpHead method = new HttpHead(url);
+        getResponse(url, response, method, headers);
+    }
+
+    /**
      * @param url URL to send to DELETE to
      * @param response response to be filled.
      * @param headers headers to add.
@@ -135,6 +171,111 @@ public class HttpClient {
     public void delete(String url, HttpResponse response, Map<String, Object> headers) {
         HttpDelete method = new HttpDelete(url);
         getResponse(url, response, method, headers);
+    }
+
+    /**
+     * @param url URL of service
+     * @param response response pre-populated with request to send. Response content and
+     *          statusCode will be filled.
+     * @param headers http headers to add
+     * @param type contentType for request.
+     */
+    public void delete(String url, HttpResponse response, Map<String, Object> headers, String type) {
+        HttpDeleteWithBody methodPost = new HttpDeleteWithBody(url);
+        ContentType contentType = ContentType.parse(type);
+        HttpEntity ent = new StringEntity(response.getRequest(), contentType);
+        methodPost.setEntity(ent);
+        getResponse(url, response, methodPost, headers);
+    }
+
+    /**
+     * Ensures the apache HttpClient used supports content compression
+     */
+    public void enableCompression() {
+        if (!this.contentCompression) {
+            this.contentCompression = true;
+            updateHttpClient();
+        }
+    }
+
+    /**
+     * Ensures the apache HttpClient used does not support content compression
+     */
+    public void disableCompression() {
+        if (this.contentCompression) {
+            this.contentCompression = false;
+            updateHttpClient();
+        }
+    }
+
+    /**
+     * Ensures the apache HttpClient used does not verify SSL certificates
+     */
+    public void disableSSLVerification() {
+        if (this.sslVerification) {
+            this.sslVerification = false;
+            updateHttpClient();
+        }
+    }
+
+    /**
+     * Ensures the apache HttpClient used verifies SSL certificates
+     */
+    public void enableSSLVerification() {
+        if (!this.sslVerification) {
+            this.sslVerification = true;
+            updateHttpClient();
+        }
+    }
+
+    /**
+     * Sets the apache HttpClient to one matching the current contentCompression and sslVerification values
+     */
+    protected void updateHttpClient() {
+        if (!contentCompression && sslVerification) {
+            this.httpClient = DEFAULT_HTTP_CLIENT;
+        } else {
+            this.httpClient = buildHttpClient(this.contentCompression, this.sslVerification);
+        }
+    }
+
+    /**
+     * Builds an apache HttpClient instance
+     * @param contentCompression if true, the returned instance will support content compression
+     * @return an apache HttpClient instance
+     */
+    protected static org.apache.http.client.HttpClient buildHttpClient(boolean contentCompression, boolean sslVerification) {
+        RequestConfig rc = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.STANDARD)
+                .build();
+
+        HttpClientBuilder builder = HttpClients.custom()
+                .useSystemProperties();
+
+        if (!contentCompression) {
+            builder.disableContentCompression();
+        }
+
+        if (!sslVerification) {
+            try {
+                builder.setSSLSocketFactory(generateAllTrustingSSLConnectionSocketFactory());
+            } catch (Exception e) {
+                throw new RuntimeException("Unable to create all-trusting SSLConnectionSocketFactory", e);
+            }
+
+        }
+
+        return builder.setConnectionReuseStrategy(NoConnectionReuseStrategy.INSTANCE)
+                .setUserAgent(HttpClient.class.getName())
+                .setDefaultRequestConfig(rc)
+                .build();
+    }
+
+    protected static SSLConnectionSocketFactory generateAllTrustingSSLConnectionSocketFactory() throws Exception {
+        SSLContext allTrustingSSLContext = SSLContexts.custom()
+                .loadTrustMaterial(null, (a, b) -> true)
+                .build();
+        return new SSLConnectionSocketFactory(allTrustingSSLContext, (a, b) -> true);
     }
 
     protected void getResponse(String url, HttpResponse response, HttpRequestBase method, Map<String, Object> headers) {
@@ -147,6 +288,7 @@ public class HttpClient {
             }
 
             HttpContext context = createContext(response);
+            response.setMethod(method.getMethod());
 
             startTime = currentTimeMillis();
             resp = executeMethod(context, method);
@@ -290,5 +432,18 @@ public class HttpClient {
      */
     public void setHttpClient(org.apache.http.client.HttpClient httpClient) {
         this.httpClient = httpClient;
+    }
+
+    /**
+     * Custom DELETE entity, which allows a body to be sent.
+     */
+    public static class HttpDeleteWithBody extends HttpEntityEnclosingRequestBase {
+        public String getMethod() {
+            return HttpDelete.METHOD_NAME;
+        }
+
+        public HttpDeleteWithBody(final String uri) {
+            setURI(URI.create(uri));
+        }
     }
 }

@@ -6,24 +6,26 @@ Using a scenario allows us to generate multiple request, only changing certain v
 !define POST_BODY_2 { {{{
 <s11:Envelope xmlns:s11="http://schemas.xmlsoap.org/soap/envelope/">
   <s11:Body>
-    <ns1:GetCityWeatherByZIP xmlns:ns1="http://ws.cdyne.com/WeatherWS/">
-      <ns1:ZIP>@{zip}</ns1:ZIP>
-    </ns1:GetCityWeatherByZIP>
+    <ns1:AddInteger xmlns:ns1="http://tempuri.org">
+      <ns1:Arg1>@{arg1}</ns1:Arg1>
+      <ns1:Arg2>@{arg2}</ns1:Arg2>
+    </ns1:AddInteger>
   </s11:Body>
 </s11:Envelope>
 }}} }
 
 |script|xml http test|
 
-|table template |send request                                                |
-|post           |${POST_BODY_2} |to           |${URL}                        |
-|check          |response status|200                                         |
-|show           |response                                                    |
-|register prefix|weather        |for namespace|http://ws.cdyne.com/WeatherWS/|
-|$City=         |xPath          |//weather:City/text()                       |
+|table template |send request                                         |
+|set value      |${ACTION}      |for header   |SOAPAction             |
+|post           |${POST_BODY_2} |to           |${URL}                 |
+|check          |response status|200                                  |
+|show           |response                                             |
+|register prefix|tempuri        |for namespace|http://tempuri.org     |
+|$result=       |xPath          |!-//tempuri:AddIntegerResult/text()-!                |
 *!
 
-|send request       |
-|zip  |City?        |
-|10007|New York     |
-|94102|San Francisco|
+|send request     |
+|arg1|arg2|result?|
+|1   |1   |2      |
+|34  |16  |50     |

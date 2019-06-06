@@ -1,0 +1,110 @@
+---
+Help: Fixture to deal with YAML files
+---
+
+Yaml files fixture is a specialization of FileFixture which allows [[YAML files][https://en.wikipedia.org/wiki/YAML]] to be read.
+It supports [[YAML specification version 1.1][http://yaml.org/spec/1.1/]].
+
+!2 Reading
+In this sample we first create a .yml file, using !-FileFixture-!, and then read it.
+
+|script       |file fixture                                           |
+|set directory|http://files/test                                      |
+|$yaml=       |create               |sample.yml|containing|wine: good |
+|append       |!-#comment: ignored-!|to        |$yaml     |on new line|
+|append       |beer: "bad"          |to        |$yaml     |on new line|
+|show         |content of           |$yaml                            |
+
+|script          |yaml file fixture                       |
+|load values from|$yaml                                   |
+|show            |values                                  |
+|check           |value           |wine|good              |
+|check           |value           |beer|bad               |
+|check           |number of values|2                      |
+|                |We can use standard file fixture methods|
+|delete          |$yaml                                   |
+
+!2 Writing
+We can also write in an easier way:
+
+|script       |yaml file fixture                       |
+|set directory|http://files/test                       |
+|set value    |bad       |for        |wine             |
+|set value    |good      |for        |beer             |
+|set value    |better    |for        |cola             |
+|$sample2=    |create    |sample2.yml|containing values|
+|show         |content of|$sample2                     |
+
+|script          |yaml file fixture           |
+|load values from|$sample2                    |
+|show            |values                      |
+|check           |value           |wine|bad   |
+|check           |value           |beer|good  |
+|check           |value           |cola|better|
+|check           |number of values|3          |
+|delete          |$sample2                    |
+
+!2 Reading array
+The top level of a YAML file can be an array instead of a set of properties. In that case the fixture will create a 'root value' called elements.
+
+|script       |file fixture                                 |
+|set directory|http://files/test                            |
+|$sample3=    |create    |sample3.yml|containing|- wine     |
+|append       |- beer    |to         |$sample3  |on new line|
+|show         |content of|$sample3                          |
+
+|script          |yaml file fixture                |
+|load values from|$sample3                         |
+|show            |values                           |
+|check           |value           |elements[0]|wine|
+|check           |value           |elements[1]|beer|
+|check           |number of values|1               |
+|delete          |$sample3                         |
+
+!2 Writing nested value
+
+|script       |yaml file fixture                           |
+|set directory|http://files/test                           |
+|set value    |white     |for        |wine[0]              |
+|set value    |red       |for        |wine[1]              |
+|set value    |rose      |for        |wine[2]              |
+|$sample4=    |create    |sample4.yml|containing value|wine|
+|show         |content of|$sample4                         |
+
+|script          |yaml file fixture      |
+|load values from|$sample4               |
+|show            |values                 |
+|check           |value|elements[0]|white|
+|check           |value|elements[1]|red  |
+|check           |value|elements[2]|rose |
+|delete          |$sample4               |
+
+!2 Reading binary content
+
+|script       |file fixture                                                                                                                                                                                                                                                                                                                                                                                                |
+|set directory|http://files/test                                                                                                                                                                                                                                                                                                                                                                                           |
+|$bin=        |create|sample-bin.yml|containing|!-canonical: !!binary "\
+ R0lGODlhDAAMAIQAAP//9/X17unp5WZmZgAAAOfn515eXvPz7Y6OjuDg4J+fn5\
+ OTk6enp56enmlpaWNjY6Ojo4SEhP/++f/++f/++f/++f/++f/++f/++f/++f/+\
+ +f/++f/++f/++f/++f/++SH+Dk1hZGUgd2l0aCBHSU1QACwAAAAADAAMAAAFLC\
+ AgjoEwnuNAFOhpEMTRiggcz4BNJHrv/zCFcLiwMWYNG84BwwEeECcgggoBADs="
+description:
+ The binary value above is a tiny arrow encoded as a gif image.-!|
+
+|script          |yaml file fixture                                                                |
+|load values from|$bin                                                                             |
+|show            |values                                                                           |
+|check           |value |description|The binary value above is a tiny arrow encoded as a gif image.|
+|$img1=          |create|arrow1.gif |containing base64 value|canonical                             |
+|$img2=          |create|arrow2.gif |containing value       |canonical                             |
+|delete          |$bin                                                                             |
+
+!2 Writing binary content
+
+|script                       |yaml file fixture                                 |
+|set content of               |$img2              |as value for|gif              |
+|set base64 encoded content of|$img2              |as value for|encoded-gif      |
+|set value                    |A small arrow image|for         |description      |
+|$sample5=                    |create             |sample5.yml |containing values|
+|show                         |content of         |$sample5                      |
+|delete                       |$sample5                                          |

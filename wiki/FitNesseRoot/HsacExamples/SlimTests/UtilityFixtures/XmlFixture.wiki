@@ -1,0 +1,36 @@
+---
+Help: Fixture to work with XML content
+Test
+---
+!-XmlFixture-! allows checks on XML, similar to what is supported by !-XmlHttpTest-!, obtained from other sources than HTTP calls.
+
+|script|xml fixture                                                         |
+|load  |!-<xml><nested><sub_nested a="1">Hello</sub_nested></nested></xml>-!|
+|show  |document                                                            |
+|check |xPath               |//sub_nested/@a               |1               |
+
+
+|script         |xml fixture                                                                                                                         |
+|load           |{{{<nested xmlns="http://ws.cdyne.com/WeatherWS/"><sub_nested a="1">Hello</sub_nested><sub_nested a="2">Bye</sub_nested></nested>}}}|
+|show           |document                                                                                                                            |
+|register prefix|ws                                      |for namespace                          |http://ws.cdyne.com/WeatherWS/                     |
+|check          |xPath                                   |//sub_nested/@a                        |null                                               |
+|check          |xPath                                   |//ws:sub_nested/@a                     |1                                                  |
+|show           |list xPath matches                      |//ws:sub_nested/@a                                                                         |
+
+!4 Validation of xml against a schema file
+
+|script   |xml fixture                                                                                                                                         |
+|load file|http://files/xmlTestExamples/valid_shiporder.xml                                                                                                    |
+|ensure   |validate against xsd file|http://files/xmlTestExamples/shiporder_schema.xsd                                                                         |
+|load file|http://files/xmlTestExamples/invalid_shiporder.xml                                                                                                  |
+|check    |validate against xsd file|http://files/xmlTestExamples/shiporder_schema.xsd|EXCEPTION:=~/.*Attribute 'orderid' must appear on element 'shiporder'.*/|
+
+|script      |file fixture                                                |
+|$xsd_schema=|content of|http://files/xmlTestExamples/shiporder_schema.xsd|
+
+!4 We can also use a schema from the wiki page
+
+|script   |xml fixture                                     |
+|load file|http://files/xmlTestExamples/valid_shiporder.xml|
+|ensure   |validate against xsd        |$xsd_schema        |
