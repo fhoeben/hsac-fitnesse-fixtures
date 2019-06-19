@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -25,13 +26,17 @@ public class ChartWriter {
 
     public <T> void writeChartGenerators(List<T> htmls,
                                          BiConsumer<ChartWriter, List<T>> bodyFunction,
-                                         String extraJs) {
-        pw.write("<script type='text/javascript'>" +
-                "if(window.google){google.charts.load('current',{'packages':['corechart']});" +
-                "google.charts.setOnLoadCallback(drawChart);" +
-                "function drawChart() {");
-        bodyFunction.accept(this, htmls);
-        pw.write("};");
+                                         String extraJs,
+                                         String... chartElements) {
+        pw.write("<script type='text/javascript'>");
+        for (String elementToHide : chartElements) {
+            // chart elements should only appear if the can be properly filled
+            // we hide them initially, we will show them again once we know they can be filled
+            writeVariableForElement(elementToHide);
+            writeHideElement(elementToHide);
+        }
+        pw.write("if(window.google){");
+        writeLoadAndCallback(htmls, bodyFunction);
         pw.write(extraJs);
         pw.write("}</script>");
     }
@@ -83,35 +88,26 @@ public class ChartWriter {
         pw.write("});");
     }
 
-    public <T> void writeBarChartGenerator(String title,
+    public <T> void writeBarChartGenerator(Consumer<PrintWriter> testResultsWriter,
+                                           String title,
                                            String chartElementId,
                                            String extraOptions) {
-        pw.write("var ");
-        pw.write(chartElementId);
-        pw.write("Element = document.getElementById('");
-        pw.write(chartElementId);
-        pw.write("');");
-
-        // do not show graph until loaded, it will not be loaded if page is accessed from file URL
-        writeHideElement(chartElementId);
-
-        pw.write("var xhr = new XMLHttpRequest();");
-        pw.write("xhr.open('GET', 'test-results.json', true);");
-        pw.write("xhr.responseType = 'json';");
-        pw.write("xhr.onload = function() {");
-        pw.write("var status = xhr.status;");
-        pw.write("if (status === 200) {");
-
-        pw.write("var testResults = xhr.response;");
-        pw.write("xhr.response = null;");
+        pw.write("var testResults=");
+        testResultsWriter.accept(pw);
+        pw.write(";");
 
         // show graph element when successfully loaded, do this before having it filled so charts API can detect size
         writeUnhideElement(chartElementId);
 
         writeBarChartContentGenerator(title, chartElementId, extraOptions);
+    }
 
-        pw.write("}};");
-        pw.write("xhr.send();");
+    protected <T> void writeLoadAndCallback(List<T> htmls, BiConsumer<ChartWriter, List<T>> bodyFunction) {
+        pw.write("google.charts.load('current',{'packages':['corechart']});");
+        pw.write("google.charts.setOnLoadCallback(drawChart);");
+        pw.write("function drawChart(){");
+        bodyFunction.accept(this, htmls);
+        pw.write("};");
     }
 
     protected void writeHideElement(String chartElementId) {
@@ -122,6 +118,14 @@ public class ChartWriter {
         pw.write("Element.getAttribute('style');");
         pw.write(chartElementId);
         pw.write("Element.setAttribute('style', 'display: none;');");
+    }
+
+    protected void writeVariableForElement(String chartElementId) {
+        pw.write("var ");
+        pw.write(chartElementId);
+        pw.write("Element = document.getElementById('");
+        pw.write(chartElementId);
+        pw.write("');");
     }
 
     protected void writeUnhideElement(String chartElementId) {

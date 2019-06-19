@@ -8,6 +8,7 @@ import java.text.NumberFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -49,9 +50,11 @@ public class HtmlOverviewFileWriter extends OverviewFileWriter {
                     "}";
 
     private final NumberFormat nf = NumberFormat.getIntegerInstance();
+    protected Function<PrintWriter, JsonWriter> jsonWriterFunction;
 
-    public HtmlOverviewFileWriter(File parentDir) {
+    public HtmlOverviewFileWriter(File parentDir, Function<PrintWriter, JsonWriter> jsonWriterFunction) {
         super(parentDir, "index.html");
+        this.jsonWriterFunction = jsonWriterFunction;
     }
 
     @Override
@@ -87,6 +90,7 @@ public class HtmlOverviewFileWriter extends OverviewFileWriter {
     }
 
     protected void writeFooter(PrintWriter pw, List<TestReportHtml> htmls) {
+        writeChartScript(pw, htmls);
         pw.write("</body></html>");
     }
 
@@ -132,17 +136,12 @@ public class HtmlOverviewFileWriter extends OverviewFileWriter {
     }
 
     protected void writePieChartsElement(PrintWriter pw, List<TestReportHtml> htmls) {
-        ChartWriter pieChartWriter = getChartWriter(pw);
         pw.write("<div style='display:flex;flex-wrap:wrap;justify-content:center;'>");
         writePieChartElements(pw, htmls);
-        pieChartWriter.writeChartGenerators(
-                htmls,
-                this::writePieChartGeneratorBody,
-                "document.getElementById('simpleStatusGraph').outerHTML=''");
         pw.write("</div>");
     }
 
-    protected void writePieChartGeneratorBody(ChartWriter writer, List<TestReportHtml> htmls) {
+    protected void writeChartGeneratorBody(ChartWriter writer, List<TestReportHtml> htmls) {
         List<TestReportHtml> nonOverviews = filterBy(htmls, r -> !r.isOverviewPage());
         writeStatusPieChartGenerator(writer, nonOverviews);
         writer.writePieChartGenerator("Tests / Run", TESTCOUNT_CHART_ID, nonOverviews,
@@ -150,8 +149,11 @@ public class HtmlOverviewFileWriter extends OverviewFileWriter {
         writer.writePieChartGenerator("Time / Run", RUNTIME_CHART_ID, nonOverviews,
                 r -> r.getRunName(), Collectors.summingLong(r -> r.getTime() < 0 ? 0 : r.getTime()));
 
-        writer.writeBarChartGenerator("ms / Test", TIME_PER_TEST_CHART_ID,
-                ",hAxis:{textPosition:'none'}");
+        writer.writeBarChartGenerator(
+                pw -> jsonWriterFunction.apply(pw).writeContent(htmls),
+                "ms / Test", TIME_PER_TEST_CHART_ID,
+                ",hAxis:{textPosition:'none'}"
+        );
     }
 
     protected void writeStatusPieChartGenerator(ChartWriter writer, List<TestReportHtml> htmls) {
@@ -269,6 +271,15 @@ public class HtmlOverviewFileWriter extends OverviewFileWriter {
 
     protected void addStatusEntry(String status, Map<String, Long> statuses, Map<String, Long> displayedStatus) {
         displayedStatus.put(status, statuses.getOrDefault(status, 0L));
+    }
+
+    protected void writeChartScript(PrintWriter pw, List<TestReportHtml> htmls) {
+        ChartWriter chartWriter = getChartWriter(pw);
+        chartWriter.writeChartGenerators(
+                htmls,
+                this::writeChartGeneratorBody,
+                "document.getElementById('simpleStatusGraph').outerHTML=''",
+                TIME_PER_TEST_CHART_ID);
     }
 
     protected ChartWriter getChartWriter(PrintWriter pw) {

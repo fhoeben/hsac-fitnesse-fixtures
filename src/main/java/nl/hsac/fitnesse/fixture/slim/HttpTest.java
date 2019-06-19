@@ -227,6 +227,10 @@ public class HttpTest extends SlimFixtureWithMap {
         return sendToImpl(body, serviceUrl, getContentType(), "DELETE");
     }
 
+    protected boolean patchWithImpl(String body, String serviceUrl) {
+        return sendToImpl(body, serviceUrl, getContentType(), "PATCH");
+    }
+
     protected boolean sendToImpl(String body, String serviceUrl, String aContentType, String method) {
         boolean result;
         resetResponse();
@@ -243,6 +247,9 @@ public class HttpTest extends SlimFixtureWithMap {
                     break;
                 case "DELETE":
                     getEnvironment().doDelete(url, response, headerValues, aContentType);
+                    break;
+                case "PATCH":
+                    getEnvironment().doHttpPatch(url, response, headerValues, aContentType);
                     break;
                 default:
                     throw new IllegalArgumentException("Unsupported method: " + method);
@@ -277,6 +284,15 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     /**
+     * Sends HTTP PATCH template with current values to service endpoint.
+     * @param serviceUrl service endpoint to send request to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean patchWithTemplate(String serviceUrl) {
+        return sendTemplateTo(serviceUrl, getContentType(), "PATCH");
+    }
+
+    /**
      * Sends HTTP method call template with current values to service endpoint.
      * @param serviceUrl service endpoint to send request to.
      * @param aContentType content type to use for post.
@@ -302,6 +318,9 @@ public class HttpTest extends SlimFixtureWithMap {
                     case "DELETE":
                         getEnvironment().doDelete(url, template, getCurrentValues(), response, headerValues, aContentType);
                         break;
+                    case "PATCH":
+                        getEnvironment().doHttpPatch(url, template, getCurrentValues(), response, headerValues, aContentType);
+                        break;
                     default:
                         throw new IllegalArgumentException("Unsupported method: " + method);
                 }
@@ -322,6 +341,11 @@ public class HttpTest extends SlimFixtureWithMap {
     public boolean putTo(String body, String serviceUrl) {
         String cleanedBody = cleanupBody(body);
         return putToImpl(cleanedBody, serviceUrl);
+    }
+
+    public boolean patchWith(String serviceUrl, String body) {
+        String cleanedBody = cleanupBody(body);
+        return patchWithImpl(cleanedBody, serviceUrl);
     }
 
     /**
@@ -895,6 +919,9 @@ public class HttpTest extends SlimFixtureWithMap {
                 break;
             case "PUT":
                 putToImpl(response.getRequest(), lastUrl);
+                break;
+            case "PATCH":
+                patchWithImpl(response.getRequest(), lastUrl);
                 break;
             case "DELETE":
                 if (lastUrl.equals(response.getRequest())) {

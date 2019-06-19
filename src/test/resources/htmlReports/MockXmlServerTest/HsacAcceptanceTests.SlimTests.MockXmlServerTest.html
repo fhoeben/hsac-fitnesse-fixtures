@@ -3,7 +3,47 @@
 	<tr>
 		<td><span class="pass">table: Mock Server Message Report</span></td>
 	</tr>
-<tr><td><span class="ignore">No requests expected or received at: /FitNesseMock</span></td></tr></table>
+<tr><td><table><tbody><tr class="scenario closed"><td class="green">Expected and received 2 requests</td></tr><tr class="scenario-detail closed-detail"><td><table><tbody><tr><td class="green">1</td><td><div class="collapsible closed"><p class="title">request</p><div>GET: /FitNesseMock</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div><pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;shiporder orderid=&quot;889923&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:noNamespaceSchemaLocation=&quot;shiporder_schema.xsd&quot;&gt;
+    &lt;orderperson&gt;John Smith&lt;/orderperson&gt;
+    &lt;shipto&gt;
+        &lt;name&gt;Ola Nordmann&lt;/name&gt;
+        &lt;address&gt;Langgt 23&lt;/address&gt;
+        &lt;city&gt;4000 Stavanger&lt;/city&gt;
+        &lt;country&gt;Norway&lt;/country&gt;
+    &lt;/shipto&gt;
+    &lt;item&gt;
+        &lt;title&gt;Empire Burlesque&lt;/title&gt;
+        &lt;note&gt;Special Edition&lt;/note&gt;
+        &lt;quantity&gt;1&lt;/quantity&gt;
+        &lt;price&gt;10.90&lt;/price&gt;
+    &lt;/item&gt;
+    &lt;item&gt;
+        &lt;title&gt;Hide your heart&lt;/title&gt;
+        &lt;quantity&gt;1&lt;/quantity&gt;
+        &lt;price&gt;9.90&lt;/price&gt;
+    &lt;/item&gt;
+&lt;/shiporder&gt;
+</pre></div></div></td></tr><tr><td class="green">2</td><td><div class="collapsible closed"><p class="title">request</p><div>GET: /FitNesseMock</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div><pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;shiporder xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:noNamespaceSchemaLocation=&quot;shiporder_schema.xsd&quot;&gt;
+    &lt;orderperson&gt;John Smith&lt;/orderperson&gt;
+    &lt;shipto&gt;
+        &lt;name&gt;Ola Nordmann&lt;/name&gt;
+        &lt;address&gt;Langgt 23&lt;/address&gt;
+        &lt;city&gt;4000 Stavanger&lt;/city&gt;
+        &lt;country&gt;Norway&lt;/country&gt;
+    &lt;/shipto&gt;
+    &lt;item&gt;
+        &lt;title&gt;Empire Burlesque&lt;/title&gt;
+        &lt;note&gt;Special Edition&lt;/note&gt;
+        &lt;quantity&gt;1&lt;/quantity&gt;
+        &lt;price&gt;10.90&lt;/price&gt;
+    &lt;/item&gt;
+    &lt;item&gt;
+        &lt;title&gt;Hide your heart&lt;/title&gt;
+        &lt;quantity&gt;1&lt;/quantity&gt;
+        &lt;price&gt;9.90&lt;/price&gt;
+    &lt;/item&gt;
+&lt;/shiporder&gt;
+</pre></div></div></td></tr></tbody></table></td></tr></tbody></table></td></tr></table>
 <br/><h2 id="TooFewMessages">Too Few Messages</h2>
 <br/><table>
 	<tr class="slimRowTitle">
@@ -51,9 +91,49 @@
 	<tr>
 		<td><span class="pass">table: Mock Server Message Report</span></td>
 	</tr>
-<tr><td><table><tbody><tr class="scenario"><td class="diff">1 (of 2) request(s) did not match expectation</td></tr><tr class="scenario-detail"><td><table><tbody><tr><td class="green">1</td><td><div class="collapsible closed"><p class="title">request</p><div><pre>&lt;Hallo/&gt;
+<tr><td><table><tbody><tr class="scenario"><td class="diff">1 (of 4) request(s) did not match expectation</td></tr><tr class="scenario-detail"><td><table><tbody><tr><td class="green">1</td><td><div class="collapsible closed"><p class="title">request</p><div>GET: /FitNesseMock</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div><pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;shiporder orderid=&quot;889923&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:noNamespaceSchemaLocation=&quot;shiporder_schema.xsd&quot;&gt;
+    &lt;orderperson&gt;John Smith&lt;/orderperson&gt;
+    &lt;shipto&gt;
+        &lt;name&gt;Ola Nordmann&lt;/name&gt;
+        &lt;address&gt;Langgt 23&lt;/address&gt;
+        &lt;city&gt;4000 Stavanger&lt;/city&gt;
+        &lt;country&gt;Norway&lt;/country&gt;
+    &lt;/shipto&gt;
+    &lt;item&gt;
+        &lt;title&gt;Empire Burlesque&lt;/title&gt;
+        &lt;note&gt;Special Edition&lt;/note&gt;
+        &lt;quantity&gt;1&lt;/quantity&gt;
+        &lt;price&gt;10.90&lt;/price&gt;
+    &lt;/item&gt;
+    &lt;item&gt;
+        &lt;title&gt;Hide your heart&lt;/title&gt;
+        &lt;quantity&gt;1&lt;/quantity&gt;
+        &lt;price&gt;9.90&lt;/price&gt;
+    &lt;/item&gt;
+&lt;/shiporder&gt;
+</pre></div></div></td></tr><tr><td class="green">2</td><td><div class="collapsible closed"><p class="title">request</p><div>GET: /FitNesseMock</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div><pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;shiporder xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:noNamespaceSchemaLocation=&quot;shiporder_schema.xsd&quot;&gt;
+    &lt;orderperson&gt;John Smith&lt;/orderperson&gt;
+    &lt;shipto&gt;
+        &lt;name&gt;Ola Nordmann&lt;/name&gt;
+        &lt;address&gt;Langgt 23&lt;/address&gt;
+        &lt;city&gt;4000 Stavanger&lt;/city&gt;
+        &lt;country&gt;Norway&lt;/country&gt;
+    &lt;/shipto&gt;
+    &lt;item&gt;
+        &lt;title&gt;Empire Burlesque&lt;/title&gt;
+        &lt;note&gt;Special Edition&lt;/note&gt;
+        &lt;quantity&gt;1&lt;/quantity&gt;
+        &lt;price&gt;10.90&lt;/price&gt;
+    &lt;/item&gt;
+    &lt;item&gt;
+        &lt;title&gt;Hide your heart&lt;/title&gt;
+        &lt;quantity&gt;1&lt;/quantity&gt;
+        &lt;price&gt;9.90&lt;/price&gt;
+    &lt;/item&gt;
+&lt;/shiporder&gt;
+</pre></div></div></td></tr><tr><td class="green">3</td><td><div class="collapsible closed"><p class="title">request</p><div><pre>&lt;Hallo/&gt;
 </pre></div></div></td><td><div class="collapsible closed"><p class="title">response</p><div><pre>&lt;dag/&gt;
-</pre></div></div></td></tr><tr><td class="diff">2</td><td>No request received</td><td><div class="collapsible closed"><p class="title">response</p><div><pre>&lt;dag2/&gt;
+</pre></div></div></td></tr><tr><td class="diff">4</td><td>No request received</td><td><div class="collapsible closed"><p class="title">response</p><div><pre>&lt;dag2/&gt;
 </pre></div></div></td></tr></tbody></table></td></tr></tbody></table></td></tr></table>
 <br/><h2 id="MessagesAsExpected">Messages As Expected</h2>
 <br/><table>
@@ -82,9 +162,49 @@
 	<tr>
 		<td><span class="pass">table: Mock Server Message Report</span></td>
 	</tr>
-<tr><td><table><tbody><tr class="scenario closed"><td class="green">Expected and received 2 requests</td></tr><tr class="scenario-detail closed-detail"><td><table><tbody><tr><td class="green">1</td><td><div class="collapsible closed"><p class="title">request</p><div><pre>&lt;Hallo/&gt;
+<tr><td><table><tbody><tr class="scenario closed"><td class="green">Expected and received 4 requests</td></tr><tr class="scenario-detail closed-detail"><td><table><tbody><tr><td class="green">1</td><td><div class="collapsible closed"><p class="title">request</p><div>GET: /FitNesseMock</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div><pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;shiporder orderid=&quot;889923&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:noNamespaceSchemaLocation=&quot;shiporder_schema.xsd&quot;&gt;
+    &lt;orderperson&gt;John Smith&lt;/orderperson&gt;
+    &lt;shipto&gt;
+        &lt;name&gt;Ola Nordmann&lt;/name&gt;
+        &lt;address&gt;Langgt 23&lt;/address&gt;
+        &lt;city&gt;4000 Stavanger&lt;/city&gt;
+        &lt;country&gt;Norway&lt;/country&gt;
+    &lt;/shipto&gt;
+    &lt;item&gt;
+        &lt;title&gt;Empire Burlesque&lt;/title&gt;
+        &lt;note&gt;Special Edition&lt;/note&gt;
+        &lt;quantity&gt;1&lt;/quantity&gt;
+        &lt;price&gt;10.90&lt;/price&gt;
+    &lt;/item&gt;
+    &lt;item&gt;
+        &lt;title&gt;Hide your heart&lt;/title&gt;
+        &lt;quantity&gt;1&lt;/quantity&gt;
+        &lt;price&gt;9.90&lt;/price&gt;
+    &lt;/item&gt;
+&lt;/shiporder&gt;
+</pre></div></div></td></tr><tr><td class="green">2</td><td><div class="collapsible closed"><p class="title">request</p><div>GET: /FitNesseMock</div></div></td><td><div class="collapsible closed"><p class="title">response</p><div><pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;shiporder xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:noNamespaceSchemaLocation=&quot;shiporder_schema.xsd&quot;&gt;
+    &lt;orderperson&gt;John Smith&lt;/orderperson&gt;
+    &lt;shipto&gt;
+        &lt;name&gt;Ola Nordmann&lt;/name&gt;
+        &lt;address&gt;Langgt 23&lt;/address&gt;
+        &lt;city&gt;4000 Stavanger&lt;/city&gt;
+        &lt;country&gt;Norway&lt;/country&gt;
+    &lt;/shipto&gt;
+    &lt;item&gt;
+        &lt;title&gt;Empire Burlesque&lt;/title&gt;
+        &lt;note&gt;Special Edition&lt;/note&gt;
+        &lt;quantity&gt;1&lt;/quantity&gt;
+        &lt;price&gt;10.90&lt;/price&gt;
+    &lt;/item&gt;
+    &lt;item&gt;
+        &lt;title&gt;Hide your heart&lt;/title&gt;
+        &lt;quantity&gt;1&lt;/quantity&gt;
+        &lt;price&gt;9.90&lt;/price&gt;
+    &lt;/item&gt;
+&lt;/shiporder&gt;
+</pre></div></div></td></tr><tr><td class="green">3</td><td><div class="collapsible closed"><p class="title">request</p><div><pre>&lt;Hallo/&gt;
 </pre></div></div></td><td><div class="collapsible closed"><p class="title">response</p><div><pre>&lt;dag/&gt;
-</pre></div></div></td></tr><tr><td class="green">2</td><td><div class="collapsible closed"><p class="title">request</p><div><pre>&lt;Hallo2/&gt;
+</pre></div></div></td></tr><tr><td class="green">4</td><td><div class="collapsible closed"><p class="title">request</p><div><pre>&lt;Hallo2/&gt;
 </pre></div></div></td><td><div class="collapsible closed"><p class="title">response</p><div><pre>&lt;dag2/&gt;
 </pre></div></div></td></tr></tbody></table></td></tr></tbody></table></td></tr></table>
 <br/><table>
