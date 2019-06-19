@@ -507,7 +507,9 @@
 
 			<!-- Aggregate JavaDoc for use with autoCompleteResponder -->
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.1.0</version>
 				<extensions>true</extensions>
 				<executions>
 					<execution>
@@ -523,7 +525,7 @@
 					<docletArtifact>
 						<groupId>nl.praegus</groupId>
 						<artifactId>fixture-doc-generator</artifactId>
-						<version>1.0-SNAPSHOT</version>
+						<version>1.0</version>
 					</docletArtifact>
 					<excludePackageNames>nl.hsac.fitnesse.sample:
 						nl.hsac.fitnesse.junit:
@@ -569,7 +571,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.10.4</version>
+						<version>3.1.0</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
