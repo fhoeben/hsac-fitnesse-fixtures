@@ -522,28 +522,27 @@
 						<goals>
 							<goal>javadoc</goal>
 						</goals>
+						<configuration>
+							<doclet>nl.praegus.doclets.FixtureDocGenerator</doclet>
+							<docletArtifact>
+								<groupId>nl.praegus</groupId>
+								<artifactId>fixture-doc-generator</artifactId>
+								<version>1.0</version>
+							</docletArtifact>
+							<excludePackageNames>nl.hsac.fitnesse.sample:
+								nl.hsac.fitnesse.junit:
+								nl.hsac.fitnesse.junit.*:
+								nl.hsac.fitnesse.slim.*:
+								nl.hsac.fitnesse.fixture.util:
+								nl.hsac.fitnesse.fixture.util.*:
+								nl.hsac.fitnesse.fixture.slim.web.annotation:
+								nl.hsac.fitnesse.fixture
+							</excludePackageNames>
+							<reportOutputDirectory>${project.basedir}/src/main/resources/META-INF/</reportOutputDirectory>
+							<useStandardDocletOptions>false</useStandardDocletOptions>
+						</configuration>
 					</execution>
 				</executions>
-
-				<configuration>
-					<doclet>nl.praegus.doclets.FixtureDocGenerator</doclet>
-					<docletArtifact>
-						<groupId>nl.praegus</groupId>
-						<artifactId>fixture-doc-generator</artifactId>
-						<version>1.0</version>
-					</docletArtifact>
-					<excludePackageNames>nl.hsac.fitnesse.sample:
-						nl.hsac.fitnesse.junit:
-						nl.hsac.fitnesse.junit.*:
-						nl.hsac.fitnesse.slim.*:
-						nl.hsac.fitnesse.fixture.util:
-						nl.hsac.fitnesse.fixture.util.*:
-						nl.hsac.fitnesse.fixture.slim.web.annotation:
-						nl.hsac.fitnesse.fixture
-					</excludePackageNames>
-					<reportOutputDirectory>${project.basedir}/src/main/resources/META-INF/</reportOutputDirectory>
-					<useStandardDocletOptions>false</useStandardDocletOptions>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -583,12 +582,12 @@
 								<goals>
 									<goal>jar</goal>
 								</goals>
+								<configuration>
+									<!-- needed to work with Java 8 while we have JavaDoc errors -->
+									<doclint>none</doclint>
+								</configuration>
 							</execution>
 						</executions>
-						<configuration>
-							<!-- needed to work with Java 8 while we have JavaDoc errors -->
-							<additionalparam>-Xdoclint:none</additionalparam>
-						</configuration>
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
