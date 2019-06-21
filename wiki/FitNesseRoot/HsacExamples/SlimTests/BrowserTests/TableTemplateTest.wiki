@@ -11,6 +11,7 @@ First we go to the Discography page for Van Morrison.
 |script                |browser test            |
 |seconds before timeout|60                      |
 |open                  |https://www.allmusic.com|
+|click if available    |I accept                |
 |enter                 |Van Morrison|as|Search  |
 |press                 |enter                   |
 |click                 |Van Morrison            |
