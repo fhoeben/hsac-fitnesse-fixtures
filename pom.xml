@@ -39,10 +39,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<hsac-fitnesse-plugin.version>1.27</hsac-fitnesse-plugin.version>
-		<fitnesse.version>20190508</fitnesse.version>
+		<fitnesse.version>20190620</fitnesse.version>
 		<selenium.version>3.141.59</selenium.version>
 		<slf4j.version>1.7.25</slf4j.version>
-		<apache.http.version>4.5.8</apache.http.version>
+		<apache.http.version>4.5.9</apache.http.version>
 		<surefire.version>2.22.1</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
