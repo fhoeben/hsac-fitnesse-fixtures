@@ -246,6 +246,11 @@
 							<directory>wiki/webdrivers</directory>
 							<followSymlinks>false</followSymlinks>
 						</fileset>
+						<fileset>
+							<!-- On clean throw away generated fixture documentation -->
+							<directory>src/main/resources/META-INF/apidocs</directory>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
 					</filesets>
 				</configuration>
 			</plugin>
