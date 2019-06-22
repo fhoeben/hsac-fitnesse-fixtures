@@ -46,3 +46,4 @@ wiki/webdrivers
 /src/test/resources/htmlReports/*/javascript/*
 wiki/FitNesseRoot/HsacExamples/SlimTests/UtilityFixtures/GeneratedSymbolicLinkSuite/*LocaleTests.wiki
 wiki/FitNesseRoot/ReRunLastFailures.wiki
+/src/main/resources/META-INF/apidocs/
