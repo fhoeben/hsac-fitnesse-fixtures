@@ -94,3 +94,5 @@ The location when working standalone:
 !path fixtures
 !path fixtures/*.jar
 *!
+
+!define ALL_UNCLE_SUITE_SETUPS {true}

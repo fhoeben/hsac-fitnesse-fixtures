@@ -5,7 +5,6 @@ This means we do not have to do this in every test, which means easier maintenan
 Stopping the browser is done in SuiteTearDown, which is done after all tests in this suite are completed.
 
 !***> Fixture code locations
-!include -c .HsacExamples.SlimTests.SuiteSetUp
 
 |Import                                   |
 |nl.hsac.fitnesse.fixture.slim.web        |
