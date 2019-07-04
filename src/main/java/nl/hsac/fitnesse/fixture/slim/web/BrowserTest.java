@@ -2429,6 +2429,31 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
                                             true, d -> checkValueIs(place, expectedValue));
     }
 
+    /**
+     * Refreshes current page until 'place' is found somewhere on the page. Do not forget to set 'repeat at most times', or else the loop may run endlessly.
+     * Usage: | refresh until | [place] | is visible on page |
+     * @param place The place to find.
+     * @return true if place is found while repeating
+     */
+    public boolean refreshUntilIsVisibleOnPage(String place) {
+        return repeatUntil(getRefreshUntilIsVisibleOnPage(place));
+    }
+
+    /**
+     * Refreshes current page until 'place' is not found somewhere on the page. Do not forget to set 'repeat at most times', or else the loop may run endlessly.
+     * Usage: | refresh until | [place] | is not visible on page |
+     * @param place The place you would not like to find anymore.
+     * @return true if place is not found while repeating
+     */
+    public boolean refreshUntilIsNotVisibleOnPage(String place) {
+        return repeatUntilNot(getRefreshUntilIsVisibleOnPage(place));
+    }
+
+    protected RepeatCompletion getRefreshUntilIsVisibleOnPage(String place) {
+        return new ConditionBasedRepeatUntil(false, d -> refresh(),
+                                            true, d -> isVisibleOnPage(place));
+    }
+
     public boolean clickUntilValueOfIs(String clickPlace, String checkPlace, String expectedValue) {
         return repeatUntil(getClickUntilValueIs(clickPlace, checkPlace, expectedValue));
     }
