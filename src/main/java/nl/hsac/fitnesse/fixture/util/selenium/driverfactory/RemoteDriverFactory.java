@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.fixture.util.selenium.driverfactory;
 
 import nl.hsac.fitnesse.fixture.Environment;
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.remote.FileDetector;
 import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -35,6 +36,9 @@ public class RemoteDriverFactory<T extends RemoteWebDriver> implements DriverFac
 
     @Override
     public T createDriver() {
+        if (capabilities instanceof MutableCapabilities) {
+            DriverFactory.addDefaultCapabilities((MutableCapabilities) capabilities);
+        }
         T remoteWebDriver = constr.apply(url, capabilities);
         FileDetector fd = remoteWebDriver.getFileDetector();
         if (fd == null || fd instanceof UselessFileDetector) {
