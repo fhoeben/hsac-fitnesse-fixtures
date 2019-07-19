@@ -1,0 +1,44 @@
+This test ensures that we can keep refreshing a page until a condition is met.
+
+We use a mock server running to serve the HTML defined in this page.
+
+
+!define HTML { {{{
+<html>
+<body>
+<div class="start">
+</body>
+</html>}}} }
+
+
+!define HTML2 { {{{
+<html>
+<body>
+<div class="start">
+</body>
+</html>}}} }
+
+!define HTML3 { {{{
+<html>
+<body>
+<div class="finish">
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|add response|${HTML2}             |
+|add response|${HTML3}             |
+|$url=       |get mock server url  |
+
+|script                |browser test                       |
+|open                  |$url                               |
+|seconds before timeout|1                                  |
+|repeat at most        |10          |times                 |
+|refresh until         |css=.start  |is not visible on page|
+|check                 |repeat count|2                     |
+
+|script|mock xml server setup|
+|stop                        |
+

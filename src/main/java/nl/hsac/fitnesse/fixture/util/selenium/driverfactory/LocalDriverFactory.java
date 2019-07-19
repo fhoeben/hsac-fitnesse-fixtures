@@ -44,6 +44,7 @@ public class LocalDriverFactory implements DriverFactory {
                 driver = new FirefoxDriver(options);
             } else if ("chromedriver".equalsIgnoreCase(driverClass.getSimpleName())) {
                 DesiredCapabilities capabilities = getChromeMobileCapabilities(profile);
+                DriverFactory.addDefaultCapabilities(capabilities);
                 driver = new ChromeDriver(capabilities);
             } else if ("internetexplorerdriver".equalsIgnoreCase(driverClass.getSimpleName())) {
                 InternetExplorerOptions ieOptions = getInternetExplorerOptions(profile);

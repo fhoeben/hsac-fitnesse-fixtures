@@ -39,16 +39,16 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<hsac-fitnesse-plugin.version>1.27</hsac-fitnesse-plugin.version>
-		<fitnesse.version>20190508</fitnesse.version>
+		<fitnesse.version>20190716</fitnesse.version>
 		<selenium.version>3.141.59</selenium.version>
 		<slf4j.version>1.7.25</slf4j.version>
-		<apache.http.version>4.5.8</apache.http.version>
+		<apache.http.version>4.5.9</apache.http.version>
 		<surefire.version>2.22.1</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
 		<selenium.internetexplorerdriver.version>3.141.5</selenium.internetexplorerdriver.version>
 		<selenium.edgedriver.version>6.17134</selenium.edgedriver.version>
-		<selenium.chromedriver.version>74.0.3729.6</selenium.chromedriver.version>
+		<selenium.chromedriver.version>75.0.3770.140</selenium.chromedriver.version>
 		<selenium.geckodriver.version>0.24.0</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
@@ -96,7 +96,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-text</artifactId>
-			<version>1.6</version>
+			<version>1.7</version>
 		</dependency>
 		<dependency>
 			<groupId>cglib</groupId>
@@ -244,6 +244,11 @@
 						<fileset>
 							<!-- On clean throw away web drivers to prevent multiple version being present after update -->
 							<directory>wiki/webdrivers</directory>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+						<fileset>
+							<!-- On clean throw away generated fixture documentation -->
+							<directory>src/main/resources/META-INF/apidocs</directory>
 							<followSymlinks>false</followSymlinks>
 						</fileset>
 					</filesets>
@@ -504,6 +509,41 @@
 					<goals>deploy</goals>
 				</configuration>
 			</plugin>
+
+			<!-- Aggregate JavaDoc for use with autoCompleteResponder -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.1.0</version>
+				<extensions>true</extensions>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>javadoc</goal>
+						</goals>
+						<configuration>
+							<doclet>nl.praegus.doclets.FixtureDocGenerator</doclet>
+							<docletArtifact>
+								<groupId>nl.praegus</groupId>
+								<artifactId>fixture-doc-generator</artifactId>
+								<version>1.0</version>
+							</docletArtifact>
+							<excludePackageNames>nl.hsac.fitnesse.sample:
+								nl.hsac.fitnesse.junit:
+								nl.hsac.fitnesse.junit.*:
+								nl.hsac.fitnesse.slim.*:
+								nl.hsac.fitnesse.fixture.util:
+								nl.hsac.fitnesse.fixture.util.*:
+								nl.hsac.fitnesse.fixture.slim.web.annotation:
+								nl.hsac.fitnesse.fixture
+							</excludePackageNames>
+							<reportOutputDirectory>${project.basedir}/src/main/resources/META-INF/</reportOutputDirectory>
+							<useStandardDocletOptions>false</useStandardDocletOptions>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -535,19 +575,19 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.10.4</version>
+						<version>3.1.0</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
 								<goals>
 									<goal>jar</goal>
 								</goals>
+								<configuration>
+									<!-- needed to work with Java 8 while we have JavaDoc errors -->
+									<doclint>none</doclint>
+								</configuration>
 							</execution>
 						</executions>
-						<configuration>
-							<!-- needed to work with Java 8 while we have JavaDoc errors -->
-							<additionalparam>-Xdoclint:none</additionalparam>
-						</configuration>
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>

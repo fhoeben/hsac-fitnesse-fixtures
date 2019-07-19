@@ -190,7 +190,7 @@ public class HttpServer<T extends HttpResponse> {
                 try {
                     String request;
                     InputStream is = he.getRequestBody();
-                    String body = IOUtils.toString(is);
+                    String body = IOUtils.toString(is, Charset.defaultCharset());
 
                     if ("POST".equals(method)
                             || "PUT".equals(method)
