@@ -1,0 +1,32 @@
+This test ensures that setting scroll behaviour to center results in the element we serch for to become interactable
+
+!define HTML { {{{
+<html>
+<body>
+<div style="background-color: #fff; border: 1px solid black; position:fixed; top:0; width:100%; height:50px; z-index:100;">the div that obscures stuff</div>
+<p>top</p><br/>
+<div style="min-height:1000px;">&nbsp;</div>
+<p>halfway down</p><br/>
+<div style="min-height:1000px;">&nbsp;</div>
+<p>bottom</p><br/>
+</body>
+</html>}}} }
+
+!*> Mock server
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+*!
+
+
+|script                               |browser test|1                                         |
+|open                                 |$url                                                   |
+|reject                               |scroll elements to center of viewport                  |
+|scroll to                            |halfway down                                           |
+|check                                |click |halfway down|EXCEPTION:=~/.*Timed-out waiting.*/|
+|press                                |HOME                                                   |
+|scroll elements to center of viewport|true                                                   |
+|ensure                               |scroll elements to center of viewport                  |
+|scroll to                            |halfway down                                           |
+|ensure                               |click |halfway down                                    |

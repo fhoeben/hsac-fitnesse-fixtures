@@ -56,6 +56,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     private NgBrowserTest ngBrowserTest;
     private boolean implicitWaitForAngular = false;
     private boolean implicitFindInFrames = true;
+    private boolean scrollElementToCenter = false;
     private int secondsBeforeTimeout;
     private int secondsBeforePageLoadTimeout;
     private int waitAfterScroll = 150;
@@ -1605,7 +1606,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * @param element element to scroll to.
      */
     protected void scrollTo(WebElement element) {
-        getSeleniumHelper().scrollTo(element);
+        getSeleniumHelper().scrollTo(element, scrollElementToCenter);
         waitAfterScroll(waitAfterScroll);
     }
 
@@ -2653,4 +2654,21 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     public void setTrimOnNormalize(boolean trimOnNormalize) {
         this.trimOnNormalize = trimOnNormalize;
     }
+
+    /**
+     * Set the scroll into view behaviour to 'çenter of viewport' (true) or 'auto' (false)
+     * @param scrollElementsToCenterOfViewport True to scroll to center, False to use automatic scroll behaviour
+     */
+    public void scrollElementsToCenterOfViewport(boolean scrollElementsToCenterOfViewport) {
+        scrollElementToCenter = scrollElementsToCenterOfViewport;
+    }
+
+    /**
+     * Get the current scroll behaviour. True means 'center of viewport', False means 'auto'
+     * @return the current boolean value of scrollElementToCenter
+     */
+    public boolean scrollElementsToCenterOfViewport() {
+        return scrollElementToCenter;
+    }
+
 }
