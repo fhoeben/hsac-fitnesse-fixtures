@@ -29,6 +29,7 @@ p {
 |script                |browser test           |
 |seconds before timeout|1                      |
 |open                  |$url                   |
+|press                 |HOME                   |
 |ensure                |is Visible        |A   |
 |ensure                |is Visible        |ELSE|
 |reject                |is Visible        |B   |
