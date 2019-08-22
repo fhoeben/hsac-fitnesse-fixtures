@@ -965,7 +965,7 @@ public class SeleniumHelper<T extends WebElement> {
      */
     public void scrollTo(WebElement element, boolean toCenter) {
         String scrollIntoViewArgs = toCenter ? "{behavior: \"auto\", block: \"center\", inline: \"center\"}" : "true";
-                executeJavascript("arguments[0].scrollIntoView("+ scrollIntoViewArgs +");", element);
+                executeJavascript("arguments[0].scrollIntoView(" + scrollIntoViewArgs + ");", element);
     }
 
     /**

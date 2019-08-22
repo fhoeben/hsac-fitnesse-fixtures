@@ -20,11 +20,13 @@ This test ensures that setting scroll behaviour to center results in the element
 *!
 
 
-|script   |browser test|1                                               |
-|open     |$url                                                         |
-|scroll to|halfway down                                                 |
-|check    |click       |halfway down|EXCEPTION:=~/.*Timed-out waiting.*/|
-|press    |HOME                                                         |
-|scroll elements to center                                              |
-|scroll to|halfway down                                                 |
-|ensure   |click       |halfway down                                    |
+|script                               |browser test|1                                         |
+|open                                 |$url                                                   |
+|reject                               |scroll elements to center of viewport                  |
+|scroll to                            |halfway down                                           |
+|check                                |click |halfway down|EXCEPTION:=~/.*Timed-out waiting.*/|
+|press                                |HOME                                                   |
+|scroll elements to center of viewport|true                                                   |
+|ensure                               |scroll elements to center of viewport                  |
+|scroll to                            |halfway down                                           |
+|ensure                               |click |halfway down                                    |
