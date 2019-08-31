@@ -26,6 +26,7 @@ import nl.hsac.fitnesse.fixture.util.TimeoutHelper;
 import nl.hsac.fitnesse.fixture.util.XMLFormatter;
 import nl.hsac.fitnesse.fixture.util.XPathHelper;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
+import nl.hsac.fitnesse.fixture.util.ZipHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.CookieConverter;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverManager;
@@ -70,6 +71,7 @@ public class Environment {
     private SecretMasker secretMasker = new SecretMasker();
     private LineEndingHelper lineEndingHelper = new LineEndingHelper();
     private PropertiesHelper propertiesHelper = new PropertiesHelper();
+    private ZipHelper zipHelper = new ZipHelper();
 
     private Environment() {
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_23);
@@ -803,6 +805,14 @@ public class Environment {
 
     public void setPropertiesHelper(PropertiesHelper propertiesHelper) {
         this.propertiesHelper = propertiesHelper;
+    }
+
+    public ZipHelper getZipHelper() {
+        return zipHelper;
+    }
+
+    public void setZipHelper(ZipHelper zipHelper) {
+        this.zipHelper = zipHelper;
     }
 
     /**
