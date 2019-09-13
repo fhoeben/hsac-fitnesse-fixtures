@@ -21,7 +21,7 @@ public class ReportFinderTest {
         assertEquals("Unexpected number of run: " + overviews, 3, overviews.size());
         assertEquals("Unexpected number of results", EXPECTED_TEST_COUNT, reports.size());
 
-        TestReportHtml mockXmlServerTest = getActual(reports, "MockXmlServerTest");
+        TestReportHtml mockXmlServerTest = getReport(reports, "MockXmlServerTest", "MockXmlServerTest");
         assertEquals(-1, mockXmlServerTest.getTime());
         assertEquals(Integer.MAX_VALUE - 2, mockXmlServerTest.getIndex());
         TestReportHtml mockXmlSuiteSetup = getReport(reports, "MockXmlServerTest", "SuiteSetUp");
