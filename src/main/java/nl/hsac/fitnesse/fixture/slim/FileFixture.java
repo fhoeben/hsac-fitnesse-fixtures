@@ -8,7 +8,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
 
 /**
  * Utility fixture to work with files.
@@ -275,4 +282,71 @@ public class FileFixture extends SlimFixtureWithMap {
         File f = FileUtil.appendToFile(fullName, extraContent, true);
         return linkToFile(f);
     }
+
+    public String zipAs(String inputfile, String zipname) {
+        String fullName = getFullName(inputfile);
+        String[] inputFiles;
+
+        File inputSrc = new File(fullName);
+        if (inputSrc.isDirectory()) {
+            inputFiles = Arrays.stream(inputSrc.listFiles())
+                    .map(File::getAbsolutePath)
+                    .toArray(String[]::new);
+        } else {
+            inputFiles = new String[] { fullName };
+        }
+
+        try {
+            String nonExistingZip = findNameForFile(zipname);
+            File zip = getEnvironment().getZipHelper().createZip(nonExistingZip, inputFiles);
+            return linkToFile(zip);
+        } catch (IOException e) {
+            throw new SlimFixtureException(true, "Unable to create zip. " + e.getMessage(), e);
+        }
+    }
+
+    public String unzipAs(String zipname, String targetDir) {
+        String zipfile = getFullName(zipname);
+
+        try {
+            String nonExistingTarget = findNameForFile(targetDir);
+            getEnvironment().getZipHelper().unzip(zipfile, nonExistingTarget);
+            return linkToFile(nonExistingTarget);
+        } catch (IOException e) {
+            throw new SlimFixtureException(true, "Unable to unzip. " + e.getMessage(), e);
+        }
+
+    }
+
+    private String findNameForFile(String fileFromWiki) {
+        String basename = FilenameUtils.getBaseName(fileFromWiki);
+        String target = getFullName(basename);
+        ensureParentExists(target);
+        String targetExt = FilenameUtils.getExtension(fileFromWiki);
+
+        return FileUtil.determineFilename(target, targetExt).getAbsolutePath();
+    }
+
+    public long numberOfFilesInZip(String zipname) {
+        return applyOnZipEntries(zipname, Stream::count);
+    }
+
+    public ArrayList<String> namesOfFilesInZip(String zipname) {
+        return applyOnZipEntries(zipname,
+                s -> s.map(ZipEntry::getName)
+                        .collect(Collectors.toCollection(ArrayList::new)));
+    }
+
+    protected <T> T applyOnZipEntries(String zipname, Function<Stream<ZipEntry>, T> function) {
+        String zipfile = getFullName(zipname);
+
+        try {
+            List<ZipEntry> entries = getEnvironment().getZipHelper().getEntries(zipfile);
+            return function.apply(entries.stream()
+                    .filter(e -> !e.isDirectory()));
+        } catch (IOException e) {
+            throw new SlimFixtureException(true, "Unable get zip entries. " + e.getMessage(), e);
+        }
+    }
+
 }

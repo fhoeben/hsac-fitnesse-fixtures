@@ -6,7 +6,7 @@
 
 	<groupId>nl.hsac</groupId>
 	<artifactId>hsac-fitnesse-fixtures</artifactId>
-	<version>4.5-SNAPSHOT</version>
+	<version>4.6-SNAPSHOT</version>
 	<url>https://github.com/fhoeben/hsac-fitnesse-fixtures</url>
 	<name>HSAC's FitNesse Fixtures</name>
 	<description>Fixtures to assist in testing via FitNesse</description>
@@ -42,14 +42,14 @@
 		<fitnesse.version>20190716</fitnesse.version>
 		<selenium.version>3.141.59</selenium.version>
 		<slf4j.version>1.7.25</slf4j.version>
-		<apache.http.version>4.5.9</apache.http.version>
+		<apache.http.version>4.5.10</apache.http.version>
 		<surefire.version>2.22.1</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
 		<selenium.internetexplorerdriver.version>3.141.5</selenium.internetexplorerdriver.version>
 		<selenium.edgedriver.version>6.17134</selenium.edgedriver.version>
-		<selenium.chromedriver.version>75.0.3770.140</selenium.chromedriver.version>
-		<selenium.geckodriver.version>0.24.0</selenium.geckodriver.version>
+		<selenium.chromedriver.version>77.0.3865.40</selenium.chromedriver.version>
+		<selenium.geckodriver.version>0.25.0</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
@@ -91,17 +91,17 @@
 		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
-			<version>2.3.28</version>
+			<version>2.3.29</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-text</artifactId>
-			<version>1.7</version>
+			<version>1.8</version>
 		</dependency>
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib-nodep</artifactId>
-			<version>3.2.12</version>
+			<version>3.3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
@@ -189,7 +189,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.24</version>
+            <version>1.25</version>
         </dependency>
 		<dependency>
 			<groupId>commons-net</groupId>

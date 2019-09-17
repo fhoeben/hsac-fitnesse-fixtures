@@ -74,6 +74,19 @@ second line-! |
 |check                  |size of  |$appended|22|
 |delete                 |$appended             |
 
+Table below shows how we can work with zip files
+
+|script                                                                   |
+|$created= |create                |bye1.txt          |containing|Bye Bye 5|
+|$zip=     |zip                   |$created          |as        |bye.zip  |
+|check     |number of files in zip|$zip              |1                   |
+|check     |names of files in zip |$zip              |[bye1.txt]          |
+|$unzipped=|unzip                 |$zip              |as        |unzipped |
+|check     |text in               |$unzipped/bye1.txt|Bye Bye 5           |
+|$zip2=    |zip                   |$unzipped         |as        |zip2.zip |
+|check     |names of files in zip |$zip2             |[bye1.txt]          |
+
+
 Table below shows how we can use a list of non-reusable data from a file:
 
 |script                                                       |
