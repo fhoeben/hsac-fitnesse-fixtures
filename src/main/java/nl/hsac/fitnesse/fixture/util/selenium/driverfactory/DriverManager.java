@@ -24,6 +24,10 @@ public class DriverManager {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> closeDriver()));
     }
 
+    protected DriverManager(DriverFactory driverFactory) {
+        this.factory = driverFactory;
+    }
+
     public void setFactory(DriverFactory factory) {
         this.factory = factory;
     }
@@ -45,11 +49,11 @@ public class DriverManager {
                 try {
                     WebDriver driver = currentFactory.createDriver();
                     postProcessDriver(driver);
-                    SeleniumHelper newHelper = createHelper(driver);
+                    SeleniumHelper newHelper = createHelper();
                     newHelper.setWebDriver(driver, getDefaultTimeoutSeconds());
                     setSeleniumHelper(newHelper);
                 } catch (SessionNotCreatedException e) {
-                    throw new StopTestException("Unable to create selenium session using: " + currentFactory, e);
+                    throw new StopTestException(e.getMessage(), e);
                 }
             }
         }
@@ -69,7 +73,7 @@ public class DriverManager {
         this.helper = helper;
     }
 
-    protected SeleniumHelper createHelper(WebDriver driver) {
+    protected SeleniumHelper createHelper() {
         // set default 'Best Function'
         BestMatchBy.setBestFunction(BestMatchBy::selectBestElement);
         return new SeleniumHelper();
