@@ -24,10 +24,6 @@ public class DriverManager {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> closeDriver()));
     }
 
-    protected DriverManager(DriverFactory driverFactory) {
-        this.factory = driverFactory;
-    }
-
     public void setFactory(DriverFactory factory) {
         this.factory = factory;
     }
@@ -49,7 +45,7 @@ public class DriverManager {
                 try {
                     WebDriver driver = currentFactory.createDriver();
                     postProcessDriver(driver);
-                    SeleniumHelper newHelper = createHelper();
+                    SeleniumHelper newHelper = createHelper(driver);
                     newHelper.setWebDriver(driver, getDefaultTimeoutSeconds());
                     setSeleniumHelper(newHelper);
                 } catch (SessionNotCreatedException e) {
@@ -73,7 +69,7 @@ public class DriverManager {
         this.helper = helper;
     }
 
-    protected SeleniumHelper createHelper() {
+    protected SeleniumHelper createHelper(WebDriver driver) {
         // set default 'Best Function'
         BestMatchBy.setBestFunction(BestMatchBy::selectBestElement);
         return new SeleniumHelper();
