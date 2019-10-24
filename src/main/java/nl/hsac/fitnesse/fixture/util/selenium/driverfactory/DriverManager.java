@@ -49,7 +49,7 @@ public class DriverManager {
                     newHelper.setWebDriver(driver, getDefaultTimeoutSeconds());
                     setSeleniumHelper(newHelper);
                 } catch (SessionNotCreatedException e) {
-                    throw new StopTestException("Unable to create selenium session using: " + currentFactory, e);
+                    throw new StopTestException(e.getMessage(), e);
                 }
             }
         }

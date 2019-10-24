@@ -25,6 +25,12 @@ public class HttpResponse {
      * @throws RuntimeException if no valid response is available
      */
     public void validResponse() {
+        if (statusCode == 0) {
+            throw new RuntimeException("Status code is 0. Probably no response was received.");
+        }
+        if (statusCode < 100) {
+            throw new RuntimeException("Status code is less than 100: " + statusCode);
+        }
         if (statusCode >= 500 && statusCode <= 599) {
             throw new RuntimeException("Server error returned: " + statusCode);
         }

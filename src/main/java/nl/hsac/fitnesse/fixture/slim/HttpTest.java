@@ -29,6 +29,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     private String downloadBase = new File(filesDir, "downloads").getPath() + "/";
     private final Map<String, Object> headerValues = new LinkedHashMap<>();
+    private boolean stopTestOnException = true;
     private boolean storeCookies = false;
     private HttpResponse response = createResponse();
     private String template;
@@ -255,7 +256,7 @@ public class HttpTest extends SlimFixtureWithMap {
                     throw new IllegalArgumentException("Unsupported method: " + method);
             }
         } catch (Throwable t) {
-            throw new StopTestException("Unable to get response from " + method + " to: " + url, t);
+            handleCallException("Unable to get response from " + method + " to: " + url, t);
         }
         result = postProcessResponse();
         return result;
@@ -325,7 +326,7 @@ public class HttpTest extends SlimFixtureWithMap {
                         throw new IllegalArgumentException("Unsupported method: " + method);
                 }
             } catch (Throwable t) {
-                throw new StopTestException("Unable to get response from " + method + " to: " + url, t);
+                handleCallException("Unable to get response from " + method + " to: " + url, t);
             }
             result = postProcessResponse();
         }
@@ -401,7 +402,7 @@ public class HttpTest extends SlimFixtureWithMap {
             }
 
         } catch (Throwable t) {
-            throw new StopTestException("Unable to get response from " + method + " to: " + url, t);
+            handleCallException("Unable to get response from " + method + " to: " + url, t);
         }
         result = postProcessResponse();
         return result;
@@ -444,7 +445,7 @@ public class HttpTest extends SlimFixtureWithMap {
             storeLastCall(method, serviceUrl);
             getEnvironment().doGet(url, response, headerValues, followRedirect);
         } catch (Throwable t) {
-            throw new StopTestException("Unable to GET response from: " + url, t);
+            handleCallException("Unable to GET response from: " + url, t);
         }
         result = postProcessResponse();
         return result;
@@ -492,7 +493,7 @@ public class HttpTest extends SlimFixtureWithMap {
             storeLastCall("HEAD", serviceUrl);
             getEnvironment().doHead(url, response, headerValues);
         } catch (Throwable t) {
-            throw new StopTestException("Unable to HEAD: " + url, t);
+            handleCallException("Unable to HEAD: " + url, t);
         }
         result = postProcessResponse();
         return result;
@@ -511,10 +512,21 @@ public class HttpTest extends SlimFixtureWithMap {
             storeLastCall("DELETE", serviceUrl);
             getEnvironment().doDelete(url, response, headerValues);
         } catch (Throwable t) {
-            throw new StopTestException("Unable to DELETE: " + url, t);
+            handleCallException("Unable to DELETE: " + url, t);
         }
         result = postProcessResponse();
         return result;
+    }
+
+    protected void handleCallException(String msg, Throwable t) {
+        if (stopTestOnException()) {
+            throw new StopTestException(msg, t);
+        } else {
+            logger.warn(msg);
+            if (logger.isDebugEnabled()) {
+                logger.debug(msg, t);
+            }
+        }
     }
 
     protected void resetResponse() {
@@ -848,6 +860,14 @@ public class HttpTest extends SlimFixtureWithMap {
 
     public boolean isExplicitContentTypeSet() {
         return explicitContentTypeSet;
+    }
+
+    public void setStopTestOnException(boolean stopTestOnException) {
+        this.stopTestOnException = stopTestOnException;
+    }
+
+    public boolean stopTestOnException() {
+        return stopTestOnException;
     }
 
     // Polling

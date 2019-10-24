@@ -74,6 +74,7 @@ public class XmlHttpResponseTest {
     public void testGetXPathList() {
         XmlHttpResponse resp = createResponse();
         resp.setResponse(MULTIPLY_NODES_RESP);
+        resp.setStatusCode(200);
 
         List<String> xpathResult =
                 resp.getAllXPath("//*[local-name()='amountPremiumYear']/text()");
