@@ -38,21 +38,27 @@ public class HttpResponse {
         if (statusCode >= 500 && statusCode <= 599) {
             throw new RuntimeException("Server error returned: " + statusCode);
         }
-
     }
 
-    public boolean responseIsValid() {
-        if (statusCode == 0) {
-            throw new SlimFixtureException("Status code is 0. Probably no response was received.");
-        }
-        if (statusCode < 100) {
-            throw new SlimFixtureException("Status code is less than 100: " + statusCode);
-        }
-        if (statusCode >= 400 && statusCode <= 499) {
-            throw new SlimFixtureException("Server reported client error: " + statusCode);
-        }
-        if (statusCode >= 500 && statusCode <= 599) {
-            throw new SlimFixtureException("Server error returned: " + statusCode);
+    public boolean responseIsValid(boolean throwExceptionOnHttpRequestFailure) {
+        try {
+            if (statusCode == 0) {
+                throw new SlimFixtureException("Status code is 0. Probably no response was received.");
+            }
+            if (statusCode < 100) {
+                throw new SlimFixtureException("Status code is less than 100: " + statusCode);
+            }
+            if (statusCode >= 400 && statusCode <= 499) {
+                throw new SlimFixtureException("Server reported client error: " + statusCode);
+            }
+            if (statusCode >= 500 && statusCode <= 599) {
+                throw new SlimFixtureException("Server error returned: " + statusCode);
+            }
+        } catch (SlimFixtureException e) {
+            if (throwExceptionOnHttpRequestFailure) {
+                throw e;
+            }
+            return false;
         }
         return true;
     }
@@ -132,6 +138,7 @@ public class HttpResponse {
 
     /**
      * Sets cookie store to use for this request response
+     *
      * @param cookieStore cookie store for this request/response
      */
     public void setCookieStore(CookieStore cookieStore) {
@@ -147,6 +154,7 @@ public class HttpResponse {
 
     /**
      * Sets response time for obtaining this response.
+     *
      * @param responseTime response time in ms for call.
      */
     public void setResponseTime(long responseTime) {
@@ -184,6 +192,7 @@ public class HttpResponse {
 
     /**
      * Returns response toString() was called on previously.
+     *
      * @param value toString() of response being searched.
      * @return response if one is known, null otherwise.
      */
