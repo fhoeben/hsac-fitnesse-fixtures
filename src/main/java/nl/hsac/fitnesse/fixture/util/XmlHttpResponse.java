@@ -8,12 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-
 /**
  * Wrapper around XML HTTP response (and request).
  */
 public class XmlHttpResponse extends HttpResponse {
-    /** Content type for requests. */
+    /**
+     * Content type for requests.
+     */
     public final static String CONTENT_TYPE_XML_TEXT_UTF8 = "text/xml; charset=UTF-8";
 
     private NamespaceContext namespaceContext;
@@ -22,7 +23,25 @@ public class XmlHttpResponse extends HttpResponse {
     @Override
     public void validResponse() {
         super.validResponse();
+        checkXmlResponse();
+    }
 
+    @Override
+    public boolean responseIsValid(boolean throwExceptionOnHttpRequestFailure) {
+        boolean responseIsValid = super.responseIsValid(throwExceptionOnHttpRequestFailure);
+        if (throwExceptionOnHttpRequestFailure) {
+            checkXmlResponse();
+        } else {
+            try {
+                checkXmlResponse();
+            } catch (RuntimeException e) {
+                return false;
+            }
+        }
+        return responseIsValid;
+    }
+
+    private void checkXmlResponse() {
         String response = getResponse();
         if (response != null) {
             boolean ableToXPath = false;
@@ -44,7 +63,7 @@ public class XmlHttpResponse extends HttpResponse {
 
     /**
      * @param xPathExpr expression to apply to response.
-     * @param params values to put inside expression before evaluation
+     * @param params    values to put inside expression before evaluation
      * @return result of xpath expression.
      * @throws RuntimeException if no valid response was available or XPath could not be evaluated.
      */
@@ -56,8 +75,9 @@ public class XmlHttpResponse extends HttpResponse {
 
     /**
      * Gets XPath value without checking whether response is valid.
+     *
      * @param xPathExpr expression to apply to response.
-     * @param params values to put inside expression before evaluation
+     * @param params    values to put inside expression before evaluation
      * @return result of xpath expression.
      */
     public String getRawXPath(String xPathExpr, Object... params) {
@@ -75,7 +95,7 @@ public class XmlHttpResponse extends HttpResponse {
 
     /**
      * @param xPathExpr expression to apply to response.
-     * @param params values to put inside expression before evaluation
+     * @param params    values to put inside expression before evaluation
      * @return result of xpath expression.
      * @throws RuntimeException if no valid response was available or XPath could not be evaluated.
      */
@@ -90,7 +110,7 @@ public class XmlHttpResponse extends HttpResponse {
 
     /**
      * @param xPathExpr expression to apply to response.
-     * @param params values to put inside expression before evaluation
+     * @param params    values to put inside expression before evaluation
      * @return result of xpath expression.
      * @throws RuntimeException if no valid response was available or XPath could not be evaluated.
      */
@@ -105,7 +125,7 @@ public class XmlHttpResponse extends HttpResponse {
 
     /**
      * @param xPathExpr expression to apply to response.
-     * @param params values to put inside expression before evaluation
+     * @param params    values to put inside expression before evaluation
      * @return result of xpath expression.
      * @throws RuntimeException if no valid response was available or XPath could not be evaluated.
      */
@@ -119,7 +139,7 @@ public class XmlHttpResponse extends HttpResponse {
 
     /**
      * @param xPathExpr expression to apply to response.
-     * @param params values to put inside expression before evaluation
+     * @param params    values to put inside expression before evaluation
      * @return result of xpath expression, without timezone part.
      * @throws RuntimeException if no valid response was available or XPath could not be evaluated.
      */
@@ -134,11 +154,12 @@ public class XmlHttpResponse extends HttpResponse {
 
     /**
      * Checks whether input values are present at correct locations in the response.
-     * @param values keyName -> value, input parameters supplied to get request.
+     *
+     * @param values             keyName -> value, input parameters supplied to get request.
      * @param expressionsToCheck xpath -> keyName, each xpath in this map is expected
-     *        to evaluate to the value present in values for that key (i.e. values[keyName])
+     *                           to evaluate to the value present in values for that key (i.e. values[keyName])
      * @return OK if all xpath expressions evaluated to the correct value. A description
-     *        of the mismatches otherwise.
+     * of the mismatches otherwise.
      */
     public XPathCheckResult checkXPaths(Map<String, Object> values, Map<String, String> expressionsToCheck) {
         XPathCheckResult result;
@@ -212,6 +233,7 @@ public class XmlHttpResponse extends HttpResponse {
 
     /**
      * Gets the value xsi:type attribute will have for provided type.
+     *
      * @param type sub type wanted.
      * @return type name including namespace prefix as present in response.
      */
@@ -221,7 +243,7 @@ public class XmlHttpResponse extends HttpResponse {
 
     /**
      * @param xPathExpr expression to apply to response.
-     * @param params values to put inside expression before evaluation
+     * @param params    values to put inside expression before evaluation
      * @return all results of xpath expression.
      * @throws RuntimeException if no valid response was available or XPath could not be evaluated.
      */
