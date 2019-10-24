@@ -617,13 +617,7 @@ public class HttpTest extends SlimFixtureWithMap {
      * @return true if response does not indicate an error.
      */
     public boolean responseIsValid() {
-        if (response.getStatusCode() >= 500 && response.getStatusCode() <= 599) {
-            throw new SlimFixtureException(false, "Server error returned: " + response.getStatusCode());
-        }
-        if (response.getStatusCode() >= 400 && response.getStatusCode() <= 499) {
-            throw new SlimFixtureException(false, "Server reported client error: " + response.getStatusCode());
-        }
-        return true;
+        return response.responseIsValid();
     }
 
     /**
