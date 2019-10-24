@@ -1,6 +1,5 @@
 package nl.hsac.fitnesse.fixture.slim;
 
-
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 import org.junit.Test;
 
@@ -8,8 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -103,7 +103,7 @@ public class HttpTestTest {
         client.setValueFor("three", "param2.nested");
         getUrl = client.createUrlWithParams("http://mysite.nl:8080/test");
         assertEquals("http://mysite.nl:8080/test?param.name=one&param.name=two&param.name=three" +
-                    "&name2=one&param2.name=one&param2.name=two&param2.nested=three", getUrl);
+                "&name2=one&param2.name=one&param2.name=two&param2.nested=three", getUrl);
     }
 
     @Test
@@ -473,12 +473,12 @@ public class HttpTestTest {
         try {
             String serverUrl = mockXmlServerSetup.getMockServerUrl();
 
-            boolean result = call.apply(serverUrl);
-            assertFalse(result);
+            assertThatThrownBy(() -> call.apply(serverUrl)).isInstanceOf(SlimFixtureException.class);
 
-            result = httpTest.repeatUntilResponseStatusIs(200);
-            assertTrue(result);
-            assertEquals(2, httpTest.repeatCount());
+            boolean result = httpTest.repeatUntilResponseStatusIs(200);
+
+            assertThat(result).isTrue();
+            assertThat(2).isEqualTo(httpTest.repeatCount());
 
             return mockXmlServerSetup.getResponseList().get(2);
         } finally {
