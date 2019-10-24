@@ -7,9 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -473,12 +472,12 @@ public class HttpTestTest {
         try {
             String serverUrl = mockXmlServerSetup.getMockServerUrl();
 
-            assertThatThrownBy(() -> call.apply(serverUrl)).isInstanceOf(SlimFixtureException.class);
+            boolean result = call.apply(serverUrl);
+            assertFalse(result);
 
-            boolean result = httpTest.repeatUntilResponseStatusIs(200);
-
-            assertThat(result).isTrue();
-            assertThat(2).isEqualTo(httpTest.repeatCount());
+            result = httpTest.repeatUntilResponseStatusIs(200);
+            assertTrue(result);
+            assertEquals(2, httpTest.repeatCount());
 
             return mockXmlServerSetup.getResponseList().get(2);
         } finally {

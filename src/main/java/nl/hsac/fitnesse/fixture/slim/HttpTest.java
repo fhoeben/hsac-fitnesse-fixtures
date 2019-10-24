@@ -901,6 +901,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     // Polling
     public boolean repeatUntilResponseStatusIs(final int expectedStatus) {
+        doNotThrowExceptionOnHttpRequestFailure();
         return repeatUntil(
                 new RepeatLastCall() {
                     @Override
@@ -911,6 +912,7 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     public boolean repeatUntilResponseIs(final String expectedResponse) {
+        doNotThrowExceptionOnHttpRequestFailure();
         RepeatCompletion completion;
         if (expectedResponse == null) {
             completion = new RepeatLastCall() {
@@ -932,6 +934,7 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     public boolean repeatUntilHeaderIs(final String header, final Object expectedValue) {
+        doNotThrowExceptionOnHttpRequestFailure();
         RepeatCompletion completion;
         if (expectedValue == null) {
             completion = new RepeatLastCall() {
