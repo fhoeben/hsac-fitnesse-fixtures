@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class HtmlReportIndexGeneratorTest {
-    static final int EXPECTED_TEST_COUNT = 41;
+    static final int EXPECTED_TEST_COUNT = 43;
     private HtmlReportIndexGenerator generator = new HtmlReportIndexGenerator();
 
     @Test
@@ -49,7 +49,7 @@ public class HtmlReportIndexGeneratorTest {
             assertTrue("File does not have expected CSS link:\n" + contents, contents.contains("href='Fit/css/fitnesse.css'"));
             assertTrue("File does not have Overview Pages section:\n" + contents, contents.contains("<h2>Overview Pages</h2>"));
             String[] rows = contents.split("</tr>\\s*<tr");
-            assertEquals("Unexpected number of rows: \n" + String.join("\n", rows), 42, rows.length);
+            assertEquals("Unexpected number of rows: \n" + String.join("\n", rows), EXPECTED_TEST_COUNT + 1, rows.length);
         }
 
         File jsonReport = new File(path, "test-results.json");

@@ -26,6 +26,7 @@ import nl.hsac.fitnesse.fixture.util.TimeoutHelper;
 import nl.hsac.fitnesse.fixture.util.XMLFormatter;
 import nl.hsac.fitnesse.fixture.util.XPathHelper;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
+import nl.hsac.fitnesse.fixture.util.ZipHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.CookieConverter;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverManager;
@@ -70,6 +71,7 @@ public class Environment {
     private SecretMasker secretMasker = new SecretMasker();
     private LineEndingHelper lineEndingHelper = new LineEndingHelper();
     private PropertiesHelper propertiesHelper = new PropertiesHelper();
+    private ZipHelper zipHelper = new ZipHelper();
 
     private Environment() {
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_23);
@@ -456,6 +458,32 @@ public class Environment {
     }
 
     /**
+     * Performs PATCH to supplied url of result of applying template with model.
+     * @param url url to patch.
+     * @param templateName name of template to use.
+     * @param model model for template.
+     * @param result result to populate with response.
+     * @param headers headers to add.
+     * @param contentType contentType for request.
+     */
+    public void doHttpPatch(String url, String templateName, Object model, HttpResponse result, Map<String, Object> headers, String contentType) {
+        String request = processTemplate(templateName, model);
+        result.setRequest(request);
+        doHttpPatch(url, result, headers, contentType);
+    }
+
+    /**
+     * Performs PATCH to supplied url of result's request.
+     * @param url url to patch.
+     * @param result result containing request, its response will be filled.
+     * @param headers headers to add.
+     * @param contentType contentType for request.
+     */
+    public void doHttpPatch(String url, HttpResponse result, Map<String, Object> headers, String contentType) {
+        httpClient.patch(url, result, headers, contentType);
+    }
+
+    /**
      * @return client to use for HTTP calls.
      */
     public HttpClient getHttpClient() {
@@ -777,6 +805,14 @@ public class Environment {
 
     public void setPropertiesHelper(PropertiesHelper propertiesHelper) {
         this.propertiesHelper = propertiesHelper;
+    }
+
+    public ZipHelper getZipHelper() {
+        return zipHelper;
+    }
+
+    public void setZipHelper(ZipHelper zipHelper) {
+        this.zipHelper = zipHelper;
     }
 
     /**

@@ -21,16 +21,40 @@ public class ReportFinderTest {
         assertEquals("Unexpected number of run: " + overviews, 3, overviews.size());
         assertEquals("Unexpected number of results", EXPECTED_TEST_COUNT, reports.size());
 
-        assertEquals(-1, getActual(reports, "MockXmlServerTest").getTime());
+        TestReportHtml mockXmlServerTest = getReport(reports, "MockXmlServerTest", "MockXmlServerTest");
+        assertEquals(-1, mockXmlServerTest.getTime());
+        assertEquals(Integer.MAX_VALUE - 2, mockXmlServerTest.getIndex());
+        TestReportHtml mockXmlSuiteSetup = getReport(reports, "MockXmlServerTest", "SuiteSetUp");
+        assertEquals(Integer.MAX_VALUE - 3, mockXmlSuiteSetup.getIndex());
+
         assertTrue(reports.stream().filter(r -> !"MockXmlServerTest".equals(r.getRunName())).noneMatch(r -> r.getTime() == -1));
 
-        assertEquals(0, getActual(overviews, "Fit").getTime());
-        assertEquals(2979, getActual(overviews, "Http").getTime());
-        assertEquals(2435, getActual(overviews, "Util").getTime());
+        TestReportHtml fitOverview = getActual(overviews, "Fit");
+        assertEquals(0, fitOverview.getTime());
+        assertEquals(Integer.MAX_VALUE, fitOverview.getIndex());
+        assertEquals(2400, getActual(overviews, "Http").getTime());
+        assertEquals(2075, getActual(overviews, "Util").getTime());
+
+        TestReportHtml fitSuiteSetup = getReport(reports, "Fit", "SuiteSetUp");
+        assertEquals(0, fitSuiteSetup.getIndex());
+        TestReportHtml fitArraysAndSymbols = getReport(reports, "Fit", "ArraysAndSymbolsComparison");
+        assertEquals(1, fitArraysAndSymbols.getIndex());
+        TestReportHtml fitReturn = getReport(reports, "Fit", "ReturnArrayAsSymbol");
+        assertEquals(2, fitReturn.getIndex());
+    }
+
+    private TestReportHtml getReport(List<TestReportHtml> reports, String run, String test) {
+        return reports.stream()
+                .filter(r -> run.equals(r.getRunName()) && r.getTestName().endsWith(test))
+                .findFirst()
+                .get();
     }
 
     private TestReportHtml getActual(List<TestReportHtml> list, String runName) {
-        return list.stream().filter(r -> runName.equals(r.getRunName())).findFirst().get();
+        return list.stream()
+                .filter(r -> runName.equals(r.getRunName()))
+                .findFirst()
+                .get();
     }
 
 }

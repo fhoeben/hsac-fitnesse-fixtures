@@ -52,6 +52,22 @@ public class HttpResponseTest {
     }
 
     @Test
+    public void testValidResponseNoResponse() {
+        expect.expect(RuntimeException.class);
+        HttpResponse resp = new HttpResponse();
+        resp.setStatusCode(0);
+        resp.validResponse();
+    }
+
+    @Test
+    public void testValidResponseTooLowResponse() {
+        expect.expect(RuntimeException.class);
+        HttpResponse resp = new HttpResponse();
+        resp.setStatusCode(99);
+        resp.validResponse();
+    }
+
+    @Test
     public void testValidResponseServerErrorNotImplemented() {
         expect.expect(RuntimeException.class);
         HttpResponse resp = new HttpResponse();

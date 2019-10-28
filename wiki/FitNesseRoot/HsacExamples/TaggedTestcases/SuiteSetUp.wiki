@@ -2,5 +2,4 @@
 Static
 ---
 |Import                       |
-|nl.hsac.fitnesse.fixture     |
 |nl.hsac.fitnesse.fixture.slim|

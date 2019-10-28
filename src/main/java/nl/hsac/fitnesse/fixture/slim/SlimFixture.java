@@ -22,7 +22,7 @@ public class SlimFixture  implements InteractionAwareFixture {
     protected final Logger logger;
     private Environment environment = Environment.getInstance();
     private int repeatInterval = 100;
-    private int repeatMaxCount = Integer.MAX_VALUE;
+    private int repeatMaxCount = 30_000;
     private StopWatch repeatTimer = new StopWatch();
     private int repeatCount = 0;
     private long repeatTime = 0;

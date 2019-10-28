@@ -7,14 +7,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.*;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.ContentType;
@@ -87,7 +80,6 @@ public class HttpClient {
         getResponse(url, response, methodPost, headers);
     }
 
-
     /**
      * @param url URL of service
      * @param response response pre-populated with request to send. Response content and
@@ -102,7 +94,6 @@ public class HttpClient {
         methodPut.setEntity(ent);
         getResponse(url, response, methodPut, headers);
     }
-
 
     /**
      * Put file as 'application/octet-stream'.
@@ -120,6 +111,21 @@ public class HttpClient {
     }
 
     /**
+     * @param url URL of service
+     * @param response response pre-populated with request to send. Response content and
+     *          statusCode will be filled.
+     * @param headers http headers to add
+     * @param type contentType for request.
+     */
+    public void patch(String url, HttpResponse response, Map<String, Object> headers, String type){
+        HttpPatch methodPatch = new HttpPatch(url);
+        ContentType contentType = ContentType.parse(type);
+        HttpEntity ent = new StringEntity(response.getRequest(), contentType);
+        methodPatch.setEntity(ent);
+        getResponse(url,response,methodPatch, headers);
+    }
+
+    /**
      * Builds request body with a given file
      * @param file file containing binary data.
      */
@@ -130,7 +136,6 @@ public class HttpClient {
         HttpEntity multipart = builder.build();
         return multipart;
     }
-
 
     /**
      * @param url URL of service

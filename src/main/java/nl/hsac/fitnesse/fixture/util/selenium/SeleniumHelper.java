@@ -961,9 +961,11 @@ public class SeleniumHelper<T extends WebElement> {
     /**
      * Trigger scrolling of window to ensure element is in visible.
      * @param element element to scroll to.
+     * @param toCenter boolean value indicating wether to center the element in the viewport or use the automatic setting
      */
-    public void scrollTo(WebElement element) {
-        executeJavascript("arguments[0].scrollIntoView(true);", element);
+    public void scrollTo(WebElement element, boolean toCenter) {
+        String scrollIntoViewArgs = toCenter ? "{behavior: \"auto\", block: \"center\", inline: \"center\"}" : "true";
+                executeJavascript("arguments[0].scrollIntoView(" + scrollIntoViewArgs + ");", element);
     }
 
     /**
@@ -1163,7 +1165,7 @@ public class SeleniumHelper<T extends WebElement> {
     }
 
     public <T> ExpectedCondition<T> conditionForAllFrames(ExpectedCondition<T> nested) {
-        return new TryAllFramesConditionDecorator(this, nested);
+        return new TryAllFramesConditionDecorator<>(this, nested);
     }
 
     /**

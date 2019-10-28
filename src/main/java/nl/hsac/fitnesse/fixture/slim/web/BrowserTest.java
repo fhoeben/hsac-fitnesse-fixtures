@@ -56,6 +56,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     private NgBrowserTest ngBrowserTest;
     private boolean implicitWaitForAngular = false;
     private boolean implicitFindInFrames = true;
+    private boolean scrollElementToCenter = false;
     private int secondsBeforeTimeout;
     private int secondsBeforePageLoadTimeout;
     private int waitAfterScroll = 150;
@@ -1605,7 +1606,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * @param element element to scroll to.
      */
     protected void scrollTo(WebElement element) {
-        getSeleniumHelper().scrollTo(element);
+        getSeleniumHelper().scrollTo(element, scrollElementToCenter);
         waitAfterScroll(waitAfterScroll);
     }
 
@@ -2429,6 +2430,31 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
                                             true, d -> checkValueIs(place, expectedValue));
     }
 
+    /**
+     * Refreshes current page until 'place' is found somewhere on the page. Do not forget to set 'repeat at most times', or else the loop may run endlessly.
+     * Usage: | refresh until | [place] | is visible on page |
+     * @param place The place to find.
+     * @return true if place is found while repeating
+     */
+    public boolean refreshUntilIsVisibleOnPage(String place) {
+        return repeatUntil(getRefreshUntilIsVisibleOnPage(place));
+    }
+
+    /**
+     * Refreshes current page until 'place' is not found somewhere on the page. Do not forget to set 'repeat at most times', or else the loop may run endlessly.
+     * Usage: | refresh until | [place] | is not visible on page |
+     * @param place The place you would not like to find anymore.
+     * @return true if place is not found while repeating
+     */
+    public boolean refreshUntilIsNotVisibleOnPage(String place) {
+        return repeatUntilNot(getRefreshUntilIsVisibleOnPage(place));
+    }
+
+    protected RepeatCompletion getRefreshUntilIsVisibleOnPage(String place) {
+        return new ConditionBasedRepeatUntil(false, d -> refresh(),
+                                            true, d -> isVisibleOnPage(place));
+    }
+
     public boolean clickUntilValueOfIs(String clickPlace, String checkPlace, String expectedValue) {
         return repeatUntil(getClickUntilValueIs(clickPlace, checkPlace, expectedValue));
     }
@@ -2628,4 +2654,21 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     public void setTrimOnNormalize(boolean trimOnNormalize) {
         this.trimOnNormalize = trimOnNormalize;
     }
+
+    /**
+     * Set the scroll into view behaviour to 'çenter of viewport' (true) or 'auto' (false)
+     * @param scrollElementsToCenterOfViewport True to scroll to center, False to use automatic scroll behaviour
+     */
+    public void scrollElementsToCenterOfViewport(boolean scrollElementsToCenterOfViewport) {
+        scrollElementToCenter = scrollElementsToCenterOfViewport;
+    }
+
+    /**
+     * Get the current scroll behaviour. True means 'center of viewport', False means 'auto'
+     * @return the current boolean value of scrollElementToCenter
+     */
+    public boolean scrollElementsToCenterOfViewport() {
+        return scrollElementToCenter;
+    }
+
 }

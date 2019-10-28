@@ -19,6 +19,26 @@ This test ensures we can work with select boxes. We use a mock server running to
     <option value="4">example4@example.com</option>
 </select>
 
+<label for="s3">Complex options to choose</label>
+<select id="s3">
+    <option value="1">a mail to <span>example1@example.com</span> is the <span>first</span> option</option>
+    <option value="2" selected>example2@example.com</option>
+    <option value="4">example4@example.com <span>is another</span> to choose</option>
+</select>
+
+<label for="s4">Multiple text nodes in an option</label>
+<select id="s4">
+    <option value="a"></option>
+    <option value="b">2nd option</option>
+    <option value="c" selected>3rd option</option>
+</select>
+<script type="text/javascript">
+    var whitespace = document.createTextNode(' ');
+    var optionText = document.createTextNode('Option text');
+    var option = document.querySelector('#s4 option');
+    option.appendChild(whitespace);
+    option.appendChild(optionText);
+</script>
 </body>
 </html>}}} }
 
@@ -26,21 +46,28 @@ This test ensures we can work with select boxes. We use a mock server running to
 |add response|${HTML}              |
 |$url=       |get mock server url  |
 
-Ensure we use our custom list formatting.
-
-|script                |browser test                                                       |
-|open                  |$url                                                               |
-|seconds before timeout|1                                                                  |
-|check                 |value of                |Option to choose |!-example8@example.com-!|
-|select                |!-example5@example.com-!|for              |Option to choose        |
-|check                 |value of                |Option to choose |!-example5@example.com-!|
-|select                |example6@example.com    |for              |Option to choose        |
-|check                 |value of                |Option to choose |!-example6@example.com-!|
-|check                 |value of                |Options to choose|!-example2@example.com-!|
-|select                |example3@example.com    |for              |Options to choose       |
-|check                 |value of                |Options to choose|!-example3@example.com-!|
-
-
+|script                |browser test                                                                                                                                  |
+|open                  |$url                                                                                                                                          |
+|seconds before timeout|1                                                                                                                                             |
+|check                 |value of                                              |Option to choose                |!-example8@example.com-!                              |
+|select                |!-example5@example.com-!                              |for                             |Option to choose                                      |
+|check                 |value of                                              |Option to choose                |!-example5@example.com-!                              |
+|select                |example6@example.com                                  |for                             |Option to choose                                      |
+|check                 |value of                                              |Option to choose                |!-example6@example.com-!                              |
+|check                 |value of                                              |Options to choose               |!-example2@example.com-!                              |
+|select                |example3@example.com                                  |for                             |Options to choose                                     |
+|check                 |value of                                              |Options to choose               |!-example3@example.com-!                              |
+|select                |example4@example.com                                  |for                             |Complex options to choose                             |
+|check                 |value of                                              |Complex options to choose       |!-example4@example.com-! is another to choose         |
+|select                |first                                                 |for                             |Complex options to choose                             |
+|check                 |value of                                              |Complex options to choose       |a mail to !-example1@example.com-! is the first option|
+|select                |to choose                                             |for                             |Complex options to choose                             |
+|check                 |value of                                              |Complex options to choose       |!-example4@example.com-! is another to choose         |
+|select                |a mail to !-example1@example.com-! is the first option|for                             |Complex options to choose                             |
+|check                 |value of                                              |Complex options to choose       |a mail to !-example1@example.com-! is the first option|
+|check                 |value of                                              |Multiple text nodes in an option|3rd option                                            |
+|select                |Option text                                           |for                             |Multiple text nodes in an option                      |
+|check                 |value of                                              |Multiple text nodes in an option|Option text                                           |
 
 |script|mock xml server setup|
 |stop                        |

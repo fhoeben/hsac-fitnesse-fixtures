@@ -14,63 +14,78 @@ Filenames may be manipulated.
 002
 last one!-!}
 
-|script                 |file fixture                                                              |
-|note                   |default directory used by the fixture is inside the files section         |
-|$def_dir=              |get directory                                                             |
-|$created=              |create      |bye1.txt                    |containing|Bye Bye 1            |
-|poll until             |$created    |exists                                                       |
-|poll until size of     |$created    |exceeds                     |0                               |
-|check                  |text in     |$created                    |Bye Bye 1                       |
-|check                  |filename of |$created                    |bye1.txt                        |
-|check                  |base name of|$created                    |bye1                            |
-|check                  |extension of|$created                    |txt                             |
-|ensure                 |exists      |$created                                                     |
-|delete                 |$created                                                                  |
-|reject                 |exists      |$created                                                     |
-|                       |deleting non-existing file does not work: throws exception                |
-|                       |but ensuring non-existing file does not exist is no problem, returns false|
-|reject                 |delete      |$created                    |if exists                       |
-|poll until             |$created    |does not exist                                               |
-|note                   |directory to be used by the fixture can be set to inside the files section|
-|set directory          |http://files/test                                                         |
-|$created2=             |create      |bye2.txt                    |containing|Bye Bye 2            |
-|check                  |text in     |$created2                   |Bye Bye 2                       |
-|delete                 |$created2   |if exists                                                    |
-|note                   |directory to be used by the fixture can be set to system path             |
-|set directory          |${DIR}                                                                    |
-|show                   |create      |bye.txt                     |containing|Bye Bye 3            |
-|check                  |size of     |bye.txt                     |9                               |
-|check                  |text in     |bye.txt                     |Bye Bye 3                       |
-|set value              |John        |for                         |name                            |
-|show                   |create      |greeting.txt                |using     |greeting.ftl         |
-|check                  |text in     |greeting.txt                |Hello John                      |
-|set value              |John        |for                         |name                            |
-|show                   |create      |greeting.html               |using     |greeting.ftl.html    |
-|show                   |text in     |greeting.html                                                |
-|show                   |content of  |greeting.html                                                |
-|note                   |filename's containing either / or \ will point to sub-directories         |
-|show                   |copy        |${DIR}/greeting.txt         |to        |copy/greetingCopy.txt|
-|check                  |text in     |${DIR}\copy\greetingCopy.txt|Hello John                      |
-|check                  |filename of |${DIR}\copy\greetingCopy.txt|greetingCopy.txt                |
-|check                  |base name of|${DIR}\copy\greetingCopy.txt|greetingCopy                    |
-|check                  |extension of|${DIR}\copy\greetingCopy.txt|txt                             |
-|note                   |you can create a new file by "appending" one line into it                 |
-|set directory          |http://files/test                                                         |
-|$appended=             |append      |first                       |to        |appended.txt         |
-|check                  |text in     |$appended                   |first                           |
-|note                   |you can append content to an existing file                                |
-|append                 |!- line-!   |to                          |$appended                       |
-|check                  |text in     |$appended                   |first line                      |
-|note                   |you can append content as a new line to an existing file                  |
-|append                 |second line |to                          |$appended |on new line          |
-|convert line endings of|$appended   |to unix                                                      |
-|check                  |text in     |$appended                                                    |!-first line
+|script                 |file fixture                                                                    |
+|note                   |default directory used by the fixture is inside the files section               |
+|$def_dir=              |get directory                                                                   |
+|$created=              |create        |bye1.txt                      |containing |Bye Bye 1             |
+|repeat at most         |50            |times                                                            |
+|                       |Do not forget to set 'repeat at most times', or else the loop may run endlessly!|
+|poll until             |$created      |exists                                                           |
+|poll until size of     |$created      |exceeds                       |0                                 |
+|check                  |text in       |$created                      |Bye Bye 1                         |
+|check                  |filename of   |$created                      |bye1.txt                          |
+|check                  |base name of  |$created                      |bye1                              |
+|check                  |extension of  |$created                      |txt                               |
+|ensure                 |exists        |$created                                                         |
+|delete                 |$created                                                                        |
+|reject                 |exists        |$created                                                         |
+|                       |deleting non-existing file does not work: throws exception                      |
+|                       |but ensuring non-existing file does not exist is no problem, returns false      |
+|reject                 |delete        |$created                      |if exists                         |
+|poll until             |$created      |does not exist                                                   |
+|note                   |directory to be used by the fixture can be set to inside the files section      |
+|set directory          |http://files/test                                                               |
+|$created2=             |create        |bye2.txt                      |containing |Bye Bye 2             |
+|check                  |text in       |$created2                     |Bye Bye 2                         |
+|delete                 |$created2     |if exists                                                        |
+|note                   |directory to be used by the fixture can be set to system path                   |
+|set directory          |${DIR}                                                                          |
+|show                   |create        |bye.txt                       |containing |Bye Bye 3             |
+|check                  |size of       |bye.txt                       |9                                 |
+|check                  |text in       |bye.txt                       |Bye Bye 3                         |
+|set value              |John          |for                           |name                              |
+|show                   |create        |greeting.txt                  |using      |greeting.ftl          |
+|check                  |text in       |greeting.txt                  |Hello John                        |
+|set value              |John          |for                           |name                              |
+|show                   |create        |greeting.html                 |using      |greeting.ftl.html     |
+|show                   |text in       |greeting.html                                                    |
+|show                   |content of    |greeting.html                                                    |
+|note                   |filename's containing either / or \ will point to sub-directories               |
+|show                   |copy          |${DIR}/greeting.txt           |to         |copy/greetingCopy.txt |
+|check                  |text in       |${DIR}\copy\greetingCopy.txt  |Hello John                        |
+|check                  |filename of   |${DIR}\copy\greetingCopy.txt  |greetingCopy.txt                  |
+|check                  |base name of  |${DIR}\copy\greetingCopy.txt  |greetingCopy                      |
+|check                  |extension of  |${DIR}\copy\greetingCopy.txt  |txt                               |
+|note                   |you can create a new file by "appending" one line into it                       |
+|set directory          |http://files/test                                                               |
+|$appended=             |append        |first                         |to         |appended.txt          |
+|check                  |text in       |$appended                     |first                             |
+|note                   |you can append content to an existing file                                      |
+|append                 |!- line-!     |to                            |$appended                         |
+|check                  |text in       |$appended                     |first line                        |
+|note                   |you can append content as a new line to an existing file                        |
+|append                 |second line   |to                            |$appended  |on new line           |
+|convert line endings of|$appended     |to unix                                                          |
+|check                  |text in       |$appended                                                        |!-first line
 second line-! |
 |convert line endings of|$appended|to windows  |
 |check                  |size of  |$appended|23|
 |convert line endings of|$appended|to unix     |
 |check                  |size of  |$appended|22|
 |delete                 |$appended             |
+
+Table below shows how we can work with zip files
+
+|script                                                                   |
+|$created= |create                |bye1.txt          |containing|Bye Bye 5|
+|$zip=     |zip                   |$created          |as        |bye.zip  |
+|check     |number of files in zip|$zip              |1                   |
+|check     |names of files in zip |$zip              |[bye1.txt]          |
+|$unzipped=|unzip                 |$zip              |as        |unzipped |
+|check     |text in               |$unzipped/bye1.txt|Bye Bye 5           |
+|$zip2=    |zip                   |$unzipped         |as        |zip2.zip |
+|check     |names of files in zip |$zip2             |[bye1.txt]          |
+
 
 Table below shows how we can use a list of non-reusable data from a file:
 

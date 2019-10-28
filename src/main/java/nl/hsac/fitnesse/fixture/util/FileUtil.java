@@ -242,7 +242,7 @@ public final class FileUtil {
         return result;
     }
 
-    private static File determineFilename(String baseName, String extension) {
+    public static File determineFilename(String baseName, String extension) {
         if (!StringUtils.isEmpty(extension)) {
             extension = "." + extension;
         }
@@ -308,5 +308,21 @@ public final class FileUtil {
             }
         }
         return new File(filename);
+    }
+
+    /**
+     * Deletes file (or directory recursively).
+     * Does not throw error if file does not exist.
+     * @param f file/directory to be deleted
+     * @return true if f no longer exists (independent of whether it existed beforehand).
+     */
+    public static boolean delete(File f) {
+        if (f.isDirectory()) {
+            for (File c : f.listFiles()) {
+                delete(c);
+            }
+        }
+        f.delete();
+        return !f.exists();
     }
 }

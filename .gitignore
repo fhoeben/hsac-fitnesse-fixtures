@@ -39,5 +39,11 @@ wiki/webdrivers
 /src/test/resources/htmlReports/index.html
 /src/test/resources/htmlReports/test-results.json
 /src/test/resources/htmlReports/test-results.csv
+/src/test/resources/htmlReports/*/css/*
+!/src/test/resources/htmlReports/Fit/css/*
+/src/test/resources/htmlReports/*/files/*
+/src/test/resources/htmlReports/*/images/*
+/src/test/resources/htmlReports/*/javascript/*
 wiki/FitNesseRoot/HsacExamples/SlimTests/UtilityFixtures/GeneratedSymbolicLinkSuite/*LocaleTests.wiki
 wiki/FitNesseRoot/ReRunLastFailures.wiki
+/src/main/resources/META-INF/apidocs/

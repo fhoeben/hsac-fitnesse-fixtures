@@ -228,6 +228,18 @@ public class HttpTestTest {
     }
 
     /**
+     * Test patch
+     */
+    @Test
+    public void testPatch() {
+        HttpTest httpTest = new HttpTest();
+        XmlHttpResponse req1 = checkCall(url -> httpTest.patchWith(url, "b"));
+        assertEquals("PATCH", httpTest.getResponse().getMethod());
+        assertEquals("PATCH", req1.getMethod());
+        assertEquals("b", req1.getRequest());
+    }
+
+    /**
      * Test post values
      */
     @Test
@@ -324,6 +336,18 @@ public class HttpTestTest {
         checkTemplateRequestBody(httpTest.getResponse().getMethod(), req1);
     }
 
+    /**
+     * Test patch with template
+     */
+    @Test
+    public void testPatchWithTemplate() {
+        HttpTest httpTest = setupHttpTestWithTemplate();
+
+        XmlHttpResponse req1 = checkCall(url -> httpTest.patchWithTemplate(url));
+        assertEquals("PATCH", httpTest.getResponse().getMethod());
+        checkTemplateRequestBody(httpTest.getResponse().getMethod(), req1);
+    }
+
     static XmlHttpResponse checkCall(Function<String, Boolean> call) {
         MockXmlServerSetup mockXmlServerSetup = new MockXmlServerSetup();
         mockXmlServerSetup.addResponse("hallo");
@@ -350,10 +374,10 @@ public class HttpTestTest {
     private void checkTemplateRequestBody(String method, XmlHttpResponse req1) {
         assertEquals(method, req1.getMethod());
 
-        assertEquals("<s11:Envelope xmlns:s11=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-                "\t<s11:Body>\n" +
-                "\t\t\t</s11:Body>\n" +
-                "</s11:Envelope>\n", req1.getRequest());
+        assertEquals(String.format("<s11:Envelope xmlns:s11=\"http://schemas.xmlsoap.org/soap/envelope/\">%n" +
+                "\t<s11:Body>%n" +
+                "\t\t\t</s11:Body>%n" +
+                "</s11:Envelope>%n"), req1.getRequest());
     }
 
     /**
@@ -426,6 +450,18 @@ public class HttpTestTest {
         assertEquals("DELETE", httpTest.getResponse().getMethod());
         assertEquals("DELETE", req1.getMethod());
         assertEquals("DELETE: /FitNesseMock", req1.getRequest());
+    }
+
+    /**
+     * Test patch, with retry
+     */
+    @Test
+    public void testPatchRetry() {
+        HttpTest httpTest = new HttpTest();
+        XmlHttpResponse req1 = checkCallWithRetry(httpTest, url -> httpTest.patchWith(url, "b"));
+        assertEquals("PATCH", httpTest.getResponse().getMethod());
+        assertEquals("PATCH", req1.getMethod());
+        assertEquals("b", req1.getRequest());
     }
 
     static XmlHttpResponse checkCallWithRetry(HttpTest httpTest, Function<String, Boolean> call) {

@@ -190,10 +190,13 @@ public class HttpServer<T extends HttpResponse> {
                 try {
                     String request;
                     InputStream is = he.getRequestBody();
-                    String body = IOUtils.toString(is);
+                    String body = IOUtils.toString(is, Charset.defaultCharset());
 
-                    if ("POST".equals(method) || "PUT".equals(method)
-                            || ("DELETE".equals(method) && !"".equals(body))) {
+                    if ("POST".equals(method)
+                            || "PUT".equals(method)
+                            || ("DELETE".equals(method) && !"".equals(body))
+                            || "PATCH".equals(method)
+                    ) {
                         request = body;
                     } else {
                         request = String.format("%s: %s", method, uri);
