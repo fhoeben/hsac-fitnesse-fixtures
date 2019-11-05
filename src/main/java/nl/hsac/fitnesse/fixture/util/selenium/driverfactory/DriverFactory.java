@@ -12,8 +12,12 @@ public interface DriverFactory {
     WebDriver createDriver();
 
     static void addDefaultCapabilities(MutableCapabilities capabilities) {
-        if (!capabilities.getCapabilityNames().contains(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR)) {
-            capabilities.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.IGNORE);
+        if (capabilities.getCapabilityNames().contains(CapabilityType.BROWSER_NAME)) {
+            if (capabilities.getBrowserName().equals("chrome")){
+                if (!capabilities.getCapabilityNames().contains(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR)) {
+                    capabilities.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.IGNORE);
+                }
+            }
         }
     }
 }
