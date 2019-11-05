@@ -138,7 +138,6 @@ public class HttpResponse {
 
     /**
      * Sets cookie store to use for this request response
-     *
      * @param cookieStore cookie store for this request/response
      */
     public void setCookieStore(CookieStore cookieStore) {
@@ -154,7 +153,6 @@ public class HttpResponse {
 
     /**
      * Sets response time for obtaining this response.
-     *
      * @param responseTime response time in ms for call.
      */
     public void setResponseTime(long responseTime) {
@@ -192,7 +190,6 @@ public class HttpResponse {
 
     /**
      * Returns response toString() was called on previously.
-     *
      * @param value toString() of response being searched.
      * @return response if one is known, null otherwise.
      */
