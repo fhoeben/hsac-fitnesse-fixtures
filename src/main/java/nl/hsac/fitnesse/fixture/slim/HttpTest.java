@@ -39,12 +39,12 @@ public class HttpTest extends SlimFixtureWithMap {
     private String lastMethod = null;
     private boolean throwExceptionOnHttpRequestFailure = false;
 
-    public void doThrowExceptionOnHttpRequestFailure() {
-        throwExceptionOnHttpRequestFailure = true;
+    public void setThrowExceptionOnHttpRequestFailure(boolean throwException) {
+        throwExceptionOnHttpRequestFailure = throwException;
     }
 
-    public void doNotThrowExceptionOnHttpRequestFailure() {
-        throwExceptionOnHttpRequestFailure = false;
+    public boolean getThrowExceptionOnHttpRequestFailure() {
+        return throwExceptionOnHttpRequestFailure;
     }
 
     /**
@@ -360,7 +360,6 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends all values (url encoded) using put.
-     *
      * @param serviceUrl service endpoint to send values to.
      * @return true if call could be made and response did not indicate error.
      */
@@ -463,7 +462,6 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Downloads binary content from specified url.
-     *
      * @param serviceUrl url to download from
      * @return link to downloaded file
      */
@@ -512,7 +510,6 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP DELETE to service endpoint.
-     *
      * @param serviceUrl service endpoint to delete.
      * @return true if call could be made and response did not indicate error.
      */
@@ -887,7 +884,6 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     public boolean repeatUntilResponseIs(final String expectedResponse) {
-        doNotThrowExceptionOnHttpRequestFailure();
         RepeatCompletion completion;
         if (expectedResponse == null) {
             completion = new RepeatLastCall() {
@@ -909,7 +905,6 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     public boolean repeatUntilHeaderIs(final String header, final Object expectedValue) {
-        doNotThrowExceptionOnHttpRequestFailure();
         RepeatCompletion completion;
         if (expectedValue == null) {
             completion = new RepeatLastCall() {

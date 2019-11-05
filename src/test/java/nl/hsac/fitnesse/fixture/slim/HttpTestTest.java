@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 import org.junit.Test;
 
@@ -102,7 +103,7 @@ public class HttpTestTest {
         client.setValueFor("three", "param2.nested");
         getUrl = client.createUrlWithParams("http://mysite.nl:8080/test");
         assertEquals("http://mysite.nl:8080/test?param.name=one&param.name=two&param.name=three" +
-                "&name2=one&param2.name=one&param2.name=two&param2.nested=three", getUrl);
+                    "&name2=one&param2.name=one&param2.name=two&param2.nested=three", getUrl);
     }
 
     @Test

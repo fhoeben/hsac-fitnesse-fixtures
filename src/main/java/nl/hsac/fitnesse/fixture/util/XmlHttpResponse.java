@@ -28,12 +28,12 @@ public class XmlHttpResponse extends HttpResponse {
     @Override
     public boolean responseIsValid(boolean throwExceptionOnHttpRequestFailure) {
         boolean responseIsValid = super.responseIsValid(throwExceptionOnHttpRequestFailure);
-        if (throwExceptionOnHttpRequestFailure) {
+        try {
             checkXmlResponse();
-        } else {
-            try {
-                checkXmlResponse();
-            } catch (RuntimeException e) {
+        } catch (RuntimeException e){
+            if(throwExceptionOnHttpRequestFailure){
+                throw e;
+            } else {
                 return false;
             }
         }
