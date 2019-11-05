@@ -24,9 +24,7 @@ import java.util.regex.Pattern;
  * Fixture to make HTTP requests using Slim scripts and/or scenarios.
  */
 public class HttpTest extends SlimFixtureWithMap {
-    /**
-     * Default content type for posts and puts.
-     */
+    /** Default content type for posts and puts. */
     public final static String DEFAULT_POST_CONTENT_TYPE = "application/x-www-form-urlencoded; charset=UTF-8";
 
     private String downloadBase = new File(filesDir, "downloads").getPath() + "/";
@@ -51,7 +49,6 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sets template to use.
-     *
      * @param aTemplate name of template file (relative to 'templates' directory on classpath)
      * @return true if template could be found.
      */
@@ -95,9 +92,8 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Stores value to be passed as headers.
-     *
      * @param value value to be passed.
-     * @param name  name to use this value for.
+     * @param name name to use this value for.
      */
     public void setValueForHeader(Object value, String name) {
         getMapHelper().setValueForIn(value, name, headerValues);
@@ -105,7 +101,6 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Clears a header value previously set.
-     *
      * @param name value to remove.
      * @return true if value was present.
      */
@@ -125,7 +120,6 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Adds all values in the supplied map to the current header values.
-     *
      * @param map to obtain values from.
      */
     public void copyHeaderValuesFrom(Map<String, Object> map) {
@@ -134,7 +128,6 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Allows subclasses access to the header values.
-     *
      * @return header values.
      */
     protected Map<String, Object> getHeaderValues() {
@@ -153,11 +146,9 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     private static final Pattern HEADER_KEY_PATTERN = Pattern.compile("header:\\s*(\\.+)");
-
     /**
      * Sets a value.
-     *
-     * @param key   (possibly nested) key to set value for.
+     * @param key (possibly nested) key to set value for.
      * @param value value to be stored.
      */
     public void set(String key, Object value) {
@@ -179,7 +170,6 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP POST template with current values to service endpoint.
-     *
      * @param serviceUrl service endpoint to send request to.
      * @return true if call could be made and response did not indicate error.
      */
@@ -189,8 +179,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP POST template with current values to service endpoint.
-     *
-     * @param serviceUrl   service endpoint to send request to.
+     * @param serviceUrl service endpoint to send request to.
      * @param aContentType content type to use for post.
      * @return true if call could be made and response did not indicate error.
      */
@@ -200,8 +189,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP POST body to service endpoint.
-     *
-     * @param body       content to post
+     * @param body content to post
      * @param serviceUrl service endpoint to send body to.
      * @return true if call could be made and response did not indicate error.
      */
@@ -212,8 +200,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP DELETE body to service endpoint.
-     *
-     * @param body       content to delete
+     * @param body content to delete
      * @param serviceUrl service endpoint to send body to.
      * @return true if call could be made and response did not indicate error.
      */
@@ -224,8 +211,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends a file by HTTP POST body to service endpoint.
-     *
-     * @param fileName   fileName to post
+     * @param fileName fileName to post
      * @param serviceUrl service endpoint to send body to.
      * @return true if call could be made and response did not indicate error.
      */
@@ -235,7 +221,6 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends all values (url encoded) using post.
-     *
      * @param serviceUrl service endpoint to send values to.
      * @return true if call could be made and response did not indicate error.
      */
@@ -292,7 +277,6 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP PUT template with current values to service endpoint.
-     *
      * @param serviceUrl service endpoint to send request to.
      * @return true if call could be made and response did not indicate error.
      */
@@ -302,7 +286,6 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP DELETE template with current values to service endpoint.
-     *
      * @param serviceUrl service endpoint to send request to.
      * @return true if call could be made and response did not indicate error.
      */
@@ -312,7 +295,6 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP PATCH template with current values to service endpoint.
-     *
      * @param serviceUrl service endpoint to send request to.
      * @return true if call could be made and response did not indicate error.
      */
@@ -322,10 +304,9 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP method call template with current values to service endpoint.
-     *
-     * @param serviceUrl   service endpoint to send request to.
+     * @param serviceUrl service endpoint to send request to.
      * @param aContentType content type to use for post.
-     * @param method       HTTP method to use
+     * @param method HTTP method to use
      * @return true if call could be made and response did not indicate error.
      */
     public boolean sendTemplateTo(String serviceUrl, String aContentType, String method) {
@@ -363,8 +344,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP PUT body to service endpoint.
-     *
-     * @param body       content to put
+     * @param body content to put
      * @param serviceUrl service endpoint to send body to.
      * @return true if call could be made and response did not indicate error.
      */
@@ -395,14 +375,14 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends a file by HTTP PUT body to service endpoint.
-     *
-     * @param fileName   fileName to post
+     * @param fileName fileName to post
      * @param serviceUrl service endpoint to send body to.
      * @return true if call could be made and response did not indicate error.
      */
     public boolean putFileTo(String fileName, String serviceUrl) {
         return putFileToImpl(fileName, serviceUrl);
     }
+
 
     protected boolean putFileToImpl(String fileName, String serviceUrl) {
         return sendFileImpl(fileName, serviceUrl, "PUT");
@@ -430,6 +410,7 @@ public class HttpTest extends SlimFixtureWithMap {
                     getEnvironment().doHttpFilePut(url, response, headerValues, file);
                     break;
             }
+
         } catch (Throwable t) {
             handleCallException("Unable to get response from " + method + " to: " + url, t);
         }
@@ -437,13 +418,13 @@ public class HttpTest extends SlimFixtureWithMap {
         return result;
     }
 
+
     protected String cleanupBody(String body) {
         return getEnvironment().getHtmlCleaner().cleanupPreFormatted(body);
     }
 
     /**
      * Sends HTTP GET to service endpoint to retrieve content.
-     *
      * @param serviceUrl service endpoint to get content from.
      * @return true if call could be made and response did not indicate error.
      */
@@ -453,7 +434,6 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP GET to service endpoint to retrieve content, not following a redirect if sent.
-     *
      * @param serviceUrl service endpoint to get content from.
      * @return true if call could be made and response did not indicate error.
      */
@@ -513,7 +493,6 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP HEAD to service endpoint.
-     *
      * @param serviceUrl service endpoint to delete.
      * @return true if call could be made and response did not indicate error.
      */
@@ -640,7 +619,6 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Performs any post processing directly after retrieving response.
-     *
      * @return true if all is well, false otherwise.
      */
     protected boolean postProcessResponse() {
@@ -670,7 +648,6 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Internal method to format a value, which will just return the 'raw' value if there is a problem formatting.
-     *
      * @param value value to format
      * @return formatted value
      */
@@ -687,7 +664,6 @@ public class HttpTest extends SlimFixtureWithMap {
     /**
      * Method that will take care of formatting a value, which may be overridden in subclasses.
      * This implementation just returns value.
-     *
      * @param value value to format
      * @return formatted value
      */
@@ -836,7 +812,7 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     /**
-     * @param cookieName    name of cookie.
+     * @param cookieName name of cookie.
      * @param attributeName name of attribute.
      * @return value of attribute for cookie.
      */
@@ -901,7 +877,6 @@ public class HttpTest extends SlimFixtureWithMap {
 
     // Polling
     public boolean repeatUntilResponseStatusIs(final int expectedStatus) {
-        doNotThrowExceptionOnHttpRequestFailure();
         return repeatUntil(
                 new RepeatLastCall() {
                     @Override
