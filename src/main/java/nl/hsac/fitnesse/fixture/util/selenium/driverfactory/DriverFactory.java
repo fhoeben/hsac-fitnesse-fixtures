@@ -15,8 +15,8 @@ public interface DriverFactory {
 
     static void addDefaultCapabilities(MutableCapabilities capabilities) {
         Set<String> capabilityNames = capabilities.getCapabilityNames();
-        if (capabilitieNames.contains(CapabilityType.BROWSER_NAME)
-                && !capabilitieNames.contains(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR)) {
+        if (capabilityNames.contains(CapabilityType.BROWSER_NAME)
+                && !capabilityNames.contains(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR)) {
             capabilities.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.IGNORE);
         }
     }
