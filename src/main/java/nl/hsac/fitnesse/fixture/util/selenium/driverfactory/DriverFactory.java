@@ -5,6 +5,8 @@ import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.CapabilityType;
 
+import java.util.Set;
+
 /**
  * Interface to encapsulate creation of Selenium driver.
  */
@@ -12,8 +14,9 @@ public interface DriverFactory {
     WebDriver createDriver();
 
     static void addDefaultCapabilities(MutableCapabilities capabilities) {
-        if (capabilities.getCapabilityNames().contains(CapabilityType.BROWSER_NAME)
-                && !capabilities.getCapabilityNames().contains(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR)) {
+        Set<String> capabilitieNames = capabilities.getCapabilityNames();
+        if (capabilitieNames.contains(CapabilityType.BROWSER_NAME)
+                && !capabilitieNames.contains(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR)) {
             capabilities.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.IGNORE);
         }
     }
