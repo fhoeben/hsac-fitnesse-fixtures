@@ -37,6 +37,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.interactions.Actions;
 
 import java.io.File;
 import java.io.IOException;
@@ -739,6 +740,45 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     @WaitUntil
     public boolean click(String place) {
         return clickImp(place, null);
+    }
+
+    public void clickXoffsetYoffset(String target, Integer xOffset, Integer yOffset) {
+        boolean result = false;
+        try {
+            WebElement webElement = this.getElementToClick(target);
+            this.getSeleniumHelper().getActions().moveToElement(webElement, xOffset, yOffset).perform();
+            this.getSeleniumHelper().getActions().moveToElement(webElement, xOffset, yOffset).click().perform();
+        } catch (WebDriverException var5) {
+            if (!this.clickExceptionIsAboutHiddenByOtherElement(var5)) {
+                throw var5;
+            }
+        }
+    }
+
+    public void doubleClickXoffsetYoffset(String target, Integer xOffset, Integer yOffset) {
+        boolean result = false;
+        try {
+            WebElement webElement = this.getElementToClick(target);
+            this.getSeleniumHelper().getActions().moveToElement(webElement, xOffset, yOffset).perform();
+            this.getSeleniumHelper().getActions().moveToElement(webElement, xOffset, yOffset).doubleClick().perform();
+        } catch (WebDriverException var5) {
+            if (!this.clickExceptionIsAboutHiddenByOtherElement(var5)) {
+                throw var5;
+            }
+        }
+    }
+
+    public void rightClickXoffsetYoffset(String target, Integer xOffset, Integer yOffset) {
+        boolean result = false;
+        try {
+            WebElement webElement = this.getElementToClick(target);
+            this.getSeleniumHelper().getActions().moveToElement(webElement, xOffset, yOffset).perform();
+            this.getSeleniumHelper().getActions().moveToElement(webElement, xOffset, yOffset).contextClick().perform();
+        } catch (WebDriverException var5) {
+            if (!this.clickExceptionIsAboutHiddenByOtherElement(var5)) {
+                throw var5;
+            }
+        }
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
