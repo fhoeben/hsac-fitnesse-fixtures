@@ -1,14 +1,3 @@
----
-Edit: no
-Files: no
-Properties: no
-RecentChanges: no
-Refactor: no
-Search: no
-Test
-Versions: no
-WhereUsed: no
----
 !*> definitions
 !define mapUrl {!-https://www.google.com/maps/@51.7147561,11.342505,5.16z-!}
 !define minimap {!-css=.widget-minimap-shim.widget-minimap-shim-button-!}
