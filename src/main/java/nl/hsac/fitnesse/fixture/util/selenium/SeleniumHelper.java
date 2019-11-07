@@ -550,6 +550,36 @@ public class SeleniumHelper<T extends WebElement> {
     }
 
     /**
+     * Simulates clicking on offset from center place on the supplied element
+     *
+     * @param element element to click on
+     */
+    public void clickXoffsetYoffset(WebElement element, Integer xOffset, Integer yOffset) {
+        getActions().moveToElement(element, xOffset, yOffset).perform();
+        getActions().moveToElement(element, xOffset, yOffset).click().perform();
+    }
+
+    /**
+     * Simulates right clicking on offset from center place on the supplied element
+     *
+     * @param element element to click on
+     */
+    public void rightClickXoffsetYoffset(WebElement element, Integer xOffset, Integer yOffset) {
+        getActions().moveToElement(element, xOffset, yOffset).perform();
+        getActions().moveToElement(element, xOffset, yOffset).contextClick().perform();
+    }
+
+    /**
+     * Simulates double clicking on offset from center place on the supplied element
+     *
+     * @param element element to click on
+     */
+    public void doubleClickXoffsetYoffset(WebElement element, Integer xOffset, Integer yOffset) {
+        getActions().moveToElement(element, xOffset, yOffset).perform();
+        getActions().moveToElement(element, xOffset, yOffset).doubleClick().perform();
+    }
+
+    /**
      * Simulates double clicking on the supplied element
      * @param element element to double click on
      */

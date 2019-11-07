@@ -1,3 +1,11 @@
+---
+Test
+---
+!1 Iteraction with maps using !-BrowserTest-! with Storyboard
+Sample test on [[Google Maps][https://www.google.com/maps]].
+
+!note '''Note:''' More about getting offsets in canvas maps: https://developers.google.com/maps/documentation/javascript/reference/overlay-view#MapCanvasProjection
+
 !*> definitions
 !define mapUrl {!-https://www.google.com/maps/@51.7147561,11.342505,5.16z-!}
 !define minimap {!-css=.widget-minimap-shim.widget-minimap-shim-button-!}
@@ -29,7 +37,6 @@
 |click           |${map}|xoffset|150   |yoffset   |43  |
 |wait for visible|Kaunas|in     |${locationBottomPopup}|
 *!
-!4 More about getting offsets in canvas maps: https://developers.google.com/maps/documentation/javascript/reference/overlay-view#MapCanvasProjection
 
 |script              |
 |lets open canvas map|
