@@ -551,8 +551,9 @@ public class SeleniumHelper<T extends WebElement> {
 
     /**
      * Simulates clicking on offset from center place on the supplied element
-     *
-     * @param element element to click on
+     * @param element element to click on with ofset
+     * @param xOffset horizontal integer offset from center
+     * @param yOffset vertical integer offset from center
      */
     public void clickXoffsetYoffset(WebElement element, Integer xOffset, Integer yOffset) {
         getActions().moveToElement(element, xOffset, yOffset).perform();
@@ -561,8 +562,9 @@ public class SeleniumHelper<T extends WebElement> {
 
     /**
      * Simulates right clicking on offset from center place on the supplied element
-     *
-     * @param element element to click on
+     * @param element element to click on with ofset
+     * @param xOffset horizontal integer offset from center
+     * @param yOffset vertical integer offset from center
      */
     public void rightClickXoffsetYoffset(WebElement element, Integer xOffset, Integer yOffset) {
         getActions().moveToElement(element, xOffset, yOffset).perform();
@@ -571,8 +573,9 @@ public class SeleniumHelper<T extends WebElement> {
 
     /**
      * Simulates double clicking on offset from center place on the supplied element
-     *
-     * @param element element to click on
+     * @param element element to click on with ofset
+     * @param xOffset horizontal integer offset from center
+     * @param yOffset vertical integer offset from center
      */
     public void doubleClickXoffsetYoffset(WebElement element, Integer xOffset, Integer yOffset) {
         getActions().moveToElement(element, xOffset, yOffset).perform();
