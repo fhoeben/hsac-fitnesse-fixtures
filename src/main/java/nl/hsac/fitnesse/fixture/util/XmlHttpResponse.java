@@ -31,7 +31,7 @@ public class XmlHttpResponse extends HttpResponse {
         try {
             checkXmlResponse();
         } catch (RuntimeException e) {
-            if(throwExceptionOnHttpRequestFailure){
+            if (throwExceptionOnHttpRequestFailure) {
                 throw e;
             } else {
                 return false;
