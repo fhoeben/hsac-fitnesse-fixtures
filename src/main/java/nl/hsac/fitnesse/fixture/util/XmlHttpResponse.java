@@ -22,25 +22,7 @@ public class XmlHttpResponse extends HttpResponse {
     @Override
     public void validResponse() {
         super.validResponse();
-        checkXmlResponse();
-    }
 
-    @Override
-    public boolean responseIsValid(boolean throwExceptionOnHttpRequestFailure) {
-        boolean responseIsValid = super.responseIsValid(throwExceptionOnHttpRequestFailure);
-        try {
-            checkXmlResponse();
-        } catch (RuntimeException e) {
-            if (throwExceptionOnHttpRequestFailure) {
-                throw e;
-            } else {
-                return false;
-            }
-        }
-        return responseIsValid;
-    }
-
-    private void checkXmlResponse() {
         String response = getResponse();
         if (response != null) {
             boolean ableToXPath = false;

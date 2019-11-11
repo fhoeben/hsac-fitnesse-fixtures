@@ -2,7 +2,9 @@ package nl.hsac.fitnesse.fixture.slim;
 
 
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -462,6 +464,23 @@ public class HttpTestTest {
         assertEquals("PATCH", httpTest.getResponse().getMethod());
         assertEquals("PATCH", req1.getMethod());
         assertEquals("b", req1.getRequest());
+    }
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
+    @Test
+    public void testExceptionIsThrownWhenThisIsTurnedOn() {
+        HttpTest httpTest = new HttpTest();
+        httpTest.setThrowExceptionOnHttpRequestFailure(true);
+
+        MockXmlServerSetup mockXmlServerSetup = new MockXmlServerSetup();
+        mockXmlServerSetup.addResponseWithStatus("error1", 500);
+
+        String serverUrl = mockXmlServerSetup.getMockServerUrl();
+
+        expectedException.expect(SlimFixtureException.class);
+        httpTest.getFrom(serverUrl);
     }
 
     static XmlHttpResponse checkCallWithRetry(HttpTest httpTest, Function<String, Boolean> call) {

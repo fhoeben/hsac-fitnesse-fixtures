@@ -27,40 +27,17 @@ public class HttpResponse {
      */
     public void validResponse() {
         if (statusCode == 0) {
-            throw new RuntimeException("Status code is 0. Probably no response was received.");
+            throw new NonValidResponseReceivedException("Status code is 0. Probably no response was received.");
         }
         if (statusCode < 100) {
-            throw new RuntimeException("Status code is less than 100: " + statusCode);
+            throw new NonValidResponseReceivedException("Status code is less than 100: " + statusCode);
         }
         if (statusCode >= 400 && statusCode <= 499) {
-            throw new RuntimeException("Server reported client error: " + statusCode);
+            throw new NonValidResponseReceivedException("Server reported client error: " + statusCode);
         }
         if (statusCode >= 500 && statusCode <= 599) {
-            throw new RuntimeException("Server error returned: " + statusCode);
+            throw new NonValidResponseReceivedException("Server error returned: " + statusCode);
         }
-    }
-
-    public boolean responseIsValid(boolean throwExceptionOnHttpRequestFailure) {
-        try {
-            if (statusCode == 0) {
-                throw new SlimFixtureException("Status code is 0. Probably no response was received.");
-            }
-            if (statusCode < 100) {
-                throw new SlimFixtureException("Status code is less than 100: " + statusCode);
-            }
-            if (statusCode >= 400 && statusCode <= 499) {
-                throw new SlimFixtureException("Server reported client error: " + statusCode);
-            }
-            if (statusCode >= 500 && statusCode <= 599) {
-                throw new SlimFixtureException("Server error returned: " + statusCode);
-            }
-        } catch (SlimFixtureException e) {
-            if (throwExceptionOnHttpRequestFailure) {
-                throw e;
-            }
-            return false;
-        }
-        return true;
     }
 
     /**
