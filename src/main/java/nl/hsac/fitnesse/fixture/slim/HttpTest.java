@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import fit.exception.FitFailureException;
 import freemarker.template.Template;
 import nl.hsac.fitnesse.fixture.util.BinaryHttpResponse;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
@@ -654,7 +655,7 @@ public class HttpTest extends SlimFixtureWithMap {
     public boolean responseIsValid() {
         try {
             response.validResponse();
-        } catch (NonValidResponseReceivedException e) {
+        } catch (FitFailureException | NonValidResponseReceivedException e) {
             if (throwExceptionOnHttpRequestFailure) {
                 throw new SlimFixtureException(false, e.getMessage());
             } else {
