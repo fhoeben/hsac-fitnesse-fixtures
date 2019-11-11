@@ -30,7 +30,7 @@ public class XmlHttpResponse extends HttpResponse {
         boolean responseIsValid = super.responseIsValid(throwExceptionOnHttpRequestFailure);
         try {
             checkXmlResponse();
-        } catch (RuntimeException e){
+        } catch (RuntimeException e) {
             if(throwExceptionOnHttpRequestFailure){
                 throw e;
             } else {
