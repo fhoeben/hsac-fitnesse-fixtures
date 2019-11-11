@@ -480,7 +480,7 @@ public class HttpTestTest {
         String serverUrl = mockXmlServerSetup.getMockServerUrl();
 
         expectedException.expect(SlimFixtureException.class);
-        httpTest.getFrom(serverUrl);
+        checkCall(url -> httpTest.getFrom(serverUrl));
     }
 
     static XmlHttpResponse checkCallWithRetry(HttpTest httpTest, Function<String, Boolean> call) {
