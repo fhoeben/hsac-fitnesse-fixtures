@@ -556,8 +556,7 @@ public class SeleniumHelper<T extends WebElement> {
      * @param yOffset vertical integer offset from center
      */
     public void clickXoffsetYoffset(WebElement element, Integer xOffset, Integer yOffset) {
-        getActions().moveToElement(element, xOffset, yOffset).perform();
-        getActions().moveToElement(element, xOffset, yOffset).click().perform();
+        getActions().moveToElement(element, xOffset, yOffset).click().build().perform();
     }
 
     /**
@@ -567,8 +566,7 @@ public class SeleniumHelper<T extends WebElement> {
      * @param yOffset vertical integer offset from center
      */
     public void rightClickXoffsetYoffset(WebElement element, Integer xOffset, Integer yOffset) {
-        getActions().moveToElement(element, xOffset, yOffset).perform();
-        getActions().moveToElement(element, xOffset, yOffset).contextClick().perform();
+        getActions().moveToElement(element, xOffset, yOffset).contextClick().build().perform();
     }
 
     /**
@@ -578,8 +576,18 @@ public class SeleniumHelper<T extends WebElement> {
      * @param yOffset vertical integer offset from center
      */
     public void doubleClickXoffsetYoffset(WebElement element, Integer xOffset, Integer yOffset) {
-        getActions().moveToElement(element, xOffset, yOffset).perform();
-        getActions().moveToElement(element, xOffset, yOffset).doubleClick().perform();
+        getActions().moveToElement(element, xOffset, yOffset).doubleClick().build().perform();
+    }
+
+    /**
+     * Simulates a drag of element to offset
+     * @param element element to drag and drop
+     * @param xOffset horizontal integer offset from center
+     * @param yOffset vertical integer offset from center
+     */
+
+    public void dragAndDropAtOffset(WebElement element, Integer xOffset, Integer yOffset) {
+        getActions().dragAndDropBy(element, xOffset, yOffset).build().perform();
     }
 
     /**

@@ -1,49 +1,52 @@
 ---
 Test
 ---
-!1 Iteraction with maps using !-BrowserTest-! with Storyboard
+!1 Iteraction with maps using !-BrowserTest-!
 Sample test on [[Google Maps][https://www.google.com/maps]].
 
-!note '''Note:''' More about getting offsets in canvas maps: https://developers.google.com/maps/documentation/javascript/reference/overlay-view#MapCanvasProjection
+!note '''Note:''' More about getting offsets in canvas maps [[here.][https://developers.google.com/maps/documentation/javascript/reference/overlay-view#MapCanvasProjection]]
 
 !*> definitions
 !define mapUrl {!-https://www.google.com/maps/@51.7147561,11.342505,5.16z-!}
-!define minimap {!-css=.widget-minimap-shim.widget-minimap-shim-button-!}
+!define urlAfterZooming {!-https://www.google.com/maps/@55.3428238,22.1908312,7z-!}
+!define minimap {css=.widget-minimap-shim.widget-minimap-shim-button}
 !define map {css=[aria-label="Map"]}
 !define locationBottomPopup {css=div.widget-reveal-card-container}
-*!
-!*> libraries
-|library     |
-|browser test|
+!define pegman {css=[aria-label="Show Street View coverage"]} 
+!define streetviewTitleCard {css=[id="titlecard"]}
 *!
 !*> scenarios
-|scenario           |lets open canvas map|
-|set browser size to|1024   |by   |800   |
-|open               |${mapUrl}           |
-|wait for visible   |${minimap}          |
-|click              |Remind me later     |
+|scenario           |open url|url   |
+|set browser size to|1024    |by|800|
+|open               |@url           |
+|wait for visible   |${minimap}     |
+|click              |Remind me later|
 
-|scenario    |lets test zooming by double clicking with offset|
-|double click|${map}    |xoffset    |294   |yoffset   |-200   |
-|double click|${map}    |xoffset    |294   |yoffset   |-200   |
+|scenario    |double zooming by double click at xoffset|xoffset   |and yoffset|yoffset    |should change url to|urlAfterZooming|
+|double click|${map}                                   |at xoffset|@xoffset   |and yoffset|@yoffset                            |
+|double click|${map}                                   |at xoffset|@xoffset   |and yoffset|@yoffset                            |
+|wait        |800                                      |milliseconds                                                           |
+|check       |location                                 |@{urlAfterZooming}                                                     |
 
-|scenario        |lets test right click with offset     |
-|right click     |${map} |xoffset|279   |yoffset   |73  |
-|click           |What's here?                          |
-|wait for visible|Vilnius|in     |${locationBottomPopup}|
+|scenario        |"Whats' here?" after right click at xoffset|xoffset   |and yoffset|yoffset    |should return city|city|
+|right click     |${map}                                     |at xoffset|@xoffset   |and yoffset|@yoffset               |
+|click           |What's here?                                                                                          |
+|wait for visible|@city                                      |in        |${locationBottomPopup}                         |
 
-|scenario        |lets test click with offset          |
-|click           |${map}|xoffset|150   |yoffset   |43  |
-|click           |${map}|xoffset|150   |yoffset   |43  |
-|wait for visible|Kaunas|in     |${locationBottomPopup}|
+|scenario        |left click at xoffset|xoffset   |and yoffset|yoffset    |should return city|city|
+|click           |${map}               |at xoffset|@xoffset   |and yoffset|@yoffset               |
+|wait            |200                  |milliseconds                                              |
+|click           |${map}               |at xoffset|@xoffset   |and yoffset|@yoffset               |
+|wait for visible|@city                |in        |${locationBottomPopup}                         |
+
+|scenario        |dragging and dropping pegman at xoffset|xoffset   |and yoffset|yoffset    |should open streetview of|title|
+|drag and drop   |${pegman}                              |at xoffset|@xoffset   |and yoffset|@yoffset                       |
+|wait for visible|@title                                 |in        |${streetviewTitleCard}                                 |
 *!
 
-|script              |
-|lets open canvas map|
-
-|storyboard                                      |
-|lets test zooming by double clicking with offset|
-
-|script                           |
-|lets test right click with offset|
-|lets test click with offset      |
+|script                                     |browser test                                                     |
+|open url                                   |${mapUrl}                                                        |
+|double zooming by double click at xoffset  |294|and yoffset|-200|should change url to     |${urlAfterZooming}|
+|"Whats' here?" after right click at xoffset|279|and yoffset|73  |should return city       |Vilnius           |
+|left click at xoffset                      |150|and yoffset|43  |should return city       |Kaunas            |
+|dragging and dropping pegman at xoffset    |-80|and yoffset|-250|should open streetview of|Vilnius University|
