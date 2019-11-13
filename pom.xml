@@ -473,6 +473,13 @@
 									<version>${hsac-fitnesse-plugin.version}</version>
 									<overWrite>true</overWrite>
 								</artifactItem>
+								<artifactItem>
+									<groupId>nl.praegus</groupId>
+									<artifactId>toolchain-fitnesse-plugin</artifactId>
+									<version>1.17</version>
+									<classifier>jar-with-dependencies</classifier>
+									<overWrite>true</overWrite>
+								</artifactItem>
 							</artifactItems>
 							<outputDirectory>${project.basedir}/wiki/plugins</outputDirectory>
 						</configuration>
