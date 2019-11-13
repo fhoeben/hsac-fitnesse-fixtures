@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
 
@@ -26,16 +27,16 @@ public class HttpResponse {
      */
     public void validResponse() {
         if (statusCode == 0) {
-            throw new RuntimeException("Status code is 0. Probably no response was received.");
+            throw new NonValidResponseReceivedException("Status code is 0. Probably no response was received.");
         }
         if (statusCode < 100) {
-            throw new RuntimeException("Status code is less than 100: " + statusCode);
-        }
-        if (statusCode >= 500 && statusCode <= 599) {
-            throw new RuntimeException("Server error returned: " + statusCode);
+            throw new NonValidResponseReceivedException("Status code is less than 100: " + statusCode);
         }
         if (statusCode >= 400 && statusCode <= 499) {
-            throw new RuntimeException("Server reported client error: " + statusCode);
+            throw new NonValidResponseReceivedException("Server reported client error: " + statusCode);
+        }
+        if (statusCode >= 500 && statusCode <= 599) {
+            throw new NonValidResponseReceivedException("Server error returned: " + statusCode);
         }
     }
 
