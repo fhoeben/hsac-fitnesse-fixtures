@@ -555,7 +555,7 @@ public class SeleniumHelper<T extends WebElement> {
      * @param xOffset horizontal integer offset from center
      * @param yOffset vertical integer offset from center
      */
-    public void clickXoffsetYoffset(WebElement element, Integer xOffset, Integer yOffset) {
+    public void clickAtXoffsetAndYoffset(WebElement element, Integer xOffset, Integer yOffset) {
         getActions().moveToElement(element, xOffset, yOffset).click().build().perform();
     }
 
@@ -565,7 +565,7 @@ public class SeleniumHelper<T extends WebElement> {
      * @param xOffset horizontal integer offset from center
      * @param yOffset vertical integer offset from center
      */
-    public void rightClickXoffsetYoffset(WebElement element, Integer xOffset, Integer yOffset) {
+    public void rightClickAtXoffsetAndYoffset(WebElement element, Integer xOffset, Integer yOffset) {
         getActions().moveToElement(element, xOffset, yOffset).contextClick().build().perform();
     }
 
@@ -575,7 +575,7 @@ public class SeleniumHelper<T extends WebElement> {
      * @param xOffset horizontal integer offset from center
      * @param yOffset vertical integer offset from center
      */
-    public void doubleClickXoffsetYoffset(WebElement element, Integer xOffset, Integer yOffset) {
+    public void doubleClickAtXoffsetAndYoffset(WebElement element, Integer xOffset, Integer yOffset) {
         getActions().moveToElement(element, xOffset, yOffset).doubleClick().build().perform();
     }
 
@@ -586,7 +586,7 @@ public class SeleniumHelper<T extends WebElement> {
      * @param yOffset vertical integer offset from center
      */
 
-    public void dragAndDropAtOffset(WebElement element, Integer xOffset, Integer yOffset) {
+    public void dragAndDropAtXoffsetAndYoffset(WebElement element, Integer xOffset, Integer yOffset) {
         getActions().dragAndDropBy(element, xOffset, yOffset).build().perform();
     }
 

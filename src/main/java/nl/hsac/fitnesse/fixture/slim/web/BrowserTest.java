@@ -745,7 +745,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         place = cleanupValue(place);
         try {
             WebElement element = getElementToClick(place);
-            getSeleniumHelper().clickXoffsetYoffset(element, xOffset, yOffset);
+            getSeleniumHelper().clickAtXoffsetAndYoffset(element, xOffset, yOffset);
         } catch (WebDriverException var5) {
             if (!this.clickExceptionIsAboutHiddenByOtherElement(var5)) {
                 throw var5;
@@ -757,7 +757,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         place = cleanupValue(place);
         try {
             WebElement element = getElementToClick(place);
-            getSeleniumHelper().doubleClickXoffsetYoffset(element, xOffset, yOffset);
+            getSeleniumHelper().doubleClickAtXoffsetAndYoffset(element, xOffset, yOffset);
         } catch (WebDriverException var5) {
             if (!this.clickExceptionIsAboutHiddenByOtherElement(var5)) {
                 throw var5;
@@ -769,7 +769,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         place = cleanupValue(place);
         try {
             WebElement element = getElementToClick(place);
-            getSeleniumHelper().rightClickXoffsetYoffset(element, xOffset, yOffset);
+            getSeleniumHelper().rightClickAtXoffsetAndYoffset(element, xOffset, yOffset);
         } catch (WebDriverException var5) {
             if (!this.clickExceptionIsAboutHiddenByOtherElement(var5)) {
                 throw var5;
@@ -781,7 +781,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         place = cleanupValue(place);
         try {
             WebElement element = getElementToClick(place);
-            getSeleniumHelper().dragAndDropAtOffset(element, xOffset, yOffset);
+            getSeleniumHelper().dragAndDropAtXoffsetAndYoffset(element, xOffset, yOffset);
         } catch (WebDriverException var5) {
             if (!this.clickExceptionIsAboutHiddenByOtherElement(var5)) {
                 throw var5;
