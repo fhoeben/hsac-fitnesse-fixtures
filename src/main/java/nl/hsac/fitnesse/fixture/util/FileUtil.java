@@ -22,6 +22,8 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Scanner;
 
+import static java.nio.file.StandardCopyOption.COPY_ATTRIBUTES;
+
 /**
  * File utilities.
  */
@@ -350,7 +352,7 @@ public final class FileUtil {
 
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    Files.copy(file, resolveTarget(file));
+                    Files.copy(file, resolveTarget(file), COPY_ATTRIBUTES);
                     return FileVisitResult.CONTINUE;
                 }
 
