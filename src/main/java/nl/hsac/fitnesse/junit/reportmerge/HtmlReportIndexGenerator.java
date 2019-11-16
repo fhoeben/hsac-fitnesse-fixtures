@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.junit.reportmerge;
 
+import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.junit.HsacFitNesseRunner;
 import nl.hsac.fitnesse.junit.reportmerge.writer.CsvOverviewFileWriter;
 import nl.hsac.fitnesse.junit.reportmerge.writer.HtmlOverviewFileWriter;
@@ -19,18 +20,26 @@ import java.util.List;
 public class HtmlReportIndexGenerator {
     public static void main(String[] arguments) throws IOException {
         String path = HsacFitNesseRunner.FITNESSE_RESULTS_PATH;
+        String target = null;
         if (arguments != null && arguments.length > 0) {
             path = arguments[0];
+            if (arguments.length > 1) {
+                target = arguments[1];
+            }
         }
         System.out.println("Generating based on: " + path);
-        String output = new HtmlReportIndexGenerator().createFrom(path);
+        String output = new HtmlReportIndexGenerator().createFrom(path, target);
         System.out.println("Generated overview: " + output);
     }
 
-    public String createFrom(String path) throws IOException {
+    public String createFrom(String path, String target) throws IOException {
         File parentDir = new File(path);
         if (!parentDir.exists() || !parentDir.isDirectory()) {
             throw new IllegalArgumentException(parentDir.getAbsolutePath() + " is not an existing directory");
+        }
+        if (target != null) {
+            FileUtil.copyTree(path, target);
+            parentDir = new File(target);
         }
 
         List<TestReportHtml> reportHtmls = findTestResultPages(parentDir);
