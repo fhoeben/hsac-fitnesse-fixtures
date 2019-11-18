@@ -19,31 +19,31 @@ Sample test on [[Google Maps][https://www.google.com/maps]].
 |wait for visible   |${minimap}     |
 |click              |Remind me later|
 
-|scenario    |double zooming by double click at xoffset|xoffset   |and yoffset|yoffset    |should change url to|urlAfterZooming|
-|double click|${map}                                   |at xoffset|@xoffset   |and yoffset|@yoffset                            |
-|double click|${map}                                   |at xoffset|@xoffset   |and yoffset|@yoffset                            |
-|wait        |800                                      |milliseconds                                                           |
-|check       |location                                 |@{urlAfterZooming}                                                     |
+|scenario    |double zooming by double click at offset X|horizontalOffset|Y                |verticalOffset|should change url to|urlAfterZooming|
+|double click|${map}                                    |at offset X     |@horizontalOffset|Y             |@verticalOffset                     |
+|double click|${map}                                    |at offset X     |@horizontalOffset|Y             |@verticalOffset                     |
+|wait        |800                                       |milliseconds                                                                          |
+|check       |location                                  |@{urlAfterZooming}                                                                    |
 
-|scenario        |"Whats' here?" after right click at xoffset|xoffset   |and yoffset|yoffset    |should return city|city|
-|right click     |${map}                                     |at xoffset|@xoffset   |and yoffset|@yoffset               |
-|click           |What's here?                                                                                          |
-|wait for visible|@city                                      |in        |${locationBottomPopup}                         |
+|scenario        |"Whats' here?" after right click at offset X|horizontalOffset|Y                |verticalOffset|should return city|city|
+|right click     |${map}                                      |at offset X     |@horizontalOffset|Y             |@verticalOffset        |
+|click           |What's here?                                                                                                          |
+|wait for visible|@city                                       |in              |${locationBottomPopup}                                  |
 
-|scenario        |left click at xoffset|xoffset   |and yoffset|yoffset    |should return city|city|
-|click           |${map}               |at xoffset|@xoffset   |and yoffset|@yoffset               |
-|wait            |200                  |milliseconds                                              |
-|click           |${map}               |at xoffset|@xoffset   |and yoffset|@yoffset               |
-|wait for visible|@city                |in        |${locationBottomPopup}                         |
+|scenario        |click at offset X|horizontalOffset|Y                |verticalOffset|should return city|city|
+|click           |${map}           |at offset X     |@horizontalOffset|Y             |@verticalOffset        |
+|wait            |200              |milliseconds                                                             |
+|click           |${map}           |at offset X     |@horizontalOffset|Y             |@verticalOffset        |
+|wait for visible|@city            |in              |${locationBottomPopup}                                  |
 
-|scenario        |dragging and dropping pegman at xoffset|xoffset   |and yoffset|yoffset    |should open streetview of|title|
-|drag and drop   |${pegman}                              |at xoffset|@xoffset   |and yoffset|@yoffset                       |
-|wait for visible|@title                                 |in        |${streetviewTitleCard}                                 |
+|scenario        |dragging and dropping pegman to offset X|horizontalOffset|Y                |verticalOffset|should open streetview of|title|
+|drag and drop   |${pegman}                               |to offset X     |@horizontalOffset|Y             |@verticalOffset                |
+|wait for visible|@title                                  |in              |${streetviewTitleCard}                                          |
 *!
 
-|script                                     |browser test                                                     |
-|open url                                   |${mapUrl}                                                        |
-|double zooming by double click at xoffset  |294|and yoffset|-200|should change url to     |${urlAfterZooming}|
-|"Whats' here?" after right click at xoffset|279|and yoffset|73  |should return city       |Vilnius           |
-|left click at xoffset                      |150|and yoffset|43  |should return city       |Kaunas            |
-|dragging and dropping pegman at xoffset    |-80|and yoffset|-250|should open streetview of|Vilnius University|
+|script                                      |browser test                                           |
+|open url                                    |${mapUrl}                                              |
+|double zooming by double click at offset X  |294|Y|-200|should change url to     |${urlAfterZooming}|
+|"Whats' here?" after right click at offset X|279|Y|73  |should return city       |Vilnius           |
+|click at offset X                           |150|Y|43  |should return city       |Kaunas            |
+|dragging and dropping pegman to offset X    |-80|Y|-250|should open streetview of|Vilnius University|

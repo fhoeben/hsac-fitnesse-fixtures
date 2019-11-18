@@ -741,50 +741,50 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return clickImp(place, null);
     }
 
-    public void clickAtXoffsetAndYoffset(String place, Integer xOffset, Integer yOffset) {
+    public void clickAtOffsetXY(String place, Integer xOffset, Integer yOffset) {
         place = cleanupValue(place);
         try {
             WebElement element = getElementToClick(place);
-            getSeleniumHelper().clickAtXoffsetAndYoffset(element, xOffset, yOffset);
-        } catch (WebDriverException var5) {
-            if (!this.clickExceptionIsAboutHiddenByOtherElement(var5)) {
-                throw var5;
+            getSeleniumHelper().clickAtOffsetXY(element, xOffset, yOffset);
+        } catch (WebDriverException e) {
+            if (!this.clickExceptionIsAboutHiddenByOtherElement(e)) {
+                throw e;
             }
         }
     }
 
-    public void doubleClickAtXoffsetAndYoffset(String place, Integer xOffset, Integer yOffset) {
+    public void doubleClickAtOffsetXY(String place, Integer xOffset, Integer yOffset) {
         place = cleanupValue(place);
         try {
             WebElement element = getElementToClick(place);
-            getSeleniumHelper().doubleClickAtXoffsetAndYoffset(element, xOffset, yOffset);
-        } catch (WebDriverException var5) {
-            if (!this.clickExceptionIsAboutHiddenByOtherElement(var5)) {
-                throw var5;
+            getSeleniumHelper().doubleClickAtOffsetXY(element, xOffset, yOffset);
+        } catch (WebDriverException e) {
+            if (!this.clickExceptionIsAboutHiddenByOtherElement(e)) {
+                throw e;
             }
         }
     }
 
-    public void rightClickAtXoffsetAndYoffset(String place, Integer xOffset, Integer yOffset) {
+    public void rightClickAtOffsetXY(String place, Integer xOffset, Integer yOffset) {
         place = cleanupValue(place);
         try {
             WebElement element = getElementToClick(place);
-            getSeleniumHelper().rightClickAtXoffsetAndYoffset(element, xOffset, yOffset);
-        } catch (WebDriverException var5) {
-            if (!this.clickExceptionIsAboutHiddenByOtherElement(var5)) {
-                throw var5;
+            getSeleniumHelper().rightClickAtOffsetXY(element, xOffset, yOffset);
+        } catch (WebDriverException e) {
+            if (!this.clickExceptionIsAboutHiddenByOtherElement(e)) {
+                throw e;
             }
         }
     }
 
-    public void dragAndDropAtXoffsetAndYoffset(String place, Integer xOffset, Integer yOffset) {
+    public void dragAndDropToOffsetXY(String place, Integer xOffset, Integer yOffset) {
         place = cleanupValue(place);
         try {
             WebElement element = getElementToClick(place);
-            getSeleniumHelper().dragAndDropAtXoffsetAndYoffset(element, xOffset, yOffset);
-        } catch (WebDriverException var5) {
-            if (!this.clickExceptionIsAboutHiddenByOtherElement(var5)) {
-                throw var5;
+            getSeleniumHelper().dragAndDropToOffsetXY(element, xOffset, yOffset);
+        } catch (WebDriverException e) {
+            if (!this.clickExceptionIsAboutHiddenByOtherElement(e)) {
+                throw e;
             }
         }
     }

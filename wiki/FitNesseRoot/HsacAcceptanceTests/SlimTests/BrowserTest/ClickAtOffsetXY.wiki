@@ -1,7 +1,7 @@
 ---
 Test
 ---
-This test ensures that we can click on an element with an offset.
+This test ensures that we can click at given element offset.
 
 We use a mock server running to serve the HTML defined in this page.
 
@@ -19,7 +19,7 @@ div {
 </head>
 <body>
 
-<div id="area" oncontextmenu="showCoords(event)"></div>
+<div id="area" onclick="showCoords(event)"></div>
 <p id="demo"></p>
 
 <script>
@@ -39,11 +39,11 @@ function showCoords(event) {
 |add response|${HTML}              |
 |$url=       |get mock server url  |
 
-|script                |browser test                         |
-|seconds before timeout|1                                    |
-|open                  |$url                                 |
-|right click           |id=area |at xoffset|10|and yoffset|50|
-|check                 |value of|id=demo   |X: 119, Y: 109   |
+|script                |browser test                       |
+|seconds before timeout|1                                  |
+|open                  |$url                               |
+|click                 |id=area |at offset X|10   |Y  |50  |
+|check                 |value of|id=demo    |X: 119, Y: 109|
 
 |script|mock xml server setup|
 |stop                        |
