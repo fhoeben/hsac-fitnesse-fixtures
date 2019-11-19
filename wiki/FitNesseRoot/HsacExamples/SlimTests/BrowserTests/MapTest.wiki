@@ -5,11 +5,11 @@ Sample test on [[Google Maps][https://www.google.com/maps]].
 
 !*> definitions
 !define mapUrl {!-https://www.google.com/maps/@51.7147561,11.342505,5.16z-!}
-!define urlAfterZooming {!-https://www.google.com/maps/@55.3428238,22.1908312,7z-!}
+!define urlAfterZooming {!-https://www.google.com/maps/@51.7147561,11.342505,5.16z-!}
 !define minimap {css=.widget-minimap-shim.widget-minimap-shim-button}
 !define map {css=[aria-label="Map"]}
 !define locationBottomPopup {css=div.widget-reveal-card-container}
-!define pegman {css=[aria-label="Show Street View coverage"]} 
+!define pegman {css=[aria-label="Show Street View coverage"]}
 !define streetviewTitleCard {css=[id="titlecard"]}
 *!
 !*> scenarios
