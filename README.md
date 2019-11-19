@@ -8,11 +8,14 @@ The fixtures provided aim to assist in testing (SOAP) web services and web appli
 The baseline FitNesse installation offers the following features:
 * Ability to easily create a standalone (no JDK or Maven required) FitNesse environment.
 * Run FitNesse tests on a build server, reporting the results in both JUnit XML format and HTML.
+* [HSAC's fitnesse-plugin](https://github.com/fhoeben/hsac-fitnesse-plugin) to add additional Wiki features (random values, calculating relative dates, 
+  Slim scenarios without need to specify all parameters, Slim scripts that take a screenshot after each step).
+* [Praegus' toolchain-plugin](https://gitlab.com/praegus/toolchain-fixtures/toolchain-fixtures), improving the wiki's look and feel and page editing features, combining:
+      - [Bootstrap-plus wiki theme](https://github.com/tcnh/fitnesse-bootstrap-plus-theme)
+      - [Autocomplete responder](https://gitlab.com/praegus/toolchain-fixtures/fitnesse-autocomplete-responder)
 * FitNesse installation for test/fixture developers containing:
     - the fixture base classes (and Selenium drivers for _Chrome_, _Internet Explorer_, _Edge_ and _Firefox_),
-    - HSAC's fitnesse-plugin to add additional Wiki features (random values, calculating relative dates,
-      Slim scenarios without need to specify all parameters, Slim scripts that take a screenshot after each step),
-    - easy fixture debugging,
+    - easy fixture debugging.
 
 The fastest way to get started: just download the 'standalone.zip' from the 
 [Releases](https://github.com/fhoeben/hsac-fitnesse-fixtures/releases/latest), extract, run it (you'll just need a
@@ -53,6 +56,8 @@ The HTML results can be found in: `target/fitnesse-results/index.html`
 The FitNesse suite to run can be specified by changing the value of the `@Suite` annotation in `nl.hsac.fitnesse.fixture.FixtureDebugTest`, or (preferably) by adding a system property, called `fitnesseSuiteToRun`, specifying the suite to run to the build server's mvn execution.
 By using the `@SuiteFilter` and `@ExcludeSuiteFilter` annotations, or (preferably) by adding `suiteFilter` and/or `excludeSuiteFilter` system properties, one can provide tags to in- or exclude and further filter the tests to run within the specified suite. Provide multiple tags by comma-separating them.
 
+When multiple test runs are done (for instance in parallel to reduce total execution times) one should configure the the HTML output directory for each run to be a subdirectory of a common root (e.g. `target/fitnesse-results/run1` and `target/fitnesse-results/run2`) and then use `nl.hsac.fitnesse.junit.reportmerge.HtmlReportIndexGenerator` to generate a combined overview of all runs.
+
 The Selenium configuration (e.g. what browser on what platform) to use when testing websites can be overridden by using system properties (i.e. `seleniumGridUrl` and either `seleniumBrowser` or `seleniumCapabilities`).
 This allows different configurations on the build server to test with different browsers, without requiring different Wiki content, but only requiring a different build configuration.
 
@@ -65,6 +70,8 @@ Which suite is executed, filters to include and exclude, and Selenium can be con
 Two images are provided on Docker Hub to run tests (or to be used as base for custom images, of course):
  * [hsac/fitnesse-fixtures-test-jre8](https://hub.docker.com/r/hsac/fitnesse-fixtures-test-jre8/) which contains a Java runtime and this project, which can be used to run tests that either do not need Selenium (i.e. do not test using BrowserTest) or use an existing/external Selenium Grid.
  * [hsac/fitnesse-fixtures-test-jre8-chrome](https://hub.docker.com/r/hsac/fitnesse-fixtures-test-jre8-chrome/) which adds this project to a Selenium standalone Chrome image and can be used to run tests with a Chrome browser (without the need to have/maintain a Selenium Grid).
+
+An additional image is provided to combine multiple test run's results: [hsac/fitnesse-fixtures-combine](https://hub.docker.com/repository/docker/hsac/fitnesse-fixtures-combine).
 
 Detailed instructions on how to use the images are provided in each image's description.
 
