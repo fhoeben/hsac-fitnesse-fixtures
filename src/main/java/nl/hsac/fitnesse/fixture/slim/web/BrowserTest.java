@@ -741,6 +741,54 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return clickImp(place, null);
     }
 
+    public void clickAtOffsetXY(String place, Integer xOffset, Integer yOffset) {
+        place = cleanupValue(place);
+        try {
+            WebElement element = getElementToClick(place);
+            getSeleniumHelper().clickAtOffsetXY(element, xOffset, yOffset);
+        } catch (WebDriverException e) {
+            if (!this.clickExceptionIsAboutHiddenByOtherElement(e)) {
+                throw e;
+            }
+        }
+    }
+
+    public void doubleClickAtOffsetXY(String place, Integer xOffset, Integer yOffset) {
+        place = cleanupValue(place);
+        try {
+            WebElement element = getElementToClick(place);
+            getSeleniumHelper().doubleClickAtOffsetXY(element, xOffset, yOffset);
+        } catch (WebDriverException e) {
+            if (!this.clickExceptionIsAboutHiddenByOtherElement(e)) {
+                throw e;
+            }
+        }
+    }
+
+    public void rightClickAtOffsetXY(String place, Integer xOffset, Integer yOffset) {
+        place = cleanupValue(place);
+        try {
+            WebElement element = getElementToClick(place);
+            getSeleniumHelper().rightClickAtOffsetXY(element, xOffset, yOffset);
+        } catch (WebDriverException e) {
+            if (!this.clickExceptionIsAboutHiddenByOtherElement(e)) {
+                throw e;
+            }
+        }
+    }
+
+    public void dragAndDropToOffsetXY(String place, Integer xOffset, Integer yOffset) {
+        place = cleanupValue(place);
+        try {
+            WebElement element = getElementToClick(place);
+            getSeleniumHelper().dragAndDropToOffsetXY(element, xOffset, yOffset);
+        } catch (WebDriverException e) {
+            if (!this.clickExceptionIsAboutHiddenByOtherElement(e)) {
+                throw e;
+            }
+        }
+    }
+
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
     public boolean clickIfAvailable(String place) {
         return clickIfAvailableIn(place, null);

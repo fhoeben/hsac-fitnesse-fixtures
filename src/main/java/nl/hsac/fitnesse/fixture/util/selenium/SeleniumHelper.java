@@ -550,6 +550,56 @@ public class SeleniumHelper<T extends WebElement> {
     }
 
     /**
+     * Simulates placing the mouse at offset from the supplied element center.
+     * @param element element to place mouse over.
+     * @param xOffset horizontal integer offset from center.
+     * @param yOffset vertical integer offset from center.
+     */
+    public Actions moveToElement(WebElement element, Integer xOffset, Integer yOffset) {
+        return getActions().moveToElement(element, xOffset, yOffset);
+    }
+
+    /**
+     * Simulates clicking at offset from center place on the supplied element.
+     * @param element element to click on with ofset.
+     * @param xOffset horizontal integer offset from center.
+     * @param yOffset vertical integer offset from center.
+     */
+    public void clickAtOffsetXY(WebElement element, Integer xOffset, Integer yOffset) {
+        moveToElement(element, xOffset, yOffset).click().build().perform();
+    }
+
+    /**
+     * Simulates right clicking at offset from center place on the supplied element.
+     * @param element element to click on with ofset.
+     * @param xOffset horizontal integer offset from given element center.
+     * @param yOffset vertical integer offset from given element center.
+     */
+    public void rightClickAtOffsetXY(WebElement element, Integer xOffset, Integer yOffset) {
+        moveToElement(element, xOffset, yOffset).contextClick().build().perform();
+    }
+
+    /**
+     * Simulates double clicking at offset from center place on the supplied element.
+     * @param element element to click on with ofset.
+     * @param xOffset horizontal integer offset from given element center.
+     * @param yOffset vertical integer offset from given element center.
+     */
+    public void doubleClickAtOffsetXY(WebElement element, Integer xOffset, Integer yOffset) {
+        moveToElement(element, xOffset, yOffset).doubleClick().build().perform();
+    }
+
+    /**
+     * Simulates a drag of element to destination offsets calculated from element center.
+     * @param element element to drag and drop.
+     * @param xOffset horizontal integer offset destination for dropping (calculated from given element center).
+     * @param yOffset vertical integer offset destination for dropping (calculated from given element center).
+     */
+    public void dragAndDropToOffsetXY(WebElement element, Integer xOffset, Integer yOffset) {
+        getActions().dragAndDropBy(element, xOffset, yOffset).build().perform();
+    }
+
+    /**
      * Simulates double clicking on the supplied element
      * @param element element to double click on
      */
