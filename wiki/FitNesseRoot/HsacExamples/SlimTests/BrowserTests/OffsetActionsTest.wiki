@@ -1,0 +1,81 @@
+!*> mockup html
+!define HTML { {{{
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+#box { width: 100px; height: 100px; padding: 0.5em; float: left; margin: 10px 10px 10px 0; border-style: solid; border-width: 1px; }
+#droppable { width: 150px; height: 150px; padding: 0.5em; float: left; margin: 10px; border-style: solid; border-width: 1px; }
+tab { padding-left: 2em;}</style>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+$( function() {
+$( "#box" ).draggable();
+$( "#droppable" ).droppable({
+drop: function( event, ui ) {
+$( this )
+.addClass( "ui-state-highlight" )
+.find( "p" )
+.html( "Dropped!" );
+}
+});
+} );
+</script>
+<script>
+function leftclick(event) {
+    var x = event.clientX-17;
+    var y = event.clientY-35;
+    var coor = "BOX clicked at X: " + x + ", Y: " + y;
+    document.getElementById("demo").innerHTML = coor;
+}
+function dblclick(event) {
+    var x = event.clientX-17;
+    var y = event.clientY-35;
+    var coor = "BOX double clicked at X: " + x + ", Y: " + y;
+    document.getElementById("demo").innerHTML = coor;
+}
+function rightclick(event) {
+    var x = event.clientX-17;
+    var y = event.clientY-35;
+    var coor = "BOX right clicked at X: " + x + ", Y: " + y;
+    document.getElementById("demo").innerHTML = coor;
+}
+</script>
+</head>
+<body>
+<div id="box" onclick="leftclick(event)" ondblclick ="dblclick(event)" oncontextmenu="rightclick(event)" class="ui-widget-content">
+<p><tab>BOX</tab></p></div>
+<div id="droppable" class="ui-widget-header">
+<p>Drop here</p>
+</div>
+<p id="demo"></p>
+</body>
+</html>
+}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+*!
+BOX is 100px width and 100px height. 
+We simmulate actions with offsets from BOX center and check what pixels of BOX got the actions.
+
+|script                |browser test                                            |
+|open                  |$url                                                    |
+|seconds before timeout|1                                                       |
+|click                 |id=box  |at offset X|-50         |Y         |-50        |
+|check                 |value of|id=demo    |BOX clicked at X: 0, Y: 0          |
+|double click          |id=box  |at offset X|0           |Y         |0          |
+|check                 |value of|id=demo    |BOX double clicked at X: 50, Y: 50 |
+|right click           |id=box  |at offset X|50          |Y         |50         |
+|check                 |value of|id=demo    |BOX right clicked at X: 100, Y: 100|
+
+We check that BOX was succesfully dropped to droppable object after dragging BOX to offset from its center.
+
+|script          |browser test               |
+|drag and drop   |id=box|to offset X|170|Y|40|
+|wait for visible|css=.ui-state-highlight    |
