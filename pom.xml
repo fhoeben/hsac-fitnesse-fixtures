@@ -476,7 +476,7 @@
 								<artifactItem>
 									<groupId>nl.praegus</groupId>
 									<artifactId>toolchain-fitnesse-plugin</artifactId>
-									<version>1.17</version>
+									<version>1.18.1</version>
 									<classifier>jar-with-dependencies</classifier>
 									<overWrite>true</overWrite>
 								</artifactItem>
