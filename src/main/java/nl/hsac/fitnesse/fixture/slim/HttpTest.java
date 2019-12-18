@@ -98,7 +98,8 @@ public class HttpTest extends SlimFixtureWithMap {
     /**
      * Use SSL trust store for all requests in the current environment (i.e. for the entire test run)
      */
-    public void setTrustStore(String trustStoreFile, String password) {
+    public void setTrustStore(String trustStore, String password) {
+        String trustStoreFile = getFilePathFromWikiUrl(trustStore);
         getEnvironment().getHttpClient().setTrustStore(trustStoreFile, password);
     }
 
@@ -112,7 +113,8 @@ public class HttpTest extends SlimFixtureWithMap {
     /**
      * Send client certificate for all requests in the current environment (i.e. for the entire test run)
      */
-    public void setClientCertificate(String keyStoreFile, String keyStorePassword, String keyPassword, String alias) {
+    public void setClientCertificate(String keyStore, String keyStorePassword, String keyPassword, String alias) {
+        String keyStoreFile = getFilePathFromWikiUrl(keyStore);
         getEnvironment().getHttpClient().setClientCertificate(keyStoreFile, keyStorePassword, keyPassword, alias);
     }
 
