@@ -96,6 +96,34 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     /**
+     * Use SSL trust store for all requests in the current environment (i.e. for the entire test run)
+     */
+    public void setTrustStore(String trustStoreFile, String password) {
+        getEnvironment().getHttpClient().setTrustStore(trustStoreFile, password);
+    }
+
+    /**
+     * Resets SSL trust store to default in the current environment (i.e. for the entire test run)
+     */
+    public void clearTrustStore() {
+        getEnvironment().getHttpClient().clearTrustStore();
+    }
+
+    /**
+     * Send client certificate for all requests in the current environment (i.e. for the entire test run)
+     */
+    public void setClientCertificate(String keyStoreFile, String keyStorePassword, String keyPassword, String alias) {
+        getEnvironment().getHttpClient().setClientCertificate(keyStoreFile, keyStorePassword, keyPassword, alias);
+    }
+
+    /**
+     * No longer send client certificate in the current environment (i.e. for the entire test run)
+     */
+    public void clearClientCertificate() {
+        getEnvironment().getHttpClient().clearClientCertificate();
+    }
+
+    /**
      * Stores value to be passed as headers.
      *
      * @param value value to be passed.
