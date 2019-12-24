@@ -1,7 +1,9 @@
 ---
 Test
+Help: Https GET without certificate verification (deprecated approach)
 ---
-!2 Https without certificate verification
+
+'''This way of disabling SSL verification is deprecated, please use http client setup to achieve the same result. See HttpsWithoutCertificateVerificationViaSetup.'''
 
 Performs HTTPS GET on domains that would normally throw an exception because of bad SSL certificates.
 

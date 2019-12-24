@@ -69,6 +69,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Enables content compression support in the current environment (i.e. for the entire test run)
+     * @deprecated use {@link HttpClientSetup} to configure http client
      */
     public void enableCompression() {
         getEnvironment().enableHttpClientCompression();
@@ -76,6 +77,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Disables content compression support in the current environment (i.e. for the entire test run)
+     * @deprecated use {@link HttpClientSetup} to configure http client
      */
     public void disableCompression() {
         getEnvironment().disableHttpClientCompression();
@@ -83,6 +85,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Disables SSL certificate verification in the current environment (i.e. for the entire test run)
+     * @deprecated use {@link HttpClientSetup} to configure http client
      */
     public void disableSSLVerification() {
         getEnvironment().disableHttpClientSSLVerification();
@@ -90,39 +93,10 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Enables SSL certificate verification in the current environment (i.e. for the entire test run)
+     * @deprecated use {@link HttpClientSetup} to configure http client
      */
     public void enableSSLVerification() {
         getEnvironment().enableHttpClientSSLVerification();
-    }
-
-    /**
-     * Use SSL trust store for all requests in the current environment (i.e. for the entire test run)
-     */
-    public void setTrustStoreWithPassword(String trustStore, String password) {
-        String trustStoreFile = getFilePathFromWikiUrl(trustStore);
-        getEnvironment().getHttpClient().setTrustStore(trustStoreFile, password);
-    }
-
-    /**
-     * Resets SSL trust store to default in the current environment (i.e. for the entire test run)
-     */
-    public void clearTrustStore() {
-        getEnvironment().getHttpClient().clearTrustStore();
-    }
-
-    /**
-     * Send client certificate for all requests in the current environment (i.e. for the entire test run)
-     */
-    public void setClientCertificateFromWithPasswordKeyPasswordAndAlias(String keyStore, String keyStorePassword, String keyPassword, String alias) {
-        String keyStoreFile = getFilePathFromWikiUrl(keyStore);
-        getEnvironment().getHttpClient().setClientCertificate(keyStoreFile, keyStorePassword, keyPassword, alias);
-    }
-
-    /**
-     * No longer send client certificate in the current environment (i.e. for the entire test run)
-     */
-    public void clearClientCertificate() {
-        getEnvironment().getHttpClient().clearClientCertificate();
     }
 
     /**

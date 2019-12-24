@@ -1,0 +1,7 @@
+
+Since changing HTTP client setting last for the entire run we store the original settings,
+so we can restore it after each test in TearDown.
+
+
+|script          |http client setup  |
+|$originalClient=|get original client|

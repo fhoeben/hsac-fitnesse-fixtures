@@ -5,6 +5,7 @@ import fitnesse.ContextConfigurator;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.Template;
+import nl.hsac.fitnesse.fixture.slim.HttpClientSetup;
 import nl.hsac.fitnesse.fixture.util.DatesHelper;
 import nl.hsac.fitnesse.fixture.util.Formatter;
 import nl.hsac.fitnesse.fixture.util.FreeMarkerHelper;
@@ -81,7 +82,7 @@ public class Environment {
         builder.setExposeFields(true);
         cfg.setObjectWrapper(builder.build());
         freemarkerConfig = cfg;
-        
+
         fmHelper = new FreeMarkerHelper();
         templateCache = new ConcurrentHashMap<String, Template>();
 
@@ -309,7 +310,7 @@ public class Environment {
     public void doHttpFilePut(String url, HttpResponse result, Map<String, Object> headers, File file) {
         httpClient.put(url, result, headers, file);
     }
-    
+
     /**
      * Performs PUT to supplied url of result of applying template with model.
      * @param url url to put to.
@@ -817,6 +818,7 @@ public class Environment {
 
     /**
      * Enables content compression support on this environment's HttpClient
+     * @deprecated use {@link HttpClientSetup} to configure http client
      */
     public void enableHttpClientCompression() {
         httpClient.enableCompression();
@@ -824,6 +826,7 @@ public class Environment {
 
     /**
      * Disables content compression support on this environment's HttpClient
+     * @deprecated use {@link HttpClientSetup} to configure http client
      */
     public void disableHttpClientCompression() {
         httpClient.disableCompression();
@@ -831,6 +834,7 @@ public class Environment {
 
     /**
      * Disables SSL certificate verification on this environment's HttpClient
+     * @deprecated use {@link HttpClientSetup} to configure http client
      */
     public void disableHttpClientSSLVerification() {
         httpClient.disableSSLVerification();
@@ -838,6 +842,7 @@ public class Environment {
 
     /**
      * Enables SSL certificate verification on this environment's HttpClient
+     * @deprecated use {@link HttpClientSetup} to configure http client
      */
     public void enableHttpClientSSLVerification() {
         httpClient.enableSSLVerification();

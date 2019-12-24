@@ -5,7 +5,6 @@ import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
-import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
@@ -17,25 +16,16 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.NoConnectionReuseStrategy;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
-import org.apache.http.ssl.PrivateKeyStrategy;
-import org.apache.http.ssl.SSLContextBuilder;
-import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 
-import javax.net.ssl.SSLContext;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -47,20 +37,11 @@ public class HttpClient {
     /** Default HttpClient instance used. */
     public final static org.apache.http.client.HttpClient DEFAULT_HTTP_CLIENT;
     private org.apache.http.client.HttpClient httpClient;
-
-    private boolean contentCompression = false;
-
-    private boolean sslVerification = true;
-    private String trustStoreFile;
-    private char[] trustStorePassword;
-
-    private String keyStoreFile;
-    private char[] keyStorePassword;
-    private char[] keyPassword;
-    private String keyAlias;
+    private boolean contentCompression = false,
+            sslVerification = true;
 
     static {
-        DEFAULT_HTTP_CLIENT = buildHttpClient(false, true, null);
+        DEFAULT_HTTP_CLIENT = buildHttpClient(false, true);
     }
 
     /**
@@ -210,6 +191,7 @@ public class HttpClient {
 
     /**
      * Ensures the apache HttpClient used supports content compression
+     * @deprecated use {@link HttpClientFactory} and {@link #setHttpClient(org.apache.http.client.HttpClient)}
      */
     public void enableCompression() {
         if (!this.contentCompression) {
@@ -220,6 +202,7 @@ public class HttpClient {
 
     /**
      * Ensures the apache HttpClient used does not support content compression
+     * @deprecated use {@link HttpClientFactory} and {@link #setHttpClient(org.apache.http.client.HttpClient)}
      */
     public void disableCompression() {
         if (this.contentCompression) {
@@ -230,6 +213,7 @@ public class HttpClient {
 
     /**
      * Ensures the apache HttpClient used does not verify SSL certificates
+     * @deprecated use {@link HttpClientFactory} and {@link #setHttpClient(org.apache.http.client.HttpClient)}
      */
     public void disableSSLVerification() {
         if (this.sslVerification) {
@@ -240,6 +224,7 @@ public class HttpClient {
 
     /**
      * Ensures the apache HttpClient used verifies SSL certificates
+     * @deprecated use {@link HttpClientFactory} and {@link #setHttpClient(org.apache.http.client.HttpClient)}
      */
     public void enableSSLVerification() {
         if (!this.sslVerification) {
@@ -248,135 +233,30 @@ public class HttpClient {
         }
     }
 
-    public void setTrustStore(String trustStoreFile, String password) {
-        this.trustStoreFile = trustStoreFile;
-        this.trustStorePassword = password.toCharArray();
-        updateHttpClient();
-    }
-
-    public void clearTrustStore() {
-        this.trustStoreFile = null;
-        this.trustStorePassword = null;
-        updateHttpClient();
-    }
-
-    public void setClientCertificate(String keyStoreFile, String keyStorePassword, String keyPassword, String alias) {
-        this.keyStoreFile = keyStoreFile;
-        this.keyStorePassword = keyStorePassword.toCharArray();
-        this.keyPassword = keyPassword.toCharArray();
-        this.keyAlias = alias;
-        updateHttpClient();
-    }
-
-    public void clearClientCertificate() {
-        this.keyStoreFile = null;
-        this.keyStorePassword = null;
-        this.keyPassword = null;
-        this.keyAlias = null;
-        updateHttpClient();
-    }
-
     /**
      * Sets the apache HttpClient to one matching the current contentCompression and sslVerification values
+     * @deprecated use {@link HttpClientFactory} and {@link #setHttpClient(org.apache.http.client.HttpClient)}
      */
     protected void updateHttpClient() {
-        if (!contentCompression && sslVerification && trustStoreFile == null && keyStoreFile == null) {
+        if (!contentCompression && sslVerification) {
             this.httpClient = DEFAULT_HTTP_CLIENT;
         } else {
-            SSLContext sslContext = null;
-            if (keyStoreFile != null || trustStoreFile != null) {
-                sslContext = generateSSLContext(
-                        trustStoreFile, trustStorePassword,
-                        keyStoreFile, keyStorePassword,
-                        keyPassword, keyAlias);
-            }
-            this.httpClient = buildHttpClient(contentCompression, sslVerification, sslContext);
+            this.httpClient = buildHttpClient(this.contentCompression, this.sslVerification);
         }
     }
 
     /**
      * Builds an apache HttpClient instance
      * @param contentCompression if true, the returned instance will support content compression
-     * @param sslVerification if false, the returned instance will trust all SSL certificates
-     * @param sslContext SSL context to use, leave null for default
      * @return an apache HttpClient instance
      */
-    protected static org.apache.http.client.HttpClient buildHttpClient(boolean contentCompression, boolean sslVerification, SSLContext sslContext) {
-        RequestConfig rc = RequestConfig.custom()
-                .setCookieSpec(CookieSpecs.STANDARD)
-                .build();
-
-        HttpClientBuilder builder = HttpClients.custom()
-                .useSystemProperties();
-
-        if (!contentCompression) {
-            builder.disableContentCompression();
-        }
-
+    protected static org.apache.http.client.HttpClient buildHttpClient(boolean contentCompression, boolean sslVerification) {
+        HttpClientFactory factory = new HttpClientFactory();
+        factory.setContentCompression(contentCompression);
         if (!sslVerification) {
-            try {
-                builder.setSSLSocketFactory(generateAllTrustingSSLConnectionSocketFactory());
-            } catch (Exception e) {
-                throw new RuntimeException("Unable to create all-trusting SSLConnectionSocketFactory", e);
-            }
+            factory.disableSSLVerification();
         }
-
-        if (sslContext != null) {
-            builder.setSSLContext(sslContext);
-        }
-
-        return builder.setConnectionReuseStrategy(NoConnectionReuseStrategy.INSTANCE)
-                .setUserAgent(HttpClient.class.getName())
-                .setDefaultRequestConfig(rc)
-                .build();
-    }
-
-    /**
-     * @param trustStoreFile file to load trusted SSL certificates from, leave null for default
-     * @param trustStorePassword password to open trust store
-     * @param keyStoreFile file to load client certificates from, leave null for no client certificate
-     * @param keyStorePassword password to open key store
-     * @param keyPassword password to access key
-     * @param keyAlias alias of key inside key store
-     * @return SSLContext to use
-     */
-    protected static SSLContext generateSSLContext(String trustStoreFile, char[] trustStorePassword,
-                                                   String keyStoreFile, char[] keyStorePassword,
-                                                   char[] keyPassword, String keyAlias) {
-        SSLContextBuilder contextBuilder = SSLContexts.custom();
-        try {
-            if (trustStoreFile != null) {
-                File trustFile = new File(trustStoreFile);
-                if (!trustFile.exists()) {
-                    throw new IllegalArgumentException("Unable to find: " + trustFile.getAbsolutePath());
-                }
-                contextBuilder.loadTrustMaterial(trustFile, trustStorePassword);
-            }
-
-            if (keyStoreFile != null) {
-                File keyFile = new File(keyStoreFile);
-                if (!keyFile.exists()) {
-                    throw new IllegalArgumentException("Unable to find: " + keyFile.getAbsolutePath());
-                }
-
-                PrivateKeyStrategy keyStrategy = null;
-                if (keyAlias != null) {
-                    keyStrategy = (aliases, socket) -> keyAlias;
-                }
-                contextBuilder.loadKeyMaterial(keyFile, keyStorePassword, keyPassword, keyStrategy);
-            }
-
-            return contextBuilder.build();
-        } catch (GeneralSecurityException | IOException e) {
-            throw new RuntimeException("Unable to configure SSL", e);
-        }
-    }
-
-    protected static SSLConnectionSocketFactory generateAllTrustingSSLConnectionSocketFactory() throws Exception {
-        SSLContext allTrustingSSLContext = SSLContexts.custom()
-                .loadTrustMaterial(null, (a, b) -> true)
-                .build();
-        return new SSLConnectionSocketFactory(allTrustingSSLContext, (a, b) -> true);
+        return factory.createClient();
     }
 
     protected void getResponse(String url, HttpResponse response, HttpRequestBase method, Map<String, Object> headers) {

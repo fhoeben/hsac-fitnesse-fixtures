@@ -1,0 +1,16 @@
+---
+Test
+Help: Http GET with gzip compression support (deprecated approach)
+---
+Performs HTTP GET with gzip compression support.
+
+'''This way of enabling compression is deprecated, please use http client setup to achieve the same result. See HttpCompressionViaSetup.'''
+
+|script  |http test                                            |
+|enable compression                                            |
+|get from|http://fakerestapi.azurewebsites.net/api/activities/1|
+|show    |response                                             |
+
+Note that the Content-Encoding header is automatically removed after the content is decoded, so |show|response header|Content-Encoding| will show null regardless of actual encoding. Tools like Wireshark will allow you to see if the content was really sent gzipped.
+
+Also note that 'enable compression' lasts for the rest of the test run, or until you call 'disable compression'.
