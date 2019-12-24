@@ -44,7 +44,7 @@ import java.util.List;
  * JUnit Runner to run a FitNesse suite or page as JUnit test.
  *
  * The suite/page to run must be specified either via the Java property
- * 'fitnesseSuiteToRun', or by adding a {@Link FitNesseRunner.Name} annotation to the test class.
+ * 'fitnesseSuiteToRun', or by adding a {@link FitNesseRunner.Suite} annotation to the test class.
  * If both are present the system property is used.
  *
  * The Selenium driver used for tests may be overridden (from what is configured in the wiki)

@@ -1,6 +1,5 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import nl.hsac.fitnesse.fixture.slim.FileFixture;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -67,8 +66,9 @@ public class XMLValidator {
     }
 
     /**
-     * Validate currently loaded xml against an xsd
-     * @param xsdFileName the XSD schema file to use for validation
+     * Validates xml against an xsd
+     * @param xmlContent XML to validate
+     * @param xsdContent the XSD schema file to use for validation
      * @return true if the xml validates against the schema.
      * Throws a descriptive SlimFixtureException when validation fails
      */
