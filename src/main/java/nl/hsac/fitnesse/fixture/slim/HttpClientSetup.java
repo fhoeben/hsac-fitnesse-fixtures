@@ -60,7 +60,14 @@ public class HttpClientSetup extends SlimFixture {
      * Use at your own risk! This makes https potentially as unsafe as http!
      */
     public void disableSSLVerification() {
-        clientFactory.disableSSLVerification();
+        clientFactory.setDisableSslVerification(true);
+    }
+
+    /**
+     * Enables SSL certificate verification for all subsequent requests until the end of the test run.
+     */
+    public void enableSSLVerification() {
+        clientFactory.setDisableSslVerification(false);
     }
 
     /**

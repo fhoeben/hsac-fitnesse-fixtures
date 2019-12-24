@@ -26,6 +26,7 @@ public class HttpClientFactory {
     private HttpClientBuilder clientBuilder;
 
     private boolean enableContentCompression = false;
+    private boolean disableSslVerification = false;
 
     private File trustStoreFile;
     private char[] trustStorePassword;
@@ -48,6 +49,9 @@ public class HttpClientFactory {
      * @return apache http client.
      */
     public HttpClient createClient() {
+        if (isSslVerificationDisabled()) {
+            disableSSLVerification();
+        }
         if (isSSLContextRequired()) {
             SSLContext sslContext = generateSSLContext();
             clientBuilder.setSSLContext(sslContext);
@@ -128,6 +132,15 @@ public class HttpClientFactory {
 
     public void setContentCompression(boolean contentCompression) {
         this.enableContentCompression = contentCompression;
+    }
+
+    public boolean isSslVerificationDisabled() {
+        return disableSslVerification;
+    }
+
+    public void setDisableSslVerification(boolean disableSslVerification) {
+        this.disableSslVerification = disableSslVerification;
+        clientBuilder.setSSLSocketFactory(null);
     }
 
     protected boolean isSSLContextRequired() {
