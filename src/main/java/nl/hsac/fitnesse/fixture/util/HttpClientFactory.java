@@ -1,6 +1,12 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.ConnectionReuseStrategy;
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
@@ -8,6 +14,7 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.NoConnectionReuseStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
 import org.apache.http.ssl.PrivateKeyStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.SSLContexts;
@@ -24,6 +31,12 @@ import java.util.Arrays;
  */
 public class HttpClientFactory {
     private HttpClientBuilder clientBuilder;
+    private String userAgent;
+    private ConnectionReuseStrategy connectionReuseStrategy;
+    private RequestConfig.Builder requestConfigBuilder;
+    private CredentialsProvider credentialsProvider;
+
+    private HttpHost proxy;
 
     private boolean enableContentCompression = false;
     private boolean disableSslVerification = false;
@@ -38,14 +51,16 @@ public class HttpClientFactory {
     private PrivateKeyStrategy keyStrategy;
 
     public HttpClientFactory() {
-        clientBuilder = createClientBuilder()
-                .setDefaultRequestConfig(getDefaultRequestConfig())
-                .setUserAgent(getUserAgent())
-                .setConnectionReuseStrategy(getConnectionReuseStrategy());
+        userAgent = nl.hsac.fitnesse.fixture.util.HttpClient.class.getName();
+        requestConfigBuilder = createRequestConfigBuilder();
+        credentialsProvider = createCredentialsProvider();
+        connectionReuseStrategy = createConnectionReuseStrategy();
+        clientBuilder = createClientBuilder();
     }
 
     /**
      * Creates a client using the current settings.
+     *
      * @return apache http client.
      */
     public HttpClient createClient() {
@@ -59,6 +74,10 @@ public class HttpClientFactory {
         if (!isContentCompressionEnabled()) {
             clientBuilder.disableContentCompression();
         }
+        clientBuilder.setUserAgent(userAgent);
+        clientBuilder.setConnectionReuseStrategy(connectionReuseStrategy);
+        clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+        clientBuilder.setDefaultRequestConfig(requestConfigBuilder.build());
         return buildClient();
     }
 
@@ -67,7 +86,7 @@ public class HttpClientFactory {
      */
     public void disableSSLVerification() {
         try {
-            clientBuilder.setSSLSocketFactory(generateAllTrustingSSLConnectionSocketFactory());
+            clientBuilder.setSSLSocketFactory(createAllTrustingSSLConnectionSocketFactory());
         } catch (Exception e) {
             throw new RuntimeException("Unable to create all-trusting SSLConnectionSocketFactory", e);
         }
@@ -115,15 +134,26 @@ public class HttpClientFactory {
         }
     }
 
-    protected SSLConnectionSocketFactory generateAllTrustingSSLConnectionSocketFactory() throws Exception {
-        SSLContext allTrustingSSLContext = SSLContexts.custom()
-                .loadTrustMaterial(null, (a, b) -> true)
-                .build();
-        return new SSLConnectionSocketFactory(allTrustingSSLContext, (a, b) -> true);
-    }
-
     protected HttpClient buildClient() {
         return clientBuilder.build();
+    }
+
+    public void setProxy(String proxyString) {
+        proxy = StringUtils.isBlank(proxyString) ? null : HttpHost.create(proxyString);
+        getRequestConfigBuilder().setProxy(proxy);
+    }
+
+    public void setProxyUsernameAndPassword(String username, String password) {
+        if (proxy == null) {
+            throw new IllegalStateException("No proxy set, please configure that before setting credentials");
+        }
+        AuthScope proxyAuthScope = new AuthScope(proxy);
+        Credentials proxyCredentials = new UsernamePasswordCredentials(username, password);
+        setCredentials(proxyAuthScope, proxyCredentials);
+    }
+
+    public void setCredentials(AuthScope scope, Credentials credentials) {
+        getCredentialsProvider().setCredentials(scope, credentials);
     }
 
     public boolean isContentCompressionEnabled() {
@@ -203,30 +233,68 @@ public class HttpClientFactory {
         this.keyStrategy = keyStrategy;
     }
 
-    protected org.apache.http.impl.client.HttpClientBuilder getClientBuilder() {
+    public HttpClientBuilder getClientBuilder() {
         return clientBuilder;
     }
 
-    protected void setClientBuilder(org.apache.http.impl.client.HttpClientBuilder builder) {
+    public void setClientBuilder(HttpClientBuilder builder) {
         clientBuilder = builder;
     }
 
-    protected org.apache.http.impl.client.HttpClientBuilder createClientBuilder() {
+    public ConnectionReuseStrategy getConnectionReuseStrategy() {
+        return connectionReuseStrategy;
+    }
+
+    public void setConnectionReuseStrategy(ConnectionReuseStrategy connectionReuseStrategy) {
+        this.connectionReuseStrategy = connectionReuseStrategy;
+    }
+
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
+
+    public CredentialsProvider getCredentialsProvider() {
+        return credentialsProvider;
+    }
+
+    public void setCredentialsProvider(CredentialsProvider credentialsProvider) {
+        this.credentialsProvider = credentialsProvider;
+    }
+
+    public RequestConfig.Builder getRequestConfigBuilder() {
+        return requestConfigBuilder;
+    }
+
+    public void setRequestConfigBuilder(RequestConfig.Builder requestConfigBuilder) {
+        this.requestConfigBuilder = requestConfigBuilder;
+    }
+
+    protected HttpClientBuilder createClientBuilder() {
         return HttpClients.custom()
                 .useSystemProperties();
     }
 
-    protected ConnectionReuseStrategy getConnectionReuseStrategy() {
+    protected ConnectionReuseStrategy createConnectionReuseStrategy() {
         return NoConnectionReuseStrategy.INSTANCE;
     }
 
-    protected String getUserAgent() {
-        return nl.hsac.fitnesse.fixture.util.HttpClient.class.getName();
+    protected SystemDefaultCredentialsProvider createCredentialsProvider() {
+        return new SystemDefaultCredentialsProvider();
     }
 
-    protected RequestConfig getDefaultRequestConfig() {
+    protected RequestConfig.Builder createRequestConfigBuilder() {
         return RequestConfig.custom()
-                .setCookieSpec(CookieSpecs.STANDARD)
+                .setCookieSpec(CookieSpecs.STANDARD);
+    }
+
+    protected SSLConnectionSocketFactory createAllTrustingSSLConnectionSocketFactory() throws Exception {
+        SSLContext allTrustingSSLContext = SSLContexts.custom()
+                .loadTrustMaterial(null, (a, b) -> true)
                 .build();
+        return new SSLConnectionSocketFactory(allTrustingSSLContext, (a, b) -> true);
     }
 }

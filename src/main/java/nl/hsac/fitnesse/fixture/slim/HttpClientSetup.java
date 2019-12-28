@@ -70,6 +70,17 @@ public class HttpClientSetup extends SlimFixture {
         clientFactory.setDisableSslVerification(false);
     }
 
+    public void setProxy(String proxyUrl) {
+        String proxy = cleanupValue(proxyUrl);
+        clientFactory.setProxy(proxy);
+    }
+
+    public void setProxyUsernameAndPassword(String username, String password) {
+        String user = cleanupValue(username);
+        String passwd = cleanupValue(password);
+        clientFactory.setProxyUsernameAndPassword(user, passwd);
+    }
+
     /**
      * Use SSL trust store (i.e. .jks).
      * @param trustStore .jks file to use
