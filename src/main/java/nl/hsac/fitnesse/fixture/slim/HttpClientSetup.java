@@ -70,11 +70,22 @@ public class HttpClientSetup extends SlimFixture {
         clientFactory.setDisableSslVerification(false);
     }
 
+    /**
+     * Sets proxy server to use. Proxy URL should contain a host name and may contain a port
+     * (separated by ':'). A scheme (http or https) is only required if the proxy should only be used for
+     * that scheme.
+     * @param proxyUrl proxy server to use (e.g. proxy.mydomain.com:8080)
+     */
     public void setProxy(String proxyUrl) {
         String proxy = cleanupValue(proxyUrl);
         clientFactory.setProxy(proxy);
     }
 
+    /**
+     * Sets credentials to supply to proxy.
+     * @param username username to send to proxy server
+     * @param password password to send to proxy server
+     */
     public void setProxyUsernameAndPassword(String username, String password) {
         String user = cleanupValue(username);
         String passwd = cleanupValue(password);
