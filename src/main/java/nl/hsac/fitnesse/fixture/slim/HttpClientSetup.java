@@ -130,6 +130,30 @@ public class HttpClientSetup extends SlimFixture {
     }
 
     /**
+     * Determines the timeout in milliseconds until a connection is established.
+     *
+     * A timeout value of zero is interpreted as an infinite timeout.
+     * A negative value is interpreted as undefined (system default if applicable).
+     * @param connectionTimeout timeout in milliseconds
+     */
+    public void connectionTimeoutMilliseconds(int connectionTimeout) {
+        clientFactory.setConnectionTimeout(connectionTimeout);
+    }
+
+    /**
+     * Defines the socket timeout in milliseconds,
+     * which is the timeout for waiting for data or, put differently,
+     * a maximum period inactivity between two consecutive data packets.
+     *
+     * A timeout value of zero is interpreted as an infinite timeout.
+     * A negative value is interpreted as undefined (system default if applicable).
+     * @param socketTimeout timeout in milliseconds
+     */
+    public void socketTimeoutMilliseconds(int socketTimeout) {
+        clientFactory.setSocketTimeout(socketTimeout);
+    }
+
+    /**
      * @return the http client at the moment this http client setup instance was created,
      *          so it may be stored in a Slim symbol to be restored later.
      */

@@ -156,6 +156,22 @@ public class HttpClientFactory {
         getCredentialsProvider().setCredentials(scope, credentials);
     }
 
+    public void setConnectionTimeout(int timeoutInMs) {
+        getRequestConfigBuilder().setConnectTimeout(timeoutInMs);
+    }
+
+    public int getConnectionTimeout() {
+        return getRequestConfigBuilder().build().getConnectTimeout();
+    }
+
+    public void setSocketTimeout(int timeoutInMs) {
+        getRequestConfigBuilder().setSocketTimeout(timeoutInMs);
+    }
+
+    public int getSocketTimeout() {
+        return getRequestConfigBuilder().build().getSocketTimeout();
+    }
+
     public boolean isContentCompressionEnabled() {
         return enableContentCompression;
     }
