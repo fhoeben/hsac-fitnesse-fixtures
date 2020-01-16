@@ -22,6 +22,7 @@ Text 2
 |check                 |text of |xpath=//button[@id="buttontwo"]|Text 2|
 |check                 |text of |css=#buttontwo                 |Text 2|
 |check                 |text of |id=buttontwo                   |Text 2|
+|check                 |text of |buttontwo                      |Text 2|
 |check                 |value of|id=buttontwo                   |      |
 
 |script|mock xml server setup|
