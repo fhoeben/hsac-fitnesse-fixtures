@@ -1259,6 +1259,21 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return result;
     }
 
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public String textOf(String place) {
+        return textOfIn(place, null);
+    }
+
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public String textOfIn(String place, String container) {
+        String result = null;
+        WebElement element = getElementToRetrieveValue(place, container);
+        if (element != null) {
+            result = element.getText();
+        }
+        return result;
+    }
+
     protected T getElementToRetrieveValue(String place, String container) {
         return getElement(place, container);
     }

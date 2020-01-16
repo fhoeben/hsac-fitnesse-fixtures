@@ -1,0 +1,28 @@
+!define HTML_MAIN { {{{
+<html>
+<title>Button text test</title>
+<body>
+<button type="button" id="buttonone" title="buttonone">
+Text 1
+</button>
+<button type="button" id="buttontwo" title="buttontwo">
+Text 2
+</button>
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML_MAIN}         |
+|$url=       |get mock server url  |
+
+|script                |browser test                                   |
+|open                  |$url                                           |
+|seconds before timeout|1                                              |
+|check                 |text of |xpath=//button[@id="buttontwo"]|Text 2|
+|check                 |text of |css=#buttontwo                 |Text 2|
+|check                 |text of |id=buttontwo                   |Text 2|
+|check                 |value of|id=buttontwo                   |      |
+
+|script|mock xml server setup|
+|stop                        |
