@@ -1261,18 +1261,12 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String textOf(String place) {
-        return textOfIn(place, null);
+        return valueOfAttributeOnIn("innerText", place, null);
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String textOfIn(String place, String container) {
-        String result = null;
-        WebElement element = getElementToRetrieveValue(place, container);
-        if (element != null) {
-            result = element.getText();
-        }
-        return result;
-    }
+        return valueOfAttributeOnIn("innerText", place, container);    }
 
     protected T getElementToRetrieveValue(String place, String container) {
         return getElement(place, container);
