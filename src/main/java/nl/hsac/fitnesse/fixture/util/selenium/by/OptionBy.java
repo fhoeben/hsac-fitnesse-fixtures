@@ -9,7 +9,7 @@ public class OptionBy extends HeuristicBy {
     public OptionBy(String optionValue) {
         super("".equals(optionValue) ? ConstantBy.getEmptyOptionBy() : ConstantBy.nothing(),
                 new XPathBy(".//option/text()[normalized(.) = '%s']/..", optionValue),
-                new XPathBy(".//option/text()[contains(normalized(.), '%s')]/..", optionValue));
+                "".equals(optionValue) ? ConstantBy.nothing() : new XPathBy(".//option/text()[contains(normalized(.), '%s')]/..", optionValue));
         text = optionValue;
     }
 
