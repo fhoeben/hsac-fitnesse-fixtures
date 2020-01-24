@@ -926,6 +926,14 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     public boolean repeatUntilResponseIs(final String expectedResponse) {
+        return repeatUntil(getRepeatCompletion(expectedResponse));
+    }
+
+    public boolean repeatUntilResponseIsNot(final String expectedResponse) {
+        return repeatUntilNot(getRepeatCompletion(expectedResponse));
+    }
+
+    private RepeatCompletion getRepeatCompletion(final String expectedResponse){
         RepeatCompletion completion;
         if (expectedResponse == null) {
             completion = new RepeatLastCall() {
@@ -943,28 +951,7 @@ public class HttpTest extends SlimFixtureWithMap {
                 }
             };
         }
-        return repeatUntil(completion);
-    }
-
-    public boolean repeatUntilResponseIsNot(final String expectedResponse) {
-        RepeatCompletion completion;
-        if (expectedResponse == null) {
-            completion = new RepeatLastCall() {
-                @Override
-                public boolean isFinished() {
-                    return response() == null;
-                }
-            };
-        } else {
-            completion = new RepeatLastCall() {
-                @Override
-                public boolean isFinished() {
-                    Object actual = response();
-                    return !compareActualToExpected(expectedResponse, actual);
-                }
-            };
-        }
-        return repeatUntil(completion);
+        return completion;
     }
 
     public boolean repeatUntilHeaderIs(final String header, final Object expectedValue) {
