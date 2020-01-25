@@ -42,7 +42,7 @@
 		<fitnesse.version>20200108</fitnesse.version>
 		<selenium.version>3.141.59</selenium.version>
 		<slf4j.version>1.7.25</slf4j.version>
-		<apache.http.version>4.5.10</apache.http.version>
+		<apache.http.version>4.5.11</apache.http.version>
 		<surefire.version>2.22.1</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
@@ -200,7 +200,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
+			<version>4.13</version>
 			<scope>provided</scope>
         </dependency>
         <dependency>
