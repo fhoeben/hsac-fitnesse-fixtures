@@ -46,7 +46,7 @@
 		<surefire.version>2.22.1</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
-		<selenium.internetexplorerdriver.version>3.141.5</selenium.internetexplorerdriver.version>
+		<selenium.internetexplorerdriver.version>3.150.1</selenium.internetexplorerdriver.version>
 		<selenium.edgedriver.version>6.17134</selenium.edgedriver.version>
 		<selenium.chromedriver.version>79.0.3945.36</selenium.chromedriver.version>
 		<selenium.geckodriver.version>0.26.0</selenium.geckodriver.version>
@@ -279,7 +279,7 @@
 							<platform>windows</platform>
 							<bit>32</bit>
 							<version>${selenium.internetexplorerdriver.version}</version>
-							<url>http://selenium-release.storage.googleapis.com/3.141/IEDriverServer_Win32_${selenium.internetexplorerdriver.version}.zip</url>
+							<url>http://selenium-release.storage.googleapis.com/3.150/IEDriverServer_Win32_${selenium.internetexplorerdriver.version}.zip</url>
 						</driver>
 						<driver>
 							<name>edgedriver</name>
