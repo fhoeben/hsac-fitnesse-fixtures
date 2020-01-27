@@ -926,11 +926,11 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     public boolean repeatUntilResponseIs(final String expectedResponse) {
-        return repeatUntil(getRepeatCompletion(expectedResponse));
+        return repeatUntil(createResponseIsCompletion(expectedResponse));
     }
 
     public boolean repeatUntilResponseIsNot(final String expectedResponse) {
-        return repeatUntilNot(getRepeatCompletion(expectedResponse));
+        return repeatUntilNot(createResponseIsCompletion(expectedResponse));
     }
 
     protected RepeatCompletion createResponseIsCompletion(final String expectedResponse) {
