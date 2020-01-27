@@ -933,7 +933,7 @@ public class HttpTest extends SlimFixtureWithMap {
         return repeatUntilNot(getRepeatCompletion(expectedResponse));
     }
 
-    private RepeatCompletion getRepeatCompletion(final String expectedResponse){
+    protected RepeatCompletion createResponseIsCompletion(final String expectedResponse) {
         RepeatCompletion completion;
         if (expectedResponse == null) {
             completion = new RepeatLastCall() {
