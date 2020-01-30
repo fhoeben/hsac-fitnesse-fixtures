@@ -71,7 +71,7 @@ Two images are provided on Docker Hub to run tests (or to be used as base for cu
  * [hsac/fitnesse-fixtures-test-jre8](https://hub.docker.com/r/hsac/fitnesse-fixtures-test-jre8/) which contains a Java runtime and this project, which can be used to run tests that either do not need Selenium (i.e. do not test using BrowserTest) or use an existing/external Selenium Grid.
  * [hsac/fitnesse-fixtures-test-jre8-chrome](https://hub.docker.com/r/hsac/fitnesse-fixtures-test-jre8-chrome/) which adds this project to a Selenium standalone Chrome image and can be used to run tests with a Chrome browser (without the need to have/maintain a Selenium Grid).
 
-An additional image is provided to combine multiple test run's results: [hsac/fitnesse-fixtures-combine](https://hub.docker.com/repository/docker/hsac/fitnesse-fixtures-combine).
+An additional image is provided to combine multiple test run's results: [hsac/fitnesse-fixtures-combine](https://hub.docker.com/r/hsac/fitnesse-fixtures-combine).
 
 Detailed instructions on how to use the images are provided in each image's description.
 
