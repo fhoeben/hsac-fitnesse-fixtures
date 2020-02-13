@@ -28,10 +28,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriver.TargetLocator;
+import org.openqa.selenium.WebDriver.Window;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -1080,6 +1083,16 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             }
             return ok;
         });
+    }
+
+    /**
+     * Check the value of a web element repeatedly until it contains an expected
+     * value, i.e., "Processing..." becomes "Done."
+     */
+    @WaitUntil(TimeoutPolicy.STOP_TEST)
+    public boolean waitUntilIs(String place, String expected) {
+        WebElement element = getElementToRetrieveValue(place, null);
+        return hasText(element, expected);
     }
 
     protected String cleanExpectedValue(String expectedText) {
@@ -2320,6 +2333,20 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     public void setBrowserSizeToMaximum() {
         getSeleniumHelper().setWindowSizeToMaximum();
     }
+
+    public void setBrowserPositionXY(int xPos, int yPos) {
+		WebDriver driver = driver();
+		String currentWindowHandle = driver.getWindowHandle();
+		TargetLocator aLocator = driver.switchTo();
+		aLocator.window(currentWindowHandle);
+		Window aWindow = driver.manage().window();
+		Point p = new Point(xPos, yPos);
+		aWindow.setPosition(p);
+	}
+
+    public void setBrowserPositionToHome() {
+		setBrowserPositionXY(0, 0);
+	}
 
     /**
      * Downloads the target of the supplied link.
