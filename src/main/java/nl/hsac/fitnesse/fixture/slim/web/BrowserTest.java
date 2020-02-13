@@ -1085,16 +1085,6 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         });
     }
 
-    /**
-     * Check the value of a web element repeatedly until it contains an expected
-     * value, i.e., "Processing..." becomes "Done."
-     */
-    @WaitUntil(TimeoutPolicy.STOP_TEST)
-    public boolean waitUntilIs(String place, String expected) {
-        WebElement element = getElementToRetrieveValue(place, null);
-        return hasText(element, expected);
-    }
-
     protected String cleanExpectedValue(String expectedText) {
         return cleanupValue(expectedText);
     }
