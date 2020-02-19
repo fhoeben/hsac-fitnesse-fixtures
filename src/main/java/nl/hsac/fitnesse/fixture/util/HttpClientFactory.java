@@ -5,6 +5,7 @@ import org.apache.http.ConnectionReuseStrategy;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
+import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
@@ -78,6 +79,7 @@ public class HttpClientFactory {
         clientBuilder.setConnectionReuseStrategy(connectionReuseStrategy);
         clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
         clientBuilder.setDefaultRequestConfig(requestConfigBuilder.build());
+
         return buildClient();
     }
 
@@ -150,6 +152,10 @@ public class HttpClientFactory {
         AuthScope proxyAuthScope = new AuthScope(proxy);
         Credentials proxyCredentials = new UsernamePasswordCredentials(username, password);
         setCredentials(proxyAuthScope, proxyCredentials);
+    }
+
+    public void configureNtlmAuthentication(String username, String password, String host, String domain) {
+        setCredentials(AuthScope.ANY, new NTCredentials(username, password, host, domain));
     }
 
     public void setCredentials(AuthScope scope, Credentials credentials) {

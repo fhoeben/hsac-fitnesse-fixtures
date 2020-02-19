@@ -130,6 +130,38 @@ public class HttpClientSetup extends SlimFixture {
     }
 
     /**
+     * Use NTLM authentication with username and password only
+     * Usage: | configure ntlm username | [username] | and password | [password] |
+     * @param username The user to authenticate with
+     * @param password The password to use
+     */
+    public void configureNtlmUsernameAndPassword (String username, String password) {
+        clientFactory.configureNtlmAuthentication(cleanupValue(username), cleanupValue(password), null, null);
+    }
+
+    /**
+     * Use NTLM authentication with username and password for a specific domain name
+     * Usage: | configure ntlm username | [username] | and password | [password] | for domain | [domain] |
+     * @param username The user to authenticate with
+     * @param password The password to use
+     * @param domain The domain the user belongs to
+     */
+    public void configureNtlmUsernameAndPasswordForDomain (String username, String password, String domain) {
+        clientFactory.configureNtlmAuthentication(username, password, null, domain);
+    }
+    /**
+     * Use NTLM authentication with username and password for a specific workstation on a specific domain
+     * Usage: | configure ntlm username | [username] | and password | [password] | for workstation | [hostname] | on domain | [domain] |
+     * @param username The user to authenticate with
+     * @param password The password to use
+     * @param workstation The hostname of the workstation to authenticate
+     * @param domain The domain the user belongs to
+     */
+    public void configureNtlmUsernameAndPasswordForWorkstationOnDomain (String username, String password, String workstation, String domain) {
+        clientFactory.configureNtlmAuthentication(username, password, workstation, domain);
+    }
+
+    /**
      * Determines the timeout in milliseconds until a connection is established.
      *
      * A timeout value of zero is interpreted as an infinite timeout.
