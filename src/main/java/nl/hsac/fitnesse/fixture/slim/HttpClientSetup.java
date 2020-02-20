@@ -130,7 +130,7 @@ public class HttpClientSetup extends SlimFixture {
     }
 
     /**
-     * Use NTLM authentication with username and password only
+     * Use NTLM authentication with username and password only. Will be used with all requests or proxies that provide NTLM challenge.
      * Usage: | configure ntlm username | [username] | and password | [password] |
      * @param username The user to authenticate with
      * @param password The password to use
@@ -140,7 +140,7 @@ public class HttpClientSetup extends SlimFixture {
     }
 
     /**
-     * Use NTLM authentication with username and password for a specific domain name
+     * Use NTLM authentication with username and password for a specific domain name. Will be used with all requests or proxies that provide NTLM challenge.
      * Usage: | configure ntlm username | [username] | and password | [password] | for domain | [domain] |
      * @param username The user to authenticate with
      * @param password The password to use
@@ -150,7 +150,7 @@ public class HttpClientSetup extends SlimFixture {
         clientFactory.configureNtlmAuthentication(username, password, null, domain);
     }
     /**
-     * Use NTLM authentication with username and password for a specific workstation on a specific domain
+     * Use NTLM authentication with username and password for a specific workstation on a specific domain. Will be used with all requests or proxies that provide NTLM challenge.
      * Usage: | configure ntlm username | [username] | and password | [password] | for workstation | [hostname] | on domain | [domain] |
      * @param username The user to authenticate with
      * @param password The password to use
@@ -159,6 +159,16 @@ public class HttpClientSetup extends SlimFixture {
      */
     public void configureNtlmUsernameAndPasswordForWorkstationOnDomain (String username, String password, String workstation, String domain) {
         clientFactory.configureNtlmAuthentication(username, password, workstation, domain);
+    }
+
+    /**
+     * Use User/Pass authentication for your requests. Use configureNtlm... methods if you need windows authentication.
+     * Usage: | configure request username | [username] | and password | [password] |
+     * @param username The user to authenticate with
+     * @param password The password to use
+     */
+    public void configureRequestUsernameAndPassword (String username, String password) {
+        clientFactory.configureBasicAuthentication(username, password);
     }
 
     /**

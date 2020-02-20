@@ -3,10 +3,7 @@ package nl.hsac.fitnesse.fixture.util;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.ConnectionReuseStrategy;
 import org.apache.http.HttpHost;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.NTCredentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.auth.*;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.CookieSpecs;
@@ -156,6 +153,10 @@ public class HttpClientFactory {
 
     public void configureNtlmAuthentication(String username, String password, String host, String domain) {
         setCredentials(AuthScope.ANY, new NTCredentials(username, password, host, domain));
+    }
+
+    public void configureBasicAuthentication(String username, String password) {
+        setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
     }
 
     public void setCredentials(AuthScope scope, Credentials credentials) {
