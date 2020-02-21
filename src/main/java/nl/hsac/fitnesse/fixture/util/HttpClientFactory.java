@@ -6,10 +6,17 @@ import org.apache.http.HttpHost;
 import org.apache.http.auth.*;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.NoConnectionReuseStrategy;
+import org.apache.http.impl.auth.BasicSchemeFactory;
+import org.apache.http.impl.auth.DigestSchemeFactory;
+import org.apache.http.impl.auth.NTLMSchemeFactory;
+import org.apache.http.impl.auth.SPNegoSchemeFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
@@ -48,6 +55,8 @@ public class HttpClientFactory {
     private char[] keyPassword;
     private PrivateKeyStrategy keyStrategy;
 
+    private Lookup<AuthSchemeProvider> authSchemeRegistry;
+
     public HttpClientFactory() {
         userAgent = nl.hsac.fitnesse.fixture.util.HttpClient.class.getName();
         requestConfigBuilder = createRequestConfigBuilder();
@@ -76,6 +85,10 @@ public class HttpClientFactory {
         clientBuilder.setConnectionReuseStrategy(connectionReuseStrategy);
         clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
         clientBuilder.setDefaultRequestConfig(requestConfigBuilder.build());
+
+        if (null != authSchemeRegistry) {
+            clientBuilder.setDefaultAuthSchemeRegistry(authSchemeRegistry);
+        }
 
         return buildClient();
     }
@@ -152,6 +165,12 @@ public class HttpClientFactory {
     }
 
     public void configureNtlmAuthentication(String username, String password, String host, String domain) {
+        authSchemeRegistry = RegistryBuilder.<AuthSchemeProvider>create()
+                .register(AuthSchemes.NTLM, new NTLMSchemeFactory())
+                .register(AuthSchemes.BASIC, new BasicSchemeFactory())
+                .register(AuthSchemes.DIGEST, new DigestSchemeFactory())
+                .register(AuthSchemes.SPNEGO, new SPNegoSchemeFactory())
+                .build();
         setCredentials(AuthScope.ANY, new NTCredentials(username, password, host, domain));
     }
 
