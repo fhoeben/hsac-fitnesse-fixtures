@@ -1,6 +1,6 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
+import nl.hsac.fitnesse.fixture.Environment;
 import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
 
@@ -51,6 +51,7 @@ public class HttpResponse {
      * @param aRequest the request to set
      */
     public void setRequest(String aRequest) {
+        aRequest = Environment.getInstance().getSoapSigningHelper().signSoapMessageIfNeeded(aRequest);
         request = aRequest;
     }
 

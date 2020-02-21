@@ -6,28 +6,7 @@ import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.Template;
 import nl.hsac.fitnesse.fixture.slim.HttpClientSetup;
-import nl.hsac.fitnesse.fixture.util.DatesHelper;
-import nl.hsac.fitnesse.fixture.util.Formatter;
-import nl.hsac.fitnesse.fixture.util.FreeMarkerHelper;
-import nl.hsac.fitnesse.fixture.util.HtmlCleaner;
-import nl.hsac.fitnesse.fixture.util.HttpClient;
-import nl.hsac.fitnesse.fixture.util.HttpResponse;
-import nl.hsac.fitnesse.fixture.util.JsonHelper;
-import nl.hsac.fitnesse.fixture.util.JsonPathHelper;
-import nl.hsac.fitnesse.fixture.util.LineEndingHelper;
-import nl.hsac.fitnesse.fixture.util.MapHelper;
-import nl.hsac.fitnesse.fixture.util.NamespaceContextImpl;
-import nl.hsac.fitnesse.fixture.util.ProgramHelper;
-import nl.hsac.fitnesse.fixture.util.ProgramResponse;
-import nl.hsac.fitnesse.fixture.util.PropertiesHelper;
-import nl.hsac.fitnesse.fixture.util.ReflectionHelper;
-import nl.hsac.fitnesse.fixture.util.SecretMasker;
-import nl.hsac.fitnesse.fixture.util.TextFormatter;
-import nl.hsac.fitnesse.fixture.util.TimeoutHelper;
-import nl.hsac.fitnesse.fixture.util.XMLFormatter;
-import nl.hsac.fitnesse.fixture.util.XPathHelper;
-import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
-import nl.hsac.fitnesse.fixture.util.ZipHelper;
+import nl.hsac.fitnesse.fixture.util.*;
 import nl.hsac.fitnesse.fixture.util.selenium.CookieConverter;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverManager;
@@ -73,6 +52,7 @@ public class Environment {
     private LineEndingHelper lineEndingHelper = new LineEndingHelper();
     private PropertiesHelper propertiesHelper = new PropertiesHelper();
     private ZipHelper zipHelper = new ZipHelper();
+    private SoapSigningHelper soapSigningHelper = new SoapSigningHelper();
 
     private Environment() {
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_23);
@@ -814,6 +794,14 @@ public class Environment {
 
     public void setZipHelper(ZipHelper zipHelper) {
         this.zipHelper = zipHelper;
+    }
+
+    public SoapSigningHelper getSoapSigningHelper() {
+        return soapSigningHelper;
+    }
+
+    public void setSoapSigningHelper(SoapSigningHelper soapSigningHelper) {
+        this.soapSigningHelper = soapSigningHelper;
     }
 
     /**
