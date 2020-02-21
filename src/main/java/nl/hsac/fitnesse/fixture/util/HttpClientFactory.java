@@ -75,7 +75,7 @@ public class HttpClientFactory {
     public HttpClient createClient() {
 
         if (useWindowsAuthenticationSettings) {
-            return WinHttpClients.createDefault();
+            clientBuilder = WinHttpClients.custom();
         }
 
         if (isSslVerificationDisabled()) {
