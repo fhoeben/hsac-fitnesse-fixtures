@@ -1,23 +1,17 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.ConnectionReuseStrategy;
 import org.apache.http.HttpHost;
-import org.apache.http.auth.*;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.config.Lookup;
-import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.NoConnectionReuseStrategy;
-import org.apache.http.impl.auth.BasicSchemeFactory;
-import org.apache.http.impl.auth.DigestSchemeFactory;
-import org.apache.http.impl.auth.NTLMSchemeFactory;
-import org.apache.http.impl.auth.SPNegoSchemeFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
@@ -32,8 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
-
-import static org.apache.http.impl.client.WinHttpClients.isWinAuthAvailable;
 
 /**
  * Helper to create Apache http client.
@@ -59,7 +51,6 @@ public class HttpClientFactory {
     private char[] keyPassword;
     private PrivateKeyStrategy keyStrategy;
 
-    private Lookup<AuthSchemeProvider> authSchemeRegistry;
     private boolean useWindowsAuthenticationSettings = false;
 
     public HttpClientFactory() {
@@ -78,13 +69,10 @@ public class HttpClientFactory {
     public HttpClient createClient() {
 
         if (useWindowsAuthenticationSettings) {
-            if (isWinAuthAvailable()){
-                clientBuilder = WinHttpClients.custom();
-            } else{
-                throw new SlimFixtureException("Unable to get Windows credential using JNI");
-            }
+            clientBuilder = WinHttpClients.custom();
+        } else {
+            clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
         }
-
         if (isSslVerificationDisabled()) {
             disableSSLVerification();
         }
@@ -97,12 +85,7 @@ public class HttpClientFactory {
         }
         clientBuilder.setUserAgent(userAgent);
         clientBuilder.setConnectionReuseStrategy(connectionReuseStrategy);
-        clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
         clientBuilder.setDefaultRequestConfig(requestConfigBuilder.build());
-
-        if (null != authSchemeRegistry) {
-            clientBuilder.setDefaultAuthSchemeRegistry(authSchemeRegistry);
-        }
 
         return buildClient();
     }
@@ -178,18 +161,8 @@ public class HttpClientFactory {
         setCredentials(proxyAuthScope, proxyCredentials);
     }
 
-    public void setUseWindowsAuthentication(boolean useWindowsAuth) {
+    public void useWindowsAuthentication(boolean useWindowsAuth) {
         this.useWindowsAuthenticationSettings = useWindowsAuth;
-    }
-
-    public void configureNtlmAuthentication(String username, String password, String host, String domain) {
-        authSchemeRegistry = RegistryBuilder.<AuthSchemeProvider>create()
-                .register(AuthSchemes.NTLM, new NTLMSchemeFactory())
-                .register(AuthSchemes.BASIC, new BasicSchemeFactory())
-                .register(AuthSchemes.DIGEST, new DigestSchemeFactory())
-                .register(AuthSchemes.SPNEGO, new SPNegoSchemeFactory())
-                .build();
-        setCredentials(AuthScope.ANY, new NTCredentials(username, password, host, domain));
     }
 
     public void configureBasicAuthentication(String username, String password) {

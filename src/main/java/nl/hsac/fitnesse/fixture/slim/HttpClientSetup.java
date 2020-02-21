@@ -130,39 +130,7 @@ public class HttpClientSetup extends SlimFixture {
     }
 
     /**
-     * Use NTLM authentication with username and password only. Will be used with all requests or proxies that provide NTLM challenge.
-     * Usage: | configure ntlm username | [username] | and password | [password] |
-     * @param username The user to authenticate with
-     * @param password The password to use
-     */
-    public void configureNtlmUsernameAndPassword (String username, String password) {
-        clientFactory.configureNtlmAuthentication(cleanupValue(username), cleanupValue(password), null, null);
-    }
-
-    /**
-     * Use NTLM authentication with username and password for a specific domain name. Will be used with all requests or proxies that provide NTLM challenge.
-     * Usage: | configure ntlm username | [username] | and password | [password] | for domain | [domain] |
-     * @param username The user to authenticate with
-     * @param password The password to use
-     * @param domain The domain the user belongs to
-     */
-    public void configureNtlmUsernameAndPasswordForDomain (String username, String password, String domain) {
-        clientFactory.configureNtlmAuthentication(username, password, null, domain);
-    }
-    /**
-     * Use NTLM authentication with username and password for a specific workstation on a specific domain. Will be used with all requests or proxies that provide NTLM challenge.
-     * Usage: | configure ntlm username | [username] | and password | [password] | for workstation | [hostname] | on domain | [domain] |
-     * @param username The user to authenticate with
-     * @param password The password to use
-     * @param workstation The hostname of the workstation to authenticate
-     * @param domain The domain the user belongs to
-     */
-    public void configureNtlmUsernameAndPasswordForWorkstationOnDomain (String username, String password, String workstation, String domain) {
-        clientFactory.configureNtlmAuthentication(username, password, workstation, domain);
-    }
-
-    /**
-     * Use User/Pass authentication for your requests. Use configureNtlm... methods if you need windows authentication.
+     * Configure Basic User/Pass authentication for all requests.
      * Usage: | configure request username | [username] | and password | [password] |
      * @param username The user to authenticate with
      * @param password The password to use
@@ -171,8 +139,12 @@ public class HttpClientSetup extends SlimFixture {
         clientFactory.configureBasicAuthentication(username, password);
     }
 
+    /**
+     * Use Currently logged in Windows user authentication on requests if running on windows and the credential can be obtained through JNI
+     * @param useWinAuth if true, windows authentication will be attempted
+     */
     public void useWindowsAuthentication(boolean useWinAuth){
-        clientFactory.setUseWindowsAuthentication(useWinAuth);
+        clientFactory.useWindowsAuthentication(useWinAuth);
     }
 
     /**
