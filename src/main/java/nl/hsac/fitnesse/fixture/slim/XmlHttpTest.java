@@ -172,8 +172,8 @@ public class XmlHttpTest extends HttpTest {
      * @param keyStoreType The keystore type. One of: {@value nl.hsac.fitnesse.fixture.util.SoapSigningHelper#VALID_KEY_STORE_TYPES}
      * @param keyStorePassword The keystore password
      */
-    public void wsSecSetkeyStoreOfTypeWithPassword(String keyStoreFile, String keyStoreType, String keyStorePassword) {
-        signingHelper().setKeyStore(keyStoreFile, keyStoreType);
+    public void wsSecSetKeystoreOfTypeWithPassword(String keystoreFile, String keyStoreType, String keyStorePassword) {
+        signingHelper().setKeyStore(keystoreFile, keyStoreType);
         signingHelper().setKeyStorePassword(keyStorePassword);
     }
 
