@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.ConnectionReuseStrategy;
 import org.apache.http.HttpHost;
@@ -31,6 +32,8 @@ import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
+
+import static org.apache.http.impl.client.WinHttpClients.isWinAuthAvailable;
 
 /**
  * Helper to create Apache http client.
@@ -75,7 +78,11 @@ public class HttpClientFactory {
     public HttpClient createClient() {
 
         if (useWindowsAuthenticationSettings) {
-            clientBuilder = WinHttpClients.custom();
+            if (isWinAuthAvailable()){
+                clientBuilder = WinHttpClients.custom();
+            } else{
+                throw new SlimFixtureException("Unable to get Windows credential using JNI");
+            }
         }
 
         if (isSslVerificationDisabled()) {
