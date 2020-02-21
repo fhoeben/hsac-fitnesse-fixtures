@@ -20,6 +20,7 @@ import org.apache.http.impl.auth.SPNegoSchemeFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
+import org.apache.http.impl.client.WinHttpClients;
 import org.apache.http.ssl.PrivateKeyStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.SSLContexts;
@@ -56,6 +57,7 @@ public class HttpClientFactory {
     private PrivateKeyStrategy keyStrategy;
 
     private Lookup<AuthSchemeProvider> authSchemeRegistry;
+    private boolean useWindowsAuthenticationSettings = false;
 
     public HttpClientFactory() {
         userAgent = nl.hsac.fitnesse.fixture.util.HttpClient.class.getName();
@@ -71,6 +73,11 @@ public class HttpClientFactory {
      * @return apache http client.
      */
     public HttpClient createClient() {
+
+        if (useWindowsAuthenticationSettings) {
+            return WinHttpClients.createDefault();
+        }
+
         if (isSslVerificationDisabled()) {
             disableSSLVerification();
         }
@@ -162,6 +169,10 @@ public class HttpClientFactory {
         AuthScope proxyAuthScope = new AuthScope(proxy);
         Credentials proxyCredentials = new UsernamePasswordCredentials(username, password);
         setCredentials(proxyAuthScope, proxyCredentials);
+    }
+
+    public void setUseWindowsAuthentication(boolean useWindowsAuth) {
+        this.useWindowsAuthenticationSettings = useWindowsAuth;
     }
 
     public void configureNtlmAuthentication(String username, String password, String host, String domain) {

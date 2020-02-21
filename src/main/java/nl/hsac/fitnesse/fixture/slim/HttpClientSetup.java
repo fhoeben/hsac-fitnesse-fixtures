@@ -171,6 +171,10 @@ public class HttpClientSetup extends SlimFixture {
         clientFactory.configureBasicAuthentication(username, password);
     }
 
+    public void useWindowsAuthentication(boolean useWinAuth){
+        clientFactory.setUseWindowsAuthentication(useWinAuth);
+    }
+
     /**
      * Determines the timeout in milliseconds until a connection is established.
      *
