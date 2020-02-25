@@ -297,7 +297,7 @@ public class XmlHttpTest extends HttpTest {
         return new XmlHttpResponse();
     }
 
-    private SoapSigningHelper signingHelper() {
-        return Environment.getInstance().getSoapSigningHelper();
+    protected SoapSigningHelper signingHelper() {
+        return getEnvironment().getSoapSigningHelper();
     }
 }
