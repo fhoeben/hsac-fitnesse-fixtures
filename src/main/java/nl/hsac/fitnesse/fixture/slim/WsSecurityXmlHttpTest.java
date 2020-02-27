@@ -151,22 +151,12 @@ public class WsSecurityXmlHttpTest extends XmlHttpTest {
      */
     @Override
     public boolean sendTemplateTo(String serviceUrl, String aContentType, String method) {
-        boolean result;
-        resetResponse();
         if (template == null) {
             throw new StopTestException("No template available to use in " + method);
-        } else {
-            String url = getUrl(serviceUrl);
-            try {
-                String body = getEnvironment().processTemplate(template, getCurrentValues());
-                storeLastCall(method, serviceUrl);
-                sendToImpl(body, url, aContentType, method);
-            } catch (Throwable t) {
-                handleCallException("Unable to get response from " + method + " to: " + url, t);
-            }
-            result = postProcessResponse();
         }
-        return result;
+
+        String body = getEnvironment().processTemplate(template, getCurrentValues());
+        return sendToImpl(body, serviceUrl, aContentType, method);
     }
 
     @Override
