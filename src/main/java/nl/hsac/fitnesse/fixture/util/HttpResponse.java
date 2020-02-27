@@ -51,7 +51,6 @@ public class HttpResponse {
      * @param aRequest the request to set
      */
     public void setRequest(String aRequest) {
-        aRequest = Environment.getInstance().getSoapSigningHelper().signSoapMessageIfNeeded(aRequest);
         request = aRequest;
     }
 
