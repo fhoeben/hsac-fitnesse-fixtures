@@ -32,11 +32,11 @@ public class HttpTest extends SlimFixtureWithMap {
     public final static String DEFAULT_POST_CONTENT_TYPE = "application/x-www-form-urlencoded; charset=UTF-8";
 
     private String downloadBase = new File(filesDir, "downloads").getPath() + "/";
-    private final Map<String, Object> headerValues = new LinkedHashMap<>();
+    protected final Map<String, Object> headerValues = new LinkedHashMap<>();
     private boolean stopTestOnException = true;
     private boolean storeCookies = false;
-    private HttpResponse response = createResponse();
-    private String template;
+    protected HttpResponse response = createResponse();
+    protected String template;
     private boolean explicitContentTypeSet = false;
     private String contentType = DEFAULT_POST_CONTENT_TYPE;
     private String lastUrl = null;

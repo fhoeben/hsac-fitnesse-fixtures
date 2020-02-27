@@ -90,7 +90,7 @@ public class SoapSigningHelper {
      */
     public void setKeyStore(String keyStore, String ksType) {
         if (Arrays.stream(VALID_KEY_STORE_TYPES.split("\\s*,\\s*")).noneMatch(ksType.toUpperCase()::equals)) {
-            throw new SlimFixtureException(false, "Invalid keystore type: " + ksType.toUpperCase() + ". Valid options: " + Arrays.toString(VALID_KEY_STORE_TYPES.split("\\s*,\\s*")));
+            throw new SlimFixtureException(false, "Invalid keystore type: " + ksType.toUpperCase() + ". Valid options: " + VALID_KEY_STORE_TYPES);
         }
         signatureKeyProperties.put("org.apache.ws.security.crypto.provider", "org.apache.ws.security.components.crypto.Merlin");
         signatureKeyProperties.put("org.apache.ws.security.crypto.merlin.keystore.file", Environment.getInstance().getFilePathFromWikiUrl(keyStore));
@@ -116,7 +116,7 @@ public class SoapSigningHelper {
      */
     public void setKeyIdentifierType(String type) {
         if (Arrays.stream(VALID_KEY_IDENTIFIER_TYPES.split("\\s*,\\s*")).noneMatch(type.toUpperCase()::equals)) {
-            throw new SlimFixtureException(false, "Invalid key identifier type: " + type.toUpperCase() + ". Valid options: " + Arrays.toString(VALID_KEY_IDENTIFIER_TYPES.split("\\s*,\\s*")));
+            throw new SlimFixtureException(false, "Invalid key identifier type: " + type.toUpperCase() + ". Valid options: " +VALID_KEY_IDENTIFIER_TYPES);
         }
         signatureKeyIdentifierType = getIntValueFromField(WSConstants.class, type.toUpperCase());
     }
@@ -132,7 +132,7 @@ public class SoapSigningHelper {
      */
     public void setCanonicalizationMethod(String cMethod) {
         if (Arrays.stream(VALID_CANONICALIZATION_METHODS.split("\\s*,\\s*")).noneMatch(cMethod.toUpperCase()::equals)) {
-            throw new SlimFixtureException(false, "Invalid canonicalization method: " + cMethod.toUpperCase() + ". Valid options: " + Arrays.toString(VALID_CANONICALIZATION_METHODS.split("\\s*,\\s*")));
+            throw new SlimFixtureException(false, "Invalid canonicalization method: " + cMethod.toUpperCase() + ". Valid options: " + VALID_CANONICALIZATION_METHODS);
         }
         signatureCanonicalizationMethod = getStringValueFromField(CanonicalizationMethod.class, cMethod.toUpperCase());
     }
@@ -144,7 +144,7 @@ public class SoapSigningHelper {
      */
     public void setDigestAlgorithm(String digestMethod) {
         if (Arrays.stream(VALID_DIGEST_ALGORITHMS.split("\\s*,\\s*")).noneMatch(digestMethod.toUpperCase()::equals)) {
-            throw new SlimFixtureException(false, "Invalid digest method: " + digestMethod.toUpperCase() + ". Valid options: " + Arrays.toString(VALID_DIGEST_ALGORITHMS.split("\\s*,\\s*")));
+            throw new SlimFixtureException(false, "Invalid digest method: " + digestMethod.toUpperCase() + ". Valid options: " + VALID_DIGEST_ALGORITHMS);
         }
         signatureDigestAlgorithm = getStringValueFromField(DigestMethod.class, digestMethod.toUpperCase());
     }
