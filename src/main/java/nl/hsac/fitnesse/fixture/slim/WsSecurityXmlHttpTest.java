@@ -171,33 +171,7 @@ public class WsSecurityXmlHttpTest extends XmlHttpTest {
 
     @Override
     protected boolean sendToImpl(String body, String serviceUrl, String aContentType, String method) {
-        boolean result;
-        resetResponse();
         body = getEnvironment().getSoapSigningHelper().signSoapMessageIfNeeded(body);
-        response.setRequest(body);
-        String url = getUrl(serviceUrl);
-        try {
-            storeLastCall(method, serviceUrl);
-            switch (method) {
-                case "POST":
-                    getEnvironment().doHttpPost(url, response, headerValues, aContentType);
-                    break;
-                case "PUT":
-                    getEnvironment().doHttpPut(url, response, headerValues, aContentType);
-                    break;
-                case "DELETE":
-                    getEnvironment().doDelete(url, response, headerValues, aContentType);
-                    break;
-                case "PATCH":
-                    getEnvironment().doHttpPatch(url, response, headerValues, aContentType);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unsupported method: " + method);
-            }
-        } catch (Throwable t) {
-            handleCallException("Unable to get response from " + method + " to: " + url, t);
-        }
-        result = postProcessResponse();
-        return result;
+        return super.sendToImpl(body, serviceUrl, aContentType, method);
     }
 }
