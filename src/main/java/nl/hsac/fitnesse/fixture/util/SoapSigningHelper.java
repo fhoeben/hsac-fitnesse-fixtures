@@ -21,6 +21,7 @@ import java.util.Properties;
 
 public class SoapSigningHelper {
 
+    // Value constants are defined as Strings instead of array(list)s, so that they can be referenced from JavaDoc.
     public static final String VALID_DIGEST_ALGORITHMS = "SHA1, SHA256, SHA512, RIPEMD160";
     public static final String VALID_KEY_IDENTIFIER_TYPES = "BST_DIRECT_REFERENCE, ISSUER_SERIAL, X509_KEY_IDENTIFIER, " +
             "SKI_KEY_IDENTIFIER, EMBEDDED_KEYNAME, EMBED_SECURITY_TOKEN_REF";
