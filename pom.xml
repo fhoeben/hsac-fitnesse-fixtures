@@ -89,6 +89,11 @@
 			<version>${apache.http.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient-win</artifactId>
+			<version>${apache.http.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
 			<version>2.3.29</version>
