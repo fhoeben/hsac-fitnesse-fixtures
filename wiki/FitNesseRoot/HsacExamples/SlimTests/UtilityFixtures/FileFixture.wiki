@@ -77,7 +77,11 @@ second line-!            |
 
 Table below shows how we can work with zip files
 
-|script                                                                   |
+We ensure lists are rendered between brackets, and not numbered
+|script|list fixture   |
+|display lists standard|
+
+|script    |file fixture                                                  |
 |$created= |create                |bye1.txt          |containing|Bye Bye 5|
 |$zip=     |zip                   |$created          |as        |bye.zip  |
 |check     |number of files in zip|$zip              |1                   |
