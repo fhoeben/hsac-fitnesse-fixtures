@@ -15,6 +15,7 @@ import org.apache.http.impl.NoConnectionReuseStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
+import org.apache.http.impl.client.WinHttpClients;
 import org.apache.http.ssl.PrivateKeyStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.SSLContexts;
@@ -50,6 +51,8 @@ public class HttpClientFactory {
     private char[] keyPassword;
     private PrivateKeyStrategy keyStrategy;
 
+    private boolean useWindowsAuthenticationSettings = false;
+
     public HttpClientFactory() {
         userAgent = nl.hsac.fitnesse.fixture.util.HttpClient.class.getName();
         requestConfigBuilder = createRequestConfigBuilder();
@@ -64,6 +67,12 @@ public class HttpClientFactory {
      * @return apache http client.
      */
     public HttpClient createClient() {
+
+        if (useWindowsAuthenticationSettings) {
+            clientBuilder = WinHttpClients.custom();
+        } else {
+            clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+        }
         if (isSslVerificationDisabled()) {
             disableSSLVerification();
         }
@@ -76,8 +85,8 @@ public class HttpClientFactory {
         }
         clientBuilder.setUserAgent(userAgent);
         clientBuilder.setConnectionReuseStrategy(connectionReuseStrategy);
-        clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
         clientBuilder.setDefaultRequestConfig(requestConfigBuilder.build());
+
         return buildClient();
     }
 
@@ -150,6 +159,14 @@ public class HttpClientFactory {
         AuthScope proxyAuthScope = new AuthScope(proxy);
         Credentials proxyCredentials = new UsernamePasswordCredentials(username, password);
         setCredentials(proxyAuthScope, proxyCredentials);
+    }
+
+    public void useWindowsAuthentication(boolean useWindowsAuth) {
+        this.useWindowsAuthenticationSettings = useWindowsAuth;
+    }
+
+    public void configureBasicAuthentication(String username, String password) {
+        setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
     }
 
     public void setCredentials(AuthScope scope, Credentials credentials) {

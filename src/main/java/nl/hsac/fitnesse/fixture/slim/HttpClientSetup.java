@@ -130,6 +130,24 @@ public class HttpClientSetup extends SlimFixture {
     }
 
     /**
+     * Configure Basic User/Pass authentication for all requests.
+     * Usage: | configure request username | [username] | and password | [password] |
+     * @param username The user to authenticate with
+     * @param password The password to use
+     */
+    public void configureRequestUsernameAndPassword (String username, String password) {
+        clientFactory.configureBasicAuthentication(username, password);
+    }
+
+    /**
+     * Use Currently logged in Windows user authentication on requests if running on windows and the credential can be obtained through JNI
+     * @param useWinAuth if true, windows authentication will be attempted
+     */
+    public void useWindowsAuthentication(boolean useWinAuth){
+        clientFactory.useWindowsAuthentication(useWinAuth);
+    }
+
+    /**
      * Determines the timeout in milliseconds until a connection is established.
      *
      * A timeout value of zero is interpreted as an infinite timeout.
