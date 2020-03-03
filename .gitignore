@@ -22,6 +22,8 @@ target/
 wiki/FitNesseRoot/files/testProgress
 wiki/FitNesseRoot/files/downloads
 .idea/
+.classpath
+.factorypath
 wiki/FitNesseRoot/files/pagesources
 wiki/FitNesseRoot/files/galen-reports
 wiki/bye.txt
