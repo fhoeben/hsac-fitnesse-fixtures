@@ -14,7 +14,7 @@ import org.junit.runner.RunWith;
         exclude = {"testResults", "testProgress",
                 "screenshots", "pagesources", "downloads", "galen-reports", "fileFixture", "httpPostExamples",
                 "test", "Desktop.ini", ".DS_Store"})
-@FitNesseRunner.Partition(count = 2, index = 0)
-@FitNesseRunner.OutputDir("target/fitnesse-results/index0")
-public class AcceptanceTest {
+@FitNesseRunner.OutputDir("target/fitnesse-results/index1")
+@FitNesseRunner.Partition(count = 2, index = 1)
+public class Acceptance2Test {
 }

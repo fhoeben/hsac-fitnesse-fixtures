@@ -38,8 +38,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<hsac-fitnesse-plugin.version>1.28.0</hsac-fitnesse-plugin.version>
-		<fitnesse.version>20200205</fitnesse.version>
+		<hsac-fitnesse-plugin.version>1.29.0</hsac-fitnesse-plugin.version>
+		<fitnesse.version>20200304</fitnesse.version>
 		<selenium.version>3.141.59</selenium.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<apache.http.version>4.5.11</apache.http.version>
@@ -343,6 +343,45 @@
 						<exclude>**/FixtureDebugTest.java</exclude>
 					</excludes>
 				</configuration>
+				<executions>
+					<execution>
+						<id>default-test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<excludes>
+								<!-- this test actually runs fitnesse tests
+                                     therefore it will only be executed for
+                                     integration-test goal
+                                -->
+								<exclude>**/FixtureDebugTest.java</exclude>
+								<exclude>**/AcceptanceTest.java</exclude>
+								<exclude>**/Acceptance2Test.java</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+					<execution>
+						<id>acceptance</id>
+						<phase>test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+                        <configuration>
+                            <includes>
+                                <!-- this test actually runs fitnesse tests
+                                     therefore it will only be executed for
+                                     integration-test goal
+                                -->
+                                <include>**/AcceptanceTest.java</include>
+                                <include>**/Acceptance2Test.java</include>
+                            </includes>
+                            <forkCount>2</forkCount>
+                            <reuseForks>true</reuseForks>
+                        </configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-failsafe-plugin</artifactId>
@@ -421,11 +460,13 @@
 					</execution>
 					<execution>
 						<id>combine-reports</id>
+						<phase>test</phase>
 						<goals>
 							<goal>java</goal>
 						</goals>
 						<configuration>
 							<mainClass>nl.hsac.fitnesse.junit.reportmerge.HtmlReportIndexGenerator</mainClass>
+							<skip>${skipTests}</skip>
 						</configuration>
 					</execution>
 				</executions>
