@@ -1020,6 +1020,13 @@ public class SeleniumHelper<T extends WebElement> {
                 executeJavascript("arguments[0].scrollIntoView(" + scrollIntoViewArgs + ");", element);
     }
 
+    /**
+     * Takes screenshot of current page (as .png).
+     * @param baseName name for file created (without extension),
+     *                 if a file already exists with the supplied name an
+     *                 '_index' will be added.
+     * @return absolute path of file created.
+     */
     public String takeScreenshot(String baseName) {
         String result = null;
 
