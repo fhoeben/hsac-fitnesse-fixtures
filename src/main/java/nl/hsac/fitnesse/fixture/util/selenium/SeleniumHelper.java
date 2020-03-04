@@ -28,18 +28,15 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchWindowException;
-import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.ScreenshotException;
 import org.openqa.selenium.safari.SafariDriver;
@@ -47,8 +44,13 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import ru.yandex.qatools.ashot.AShot;
+import ru.yandex.qatools.ashot.Screenshot;
+import ru.yandex.qatools.ashot.shooting.ShootingStrategies;
 
 import java.io.IOException;
+import java.io.ByteArrayOutputStream;
+import javax.imageio.ImageIO;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
@@ -1018,26 +1020,21 @@ public class SeleniumHelper<T extends WebElement> {
                 executeJavascript("arguments[0].scrollIntoView(" + scrollIntoViewArgs + ");", element);
     }
 
-    /**
-     * Takes screenshot of current page (as .png).
-     * @param baseName name for file created (without extension),
-     *                 if a file already exists with the supplied name an
-     *                 '_index' will be added.
-     * @return absolute path of file created.
-     */
     public String takeScreenshot(String baseName) {
         String result = null;
 
-        WebDriver d = driver();
-
-        if (!(d instanceof TakesScreenshot)) {
-            d = new Augmenter().augment(d);
-        }
-        if (d instanceof TakesScreenshot) {
-            TakesScreenshot ts = (TakesScreenshot) d;
-            byte[] png = ts.getScreenshotAs(OutputType.BYTES);
-            result = writeScreenshot(baseName, png);
-        }
+        Screenshot screenshot = new AShot()
+            .shootingStrategy(
+                ShootingStrategies.viewportPasting(1000)
+            )
+            .takeScreenshot(driver());
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            ImageIO.write(screenshot.getImage(), "png", out);
+            result = writeScreenshot(baseName, out.toByteArray());
+        } catch(IOException e) {
+            // ignore
+        };
         return result;
     }
 
