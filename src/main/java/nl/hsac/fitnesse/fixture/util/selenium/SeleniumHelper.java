@@ -28,15 +28,18 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchWindowException;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.ScreenshotException;
 import org.openqa.selenium.safari.SafariDriver;
@@ -1021,27 +1024,77 @@ public class SeleniumHelper<T extends WebElement> {
     }
 
     /**
-     * Takes screenshot of current page (as .png).
+     * Type of screenshot to take
+     */
+    protected enum ScreenshotType {
+        Viewport,
+        FullPage
+    }
+
+    /**
+     * Takes screenshot of page as currently visible to the user (as .png).
      * @param baseName name for file created (without extension),
      *                 if a file already exists with the supplied name an
      *                 '_index' will be added.
      * @return absolute path of file created.
      */
     public String takeScreenshot(String baseName) {
-        String result = null;
+        return takeScreenshot(baseName, ScreenshotType.Viewport);
+    }
 
-        Screenshot screenshot = new AShot()
-            .shootingStrategy(
-                ShootingStrategies.viewportPasting(1000)
-            )
-            .takeScreenshot(driver());
-        try {
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            ImageIO.write(screenshot.getImage(), "png", out);
-            result = writeScreenshot(baseName, out.toByteArray());
-        } catch(IOException e) {
-            // ignore
-        };
+    /**
+     * Takes screenshot of whole of current page (as .png).
+     * @param baseName name for file created (without extension),
+     *                 if a file already exists with the supplied name an
+     *                 '_index' will be added.
+     * @return absolute path of file created.
+     */
+    public String fullPageScreenshot(String baseName) {
+        return takeScreenshot(baseName, ScreenshotType.FullPage);
+    }
+
+    /**
+     * Takes screenshot of page (as .png).
+     * @param baseName name for file created (without extension),
+     *                 if a file already exists with the supplied name an
+     *                 '_index' will be added.
+     * @param type     type of screenshot.
+     * @return absolute path of file created.
+     */
+    protected String takeScreenshot(String baseName, ScreenshotType type) {
+        String result = null;
+        byte[] png = null;
+
+        switch (type) {
+            case FullPage:
+                Screenshot screenshot = new AShot()
+                .shootingStrategy(
+                    ShootingStrategies.viewportPasting(1000)
+                )
+                .takeScreenshot(driver());
+                try {
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    ImageIO.write(screenshot.getImage(), "png", out);
+                    png = out.toByteArray();
+                } catch (IOException e) {
+                    // ignore
+                };
+                break;
+            default:
+                WebDriver d = driver();
+
+                if (!(d instanceof TakesScreenshot)) {
+                    d = new Augmenter().augment(d);
+                }
+                if (d instanceof TakesScreenshot) {
+                    TakesScreenshot ts = (TakesScreenshot) d;
+                    png = ts.getScreenshotAs(OutputType.BYTES);
+                }
+        }
+        if (png != null) {
+            result = writeScreenshot(baseName, png);
+        }
+
         return result;
     }
 
