@@ -2001,13 +2001,43 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     /**
-     * Takes screenshot from current page
+     * Takes screenshot of page as currently visible
      * @param basename filename (below screenshot base directory).
      * @return location of screenshot.
      */
     public String takeScreenshot(String basename) {
+        return takeScreenshotWith(
+            basename,
+            name ->
+                createScreenshot(name)
+        );
+    }
+
+    /**
+     * Takes screenshot of whole page
+     * @param basename filename (below screenshot base directory).
+     * @return location of screenshot.
+     */
+    public String fullPageScreenshot(String basename) {
+        return takeScreenshotWith(
+            basename,
+            name -> 
+                getSeleniumHelper()
+                    .fullPageScreenshot(
+                        getScreenshotBasename(name)
+                    )
+        );
+    }
+
+    /**
+     * Takes screenshot using the passed maker function
+     * @param basename filename (below screenshot base directory).
+     * @param maker    function for taking the screenshot, should return the screenshot location.
+     * @return location of screenshot.
+     */
+    private String takeScreenshotWith(String baseName, Function<String, String> maker) {
         try {
-            String screenshotFile = createScreenshot(basename);
+            String screenshotFile = maker.apply(baseName);
             if (screenshotFile == null) {
                 throw new SlimFixtureException(false, "Unable to take screenshot: does the webdriver support it?");
             } else {
@@ -2020,9 +2050,10 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             // so we output a message but no exception. We rely on a next line to actually handle alert
             // (which may mean either really handle or stop test).
             return String.format(
-                    "<div><strong>Unable to take screenshot</strong>, alert is active. Alert text:<br/>" +
-                            "'<span>%s</span>'</div>",
-                    StringEscapeUtils.escapeHtml4(alertText()));
+                "<div><strong>Unable to take screenshot</strong>, alert is active. Alert text:<br/>" +
+                    "'<span>%s</span>'</div>",
+                StringEscapeUtils.escapeHtml4(alertText())
+            );
         }
     }
 

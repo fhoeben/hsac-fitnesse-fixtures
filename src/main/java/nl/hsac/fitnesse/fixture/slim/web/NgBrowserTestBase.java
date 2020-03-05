@@ -22,6 +22,7 @@ public abstract class NgBrowserTestBase extends BrowserTest<WebElement> {
         METHODS_NO_WAIT = ReflectionHelper.validateMethodNames(NgBrowserTestBase.class,
                 "open",
                 "takeScreenshot",
+                "fullPageScreenshot",
                 "location",
                 "back",
                 "forward",

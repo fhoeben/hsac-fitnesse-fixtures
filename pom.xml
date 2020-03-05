@@ -132,6 +132,11 @@
 			</exclusions>
 		</dependency>
 		<dependency>
+            <groupId>ru.yandex.qatools.ashot</groupId>
+            <artifactId>ashot</artifactId>
+            <version>1.5.4</version>
+        </dependency>
+		<dependency>
 			<groupId>com.codeborne</groupId>
 			<artifactId>phantomjsdriver</artifactId>
 			<version>1.4.4</version>

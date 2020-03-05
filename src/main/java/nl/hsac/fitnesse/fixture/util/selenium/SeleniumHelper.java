@@ -47,8 +47,13 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import ru.yandex.qatools.ashot.AShot;
+import ru.yandex.qatools.ashot.Screenshot;
+import ru.yandex.qatools.ashot.shooting.ShootingStrategies;
 
 import java.io.IOException;
+import java.io.ByteArrayOutputStream;
+import javax.imageio.ImageIO;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
@@ -1019,25 +1024,77 @@ public class SeleniumHelper<T extends WebElement> {
     }
 
     /**
-     * Takes screenshot of current page (as .png).
+     * Type of screenshot to take
+     */
+    protected enum ScreenshotType {
+        Viewport,
+        FullPage
+    }
+
+    /**
+     * Takes screenshot of page as currently visible to the user (as .png).
      * @param baseName name for file created (without extension),
      *                 if a file already exists with the supplied name an
      *                 '_index' will be added.
      * @return absolute path of file created.
      */
     public String takeScreenshot(String baseName) {
+        return takeScreenshot(baseName, ScreenshotType.Viewport);
+    }
+
+    /**
+     * Takes screenshot of whole of current page (as .png).
+     * @param baseName name for file created (without extension),
+     *                 if a file already exists with the supplied name an
+     *                 '_index' will be added.
+     * @return absolute path of file created.
+     */
+    public String fullPageScreenshot(String baseName) {
+        return takeScreenshot(baseName, ScreenshotType.FullPage);
+    }
+
+    /**
+     * Takes screenshot of page (as .png).
+     * @param baseName name for file created (without extension),
+     *                 if a file already exists with the supplied name an
+     *                 '_index' will be added.
+     * @param type     type of screenshot.
+     * @return absolute path of file created.
+     */
+    protected String takeScreenshot(String baseName, ScreenshotType type) {
         String result = null;
+        byte[] png = null;
 
-        WebDriver d = driver();
+        switch (type) {
+            case FullPage:
+                Screenshot screenshot = new AShot()
+                .shootingStrategy(
+                    ShootingStrategies.viewportPasting(1000)
+                )
+                .takeScreenshot(driver());
+                try {
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    ImageIO.write(screenshot.getImage(), "png", out);
+                    png = out.toByteArray();
+                } catch (IOException e) {
+                    // ignore
+                };
+                break;
+            default:
+                WebDriver d = driver();
 
-        if (!(d instanceof TakesScreenshot)) {
-            d = new Augmenter().augment(d);
+                if (!(d instanceof TakesScreenshot)) {
+                    d = new Augmenter().augment(d);
+                }
+                if (d instanceof TakesScreenshot) {
+                    TakesScreenshot ts = (TakesScreenshot) d;
+                    png = ts.getScreenshotAs(OutputType.BYTES);
+                }
         }
-        if (d instanceof TakesScreenshot) {
-            TakesScreenshot ts = (TakesScreenshot) d;
-            byte[] png = ts.getScreenshotAs(OutputType.BYTES);
+        if (png != null) {
             result = writeScreenshot(baseName, png);
         }
+
         return result;
     }
 
