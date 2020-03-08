@@ -2185,7 +2185,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     private String getTimeoutMessage(TimeoutException e) {
         String messageBase = String.format("Timed-out waiting (after %ss)", secondsBeforeTimeout());
-        return getSlimFixtureExceptionMessage("timeouts", "timeout", messageBase, e);
+        try {
+            return getSlimFixtureExceptionMessage("timeouts", "timeout", messageBase, e);
+        } catch (RuntimeException re) {
+            return messageBase + " and unable to capture screenshot and page source. " + re.toString();
+        }
     }
 
     protected void handleRequiredElementNotFound(String toFind) {
