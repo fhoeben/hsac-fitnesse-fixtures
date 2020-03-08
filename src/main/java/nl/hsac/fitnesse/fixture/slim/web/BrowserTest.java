@@ -56,6 +56,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     private NgBrowserTest ngBrowserTest;
     private boolean implicitWaitForAngular = false;
     private boolean implicitFindInFrames = true;
+    private boolean continueIfReadyStateInteractive = false;
     private boolean scrollElementToCenter = false;
     private int secondsBeforeTimeout;
     private int secondsBeforePageLoadTimeout;
@@ -235,6 +236,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             if (!done) {
                 System.err.printf("Open of %s returned while document.readyState was %s", url, readyState);
                 System.err.println();
+                if (isContinueIfReadyStateInteractive() && "interactive".equals(readyState)) {
+                    done = true;
+                }
             }
             return done;
         });
@@ -2632,6 +2636,14 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     public void setImplicitFindInFramesTo(boolean implicitFindInFrames) {
         this.implicitFindInFrames = implicitFindInFrames;
+    }
+
+    public boolean isContinueIfReadyStateInteractive() {
+        return continueIfReadyStateInteractive;
+    }
+
+    public void setContinueIfReadyStateInteractive(boolean continueIfReadyStateInteractive) {
+        this.continueIfReadyStateInteractive = continueIfReadyStateInteractive;
     }
 
     /**
