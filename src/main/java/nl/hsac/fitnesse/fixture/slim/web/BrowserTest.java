@@ -41,6 +41,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -195,6 +196,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             result = new StopTestException(false, msg, t);
         } else if (t instanceof SlimFixtureException) {
             result = super.handleException(method, arguments, t);
+        } else if (t instanceof WebDriverException && t.getCause() instanceof ConnectException) {
+            String msg = "Lost connection to webdriver: " + t.getCause();
+            result = new StopTestException(false, msg, t);
         } else {
             String msg = getSlimFixtureExceptionMessage("exception", null, t);
             result = new SlimFixtureException(false, msg, t);
