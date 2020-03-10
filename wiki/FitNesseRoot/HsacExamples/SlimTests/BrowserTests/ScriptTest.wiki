@@ -9,6 +9,7 @@ This class allows us to specify what we want to do using a web browser, by the (
 The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
 
 |script                                 |browser test                                                      |
+|note                                   |all music loads a lot of slow ads, we don't want to wait on those |
 |set continue if ready state interactive|true                                                              |
 |open                                   |https://www.allmusic.com                                          |
 |show                                   |click if available|I accept                                       |
@@ -20,6 +21,10 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |check                                  |page title        |!-Van Morrison | Album Discography | AllMusic-!|
 |show                                   |take screenshot   |discography                                    |
 |check                                  |value of          |Year|in row where|Album|is|Astral Weeks|1968   |
+|note                                   |close popup, if shown                                             |
+|show                                   |click if available|X                                              |
+|note                                   |scroll top of discography on screen                               |
+|scroll to                              |Filter Discography By                                             |
 |click                                  |Astral Weeks                                                      |
 |show                                   |take screenshot   |album                                          |
 |click                                  |click to embiggen                                                 |
