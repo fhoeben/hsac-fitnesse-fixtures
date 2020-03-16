@@ -37,7 +37,9 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.build.outputTimestamp>2020-01-01T00:00:00Z</project.build.outputTimestamp>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
 		<hsac-fitnesse-plugin.version>1.29.0</hsac-fitnesse-plugin.version>
 		<fitnesse.version>20200308</fitnesse.version>
 		<selenium.version>3.141.59</selenium.version>
@@ -231,8 +233,18 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.1.0</version>
+			</plugin>
+			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.1.0</version>
 				<configuration>
 					<filesets>
 						<fileset>
@@ -357,29 +369,8 @@
                                      integration-test goal
                                 -->
 								<exclude>**/FixtureDebugTest.java</exclude>
-								<exclude>**/AcceptanceTest.java</exclude>
-								<exclude>**/Acceptance2Test.java</exclude>
 							</excludes>
 						</configuration>
-					</execution>
-					<execution>
-						<id>acceptance</id>
-						<phase>test</phase>
-						<goals>
-							<goal>test</goal>
-						</goals>
-                        <configuration>
-                            <includes>
-                                <!-- this test actually runs fitnesse tests
-                                     therefore it will only be executed for
-                                     integration-test goal
-                                -->
-                                <include>**/AcceptanceTest.java</include>
-                                <include>**/Acceptance2Test.java</include>
-                            </includes>
-                            <forkCount>2</forkCount>
-                            <reuseForks>true</reuseForks>
-                        </configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -387,19 +378,6 @@
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>${surefire.version}</version>
 				<executions>
-					<execution>
-						<!-- Generates suites below HsacExamples.SlimTests.UtilityFixtures.GeneratedSymbolicLinkSuite -->
-						<id>generate-suite</id>
-						<phase>test-compile</phase>
-						<goals>
-							<goal>integration-test</goal>
-						</goals>
-						<configuration>
-							<systemPropertyVariables>
-								<fitnesseSuiteToRun>HsacExamples.SlimTests.UtilityFixtures.GeneratedSymbolicLinkSuite.SuiteGenerator</fitnesseSuiteToRun>
-							</systemPropertyVariables>
-						</configuration>
-					</execution>
 					<execution>
 						<id>run-fitnesse-tests</id>
 						<phase>integration-test</phase>
@@ -419,6 +397,8 @@
 						<seleniumDriverClass>${seleniumDriverClass}</seleniumDriverClass>
 						<seleniumCapabilities>${seleniumCapabilities}</seleniumCapabilities>
 						<seleniumJsonCapabilities>${seleniumJsonCapabilities}</seleniumJsonCapabilities>
+						<partitionCount>${partitionCount}</partitionCount>
+						<partitionIndex>${partitionIndex}</partitionIndex>
 					</systemPropertyVariables>
 					<properties>
 						<property>
@@ -460,13 +440,11 @@
 					</execution>
 					<execution>
 						<id>combine-reports</id>
-						<phase>test</phase>
 						<goals>
 							<goal>java</goal>
 						</goals>
 						<configuration>
 							<mainClass>nl.hsac.fitnesse.junit.reportmerge.HtmlReportIndexGenerator</mainClass>
-							<skip>${skipTests}</skip>
 						</configuration>
 					</execution>
 				</executions>
@@ -477,7 +455,7 @@
 					 dependencies are available to Fitnesse without need to have Maven to run tests.
 				-->
 				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.1.1</version>
 				<configuration>
 					<includes>**/*</includes>
 					<excludes>META-INF,META-INF/**</excludes>
@@ -573,7 +551,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.1.0</version>
+				<version>3.1.1</version>
 				<extensions>true</extensions>
 				<executions>
 					<execution>

@@ -1,0 +1,14 @@
+.idea/
+.git/
+chrome/
+chrome-with-pdf/
+combine/
+src/main/wiki/
+target/
+test/
+test-with-pdf/
+compose/
+*.iml
+*.sh
+LICENSE.txt
+README.md
