@@ -1,0 +1,6 @@
+---
+Help: Fixtures to facilitate test definition
+Suite
+---
+
+!contents -R2 -g -p -f -h

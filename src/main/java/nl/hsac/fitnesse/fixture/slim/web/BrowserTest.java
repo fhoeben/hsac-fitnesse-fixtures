@@ -56,6 +56,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     private NgBrowserTest ngBrowserTest;
     private boolean implicitWaitForAngular = false;
     private boolean implicitFindInFrames = true;
+    private boolean continueIfReadyStateInteractive = false;
     private boolean scrollElementToCenter = false;
     private int secondsBeforeTimeout;
     private int secondsBeforePageLoadTimeout;
@@ -194,6 +195,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             result = new StopTestException(false, msg, t);
         } else if (t instanceof SlimFixtureException) {
             result = super.handleException(method, arguments, t);
+        } else if (t instanceof WebDriverException
+                && getSeleniumHelper().exceptionIndicatesConnectionLost((WebDriverException) t)) {
+            Throwable msgT = t.getCause() != null ? t.getCause() : t;
+            String msg = "Problem communicating with webdriver: " + msgT;
+            result = new StopTestException(false, msg, t);
         } else {
             String msg = getSlimFixtureExceptionMessage("exception", null, t);
             result = new SlimFixtureException(false, msg, t);
@@ -235,6 +241,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             if (!done) {
                 System.err.printf("Open of %s returned while document.readyState was %s", url, readyState);
                 System.err.println();
+                if (isContinueIfReadyStateInteractive() && "interactive".equals(readyState)) {
+                    done = true;
+                }
             }
             return done;
         });
@@ -2181,7 +2190,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     private String getTimeoutMessage(TimeoutException e) {
         String messageBase = String.format("Timed-out waiting (after %ss)", secondsBeforeTimeout());
-        return getSlimFixtureExceptionMessage("timeouts", "timeout", messageBase, e);
+        try {
+            return getSlimFixtureExceptionMessage("timeouts", "timeout", messageBase, e);
+        } catch (RuntimeException re) {
+            return messageBase + " and unable to capture screenshot and page source. " + re.toString();
+        }
     }
 
     protected void handleRequiredElementNotFound(String toFind) {
@@ -2632,6 +2645,14 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     public void setImplicitFindInFramesTo(boolean implicitFindInFrames) {
         this.implicitFindInFrames = implicitFindInFrames;
+    }
+
+    public boolean isContinueIfReadyStateInteractive() {
+        return continueIfReadyStateInteractive;
+    }
+
+    public void setContinueIfReadyStateInteractive(boolean continueIfReadyStateInteractive) {
+        this.continueIfReadyStateInteractive = continueIfReadyStateInteractive;
     }
 
     /**

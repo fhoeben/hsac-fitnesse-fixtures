@@ -6,7 +6,7 @@
 
 	<groupId>nl.hsac</groupId>
 	<artifactId>hsac-fitnesse-fixtures</artifactId>
-	<version>4.11-SNAPSHOT</version>
+	<version>4.12-SNAPSHOT</version>
 	<url>https://github.com/fhoeben/hsac-fitnesse-fixtures</url>
 	<name>HSAC's FitNesse Fixtures</name>
 	<description>Fixtures to assist in testing via FitNesse</description>
@@ -37,18 +37,20 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.build.outputTimestamp>2020-01-01T00:00:00Z</project.build.outputTimestamp>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<hsac-fitnesse-plugin.version>1.28.0</hsac-fitnesse-plugin.version>
-		<fitnesse.version>20200205</fitnesse.version>
+
+		<hsac-fitnesse-plugin.version>1.29.0</hsac-fitnesse-plugin.version>
+		<fitnesse.version>20200308</fitnesse.version>
 		<selenium.version>3.141.59</selenium.version>
 		<slf4j.version>1.7.25</slf4j.version>
-		<apache.http.version>4.5.11</apache.http.version>
+		<apache.http.version>4.5.12</apache.http.version>
 		<surefire.version>2.22.1</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
 		<selenium.internetexplorerdriver.version>3.150.1</selenium.internetexplorerdriver.version>
 		<selenium.edgedriver.version>6.17134</selenium.edgedriver.version>
-		<selenium.chromedriver.version>80.0.3987.16</selenium.chromedriver.version>
+		<selenium.chromedriver.version>80.0.3987.106</selenium.chromedriver.version>
 		<selenium.geckodriver.version>0.26.0</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
@@ -231,8 +233,18 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.1.0</version>
+			</plugin>
+			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.1.0</version>
 				<configuration>
 					<filesets>
 						<fileset>
@@ -343,24 +355,29 @@
 						<exclude>**/FixtureDebugTest.java</exclude>
 					</excludes>
 				</configuration>
+				<executions>
+					<execution>
+						<id>default-test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<excludes>
+								<!-- this test actually runs fitnesse tests
+                                     therefore it will only be executed for
+                                     integration-test goal
+                                -->
+								<exclude>**/FixtureDebugTest.java</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>${surefire.version}</version>
 				<executions>
-					<execution>
-						<!-- Generates suites below HsacExamples.SlimTests.UtilityFixtures.GeneratedSymbolicLinkSuite -->
-						<id>generate-suite</id>
-						<phase>test-compile</phase>
-						<goals>
-							<goal>integration-test</goal>
-						</goals>
-						<configuration>
-							<systemPropertyVariables>
-								<fitnesseSuiteToRun>HsacExamples.SlimTests.UtilityFixtures.GeneratedSymbolicLinkSuite.SuiteGenerator</fitnesseSuiteToRun>
-							</systemPropertyVariables>
-						</configuration>
-					</execution>
 					<execution>
 						<id>run-fitnesse-tests</id>
 						<phase>integration-test</phase>
@@ -380,6 +397,8 @@
 						<seleniumDriverClass>${seleniumDriverClass}</seleniumDriverClass>
 						<seleniumCapabilities>${seleniumCapabilities}</seleniumCapabilities>
 						<seleniumJsonCapabilities>${seleniumJsonCapabilities}</seleniumJsonCapabilities>
+						<partitionCount>${partitionCount}</partitionCount>
+						<partitionIndex>${partitionIndex}</partitionIndex>
 					</systemPropertyVariables>
 					<properties>
 						<property>
@@ -436,7 +455,7 @@
 					 dependencies are available to Fitnesse without need to have Maven to run tests.
 				-->
 				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.1.1</version>
 				<configuration>
 					<includes>**/*</includes>
 					<excludes>META-INF,META-INF/**</excludes>
@@ -481,7 +500,7 @@
 								<artifactItem>
 									<groupId>nl.praegus</groupId>
 									<artifactId>toolchain-fitnesse-plugin</artifactId>
-									<version>1.20</version>
+									<version>2.0.0</version>
 									<classifier>jar-with-dependencies</classifier>
 									<overWrite>true</overWrite>
 								</artifactItem>
@@ -532,7 +551,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.1.0</version>
+				<version>3.1.1</version>
 				<extensions>true</extensions>
 				<executions>
 					<execution>

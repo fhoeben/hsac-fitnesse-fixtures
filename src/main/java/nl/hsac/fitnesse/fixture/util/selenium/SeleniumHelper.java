@@ -50,6 +50,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.SocketException;
 import java.net.URL;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -997,6 +998,21 @@ public class SeleniumHelper<T extends WebElement> {
         }
         return result;
     }
+
+    /**
+     * Check whether exception indicates connection with webdriver is lost.
+     * @param e exception caught
+     * @return true if exception indicated we can no longer communicate with webdriver.
+     */
+    public boolean exceptionIndicatesConnectionLost(WebDriverException e) {
+        boolean result = e.getCause() instanceof SocketException;
+        if (!result && e.getMessage() != null) {
+            result = e.getMessage().contains("java.net.SocketException")
+                    || e.getMessage().contains("java.net.ConnectException");
+        }
+        return result;
+    }
+
 
     /**
      * Finds element matching the By supplied.
