@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class MapHelper {
     private static final Pattern LIST_INDEX_PATTERN = Pattern.compile("(\\S+)\\[(\\d+)\\]");
-    private HtmlCleaner htmlCleaner = new HtmlCleaner();
+    protected HtmlCleaner htmlCleaner = new HtmlCleaner();
 
     /**
      * Gets value from map.
@@ -140,6 +140,24 @@ public class MapHelper {
             valueObjects.add(cleanValue);
         }
         setValueForIn(valueObjects, cleanName, map);
+    }
+
+    public void removeFrom(String keyToRemove, Map<String, Object> map) {
+        String cleanKey = htmlCleaner.cleanupValue(keyToRemove);
+        if (map.containsKey(cleanKey)) {
+            map.remove(cleanKey);
+        } else {
+            int firstDot = cleanKey.indexOf(".");
+            if (firstDot > -1) {
+                String key = cleanKey.substring(0, firstDot);
+                Object nested = getValueImpl(map, key, false);
+                if (nested instanceof Map) {
+                    Map<String, Object> nestedMap = (Map<String, Object>) nested;
+                    String nestedKey = cleanKey.substring(firstDot + 1);
+                    removeFrom(nestedKey, nestedMap);
+                }
+            }
+        }
     }
 
     /**
