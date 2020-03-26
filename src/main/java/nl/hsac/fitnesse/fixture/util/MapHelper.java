@@ -142,10 +142,12 @@ public class MapHelper {
         setValueForIn(valueObjects, cleanName, map);
     }
 
-    public void removeFrom(String keyToRemove, Map<String, Object> map) {
+    public boolean removeFrom(String keyToRemove, Map<String, Object> map) {
         String cleanKey = htmlCleaner.cleanupValue(keyToRemove);
+        boolean result = false;
         if (map.containsKey(cleanKey)) {
             map.remove(cleanKey);
+            return true;
         } else {
             int firstDot = cleanKey.indexOf(".");
             if (firstDot > -1) {
@@ -154,10 +156,11 @@ public class MapHelper {
                 if (nested instanceof Map) {
                     Map<String, Object> nestedMap = (Map<String, Object>) nested;
                     String nestedKey = cleanKey.substring(firstDot + 1);
-                    removeFrom(nestedKey, nestedMap);
+                    result = removeFrom(nestedKey, nestedMap);
                 }
             }
         }
+        return result;
     }
 
     /**

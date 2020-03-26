@@ -124,9 +124,7 @@ public class SlimFixtureWithMap extends SlimFixtureWithMapHelper {
      * @return true if value was present.
      */
     public boolean clearValue(String name) {
-        boolean result = getMapHelper().getValue(getCurrentValues(), name) != null;
-        getMapHelper().removeFrom(name, getCurrentValues());
-        return result;
+        return getMapHelper().removeFrom(name, getCurrentValues());
     }
 
     /**

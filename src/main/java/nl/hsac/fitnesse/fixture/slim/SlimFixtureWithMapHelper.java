@@ -56,8 +56,10 @@ public class SlimFixtureWithMapHelper extends SlimFixture {
         }
 
         @Override
-        public void removeFrom(String key, Map<String, Object> map) {
+        public boolean removeFrom(String key, Map<String, Object> map) {
+            boolean result = map.containsKey(key);
             map.remove(key);
+            return result;
         }
 
         @Override
