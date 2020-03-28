@@ -15,4 +15,4 @@ cache:
   - $HOME/.m2
 
 script:
-  - ./travis_build_and_test.sh
+  - mvn -DfitnesseSuiteToRun=${SUITE} -DseleniumBrowser=chrome "-DseleniumJsonProfile={'args':['headless', 'disable-gpu']}" test failsafe:integration-test
