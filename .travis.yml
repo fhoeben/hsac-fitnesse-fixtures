@@ -1,0 +1,16 @@
+language: java
+jdk:
+  - openjdk8
+
+addons:
+  chrome: stable
+
+dist: xenial
+sudo: required
+
+cache:
+  directories:
+  - $HOME/.m2
+
+script:
+  - ./travis_build_and_test.sh
