@@ -6,5 +6,5 @@ set -e
 if [ "${TRAVIS_PULL_REQUEST}" == "true" ]; then
   # GitLab does not run pipelines for PR on forks (yet), so we run on travis
   echo -e "Run acceptance test using Headless Chrome on Travis server\n"
-  mvn -DseleniumBrowser=chrome "-DseleniumJsonProfile={'args':['headless', 'disable-gpu']}" test
+  mvn -DfitnesseSuiteToRun=${SUITE} -DseleniumBrowser=chrome "-DseleniumJsonProfile={'args':['headless', 'disable-gpu']}" test failsafe:integration-test
 fi
