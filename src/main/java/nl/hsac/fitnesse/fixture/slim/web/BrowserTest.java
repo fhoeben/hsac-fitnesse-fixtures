@@ -2015,11 +2015,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * @return location of screenshot.
      */
     public String takeScreenshot(String basename) {
-        return takeScreenshotWith(
-            basename,
-            name ->
-                createScreenshot(name)
-        );
+        return takeScreenshotWith(basename, this::createScreenshot);
     }
 
     /**
@@ -2028,14 +2024,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * @return location of screenshot.
      */
     public String fullPageScreenshot(String basename) {
-        return takeScreenshotWith(
-            basename,
-            name -> 
-                getSeleniumHelper()
-                    .fullPageScreenshot(
-                        getScreenshotBasename(name)
-                    )
-        );
+        return takeScreenshotWith(basename, this::createFullPageScreenshot);
     }
 
     /**
@@ -2044,9 +2033,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * @param maker    function for taking the screenshot, should return the screenshot location.
      * @return location of screenshot.
      */
-    private String takeScreenshotWith(String baseName, Function<String, String> maker) {
+    protected String takeScreenshotWith(String basename, Function<String, String> maker) {
         try {
-            String screenshotFile = maker.apply(baseName);
+            String screenshotFile = maker.apply(basename);
             if (screenshotFile == null) {
                 throw new SlimFixtureException(false, "Unable to take screenshot: does the webdriver support it?");
             } else {
@@ -2083,7 +2072,12 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return screenshotFile;
     }
 
-    private String createScreenshot(String basename) {
+    protected String createFullPageScreenshot(String basename) {
+        String name = getScreenshotBasename(basename);
+        return getSeleniumHelper().fullPageScreenshot(name);
+    }
+
+    protected String createScreenshot(String basename) {
         String name = getScreenshotBasename(basename);
         return getSeleniumHelper().takeScreenshot(name);
     }
