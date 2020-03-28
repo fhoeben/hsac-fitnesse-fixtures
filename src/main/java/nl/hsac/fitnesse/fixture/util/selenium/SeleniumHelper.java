@@ -51,9 +51,9 @@ import ru.yandex.qatools.ashot.AShot;
 import ru.yandex.qatools.ashot.Screenshot;
 import ru.yandex.qatools.ashot.shooting.ShootingStrategies;
 
-import java.io.IOException;
-import java.io.ByteArrayOutputStream;
 import javax.imageio.ImageIO;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.URL;
@@ -1036,15 +1036,7 @@ public class SeleniumHelper<T extends WebElement> {
      */
     public void scrollTo(WebElement element, boolean toCenter) {
         String scrollIntoViewArgs = toCenter ? "{behavior: \"auto\", block: \"center\", inline: \"center\"}" : "true";
-                executeJavascript("arguments[0].scrollIntoView(" + scrollIntoViewArgs + ");", element);
-    }
-
-    /**
-     * Type of screenshot to take
-     */
-    protected enum ScreenshotType {
-        Viewport,
-        FullPage
+        executeJavascript("arguments[0].scrollIntoView(" + scrollIntoViewArgs + ");", element);
     }
 
     /**
@@ -1055,7 +1047,18 @@ public class SeleniumHelper<T extends WebElement> {
      * @return absolute path of file created.
      */
     public String takeScreenshot(String baseName) {
-        return takeScreenshot(baseName, ScreenshotType.Viewport);
+        String result = null;
+        WebDriver d = driver();
+
+        if (!(d instanceof TakesScreenshot)) {
+            d = new Augmenter().augment(d);
+        }
+        if (d instanceof TakesScreenshot) {
+            TakesScreenshot ts = (TakesScreenshot) d;
+            byte[] png = ts.getScreenshotAs(OutputType.BYTES);
+            result = writeScreenshot(baseName, png);
+        }
+        return result;
     }
 
     /**
@@ -1066,51 +1069,19 @@ public class SeleniumHelper<T extends WebElement> {
      * @return absolute path of file created.
      */
     public String fullPageScreenshot(String baseName) {
-        return takeScreenshot(baseName, ScreenshotType.FullPage);
-    }
-
-    /**
-     * Takes screenshot of page (as .png).
-     * @param baseName name for file created (without extension),
-     *                 if a file already exists with the supplied name an
-     *                 '_index' will be added.
-     * @param type     type of screenshot.
-     * @return absolute path of file created.
-     */
-    protected String takeScreenshot(String baseName, ScreenshotType type) {
         String result = null;
-        byte[] png = null;
-
-        switch (type) {
-            case FullPage:
-                Screenshot screenshot = new AShot()
+        Screenshot screenshot = new AShot()
                 .shootingStrategy(
-                    ShootingStrategies.viewportPasting(1000)
+                        ShootingStrategies.viewportPasting(1000)
                 )
                 .takeScreenshot(driver());
-                try {
-                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-                    ImageIO.write(screenshot.getImage(), "png", out);
-                    png = out.toByteArray();
-                } catch (IOException e) {
-                    // ignore
-                };
-                break;
-            default:
-                WebDriver d = driver();
-
-                if (!(d instanceof TakesScreenshot)) {
-                    d = new Augmenter().augment(d);
-                }
-                if (d instanceof TakesScreenshot) {
-                    TakesScreenshot ts = (TakesScreenshot) d;
-                    png = ts.getScreenshotAs(OutputType.BYTES);
-                }
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream(4096);
+            ImageIO.write(screenshot.getImage(), "png", out);
+            result = writeScreenshot(baseName, out.toByteArray());
+        } catch (IOException e) {
+            // ignore
         }
-        if (png != null) {
-            result = writeScreenshot(baseName, png);
-        }
-
         return result;
     }
 
