@@ -72,7 +72,7 @@ public class AllFramesDecorator<T> {
                 }
             } catch (WebDriverException e) {
                 String msg = e.getMessage();
-                if (!"target frame detached".equals(msg)) {
+                if (msg == null || !msg.contains("target frame detached")) {
                     // target frame detached is a non-standard chrome error
                     // we ignore those and just continue to check other frames
                     throw e;
