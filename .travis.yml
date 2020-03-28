@@ -15,4 +15,4 @@ cache:
   - $HOME/.m2
 
 script:
-  - mvn -DfitnesseSuiteToRun=${SUITE} -DseleniumBrowser=chrome "-DseleniumJsonProfile={'args':['headless', 'disable-gpu']}" test failsafe:integration-test
+  - mvn -DfitnesseSuiteToRun=HsacAcceptanceTests -DseleniumBrowser=chrome "-DseleniumJsonProfile={'args':['headless', 'disable-gpu']}" test failsafe:integration-test
