@@ -347,15 +347,6 @@
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${surefire.version}</version>
-				<configuration>
-					<excludes>
-						<!-- this test actually runs fitnesse tests
-							 therefore it will only be executed for
-							 integration-test goal
-						-->
-						<exclude>**/FixtureDebugTest.java</exclude>
-					</excludes>
-				</configuration>
 				<executions>
 					<execution>
 						<id>default-test</id>
