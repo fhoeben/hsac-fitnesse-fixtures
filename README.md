@@ -10,9 +10,9 @@ The baseline FitNesse installation offers the following features:
 * Run FitNesse tests on a build server, reporting the results in both JUnit XML format and HTML.
 * [HSAC's fitnesse-plugin](https://github.com/fhoeben/hsac-fitnesse-plugin) to add additional Wiki features (random values, calculating relative dates, 
   Slim scenarios without need to specify all parameters, Slim scripts that take a screenshot after each step).
-* [Praegus' toolchain-plugin](https://gitlab.com/praegus/toolchain-fixtures/toolchain-fixtures), improving the wiki's look and feel and page editing features, combining:
-    - [Bootstrap-plus wiki theme](https://github.com/tcnh/fitnesse-bootstrap-plus-theme)
-    - [Autocomplete responder](https://gitlab.com/praegus/toolchain-fixtures/fitnesse-autocomplete-responder)
+* [Praegus' toolchain-plugin](https://github.com/praegus/toolchain-fitnesse-plugin), improving the wiki's look and feel and page editing features, combining:
+    - [Bootstrap-plus wiki theme](https://github.com/tcnh/fitnesse-bootstrap-plus-theme) (Website: https://praegus.github.io/fitnesse-bootstrap-plus-theme/)
+    - [Autocomplete responder](https://github.com/praegus/fitnesse-autocomplete-responder)
 * FitNesse installation for test/fixture developers containing:
     - the fixture base classes (and Selenium drivers for _Chrome_, _Internet Explorer_, _Edge_ and _Firefox_),
     - easy fixture debugging.
