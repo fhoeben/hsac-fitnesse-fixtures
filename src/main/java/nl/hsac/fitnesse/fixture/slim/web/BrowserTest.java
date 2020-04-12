@@ -357,10 +357,10 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     public boolean switchToNextTab() {
         boolean result = false;
         List<String> tabs = getTabHandles();
-        if (tabs.size() > 1) {
-            int currentTab = getCurrentTabIndex(tabs);
+        int currentTab = getCurrentTabIndex(tabs);
+        if (tabs.size() > 1 || currentTab < 0) {
             int nextTab = currentTab + 1;
-            if (nextTab == tabs.size()) {
+            if (nextTab == tabs.size() || nextTab < 0) {
                 nextTab = 0;
             }
             goToTab(tabs, nextTab);
@@ -373,8 +373,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     public boolean switchToPreviousTab() {
         boolean result = false;
         List<String> tabs = getTabHandles();
-        if (tabs.size() > 1) {
-            int currentTab = getCurrentTabIndex(tabs);
+        int currentTab = getCurrentTabIndex(tabs);
+        if (tabs.size() > 1 || currentTab < 0) {
             int nextTab = currentTab - 1;
             if (nextTab < 0) {
                 nextTab = tabs.size() - 1;

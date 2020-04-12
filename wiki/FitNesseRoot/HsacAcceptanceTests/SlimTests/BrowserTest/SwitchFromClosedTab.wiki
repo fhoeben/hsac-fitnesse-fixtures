@@ -1,0 +1,41 @@
+---
+Test
+---
+
+This test ensures we can switch back to the first tab when a previously opened second tab is closed but still our current tab.
+
+!define HTML { {{{
+<html>
+<body>
+First tab
+</body>
+</html>}}} }
+
+!define HTML2 { {{{
+<html>
+<body>
+<a href="javascript:window.close()">Close</a>
+</body>
+</html>}}} }
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|add response|${HTML2}             |
+|add response|${HTML2}             |
+|$url=       |get mock server url  |
+
+|script|browser test           |
+|open  |$url                   |
+|open  |$url      |in new tab  |
+|click |Close                  |
+|wait  |100       |milliseconds|
+|switch to next tab            |
+|ensure|is visible|First tab   |
+|open  |$url      |in new tab  |
+|click |Close                  |
+|wait  |100       |milliseconds|
+|switch to previous tab        |
+|ensure|is visible|First tab   |
+
+|script|mock xml server setup|
+|stop                        |
