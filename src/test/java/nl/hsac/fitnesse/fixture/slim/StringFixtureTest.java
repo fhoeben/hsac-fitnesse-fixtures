@@ -2,11 +2,7 @@ package nl.hsac.fitnesse.fixture.slim;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * Tests StringFixture.
@@ -21,9 +17,29 @@ public class StringFixtureTest {
     }
 
     @Test
+    public void testIsEmpty() {
+        assertTrue("null", fixture.isEmpty(null));
+        assertTrue("", fixture.isEmpty(""));
+        assertFalse("hello", fixture.isEmpty("hello"));
+    }
+
+    @Test
+    public void testIsNotEmpty() {
+        assertFalse("null", fixture.isNotEmpty(null));
+        assertFalse("", fixture.isNotEmpty(""));
+        assertTrue("hello", fixture.isNotEmpty("hello"));
+    }
+
+    @Test
     public void testValue() {
-        assertEquals("null", null, fixture.valueOf(null));
+        assertNull("null", fixture.valueOf(null));
         assertEquals("hello", "hello", fixture.valueOf("hello"));
+    }
+
+    @Test
+    public void testCopyValue() {
+        assertNull("null", fixture.copyValueOf(null));
+        assertEquals("hello", "hello", fixture.copyValueOf("hello"));
     }
 
     @Test
@@ -99,5 +115,11 @@ public class StringFixtureTest {
     public void testConvertToLowerCase() {
         assertNull("null", fixture.convertToLowerCase(null));
         assertEquals("abC1", "abc1", fixture.convertToLowerCase("abC1"));
+    }
+
+    @Test
+    public void testCapitalise() {
+        assertNull("null", fixture.capitalise(null));
+        assertEquals("abc1", "Abc1", fixture.capitalise("abc1"));
     }
 }

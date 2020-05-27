@@ -21,6 +21,15 @@ public class StringFixture extends SlimFixture {
     }
 
     /**
+     * NOTE: Duplicate implementation of method 'valueOf' to prevent unintended calls to Browser Test method with the same name
+     * Returns value.
+     * @param value value to return
+     */
+    public String copyValueOf(String value) {
+        return value;
+    }
+
+    /**
      * Determines length of string.
      * @param value value to determine length of
      * @return length of value
@@ -34,12 +43,30 @@ public class StringFixture extends SlimFixture {
     }
 
     /**
+     * Checks if an input String is null or empty (length() = 0).
+     * @param inputString An input String to check.
+     * @return {@code true} if empty, or {@code false} otherwise.
+     */
+    public boolean isEmpty (String inputString) {
+        return StringUtils.isEmpty(inputString);
+    }
+
+    /**
+     * Checks if an input String is not null or not empty (length() != 0).
+     * @param inputString An input String to check.
+     * @return {@code true} if filled (not empty), or {@code false} otherwise.
+     */
+    public boolean isNotEmpty (String inputString) {
+        return !isEmpty(inputString);
+    }
+
+    /**
      * <p>Compares two Strings, returning <code>false</code> if they are equal.</p>
      *
      * <p><code>null</code>s are handled without exceptions. Two <code>null</code>
      * references are considered to be equal. The comparison is case sensitive.</p>
      *
-     * @see org.apache.commons.lang3.StringUtils#equals(CharSequence, CharSequence)
+     * @see StringUtils#equals(CharSequence, CharSequence)
      * @param value1  the first String, may be null
      * @param value2  the second String, may be null
      * @return <code>false</code> if the Strings are equal, or both <code>null</code>
@@ -54,7 +81,7 @@ public class StringFixture extends SlimFixture {
      * <p><code>null</code>s are handled without exceptions. Two <code>null</code>
      * references are considered to be equal. The comparison is case sensitive.</p>
      *
-     * @see org.apache.commons.lang3.StringUtils#equals(CharSequence, CharSequence)
+     * @see StringUtils#equals(CharSequence, CharSequence)
      * @param value1  the first String, may be null
      * @param value2  the second String, may be null
      * @return <code>true</code> if the Strings are equal, or both <code>null</code>
@@ -99,6 +126,19 @@ public class StringFixture extends SlimFixture {
         String result = null;
         if (value != null) {
             result = value.toLowerCase();
+        }
+        return result;
+    }
+
+    /**
+     * Capitalise first character of a string.
+     * @param value value to capitalise.
+     * @return value capitalised.
+     */
+    public String capitalise (String value) {
+        String result = null;
+        if (value != null) {
+            result = StringUtils.capitalize(value);
         }
         return result;
     }
