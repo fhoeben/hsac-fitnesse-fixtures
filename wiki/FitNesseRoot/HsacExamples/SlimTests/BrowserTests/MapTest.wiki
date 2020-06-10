@@ -12,11 +12,11 @@ Sample test on [[Google Maps][https://www.google.com/maps]].
 !define streetviewTitleCard {css=[id="titlecard"]}
 *!
 !*> scenarios
-|scenario           |open url|url   |
-|set browser size to|1024    |by|800|
-|open               |@url           |
-|wait for visible   |${minimap}     |
-|click              |Remind me later|
+|scenario           |open url          |url            |
+|set browser size to|1024              |by|800         |
+|open               |@url                              |
+|wait for visible   |${minimap}                        |
+|show               |click if available|Remind me later|
 
 |scenario    |double zooming by double click at offset X|horizontalOffset|Y                |verticalOffset|should change url to|urlAfterZooming|
 |double click|Map                                       |at offset X     |@horizontalOffset|Y             |@verticalOffset                     |

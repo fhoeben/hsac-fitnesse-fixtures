@@ -48,6 +48,10 @@ Values for lists can either be set using the 'set values' method or by specifyin
 |set value  |9,asas             |for       |g\[]                          |
 |check      |value              |map.map.b |2                             |
 |set value  |3                  |for       |map.map.b                     |
+|ensure     |clear value        |map.map.b                                |
+|check      |value              |map.map.b |null                          |
+|reject     |clear value        |map.map.b                                |
+|set value  |3                  |for       |map.map.b                     |
 |check      |value              |b         |in|$hash1|3                   |
 |check      |value              |aliases[1]|in|$hash1|!-FitNesse@hsac.nl-!|
 |set value  |!-github3@hsac.nl-!|for       |map.map.aliases[1]            |

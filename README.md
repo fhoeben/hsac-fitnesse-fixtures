@@ -1,5 +1,5 @@
 # hsac-fitnesse-fixtures
-[![Build Status](https://travis-ci.org/fhoeben/hsac-fitnesse-fixtures.svg?branch=master)](https://travis-ci.org/fhoeben/hsac-fitnesse-fixtures) [![Maven Central](https://img.shields.io/maven-central/v/nl.hsac/hsac-fitnesse-fixtures.svg?maxAge=86400)](https://mvnrepository.com/artifact/nl.hsac/hsac-fitnesse-fixtures)
+[![Maven Central](https://img.shields.io/maven-central/v/nl.hsac/hsac-fitnesse-fixtures.svg?maxAge=86400)](https://mvnrepository.com/artifact/nl.hsac/hsac-fitnesse-fixtures)
 
 This project assists in testing (SOAP) web services and web applications by providing an application to define and run tests. To this end it contains a baseline installation of FitNesse (an acceptance testing wiki framework) and some FitNesse fixture (base) classes.
 
@@ -10,9 +10,9 @@ The baseline FitNesse installation offers the following features:
 * Run FitNesse tests on a build server, reporting the results in both JUnit XML format and HTML.
 * [HSAC's fitnesse-plugin](https://github.com/fhoeben/hsac-fitnesse-plugin) to add additional Wiki features (random values, calculating relative dates, 
   Slim scenarios without need to specify all parameters, Slim scripts that take a screenshot after each step).
-* [Praegus' toolchain-plugin](https://gitlab.com/praegus/toolchain-fixtures/toolchain-fixtures), improving the wiki's look and feel and page editing features, combining:
-    - [Bootstrap-plus wiki theme](https://github.com/tcnh/fitnesse-bootstrap-plus-theme)
-    - [Autocomplete responder](https://gitlab.com/praegus/toolchain-fixtures/fitnesse-autocomplete-responder)
+* [Praegus' toolchain-plugin](https://github.com/praegus/toolchain-fitnesse-plugin), improving the wiki's look and feel and page editing features, combining:
+    - [Bootstrap-plus wiki theme](https://github.com/praegus/fitnesse-bootstrap-plus-theme) (Website: https://praegus.github.io/fitnesse-bootstrap-plus-theme/)
+    - [Autocomplete responder](https://github.com/praegus/fitnesse-autocomplete-responder)
 * FitNesse installation for test/fixture developers containing:
     - the fixture base classes (and Selenium drivers for _Chrome_, _Internet Explorer_, _Edge_ and _Firefox_),
     - easy fixture debugging.
@@ -75,8 +75,11 @@ An additional image is provided to combine multiple test run's results: [hsac/fi
 
 Detailed instructions on how to use the images are provided in each image's description.
 
+The automated build process also generates docker images for each commit in [GitLab's docker registry](https://gitlab.com/fhoeben/hsac-fitnesse-fixtures/container_registry), so if you want the latest code snapshot in an image you can get that there.
+The master branch updates the 'latest' images, other branches have a tag based on their name. *Please note:* these images are temporary, and subject to periodic cleanup.
+
 ### Reports
-Example reports for Windows using a Sauce Labs Selenium driver (https://fhoeben.github.io/hsac-fitnesse-fixtures-test-results/examples-results/) and Linux with Chrome Headless (https://fhoeben.github.io/hsac-fitnesse-fixtures-test-results/acceptance-test-results/) are generated in the automated build process of this project.
+The automated build process of this project generates some reports which can give an impression of the reports generated from test runs. The project's [acceptance tests](https://gitlab.com/fhoeben/hsac-fitnesse-fixtures/-/jobs/artifacts/master/file/test-results/index.html?job=reports-combine) and [examples](https://gitlab.com/fhoeben/hsac-fitnesse-fixtures/-/jobs/artifacts/master/file/example-results/index.html?job=example-reports-combine) both cover multiple runs in a single report. Clicking on a run's name in the 'Overview Pages' table takes you to a single run's test report.
 
 ## Fixture developer installation:
 Import this project in your favorite Java IDE (with Maven support).
