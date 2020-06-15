@@ -19,16 +19,13 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.protocol.HttpCoreContext;
 import org.apache.http.util.EntityUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 /**
  * Helper to make Http calls and get response.
@@ -275,6 +272,7 @@ public class HttpClient {
             resp = executeMethod(context, method);
             endTime = currentTimeMillis();
 
+            storeHeadersSent(response, context);
             storeResponse(response, resp);
         } catch (Exception e) {
             throw new RuntimeException("Unable to get response from: " + url, e);
@@ -293,13 +291,21 @@ public class HttpClient {
         for (String key : requestHeaders.keySet()) {
             Object value = requestHeaders.get(key);
             if (value != null) {
-                method.setHeader(key, value.toString());
+                if (value instanceof Iterable) {
+                    for (Object v : (Iterable<?>)value) {
+                        if (v != null) {
+                            method.addHeader(key, v.toString());
+                        }
+                    }
+                } else {
+                    method.addHeader(key, value.toString());
+                }
             }
         }
     }
 
     protected HttpContext createContext(HttpResponse response) {
-        HttpContext localContext = new BasicHttpContext();
+        HttpContext localContext = new HttpCoreContext();
         CookieStore store = response.getCookieStore();
         if (store != null) {
             localContext.setAttribute(HttpClientContext.COOKIE_STORE, store);
@@ -312,37 +318,29 @@ public class HttpClient {
         return httpClient.execute(method, context);
     }
 
-    protected void storeResponse(HttpResponse response, org.apache.http.HttpResponse resp) throws IOException {
-        int returnCode = resp.getStatusLine().getStatusCode();
-        response.setStatusCode(returnCode);
-
-        addHeadersFromResponse(response.getResponseHeaders(), resp.getAllHeaders());
-
-        copyResponseContent(response, resp);
-    }
-
-    protected void addHeadersFromResponse(Map<String, Object> responseHeaders, Header[] respHeaders) {
-        for (Header h : respHeaders) {
-            String headerName = h.getName();
-            String headerValue = h.getValue();
-            if (responseHeaders.containsKey(headerName)) {
-                handleRepeatedHeaderValue(responseHeaders, headerName, headerValue);
-            } else {
-                responseHeaders.put(headerName, headerValue);
+    protected void storeHeadersSent(HttpResponse response, HttpContext context) {
+        if (context instanceof HttpCoreContext) {
+            Header[] headersSent = ((HttpCoreContext)context).getRequest().getAllHeaders();
+            for (Header header : headersSent) {
+                response.addRequestHeader(header.getName(), header.getValue());
             }
         }
     }
 
-    protected void handleRepeatedHeaderValue(Map<String, Object> responseHeaders,
-                                             String headerName, String headerValue) {
-        Object previousHeaderValue = responseHeaders.get(headerName);
-        if (previousHeaderValue instanceof Collection) {
-            ((Collection) previousHeaderValue).add(headerValue);
-        } else {
-            List<Object> valueList = new ArrayList();
-            valueList.add(previousHeaderValue);
-            valueList.add(headerValue);
-            responseHeaders.put(headerName, valueList);
+    protected void storeResponse(HttpResponse response, org.apache.http.HttpResponse resp) throws IOException {
+        int returnCode = resp.getStatusLine().getStatusCode();
+        response.setStatusCode(returnCode);
+
+        addHeadersFromResponse(response, resp.getAllHeaders());
+
+        copyResponseContent(response, resp);
+    }
+
+    protected void addHeadersFromResponse(HttpResponse response, Header[] respHeaders) {
+        for (Header h : respHeaders) {
+            String headerName = h.getName();
+            String headerValue = h.getValue();
+            response.addResponseHeader(headerName, headerValue);
         }
     }
 

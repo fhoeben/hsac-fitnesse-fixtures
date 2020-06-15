@@ -677,6 +677,13 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     /**
+     * @return actual headers sent (these will contain the headers explicitly set and some implicit).
+     */
+    public Map<String, Object> requestHeaders() {
+        return response.getRequestHeaders();
+    }
+
+    /**
      * @return response received last time postTo(), delete() or getFrom() was called.
      */
     public String response() {

@@ -1,10 +1,12 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -14,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class HttpResponse {
     private final static Map<String, HttpResponse> INSTANCES = new ConcurrentHashMap<>();
 
+    private Map<String, Object> requestHeaders = new LinkedHashMap<>();
     private Map<String, Object> responseHeaders = new LinkedHashMap<>();
     private String method;
     private String request;
@@ -83,10 +86,56 @@ public class HttpResponse {
     }
 
     /**
+     * @return actual headers sent (these will contain the requested headers and some implicit).
+     */
+    public Map<String, Object> getRequestHeaders() {
+        return requestHeaders;
+    }
+
+    /**
+     * Adds value to actual headers sent (there may be multiple values per name).
+     * @param headerName name of header to add.
+     * @param headerValue value to add.
+     * @return all current values for name.
+     */
+    public Object addRequestHeader(String headerName, String headerValue) {
+        return addValue(getRequestHeaders(), headerName, headerValue);
+    }
+
+    /**
      * @return headers in response.
      */
     public Map<String, Object> getResponseHeaders() {
         return responseHeaders;
+    }
+
+    /**
+     * Adds value to headers received (there may be multiple values per name).
+     * @param headerName name of header to add.
+     * @param headerValue value to add.
+     * @return all current values for name.
+     */
+    public Object addResponseHeader(String headerName, String headerValue) {
+        return addValue(getResponseHeaders(), headerName, headerValue);
+    }
+
+    protected Object addValue(Map<String, Object> headers, String name, String value) {
+        Object result;
+        Object existingValue = headers.get(name);
+        if (existingValue == null) {
+            headers.put(name, value);
+            result = value;
+        } else if (existingValue instanceof Collection) {
+            ((Collection) existingValue).add(value);
+            result = existingValue;
+        } else {
+            List<Object> valueList = new ArrayList<Object>();
+            valueList.add(existingValue);
+            valueList.add(value);
+            headers.put(name, valueList);
+            result = valueList;
+        }
+        return result;
     }
 
     /**
