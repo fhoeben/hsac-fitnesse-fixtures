@@ -601,6 +601,19 @@ public class SeleniumHelper<T extends WebElement> {
     }
 
     /**
+     * Simulates a drag of react element to destination offsets calculated from element center.
+     * @param element element to drag and drop.
+     * @param xOffset horizontal integer offset destination for dropping (calculated from given element center).
+     * @param yOffset vertical integer offset destination for dropping (calculated from given element center).
+     */
+    public void reactDragAndDropToOffsetXY(WebElement element, Integer xOffset, Integer yOffset) {
+        getActions().clickAndHold(element)
+                .moveByOffset(10, 0)
+                .moveByOffset(xOffset - 10, yOffset)
+                .release().perform();
+    }
+
+    /**
      * Simulates double clicking on the supplied element
      * @param element element to double click on
      */
@@ -632,6 +645,18 @@ public class SeleniumHelper<T extends WebElement> {
      */
     public void dragAndDrop(WebElement source, WebElement target) {
         getActions().dragAndDrop(source, target).perform();
+    }
+
+    /**
+     * Simulates a drag from source react element and drop to target element
+     * @param source element to start the drag
+     * @param target element to end the drag
+     */
+    public void reactDragAndDrop(WebElement source, WebElement target) {
+        getActions().clickAndHold(source)
+                .moveByOffset(10, 0)
+                .moveToElement(target)
+                .release().perform();
     }
 
     /**

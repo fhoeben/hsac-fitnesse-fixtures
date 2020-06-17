@@ -798,6 +798,18 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         }
     }
 
+    public void reactDragAndDropToOffsetXY(String place, Integer xOffset, Integer yOffset) {
+        place = cleanupValue(place);
+        try {
+            WebElement element = getElementToClick(place);
+            getSeleniumHelper().reactDragAndDropToOffsetXY(element, xOffset, yOffset);
+        } catch (WebDriverException e) {
+            if (!this.clickExceptionIsAboutHiddenByOtherElement(e)) {
+                throw e;
+            }
+        }
+    }
+
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
     public boolean clickIfAvailable(String place) {
         return clickIfAvailableIn(place, null);
@@ -919,6 +931,20 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     @WaitUntil
     public boolean dragAndDropTo(String source, String destination) {
         return dragAndDropImpl(source, destination, false);
+    }
+
+    public void reactDragAndDropTo(String source, String destination) {
+        source = cleanupValue(source);
+        WebElement sourceElement = getElementToClick(source);
+        destination = cleanupValue(destination);
+        WebElement destinationElement = getElementToClick(destination);
+        try {
+            getSeleniumHelper().reactDragAndDrop(sourceElement, destinationElement);
+        } catch (WebDriverException e) {
+            if (!this.clickExceptionIsAboutHiddenByOtherElement(e)) {
+                throw e;
+            }
+        }
     }
 
     @WaitUntil
