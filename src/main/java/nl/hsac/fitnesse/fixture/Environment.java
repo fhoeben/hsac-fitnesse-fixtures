@@ -296,8 +296,8 @@ public class Environment {
      * @param headers headers to add.
      * @param file file containing binary data to post.
      */
-    public void doHttpFilePost(String url, HttpResponse result, Map<String, Object> headers, File file) {
-        httpClient.post(url, result, headers, file);
+    public void doHttpFilePost(String url, HttpResponse result, Map<String, Object> headers, String boundary, File file) {
+        httpClient.post(url, result, headers, boundary, file);
     }
 
     /**
@@ -307,8 +307,8 @@ public class Environment {
      * @param headers headers to add.
      * @param file file containing binary data to post.
      */
-    public void doHttpFilePut(String url, HttpResponse result, Map<String, Object> headers, File file) {
-        httpClient.put(url, result, headers, file);
+    public void doHttpFilePut(String url, HttpResponse result, Map<String, Object> headers, String boundary, File file) {
+        httpClient.put(url, result, headers, boundary, file);
     }
 
     /**

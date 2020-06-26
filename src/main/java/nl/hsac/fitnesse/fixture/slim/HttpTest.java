@@ -41,6 +41,7 @@ public class HttpTest extends SlimFixtureWithMap {
     private String contentType = DEFAULT_POST_CONTENT_TYPE;
     private String lastUrl = null;
     private String lastMethod = null;
+    private String lastBoundary = null;
     private boolean throwExceptionOnHttpRequestFailure = false;
 
     public void setThrowExceptionOnHttpRequestFailure(boolean throwException) {
@@ -236,9 +237,20 @@ public class HttpTest extends SlimFixtureWithMap {
      * @return true if call could be made and response did not indicate error.
      */
     public boolean postFileTo(String fileName, String serviceUrl) {
-        return postFileToImpl(fileName, serviceUrl);
+        return postFileToImpl(fileName, serviceUrl, null);
     }
 
+    /**
+     * Sends a file by HTTP POST body to service endpoint, whilst explicitly defining the multipart boundary string
+     *
+     * @param fileName   fileName to post
+     * @param serviceUrl service endpoint to send body to.
+     * @param boundary The multipart boundary to set
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean postFileToWithMultipartBoundary(String fileName, String serviceUrl, String boundary) {
+        return postFileToImpl(fileName, serviceUrl, boundary);
+    }
     /**
      * Sends all values (url encoded) using post.
      *
@@ -292,8 +304,8 @@ public class HttpTest extends SlimFixtureWithMap {
         return result;
     }
 
-    protected boolean postFileToImpl(String fileName, String serviceUrl) {
-        return sendFileImpl(fileName, serviceUrl, "POST");
+    protected boolean postFileToImpl(String fileName, String serviceUrl, String boundary) {
+        return sendFileImpl(fileName, serviceUrl, boundary, "POST");
     }
 
     /**
@@ -407,14 +419,14 @@ public class HttpTest extends SlimFixtureWithMap {
      * @return true if call could be made and response did not indicate error.
      */
     public boolean putFileTo(String fileName, String serviceUrl) {
-        return putFileToImpl(fileName, serviceUrl);
+        return putFileToImpl(fileName, serviceUrl, null);
     }
 
-    protected boolean putFileToImpl(String fileName, String serviceUrl) {
-        return sendFileImpl(fileName, serviceUrl, "PUT");
+    protected boolean putFileToImpl(String fileName, String serviceUrl, String boundary) {
+        return sendFileImpl(fileName, serviceUrl, boundary, "PUT");
     }
 
-    protected boolean sendFileImpl(String fileName, String serviceUrl, String method) {
+    protected boolean sendFileImpl(String fileName, String serviceUrl, String boundary, String method) {
         boolean result;
         resetResponse();
         String url = getUrl(serviceUrl);
@@ -427,13 +439,13 @@ public class HttpTest extends SlimFixtureWithMap {
 
         try {
             response.setRequest(fileName);
-            storeLastCall(method + "_FILE", serviceUrl);
+            storeLastFileCall(method + "_FILE", serviceUrl, boundary);
             switch (method) {
                 case "POST":
-                    getEnvironment().doHttpFilePost(url, response, headerValues, file);
+                    getEnvironment().doHttpFilePost(url, response, headerValues, boundary, file);
                     break;
                 case "PUT":
-                    getEnvironment().doHttpFilePut(url, response, headerValues, file);
+                    getEnvironment().doHttpFilePut(url, response, headerValues, boundary, file);
                     break;
             }
         } catch (Throwable t) {
@@ -1013,10 +1025,10 @@ public class HttpTest extends SlimFixtureWithMap {
                 getImpl(lastUrl, false);
                 break;
             case "POST_FILE":
-                postFileToImpl(response.getRequest(), lastUrl);
+                postFileToImpl(response.getRequest(), lastUrl, lastBoundary);
                 break;
             case "PUT_FILE":
-                putFileToImpl(response.getRequest(), lastUrl);
+                putFileToImpl(response.getRequest(), lastUrl, lastBoundary);
                 break;
             default:
                 throw new SlimFixtureException(false, "Repeat of method: " + lastMethod + " not configured.");
@@ -1026,6 +1038,11 @@ public class HttpTest extends SlimFixtureWithMap {
     protected void storeLastCall(String method, String url) {
         lastMethod = method;
         lastUrl = url;
+    }
+
+    protected void storeLastFileCall(String method, String url, String boundary) {
+        storeLastCall(method, url);
+        lastBoundary = boundary;
     }
 
     protected abstract class RepeatLastCall implements RepeatCompletion {
