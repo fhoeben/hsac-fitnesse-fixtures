@@ -246,6 +246,7 @@ public class HttpTest extends SlimFixtureWithMap {
      * @param fileName   fileName to post
      * @param serviceUrl service endpoint to send body to.
      * @param boundary The multipart boundary to set
+     * Usage: | put file | [fileName] | to | [serviceUrl] | with multipart boundary | [boundary] |
      * @return true if call could be made and response did not indicate error.
      */
     public boolean postFileToWithMultipartBoundary(String fileName, String serviceUrl, String boundary) {
@@ -421,6 +422,20 @@ public class HttpTest extends SlimFixtureWithMap {
     public boolean putFileTo(String fileName, String serviceUrl) {
         return putFileToImpl(fileName, serviceUrl, null);
     }
+
+    /**
+     * Sends a file by HTTP PUT body to service endpoint, whilst explicitly defining the multipart boundary string
+     *
+     * @param fileName   fileName to post
+     * @param serviceUrl service endpoint to send body to.
+     * @param boundary The multipart boundary tring to use.
+     * Usage: | put file | [fileName] | to | [serviceUrl] | with multipart boundary | [boundary] |
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean putFileToWithMultipartBoundary(String fileName, String serviceUrl, String boundary) {
+        return putFileToImpl(fileName, serviceUrl, boundary);
+    }
+
 
     protected boolean putFileToImpl(String fileName, String serviceUrl, String boundary) {
         return sendFileImpl(fileName, serviceUrl, boundary, "PUT");

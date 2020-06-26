@@ -6,6 +6,7 @@
 |add response|{{{<status>OK</status>}}}|
 |add response|{{{<status>OK</status>}}}|
 |add response|{{{<status>OK</status>}}}|
+|add response|{{{<status>OK</status>}}}|
 |$mockUrl=   |get mock server url      |
 
 *!
@@ -14,11 +15,15 @@ Now we post files to the service. Note the different notation options. We can:
  * Use wiki-urls pointing to files in the files folder or below
  * Use relative paths (non links) from files folder (include files folder)
 
-|script   |http test                                             |
-|post file|http://files/httpPostExamples/testFile.txt|to|$mockUrl|
-|post file|files/httpPostExamples/testFile.txt       |to|$mockUrl|
-|post file|http://files/httpPostExamples/test.png    |to|$mockUrl|
-|post file|files/httpPostExamples/test.png           |to|$mockUrl|
+When the receiving service needs a specific multipart boundary, or a boundary that is also given in the content-type header, it can be set using the -with boundary version of the post/put methods
+
+
+|script   |http test                                                                                                             |
+|post file|http://files/httpPostExamples/testFile.txt|to|$mockUrl|with multipart boundary|!------SpecificMultiPartBoundary------!|
+|post file|files/httpPostExamples/testFile.txt       |to|$mockUrl                                                                |
+|post file|http://files/httpPostExamples/test.png    |to|$mockUrl                                                                |
+|put file |files/httpPostExamples/test.png           |to|$mockUrl|with multipart boundary|!------SpecificMultiPartBoundary------!|
+|show     |request                                                                                                               |
 
 The Message report will show the received request:
 
