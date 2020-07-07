@@ -798,11 +798,23 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         }
     }
 
-    public void reactDragAndDropToOffsetXY(String place, Integer xOffset, Integer yOffset) {
+    public void dragWithDelayAndDropToOffsetXY(String place, long delay, Integer xOffset, Integer yOffset) {
         place = cleanupValue(place);
         try {
             WebElement element = getElementToClick(place);
-            getSeleniumHelper().reactDragAndDropToOffsetXY(element, xOffset, yOffset);
+            getSeleniumHelper().dragWithDelayAndDropToOffsetXY(element, delay, xOffset, yOffset);
+        } catch (WebDriverException e) {
+            if (!this.clickExceptionIsAboutHiddenByOtherElement(e)) {
+                throw e;
+            }
+        }
+    }
+
+    public void dragWithDistanceAndDropToOffsetXY(String place, Integer distance, Integer xOffset, Integer yOffset) {
+        place = cleanupValue(place);
+        try {
+            WebElement element = getElementToClick(place);
+            getSeleniumHelper().dragWithDistanceAndDropToOffsetXY(element, distance, xOffset, yOffset);
         } catch (WebDriverException e) {
             if (!this.clickExceptionIsAboutHiddenByOtherElement(e)) {
                 throw e;
@@ -933,13 +945,27 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return dragAndDropImpl(source, destination, false);
     }
 
-    public void reactDragAndDropTo(String source, String destination) {
+    public void dragWithDelayAndDropTo(String source, long delay, String destination) {
         source = cleanupValue(source);
         WebElement sourceElement = getElementToClick(source);
         destination = cleanupValue(destination);
         WebElement destinationElement = getElementToClick(destination);
         try {
-            getSeleniumHelper().reactDragAndDrop(sourceElement, destinationElement);
+            getSeleniumHelper().dragWithDelayAndDrop(sourceElement, delay, destinationElement);
+        } catch (WebDriverException e) {
+            if (!this.clickExceptionIsAboutHiddenByOtherElement(e)) {
+                throw e;
+            }
+        }
+    }
+
+    public void dragWithDistanceAndDropTo(String source, Integer distance, String destination) {
+        source = cleanupValue(source);
+        WebElement sourceElement = getElementToClick(source);
+        destination = cleanupValue(destination);
+        WebElement destinationElement = getElementToClick(destination);
+        try {
+            getSeleniumHelper().dragWithDistanceAndDrop(sourceElement, distance, destinationElement);
         } catch (WebDriverException e) {
             if (!this.clickExceptionIsAboutHiddenByOtherElement(e)) {
                 throw e;
