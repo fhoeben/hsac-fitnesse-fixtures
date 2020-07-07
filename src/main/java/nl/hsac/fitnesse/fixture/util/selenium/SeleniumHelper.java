@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.fixture.util.selenium;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
+import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ConstantBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.CssBy;
@@ -30,6 +31,7 @@ import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
@@ -48,6 +50,10 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketException;
@@ -1053,6 +1059,44 @@ public class SeleniumHelper<T extends WebElement> {
             TakesScreenshot ts = (TakesScreenshot) d;
             byte[] png = ts.getScreenshotAs(OutputType.BYTES);
             result = writeScreenshot(baseName, png);
+        }
+        return result;
+    }
+
+    /**
+     * Takes screenshot of a specific element on the page (as .png).
+     * @param baseName name for file created (without extension),
+     *                 if a file already exists with the supplied name an
+     *                 '_index' will be added.
+     * @param element the webelement to crop the image to.
+     * @return absolute path of file created.
+     */
+    public String takeElementScreenshot(String baseName, WebElement element) {
+        String result = null;
+
+        WebDriver d = driver();
+
+        if (!(d instanceof TakesScreenshot)) {
+            d = new Augmenter().augment(d);
+        }
+        if (d instanceof TakesScreenshot) {
+            TakesScreenshot ts = (TakesScreenshot) d;
+            File screenshot = ts.getScreenshotAs(OutputType.FILE);
+            try {
+                BufferedImage fullWindow = ImageIO.read(screenshot);
+
+                Point location = element.getLocation();
+                int w = element.getSize().getWidth();
+                int h = element.getSize().getHeight();
+
+                BufferedImage elementScreenshot = fullWindow.getSubimage(location.getX(), location.getY(), w, h);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ImageIO.write(elementScreenshot, "png", baos);
+
+                result = writeScreenshot(baseName, baos.toByteArray());
+            } catch (IOException e) {
+                throw new SlimFixtureException(true, "Unable to create element screenshot");
+            }
         }
         return result;
     }

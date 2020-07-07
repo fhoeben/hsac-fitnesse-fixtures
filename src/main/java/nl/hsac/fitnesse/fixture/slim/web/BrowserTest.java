@@ -2035,6 +2035,42 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         }
     }
 
+    /**
+     * Take a screenshot and crop it to the provided element
+     * @param basename filename (below screenshot base directory).
+     * @param place The element to crop the screenshot image to
+     * @return location of the captured image
+     */
+    @WaitUntil
+    public String takeScreenshotOf(String basename, String place) {
+        return takeScreenshotOfIn(basename, place, null);
+    }
+
+    /**
+     * Take a screenshot and crop it to the provided element
+     * @param basename filename (below screenshot base directory).
+     * @param place The element to crop the screenshot image to.
+     * @param container the elemnt to limit the search context to, when searching for place.
+     * @return location of the captured image
+     */
+    @WaitUntil
+    public String takeScreenshotOfIn(String basename, String place, String container) {
+        T element = container == null ? getElement(place) : getElement(place, container);
+        if (element == null) {
+            return null;
+        }
+        scrollIfNotOnScreen(element);
+
+        String name = getScreenshotBasename(basename);
+        String imageFile = getSeleniumHelper().takeElementScreenshot(name, element);
+        if (imageFile == null) {
+            throw new SlimFixtureException(false, "Unable to take screenshot: does the webdriver support it?");
+        } else {
+            imageFile = getScreenshotLink(imageFile);
+        }
+        return imageFile;
+    }
+
     private String getScreenshotLink(String screenshotFile) {
         String wikiUrl = getWikiUrl(screenshotFile);
         if (wikiUrl != null) {
