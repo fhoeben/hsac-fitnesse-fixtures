@@ -941,6 +941,22 @@ public class SeleniumHelper<T extends WebElement> {
     }
 
     /**
+     * return an augmented driver if it is not screenshot-capable (i.e. not a RemoteWebDriver)
+     * @return selenium web driver with screenshot capabilities
+     */
+    protected TakesScreenshot screenshotCapableDriver() {
+        WebDriver d = driver();
+
+        if (!(d instanceof TakesScreenshot)) {
+            d = new Augmenter().augment(d);
+        }
+        if (d instanceof TakesScreenshot) {
+            return (TakesScreenshot) d;
+        }
+        return null;
+    }
+
+    /**
      * Allows clients to wait until a certain condition is true.
      * @return wait using the driver in this helper.
      */
@@ -1050,13 +1066,8 @@ public class SeleniumHelper<T extends WebElement> {
     public String takeScreenshot(String baseName) {
         String result = null;
 
-        WebDriver d = driver();
-
-        if (!(d instanceof TakesScreenshot)) {
-            d = new Augmenter().augment(d);
-        }
-        if (d instanceof TakesScreenshot) {
-            TakesScreenshot ts = (TakesScreenshot) d;
+        TakesScreenshot ts = screenshotCapableDriver();
+        if (ts != null) {
             byte[] png = ts.getScreenshotAs(OutputType.BYTES);
             result = writeScreenshot(baseName, png);
         }
@@ -1074,13 +1085,8 @@ public class SeleniumHelper<T extends WebElement> {
     public String takeElementScreenshot(String baseName, WebElement element) {
         String result = null;
 
-        WebDriver d = driver();
-
-        if (!(d instanceof TakesScreenshot)) {
-            d = new Augmenter().augment(d);
-        }
-        if (d instanceof TakesScreenshot) {
-            TakesScreenshot ts = (TakesScreenshot) d;
+        TakesScreenshot ts = screenshotCapableDriver();
+        if (ts != null) {
             File screenshot = ts.getScreenshotAs(OutputType.FILE);
             try {
                 BufferedImage fullWindow = ImageIO.read(screenshot);
