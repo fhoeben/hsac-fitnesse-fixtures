@@ -50,7 +50,7 @@
 
 		<webdriver.download.skip>false</webdriver.download.skip>
 		<selenium.internetexplorerdriver.version>3.150.1</selenium.internetexplorerdriver.version>
-		<selenium.edgedriver.version>6.17134</selenium.edgedriver.version>
+		<selenium.edgedriver.version>83.0.478.50</selenium.edgedriver.version>
 		<selenium.chromedriver.version>83.0.4103.39</selenium.chromedriver.version>
 		<selenium.geckodriver.version>0.26.0</selenium.geckodriver.version>
 
@@ -304,6 +304,8 @@
 							<platform>windows</platform>
 							<bit>64</bit>
 							<version>${selenium.edgedriver.version}</version>
+							<url>https://msedgedriver.azureedge.net/${selenium.edgedriver.version}/edgedriver_mac64.zip</url>
+							<fileMatchInside>msedgedriver.exe</fileMatchInside>
 						</driver>
 						<driver>
 							<name>chromedriver</name>
