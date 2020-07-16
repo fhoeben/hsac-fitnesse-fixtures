@@ -281,7 +281,7 @@
 			<plugin>
 				<groupId>com.github.webdriverextensions</groupId>
 				<artifactId>webdriverextensions-maven-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>3.1.2</version>
 				<executions>
 					<execution>
 						<goals>
