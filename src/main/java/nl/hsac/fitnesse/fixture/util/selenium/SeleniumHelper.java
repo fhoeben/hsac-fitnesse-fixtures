@@ -625,7 +625,7 @@ public class SeleniumHelper<T extends WebElement> {
      * @param xOffset horizontal integer offset destination for dropping (calculated from given element center).
      * @param yOffset vertical integer offset destination for dropping (calculated from given element center).
      */
-    public void dragWithDelayAndDropToOffsetXY (WebElement source, long delay, Integer xOffset, Integer yOffset) {
+    public void dragWithDelayAndDropToOffsetXY(WebElement source, long delay, Integer xOffset, Integer yOffset) {
         getActions().clickAndHold(source)
                 .pause(delay)
                 .moveByOffset(xOffset, yOffset)
