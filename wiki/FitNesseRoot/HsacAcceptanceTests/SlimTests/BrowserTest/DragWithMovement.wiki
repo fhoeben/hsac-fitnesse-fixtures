@@ -1,0 +1,110 @@
+---
+Test
+---
+This test ensures that we can drag [[react sortable][https://github.com/clauderic/react-sortable-hoc]] elements, which requires a minimum distance (in pixels) to be dragged before sorting is enabled.
+
+We use a mock server running to serve the HTML defined in this page.
+HTML build by example from https://codepen.io/csbarker/pen/WmWQVJ
+
+!define minDistance {4}
+!define distance {4}
+
+!*> html mockup
+
+!define HTML { {{{
+<html lang="en" class=""><head>
+<meta charset="UTF-8">
+<meta charset="UTF-8">
+<link rel="apple-touch-icon" type="image/png" href="https://static.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png">
+<meta name="apple-mobile-web-app-title" content="CodePen">
+<link rel="shortcut icon" type="image/x-icon" href="https://static.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico">
+<link rel="mask-icon" type="" href="https://static.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg" color="#111">
+<title>CodePen - React sortable list using react-sortable-hoc</title>
+<style class="INLINE_PEN_STYLESHEET_ID">
+    * {
+  font-family:arial;
+}
+UL, LI {
+  padding:0;
+  margin:0;
+}
+LI {
+  list-style:none;
+  line-height:50px;
+  background-color:#eee;
+  border-bottom:1px solid #ccc;
+  padding-left:1em;
+}
+  </style>
+</head>
+<body>
+<h3>Drag &amp; Drop using <a href="https://github.com/clauderic/react-sortable-hoc">React Sortable HOC</a></h3>
+<div id="list"><ul><li style="">Item 1 </li><li style="">Item 2 </li><li style="">Item 3 </li><li style="">Item 4 </li><li style="">Item 5 </li><li style="">Item 6 </li></ul></div>
+<script src="https://static.codepen.io/assets/common/stopExecutionOnTimeout-157cd5b220a5c80d4ff8e0e70ac069bffd87a61252088146915e8726e5d9f147.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.8.5/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.8.5/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-sortable-hoc/0.9.0/react-sortable-hoc.min.js"></script>
+<script id="INLINE_PEN_JS_ID">
+    function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var Sortable = SortableHOC;
+var SortableContainer = Sortable.SortableContainer;
+var SortableElement = Sortable.SortableElement;
+var arrayMove = Sortable.arrayMove;
+const SortableItem = SortableElement(({ value }) => React.createElement("li", null, value, " "));
+
+const SortableList = SortableContainer(({ items }) => {
+  return (
+    React.createElement("ul", null,
+    items.map((value, index) =>
+    React.createElement(SortableItem, { key: `item-${index}`, index: index, value: value }))));
+
+
+
+
+});
+
+class SortableComponent extends React.Component {constructor(...args) {super(...args);_defineProperty(this, "state",
+    {
+      items: ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6'] });_defineProperty(this, "onSortEnd",
+
+    ({ oldIndex, newIndex }) => {
+      this.setState(({ items }) => ({
+        items: arrayMove(items, oldIndex, newIndex) }));
+
+    });}
+  render() {
+    return React.createElement(SortableList, { items: this.state.items,
+      onSortEnd: this.onSortEnd,
+      distance: ${minDistance} });
+  }}
+
+
+ReactDOM.render(React.createElement(SortableComponent, null), document.getElementById('list'));
+    //# sourceURL=pen.js
+  </script>
+
+</body></html>
+}}} }
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+*!
+
+|script                |browser test|
+|open                  |$url        |
+|seconds before timeout|1           |
+
+|script           |browser test                        |
+|set drag distance|${distance}                         |
+|drag and drop    |Item 1  |to                 |Item 3 |
+|check            |value of|css=li:nth-child(3)|Item 1 |
+|drag and drop    |Item 2  |to offset x        |0|y|200|
+|check            |value of|css=li:nth-child(5)|Item 2 |
+
+!*> Stop the mock server
+
+|script|mock xml server setup|
+|stop                        |
+
+*!

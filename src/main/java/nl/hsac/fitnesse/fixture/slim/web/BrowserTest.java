@@ -66,6 +66,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     private String pageSourceBase = new File(filesDir, "pagesources").getPath() + "/";
     private boolean sendCommandForControlOnMac = false;
     private boolean trimOnNormalize = true;
+    private Long dragPressDelay;
+    private Integer dragDistance;
     private static final String CHROME_HIDDEN_BY_OTHER_ELEMENT_ERROR = "Other element would receive the click",
             EDGE_HIDDEN_BY_OTHER_ELEMENT_ERROR = "Element is obscured";
     private static final Pattern FIREFOX_HIDDEN_BY_OTHER_ELEMENT_ERROR_PATTERN =
@@ -790,7 +792,13 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         place = cleanupValue(place);
         try {
             WebElement element = getElementToClick(place);
-            getSeleniumHelper().dragAndDropToOffsetXY(element, xOffset, yOffset);
+         if (dragPressDelay == null && dragDistance == null) {
+             getSeleniumHelper().dragAndDropToOffsetXY(element, xOffset, yOffset);
+        } else if (dragDistance != null) {
+             getSeleniumHelper().dragWithDistanceAndDropToOffsetXY(element, dragDistance, xOffset, yOffset);
+        } else {
+             getSeleniumHelper().dragWithDelayAndDropToOffsetXY(element, dragPressDelay, xOffset, yOffset);
+         }
         } catch (WebDriverException e) {
             if (!this.clickExceptionIsAboutHiddenByOtherElement(e)) {
                 throw e;
@@ -915,10 +923,29 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     protected Keys controlKey() {
         return sendCommandForControlOnMac ? getSeleniumHelper().getControlOrCommand() : Keys.CONTROL;
     }
+    protected Long getDragPressDelay() {
+        return dragPressDelay;
+    }
+    protected Integer getDragDistance() {
+        return dragDistance;
+    }
+
+    public void setDragDistance(int dragDistance) {
+        this.dragDistance = dragDistance;
+    }
+
+    public void setDragPressDelay(long dragPressDelay) {
+        this.dragPressDelay = dragPressDelay;
+    }
+
+    public void clearDragSetup() {
+        this.dragPressDelay = null;
+        this.dragDistance = null;
+    }
 
     @WaitUntil
     public boolean dragAndDropTo(String source, String destination) {
-        return dragAndDropImpl(source, destination, false);
+        return this.dragAndDropImpl(source, destination, false);
     }
 
     @WaitUntil
@@ -928,6 +955,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     protected boolean dragAndDropImpl(String source, String destination, boolean html5) {
         boolean result = false;
+        Long dragPressDelay = getDragPressDelay();
+        Integer dragDistance = getDragDistance();
         source = cleanupValue(source);
         WebElement sourceElement = getElementToClick(source);
         destination = cleanupValue(destination);
@@ -942,8 +971,12 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
                     } catch (IOException e) {
                         throw new SlimFixtureException(false, "The drag and drop simulator javascript could not be found.", e);
                     }
-                } else {
+                } else if (dragPressDelay == null && dragDistance == null) {
                     getSeleniumHelper().dragAndDrop(sourceElement, destinationElement);
+                } else if (dragDistance != null) {
+                    getSeleniumHelper().dragWithDistanceAndDrop(sourceElement, dragDistance, destinationElement);
+                } else {
+                    getSeleniumHelper().dragWithDelayAndDrop(sourceElement, dragPressDelay, destinationElement);
                 }
                 result = true;
             }
