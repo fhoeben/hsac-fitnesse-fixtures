@@ -93,11 +93,12 @@ ReactDOM.render(React.createElement(SortableComponent, null), document.getElemen
 |open                  |$url        |
 |seconds before timeout|1           |
 
-|script|browser test                                                           |
-|drag  |Item 1  |with delay         |${pressDelay}|and drop to         |Item 3 |
-|check |value of|css=li:nth-child(3)|Item 1                                    |
-|drag  |Item 2  |with delay         |${pressDelay}|and drop to offset x|0|y|200|
-|check |value of|css=li:nth-child(5)|Item 2                                    |
+|script              |browser test                        |
+|set drag press delay|${pressDelay}                       |
+|drag and drop       |Item 1  |to                 |Item 3 |
+|check               |value of|css=li:nth-child(3)|Item 1 |
+|drag and drop       |Item 2  |to offset x        |0|y|200|
+|check               |value of|css=li:nth-child(5)|Item 2 |
 
 !*> Stop the mock server
 
