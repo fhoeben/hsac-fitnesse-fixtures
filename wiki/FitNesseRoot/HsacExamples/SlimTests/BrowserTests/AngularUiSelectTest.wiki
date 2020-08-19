@@ -1,7 +1,10 @@
-Sample test interacting with [[!-AngularJs-! ui-select][https://github.com/angular-ui/ui-select]], which does not use actual 'select' with 'options'. 
+Sample test interacting with [[!-AngularJs-! ui-select][https://github.com/angular-ui/ui-select]], which does not use actual 'select' with 'options'.
+
+|storyboard|browser test                      |
+|open      |http://run.plnkr.co/plunks/jBJkDb/|
+|click     |Dismiss                           |
 
 |storyboard|ng browser test                         |
-|open      |http://run.plnkr.co/plunks/jBJkDb/      |
 |click     |Select or search a person in the list...|
 |type      |Adam                                    |
 |press enter                                        |
