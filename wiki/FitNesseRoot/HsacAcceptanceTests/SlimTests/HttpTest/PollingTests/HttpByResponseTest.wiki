@@ -16,6 +16,8 @@ We retry a call until the response is a certain value.
 |add response|10 response|with status|300|
 |add response|11 response|with status|300|
 |add response|12 response|with status|300|
+|add response|13 response|with status|300|
+|add response|14 response|with status|300|
 |$url=       |get mock server url        |
 
 *!
@@ -54,6 +56,10 @@ We retry a call until the response is a certain value.
 |get from                    |$url                                 |
 |repeat until response is not|11 response                          |
 |check                       |repeat count            |1           |
+|repeat at most              |5                       |times       |
+|repeat until response is    |=~/\d4 r.s.+/                        |
+|check                       |response                |14 response |
+|check                       |repeat count            |2           |
 
 
 !*> Stop Server

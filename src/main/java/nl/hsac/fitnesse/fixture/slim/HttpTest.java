@@ -950,11 +950,12 @@ public class HttpTest extends SlimFixtureWithMap {
                 }
             };
         } else {
+            String cleanedExpected = cleanupValue(expectedResponse);
             completion = new RepeatLastCall() {
                 @Override
                 public boolean isFinished() {
                     Object actual = response();
-                    return compareActualToExpected(expectedResponse, actual);
+                    return compareActualToExpected(cleanedExpected, actual);
                 }
             };
         }
@@ -971,11 +972,12 @@ public class HttpTest extends SlimFixtureWithMap {
                 }
             };
         } else {
+            Object cleanedExpected = cleanupValue(expectedValue);
             completion = new RepeatLastCall() {
                 @Override
                 public boolean isFinished() {
                     Object actual = responseHeader(header);
-                    return compareActualToExpected(expectedValue, actual);
+                    return compareActualToExpected(cleanedExpected, actual);
                 }
             };
         }
@@ -1029,18 +1031,6 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     protected abstract class RepeatLastCall implements RepeatCompletion {
-
-        protected boolean compareActualToExpected(Object expected, Object actual) {
-            boolean result;
-            if (actual == null) {
-                result = expected.equals("null");
-            } else {
-                result = expected.equals(actual)
-                        || expected.toString().equals(actual.toString());
-            }
-            return result;
-        }
-
         @Override
         public void repeat() {
             repeatLastCall();

@@ -156,11 +156,12 @@ public class JsonHttpTest extends HttpTest {
                 }
             };
         } else {
+            Object cleanedExpected = cleanupValue(expectedValue);
             completion = new RepeatLastCall() {
                 @Override
                 public boolean isFinished() {
                     Object actual = jsonPath(jsonPath);
-                    return compareActualToExpected(expectedValue, actual);
+                    return compareActualToExpected(cleanedExpected, actual);
                 }
             };
         }

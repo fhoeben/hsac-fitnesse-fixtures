@@ -2658,7 +2658,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         if (expectedValue == null) {
             match = actual == null;
         } else {
-            match = cleanExpectedValue(expectedValue).equals(actual);
+            String cleanExpectedValue = cleanExpectedValue(expectedValue);
+            match = compareActualToExpected(cleanExpectedValue, actual);
         }
         return match;
     }
