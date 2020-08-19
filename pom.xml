@@ -42,7 +42,7 @@
 
 		<hsac-fitnesse-plugin.version>1.29.0</hsac-fitnesse-plugin.version>
 		<fitnesse.version>20200501</fitnesse.version>
-		<praegus-toolchain-fitnesse-plugin.version>2.0.8</praegus-toolchain-fitnesse-plugin.version>
+		<praegus-toolchain-fitnesse-plugin.version>2.0.9</praegus-toolchain-fitnesse-plugin.version>
 		<selenium.version>3.141.59</selenium.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<apache.http.version>4.5.12</apache.http.version>
