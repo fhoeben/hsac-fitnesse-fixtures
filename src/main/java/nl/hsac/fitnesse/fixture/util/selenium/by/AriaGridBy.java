@@ -42,7 +42,7 @@ public class AriaGridBy {
      * @param value text to find in column with the supplied header.
      * @param columnName header text of the column to find value in.
      * @param extraColumnNames name of other header texts that must be present in table's header row
-     * @return XPath expression selecting a td in the row
+     * @return XPath expression selecting a cell in the row
      */
     public static String getXPathForColumnInRowByValueInOtherColumn(String value, String columnName, String... extraColumnNames) {
         String selectIndex = getXPathForColumnIndex(columnName);
@@ -57,7 +57,7 @@ public class AriaGridBy {
      * text in a specific column.
      * @param selectIndex index of the column to find value in (usually obtained via {@link #getXPathForColumnIndex(String)}).
      * @param value text to find in the column.
-     * @return XPath expression selecting a tr in the table.
+     * @return XPath expression selecting a row in the table.
      */
     public static String getXPathForRowByValueInOtherColumn(String selectIndex, String value) {
         return String.format("/div[@role='row'][span[@role='cell'][%1$s]/descendant-or-self::text()[normalized(.)='%2$s']]", selectIndex, value);
@@ -66,8 +66,8 @@ public class AriaGridBy {
     /**
      * Creates an XPath expression that will determine, for a row, which index to use to select the cell in the column
      * with the supplied header text value.
-     * @param columnName name of column in header (th)
-     * @return XPath expression which can be used to select a td in a row
+     * @param columnName name of column in header
+     * @return XPath expression which can be used to select a cell in a row
      */
     public static String getXPathForColumnIndex(String columnName) {
         // determine how many columns are before the column with the requested name
@@ -81,7 +81,7 @@ public class AriaGridBy {
      * header texts present.
      * @param columnName first header text which must be present.
      * @param extraColumnNames name of other header texts that must be present in table's header row.
-     * @return XPath expression selecting a tr in the row
+     * @return XPath expression selecting a row in the table
      */
     public static String getXPathForHeaderRowByHeaders(String columnName, String... extraColumnNames) {
         String allHeadersPresent;
@@ -103,7 +103,7 @@ public class AriaGridBy {
     /**
      * Creates an XPath expression that will find a header cell based on its text.
      * @param headerText header text which must be present.
-     * @return XPath expression selecting a th which has (a sub-element with) the supplied text.
+     * @return XPath expression selecting a columnheader which has (a sub-element with) the supplied text.
      */
     public static String getXPathForHeaderCellWithText(String headerText) {
         return String.format("span[@role='columnheader'][descendant-or-self::text()[normalized(.)='%1$s']]", headerText);
