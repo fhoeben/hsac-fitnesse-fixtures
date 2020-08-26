@@ -1,0 +1,164 @@
+!define HTML { {{{<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>[role="table"] {
+  display: table;
+}
+[role="table"] > div[id] {
+  display: table-caption;
+  font-style: italic;
+}
+[role="table"] [role="row"] {
+  display: table-row;
+}
+[role="table"] [role="cell"],
+[role="table"] [role="columnheader"] {
+  display: table-cell;
+  padding: 0.125em 0.25em;
+  width: 8em;
+}
+[role="table"] [role="columnheader"] {
+  font-weight: bold;
+  border-bottom: thin solid #888;
+}
+[role="table"] [role="rowgroup"]:last-child [role="row"]:nth-child(odd) {
+  background-color: #ddd;
+}</style>
+</head>
+<body>
+<div role="table"
+     aria-label="Students"
+     aria-describedby="students_table_desc">
+  <div id="students_table_desc">
+    Students currently enrolled in WAI-ARIA 101 for the coming semester
+  </div>
+  <div role="rowgroup">
+    <div role="row">
+      <span role="columnheader">
+        First Name
+      </span>
+      <span role="columnheader">
+        Last Name
+      </span>
+      <span role="columnheader">
+        Company
+      </span>
+      <span role="columnheader">
+        Address
+      </span>
+      <span role="columnheader">
+        Actions
+      </span>
+      <span role="columnheader">
+        Note
+      </span>
+    </div>
+  </div>
+  <div role="rowgroup">
+    <div role="row">
+      <span role="cell">
+        Fred
+      </span>
+      <span role="cell">
+        Jackson
+      </span>
+      <span role="cell">
+        Acme, Inc.
+      </span>
+      <span role="cell">
+        123 Broad St.
+      </span>
+      <span role="cell">
+         <button>Delete</button><button>Send mail</button>
+      </span>
+      <span role="cell">
+        <input type="text" placeholder="A note">
+      </span>
+    </div>
+    <div role="row">
+      <span role="cell">
+        Sara
+      </span>
+      <span role="cell">
+        James
+      </span>
+      <span role="cell">
+        Acme2, Inc.
+      </span>
+      <span role="cell">
+        456 Broad St.
+      </span>
+      <span role="cell">
+         <button>Delete</button><button>Send mail</button>
+      </span>
+      <span role="cell">
+        <input type="text" placeholder="A note">
+      </span>
+    </div>
+    <div role="row">
+      <span role="cell">
+        Ralph
+      </span>
+      <span role="cell">
+        Jefferson
+      </span>
+      <span role="cell">
+        XYZ, Inc.
+      </span>
+      <span role="cell">
+        456 Main St.
+      </span>
+      <span role="cell">
+         <button>Delete</button><button>Send mail</button>
+      </span>
+      <span role="cell">
+        <input type="text" placeholder="A note">
+      </span>
+    </div>
+    <div role="row">
+      <span role="cell">
+        Nancy
+      </span>
+      <span role="cell">
+        Jensen
+      </span>
+      <span role="cell">
+        GHI, Inc.
+      </span>
+      <span role="cell">
+        789 Main St.
+      </span>
+      <span role="cell">
+        <button>Delete</button><button>Send mail</button>
+      </span>
+      <span role="cell">
+        <input type="text" placeholder="A note">
+      </span>
+    </div>
+  </div>
+</div>
+</body>}}} }
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script                   |browser test                                                                                       |
+|seconds before timeout   |1                                                                                                  |
+|use aria table structure |true                                                                                               |
+|open                     |$url                                                                                               |
+|check                    |value of column number|1            |in row number|2           |Sara                               |
+|check                    |value of              |Last Name    |in row number|2           |James                              |
+|check                    |value of              |Address      |in row number|4           |789 Main St.                       |
+|row exists where         |First Name            |is           |Nancy                                                         |
+|reject                   |row exists where      |First Name   |is           |Walter                                          |
+|check                    |value of              |Last Name    |in row where |First Name  |is       |Ralph        |Jefferson  |
+|check                    |value of              |Company      |in row where |Address     |is       |456 Broad St.|Acme2, Inc.|
+|check                    |value of              |First Name   |in row where |Company     |is       |GHI, Inc.    |Nancy      |
+|click                    |Delete                |in row number|3                                                             |
+|click                    |Send mail             |in row where |First Name   |is          |Sara                               |
+|enter                    |This is Ralph         |as           |Note         |in row where|Last Name|is           |Jefferson  |
+|show                     |take screenshot       |done                                                                        |
+
+|script|mock xml server setup|
+|stop                        |
