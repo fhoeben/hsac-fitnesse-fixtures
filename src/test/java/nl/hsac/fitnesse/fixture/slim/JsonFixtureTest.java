@@ -14,7 +14,7 @@ public class JsonFixtureTest {
     private JsonFixture fixture = new JsonFixture();
     private final String jsonPathNoResults = "$.store.book[?(@.category==\"test\")].author";
     private final String jsonPathWithResults = "$.store.book[?(@.category==\"fiction\")].author";
-    private final String jsonResults = "Evelyn Waugh";
+    private final String expectedResult = "Evelyn Waugh";
 
 
     private static String JSON =
@@ -60,7 +60,6 @@ public class JsonFixtureTest {
     public void testElementOfJsonPathNoResult() {
         JsonFixture cont = new JsonFixture();
         cont.load(JSON);
-
         Object result = cont.elementOfJsonPath(0,jsonPathNoResults);
         assertNull(result);
     }
@@ -69,8 +68,7 @@ public class JsonFixtureTest {
     public void testElementOfJsonPathResults(){
         JsonFixture cont = new JsonFixture();
         cont.load(JSON);
-
         Object result = cont.elementOfJsonPath(0,jsonPathWithResults);
-        assertEquals(jsonResults,result);
+        assertEquals(expectedResult,result);
     }
 }
