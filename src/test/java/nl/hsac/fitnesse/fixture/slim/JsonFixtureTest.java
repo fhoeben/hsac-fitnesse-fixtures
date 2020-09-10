@@ -68,7 +68,7 @@ public class JsonFixtureTest {
     public void testElementOfJsonPathResults(){
         JsonFixture cont = new JsonFixture();
         cont.load(JSON);
-        Object result = cont.elementOfJsonPath(0,jsonPathWithResults);
+        Object result = cont.elementOfJsonPath(0, "$.store.book[?(@.category==\"fiction\")].author");
         assertEquals(expectedResult,result);
     }
 }
