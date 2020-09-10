@@ -2,20 +2,11 @@ package nl.hsac.fitnesse.fixture.slim;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 public class JsonFixtureTest {
     private JsonFixture fixture = new JsonFixture();
-    private final String jsonPathNoResults = "$.store.book[?(@.category==\"test\")].author";
-    private final String jsonPathWithResults = "$.store.book[?(@.category==\"fiction\")].author";
-    private final String expectedResult = "Evelyn Waugh";
-
 
     private static String JSON =
             "{\n" +
@@ -58,17 +49,18 @@ public class JsonFixtureTest {
 
     @Test
     public void testElementOfJsonPathNoResult() {
-        JsonFixture cont = new JsonFixture();
-        cont.load(JSON);
-        Object result = cont.elementOfJsonPath(0, jsonPathNoResults);
+        fixture.load(JSON);
+        Object result = fixture.elementOfJsonPath(0, "$.store.book[?(@.category==\"test\")].author");
+        assertNull(result);
+
+        result = fixture.elementOfJsonPath(3, "$.store.book[?(@.category==\"fiction\")].author");
         assertNull(result);
     }
 
     @Test
     public void testElementOfJsonPathResults(){
-        JsonFixture cont = new JsonFixture();
-        cont.load(JSON);
-        Object result = cont.elementOfJsonPath(0, "$.store.book[?(@.category==\"fiction\")].author");
-        assertEquals(expectedResult, "Evelyn Waugh");
+        fixture.load(JSON);
+        Object result = fixture.elementOfJsonPath(0, "$.store.book[?(@.category==\"fiction\")].author");
+        assertEquals("Evelyn Waugh", result);
     }
 }
