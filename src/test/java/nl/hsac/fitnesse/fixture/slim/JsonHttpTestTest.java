@@ -127,5 +127,4 @@ public class JsonHttpTestTest {
         assertEquals("DELETE", req1.getMethod());
         assertEquals("{\"d\":\"4\",\"C\":\"3\"}", req1.getRequest());
     }
-
 }

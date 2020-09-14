@@ -73,7 +73,7 @@ public class JsonFixture extends SlimFixture {
 
     public Object elementOfJsonPath(int index, String path) {
         List<Object> all = listJsonPathMatches(path);
-        return all.get(index);
+        return all.size() > index ? all.get(index) : null;
     }
 
     public int jsonPathCount(String path) {
