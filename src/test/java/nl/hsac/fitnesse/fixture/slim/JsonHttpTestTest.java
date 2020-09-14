@@ -1,19 +1,12 @@
 package nl.hsac.fitnesse.fixture.slim;
 
-import fit.Fixture;
-import nl.hsac.fitnesse.fixture.util.HttpResponse;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 import org.apache.http.entity.ContentType;
 import org.junit.Test;
-import org.mockito.Mockito;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 import static junit.framework.TestCase.assertTrue;
 import static nl.hsac.fitnesse.fixture.slim.HttpTestTest.checkCall;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertNull;
 
 /**
  * Tests JsonHttpTest.
@@ -133,24 +126,4 @@ public class JsonHttpTestTest {
         assertEquals("DELETE", req1.getMethod());
         assertEquals("{\"d\":\"4\",\"C\":\"3\"}", req1.getRequest());
     }
-
-    @Test
-    public void testElementOfJsonPathNoResult() {
-        ArrayList<String> emptyList = new ArrayList<>();
-        JsonHttpTest fixtureSpy = Mockito.spy(fixture);
-        Mockito.doReturn(emptyList).when(fixtureSpy).listJsonPathMatches("test");
-        Object result = fixtureSpy.elementOfJsonPath(0, "test");
-        assertNull(result);
-    }
-
-    @Test
-    public void testElementOfJsonPathResults() {
-        ArrayList<String> emptyList = new ArrayList<>();
-        emptyList.add("hello");
-        JsonHttpTest fixtureSpy = Mockito.spy(fixture);
-        Mockito.doReturn(emptyList).when(fixtureSpy).listJsonPathMatches("test");
-        Object result = fixtureSpy.elementOfJsonPath(0, "test");
-        assertEquals("hello", result);
-    }
-
 }
