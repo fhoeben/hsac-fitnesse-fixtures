@@ -6,7 +6,8 @@ import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;
 import static nl.hsac.fitnesse.fixture.slim.HttpTestTest.checkCall;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Tests JsonHttpTest.
