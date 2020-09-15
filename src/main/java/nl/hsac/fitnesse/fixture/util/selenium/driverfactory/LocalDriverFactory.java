@@ -1,9 +1,12 @@
 package nl.hsac.fitnesse.fixture.util.selenium.driverfactory;
 
+import com.galenframework.generator.raycast.EdgesContainer;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
@@ -49,6 +52,9 @@ public class LocalDriverFactory implements DriverFactory {
             } else if ("internetexplorerdriver".equalsIgnoreCase(driverClass.getSimpleName())) {
                 InternetExplorerOptions ieOptions = getInternetExplorerOptions(profile);
                 driver = new InternetExplorerDriver(ieOptions);
+            } else if ("edgedriver".equalsIgnoreCase(driverClass.getSimpleName())) {
+                DesiredCapabilities edgeOptions = getChromiumEdgeOptions(profile);
+                driver = new EdgeDriver(edgeOptions);
             } else {
                 driver = driverClass.newInstance();
             }
@@ -131,5 +137,13 @@ public class LocalDriverFactory implements DriverFactory {
             }
         }
         return ieOptions;
+    }
+
+    public static DesiredCapabilities getChromiumEdgeOptions(Map<String, Object> profile) {
+        DesiredCapabilities capabilities = DesiredCapabilities.edge();
+        if(profile != null) {
+           capabilities.setCapability("ms:edgeOptions", profile);
+        }
+        return capabilities;
     }
 }
