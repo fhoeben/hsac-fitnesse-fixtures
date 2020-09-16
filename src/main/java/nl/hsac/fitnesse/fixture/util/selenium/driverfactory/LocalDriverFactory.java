@@ -139,7 +139,7 @@ public class LocalDriverFactory implements DriverFactory {
 
     public static DesiredCapabilities getChromiumEdgeOptions(Map<String, Object> profile) {
         DesiredCapabilities capabilities = DesiredCapabilities.edge();
-        if(profile != null) {
+        if (profile != null) {
            capabilities.setCapability("ms:edgeOptions", profile);
         }
         return capabilities;
