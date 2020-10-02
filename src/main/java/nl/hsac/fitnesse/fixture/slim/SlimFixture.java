@@ -14,11 +14,15 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Base class for Slim fixtures.
  */
-public class SlimFixture  implements InteractionAwareFixture {
+public class SlimFixture implements InteractionAwareFixture {
+    public static final Pattern REGEX_EXPECTED_VALUE_PATTERN = Pattern.compile("\\s*=~/(.*)/");
+
     protected final Logger logger;
     private Environment environment = Environment.getInstance();
     private int repeatInterval = 100;
@@ -195,9 +199,36 @@ public class SlimFixture  implements InteractionAwareFixture {
         return repeatUntil(new Negate(repeat));
     }
 
+    protected boolean compareActualToExpected(Object expected, Object actual) {
+        boolean result;
+        if (expected == null) {
+            result = actual == null;
+        } else if (actual == null) {
+            result = expected.equals("null");
+        } else if (expected.equals(actual)) {
+            result = true;
+        } else {
+            String expectedStr = expected.toString();
+            String actualStr = actual.toString();
+            result = expectedStr.equals(actualStr) ||
+                    regexMatch(expectedStr, actualStr);
+        }
+        return result;
+    }
+
+    protected boolean regexMatch(String expected, String actual) {
+        boolean result = false;
+        Matcher matcher = REGEX_EXPECTED_VALUE_PATTERN.matcher(expected);
+        if (matcher.matches()) {
+            String regex = matcher.group(1);
+            result = actual.matches(regex);
+        }
+        return result;
+    }
+
     /**
-         * Interface to repeat a call until a condition is met.
-         */
+     * Interface to repeat a call until a condition is met.
+     */
     public interface RepeatCompletion {
         /**
          * @return true if no more repeats are needed.

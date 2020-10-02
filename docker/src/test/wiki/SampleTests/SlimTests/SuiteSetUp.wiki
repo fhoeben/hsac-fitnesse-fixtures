@@ -1,0 +1,5 @@
+---
+Help: Defines where to look for fixture code.
+---
+|Import                           |
+|nl.hsac.fitnesse.fixture.slim    |

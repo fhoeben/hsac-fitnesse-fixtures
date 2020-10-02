@@ -1,3 +1,5 @@
+if: type = pull_request
+
 language: java
 jdk:
   - openjdk8
@@ -8,21 +10,9 @@ addons:
 dist: xenial
 sudo: required
 
-matrix:
-  fast_finish: true
-  allow_failures:
-    - env: TEST_TYPE=examples CAPA="browserName:chrome,platform:Windows 10,screenResolution:1680x1050"
-
-env:
-  - TEST_TYPE=acceptance-test
-  - TEST_TYPE=examples CAPA="browserName:chrome,platform:Windows 10,screenResolution:1680x1050"
-
 cache:
   directories:
   - $HOME/.m2
 
 script:
-  - travis_wait 90 ./travis_build_and_test.sh
-
-after_success:
-  - "[[ \"${TRAVIS_PULL_REQUEST}\" == \"false\" && \"${TRAVIS_BRANCH}\" == \"master\" && \"${TEST_TYPE}\" == \"acceptance-test\" ]] && { ./travis_publish_results.sh target/*.zip hsac-fitnesse-fixtures-snapshot-standalone.zip; python travis_add_server.py; mvn -DskipTests deploy --settings ~/.m2/mySettings.xml; };"
+  - mvn -DfitnesseSuiteToRun=HsacAcceptanceTests -DseleniumBrowser=chrome "-DseleniumJsonProfile={'args':['headless', 'disable-gpu']}" test failsafe:integration-test

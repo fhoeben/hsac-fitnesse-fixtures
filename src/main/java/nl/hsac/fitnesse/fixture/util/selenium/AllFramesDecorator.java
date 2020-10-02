@@ -3,6 +3,7 @@ package nl.hsac.fitnesse.fixture.util.selenium;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ConstantBy;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.UnhandledAlertException;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
@@ -68,6 +69,13 @@ public class AllFramesDecorator<T> {
                     if (isFinished(result)) {
                         break;
                     }
+                }
+            } catch (WebDriverException e) {
+                String msg = e.getMessage();
+                if (msg == null || !msg.contains("target frame detached")) {
+                    // target frame detached is a non-standard chrome error
+                    // we ignore those and just continue to check other frames
+                    throw e;
                 }
             } finally {
                 // if we already had a problem with alerts at lower level, no need to try to go up again
