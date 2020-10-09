@@ -6,20 +6,46 @@ It is intended to be used is as a [[library][.FitNesse.UserGuide.WritingAcceptan
 
 This page demonstrates the features of the class (!-nl.hsac.fitnesse.fixture.slim.StringFixture-!) and therefore uses it on its own in a script table (instead of inside a script using a different fixture).
 
-|script|string fixture                                                                                    |
-|check |value of             |Hello                      |Hello                                           |
-|check |length of            |Hello                      |5                                               |
-|ensure|text                 |Hello world!               |contains    |world                              |
-|reject|text                 |Hello world!               |contains    |moon                               |
-|ensure|value                |Hello                      |differs from|Hell                               |
-|ensure|value                |Hello                      |equals      |Hello                              |
-|check |convert to upper case|Bye                        |BYE                                             |
-|check |convert to lower case|Bye                        |bye                                             |
-|check |remove whitespace    |!-   Hello    World    -!  |!-HelloWorld-!                                  |
-|check |normalize whitespace |!-   Hello    World    -!  |Hello World                                     |
-|check |replace all          |Hello ([A-Za-z]+)          |in          |Hello World|with|$1      |World    |
-|check |replace all          |(\d{4})-(\d{1,2})-(\d{1,2})|in          |1975-12-3  |with|$3-$2-$1|3-12-1975|
-
+|script|string fixture                                                                                                                                  |
+|check |value of             |Hello                      |Hello                                                                                            |
+|check |length of            |Hello                      |5                                                                                                |
+|ensure|text                 |Hello world!               |contains    |world                                                                               |
+|reject|text                 |Hello world!               |contains    |moon                                                                                |
+|ensure|value                |Hello                      |differs from|Hell                                                                                |
+|ensure|value                |Hello                      |equals      |Hello                                                                               |
+|check |convert to upper case|Bye                        |BYE                                                                                              |
+|check |convert to lower case|Bye                        |bye                                                                                              |
+|check |capitalise           |hello world!               |Hello world!                                                                                     |
+|check |remove whitespace    |!-   Hello    World    -!  |!-HelloWorld-!                                                                                   |
+|check |normalize whitespace |!-   Hello    World    -!  |Hello World                                                                                      |
+|check |replace all          |Hello ([A-Za-z]+)          |in          |Hello World                         |with|$1       |World                           |
+|check |replace all          |(\d{4})-(\d{1,2})-(\d{1,2})|in          |1975-12-3                           |with|$3-$2-$1 |3-12-1975                       |
+|check |replace all          |without regex              |in          |Just replace without regex in a text|with|some text|Just replace some text in a text|
+
+Checks whether a value is stored in a symbol.
+ * Note that an undefined symbol (i.e. not assigned a value in a fixture method) is NOT empty (null or length=0).
+ * Note also that you cannot distinquish between a symbol with a 'real' null value and one with the text value 'null'.
+
+|script    |string fixture                    |
+|note      |symbol $undefined is not used before       |
+|$realnull=|set null value                       |
+|$textnull=|value of             |null           |
+|$empty=   |value of             |               |
+|$filled=  |value of             |Hello          |
+|check     |is empty             |$realnull|true |
+|check     |is empty             |$textnull|false|
+|check     |is empty             |$undefined     |false|
+|check     |is empty             |$empty   |true |
+|check     |is not empty         |$filled  |true |
+|check     |is undefined         |$undefined     |true |
+|check     |is undefined         |$empty   |false|
+|check     |is empty or undefined|$undefined     |true |
+|check     |is empty or undefined|$empty   |true |
+|check     |value of             |$realnull|     |
+|check     |value of             |$textnull|     |
+|check     |value of             |$undefined     |     |
+|check     |value of             |$empty   |     |
+|check     |value of             |$filled  |     |
 
 Conversions to numbers (so that [[relative checks][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ValueComparisons]] can be done).
 

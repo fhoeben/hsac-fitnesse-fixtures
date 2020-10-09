@@ -21,11 +21,11 @@ public class StringFixture extends SlimFixture {
     }
 
     /**
-     * NOTE: Duplicate implementation of method 'valueOf' to prevent unintended calls to Browser Test method with the same name
+     * NOTE: Duplicate implementation of method 'valueOf' to enable use in scripts started with another fixture containing the same method name (eg. BrowserTest)
      * Returns value.
      * @param value value to return
      */
-    public String copyValueOf(String value) {
+    public String getValueOf(String value) {
         return value;
     }
 
@@ -43,21 +43,50 @@ public class StringFixture extends SlimFixture {
     }
 
     /**
-     * Checks if an input String is null or empty (length() = 0).
-     * @param inputString An input String to check.
+     * Checks if an input string is empty: null or length() = 0.
+     *
+     * @param value value to check.
      * @return {@code true} if empty, or {@code false} otherwise.
      */
-    public boolean isEmpty (String inputString) {
-        return StringUtils.isEmpty(inputString);
+    public boolean isEmpty(String value) { return StringUtils.isEmpty(value); }
+
+    /**
+     * Checks if a string is not empty: not null and length() != 0.
+     *
+     * @param value value to check.
+     * @return {@code true} if filled (not empty), {@code false} otherwise.
+     */
+    public boolean isNotEmpty(String value) { return !isEmpty(value); }
+
+    /**
+     * Checks if a value meets the symbol naming convention ('$xyz').
+     * This indicates an undefined FitNesse symbol.
+     * http://fitnesse.org/FitNesse.SuiteAcceptanceTests.SuiteSlimTests.SlimSymbols.NamingConvention
+     *
+     * @param value value to check.
+     * @return {@code true} if undefined (value is symbol name-like), {@code false} otherwise.
+     */
+    public boolean isUndefined(String value) {
+        boolean result = false;
+        if (getMatcher("\\$[a-zA-Z][a-zA-Z0-9_]*", value).matches()) {
+            result = true;
+        }
+        return result;
     }
 
     /**
-     * Checks if an input String is not null or not empty (length() != 0).
-     * @param inputString An input String to check.
-     * @return {@code true} if filled (not empty), or {@code false} otherwise.
+     * Checks if a value is empty or has a value that meets the symbol naming convention ('$xyz').
+     * The latter indicates an undefined FitNesse symbol.
+     *
+     * @param value value to check.
+     * @return {@code true} if empty or symbol name-like, {@code false} otherwise.
      */
-    public boolean isNotEmpty (String inputString) {
-        return !isEmpty(inputString);
+    public boolean isEmptyOrUndefined(String value) {
+        boolean result = false;
+        if (isEmpty(value) || isUndefined(value)) {
+            result = true;
+        }
+        return result;
     }
 
     /**
@@ -131,9 +160,9 @@ public class StringFixture extends SlimFixture {
     }
 
     /**
-     * Capitalise first character of a string.
+     * Capitalises the first character of a string.
      * @param value value to capitalise.
-     * @return value capitalised.
+     * @return capitalised value.
      */
     public String capitalise (String value) {
         String result = null;
@@ -245,4 +274,11 @@ public class StringFixture extends SlimFixture {
     public String convertLineEndingsToUnix(String input) {
         return getEnvironment().getLineEndingHelper().convertEndingsTo(input, LineEndingHelper.UNIX_LINE_ENDING);
     }
+
+    /**
+     * Returns a null value.
+     *
+     * @return null value.
+     */
+    public String setNullValue() { return null;}
 }
