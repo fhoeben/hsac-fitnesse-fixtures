@@ -14,6 +14,7 @@ import nl.hsac.fitnesse.fixture.util.selenium.SelectHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.StaleContextException;
 import nl.hsac.fitnesse.fixture.util.selenium.by.AltBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.AriaGridBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ContainerBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.GridBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ListItemBy;
@@ -58,6 +59,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     private boolean implicitFindInFrames = true;
     private boolean continueIfReadyStateInteractive = false;
     private boolean scrollElementToCenter = false;
+    private boolean waiAriaTables = false;
     private int secondsBeforeTimeout;
     private int secondsBeforePageLoadTimeout;
     private int waitAfterScroll = 150;
@@ -66,6 +68,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     private String pageSourceBase = new File(filesDir, "pagesources").getPath() + "/";
     private boolean sendCommandForControlOnMac = false;
     private boolean trimOnNormalize = true;
+    private Long dragPressDelay;
+    private Integer dragDistance;
     private static final String CHROME_HIDDEN_BY_OTHER_ELEMENT_ERROR = "Other element would receive the click",
             EDGE_HIDDEN_BY_OTHER_ELEMENT_ERROR = "Element is obscured";
     private static final Pattern FIREFOX_HIDDEN_BY_OTHER_ELEMENT_ERROR_PATTERN =
@@ -790,7 +794,13 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         place = cleanupValue(place);
         try {
             WebElement element = getElementToClick(place);
-            getSeleniumHelper().dragAndDropToOffsetXY(element, xOffset, yOffset);
+         if (dragPressDelay == null && dragDistance == null) {
+             getSeleniumHelper().dragAndDropToOffsetXY(element, xOffset, yOffset);
+        } else if (dragDistance != null) {
+             getSeleniumHelper().dragWithDistanceAndDropToOffsetXY(element, dragDistance, xOffset, yOffset);
+        } else {
+             getSeleniumHelper().dragWithDelayAndDropToOffsetXY(element, dragPressDelay, xOffset, yOffset);
+         }
         } catch (WebDriverException e) {
             if (!this.clickExceptionIsAboutHiddenByOtherElement(e)) {
                 throw e;
@@ -915,10 +925,29 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     protected Keys controlKey() {
         return sendCommandForControlOnMac ? getSeleniumHelper().getControlOrCommand() : Keys.CONTROL;
     }
+    protected Long getDragPressDelay() {
+        return dragPressDelay;
+    }
+    protected Integer getDragDistance() {
+        return dragDistance;
+    }
+
+    public void setDragDistance(int dragDistance) {
+        this.dragDistance = dragDistance;
+    }
+
+    public void setDragPressDelay(long dragPressDelay) {
+        this.dragPressDelay = dragPressDelay;
+    }
+
+    public void clearDragSetup() {
+        this.dragPressDelay = null;
+        this.dragDistance = null;
+    }
 
     @WaitUntil
     public boolean dragAndDropTo(String source, String destination) {
-        return dragAndDropImpl(source, destination, false);
+        return this.dragAndDropImpl(source, destination, false);
     }
 
     @WaitUntil
@@ -928,6 +957,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     protected boolean dragAndDropImpl(String source, String destination, boolean html5) {
         boolean result = false;
+        Long dragPressDelay = getDragPressDelay();
+        Integer dragDistance = getDragDistance();
         source = cleanupValue(source);
         WebElement sourceElement = getElementToClick(source);
         destination = cleanupValue(destination);
@@ -942,8 +973,12 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
                     } catch (IOException e) {
                         throw new SlimFixtureException(false, "The drag and drop simulator javascript could not be found.", e);
                     }
-                } else {
+                } else if (dragPressDelay == null && dragDistance == null) {
                     getSeleniumHelper().dragAndDrop(sourceElement, destinationElement);
+                } else if (dragDistance != null) {
+                    getSeleniumHelper().dragWithDistanceAndDrop(sourceElement, dragDistance, destinationElement);
+                } else {
+                    getSeleniumHelper().dragWithDelayAndDrop(sourceElement, dragPressDelay, destinationElement);
                 }
                 result = true;
             }
@@ -1441,26 +1476,39 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     @WaitUntil
     public boolean enterAsInRowWhereIs(String value, String requestedColumnName, String selectOnColumn, String selectOnValue) {
-        By cellBy = GridBy.columnInRowWhereIs(requestedColumnName, selectOnColumn, selectOnValue);
+
+        By cellBy = waiAriaTables ?
+                AriaGridBy.columnInRowWhereIs(requestedColumnName, selectOnColumn, selectOnValue) :
+                GridBy.columnInRowWhereIs(requestedColumnName, selectOnColumn, selectOnValue);
+
         WebElement element = findElement(cellBy);
         return enter(element, value, true);
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOfColumnNumberInRowNumber(int columnIndex, int rowIndex) {
-        By by = GridBy.coordinates(columnIndex, rowIndex);
+        By by = waiAriaTables ?
+                AriaGridBy.coordinates(columnIndex, rowIndex) :
+                GridBy.coordinates(columnIndex, rowIndex);
+
         return valueFor(by);
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOfInRowNumber(String requestedColumnName, int rowIndex) {
-        By by = GridBy.columnInRow(requestedColumnName, rowIndex);
+        By by = waiAriaTables ?
+                AriaGridBy.columnInRow(requestedColumnName, rowIndex) :
+                GridBy.columnInRow(requestedColumnName, rowIndex);
+
         return valueFor(by);
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOfInRowWhereIs(String requestedColumnName, String selectOnColumn, String selectOnValue) {
-        By by = GridBy.columnInRowWhereIs(requestedColumnName, selectOnColumn, selectOnValue);
+        By by = waiAriaTables ?
+                AriaGridBy.columnInRowWhereIs(requestedColumnName, selectOnColumn, selectOnValue) :
+                GridBy.columnInRowWhereIs(requestedColumnName, selectOnColumn, selectOnValue);
+
         return valueFor(by);
     }
 
@@ -1481,18 +1529,26 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     @WaitUntil(TimeoutPolicy.RETURN_FALSE)
     public boolean rowExistsWhereIs(String selectOnColumn, String selectOnValue) {
-        return findElement(GridBy.rowWhereIs(selectOnColumn, selectOnValue)) != null;
+        return waiAriaTables ?
+                findElement(AriaGridBy.rowWhereIs(selectOnColumn, selectOnValue)) != null :
+                findElement(GridBy.rowWhereIs(selectOnColumn, selectOnValue)) != null;
     }
 
     @WaitUntil
     public boolean clickInRowNumber(String place, int rowIndex) {
-        By rowBy = GridBy.rowNumber(rowIndex);
+        By rowBy = waiAriaTables ?
+                AriaGridBy.rowNumber(rowIndex) :
+                GridBy.rowNumber(rowIndex);
+
         return clickInRow(rowBy, place);
     }
 
     @WaitUntil
     public boolean clickInRowWhereIs(String place, String selectOnColumn, String selectOnValue) {
-        By rowBy = GridBy.rowWhereIs(selectOnColumn, selectOnValue);
+        By rowBy = waiAriaTables ?
+                AriaGridBy.rowWhereIs(selectOnColumn, selectOnValue) :
+                GridBy.rowWhereIs(selectOnColumn, selectOnValue);
+
         return clickInRow(rowBy, place);
     }
 
@@ -1508,7 +1564,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      */
     @WaitUntil
     public String downloadFromRowNumber(String place, int rowNumber) {
-        return downloadFromRow(GridBy.linkInRow(place, rowNumber));
+        return waiAriaTables ?
+                downloadFromRow(AriaGridBy.linkInRow(place, rowNumber)) :
+                downloadFromRow(GridBy.linkInRow(place, rowNumber));
     }
 
     /**
@@ -1520,7 +1578,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      */
     @WaitUntil
     public String downloadFromRowWhereIs(String place, String selectOnColumn, String selectOnValue) {
-        return downloadFromRow(GridBy.linkInRowWhereIs(place, selectOnColumn, selectOnValue));
+        return waiAriaTables ?
+                downloadFromRow(AriaGridBy.linkInRowWhereIs(place, selectOnColumn, selectOnValue)) :
+                downloadFromRow(GridBy.linkInRowWhereIs(place, selectOnColumn, selectOnValue));
     }
 
     protected String downloadFromRow(By linkBy) {
@@ -2625,7 +2685,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         if (expectedValue == null) {
             match = actual == null;
         } else {
-            match = cleanExpectedValue(expectedValue).equals(actual);
+            String cleanExpectedValue = cleanExpectedValue(expectedValue);
+            match = compareActualToExpected(cleanExpectedValue, actual);
         }
         return match;
     }
@@ -2776,4 +2837,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return scrollElementToCenter;
     }
 
+    /**
+     * Configure browser test to expect wai aria style tables made up of divs and spans with roles like table/cell/row/etc.
+     * @param waiAriaTables True to expect aria tables, false to expect classic &lt;table&gt; table tags.
+     */
+    public void useAriaTableStructure(boolean waiAriaTables) {
+        this.waiAriaTables = waiAriaTables;
+    }
 }

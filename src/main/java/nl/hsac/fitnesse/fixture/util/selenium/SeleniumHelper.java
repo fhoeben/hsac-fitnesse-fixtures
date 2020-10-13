@@ -607,6 +607,38 @@ public class SeleniumHelper<T extends WebElement> {
     }
 
     /**
+     * Simulates a drag of element to destination offsets calculated from element center.
+     * Performs a slight user defined diagonal movement of element to avoid limitations of "distance"
+     * More info: https://github.com/clauderic/react-sortable-hoc
+     * @param element element to drag and drop.
+     * @param distance integer horizontal and vertical offsets to move element (calculated from given element center).
+     * @param xOffset horizontal integer offset destination for dropping (calculated from given element center).
+     * @param yOffset vertical integer offset destination for dropping (calculated from given element center).
+     */
+    public void dragWithDistanceAndDropToOffsetXY(WebElement element, int distance, Integer xOffset, Integer yOffset) {
+        getActions().clickAndHold(element)
+                .moveByOffset(distance, distance)
+                .moveByOffset(xOffset - distance, yOffset - distance)
+                .release().perform();
+    }
+
+    /**
+     * Simulates a drag from source react element and drop to target element
+     * Performs a slight user defined delay before drag to avoid limitations of "pressDelay"
+     * More info: https://github.com/clauderic/react-sortable-hoc
+     * @param source element to start the drag
+     * @param delay long to define how much to delay in millis after clickAndHold
+     * @param xOffset horizontal integer offset destination for dropping (calculated from given element center).
+     * @param yOffset vertical integer offset destination for dropping (calculated from given element center).
+     */
+    public void dragWithDelayAndDropToOffsetXY(WebElement source, long delay, Integer xOffset, Integer yOffset) {
+        getActions().clickAndHold(source)
+                .pause(delay)
+                .moveByOffset(xOffset, yOffset)
+                .release().perform();
+    }
+
+    /**
      * Simulates double clicking on the supplied element
      * @param element element to double click on
      */
@@ -640,6 +672,35 @@ public class SeleniumHelper<T extends WebElement> {
         getActions().dragAndDrop(source, target).perform();
     }
 
+    /**
+     * Simulates a drag from source element and drop to target element
+     * Performs a slight user defined movement of element to avoid limitations of "distance"
+     * More info: https://github.com/clauderic/react-sortable-hoc
+     * @param source element to start the drag
+     * @param target element to end the drag
+     * @param distance integer offset for horizontal and vertical element move (calculated from given element center).
+     */
+    public void dragWithDistanceAndDrop(WebElement source, int distance, WebElement target) {
+        getActions().clickAndHold(source)
+                .moveByOffset(distance, distance)
+                .moveToElement(target)
+                .release().perform();
+    }
+
+    /**
+     * Simulates a drag from source element and drop to target element
+     * Performs a slight user defined delay before drag to avoid limitations of "pressDelay"
+     * More info: https://github.com/clauderic/react-sortable-hoc
+     * @param source element to start the drag
+     * @param delay long to define how much to delay in millis after clickAndHold
+     * @param target element to end the drag
+     */
+    public void dragWithDelayAndDrop(WebElement source, long delay, WebElement target) {
+        getActions().clickAndHold(source)
+                .pause(delay)
+                .moveToElement(target)
+                .release().perform();
+    }
     /**
      * Simulates a drag from source element and drop to target element. HTML5 draggable-compatible
      * Workaround for https://github.com/seleniumhq/selenium-google-code-issue-archive/issues/3604
