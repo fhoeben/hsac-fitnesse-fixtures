@@ -28,6 +28,7 @@
 |check        |all json path matches|airplanes[*].airline|=~/.*KLM.*Virgin.*/                                 |
 |check        |json path            |airplanes[0].seats  |400                                                 |
 |check        |element              |0                   |of json path|airplanes[?(@.airline=='KLM')].type|747|
+|check        |element              |2                   |of json path|airplanes[?(@.airline=='KLM')].type|null|
 |set json path|airplanes[0].seats   |to                  |300                                                 |
 |check        |json path            |airplanes[0].seats  |300                                                 |
 |ensure       |json path exists     |airplanes[0].seats                                                       |
