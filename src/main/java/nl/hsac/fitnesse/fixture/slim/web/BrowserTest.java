@@ -2822,7 +2822,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     /**
-     * Set the scroll into view behaviour to 'çenter of viewport' (true) or 'auto' (false)
+     * Set the scroll into view behaviour to 'center of viewport' (true) or 'auto' (false)
      * @param scrollElementsToCenterOfViewport True to scroll to center, False to use automatic scroll behaviour
      */
     public void scrollElementsToCenterOfViewport(boolean scrollElementsToCenterOfViewport) {
