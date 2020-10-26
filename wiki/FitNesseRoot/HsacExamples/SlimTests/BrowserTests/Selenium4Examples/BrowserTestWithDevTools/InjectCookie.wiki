@@ -1,0 +1,12 @@
+---
+Test
+---
+|script|browser test with dev tools                                                             |
+|open  |https://orangebeard.io                                                                  |
+|ensure|is visible|This website uses cookies to ensure you will get the best browser experience.|
+
+!|script                                                                                                                    |
+|set cookie            |cookie_notice_accepted|with value         |true         |for domain         |orangebeard.io         |
+|open                  |https://orangebeard.io                                                                              |
+|seconds before timeout|3                                                                                                   |
+|reject                |is visible            |This website uses cookies to ensure you will get the best browser experience.|

@@ -1,8 +1,8 @@
 package nl.hsac.fitnesse.fixture.util.selenium.caching;
 
+import org.openqa.selenium.remote.JsonToWebElementConverter;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.RemoteWebElement;
-import org.openqa.selenium.remote.internal.JsonToWebElementConverter;
 
 /**
  * Selenium element converter that ensure our {@link CachingRemoteWebElement} are used.

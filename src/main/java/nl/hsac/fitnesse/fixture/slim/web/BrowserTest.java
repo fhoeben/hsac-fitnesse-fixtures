@@ -20,6 +20,7 @@ import nl.hsac.fitnesse.fixture.util.selenium.by.GridBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ListItemBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.OptionBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.relative.RelativeMethod;
 import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -28,6 +29,7 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.InvalidElementStateException;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.TimeoutException;
@@ -48,6 +50,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
+
 
 public class BrowserTest<T extends WebElement> extends SlimFixture {
     private final List<String> currentSearchContextPath = new ArrayList<>();
@@ -508,6 +511,83 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     /**
+     * Replace content of given tag, found left of a reference element
+     * Usage: | enter | [value] | as | [tagName] | left of | [referencePlace] |
+     * @param value value to enter
+     * @param tagName tag to find (i.e. input)
+     * @param referencePlace the element to us as a reference to search from
+     * @return true if the element was found and the value was sent
+     */
+    @WaitUntil
+    public boolean enterAsLeftOf(String value, String tagName, String referencePlace) {
+        return enterRelativeImp(value, tagName, cleanupValue(referencePlace), RelativeMethod.TO_LEFT_OF);
+    }
+
+    /**
+     * Replace content of given tag, found right of a reference element
+     * Usage: | enter | [value] | as | [tagName] | right of | [referencePlace] |
+     * @param value value to enter
+     * @param tagName tag to find (i.e. input)
+     * @param referencePlace the element to us as a reference to search from
+     * @return true if the element was found and the value was sent
+     */
+    @WaitUntil
+    public boolean enterAsRightOf(String value, String tagName, String referencePlace) {
+        return enterRelativeImp(value, tagName, cleanupValue(referencePlace), RelativeMethod.TO_RIGHT_OF);
+    }
+
+    /**
+     * Replace content of given tag, found above a reference element
+     * @param value value to enter
+     * @param tagName tag to find (i.e. input)
+     * @param referencePlace the element to us as a reference to search from
+     * @return true if the element was found and the value was sent
+     */
+    @WaitUntil
+    public boolean enterAsAbove(String value, String tagName, String referencePlace) {
+        return enterRelativeImp(value, tagName, cleanupValue(referencePlace), RelativeMethod.ABOVE);
+    }
+
+    /**
+     * Replace content of given tag, found below a reference element
+     * @param value value to enter
+     * @param tagName tag to find (i.e. input)
+     * @param referencePlace the element to us as a reference to search from
+     * @return true if the element was found and the value was sent
+     */
+    @WaitUntil
+    public boolean enterAsBelow(String value, String tagName, String referencePlace) {
+        return enterRelativeImp(value, tagName, cleanupValue(referencePlace), RelativeMethod.BELOW);
+    }
+
+    /**
+     * Replace content of given tag, found near (within 50px of) a reference element
+     * @param value value to enter
+     * @param tagName tag to find (i.e. input)
+     * @param referencePlace the element to us as a reference to search from
+     * @return true if the element was found and the value was sent
+     */
+    @WaitUntil
+    public boolean enterAsNear(String value, String tagName, String referencePlace) {
+        return enterRelativeImp(value, tagName, cleanupValue(referencePlace), RelativeMethod.NEAR);
+    }
+
+    public boolean enterRelativeImp(String value, String tagName, String referencePlace, RelativeMethod relativeMethod) {
+        boolean result = false;
+        try {
+            T elementToSendValue = getSeleniumHelper().getElementTagRelativeToReference(tagName, referencePlace, relativeMethod);
+            result = enter(elementToSendValue, value, true);
+        } catch (IllegalArgumentException | InvalidElementStateException e) {
+            // if referenceElement was not yet found, or the element found is not (yet) interactable hold back the exception so WaitUntil is not interrupted
+            if (!(e instanceof InvalidElementStateException) && !exceptionIsFromRelativeLocator(e)) {
+                throw e;
+            }
+        }
+        return result;
+    }
+
+
+    /**
      * Replaces content at place by value.
      * @param value value to set.
      * @param place element to set value on.
@@ -823,6 +903,75 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return clickImp(place, container);
     }
 
+    /**
+     * Click an element found by it's tag name, below its reference place
+     * @param tag The tag to look for (i.e. input)
+     * @param referencePlace The element to use as a reference
+     * @return true if the element was found and clicked
+     */
+    @WaitUntil
+    public boolean clickBelow(String tag, String referencePlace) {
+        return relativeClickImp(tag, referencePlace, RelativeMethod.BELOW);
+    }
+
+    /**
+     * Click an element found by it's tag name, above its reference place
+     * @param tag The tag to look for (i.e. input)
+     * @param referencePlace The element to use as a reference
+     * @return true if the element was found and clicked
+     */
+    @WaitUntil
+    public boolean clickAbove(String tag, String referencePlace) {
+        return relativeClickImp(tag, referencePlace, RelativeMethod.ABOVE);
+    }
+
+    /**
+     * Click an element found by it's tag name, left of its reference place
+     * @param tag The tag to look for (i.e. input)
+     * @param referencePlace The element to use as a reference
+     * @return true if the element was found and clicked
+     */
+    @WaitUntil
+    public boolean clickRightOf(String tag, String referencePlace) {
+        return relativeClickImp(tag, referencePlace, RelativeMethod.TO_RIGHT_OF);
+    }
+
+    /**
+     * Click an element found by it's tag name, right of its reference place
+     * @param tag The tag to look for (i.e. input)
+     * @param referencePlace The element to use as a reference
+     * @return true if the element was found and clicked
+     */
+    @WaitUntil
+    public boolean clickLeftOf(String tag, String referencePlace) {
+        return relativeClickImp(tag, referencePlace, RelativeMethod.TO_LEFT_OF);
+    }
+
+    /**
+     * Click an element found by it's tag name, near (within 50px of) its reference place
+     * @param tag The tag to look for (i.e. input)
+     * @param referencePlace The element to use as a reference
+     * @return true if the element was found and clicked
+     */
+    @WaitUntil
+    public boolean clickNear(String tag, String referencePlace) {
+        return relativeClickImp(tag, referencePlace, RelativeMethod.NEAR);
+    }
+
+    protected boolean relativeClickImp(String tag, String referencePlace, RelativeMethod relativeMethod) {
+        boolean result = false;
+        try {
+            T elementToClick = getSeleniumHelper().getElementTagRelativeToReference(tag, cleanupValue(referencePlace), relativeMethod);
+            result = clickElement(elementToClick);
+        } catch (IllegalArgumentException | WebDriverException e) {
+            // if other element hides the element, or referenceElement was not yet found, hold back the exception so WaitUntil is not interrupted
+            if (!clickExceptionIsAboutHiddenByOtherElement(e) && !exceptionIsFromRelativeLocator(e)) {
+                throw e;
+            }
+        }
+        return result;
+    }
+
     protected boolean clickImp(String place, String container) {
         boolean result = false;
         place = cleanupValue(place);
@@ -836,6 +985,10 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             }
         }
         return result;
+    }
+
+    protected boolean exceptionIsFromRelativeLocator (Exception e) {
+        return e.getMessage().startsWith("Element to search") && e.getMessage().endsWith("must be set");
     }
 
     protected boolean clickExceptionIsAboutHiddenByOtherElement(Exception e) {
@@ -1203,6 +1356,41 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOf(String place) {
         return valueFor(place);
+    }
+
+    public String valueOfLeftOf(String tagName, String referencePlace) {
+        return valueOfRelativeImp(tagName, cleanupValue(referencePlace), RelativeMethod.TO_LEFT_OF);
+    }
+
+    public String valueOfRightOf(String tagName, String referencePlace) {
+        return valueOfRelativeImp(tagName, cleanupValue(referencePlace), RelativeMethod.TO_RIGHT_OF);
+    }
+
+    public String valueOfAbove(String tagName, String referencePlace) {
+        return valueOfRelativeImp(tagName, cleanupValue(referencePlace), RelativeMethod.ABOVE);
+    }
+
+    public String valueOfBelow(String tagName, String referencePlace) {
+        return valueOfRelativeImp(tagName, cleanupValue(referencePlace), RelativeMethod.BELOW);
+    }
+
+    public String valueOfNear(String tagName, String referencePlace) {
+        return valueOfRelativeImp(tagName, cleanupValue(referencePlace), RelativeMethod.NEAR);
+    }
+
+
+    protected String valueOfRelativeImp(String tag, String referencePlace, RelativeMethod relativeMethod) {
+        String result = null;
+        try {
+            T elementToRetrieveValueFrom = getSeleniumHelper().getElementTagRelativeToReference(tag, referencePlace, relativeMethod);
+            result = valueFor(elementToRetrieveValueFrom);
+        } catch (IllegalArgumentException | WebDriverException e) {
+            // if referenceElement was not yet found, hold back the exception so WaitUntil is not interrupted
+            if (!exceptionIsFromRelativeLocator(e)) {
+                throw e;
+            }
+        }
+        return result;
     }
 
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
@@ -2131,7 +2319,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return imageFile;
     }
 
-    private String getScreenshotLink(String screenshotFile) {
+    protected String getScreenshotLink(String screenshotFile) {
         String wikiUrl = getWikiUrl(screenshotFile);
         if (wikiUrl != null) {
             // make href to screenshot
@@ -2165,7 +2353,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return screenshotFile;
     }
 
-    private String getScreenshotBasename(String basename) {
+    protected String getScreenshotBasename(String basename) {
         return screenshotBase + basename;
     }
 

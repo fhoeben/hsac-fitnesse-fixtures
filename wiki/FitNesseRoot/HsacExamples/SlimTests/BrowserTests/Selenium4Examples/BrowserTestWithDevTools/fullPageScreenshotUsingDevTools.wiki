@@ -1,0 +1,7 @@
+---
+Test
+---
+|script|browser test with dev tools     |
+|open  |https://orangebeard.io          |
+|show  |take full page screenshot|full  |
+|show  |take screenshot          |normal|

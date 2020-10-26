@@ -18,6 +18,8 @@ import nl.hsac.fitnesse.fixture.util.selenium.by.TechnicalSelectorBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.TextBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ToClickBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
+import nl.hsac.fitnesse.fixture.util.selenium.by.relative.RelativeLocator;
+import nl.hsac.fitnesse.fixture.util.selenium.by.relative.RelativeMethod;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -55,6 +57,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.URL;
@@ -68,6 +71,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static nl.hsac.fitnesse.fixture.util.FirstNonNullHelper.firstNonNull;
+import static nl.hsac.fitnesse.fixture.util.selenium.by.relative.RelativeLocator.withTagName;
 
 /**
  * Helper to work with Selenium.
@@ -171,6 +175,25 @@ public class SeleniumHelper<T extends WebElement> {
     public T getElement(String place) {
         return findByTechnicalSelectorOr(place, ElementBy::heuristic);
     }
+
+    /**
+     * Finds an element by tag name, relative to a reference element, using the given RelativeMethod
+     * @param tagName the tag to find (i.e. input)
+     * @param referencePlace the place to find as a reference for the tag to find
+     * @param rMethod the RelativeLocator method to use (above/blow/toLeftOf/toRightOf/near)
+     * @return the element if found, or null if no element was found
+     */
+    public T getElementTagRelativeToReference(String tagName, String referencePlace, RelativeMethod rMethod) {
+        try {
+            T referenceElement = getElementToCheckVisibility(referencePlace);
+            RelativeLocator.RelativeBy rBy = withTagName(tagName);
+            Method searchMethod = RelativeLocator.RelativeBy.class.getMethod(rMethod.toString(), WebElement.class);
+            return findElement((RelativeLocator.RelativeBy) searchMethod.invoke(rBy, referenceElement));
+        } catch (ReflectiveOperationException e) {
+            throw new SlimFixtureException(true, "Error finding relative element", e);
+        }
+    }
+
 
     /**
      * Finds element to determine whether it is on screen, by searching in multiple locations.
