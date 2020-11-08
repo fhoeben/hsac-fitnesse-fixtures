@@ -13,7 +13,7 @@ variables:
   # when running from the command line.
   # `installAtEnd` and `deployAtEnd` are only effective with recent version of the corresponding plugins.
   MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
-  SELENIUM_VERSION: 3.141.59
+  SELENIUM_VERSION: "3.141.59"
   KANIKO_CACHE: "true"
 
 before_script:
@@ -163,8 +163,8 @@ build-test-pdf-images:
     - . /fitnesse/startGridAndRunTests.sh
       -DfitnesseSuiteToRun=${SUITE}
       -DpartitionIndex=${INDEX} -DpartitionCount=${COUNT}
-      -DseleniumJsonCapabilities="{'browserName':'chrome','chromeOptions':{'args':['--disable-dev-shm-usage']}}"
-      -DseleniumGridUrl=http://localhost:4444/wd/hub
+      -DseleniumBrowser=chrome
+      -DseleniumJsonProfile="{'args':['disable-dev-shm-usage']}"
 
   after_script:
     - NAME=${CI_JOB_NAME}
