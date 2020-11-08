@@ -1352,15 +1352,8 @@ public class SeleniumHelper<T extends WebElement> {
      */
     public void switchToParentFrame() {
         if (!currentIFramePath.isEmpty()) {
-            // copy path since substring creates a view, not a deep copy
-            List<T> newPath = currentIFramePath.subList(0, currentIFramePath.size() - 1);
-            newPath = new ArrayList<T>(newPath);
-            // Safari and PhantomJs don't support switchTo.parentFrame, so we do this
-            // it works for Phantom, but is VERY slow there (other browsers are slow but ok)
-            switchToDefaultContent();
-            for (T iframe : newPath) {
-                switchToFrame(iframe);
-            }
+            currentIFramePath.remove(currentIFramePath.size() - 1);
+            getTargetLocator().parentFrame();
         }
     }
 
