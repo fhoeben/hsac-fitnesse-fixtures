@@ -49,14 +49,14 @@ public class LocalDriverFactory implements DriverFactory {
                 FirefoxOptions options = new FirefoxOptions().setProfile(fxProfile);
                 driver = new FirefoxDriver(options);
             } else if ("chromedriver".equalsIgnoreCase(driverClass.getSimpleName())) {
-                ChromeOptions chromeOptions = (ChromeOptions) createChromiumOptions(new ChromeOptions(), profile);
+                ChromeOptions chromeOptions = createChromiumOptions(new ChromeOptions(), profile);
                 DriverFactory.addDefaultCapabilities(chromeOptions);
                 driver = new ChromeDriver(chromeOptions);
             } else if ("internetexplorerdriver".equalsIgnoreCase(driverClass.getSimpleName())) {
                 InternetExplorerOptions ieOptions = getInternetExplorerOptions(profile);
                 driver = new InternetExplorerDriver(ieOptions);
             } else if ("edgedriver".equalsIgnoreCase(driverClass.getSimpleName())) {
-                EdgeOptions edgeOptions = (EdgeOptions) createChromiumOptions(new EdgeOptions(), profile);
+                EdgeOptions edgeOptions = createChromiumOptions(new EdgeOptions(), profile);
                 DriverFactory.addDefaultCapabilities(edgeOptions);
                 driver = new EdgeDriver(edgeOptions);
             } else {
@@ -143,7 +143,7 @@ public class LocalDriverFactory implements DriverFactory {
      * @return the appended options object
      */
     @SuppressWarnings("unchecked")
-    private static ChromiumOptions<?> createChromiumOptions(ChromiumOptions<?> options, Map<String, Object> profile) {
+    private static <T extends ChromiumOptions<?>> T createChromiumOptions(T options, Map<String, Object> profile) {
         for (Map.Entry<String, Object> profileEntry : profile.entrySet()) {
             switch (profileEntry.getKey()) {
                 case "args":

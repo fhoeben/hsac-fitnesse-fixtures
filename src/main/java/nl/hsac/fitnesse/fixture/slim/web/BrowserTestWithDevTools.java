@@ -4,8 +4,8 @@ import fitnesse.util.Base64;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chromium.ChromiumDriver;
 import org.openqa.selenium.devtools.DevTools;
+import org.openqa.selenium.devtools.HasDevTools;
 import org.openqa.selenium.devtools.emulation.Emulation;
 import org.openqa.selenium.devtools.fetch.Fetch;
 import org.openqa.selenium.devtools.fetch.model.AuthChallengeResponse;
@@ -66,10 +66,10 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
     }
 
     private void ensureDevToolsEnabledDriver() {
-        if (!(getSeleniumHelper().driver() instanceof ChromiumDriver)) {
+        if (!(getSeleniumHelper().driver() instanceof HasDevTools)) {
             throw new StopTestException(false, "DevTools enabled Browser Test can only be used with a chromium based browser (Chrome/Edge)");
         }
-        devTools = ((ChromiumDriver) getSeleniumHelper().driver()).getDevTools();
+        devTools = ((HasDevTools) getSeleniumHelper().driver()).getDevTools();
         devTools.createSessionIfThereIsNotOne();
         devTools.send(Network.enable(Optional.of(100000), Optional.of(100000), Optional.of(100000)));
     }
