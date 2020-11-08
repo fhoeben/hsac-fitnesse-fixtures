@@ -45,7 +45,7 @@
 		<praegus-toolchain-fitnesse-plugin.version>2.0.10</praegus-toolchain-fitnesse-plugin.version>
 		<selenium.version>3.141.59</selenium.version>
 		<slf4j.version>1.7.25</slf4j.version>
-		<apache.http.version>4.5.12</apache.http.version>
+		<apache.http.version>4.5.13</apache.http.version>
 		<surefire.version>2.22.1</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
@@ -202,7 +202,7 @@
 		<dependency>
 			<groupId>commons-net</groupId>
 			<artifactId>commons-net</artifactId>
-			<version>3.7</version>
+			<version>3.7.2</version>
 		</dependency>
 		<!-- Testing -->
 		<dependency>
