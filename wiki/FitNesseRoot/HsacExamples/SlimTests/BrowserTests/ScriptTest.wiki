@@ -12,17 +12,22 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 |note                                   |all music loads a lot of slow ads, we don't want to wait on those     |
 |set continue if ready state interactive|true                                                                  |
 |open                                   |https://www.allmusic.com                                              |
-|show                                   |click if available|I accept                                           |
+|show                                   |click if available|AGREE                                              |
+|show                                   |click if available|id=exco_sticky-x-button                            |
 |enter                                  |Van Morrison      |as         |Search                                 |
 |press                                  |enter                                                                 |
 |click                                  |Van Morrison                                                          |
+|note                                   |close popup, if shown                                                 |
+|show                                   |click if available|css=.registration-prompt-close                     |
 |show                                   |take screenshot   |overview                                           |
 |click                                  |Discography                                                           |
 |check                                  |page title        |!-Van Morrison | Album Discography | AllMusic-!    |
+|note                                   |close popup, if shown                                                 |
+|show                                   |click if available|css=.registration-prompt-close                     |
 |show                                   |take screenshot   |discography                                        |
 |check                                  |value of          |Year       |in row where|Album|is|Astral Weeks|1968|
 |note                                   |close popup, if shown                                                 |
-|show                                   |click if available|X                                                  |
+|show                                   |click if available|css=.registration-prompt-close                     |
 |note                                   |scroll top of discography on screen                                   |
 |scroll to                              |Filter Discography By                                                 |
 |click                                  |Astral Weeks                                                          |
