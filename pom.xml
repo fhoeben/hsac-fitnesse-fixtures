@@ -42,10 +42,10 @@
 
 		<hsac-fitnesse-plugin.version>1.29.1</hsac-fitnesse-plugin.version>
 		<fitnesse.version>20200501</fitnesse.version>
-		<praegus-toolchain-fitnesse-plugin.version>2.0.9</praegus-toolchain-fitnesse-plugin.version>
+		<praegus-toolchain-fitnesse-plugin.version>2.0.10</praegus-toolchain-fitnesse-plugin.version>
 		<selenium.version>4.0.0-alpha-6</selenium.version>
 		<slf4j.version>1.7.25</slf4j.version>
-		<apache.http.version>4.5.12</apache.http.version>
+		<apache.http.version>4.5.13</apache.http.version>
 		<surefire.version>2.22.1</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
@@ -202,7 +202,7 @@
 		<dependency>
 			<groupId>commons-net</groupId>
 			<artifactId>commons-net</artifactId>
-			<version>3.7</version>
+			<version>3.7.2</version>
 		</dependency>
 		<!-- Testing -->
 		<dependency>

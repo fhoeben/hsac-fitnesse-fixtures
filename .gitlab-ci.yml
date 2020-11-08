@@ -163,8 +163,8 @@ build-test-pdf-images:
     - . /fitnesse/startGridAndRunTests.sh
       -DfitnesseSuiteToRun=${SUITE}
       -DpartitionIndex=${INDEX} -DpartitionCount=${COUNT}
-      -DseleniumJsonCapabilities="{'browserName':'chrome','chromeOptions':{'args':['--disable-dev-shm-usage']}}"
-      -DseleniumGridUrl=http://localhost:4444/wd/hub
+      -DseleniumBrowser=chrome
+      -DseleniumJsonProfile="{'args':['disable-dev-shm-usage']}"
 
   after_script:
     - NAME=${CI_JOB_NAME}
