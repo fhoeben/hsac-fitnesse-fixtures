@@ -144,6 +144,9 @@ public class LocalDriverFactory implements DriverFactory {
      */
     @SuppressWarnings("unchecked")
     private static <T extends ChromiumOptions<?>> T createChromiumOptions(T options, Map<String, Object> profile) {
+        if (profile == null) {
+            return options;
+        }
         for (Map.Entry<String, Object> profileEntry : profile.entrySet()) {
             switch (profileEntry.getKey()) {
                 case "args":
