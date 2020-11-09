@@ -999,7 +999,6 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
                             || FIREFOX_HIDDEN_BY_OTHER_ELEMENT_ERROR_PATTERN.matcher(msg).find()
                             // IE does not throw an exception, so no need to detect any
                             // Safari does throw an exception, but not one specific to this event. Too bad :/
-                            // PhantomJS just clicks the element whether it's hidden or not, so no exception either
                     );
     }
 
