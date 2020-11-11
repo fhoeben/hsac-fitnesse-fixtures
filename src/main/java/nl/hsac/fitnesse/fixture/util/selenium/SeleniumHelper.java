@@ -18,7 +18,6 @@ import nl.hsac.fitnesse.fixture.util.selenium.by.TechnicalSelectorBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.TextBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ToClickBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.XPathBy;
-import nl.hsac.fitnesse.fixture.util.selenium.by.relative.RelativeLocator;
 import nl.hsac.fitnesse.fixture.util.selenium.by.relative.RelativeMethod;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -47,6 +46,7 @@ import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.ScreenshotException;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.support.locators.RelativeLocator;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
@@ -71,7 +71,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static nl.hsac.fitnesse.fixture.util.FirstNonNullHelper.firstNonNull;
-import static nl.hsac.fitnesse.fixture.util.selenium.by.relative.RelativeLocator.withTagName;
+import static org.openqa.selenium.support.locators.RelativeLocator.withTagName;
 
 /**
  * Helper to work with Selenium.

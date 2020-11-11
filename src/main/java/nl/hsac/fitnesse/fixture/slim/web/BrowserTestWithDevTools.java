@@ -6,27 +6,28 @@ import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.HasDevTools;
-import org.openqa.selenium.devtools.emulation.Emulation;
-import org.openqa.selenium.devtools.fetch.Fetch;
-import org.openqa.selenium.devtools.fetch.model.AuthChallengeResponse;
-import org.openqa.selenium.devtools.fetch.model.RequestPattern;
-import org.openqa.selenium.devtools.fetch.model.RequestStage;
-import org.openqa.selenium.devtools.log.Log;
-import org.openqa.selenium.devtools.log.model.LogEntry;
-import org.openqa.selenium.devtools.network.Network;
-import org.openqa.selenium.devtools.network.model.Cookie;
-import org.openqa.selenium.devtools.network.model.CookiePriority;
-import org.openqa.selenium.devtools.network.model.CookieSameSite;
-import org.openqa.selenium.devtools.network.model.Headers;
-import org.openqa.selenium.devtools.network.model.RequestId;
-import org.openqa.selenium.devtools.network.model.RequestWillBeSent;
-import org.openqa.selenium.devtools.network.model.ResourceType;
-import org.openqa.selenium.devtools.network.model.ResponseReceived;
-import org.openqa.selenium.devtools.network.model.TimeSinceEpoch;
-import org.openqa.selenium.devtools.page.Page;
-import org.openqa.selenium.devtools.performance.Performance;
-import org.openqa.selenium.devtools.performance.model.Metric;
-import org.openqa.selenium.devtools.security.Security;
+import org.openqa.selenium.devtools.idealized.log.model.LogEntry;
+import org.openqa.selenium.devtools.v87.V87Log;
+import org.openqa.selenium.devtools.v87.emulation.Emulation;
+import org.openqa.selenium.devtools.v87.fetch.Fetch;
+import org.openqa.selenium.devtools.v87.fetch.model.AuthChallengeResponse;
+import org.openqa.selenium.devtools.v87.fetch.model.RequestPattern;
+import org.openqa.selenium.devtools.v87.fetch.model.RequestStage;
+import org.openqa.selenium.devtools.v87.log.Log;
+import org.openqa.selenium.devtools.v87.network.Network;
+import org.openqa.selenium.devtools.v87.network.model.Cookie;
+import org.openqa.selenium.devtools.v87.network.model.CookiePriority;
+import org.openqa.selenium.devtools.v87.network.model.CookieSameSite;
+import org.openqa.selenium.devtools.v87.network.model.Headers;
+import org.openqa.selenium.devtools.v87.network.model.RequestId;
+import org.openqa.selenium.devtools.v87.network.model.RequestWillBeSent;
+import org.openqa.selenium.devtools.v87.network.model.ResourceType;
+import org.openqa.selenium.devtools.v87.network.model.ResponseReceived;
+import org.openqa.selenium.devtools.v87.network.model.TimeSinceEpoch;
+import org.openqa.selenium.devtools.v87.page.Page;
+import org.openqa.selenium.devtools.v87.performance.Performance;
+import org.openqa.selenium.devtools.v87.performance.model.Metric;
+import org.openqa.selenium.devtools.v87.security.Security;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
@@ -188,7 +190,7 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
         devTools.send(Emulation.setDeviceMetricsOverride(
                 layoutMetrics.getContentSize().getWidth().intValue(),
                 layoutMetrics.getContentSize().getHeight().intValue(), 1, false,
-                empty(), empty(), empty(), empty(), empty(), empty(), empty(), empty()));
+                empty(), empty(), empty(), empty(), empty(), empty(), empty(), empty(), empty()));
 
         String result = takeScreenshot(baseName);
 
@@ -236,7 +238,7 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
         devTools.send(Log.enable());
         StringBuilder logView = new StringBuilder();
         for (LogEntry entry : logEntryList) {
-            logView.append(String.format("[%s] %s", entry.getLevel().toString(), entry.getText()))
+            logView.append(String.format("[%s] %s", entry.getEntry().getLevel().toString(), entry.getEntry().getMessage()))
                     .append("\r\n");
         }
         return logView.toString();
@@ -316,7 +318,17 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
      */
     private void enableConsoleLogCapturing() {
         //TODO: Add runtime Console API call logging when new version is released
-        devTools.addListener(Log.entryAdded(), logEntries::add);
+        devTools.addListener(Log.entryAdded(), logEntry -> {
+            logEntries.add(
+                    new LogEntry("browser",
+                            new org.openqa.selenium.logging.LogEntry(
+                                    Level.parse(logEntry.getLevel().name()),
+                                    Long.getLong(logEntry.getTimestamp().toString()),
+                                    logEntry.getText()
+                            )
+                    )
+            );
+        });
         devTools.send(Log.enable());
     }
 
