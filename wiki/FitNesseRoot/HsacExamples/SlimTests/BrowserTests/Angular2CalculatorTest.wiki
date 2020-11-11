@@ -1,7 +1,4 @@
-Sample test on [[Angular][https://angular.io/]] application. 
-
-!note '''Please note:''' The application used in this test does NOT seem to work with !-PhantomJs-!. It does work when executed with Chrome or Firefox.
-
+Sample test on [[Angular][https://angular.io/]] application.
 
 |table template|add                   |
 |enter         |@{first} |as |First   |

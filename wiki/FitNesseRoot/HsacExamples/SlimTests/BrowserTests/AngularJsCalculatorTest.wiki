@@ -1,7 +1,5 @@
-Sample test on [[!-AngularJs-!][https://angularjs.org/]] application finding elements based on their Angular binding or model. 
+Sample test on [[!-AngularJs-!][https://angularjs.org/]] application finding elements based on their Angular binding or model.
 Inspired by http://anthonychu.ca/post/end-to-end-testing-angular-apps-with-nunit-and-specflow-using-protractornet/
-
-!note '''Please note:''' The application used in this test does NOT seem to work with !-PhantomJs-!. It does work when executed with Chrome or Firefox.
 
 |table template|add                   |
 |enter         |@{first} |as |first   |
