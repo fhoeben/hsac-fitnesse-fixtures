@@ -1,12 +1,13 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import com.google.gson.Gson;
 import nl.hsac.fitnesse.fixture.util.DataUrlHelper;
 import nl.hsac.fitnesse.fixture.util.JsonPathHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.entity.ContentType;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -28,7 +29,9 @@ public class JsonHttpTest extends HttpTest {
     }
 
     protected String jsonEncodeCurrentValues() {
-        return new JSONObject(getCurrentValues()).toString();
+        Gson gson = new Gson();
+        return gson.toJson(getCurrentValues(), LinkedHashMap.class);
+//        return new JSONObject(getCurrentValues()).toString();
     }
 
     protected String getContentTypeForJson() {
