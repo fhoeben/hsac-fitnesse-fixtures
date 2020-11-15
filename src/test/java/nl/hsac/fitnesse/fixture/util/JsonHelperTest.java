@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.util;
 
 import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -57,7 +58,7 @@ public class JsonHelperTest {
                 "  ]\n" +
                 "}", "$.parameters", "$.category");
 
-        assertEquals("{\n" +
+        JSONAssert.assertEquals("{\n" +
                         "  \"extraKey\": 2,\n" +
                         "  \"parameters\": [\n" +
                         "    {\n" +
@@ -70,7 +71,7 @@ public class JsonHelperTest {
                         "    }\n" +
                         "  ]\n" +
                         "}",
-                helper.format(h));
+                helper.format(h), false);
     }
 
     @Test
@@ -89,7 +90,7 @@ public class JsonHelperTest {
                 "  ]\n" +
                 "}", "$.parameters", "$.price");
 
-        assertEquals("{\n" +
+        JSONAssert.assertEquals("{\n" +
                         "  \"extraKey\": 2,\n" +
                         "  \"parameters\": [\n" +
                         "    {\n" +
@@ -102,7 +103,7 @@ public class JsonHelperTest {
                         "    }\n" +
                         "  ]\n" +
                         "}",
-                helper.format(h));
+                helper.format(h),false);
     }
 
     @Test
