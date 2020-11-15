@@ -1,6 +1,8 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
 import net.minidev.json.JSONArray;
 import nl.hsac.fitnesse.fixture.Environment;
 import org.apache.commons.lang3.StringUtils;
@@ -26,26 +28,15 @@ public class JsonHelper implements Formatter {
     public String format(String json) {
         String result = null;
         if (json != null){
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            JsonParser jsonParser = new JsonParser();
+
             if (json.startsWith("{")) {
-                // Fixed JsonHttpTestTest#testFormatJson
-                return new Gson().toJson(json);
+                return gson.toJson(jsonParser.parse(json).getAsJsonObject());
             } else if (json.startsWith("[")) {
-//                JSONObject jsonObject = new JSONObject("{'a': " + json + "}");
-//                org.json.JSONArray array = (org.json.JSONArray) jsonObject.get("a");
-//                result = array.toString(4);
-
-                JsonParser jsonParser = new JsonParser();
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                String prettyJson = gson.toJson(jsonParser.parse(json).getAsJsonArray().get(0).getAsJsonObject());
-                System.out.println( "json prettify"+ prettyJson);
-
-                org.json.JSONArray array = new org.json.JSONArray("[" + prettyJson + "]");
-                System.out.println(gson.toJson(array));
-
-                result = array.toString(4);
-
-//                JsonArray jsonArray1 = (JsonArray) new JsonParser().parse(json).getAsJsonArray();
-//                org.json.JSONArray array = (org.json.JSONArray) jsonObject.get("a");
+                String prettyJson;
+                prettyJson = gson.toJson(jsonParser.parse(json).getAsJsonArray());
+                result = prettyJson;
             }
         }
         return result;

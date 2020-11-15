@@ -21,10 +21,10 @@ public class JsonHelperTest {
     public void testFormatSimple() {
         assertEquals(
                 "{\n" +
-                        "    \"price\": 8.95,\n" +
-                        "    \"category\": \"reference\"\n" +
+                        "  \"price\": 8.95,\n" +
+                        "  \"category\": \"reference\"\n" +
                         "}",
-                helper.format("{\"category\": \"reference\",\"price\": 8.95}"));
+                helper.format("{\"price\": 8.95,\"category\": \"reference\"}"));
     }
 
     @Test
@@ -58,17 +58,17 @@ public class JsonHelperTest {
                 "}", "$.parameters", "$.category");
 
         assertEquals("{\n" +
-                        "    \"extraKey\": 2,\n" +
-                        "    \"parameters\": [\n" +
-                        "        {\n" +
-                        "            \"price\": 18.95,\n" +
-                        "            \"category\": \"areference\"\n" +
-                        "        },\n" +
-                        "        {\n" +
-                        "            \"price\": 8.95,\n" +
-                        "            \"category\": \"reference\"\n" +
-                        "        }\n" +
-                        "    ]\n" +
+                        "  \"extraKey\": 2,\n" +
+                        "  \"parameters\": [\n" +
+                        "    {\n" +
+                        "      \"price\": 18.95,\n" +
+                        "      \"category\": \"areference\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"price\": 8.95,\n" +
+                        "      \"category\": \"reference\"\n" +
+                        "    }\n" +
+                        "  ]\n" +
                         "}",
                 helper.format(h));
     }
@@ -90,17 +90,17 @@ public class JsonHelperTest {
                 "}", "$.parameters", "$.price");
 
         assertEquals("{\n" +
-                        "    \"extraKey\": 2,\n" +
-                        "    \"parameters\": [\n" +
-                        "        {\n" +
-                        "            \"price\": 8.95,\n" +
-                        "            \"category\": \"reference\"\n" +
-                        "        },\n" +
-                        "        {\n" +
-                        "            \"price\": 18.95,\n" +
-                        "            \"category\": \"areference\"\n" +
-                        "        }\n" +
-                        "    ]\n" +
+                        "  \"extraKey\": 2,\n" +
+                        "  \"parameters\": [\n" +
+                        "    {\n" +
+                        "      \"price\": 8.95,\n" +
+                        "      \"category\": \"reference\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"price\": 18.95,\n" +
+                        "      \"category\": \"areference\"\n" +
+                        "    }\n" +
+                        "  ]\n" +
                         "}",
                 helper.format(h));
     }
