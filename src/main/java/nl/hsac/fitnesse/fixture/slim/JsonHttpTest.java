@@ -31,7 +31,6 @@ public class JsonHttpTest extends HttpTest {
     protected String jsonEncodeCurrentValues() {
         Gson gson = new Gson();
         return gson.toJson(getCurrentValues(), LinkedHashMap.class);
-//        return new JSONObject(getCurrentValues()).toString();
     }
 
     protected String getContentTypeForJson() {

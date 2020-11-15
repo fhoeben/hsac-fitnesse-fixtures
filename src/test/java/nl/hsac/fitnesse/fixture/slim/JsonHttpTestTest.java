@@ -23,9 +23,9 @@ public class JsonHttpTestTest {
                 "}</pre>";
 
         assertEquals(expected,
-                fixture.safeFormatValue("{\"price\": 8.95,\"category\": \"reference\"}").replace("\r", "").replace("\\", ""));
+                fixture.safeFormatValue("{\"price\": 8.95,\"category\": \"reference\"}").replace("\r", ""));
         assertEquals(expected,
-                fixture.safeFormatValue(" {\"price\": 8.95,\"category\": \"reference\"}").replace("\r", "").replace("\\", ""));
+                fixture.safeFormatValue(" {\"price\": 8.95,\"category\": \"reference\"}").replace("\r", ""));
     }
 
     @Test
