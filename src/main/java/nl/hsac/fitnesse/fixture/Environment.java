@@ -705,8 +705,9 @@ public class Environment {
     public String getFilePathFromWikiUrl(String wikiUrl) {
         String url = getHtmlCleaner().getUrl(wikiUrl);
         File file;
-        if (url.startsWith("files/")) {
-            String relativeFile = url.substring("files".length());
+        if (url.startsWith("files/") || url.startsWith("http://files/")) {
+            String prefix = url.startsWith("files/") ? "files" : "http://files";
+            String relativeFile = url.substring(prefix.length());
             relativeFile = relativeFile.replace('/', File.separatorChar);
             String pathname = getFitNesseFilesSectionDir() + relativeFile;
             file = new File(pathname);
