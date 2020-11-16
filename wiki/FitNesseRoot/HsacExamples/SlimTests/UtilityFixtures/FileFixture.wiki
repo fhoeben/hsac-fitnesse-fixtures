@@ -104,5 +104,8 @@ Table below shows how we can use a list of non-reusable data from a file:
 |check        |take first line from|list.txt  |last one!      |
 |show         |text in             |list.txt                  |
 
+Files-directory aliases (http://files/...) can be used to reference files in literal tables:
 
-
+!|script                                                                              |
+|append|NewContent|to                               |http://files/fileFixture/list.txt|
+|check |text in   |http://files/fileFixture/list.txt|NewContent                       |
