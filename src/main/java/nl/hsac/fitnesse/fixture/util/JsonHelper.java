@@ -32,7 +32,7 @@ public class JsonHelper implements Formatter {
             JsonParser jsonParser = new JsonParser();
 
             if (json.startsWith("{")) {
-                return gson.toJson(jsonParser.parse(json).getAsJsonObject());
+                result = gson.toJson(jsonParser.parse(json).getAsJsonObject());
             } else if (json.startsWith("[")) {
                 result = gson.toJson(jsonParser.parse(json).getAsJsonArray());
             }
