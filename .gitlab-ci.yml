@@ -15,7 +15,7 @@ variables:
   MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
   SELENIUM_VERSION: "3.141.59"
   KANIKO_CACHE: "true"
-  KANIKO_MIRROR: "https://mirror.gcr.io"
+  KANIKO_MIRROR: "mirror.gcr.io"
 
 before_script:
   - TEST_IMAGE=${CI_REGISTRY_IMAGE}/fitnesse-fixtures-test-jre8:temp-${CI_PIPELINE_ID}
