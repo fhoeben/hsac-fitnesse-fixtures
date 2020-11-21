@@ -66,7 +66,7 @@ build-test-images:
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
     - /kaniko/executor
       --cache=${KANIKO_CACHE}
-      --registry-mirror=${KANIKO_MIRROR}
+      --registry-mirror ${KANIKO_MIRROR}
       --single-snapshot
       --context $CI_PROJECT_DIR/docker/test
       --dockerfile $CI_PROJECT_DIR/docker/test/Dockerfile-local
@@ -74,7 +74,7 @@ build-test-images:
 
     - /kaniko/executor
       --cache=${KANIKO_CACHE}
-      --registry-mirror=${KANIKO_MIRROR}
+      --registry-mirror ${KANIKO_MIRROR}
       --single-snapshot
       --context $CI_PROJECT_DIR/docker/chrome
       --dockerfile $CI_PROJECT_DIR/docker/chrome/Dockerfile
@@ -88,7 +88,7 @@ build-combine-image:
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
     - /kaniko/executor
       --cache=${KANIKO_CACHE}
-      --registry-mirror=${KANIKO_MIRROR}
+      --registry-mirror ${KANIKO_MIRROR}
       --single-snapshot
       --context $CI_PROJECT_DIR/docker/combine
       --dockerfile $CI_PROJECT_DIR/docker/combine/Dockerfile-local
@@ -120,7 +120,7 @@ build-test-pdf-images:
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
     - /kaniko/executor
       --cache=${KANIKO_CACHE}
-      --registry-mirror=${KANIKO_MIRROR}
+      --registry-mirror ${KANIKO_MIRROR}
       --single-snapshot
       --context $CI_PROJECT_DIR/docker/test-with-pdf
       --dockerfile $CI_PROJECT_DIR/docker/test-with-pdf/Dockerfile-local
@@ -129,7 +129,7 @@ build-test-pdf-images:
 
     - /kaniko/executor
       --cache=${KANIKO_CACHE}
-      --registry-mirror=${KANIKO_MIRROR}
+      --registry-mirror ${KANIKO_MIRROR}
       --single-snapshot
       --context $CI_PROJECT_DIR/docker/chrome-with-pdf
       --dockerfile $CI_PROJECT_DIR/docker/chrome-with-pdf/Dockerfile
