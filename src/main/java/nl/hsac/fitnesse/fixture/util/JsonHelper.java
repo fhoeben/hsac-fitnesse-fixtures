@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import com.google.gson.Gson;
 import net.minidev.json.JSONArray;
 import nl.hsac.fitnesse.fixture.Environment;
 import org.apache.commons.lang3.StringUtils;
@@ -17,6 +18,8 @@ import java.util.Map;
  * Helper dealing with JSON objects.
  */
 public class JsonHelper {
+    private final static Gson GSON = new Gson();
+
     /**
      * Interprets supplied String as Json and converts it into a Map.
      * @param jsonString string to interpret as Json object.
@@ -26,10 +29,8 @@ public class JsonHelper {
         if (StringUtils.isEmpty(jsonString)) {
             return null;
         }
-        JSONObject jsonObject;
         try {
-            jsonObject = new JSONObject(jsonString);
-            return jsonObjectToMap(jsonObject);
+            return GSON.fromJson(jsonString, Map.class);
         } catch (JSONException e) {
             throw new RuntimeException("Unable to convert string to map: " + jsonString, e);
         }
