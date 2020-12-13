@@ -52,7 +52,7 @@
 		<selenium.internetexplorerdriver.version>3.150.1</selenium.internetexplorerdriver.version>
 		<selenium.edgedriver.version>87.0.669.0</selenium.edgedriver.version>
 		<selenium.chromedriver.version>87.0.4280.88</selenium.chromedriver.version>
-		<selenium.geckodriver.version>0.27.0</selenium.geckodriver.version>
+		<selenium.geckodriver.version>0.28.0</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
