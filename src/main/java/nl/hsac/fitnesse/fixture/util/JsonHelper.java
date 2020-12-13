@@ -1,8 +1,5 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParser;
 import net.minidev.json.JSONArray;
 import nl.hsac.fitnesse.fixture.Environment;
 import org.apache.commons.lang3.StringUtils;
@@ -19,27 +16,7 @@ import java.util.Map;
 /**
  * Helper dealing with JSON objects.
  */
-public class JsonHelper implements Formatter {
-    /**
-     * Creates formatted version of the supplied JSON.
-     * @param json JSON to format.
-     * @return formatted version.
-     */
-    public String format(String json) {
-        String result = null;
-        if (json != null){
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            JsonParser jsonParser = new JsonParser();
-
-            if (json.startsWith("{")) {
-                result = gson.toJson(jsonParser.parse(json).getAsJsonObject());
-            } else if (json.startsWith("[")) {
-                result = gson.toJson(jsonParser.parse(json).getAsJsonArray());
-            }
-        }
-        return result;
-    }
-
+public class JsonHelper {
     /**
      * Interprets supplied String as Json and converts it into a Map.
      * @param jsonString string to interpret as Json object.

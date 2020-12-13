@@ -12,21 +12,7 @@ import static org.junit.Assert.assertNull;
 
 public class JsonHelperTest {
     private JsonHelper helper = new JsonHelper();
-
-    @Test
-    public void testFormatNull() {
-        assertNull(helper.format(null));
-    }
-
-    @Test
-    public void testFormatSimple() {
-        assertEquals(
-                "{\n" +
-                        "  \"price\": 8.95,\n" +
-                        "  \"category\": \"reference\"\n" +
-                        "}",
-                helper.format("{\"price\": 8.95,\"category\": \"reference\"}"));
-    }
+    private JsonFormatter formatter = new JsonFormatter();
 
     @Test
     public void testNullToMap() {
@@ -59,19 +45,19 @@ public class JsonHelperTest {
                 "}", "$.parameters", "$.category");
 
         JSONAssert.assertEquals("{\n" +
-                        "  \"extraKey\": 2,\n" +
-                        "  \"parameters\": [\n" +
-                        "    {\n" +
-                        "      \"price\": 18.95,\n" +
-                        "      \"category\": \"areference\"\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "      \"price\": 8.95,\n" +
-                        "      \"category\": \"reference\"\n" +
-                        "    }\n" +
-                        "  ]\n" +
+                        "    \"extraKey\": 2,\n" +
+                        "    \"parameters\": [\n" +
+                        "        {\n" +
+                        "            \"price\": 18.95,\n" +
+                        "            \"category\": \"areference\"\n" +
+                        "        },\n" +
+                        "        {\n" +
+                        "            \"price\": 8.95,\n" +
+                        "            \"category\": \"reference\"\n" +
+                        "        }\n" +
+                        "    ]\n" +
                         "}",
-                helper.format(h), false);
+                formatter.format(h), false);
     }
 
     @Test
@@ -91,19 +77,19 @@ public class JsonHelperTest {
                 "}", "$.parameters", "$.price");
 
         JSONAssert.assertEquals("{\n" +
-                        "  \"extraKey\": 2,\n" +
-                        "  \"parameters\": [\n" +
-                        "    {\n" +
-                        "      \"price\": 8.95,\n" +
-                        "      \"category\": \"reference\"\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "      \"price\": 18.95,\n" +
-                        "      \"category\": \"areference\"\n" +
-                        "    }\n" +
-                        "  ]\n" +
+                        "    \"extraKey\": 2,\n" +
+                        "    \"parameters\": [\n" +
+                        "        {\n" +
+                        "            \"price\": 8.95,\n" +
+                        "            \"category\": \"reference\"\n" +
+                        "        },\n" +
+                        "        {\n" +
+                        "            \"price\": 18.95,\n" +
+                        "            \"category\": \"areference\"\n" +
+                        "        }\n" +
+                        "    ]\n" +
                         "}",
-                helper.format(h),false);
+                formatter.format(h), false);
     }
 
     @Test

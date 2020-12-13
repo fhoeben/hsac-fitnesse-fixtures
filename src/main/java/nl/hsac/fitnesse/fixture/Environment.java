@@ -12,6 +12,7 @@ import nl.hsac.fitnesse.fixture.util.FreeMarkerHelper;
 import nl.hsac.fitnesse.fixture.util.HtmlCleaner;
 import nl.hsac.fitnesse.fixture.util.HttpClient;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
+import nl.hsac.fitnesse.fixture.util.JsonFormatter;
 import nl.hsac.fitnesse.fixture.util.JsonHelper;
 import nl.hsac.fitnesse.fixture.util.JsonPathHelper;
 import nl.hsac.fitnesse.fixture.util.LineEndingHelper;
@@ -60,6 +61,7 @@ public class Environment {
     private TextFormatter textFormatter;
     private XMLFormatter xmlFormatter;
     private JsonPathHelper jsonPathHelper;
+    private JsonFormatter jsonFormatter;
     private JsonHelper jsonHelper;
     private HtmlCleaner htmlCleaner;
     private TimeoutHelper timeoutHelper = new TimeoutHelper();
@@ -96,6 +98,7 @@ public class Environment {
         xPathHelper = new XPathHelper();
 
         jsonPathHelper = new JsonPathHelper();
+        jsonFormatter = new JsonFormatter();
         jsonHelper = new JsonHelper();
 
         htmlCleaner = new HtmlCleaner();
@@ -543,7 +546,7 @@ public class Environment {
      * @return HTML formatted version of jsonString
      */
     public String getHtmlForJson(String jsonString) {
-        return getHtml(jsonHelper, jsonString);
+        return getHtml(jsonFormatter, jsonString);
     }
 
     /**
