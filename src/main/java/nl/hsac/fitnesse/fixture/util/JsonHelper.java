@@ -1,5 +1,8 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
 import net.minidev.json.JSONArray;
 import nl.hsac.fitnesse.fixture.Environment;
 import org.apache.commons.lang3.StringUtils;
@@ -25,12 +28,13 @@ public class JsonHelper implements Formatter {
     public String format(String json) {
         String result = null;
         if (json != null){
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            JsonParser jsonParser = new JsonParser();
+
             if (json.startsWith("{")) {
-                result = new JSONObject(json).toString(4);
+                result = gson.toJson(jsonParser.parse(json).getAsJsonObject());
             } else if (json.startsWith("[")) {
-                JSONObject jsonObject = new JSONObject("{'a': " + json + "}");
-                org.json.JSONArray array = (org.json.JSONArray) jsonObject.get("a");
-                result = array.toString(4);
+                result = gson.toJson(jsonParser.parse(json).getAsJsonArray());
             }
         }
         return result;

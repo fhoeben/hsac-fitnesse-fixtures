@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -159,9 +160,9 @@ public class XmlHttpResponseTest {
         String expected = SoapCallMapColumnFixture.NO_ESCAPE_PREFIX
                             + "NOK:\n<ul>\n"
                             + " <li>amount: 12 <> 158.86</li>\n"
+                            + " <li>result: 1 <> 13.44</li>\n"
                             + " <li>unknownKey: null <> OK</li>\n"
                             + " <li>status: OK <> null</li>\n"
-                            + " <li>result: 1 <> 13.44</li>\n"
                             + "</ul>";
         XPathCheckResult checkResult = resp.checkXPaths(values, expressionsToCheck);
         assertEquals("NOK", checkResult.getResult());
@@ -169,7 +170,7 @@ public class XmlHttpResponseTest {
     }
 
     private Map<String, String> createExprToCheck() {
-        Map<String, String> expressionsToCheck = new HashMap<String, String>();
+        Map<String, String> expressionsToCheck = new LinkedHashMap();
         expressionsToCheck.put("//*[local-name()='amountPremiumYear']", "amount");
         expressionsToCheck.put("//*[local-name()='calculatedResult']", "result");
         return expressionsToCheck;
