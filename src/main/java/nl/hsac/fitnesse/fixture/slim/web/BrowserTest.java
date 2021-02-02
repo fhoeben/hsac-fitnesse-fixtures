@@ -48,6 +48,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
+import io.github.sukgu.*;
 
 public class BrowserTest<T extends WebElement> extends SlimFixture {
     private final List<String> currentSearchContextPath = new ArrayList<>();
@@ -754,6 +755,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return clickImp(place, null);
     }
 
+    @WaitUntil
+    public boolean clickShadowDom(String place) {
+        return clickShadowImp(place, null);
+    }
+
     public void clickAtOffsetXY(String place, Integer xOffset, Integer yOffset) {
         place = cleanupValue(place);
         try {
@@ -828,6 +834,24 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         place = cleanupValue(place);
         try {
             WebElement element = getElementToClick(place, container);
+            result = clickElement(element);
+        } catch (WebDriverException e) {
+            // if other element hides the element, hold back the exception so WaitUntil is not interrupted
+            if (!clickExceptionIsAboutHiddenByOtherElement(e)) {
+                throw e;
+            }
+        }
+        return result;
+    }
+
+    protected boolean clickShadowImp(String place, String container) {
+        boolean result = false;
+        place = cleanupValue(place);
+        try {
+            Shadow shadow = new Shadow(driver());
+            WebElement element = shadow.findElement(place);
+
+//            WebElement element = getElementToClick(place, container);
             result = clickElement(element);
         } catch (WebDriverException e) {
             // if other element hides the element, hold back the exception so WaitUntil is not interrupted
