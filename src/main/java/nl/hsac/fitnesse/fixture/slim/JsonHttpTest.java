@@ -1,10 +1,10 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import net.minidev.json.JSONObject;
 import nl.hsac.fitnesse.fixture.util.DataUrlHelper;
 import nl.hsac.fitnesse.fixture.util.JsonPathHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.entity.ContentType;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class JsonHttpTest extends HttpTest {
     }
 
     protected String jsonEncodeCurrentValues() {
-        return new JSONObject(getCurrentValues()).toString();
+         return JSONObject.toJSONString(getCurrentValues());
     }
 
     protected String getContentTypeForJson() {

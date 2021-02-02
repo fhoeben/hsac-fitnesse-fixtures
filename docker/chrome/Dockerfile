@@ -3,21 +3,24 @@ ARG  SELENIUM_VERSION=latest
 FROM ${TEST_IMAGE} as hsac-fixtures
 
 FROM selenium/standalone-chrome:${SELENIUM_VERSION}
-RUN sudo mkdir -p /fitnesse/target/selenium-log
-RUN sudo chown -R seluser:seluser /fitnesse/
+RUN sudo mv /etc/supervisor/conf.d/selenium.conf /etc/supervisor/conf.d/selenium.conf.bak && \
+    sudo mkdir -p /fitnesse/target && \
+    sudo mkdir -p /fitnesse/wiki/webdrivers && \
+    sudo ln -s /usr/bin/chromedriver /fitnesse/wiki/webdrivers/chromedriver-linux-64bit && \
+    sudo chown -R 1200:1201 /fitnesse/
 
 WORKDIR /fitnesse
 COPY startGridAndRunTests.sh .
+COPY fitnesse-hsac.conf /etc/supervisor/conf.d/
 
 VOLUME /fitnesse/target
 VOLUME /fitnesse/wiki/FitNesseRoot
 
-ENV JAVA_OPTS -Xmx96m -Xms96m
 ENV FITNESSE_OPTS -Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true \
-    -DseleniumJsonCapabilities="{'browserName':'chrome','chromeOptions':{'args':['--disable-dev-shm-usage']}}" \
-    -DseleniumGridUrl=http://localhost:4444/wd/hub
+    -DseleniumBrowser=chrome \
+    -DseleniumJsonProfile="{'args':['--disable-dev-shm-usage']}"
 
 ENTRYPOINT ["/fitnesse/startGridAndRunTests.sh"]
 CMD []
 
-COPY --from=hsac-fixtures --chown=seluser:seluser /fitnesse /fitnesse
+COPY --from=hsac-fixtures --chown=1200:1201 /fitnesse /fitnesse

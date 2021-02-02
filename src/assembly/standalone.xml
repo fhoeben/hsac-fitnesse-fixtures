@@ -42,9 +42,12 @@
                 <exclude>files/**</exclude>
                 <exclude>bye.txt</exclude>
                 <exclude>greeting.*</exclude>
+                <exclude>FitNesseRoot/content.txt</exclude>
+                <exclude>FitNesseRoot/properties.xml</exclude>
                 <exclude>FitNesseRoot/**/*.zip</exclude>
                 <exclude>FitNesseRoot/files/**</exclude>
                 <exclude>FitNesseRoot/FitNesse/**</exclude>
+                <exclude>FitNesseRoot/PlugIns/content.txt</exclude>
                 <exclude>FitNesseRoot/PageFooter/**</exclude>
                 <exclude>FitNesseRoot/PageHeader/**</exclude>
                 <exclude>FitNesseRoot/RecentChanges/**</exclude>
@@ -55,6 +58,7 @@
                 <exclude>FitNesseRoot/properties</exclude>
                 <exclude>FitNesseRoot/updateList</exclude>
                 <exclude>FitNesseRoot/updateDoNotCopyOverList</exclude>
+                <exclude>FitNesseRoot/HsacExamples/SlimTests/UtilityFixtures/GeneratedSymbolicLinkSuite/*LocaleTests.wiki</exclude>
             </excludes>
         </fileSet>
         <fileSet>
@@ -68,4 +72,4 @@
             </includes>
         </fileSet>
     </fileSets>
-</assembly> 
+</assembly>
