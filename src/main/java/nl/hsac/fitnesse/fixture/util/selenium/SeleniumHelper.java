@@ -41,6 +41,7 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.interactions.SourceType;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.ScreenshotException;
@@ -193,6 +194,7 @@ public class SeleniumHelper<T extends WebElement> {
         By by = placeToBy(place);
         if (by == null) {
             by = byFunction.apply(place);
+            System.out.println("By Function: " + by.toString());
         }
         return findElement(by);
     }
@@ -1104,6 +1106,8 @@ public class SeleniumHelper<T extends WebElement> {
      * @return element if found, null if none could be found.
      */
     public T findElement(SearchContext context, By by) {
+        System.out.println("By: " + by.toString());
+        System.out.println("Context: " + context.toString());
         return FirstElementBy.getWebElement(by, context);
     }
 

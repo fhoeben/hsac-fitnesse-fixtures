@@ -752,6 +752,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     @WaitUntil
     public boolean click(String place) {
+        System.out.println(place);
         return clickImp(place, null);
     }
 
@@ -835,6 +836,25 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         try {
             WebElement element = getElementToClick(place, container);
             result = clickElement(element);
+
+            if(element == null){
+                Shadow shadow = new Shadow(driver());
+                element = shadow.findElement(place);
+                result = clickElement(element);
+
+                System.out.println("WebElement of \"" + place + "\" : ");
+                System.out.println(element);
+                System.out.println("Result of \"" + place + "\" : ");
+                System.out.println(result);
+
+                return result;
+            }
+
+            System.out.println("WebElement of \"" + place + "\" : ");
+            System.out.println(element);
+            System.out.println("Result of \"" + place + "\" : ");
+            System.out.println(result);
+
         } catch (WebDriverException e) {
             // if other element hides the element, hold back the exception so WaitUntil is not interrupted
             if (!clickExceptionIsAboutHiddenByOtherElement(e)) {
