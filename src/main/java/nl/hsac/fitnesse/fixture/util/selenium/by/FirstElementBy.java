@@ -52,7 +52,6 @@ public class FirstElementBy<T extends WebElement> extends SingleElementOrNullBy<
             byResult = BestMatchBy.findElement(by, context);
         }
 
-//        System.out.println("byResult: " + byResult.toString());
         return byResult;
     }
 

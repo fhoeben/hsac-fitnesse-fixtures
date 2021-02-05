@@ -1,0 +1,13 @@
+---
+Test
+---
+<test page>
+
+
+|script|browser test                                                                       |
+|open  |file:///C:/Users/mfolk/OneDrive%20-%20syracom%20AG/Desktop/shadom%20dom%20test.html|
+|click |Button outside                                                                     |
+|note  |confirm alert                                                                      |
+|note  |click                      |button#inside                                          |
+|note  |confirm alert                                                                      |
+|note  |wait                       |5                       |seconds                       |

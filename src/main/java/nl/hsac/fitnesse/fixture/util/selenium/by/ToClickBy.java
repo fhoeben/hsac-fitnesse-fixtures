@@ -1,8 +1,8 @@
 package nl.hsac.fitnesse.fixture.util.selenium.by;
 
-import io.github.sukgu.Shadow;
+
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+
 
 /**
  * Finds elements to click.

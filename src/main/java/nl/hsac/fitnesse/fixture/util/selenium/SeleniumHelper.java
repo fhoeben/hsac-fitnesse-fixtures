@@ -194,7 +194,6 @@ public class SeleniumHelper<T extends WebElement> {
         By by = placeToBy(place);
         if (by == null) {
             by = byFunction.apply(place);
-            System.out.println("By Function: " + by.toString());
         }
         return findElement(by);
     }
@@ -1106,8 +1105,6 @@ public class SeleniumHelper<T extends WebElement> {
      * @return element if found, null if none could be found.
      */
     public T findElement(SearchContext context, By by) {
-        System.out.println("By: " + by.toString());
-        System.out.println("Context: " + context.toString());
         return FirstElementBy.getWebElement(by, context);
     }
 

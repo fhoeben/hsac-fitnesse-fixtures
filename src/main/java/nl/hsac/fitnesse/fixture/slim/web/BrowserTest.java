@@ -752,13 +752,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     @WaitUntil
     public boolean click(String place) {
-        System.out.println(place);
         return clickImp(place, null);
-    }
-
-    @WaitUntil
-    public boolean clickShadowDom(String place) {
-        return clickShadowImp(place, null);
     }
 
     public void clickAtOffsetXY(String place, Integer xOffset, Integer yOffset) {
@@ -836,25 +830,6 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         try {
             WebElement element = getElementToClick(place, container);
             result = clickElement(element);
-
-            if(element == null){
-                Shadow shadow = new Shadow(driver());
-                element = shadow.findElement(place);
-                result = clickElement(element);
-
-                System.out.println("WebElement of \"" + place + "\" : ");
-                System.out.println(element);
-                System.out.println("Result of \"" + place + "\" : ");
-                System.out.println(result);
-
-                return result;
-            }
-
-            System.out.println("WebElement of \"" + place + "\" : ");
-            System.out.println(element);
-            System.out.println("Result of \"" + place + "\" : ");
-            System.out.println(result);
-
         } catch (WebDriverException e) {
             // if other element hides the element, hold back the exception so WaitUntil is not interrupted
             if (!clickExceptionIsAboutHiddenByOtherElement(e)) {
@@ -864,23 +839,6 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return result;
     }
 
-    protected boolean clickShadowImp(String place, String container) {
-        boolean result = false;
-        place = cleanupValue(place);
-        try {
-            Shadow shadow = new Shadow(driver());
-            WebElement element = shadow.findElement(place);
-
-//            WebElement element = getElementToClick(place, container);
-            result = clickElement(element);
-        } catch (WebDriverException e) {
-            // if other element hides the element, hold back the exception so WaitUntil is not interrupted
-            if (!clickExceptionIsAboutHiddenByOtherElement(e)) {
-                throw e;
-            }
-        }
-        return result;
-    }
 
     protected boolean clickExceptionIsAboutHiddenByOtherElement(Exception e) {
         String msg = e.getMessage();
@@ -1031,6 +989,10 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getElementToClick(String place) {
+        if (getSeleniumHelper().getElementToClick(place) == null){
+            Shadow shadow = new Shadow(driver());
+            return (T) shadow.findElement(place);
+        }
         return getSeleniumHelper().getElementToClick(place);
     }
 
