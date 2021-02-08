@@ -54,6 +54,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     private final List<String> currentSearchContextPath = new ArrayList<>();
 
     private SeleniumHelper<T> seleniumHelper = getEnvironment().getSeleniumHelper();
+    private Shadow shadow = new Shadow(driver());
     private ReflectionHelper reflectionHelper = getEnvironment().getReflectionHelper();
     private NgBrowserTest ngBrowserTest;
     private boolean implicitWaitForAngular = false;
@@ -989,10 +990,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getElementToClick(String place) {
-        if (getSeleniumHelper().getElementToClick(place) == null){
-            Shadow shadow = new Shadow(driver());
+        if (getSeleniumHelper().getElementToClick(place) == null)
             return (T) shadow.findElement(place);
-        }
         return getSeleniumHelper().getElementToClick(place);
     }
 
@@ -1070,6 +1069,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getContainerElement(String container) {
+        if (findByTechnicalSelectorOr(container, this::getContainerImpl) == null)
+            return (T) shadow.findElement(container);
+
         return findByTechnicalSelectorOr(container, this::getContainerImpl);
     }
 
@@ -1599,6 +1601,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getElement(String place) {
+       if(getSeleniumHelper().getElement(place) == null){
+            return (T) shadow.findElement(place);
+        }
         return getSeleniumHelper().getElement(place);
     }
 
