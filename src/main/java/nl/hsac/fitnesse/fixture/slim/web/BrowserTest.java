@@ -24,17 +24,7 @@ import nl.hsac.fitnesse.slim.interaction.ExceptionHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.text.StringEscapeUtils;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.SearchContext;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.UnhandledAlertException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -990,8 +980,14 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getElementToClick(String place) {
-        if (getSeleniumHelper().getElementToClick(place) == null)
-            return (T) shadow.findElement(place);
+        if (getSeleniumHelper().getElementToClick(place) == null){
+            try{
+                return (T) shadow.findElement(place);
+            }catch(ElementNotVisibleException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
         return getSeleniumHelper().getElementToClick(place);
     }
 
@@ -1069,9 +1065,14 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getContainerElement(String container) {
-        if (findByTechnicalSelectorOr(container, this::getContainerImpl) == null)
-            return (T) shadow.findElement(container);
-
+        if (findByTechnicalSelectorOr(container, this::getContainerImpl) == null){
+            try{
+                return (T) shadow.findElement(container);
+            }catch(ElementNotVisibleException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
         return findByTechnicalSelectorOr(container, this::getContainerImpl);
     }
 
@@ -1601,8 +1602,13 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getElement(String place) {
-       if(getSeleniumHelper().getElement(place) == null){
-            return (T) shadow.findElement(place);
+        if (getSeleniumHelper().getElementToClick(place) == null){
+            try{
+                return (T) shadow.findElement(place);
+            }catch(ElementNotVisibleException e) {
+                e.printStackTrace();
+                return null;
+            }
         }
         return getSeleniumHelper().getElement(place);
     }
