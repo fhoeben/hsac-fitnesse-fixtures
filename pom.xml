@@ -6,7 +6,7 @@
 
 	<groupId>nl.hsac</groupId>
 	<artifactId>hsac-fitnesse-fixtures</artifactId>
-	<version>4.23-SNAPSHOT</version>
+	<version>4.24.0</version>
 	<url>https://github.com/fhoeben/hsac-fitnesse-fixtures</url>
 	<name>HSAC's FitNesse Fixtures</name>
 	<description>Fixtures to assist in testing via FitNesse</description>
@@ -50,8 +50,8 @@
 
 		<webdriver.download.skip>false</webdriver.download.skip>
 		<selenium.internetexplorerdriver.version>3.150.1</selenium.internetexplorerdriver.version>
-		<selenium.edgedriver.version>88.0.705.53</selenium.edgedriver.version>
-		<selenium.chromedriver.version>88.0.4324.96</selenium.chromedriver.version>
+		<selenium.edgedriver.version>90.0.816.0</selenium.edgedriver.version>
+		<selenium.chromedriver.version>89.0.4389.23</selenium.chromedriver.version>
 		<selenium.geckodriver.version>0.29.0</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
