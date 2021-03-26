@@ -1,4 +1,4 @@
-ARG  JRE_IMAGE=amazoncorretto/amazoncorretto:8-alpine-jre
+ARG  JRE_IMAGE=amazoncorretto:8-alpine-jre
 
 FROM ${JRE_IMAGE}
 RUN mkdir -p /fitnesse/wiki/fixtures/nl/hsac/fitnesse

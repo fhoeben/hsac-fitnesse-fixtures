@@ -1,6 +1,7 @@
 package nl.hsac.fitnesse.fixture.util;
 
 import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -11,21 +12,7 @@ import static org.junit.Assert.assertNull;
 
 public class JsonHelperTest {
     private JsonHelper helper = new JsonHelper();
-
-    @Test
-    public void testFormatNull() {
-        assertNull(helper.format(null));
-    }
-
-    @Test
-    public void testFormatSimple() {
-        assertEquals(
-                "{\n" +
-                        "    \"price\": 8.95,\n" +
-                        "    \"category\": \"reference\"\n" +
-                        "}",
-                helper.format("{\"category\": \"reference\",\"price\": 8.95}"));
-    }
+    private JsonFormatter formatter = new JsonFormatter();
 
     @Test
     public void testNullToMap() {
@@ -57,7 +44,7 @@ public class JsonHelperTest {
                 "  ]\n" +
                 "}", "$.parameters", "$.category");
 
-        assertEquals("{\n" +
+        JSONAssert.assertEquals("{\n" +
                         "    \"extraKey\": 2,\n" +
                         "    \"parameters\": [\n" +
                         "        {\n" +
@@ -70,7 +57,7 @@ public class JsonHelperTest {
                         "        }\n" +
                         "    ]\n" +
                         "}",
-                helper.format(h));
+                formatter.format(h), false);
     }
 
     @Test
@@ -89,7 +76,7 @@ public class JsonHelperTest {
                 "  ]\n" +
                 "}", "$.parameters", "$.price");
 
-        assertEquals("{\n" +
+        JSONAssert.assertEquals("{\n" +
                         "    \"extraKey\": 2,\n" +
                         "    \"parameters\": [\n" +
                         "        {\n" +
@@ -102,7 +89,7 @@ public class JsonHelperTest {
                         "        }\n" +
                         "    ]\n" +
                         "}",
-                helper.format(h));
+                formatter.format(h), false);
     }
 
     @Test

@@ -1,11 +1,14 @@
 package nl.hsac.fitnesse.fixture.util;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import net.minidev.json.JSONArray;
 import nl.hsac.fitnesse.fixture.Environment;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -16,25 +19,9 @@ import java.util.Map;
 /**
  * Helper dealing with JSON objects.
  */
-public class JsonHelper implements Formatter {
-    /**
-     * Creates formatted version of the supplied JSON.
-     * @param json JSON to format.
-     * @return formatted version.
-     */
-    public String format(String json) {
-        String result = null;
-        if (json != null){
-            if (json.startsWith("{")) {
-                result = new JSONObject(json).toString(4);
-            } else if (json.startsWith("[")) {
-                JSONObject jsonObject = new JSONObject("{'a': " + json + "}");
-                org.json.JSONArray array = (org.json.JSONArray) jsonObject.get("a");
-                result = array.toString(4);
-            }
-        }
-        return result;
-    }
+public class JsonHelper {
+    private final static Gson GSON = new Gson();
+    private final static Type MAP_TYPE = new TypeToken<LinkedHashMap<String, Object>>(){}.getType();
 
     /**
      * Interprets supplied String as Json and converts it into a Map.
@@ -45,10 +32,8 @@ public class JsonHelper implements Formatter {
         if (StringUtils.isEmpty(jsonString)) {
             return null;
         }
-        JSONObject jsonObject;
         try {
-            jsonObject = new JSONObject(jsonString);
-            return jsonObjectToMap(jsonObject);
+            return GSON.fromJson(jsonString, MAP_TYPE);
         } catch (JSONException e) {
             throw new RuntimeException("Unable to convert string to map: " + jsonString, e);
         }
