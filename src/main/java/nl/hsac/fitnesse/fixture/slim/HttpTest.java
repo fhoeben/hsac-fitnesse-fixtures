@@ -240,6 +240,18 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     /**
+     * Sends a file by HTTP POST body to service endpoint with specific partname.
+     *
+     * @param fileName   fileName to post
+     * @param partName   partName for file
+     * @param serviceUrl service endpoint to send body to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean postFileAsTo(String fileName, String partName, String serviceUrl) {
+        return postFileAsToImpl(fileName, partName, serviceUrl);
+    }
+
+    /**
      * Sends all values (url encoded) using post.
      *
      * @param serviceUrl service endpoint to send values to.
@@ -293,7 +305,11 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     protected boolean postFileToImpl(String fileName, String serviceUrl) {
-        return sendFileImpl(fileName, serviceUrl, "POST");
+        return sendFileImpl("file", fileName, serviceUrl, "POST");
+    }
+
+    protected boolean postFileAsToImpl(String fileName, String partName, String serviceUrl) {
+        return sendFileImpl(partName, fileName, serviceUrl, "POST");
     }
 
     /**
@@ -410,11 +426,27 @@ public class HttpTest extends SlimFixtureWithMap {
         return putFileToImpl(fileName, serviceUrl);
     }
 
-    protected boolean putFileToImpl(String fileName, String serviceUrl) {
-        return sendFileImpl(fileName, serviceUrl, "PUT");
+    /**
+     * Sends a file by HTTP PUT body to service endpoint.
+     *
+     * @param fileName   fileName to post
+     * @param partName   partName for file
+     * @param serviceUrl service endpoint to send body to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean putFileAsTo(String fileName, String partName, String serviceUrl) {
+        return putFileAsToImpl(fileName, partName, serviceUrl);
     }
 
-    protected boolean sendFileImpl(String fileName, String serviceUrl, String method) {
+    protected boolean putFileToImpl(String fileName, String serviceUrl) {
+        return sendFileImpl("file", fileName, serviceUrl, "PUT");
+    }
+
+    protected boolean putFileAsToImpl(String fileName, String partName, String serviceUrl) {
+        return sendFileImpl(partName, fileName, serviceUrl, "PUT");
+    }
+
+    protected boolean sendFileImpl(String partName, String fileName, String serviceUrl, String method) {
         boolean result;
         resetResponse();
         String url = getUrl(serviceUrl);
@@ -430,10 +462,10 @@ public class HttpTest extends SlimFixtureWithMap {
             storeLastCall(method + "_FILE", serviceUrl);
             switch (method) {
                 case "POST":
-                    getEnvironment().doHttpFilePost(url, response, headerValues, file);
+                    getEnvironment().doHttpFilePost(url, response, headerValues, partName, file);
                     break;
                 case "PUT":
-                    getEnvironment().doHttpFilePut(url, response, headerValues, file);
+                    getEnvironment().doHttpFilePut(url, response, headerValues, partName, file);
                     break;
             }
         } catch (Throwable t) {
