@@ -308,7 +308,7 @@ public class HttpTest extends SlimFixtureWithMap {
         return sendFileImpl("file", fileName, serviceUrl, "POST");
     }
 
-    protected boolean postFileAsToImpl(String fileName, String partName, String serviceUrl) {
+    protected boolean postFileAsToImpl(String partName, String fileName, String serviceUrl) {
         return sendFileImpl(partName, fileName, serviceUrl, "POST");
     }
 
