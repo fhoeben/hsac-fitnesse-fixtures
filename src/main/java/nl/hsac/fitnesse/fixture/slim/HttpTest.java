@@ -435,7 +435,7 @@ public class HttpTest extends SlimFixtureWithMap {
      * @return true if call could be made and response did not indicate error.
      */
     public boolean putFileAsTo(String fileName, String partName, String serviceUrl) {
-        return putFileAsToImpl(fileName, partName, serviceUrl);
+        return putFileAsToImpl(partName, fileName, serviceUrl);
     }
 
     protected boolean putFileToImpl(String fileName, String serviceUrl) {
