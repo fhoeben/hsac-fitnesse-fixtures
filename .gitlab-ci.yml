@@ -24,7 +24,7 @@ before_script:
   - CHROME_PDF_IMAGE=${CI_REGISTRY_IMAGE}/fitnesse-fixtures-test-jre8-chrome-with-pdf:temp-${CI_PIPELINE_ID}
 
 .mvn: &mvn
-  image: adoptopenjdk/maven-openjdk8:latest
+  image: maven:3.6-amazoncorretto-8
   cache:
     paths:
       - .m2/repository
