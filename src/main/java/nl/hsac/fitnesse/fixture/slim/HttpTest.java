@@ -305,7 +305,7 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     protected boolean postFileToImpl(String fileName, String serviceUrl) {
-        return sendFileImpl("file", fileName, serviceUrl, "POST");
+        return postFileAsToImpl("file", fileName, serviceUrl);
     }
 
     protected boolean postFileAsToImpl(String partName, String fileName, String serviceUrl) {
@@ -439,10 +439,10 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     protected boolean putFileToImpl(String fileName, String serviceUrl) {
-        return sendFileImpl("file", fileName, serviceUrl, "PUT");
+        return putFileAsToImpl("file", fileName, serviceUrl);
     }
 
-    protected boolean putFileAsToImpl(String fileName, String partName, String serviceUrl) {
+    protected boolean putFileAsToImpl(String partName, String fileName, String serviceUrl) {
         return sendFileImpl(partName, fileName, serviceUrl, "PUT");
     }
 

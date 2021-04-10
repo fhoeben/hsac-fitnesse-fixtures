@@ -69,6 +69,7 @@ public class HttpClient {
      * @param response response pre-populated with request to send. Response content and
      *          statusCode will be filled.
      * @param headers http headers to add
+     * @param partName name for the part containing file
      * @param file file containing binary data to post.
      */
     public void post(String url, HttpResponse response, Map<String, Object> headers, String partName, File file) {
@@ -99,6 +100,7 @@ public class HttpClient {
      * @param response response pre-populated with request to send. Response content and
      *          statusCode will be filled.
      * @param headers http headers to add
+     * @param partName name for the part containing file
      * @param file file containing binary data to put.
      */
     public void put(String url, HttpResponse response, Map<String, Object> headers, String partName, File file) {
