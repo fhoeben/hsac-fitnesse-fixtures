@@ -47,3 +47,4 @@ wiki/webdrivers
 wiki/FitNesseRoot/HsacExamples/SlimTests/UtilityFixtures/GeneratedSymbolicLinkSuite/*LocaleTests.wiki
 wiki/FitNesseRoot/ReRunLastFailures*.wiki
 /src/main/resources/META-INF/apidocs/
+/wiki/FitNesseRoot/ImmoTest/
