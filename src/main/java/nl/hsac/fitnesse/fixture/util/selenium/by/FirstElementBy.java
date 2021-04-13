@@ -51,7 +51,6 @@ public class FirstElementBy<T extends WebElement> extends SingleElementOrNullBy<
         } else {
             byResult = BestMatchBy.findElement(by, context);
         }
-
         return byResult;
     }
 

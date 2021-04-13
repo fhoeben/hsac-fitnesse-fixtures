@@ -1,8 +1,6 @@
 package nl.hsac.fitnesse.fixture.util.selenium.by;
 
-
 import org.openqa.selenium.By;
-
 
 /**
  * Finds elements to click.
@@ -28,8 +26,7 @@ public class ToClickBy {
                     new XPathBy(".//text()[@onclick and normalized(.)='%s']/..", place),
                     new XPathBy(".//text()[@onclick and contains(normalized(.),'%s')]/..", place),
                     TextBy.exact(place),
-                    TextBy.partial(place)
-            );
+                    TextBy.partial(place));
         }
     }
 }

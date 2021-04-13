@@ -21,7 +21,7 @@ Navigating to the right page is done only once (all subsequent test approaches u
 |open                                   |https://www.allmusic.com                  |
 |show                                   |click if available|AGREE                  |
 |show                                   |click if available|id=exco_sticky-x-button|
-|enter                                  |Van Morrison      |as       |Search       |
+|enter                                  |Van Morrison      |as|Search       |
 |press                                  |enter                                     |
 |click                                  |Van Morrison                              |
 |wait for visible                       |Album Highlights                          |
