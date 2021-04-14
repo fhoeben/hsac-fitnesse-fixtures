@@ -550,6 +550,39 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     /**
+     * Downloads binary content from specified url.
+     *
+     * @param serviceUrl url to download from
+     * @return link to downloaded file
+     */
+    public String postValuesAndGetFileFrom(String serviceUrl) {
+        String body = urlEncodeCurrentValues();
+        resetResponse();
+        String url = createUrlWithParams(serviceUrl);
+
+        BinaryHttpResponse resp = new BinaryHttpResponse();
+        resp.setCookieStore(response.getCookieStore());
+
+        response.setRequest(body);
+        getEnvironment().doHttpPost(url, response, headerValues, getContentType());
+        response.cloneValues(resp);
+
+        byte[] content = resp.getResponseContent();
+        if (content == null) {
+            try {
+                content = resp.getResponse().getBytes("utf-8");
+            } catch (UnsupportedEncodingException e) {
+                // will not happen
+            }
+        }
+        String fileName = resp.getFileName();
+        if (StringUtils.isEmpty(fileName)) {
+            fileName = "download";
+        }
+        return createFile(downloadBase, fileName, content);
+    }
+
+    /**
      * Sends HTTP HEAD to service endpoint.
      *
      * @param serviceUrl service endpoint to delete.
