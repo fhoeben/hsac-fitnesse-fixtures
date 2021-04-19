@@ -4,7 +4,7 @@ import fit.exception.FitFailureException;
 
 import javax.xml.namespace.NamespaceContext;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +13,7 @@ import java.util.Map;
  * Implementation of namespace registry for XPath expressions.
  */
 public class NamespaceContextImpl implements NamespaceContext {
-    private final Map<String, String> namespaces = new HashMap<String, String>();
+    private final Map<String, String> namespaces = new LinkedHashMap<>();
 
     /**
      * Adds registration for prefix.

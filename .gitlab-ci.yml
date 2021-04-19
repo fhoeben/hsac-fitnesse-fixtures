@@ -24,7 +24,7 @@ before_script:
   - CHROME_PDF_IMAGE=${CI_REGISTRY_IMAGE}/fitnesse-fixtures-test-jre8-chrome-with-pdf:temp-${CI_PIPELINE_ID}
 
 .mvn: &mvn
-  image: adoptopenjdk/maven-openjdk8:latest
+  image: maven:3.6-amazoncorretto-8
   cache:
     paths:
       - .m2/repository
@@ -62,7 +62,7 @@ compile-and-verify-project:
 build-test-images:
   <<: *docker_build_definition
   script:
-    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"},\"https://index.docker.io/v1/\":{\"auth\":\"$DOCKER_AUTH\"}}}" > /kaniko/.docker/config.json
     - /kaniko/executor
       --cache=${KANIKO_CACHE}
       --single-snapshot

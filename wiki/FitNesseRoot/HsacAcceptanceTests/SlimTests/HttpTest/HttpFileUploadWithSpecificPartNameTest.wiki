@@ -1,0 +1,31 @@
+|script       |file fixture                                                       |
+|$createdFile=|create|upload.txt|containing|This is a file to test the file upload|
+
+!2 Upload file with POST HTTP method
+
+|script      |mock xml server setup|
+|add response|{{{<binary/>}}}      |
+|$url=       |get mock server url  |
+
+|script   |http test           |
+|post file|$createdFile|as|specific-name|to|$url|
+
+|table: Mock Server Message Report|
+
+|script|mock xml server setup|
+|stop                        |
+
+!2 Upload file with PUT HTTP method
+
+|script      |mock xml server setup|
+|add response|{{{<binary/>}}}      |
+|$url=       |get mock server url  |
+
+|script   |http test           |
+|put file|$createdFile|as|specific-name|to|$url|
+
+|table: Mock Server Message Report|
+
+|script|mock xml server setup|
+|stop                        |
+

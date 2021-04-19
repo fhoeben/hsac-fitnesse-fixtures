@@ -1,5 +1,5 @@
 ARG  BASE_IMAGE=hsac/fitnesse-fixtures-test-jre8:base-latest
-ARG  JRE_IMAGE=amazoncorretto/amazoncorretto:8-alpine-jre
+ARG  JRE_IMAGE=amazoncorretto:8-alpine-jre
 
 FROM ${BASE_IMAGE} as base
 
