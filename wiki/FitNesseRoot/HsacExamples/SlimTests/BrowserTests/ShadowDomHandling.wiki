@@ -1,0 +1,10 @@
+---
+Test
+---
+<test page>
+
+|script                    |browser test                                      |
+|open                      |https://www.virustotal.com                        |
+|set shadow Dom handling to|false                                             |
+|click                     |home-view#home-view>vt-ui-button[data-route='url']|
+|wait seconds              |4                                                 |
