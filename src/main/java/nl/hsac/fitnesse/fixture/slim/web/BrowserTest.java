@@ -991,7 +991,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getElementToClick(String place) {
-        if (getSeleniumHelper().getElementToClick(place) == null && isShadowDomHandling() ){
+        if (getSeleniumHelper().getElementToClick(place) == null && isShadowDomHandlingEnabled() ){
             try{
                 return (T) shadow.findElement(place);
             } catch (ElementNotVisibleException e){
@@ -1075,6 +1075,13 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getContainerElement(String container) {
+        if(findByTechnicalSelectorOr(container, this::getContainerImpl) == null && isShadowDomHandlingEnabled()){
+            try{
+                return (T) shadow.findElement(container);
+            } catch (ElementNotVisibleException e){
+                return null;
+            }
+        }
         return findByTechnicalSelectorOr(container, this::getContainerImpl);
     }
 
@@ -1604,6 +1611,13 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getElement(String place) {
+        if (getSeleniumHelper().getElement(place) == null && isShadowDomHandlingEnabled()){
+            try{
+                return (T) shadow.findElement(place);
+            } catch (ElementNotVisibleException e){
+                return null;
+            }
+        }
         return getSeleniumHelper().getElement(place);
     }
 
@@ -2743,7 +2757,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         this.ngBrowserTest = ngBrowserTest;
     }
 
-    public boolean isShadowDomHandling(){
+    public boolean isShadowDomHandlingEnabled(){
         return shadowDomHandling;
     }
 
