@@ -78,6 +78,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             Pattern.compile("Element.+is not clickable.+because another element.+obscures it");
     private Shadow shadow = new Shadow(driver());
     private boolean shadowDomHandling = true;
+    private int shadowPollingTimeSeconds = 1;
 
     protected List<String> getCurrentSearchContextPath() {
         return currentSearchContextPath;
@@ -991,12 +992,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getElementToClick(String place) {
-        if (getSeleniumHelper().getElementToClick(place) == null && isShadowDomHandlingEnabled() ){
-            try{
-                return (T) shadow.findElement(place);
-            } catch (ElementNotVisibleException e){
-                return null;
-            }
+        if (getSeleniumHelper().getElementToClick(place) == null && isShadowDomHandlingEnabled()){
+            return getElementWithShadow(place);
         }
         return getSeleniumHelper().getElementToClick(place);
     }
@@ -1076,11 +1073,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     protected T getContainerElement(String container) {
         if(findByTechnicalSelectorOr(container, this::getContainerImpl) == null && isShadowDomHandlingEnabled()){
-            try{
-                return (T) shadow.findElement(container);
-            } catch (ElementNotVisibleException e){
-                return null;
-            }
+            return getElementWithShadow(container);
         }
         return findByTechnicalSelectorOr(container, this::getContainerImpl);
     }
@@ -1612,11 +1605,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     protected T getElement(String place) {
         if (getSeleniumHelper().getElement(place) == null && isShadowDomHandlingEnabled()){
-            try{
-                return (T) shadow.findElement(place);
-            } catch (ElementNotVisibleException e){
-                return null;
-            }
+            return getElementWithShadow(place);
         }
         return getSeleniumHelper().getElement(place);
     }
@@ -2763,6 +2752,30 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     public void setShadowDomHandlingTo(boolean shadowDomHandling){
         this.shadowDomHandling = shadowDomHandling;
+    }
+
+    protected T getElementWithShadow(String cssSelector){
+        try{
+            return (T) shadow.findElement(cssSelector);
+        } catch (ElementNotVisibleException e){
+            return null;
+        }
+    }
+
+    public void setImplicitWaitForShadowTo(int shadowImplicitWaitSeconds){
+        shadow.setImplicitWait(shadowImplicitWaitSeconds);
+    }
+
+    public void setExplicitWaitForShadowTo(int shadowExplicitWaitSeconds){
+        try{
+            shadow.setExplicitWait(shadowExplicitWaitSeconds,shadowPollingTimeSeconds);
+        } catch(Exception e){
+            System.err.println(e);
+        }
+    }
+
+    public void setPollingTimeForShadowTo(int shadowPollingTimeSeconds){
+        this.shadowPollingTimeSeconds = shadowPollingTimeSeconds;
     }
 
     public boolean isImplicitWaitForAngularEnabled() {
