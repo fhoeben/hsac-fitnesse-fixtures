@@ -578,7 +578,7 @@ public class HttpTest extends SlimFixtureWithMap {
         }
         String fileName = resp.getFileName();
         if (StringUtils.isEmpty(fileName)) {
-            fileName = "download.pdf";
+            fileName = "download";
         }
         return createFile(downloadBase, fileName, content);
     }
