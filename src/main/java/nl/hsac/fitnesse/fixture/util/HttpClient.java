@@ -58,8 +58,10 @@ public class HttpClient {
     public void post(String url, HttpResponse response, Map<String, Object> headers, String type) {
         HttpPost methodPost = new HttpPost(url);
         ContentType contentType = ContentType.parse(type);
-        HttpEntity ent = new StringEntity(response.getRequest(), contentType);
-        methodPost.setEntity(ent);
+        if (response.getRequest() != null) {
+            HttpEntity ent = new StringEntity(response.getRequest(), contentType);
+            methodPost.setEntity(ent);
+        }
         getResponse(url, response, methodPost, headers);
     }
 
@@ -117,12 +119,12 @@ public class HttpClient {
      * @param headers http headers to add
      * @param type contentType for request.
      */
-    public void patch(String url, HttpResponse response, Map<String, Object> headers, String type){
+    public void patch(String url, HttpResponse response, Map<String, Object> headers, String type) {
         HttpPatch methodPatch = new HttpPatch(url);
         ContentType contentType = ContentType.parse(type);
         HttpEntity ent = new StringEntity(response.getRequest(), contentType);
         methodPatch.setEntity(ent);
-        getResponse(url,response,methodPatch, headers);
+        getResponse(url, response, methodPatch, headers);
     }
 
     /**
@@ -294,7 +296,7 @@ public class HttpClient {
             Object value = requestHeaders.get(key);
             if (value != null) {
                 if (value instanceof Iterable) {
-                    for (Object v : (Iterable<?>)value) {
+                    for (Object v : (Iterable<?>) value) {
                         if (v != null) {
                             method.addHeader(key, v.toString());
                         }
@@ -322,7 +324,7 @@ public class HttpClient {
 
     protected void storeHeadersSent(HttpResponse response, HttpContext context) {
         if (context instanceof HttpCoreContext) {
-            Header[] headersSent = ((HttpCoreContext)context).getRequest().getAllHeaders();
+            Header[] headersSent = ((HttpCoreContext) context).getRequest().getAllHeaders();
             for (Header header : headersSent) {
                 response.addRequestHeader(header.getName(), header.getValue());
             }
@@ -390,7 +392,7 @@ public class HttpClient {
         method.reset();
         if (response instanceof CloseableHttpResponse) {
             try {
-                ((CloseableHttpResponse)response).close();
+                ((CloseableHttpResponse) response).close();
             } catch (IOException e) {
                 throw new RuntimeException("Unable to close connection", e);
             }

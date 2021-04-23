@@ -557,27 +557,28 @@ public class HttpTest extends SlimFixtureWithMap {
      */
     public String postValuesAndGetFileFrom(String serviceUrl) {
         String body = urlEncodeCurrentValues();
-        resetResponse();
         String url = createUrlWithParams(serviceUrl);
 
+        resetResponse();
         BinaryHttpResponse resp = new BinaryHttpResponse();
         resp.setCookieStore(response.getCookieStore());
 
         response.setRequest(body);
-        getEnvironment().doHttpPost(url, response, headerValues, getContentType());
+
+        getEnvironment().doHttpPost(url, resp, headerValues, getContentType());
         response.cloneValues(resp);
 
         byte[] content = resp.getResponseContent();
         if (content == null) {
             try {
-                content = resp.getResponse().getBytes("utf-8");
+                content = resp.getResponse().getBytes("UTF-8");
             } catch (UnsupportedEncodingException e) {
                 // will not happen
             }
         }
         String fileName = resp.getFileName();
         if (StringUtils.isEmpty(fileName)) {
-            fileName = "download";
+            fileName = "download.pdf";
         }
         return createFile(downloadBase, fileName, content);
     }
