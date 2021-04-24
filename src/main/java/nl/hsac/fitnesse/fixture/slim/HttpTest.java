@@ -14,6 +14,7 @@ import org.apache.http.impl.cookie.BasicClientCookie;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -527,20 +528,43 @@ public class HttpTest extends SlimFixtureWithMap {
      */
     public String getFileFrom(String serviceUrl) {
         resetResponse();
-        String url = createUrlWithParams(serviceUrl);
 
-        BinaryHttpResponse resp = new BinaryHttpResponse();
-        resp.setCookieStore(response.getCookieStore());
+        BinaryHttpResponse resp = createBinaryResponse(response);
+        String url = createUrlWithParams(serviceUrl);
         getEnvironment().doGet(url, resp, headerValues);
+        return processBinaryResponse(resp);
+    }
+
+    /**
+     * Downloads binary content from specified url.
+     *
+     * @param serviceUrl url to download from
+     * @return link to downloaded file
+     */
+    public String postValuesAndGetFileFrom(String serviceUrl) {
+        resetResponse();
+        String body = urlEncodeCurrentValues();
+        response.setRequest(body);
+
+        BinaryHttpResponse resp = createBinaryResponse(response);
+        String url = getUrl(serviceUrl);
+        getEnvironment().doHttpPost(url, resp, headerValues, getContentType());
+        return processBinaryResponse(resp);
+    }
+
+    protected BinaryHttpResponse createBinaryResponse(HttpResponse aResponse) {
+        BinaryHttpResponse resp = new BinaryHttpResponse();
+        resp.setCookieStore(aResponse.getCookieStore());
+        resp.setRequest(aResponse.getRequest());
+        return resp;
+    }
+
+    protected String processBinaryResponse(BinaryHttpResponse resp) {
         response.cloneValues(resp);
 
         byte[] content = resp.getResponseContent();
         if (content == null) {
-            try {
-                content = resp.getResponse().getBytes("utf-8");
-            } catch (UnsupportedEncodingException e) {
-                // will not happen
-            }
+            content = resp.getResponse().getBytes(StandardCharsets.UTF_8);
         }
         String fileName = resp.getFileName();
         if (StringUtils.isEmpty(fileName)) {
