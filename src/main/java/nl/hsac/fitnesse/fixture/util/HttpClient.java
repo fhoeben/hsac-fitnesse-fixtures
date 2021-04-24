@@ -58,10 +58,8 @@ public class HttpClient {
     public void post(String url, HttpResponse response, Map<String, Object> headers, String type) {
         HttpPost methodPost = new HttpPost(url);
         ContentType contentType = ContentType.parse(type);
-        if (response.getRequest() != null) {
-            HttpEntity ent = new StringEntity(response.getRequest(), contentType);
-            methodPost.setEntity(ent);
-        }
+        HttpEntity ent = new StringEntity(response.getRequest(), contentType);
+        methodPost.setEntity(ent);
         getResponse(url, response, methodPost, headers);
     }
 

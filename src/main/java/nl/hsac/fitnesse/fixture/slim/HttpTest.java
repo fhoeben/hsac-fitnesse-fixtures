@@ -14,6 +14,7 @@ import org.apache.http.impl.cookie.BasicClientCookie;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -527,26 +528,11 @@ public class HttpTest extends SlimFixtureWithMap {
      */
     public String getFileFrom(String serviceUrl) {
         resetResponse();
+
+        BinaryHttpResponse resp = createBinaryResponse(response);
         String url = createUrlWithParams(serviceUrl);
-
-        BinaryHttpResponse resp = new BinaryHttpResponse();
-        resp.setCookieStore(response.getCookieStore());
         getEnvironment().doGet(url, resp, headerValues);
-        response.cloneValues(resp);
-
-        byte[] content = resp.getResponseContent();
-        if (content == null) {
-            try {
-                content = resp.getResponse().getBytes("utf-8");
-            } catch (UnsupportedEncodingException e) {
-                // will not happen
-            }
-        }
-        String fileName = resp.getFileName();
-        if (StringUtils.isEmpty(fileName)) {
-            fileName = "download";
-        }
-        return createFile(downloadBase, fileName, content);
+        return processBinaryResponse(resp);
     }
 
     /**
@@ -556,25 +542,29 @@ public class HttpTest extends SlimFixtureWithMap {
      * @return link to downloaded file
      */
     public String postValuesAndGetFileFrom(String serviceUrl) {
-        String body = urlEncodeCurrentValues();
-        String url = createUrlWithParams(serviceUrl);
-
         resetResponse();
-        BinaryHttpResponse resp = new BinaryHttpResponse();
-        resp.setCookieStore(response.getCookieStore());
-
+        String body = urlEncodeCurrentValues();
         response.setRequest(body);
 
+        BinaryHttpResponse resp = createBinaryResponse(response);
+        String url = getUrl(serviceUrl);
         getEnvironment().doHttpPost(url, resp, headerValues, getContentType());
+        return processBinaryResponse(resp);
+    }
+
+    protected BinaryHttpResponse createBinaryResponse(HttpResponse aResponse) {
+        BinaryHttpResponse resp = new BinaryHttpResponse();
+        resp.setCookieStore(aResponse.getCookieStore());
+        resp.setRequest(aResponse.getRequest());
+        return resp;
+    }
+
+    protected String processBinaryResponse(BinaryHttpResponse resp) {
         response.cloneValues(resp);
 
         byte[] content = resp.getResponseContent();
         if (content == null) {
-            try {
-                content = resp.getResponse().getBytes("UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                // will not happen
-            }
+            content = resp.getResponse().getBytes(StandardCharsets.UTF_8);
         }
         String fileName = resp.getFileName();
         if (StringUtils.isEmpty(fileName)) {
