@@ -39,7 +39,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import io.github.sukgu.Shadow;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,11 +51,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
+import io.github.sukgu.Shadow;
 
 public class BrowserTest<T extends WebElement> extends SlimFixture {
     private final List<String> currentSearchContextPath = new ArrayList<>();
 
     private SeleniumHelper<T> seleniumHelper = getEnvironment().getSeleniumHelper();
+    private Shadow shadow = new Shadow(driver());
     private ReflectionHelper reflectionHelper = getEnvironment().getReflectionHelper();
     private NgBrowserTest ngBrowserTest;
     private boolean implicitWaitForAngular = false;
@@ -78,9 +79,6 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             EDGE_HIDDEN_BY_OTHER_ELEMENT_ERROR = "Element is obscured";
     private static final Pattern FIREFOX_HIDDEN_BY_OTHER_ELEMENT_ERROR_PATTERN =
             Pattern.compile("Element.+is not clickable.+because another element.+obscures it");
-    private Shadow shadow = new Shadow(driver());
-    private boolean shadowDomHandling = true;
-    private int shadowPollingTimeSeconds = 1;
 
     protected List<String> getCurrentSearchContextPath() {
         return currentSearchContextPath;
@@ -854,6 +852,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return result;
     }
 
+
     protected boolean clickExceptionIsAboutHiddenByOtherElement(Exception e) {
         String msg = e.getMessage();
         return msg != null
@@ -1003,8 +1002,13 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getElementToClick(String place) {
-        if (getSeleniumHelper().getElementToClick(place) == null && isShadowDomHandlingEnabled()){
-            return getElementWithShadow(place);
+        if (getSeleniumHelper().getElementToClick(place) == null){
+            try{
+                return (T) shadow.findElement(place);
+            }catch(ElementNotVisibleException e) {
+                e.printStackTrace();
+                return null;
+            }
         }
         return getSeleniumHelper().getElementToClick(place);
     }
@@ -1083,8 +1087,13 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getContainerElement(String container) {
-        if(findByTechnicalSelectorOr(container, this::getContainerImpl) == null && isShadowDomHandlingEnabled()){
-            return getElementWithShadow(container);
+        if (findByTechnicalSelectorOr(container, this::getContainerImpl) == null){
+            try{
+                return (T) shadow.findElement(container);
+            }catch(ElementNotVisibleException e) {
+                e.printStackTrace();
+                return null;
+            }
         }
         return findByTechnicalSelectorOr(container, this::getContainerImpl);
     }
@@ -1615,8 +1624,13 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getElement(String place) {
-        if (getSeleniumHelper().getElement(place) == null && isShadowDomHandlingEnabled()){
-            return getElementWithShadow(place);
+        if (getSeleniumHelper().getElementToClick(place) == null){
+            try{
+                return (T) shadow.findElement(place);
+            }catch(ElementNotVisibleException e) {
+                e.printStackTrace();
+                return null;
+            }
         }
         return getSeleniumHelper().getElement(place);
     }
@@ -2755,38 +2769,6 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     public void setNgBrowserTest(NgBrowserTest ngBrowserTest) {
         this.ngBrowserTest = ngBrowserTest;
-    }
-
-    public boolean isShadowDomHandlingEnabled(){
-        return shadowDomHandling;
-    }
-
-    public void setShadowDomHandlingTo(boolean shadowDomHandling){
-        this.shadowDomHandling = shadowDomHandling;
-    }
-
-    protected T getElementWithShadow(String cssSelector){
-        try{
-            return (T) shadow.findElement(cssSelector);
-        } catch (ElementNotVisibleException e){
-            return null;
-        }
-    }
-
-    public void setImplicitWaitForShadowTo(int shadowImplicitWaitSeconds){
-        shadow.setImplicitWait(shadowImplicitWaitSeconds);
-    }
-
-    public void setExplicitWaitForShadowTo(int shadowExplicitWaitSeconds){
-        try{
-            shadow.setExplicitWait(shadowExplicitWaitSeconds,shadowPollingTimeSeconds);
-        } catch(Exception e){
-            System.err.println(e);
-        }
-    }
-
-    public void setPollingTimeForShadowTo(int shadowPollingTimeSeconds){
-        this.shadowPollingTimeSeconds = shadowPollingTimeSeconds;
     }
 
     public boolean isImplicitWaitForAngularEnabled() {
