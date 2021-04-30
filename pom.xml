@@ -6,7 +6,7 @@
 
 	<groupId>nl.hsac</groupId>
 	<artifactId>hsac-fitnesse-fixtures</artifactId>
-	<version>4.23-SNAPSHOT</version>
+	<version>4.26-SNAPSHOT</version>
 	<url>https://github.com/fhoeben/hsac-fitnesse-fixtures</url>
 	<name>HSAC's FitNesse Fixtures</name>
 	<description>Fixtures to assist in testing via FitNesse</description>
@@ -41,8 +41,8 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<hsac-fitnesse-plugin.version>1.30.0</hsac-fitnesse-plugin.version>
-		<fitnesse.version>20201213</fitnesse.version>
-		<praegus-toolchain-fitnesse-plugin.version>2.0.12</praegus-toolchain-fitnesse-plugin.version>
+		<fitnesse.version>20210410</fitnesse.version>
+		<praegus-toolchain-fitnesse-plugin.version>2.0.13</praegus-toolchain-fitnesse-plugin.version>
 		<selenium.version>3.141.59</selenium.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<apache.http.version>4.5.13</apache.http.version>
@@ -50,9 +50,9 @@
 
 		<webdriver.download.skip>false</webdriver.download.skip>
 		<selenium.internetexplorerdriver.version>3.150.1</selenium.internetexplorerdriver.version>
-		<selenium.edgedriver.version>88.0.705.53</selenium.edgedriver.version>
-		<selenium.chromedriver.version>88.0.4324.96</selenium.chromedriver.version>
-		<selenium.geckodriver.version>0.29.0</selenium.geckodriver.version>
+		<selenium.edgedriver.version>90.0.818.46</selenium.edgedriver.version>
+		<selenium.chromedriver.version>90.0.4430.24</selenium.chromedriver.version>
+		<selenium.geckodriver.version>0.29.1</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
@@ -99,7 +99,7 @@
 		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
-			<version>2.3.30</version>
+			<version>2.3.31</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -197,18 +197,18 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.27</version>
+            <version>1.28</version>
         </dependency>
 		<dependency>
 			<groupId>commons-net</groupId>
 			<artifactId>commons-net</artifactId>
-			<version>3.7.2</version>
+			<version>3.8.0</version>
 		</dependency>
 		<!-- Testing -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13.1</version>
+			<version>4.13.2</version>
 			<scope>provided</scope>
         </dependency>
         <dependency>

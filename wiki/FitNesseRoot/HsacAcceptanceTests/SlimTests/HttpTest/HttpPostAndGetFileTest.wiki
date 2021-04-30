@@ -1,0 +1,22 @@
+---
+Help: Ensure we can download from a url to file
+---
+|script           |mock xml server setup                                                                                                                   |
+|add response file|http://files/httpPostExamples/test.pdf|with headers|!{ Content-Type:application/pdf, content-disposition: attachment; filename=test.pdf}|
+|$url=            |get mock server url                                                                                                                     |
+
+|script   |http test                            |
+|set value|foo                          |for|bar|
+|$file=   |post values and get file from|$url   |
+|check    |response status              |200    |
+|check not|response                     |NULL   |
+
+|script|file fixture           |
+|check |base name of|$file|test|
+|check |extension of|$file|pdf |
+|delete|$file                  |
+
+|table: Mock Server Message Report|
+
+|script|mock xml server setup|
+|stop                        |

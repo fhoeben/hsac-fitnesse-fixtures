@@ -140,6 +140,11 @@ public class MockXmlServerSetup extends SlimFixture {
         addResponse(fileContent);
     }
 
+    public void addResponseFileWithHeaders(String aResponseFile, Map<String, Object> headers) {
+        String fileContent = loadResponseFromFile(aResponseFile);
+        addResponseImpl(fileContent, null, headers);
+    }
+
     public void addResponseFileWithStatus(String aResponseFile, int aStatusCode) {
         String fileContent = loadResponseFromFile(aResponseFile);
         addResponseWithStatus(fileContent, aStatusCode);
