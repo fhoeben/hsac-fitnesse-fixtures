@@ -1,5 +1,5 @@
 ---
-Prune
+Test
 ---
 !4 Not functional, wait for new selenium 4 release
 
