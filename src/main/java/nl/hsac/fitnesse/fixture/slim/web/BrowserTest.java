@@ -57,7 +57,6 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     private final List<String> currentSearchContextPath = new ArrayList<>();
 
     private SeleniumHelper<T> seleniumHelper = getEnvironment().getSeleniumHelper();
-    private Shadow shadow = new Shadow(driver());
     private ReflectionHelper reflectionHelper = getEnvironment().getReflectionHelper();
     private NgBrowserTest ngBrowserTest;
     private boolean implicitWaitForAngular = false;
@@ -851,7 +850,6 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         }
         return result;
     }
-
 
     protected boolean clickExceptionIsAboutHiddenByOtherElement(Exception e) {
         String msg = e.getMessage();
