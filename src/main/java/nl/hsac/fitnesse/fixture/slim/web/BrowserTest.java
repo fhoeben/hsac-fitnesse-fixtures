@@ -1968,6 +1968,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getElementToCheckVisibility(String place) {
+        if(getSeleniumHelper().getElementToCheckVisibility(place) == null && isShadowDomHandlingEnabled()){
+            return getElementWithShadow(place);
+        }
         return getSeleniumHelper().getElementToCheckVisibility(place);
     }
 
@@ -2500,6 +2503,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T findElement(By selector) {
+
         return getSeleniumHelper().findElement(selector);
     }
 
