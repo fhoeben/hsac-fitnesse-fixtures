@@ -51,7 +51,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
-import io.github.sukgu.Shadow;
 
 public class BrowserTest<T extends WebElement> extends SlimFixture {
     private final List<String> currentSearchContextPath = new ArrayList<>();
