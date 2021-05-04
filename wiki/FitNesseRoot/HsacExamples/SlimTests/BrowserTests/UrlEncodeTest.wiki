@@ -1,5 +1,0 @@
-!1 Website testing using !-BrowserTest-! with UrlEncode
-
-|script                         |browser test                                      |
-|url encode|Audi AG|
-|open| $encodedName|
