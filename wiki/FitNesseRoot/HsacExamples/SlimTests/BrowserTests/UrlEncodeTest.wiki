@@ -1,0 +1,4 @@
+
+|script | browser test|
+|$encodedName= | url encode |Audi AG|
+|open| $encodedName|
