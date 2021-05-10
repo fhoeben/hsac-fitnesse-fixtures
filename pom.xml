@@ -403,7 +403,7 @@
 					<properties>
 						<property>
 							<name>listener</name>
-							<value>nl.hsac.fitnesse.junit.JUnitXMLPerPageListener,nl.hsac.fitnesse.junit.ProgressLoggerListener${extraFailsafeListeners}</value>
+							<value>fitnesse.junit.JUnitXMLPerPageRunListener,nl.hsac.fitnesse.junit.ProgressLoggerListener${extraFailsafeListeners}</value>
 						</property>
 					</properties>
 					<!-- Our listener will create XML failsafe should not, or all tests are reported twice -->

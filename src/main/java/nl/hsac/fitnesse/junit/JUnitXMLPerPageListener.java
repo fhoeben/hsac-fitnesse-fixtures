@@ -19,6 +19,7 @@ import java.io.Writer;
  * 1 file per Java class (and we have only 1 class that runs all pages).
  * This allows build servers to report progress during the run.
  * The page names are used as test names, the Java class executing them is ignored.
+ * @deprecated use fitnesse.junit.JUnitXMLPerPageRunListener
  */
 public class JUnitXMLPerPageListener extends RunListener {
     // default directory for maven-failsafe-plugin
