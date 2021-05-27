@@ -6,7 +6,7 @@
 
 	<groupId>nl.hsac</groupId>
 	<artifactId>hsac-fitnesse-fixtures</artifactId>
-	<version>4.25-SNAPSHOT</version>
+	<version>4.27-SNAPSHOT</version>
 	<url>https://github.com/fhoeben/hsac-fitnesse-fixtures</url>
 	<name>HSAC's FitNesse Fixtures</name>
 	<description>Fixtures to assist in testing via FitNesse</description>
@@ -41,7 +41,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<hsac-fitnesse-plugin.version>1.30.0</hsac-fitnesse-plugin.version>
-		<fitnesse.version>20210410</fitnesse.version>
+		<fitnesse.version>20210516</fitnesse.version>
 		<praegus-toolchain-fitnesse-plugin.version>2.0.13</praegus-toolchain-fitnesse-plugin.version>
 		<selenium.version>3.141.59</selenium.version>
 		<slf4j.version>1.7.25</slf4j.version>
@@ -50,9 +50,9 @@
 
 		<webdriver.download.skip>false</webdriver.download.skip>
 		<selenium.internetexplorerdriver.version>3.150.1</selenium.internetexplorerdriver.version>
-		<selenium.edgedriver.version>90.0.818.41</selenium.edgedriver.version>
+		<selenium.edgedriver.version>90.0.818.46</selenium.edgedriver.version>
 		<selenium.chromedriver.version>90.0.4430.24</selenium.chromedriver.version>
-		<selenium.geckodriver.version>0.29.0</selenium.geckodriver.version>
+		<selenium.geckodriver.version>0.29.1</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
@@ -403,7 +403,7 @@
 					<properties>
 						<property>
 							<name>listener</name>
-							<value>nl.hsac.fitnesse.junit.JUnitXMLPerPageListener,nl.hsac.fitnesse.junit.ProgressLoggerListener${extraFailsafeListeners}</value>
+							<value>fitnesse.junit.JUnitXMLPerPageRunListener,nl.hsac.fitnesse.junit.ProgressLoggerListener${extraFailsafeListeners}</value>
 						</property>
 					</properties>
 					<!-- Our listener will create XML failsafe should not, or all tests are reported twice -->
