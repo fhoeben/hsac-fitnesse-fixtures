@@ -14,6 +14,8 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -204,6 +206,14 @@ public class SeleniumDriverSetup extends SlimFixture {
         }
         getEnvironment().setSymbol(LAST_RUN_SUMMARY, result);
         return result;
+    }
+
+    public void printLog(){
+        List<LogEntry> entries = getEnvironment().getSeleniumHelper().driver().manage().logs().get(LogType.PERFORMANCE).getAll();
+        System.out.println(entries.size() + " log entries found");
+        for (LogEntry entry : entries) {
+            System.out.println(entry.getMessage());
+        }
     }
 
     public static String getLastRunSummary() {

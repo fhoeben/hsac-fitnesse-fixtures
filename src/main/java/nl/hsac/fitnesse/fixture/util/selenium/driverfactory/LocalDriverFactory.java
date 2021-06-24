@@ -1,18 +1,25 @@
 package nl.hsac.fitnesse.fixture.util.selenium.driverfactory;
 
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
+import org.apache.commons.logging.Log;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import java.util.logging.Level;
 
 /**
  * Creates a webdriver at the local machine.
@@ -42,11 +49,21 @@ public class LocalDriverFactory implements DriverFactory {
             if ("firefoxdriver".equalsIgnoreCase(driverClass.getSimpleName())) {
                 FirefoxProfile fxProfile = getFirefoxProfile(profile);
                 FirefoxOptions options = new FirefoxOptions().setProfile(fxProfile);
+
+                LoggingPreferences logPrefs = new LoggingPreferences();
+                logPrefs.enable("performance", Level.ALL);
+                options.setCapability("loggingPrefs",logPrefs);
+
+//                LoggingPreferences logPrefs = new LoggingPreferences();
+//                logPrefs.enable(profile.get("logtype").toString(),Level.ALL);
+//                chromeOptions.setCapability("goog:loggingPrefs",logPrefs);
+//
+
                 driver = new FirefoxDriver(options);
             } else if ("chromedriver".equalsIgnoreCase(driverClass.getSimpleName())) {
-                DesiredCapabilities capabilities = getChromeMobileCapabilities(profile);
-                DriverFactory.addDefaultCapabilities(capabilities);
-                driver = new ChromeDriver(capabilities);
+                ChromeOptions chromeOptions = getChromeOptions(profile);
+                DriverFactory.addDefaultCapabilities(chromeOptions);
+                driver = new ChromeDriver(chromeOptions);
             } else if ("internetexplorerdriver".equalsIgnoreCase(driverClass.getSimpleName())) {
                 InternetExplorerOptions ieOptions = getInternetExplorerOptions(profile);
                 driver = new InternetExplorerDriver(ieOptions);
@@ -117,6 +134,19 @@ public class LocalDriverFactory implements DriverFactory {
             }
         }
         return fxProfile;
+    }
+
+    public ChromeOptions getChromeOptions(Map<String, Object> profile){
+        ChromeOptions chromeOptions = new ChromeOptions();
+        if (profile != null){
+            chromeOptions.setCapability(ChromeOptions.CAPABILITY,profile);
+            if(profile.containsKey("logtype")){
+                LoggingPreferences logPrefs = new LoggingPreferences();
+                logPrefs.enable(profile.get("logtype").toString(),Level.ALL);
+                chromeOptions.setCapability("goog:loggingPrefs",logPrefs);
+            }
+        }
+        return chromeOptions;
     }
 
     public static DesiredCapabilities getChromeMobileCapabilities(Map<String, Object> profile) {
