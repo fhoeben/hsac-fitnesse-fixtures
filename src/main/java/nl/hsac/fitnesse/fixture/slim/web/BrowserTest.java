@@ -36,6 +36,8 @@ import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -82,6 +84,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     private int shadowTryCounter = 0;
     private int shadowTryXAmountOfTimes = 10;
 
+
     protected List<String> getCurrentSearchContextPath() {
         return currentSearchContextPath;
     }
@@ -91,6 +94,14 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     protected void beforeInvoke(Method method, Object[] arguments) {
         super.beforeInvoke(method, arguments);
         waitForAngularIfNeeded(method);
+    }
+
+    public void analyzeLog(){
+        List<LogEntry> entries = driver().manage().logs().get(LogType.PERFORMANCE).getAll();
+        System.out.println(entries.size() + " " + LogType.PERFORMANCE + " log entries found");
+        for (LogEntry entry : entries) {
+            System.out.println(entry.getMessage());
+        }
     }
 
     @Override

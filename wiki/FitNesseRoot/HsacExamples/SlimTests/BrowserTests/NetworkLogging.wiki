@@ -1,0 +1,10 @@
+---
+Test
+---
+<test page>
+
+!1 Website testing using !-BrowserTest-!
+
+|script | browser test|
+|open| https://google.com|
+|note|analyzeLog|
