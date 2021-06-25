@@ -46,23 +46,8 @@ This configuration can be overridden by using system properties. This allows dif
 |$ieCleanSession=                      |copy map                          |
 *!
 
-!*> Define $chromeLogging internet explorer profile
-
-|script         |map fixture            |
-|set value      |performance|for|logtype|
-|$chromeLogging=|copy map               |
-*!
-
-!*> Define $firefoxLogging internet explorer profile
-
-|script          |map fixture            |
-|set value       |performance|for|logtype|
-|$firefoxLogging=|copy map               |
-*!
-
 |script          |selenium driver setup                                                                                                                  |
-|note            |start driver for     |chrome                 |with profile          |$chromeLogging                          |                         |
-|start driver for|firefox                                                                                                                                |
+|start driver for|chrome                                                                                                                                 |
 |note            |start driver for     |!-MicrosoftEdge-!                                                                                                |
 |note            |start driver for     |internet explorer                                                                                                |
 |note            |start driver for     |firefox                                                                                                          |

@@ -1,4 +1,3 @@
 |script|selenium driver setup|
 |show  |run summary          |
-|print log|
 |stop driver                 |
