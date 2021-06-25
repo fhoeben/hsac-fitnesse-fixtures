@@ -2767,7 +2767,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     protected T getElementWithShadow(String cssSelector){
         try{
             return (T) shadow.findElement(cssSelector);
-        } catch (ElementNotVisibleException e){
+        } catch (Exception e){
             return null;
         }
     }
