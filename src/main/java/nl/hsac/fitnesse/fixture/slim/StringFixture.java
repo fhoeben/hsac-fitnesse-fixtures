@@ -3,8 +3,6 @@ package nl.hsac.fitnesse.fixture.slim;
 import nl.hsac.fitnesse.fixture.util.LineEndingHelper;
 import org.apache.commons.lang3.StringUtils;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -206,14 +204,5 @@ public class StringFixture extends SlimFixture {
 
     public String convertLineEndingsToUnix(String input) {
         return getEnvironment().getLineEndingHelper().convertEndingsTo(input, LineEndingHelper.UNIX_LINE_ENDING);
-    }
-
-    public String urlEncode(String value){
-        try{
-            URI uri = new URI("http", "www.home.com", "/test", value, null);
-            return uri.getRawQuery();
-        } catch(URISyntaxException e){
-            throw new Error(e);
-        }
     }
 }
