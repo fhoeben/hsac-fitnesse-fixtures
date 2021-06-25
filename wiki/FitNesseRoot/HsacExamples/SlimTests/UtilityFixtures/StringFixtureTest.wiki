@@ -48,7 +48,3 @@ And this can be combined with usage of [[variables/symbols][.FitNesse.UserGuide.
 |1975-01-2        |02-01-1975       |
 |1975-1-02        |02-01-1975       |
 |1975-01-02       |02-01-1975       |
-
-Url Encode test
-|script | string fixture|
-|check |url encode |Audi AG| Audi%20AG|
