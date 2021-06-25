@@ -81,6 +81,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     private Shadow shadow = new Shadow(driver());
     private boolean shadowDomHandling = true;
     private int shadowPollingTimeSeconds = 1;
+    private int shadowTryCounter = 0;
+    private int shadowTryXAmountOfTimes = 10;
 
     protected List<String> getCurrentSearchContextPath() {
         return currentSearchContextPath;
@@ -1002,9 +1004,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getElementToClick(String place) {
-        if (getSeleniumHelper().getElementToClick(place) == null && isShadowDomHandlingEnabled()){
-            return getElementWithShadow(place);
-        }
+        if (ShadowUsageAllowed(getSeleniumHelper().getElementToClick(place))) return getElementWithShadow(place);
         return getSeleniumHelper().getElementToClick(place);
     }
 
@@ -1082,9 +1082,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getContainerElement(String container) {
-        if(findByTechnicalSelectorOr(container, this::getContainerImpl) == null && isShadowDomHandlingEnabled()){
+        if (ShadowUsageAllowed(findByTechnicalSelectorOr(container, this::getContainerImpl)))
             return getElementWithShadow(container);
-        }
         return findByTechnicalSelectorOr(container, this::getContainerImpl);
     }
 
@@ -1614,9 +1613,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getElement(String place) {
-        if (getSeleniumHelper().getElement(place) == null && isShadowDomHandlingEnabled()){
-            return getElementWithShadow(place);
-        }
+        if (ShadowUsageAllowed(getSeleniumHelper().getElement(place))) return getElementWithShadow(place);
         return getSeleniumHelper().getElement(place);
     }
 
@@ -1953,9 +1950,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getElementToCheckVisibility(String place) {
-        if(getSeleniumHelper().getElementToCheckVisibility(place) == null && isShadowDomHandlingEnabled()){
+        if (ShadowUsageAllowed(getSeleniumHelper().getElementToCheckVisibility(place)))
             return getElementWithShadow(place);
-        }
         return getSeleniumHelper().getElementToCheckVisibility(place);
     }
 
@@ -2775,6 +2771,17 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         }
     }
 
+    private boolean ShadowUsageAllowed(T elementOrContainer) {
+        if (elementOrContainer == null && isShadowDomHandlingEnabled() && shadowTriedEnoughTimes()) {
+            return true;
+        } else if (elementOrContainer == null) {
+            shadowIncreaseTryCounter();
+        } else {
+            resetShadowTryCounter();
+        }
+        return false;
+    }
+
     public void setImplicitWaitForShadowTo(int shadowImplicitWaitSeconds){
         shadow.setImplicitWait(shadowImplicitWaitSeconds);
     }
@@ -2789,6 +2796,22 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     public void setPollingTimeForShadowTo(int shadowPollingTimeSeconds){
         this.shadowPollingTimeSeconds = shadowPollingTimeSeconds;
+    }
+
+    public void shadowTryAmountOfTimes(int amountOfTimes) {
+        this.shadowTryXAmountOfTimes = amountOfTimes;
+    }
+
+    private int shadowIncreaseTryCounter() {
+        return this.shadowTryCounter++;
+    }
+
+    private void resetShadowTryCounter() {
+        this.shadowTryCounter = 0;
+    }
+
+    private boolean shadowTriedEnoughTimes() {
+        return shadowTryCounter == shadowTryXAmountOfTimes;
     }
 
     public boolean isImplicitWaitForAngularEnabled() {
