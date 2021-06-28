@@ -28,7 +28,6 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Dimension;
-import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.TimeoutException;
@@ -36,8 +35,6 @@ import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.logging.LogEntry;
-import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -998,7 +995,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getElementToClick(String place) {
-        if (ShadowUsageAllowed(getSeleniumHelper().getElementToClick(place))) return getElementWithShadow(place);
+        if (isShadowUsageAllowed(getSeleniumHelper().getElementToClick(place))) return getElementWithShadow(place);
         return getSeleniumHelper().getElementToClick(place);
     }
 
@@ -1076,7 +1073,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getContainerElement(String container) {
-        if (ShadowUsageAllowed(findByTechnicalSelectorOr(container, this::getContainerImpl)))
+        if (isShadowUsageAllowed(findByTechnicalSelectorOr(container, this::getContainerImpl)))
             return getElementWithShadow(container);
         return findByTechnicalSelectorOr(container, this::getContainerImpl);
     }
@@ -1607,7 +1604,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getElement(String place) {
-        if (ShadowUsageAllowed(getSeleniumHelper().getElement(place))) return getElementWithShadow(place);
+        if (isShadowUsageAllowed(getSeleniumHelper().getElement(place))) return getElementWithShadow(place);
         return getSeleniumHelper().getElement(place);
     }
 
@@ -1944,7 +1941,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected T getElementToCheckVisibility(String place) {
-        if (ShadowUsageAllowed(getSeleniumHelper().getElementToCheckVisibility(place)))
+        if (isShadowUsageAllowed(getSeleniumHelper().getElementToCheckVisibility(place)))
             return getElementWithShadow(place);
         return getSeleniumHelper().getElementToCheckVisibility(place);
     }
@@ -2765,8 +2762,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         }
     }
 
-    private boolean ShadowUsageAllowed(T elementOrContainer) {
+    protected boolean isShadowUsageAllowed(T elementOrContainer) {
         if (elementOrContainer == null && isShadowDomHandlingEnabled() && shadowTriedEnoughTimes()) {
+            resetShadowTryCounter();
             return true;
         } else if (elementOrContainer == null) {
             shadowIncreaseTryCounter();
