@@ -96,13 +96,6 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         waitForAngularIfNeeded(method);
     }
 
-    public void analyzeLog(){
-        List<LogEntry> entries = driver().manage().logs().get(LogType.PERFORMANCE).getAll();
-        System.out.println(entries.size() + " " + LogType.PERFORMANCE + " log entries found");
-        for (LogEntry entry : entries) {
-            System.out.println(entry.getMessage());
-        }
-    }
 
     @Override
     protected Object invoke(FixtureInteraction interaction, Method method, Object[] arguments)
