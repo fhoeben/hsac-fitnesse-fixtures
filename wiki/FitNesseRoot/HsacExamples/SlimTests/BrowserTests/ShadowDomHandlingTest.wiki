@@ -23,7 +23,7 @@ Below is a simple example using the shadow automation plugin. The plugin is inte
 |note| set explicit wait for shadow to | 5|
 | note| set implicit wait for shadow to |10|
 |note| set polling time for shadow to | 3|
-|click | home-view#home-view>vt-ui-button[data-route='url']|
+|click | css=home-view#home-view>vt-ui-button[data-route='url']|
 |wait| 3| seconds|
 
 !3 All BrowserTests Methods that support shadow DOM handling

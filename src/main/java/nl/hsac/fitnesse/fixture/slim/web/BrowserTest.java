@@ -2754,9 +2754,10 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         this.shadowDomHandling = shadowDomHandling;
     }
 
-    protected T getElementWithShadow(String cssSelector){
+    protected T getElementWithShadow(String place){
         try{
-            return (T) shadow.findElement(cssSelector);
+            if(place.startsWith("css=")) return (T) shadow.findElement(place.split("css=")[1]);
+            return null;
         } catch (Exception e){
             return null;
         }
