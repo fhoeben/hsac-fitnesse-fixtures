@@ -223,6 +223,11 @@
 			<version>1.5.0</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>io.github.sukgu</groupId>
+			<artifactId>automation</artifactId>
+			<version>0.1.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -363,6 +368,7 @@
 							<goal>test</goal>
 						</goals>
 						<configuration>
+							<testFailureIgnore>true</testFailureIgnore>
 							<excludes>
 								<!-- this test actually runs fitnesse tests
                                      therefore it will only be executed for
