@@ -21,7 +21,8 @@ public class XmlHttpTest extends HttpTest {
 
     /**
      * Register a prefix to use in XPath expressions.
-     * @param prefix prefix to be used in xPath expressions.
+     *
+     * @param prefix    prefix to be used in xPath expressions.
      * @param namespace XML namespace the prefix should point to.
      */
     public void registerPrefixForNamespace(String prefix, String namespace) {
@@ -39,6 +40,7 @@ public class XmlHttpTest extends HttpTest {
 
     /**
      * Gets a HTML list with all matches to the supplied XPath.
+     *
      * @param xPathExpr expression to evaluate.
      * @return list containing all results of expression evaluation against last response received, null if there were no matches.
      * @throws RuntimeException if no valid response was available or XPath could not be evaluated.
@@ -62,11 +64,12 @@ public class XmlHttpTest extends HttpTest {
 
     public ArrayList<String> listXPathMatches(String xPathExpr) {
         List<String> results = getResponse().getAllXPath(xPathExpr);
-        return results instanceof ArrayList? (ArrayList<String>) results : new ArrayList<>(results);
+        return results instanceof ArrayList ? (ArrayList<String>) results : new ArrayList<>(results);
     }
 
     /**
      * Gets XPath value, without ensuring response was valid.
+     *
      * @param xPathExpr expression to evaluate.
      * @return result of expression evaluation against last response received.
      */
@@ -103,7 +106,7 @@ public class XmlHttpTest extends HttpTest {
 
     /**
      * @param baseName base of filename to generate (a number might be added to the name to make it unique).
-     * @param xPath expression to evaluate.
+     * @param xPath    expression to evaluate.
      * @return link to created file.
      */
     public String createFileFromBase64ContentOf(String baseName, String xPath) {
@@ -173,5 +176,16 @@ public class XmlHttpTest extends HttpTest {
     @Override
     protected XmlHttpResponse createResponse() {
         return new XmlHttpResponse();
+    }
+
+    /**
+     * Select the part of a multimime response. This can only be done once per request, the underlying response
+     * is modified.
+     *
+     * @param part Which part number.
+     * @return True if the part exists.
+     */
+    public boolean selectPartOfResponse(int part) {
+        return getResponse().selectPartOfResponse(part);
     }
 }

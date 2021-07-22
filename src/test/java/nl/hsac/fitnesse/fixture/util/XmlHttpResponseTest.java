@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests XmlHttpResponse.
@@ -20,7 +22,12 @@ import static org.junit.Assert.assertNull;
 public class XmlHttpResponseTest {
     final static String OK_RESP = "<?xml version='1.0' encoding='UTF-8'?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Body><ns2:yarOpportunityResponse xmlns:ns2=\"http://www.openuri.org/\" xmlns=\"http://www.leanapps.com/life/wslife\"><opportunityReturn><errorStatus>OK</errorStatus><calculatedResult>13.44</calculatedResult><amountPremiumYear>158.86</amountPremiumYear></opportunityReturn></ns2:yarOpportunityResponse></soapenv:Body></soapenv:Envelope>";
     final static String MULTIPLY_NODES_RESP = "<?xml version='1.0' encoding='UTF-8'?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Body><ns2:yarOpportunityResponse xmlns:ns2=\"http://www.openuri.org/\" xmlns=\"http://www.leanapps.com/life/wslife\"><opportunityReturns><errorStatus>OK</errorStatus><opportunityReturn><calculatedResult>125.14</calculatedResult><amountPremiumYear>125.14</amountPremiumYear></opportunityReturn><opportunityReturn><calculatedResult>13.44</calculatedResult><amountPremiumYear>158.86</amountPremiumYear></opportunityReturn><opportunityReturn><calculatedResult>19.37</calculatedResult><amountPremiumYear>139.24</amountPremiumYear></opportunityReturn></opportunityReturns></ns2:yarOpportunityResponse></soapenv:Body></soapenv:Envelope>";
+    private final static String BOUNDERY = "--uuid:33077a12-716e-44ec-a23d-3370cd872c81\n";
+    private final static String HEADERS = "Content-Type: application/xop+xml; charset=UTF-8; type=\"application/soap+xml\"\n" +
+        "Content-Transfer-Encoding: binary\n" +
+        "Content-ID: <root.message@cxf.apache.org>\n\n";
 
+    public final static String MULTIPART_RESPONSE= BOUNDERY + HEADERS + OK_RESP + "\n" + BOUNDERY;
 
     @Rule
     public ExpectedException expect = ExpectedException.none();
@@ -181,5 +188,19 @@ public class XmlHttpResponseTest {
         XmlHttpResponse resp = getOKResponse();
         List<String> xpathResults = resp.getAllXPath("//*/text()");
         assertEquals(3, xpathResults.size());
+    }
+
+    @Test
+    public void testMultipart() {
+        XmlHttpResponse response = new XmlHttpResponse();
+        response.setResponse(MULTIPART_RESPONSE);
+        assertFalse(response.selectPartOfResponse(1));
+        assertEquals(response.getResponse(), MULTIPART_RESPONSE);
+        assertTrue(response.selectPartOfResponse(0));
+        assertEquals(response.getResponse(),OK_RESP);
+        // Response is modified, so no parts exist anymore
+        assertFalse(response.selectPartOfResponse(0));
+        response.setResponse(MULTIPART_RESPONSE + HEADERS +"\n" + OK_RESP + "\n" + BOUNDERY);
+        assertTrue(response.selectPartOfResponse(1));
     }
 }
