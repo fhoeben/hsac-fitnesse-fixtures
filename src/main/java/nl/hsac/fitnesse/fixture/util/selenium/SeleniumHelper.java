@@ -1275,6 +1275,13 @@ public class SeleniumHelper<T extends WebElement> {
         getWindow().maximize();
     }
 
+    public void setBrowserPositionXY(int xPos, int yPos) {
+		String currentWindowHandle = driver().getWindowHandle();
+		getTargetLocator().window(currentWindowHandle);
+		Point p = new Point(xPos, yPos);
+		getWindow().setPosition(p);
+    }
+
     /**
      * @return current browser window.
      */
