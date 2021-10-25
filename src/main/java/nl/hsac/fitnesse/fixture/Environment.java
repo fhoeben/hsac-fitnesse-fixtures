@@ -297,10 +297,11 @@ public class Environment {
      * @param url url to post to.
      * @param result result containing request, its response will be filled.
      * @param headers headers to add.
+     * @param partName partName for file
      * @param file file containing binary data to post.
      */
-    public void doHttpFilePost(String url, HttpResponse result, Map<String, Object> headers, File file) {
-        httpClient.post(url, result, headers, file);
+    public void doHttpFilePost(String url, HttpResponse result, Map<String, Object> headers, String partName, File file) {
+        httpClient.post(url, result, headers, partName, file);
     }
 
     /**
@@ -308,10 +309,11 @@ public class Environment {
      * @param url url to post to.
      * @param result result containing request, its response will be filled.
      * @param headers headers to add.
+     * @param partName partName for file
      * @param file file containing binary data to post.
      */
-    public void doHttpFilePut(String url, HttpResponse result, Map<String, Object> headers, File file) {
-        httpClient.put(url, result, headers, file);
+    public void doHttpFilePut(String url, HttpResponse result, Map<String, Object> headers, String partName, File file) {
+        httpClient.put(url, result, headers, partName, file);
     }
 
     /**

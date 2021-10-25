@@ -14,6 +14,7 @@ import org.apache.http.impl.cookie.BasicClientCookie;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -240,6 +241,18 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     /**
+     * Sends a file by HTTP POST body to service endpoint with specific partname.
+     *
+     * @param fileName   fileName to post
+     * @param partName   partName for file
+     * @param serviceUrl service endpoint to send body to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean postFileAsTo(String fileName, String partName, String serviceUrl) {
+        return postFileAsToImpl(partName, fileName, serviceUrl);
+    }
+
+    /**
      * Sends all values (url encoded) using post.
      *
      * @param serviceUrl service endpoint to send values to.
@@ -293,7 +306,11 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     protected boolean postFileToImpl(String fileName, String serviceUrl) {
-        return sendFileImpl(fileName, serviceUrl, "POST");
+        return postFileAsToImpl("file", fileName, serviceUrl);
+    }
+
+    protected boolean postFileAsToImpl(String partName, String fileName, String serviceUrl) {
+        return sendFileImpl(partName, fileName, serviceUrl, "POST");
     }
 
     /**
@@ -410,11 +427,27 @@ public class HttpTest extends SlimFixtureWithMap {
         return putFileToImpl(fileName, serviceUrl);
     }
 
-    protected boolean putFileToImpl(String fileName, String serviceUrl) {
-        return sendFileImpl(fileName, serviceUrl, "PUT");
+    /**
+     * Sends a file by HTTP PUT body to service endpoint.
+     *
+     * @param fileName   fileName to post
+     * @param partName   partName for file
+     * @param serviceUrl service endpoint to send body to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean putFileAsTo(String fileName, String partName, String serviceUrl) {
+        return putFileAsToImpl(partName, fileName, serviceUrl);
     }
 
-    protected boolean sendFileImpl(String fileName, String serviceUrl, String method) {
+    protected boolean putFileToImpl(String fileName, String serviceUrl) {
+        return putFileAsToImpl("file", fileName, serviceUrl);
+    }
+
+    protected boolean putFileAsToImpl(String partName, String fileName, String serviceUrl) {
+        return sendFileImpl(partName, fileName, serviceUrl, "PUT");
+    }
+
+    protected boolean sendFileImpl(String partName, String fileName, String serviceUrl, String method) {
         boolean result;
         resetResponse();
         String url = getUrl(serviceUrl);
@@ -430,10 +463,10 @@ public class HttpTest extends SlimFixtureWithMap {
             storeLastCall(method + "_FILE", serviceUrl);
             switch (method) {
                 case "POST":
-                    getEnvironment().doHttpFilePost(url, response, headerValues, file);
+                    getEnvironment().doHttpFilePost(url, response, headerValues, partName, file);
                     break;
                 case "PUT":
-                    getEnvironment().doHttpFilePut(url, response, headerValues, file);
+                    getEnvironment().doHttpFilePut(url, response, headerValues, partName, file);
                     break;
             }
         } catch (Throwable t) {
@@ -495,20 +528,43 @@ public class HttpTest extends SlimFixtureWithMap {
      */
     public String getFileFrom(String serviceUrl) {
         resetResponse();
-        String url = createUrlWithParams(serviceUrl);
 
-        BinaryHttpResponse resp = new BinaryHttpResponse();
-        resp.setCookieStore(response.getCookieStore());
+        BinaryHttpResponse resp = createBinaryResponse(response);
+        String url = createUrlWithParams(serviceUrl);
         getEnvironment().doGet(url, resp, headerValues);
+        return processBinaryResponse(resp);
+    }
+
+    /**
+     * Downloads binary content from specified url.
+     *
+     * @param serviceUrl url to download from
+     * @return link to downloaded file
+     */
+    public String postValuesAndGetFileFrom(String serviceUrl) {
+        resetResponse();
+        String body = urlEncodeCurrentValues();
+        response.setRequest(body);
+
+        BinaryHttpResponse resp = createBinaryResponse(response);
+        String url = getUrl(serviceUrl);
+        getEnvironment().doHttpPost(url, resp, headerValues, getContentType());
+        return processBinaryResponse(resp);
+    }
+
+    protected BinaryHttpResponse createBinaryResponse(HttpResponse aResponse) {
+        BinaryHttpResponse resp = new BinaryHttpResponse();
+        resp.setCookieStore(aResponse.getCookieStore());
+        resp.setRequest(aResponse.getRequest());
+        return resp;
+    }
+
+    protected String processBinaryResponse(BinaryHttpResponse resp) {
         response.cloneValues(resp);
 
         byte[] content = resp.getResponseContent();
         if (content == null) {
-            try {
-                content = resp.getResponse().getBytes("utf-8");
-            } catch (UnsupportedEncodingException e) {
-                // will not happen
-            }
+            content = resp.getResponse().getBytes(StandardCharsets.UTF_8);
         }
         String fileName = resp.getFileName();
         if (StringUtils.isEmpty(fileName)) {

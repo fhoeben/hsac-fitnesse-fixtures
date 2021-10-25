@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.junit;
 
+import fitnesse.junit.JUnitXMLPerPageRunListener;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.RunListener;
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public class JUnitConsoleRunner {
     protected List<RunListener> getListeners() {
-        return Arrays.asList(new JUnitXMLPerPageListener(), new ProgressLoggerListener());
+        return Arrays.asList(new JUnitXMLPerPageRunListener(), new ProgressLoggerListener());
     }
 
     protected List<Class> getTestClasses(String[] args) {
