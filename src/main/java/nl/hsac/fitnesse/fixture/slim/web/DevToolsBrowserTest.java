@@ -7,29 +7,29 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.HasDevTools;
 import org.openqa.selenium.devtools.idealized.log.model.LogEntry;
-import org.openqa.selenium.devtools.v87.V87Log;
-import org.openqa.selenium.devtools.v87.emulation.Emulation;
-import org.openqa.selenium.devtools.v87.fetch.Fetch;
-import org.openqa.selenium.devtools.v87.fetch.model.AuthChallengeResponse;
-import org.openqa.selenium.devtools.v87.fetch.model.RequestPattern;
-import org.openqa.selenium.devtools.v87.fetch.model.RequestStage;
-import org.openqa.selenium.devtools.v87.log.Log;
-import org.openqa.selenium.devtools.v87.network.Network;
-import org.openqa.selenium.devtools.v87.network.model.Cookie;
-import org.openqa.selenium.devtools.v87.network.model.CookiePriority;
-import org.openqa.selenium.devtools.v87.network.model.CookieSameSite;
-import org.openqa.selenium.devtools.v87.network.model.Headers;
-import org.openqa.selenium.devtools.v87.network.model.RequestId;
-import org.openqa.selenium.devtools.v87.network.model.RequestWillBeSent;
-import org.openqa.selenium.devtools.v87.network.model.ResourceType;
-import org.openqa.selenium.devtools.v87.network.model.ResponseReceived;
-import org.openqa.selenium.devtools.v87.network.model.TimeSinceEpoch;
-import org.openqa.selenium.devtools.v87.page.Page;
-import org.openqa.selenium.devtools.v87.performance.Performance;
-import org.openqa.selenium.devtools.v87.performance.model.Metric;
-import org.openqa.selenium.devtools.v87.security.Security;
+import org.openqa.selenium.devtools.v94.emulation.Emulation;
+import org.openqa.selenium.devtools.v94.fetch.Fetch;
+import org.openqa.selenium.devtools.v94.fetch.model.RequestPattern;
+import org.openqa.selenium.devtools.v94.fetch.model.RequestStage;
+import org.openqa.selenium.devtools.v94.log.Log;
+import org.openqa.selenium.devtools.v94.network.Network;
+import org.openqa.selenium.devtools.v94.network.model.Cookie;
+import org.openqa.selenium.devtools.v94.network.model.CookiePriority;
+import org.openqa.selenium.devtools.v94.network.model.CookieSameSite;
+import org.openqa.selenium.devtools.v94.network.model.Headers;
+import org.openqa.selenium.devtools.v94.network.model.RequestId;
+import org.openqa.selenium.devtools.v94.network.model.RequestWillBeSent;
+import org.openqa.selenium.devtools.v94.network.model.ResourceType;
+import org.openqa.selenium.devtools.v94.network.model.ResponseReceived;
+import org.openqa.selenium.devtools.v94.network.model.TimeSinceEpoch;
+import org.openqa.selenium.devtools.v94.page.Page;
+import org.openqa.selenium.devtools.v94.performance.Performance;
+import org.openqa.selenium.devtools.v94.performance.model.Metric;
+import org.openqa.selenium.devtools.v94.runtime.Runtime;
+import org.openqa.selenium.devtools.v94.security.Security;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,27 +41,31 @@ import java.util.stream.Collectors;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 
-public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T> {
+
+public class DevToolsBrowserTest<T extends WebElement> extends BrowserTest<T> {
     private DevTools devTools;
-    private final List<LogEntry> logEntries = new ArrayList<>();
+    private final List<String> logEntries = new ArrayList<>();
     private final List<RequestWillBeSent> requests = new ArrayList<>();
     private final List<ResponseReceived> responses = new ArrayList<>();
     private final List<RequestPattern> requestPatternsToOverride = new ArrayList<>();
-    private boolean overrideAuth = false;
 
-    public BrowserTestWithDevTools() {
+    /**
+     * Experimental class leveraging selenium 4's devTools api's. Use with devTools enabled browser
+     * Current api: v94
+     */
+    public DevToolsBrowserTest() {
         super();
         ensureDevToolsEnabledDriver();
         enableConsoleLogCapturing();
     }
 
-    public BrowserTestWithDevTools(int secondsBeforeTimeout) {
+    public DevToolsBrowserTest(int secondsBeforeTimeout) {
         super(secondsBeforeTimeout);
         ensureDevToolsEnabledDriver();
         enableConsoleLogCapturing();
     }
 
-    public BrowserTestWithDevTools(int secondsBeforeTimeout, boolean confirmAlertIfAvailable) {
+    public DevToolsBrowserTest(int secondsBeforeTimeout, boolean confirmAlertIfAvailable) {
         super(secondsBeforeTimeout, confirmAlertIfAvailable);
         ensureDevToolsEnabledDriver();
         enableConsoleLogCapturing();
@@ -78,6 +82,7 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
 
     /**
      * Inject custom request headers in each request the browser sends
+     *
      * @param headers A map conaining headers as key:value
      */
     public void injectHttpHeaders(Map<String, Object> headers) {
@@ -100,6 +105,7 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
 
     /**
      * Get a map containing all cookies for the given URL
+     *
      * @param url The url to list cookies for
      * @return a map containing the cookies as name:value pairs
      */
@@ -114,17 +120,19 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
 
     /**
      * Set a cookie for a specific domain
-     * @param name The name of the cookie
-     * @param value The cookie value
+     *
+     * @param name   The name of the cookie
+     * @param value  The cookie value
      * @param domain The domain the cookie is valid for
      */
     public void setCookieWithValueForDomain(String name, String value, String domain) {
         devTools.send(Network.setCookie(name, value, empty(), Optional.of(domain),
-                empty(), empty(), empty(), empty(), empty(), empty()));
+                empty(), empty(), empty(), empty(), empty(), empty(), empty(), empty(), empty()));
     }
 
     /**
      * Set a cookie with the possibility to set all properties
+     *
      * @param cookieData a map containing key/value for name, value, url, domain, path, secure, httpOnly, sameSite, expires, priority
      *                   Only name and value are mandatory, the others are optional.
      */
@@ -132,19 +140,23 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
         devTools.send(Network.setCookie(
                 String.valueOf(cookieData.get("name")),
                 String.valueOf(cookieData.get("value")),
-                cookieData.get("url") != null ? Optional.of(String.valueOf(cookieData.get("url"))) : empty(),
-                cookieData.get("domain") != null ? Optional.of(String.valueOf(cookieData.get("domain"))) : empty(),
-                cookieData.get("path") != null ? Optional.of(String.valueOf(cookieData.get("path"))) : empty(),
-                cookieData.get("secure") != null ? Optional.of(Boolean.valueOf(cookieData.get("secure").toString())) : empty(),
-                cookieData.get("httpOnly") != null ? Optional.of(Boolean.valueOf(cookieData.get("httpOnly").toString())) : empty(),
-                cookieData.get("sameSite") != null ? Optional.of(CookieSameSite.fromString(String.valueOf(cookieData.get("sameSite")))) : empty(),
-                cookieData.get("expires") != null ? Optional.of(new TimeSinceEpoch(new BigInteger(String.valueOf(cookieData.get("expires"))))) : empty(),
-                cookieData.get("priority") != null ? Optional.of(CookiePriority.fromString(String.valueOf(cookieData.get("priority")))) : empty())
-        );
+                Optional.of(String.valueOf(cookieData.get("url"))),
+                Optional.of(String.valueOf(cookieData.get("domain"))),
+                Optional.of(String.valueOf(cookieData.get("path"))),
+                Optional.of(Boolean.valueOf(cookieData.get("secure").toString())),
+                Optional.of(Boolean.valueOf(cookieData.get("httpOnly").toString())),
+                Optional.of(CookieSameSite.fromString(String.valueOf(cookieData.get("sameSite")))),
+                Optional.of(new TimeSinceEpoch(new BigInteger(String.valueOf(cookieData.get("expires"))))),
+                Optional.of(CookiePriority.fromString(String.valueOf(cookieData.get("priority")))),
+                empty(),
+                empty(),
+                empty()
+        ));
     }
 
     /**
      * Toggle browser caching
+     *
      * @param disable true to disable caching, false to re-enable it
      */
     public void disableBrowserCache(boolean disable) {
@@ -153,8 +165,9 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
 
     /**
      * Mock geo location and accuracy
-     * @param lat Latitude
-     * @param lon Longitude
+     *
+     * @param lat      Latitude
+     * @param lon      Longitude
      * @param accuracy Accuracy
      */
     public void setGeoLocationLatLonAccuracy(String lat, String lon, String accuracy) {
@@ -163,9 +176,9 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
 
     /**
      * Mock geo location with a default accuracy of 1.
+     *
      * @param lat Latitude
      * @param lon Longitude
-     *
      */
     public void setGeoLocationLatLon(String lat, String lon) {
         setGeoLocationLatLonAccuracy(lat, lon, "1");
@@ -173,6 +186,7 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
 
     /**
      * Override the user agent string
+     *
      * @param userAgent The useragent String to identify with
      */
     public void setUserAgent(String userAgent) {
@@ -181,6 +195,7 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
 
     /**
      * Take a screenshot of the full web page, by mocking the viewport size to the current content's size
+     *
      * @param baseName The base name of the screensho file
      * @return A link to the screenshot file
      */
@@ -200,26 +215,8 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
     }
 
     /**
-     * Set username and password to use for basic or digest authentication.
-     * This setting is -for now- mutually exclusive with overrideRespo0nse... methods, as this method adds a listener/handler
-     * that pauses and continues all non-auth requests.
-     * Call | enable network overrides | after this method to enable the Fetch domain.
-     * @param user Username to provide
-     * @param password Password to provide
-     */
-    public void overrideAuthenticationWithUserAndPassword(String user, String password) {
-        devTools.addListener(Fetch.requestPaused(), requestPaused ->
-                devTools.send(Fetch.continueRequest(requestPaused.getRequestId(), empty(), empty(), empty(), empty())));
-
-        devTools.addListener(Fetch.authRequired(), authRequired ->
-                devTools.send(Fetch.continueWithAuth(authRequired.getRequestId(),
-                        new AuthChallengeResponse(AuthChallengeResponse.Response.PROVIDECREDENTIALS, Optional.of(user), Optional.of(password)))));
-
-        overrideAuth = true;
-    }
-
-    /**
      * Ignore SSL errors
+     *
      * @param ignore true to ignore, false for default behaviour
      */
     public void ignoreCertificateErrors(boolean ignore) {
@@ -228,20 +225,17 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
 
     /**
      * Retrieve the console output
+     *
      * @return Log entries, one on each line
      */
     public String consoleLog() {
         return formattedConsoleLog(logEntries);
     }
 
-    private String formattedConsoleLog(List<LogEntry> logEntryList) {
+    private String formattedConsoleLog(List<String> logEntryList) {
         devTools.send(Log.enable());
-        StringBuilder logView = new StringBuilder();
-        for (LogEntry entry : logEntryList) {
-            logView.append(String.format("[%s] %s", entry.getEntry().getLevel().toString(), entry.getEntry().getMessage()))
-                    .append("\r\n");
-        }
-        return logView.toString();
+        String logView = logEntryList.stream().map(entry -> entry + "\r\n").collect(Collectors.joining());
+        return logView;
     }
 
     /**
@@ -267,6 +261,7 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
 
     /**
      * Get the collected performance metrics as a key:value map
+     *
      * @return All collected metrics
      */
     public Map<String, Number> performanceMetrics() {
@@ -276,6 +271,7 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
 
     /**
      * Get a specific metric by name
+     *
      * @param metric the metric to retrieve
      * @return a number representing the metric's measurement
      */
@@ -294,6 +290,7 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
 
     /**
      * Keep track of requets and responses for a specific ResourceType during the session.
+     *
      * @param resourceType The resource type to log. Valid options: Document, Stylesheet, Image, Media, Font, Script,
      *                     TextTrack, XHR, Fetch, EventSource, WebSocket, Manifest, SignedExchange, Ping,
      *                     CSPViolationReport, Other
@@ -318,18 +315,21 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
      */
     private void enableConsoleLogCapturing() {
         //TODO: Add runtime Console API call logging when new version is released
-        devTools.addListener(Log.entryAdded(), logEntry -> {
-            logEntries.add(
-                    new LogEntry("browser",
-                            new org.openqa.selenium.logging.LogEntry(
-                                    Level.parse(logEntry.getLevel().name()),
-                                    Long.getLong(logEntry.getTimestamp().toString()),
-                                    logEntry.getText()
-                            )
-                    )
-            );
-        });
         devTools.send(Log.enable());
+        devTools.addListener(Runtime.consoleAPICalled(), call -> {
+            String entry = call.getType().toString() + "; " +
+                    new Timestamp(System.currentTimeMillis()).getTime() + "; " +
+                    call.getArgs().stream().map(Object::toString).collect(Collectors.joining());
+
+            logEntries.add(entry);
+        });
+        devTools.addListener(Log.entryAdded(), logEntry -> {
+            String entry = logEntry.getLevel().name() + "; " +
+                    logEntry.getTimestamp().toString() + "; " +
+                    logEntry.getText();
+            logEntries.add(entry);
+        });
+
     }
 
     /**
@@ -358,7 +358,7 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
                         Optional.of(Base64.encode(responseBody)),
                         empty()));
             } else {
-                devTools.send(Fetch.continueRequest(requestPaused.getRequestId(), empty(), empty(), empty(), empty()));
+                devTools.send(Fetch.continueRequest(requestPaused.getRequestId(), empty(), empty(), empty(), empty(), empty()));
             }
         });
     }
@@ -368,6 +368,7 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
      */
     public void enableNetworkOverrides() {
         Optional<List<RequestPattern>> patterns = requestPatternsToOverride.isEmpty() ? empty() : Optional.of(requestPatternsToOverride);
+        boolean overrideAuth = false;
         devTools.send(Fetch.enable(patterns, Optional.of(overrideAuth)));
     }
 
@@ -382,6 +383,7 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
 
     /**
      * Get the response body of a request to a url that matches the pattern
+     *
      * @param requestUrlPattern The url pattern to match. Wildcards ('*' -> zero or more, '?' -> exactly one) are allowed.
      *                          Escape character is backslash.
      * @return the response body as a String
@@ -394,6 +396,7 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
 
     /**
      * Get the response status of a request to a url that matches the pattern
+     *
      * @param requestUrlPattern The url pattern to match. Wildcards ('*' -> zero or more, '?' -> exactly one) are allowed.
      *                          Escape character is backslash.
      * @return the response status code (i.e. 200 for OK)
@@ -406,6 +409,7 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
 
     /**
      * Get a list of logged urls that were requested
+     *
      * @return list of request URL's
      */
     public List<String> requestLog() {
@@ -423,6 +427,7 @@ public class BrowserTestWithDevTools<T extends WebElement> extends BrowserTest<T
 
     /**
      * Convert a wildcard pattern to a regex pattern so we can match consistently
+     *
      * @param wildcardPattern The pattern to convert
      * @return a regex String
      */

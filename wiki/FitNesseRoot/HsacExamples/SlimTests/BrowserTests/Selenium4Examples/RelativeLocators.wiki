@@ -10,9 +10,9 @@ Test
 <span>Password:</span><br/>
 <input type="password"/><br/>
 <br/>&nbsp;</br/>&nbsp;</br/>&nbsp;</br/>&nbsp;</br/>&nbsp;</br/>
-<input type="checkbox"><span id="first">Option 1</span><br/>
+<input aria-label="box" type="checkbox"><span id="first">Option 1</span><br/>
 <input type="checkbox"><span id="2">Option 2</span><br/>
-<span id="3">Option 3</span><input type="checkbox"><br/>
+<span id="3">Option 3</span><input aria-label="box" type="checkbox"><br/>
 </body>
 </html>}}} }
 
@@ -20,15 +20,15 @@ Test
 |add response|${HTML}              |
 |$url=       |get mock server url  |
 
-|script|browser test   |5                                            |
-|open  |$url                                                         |
-|click |input          |left of |Option 1                            |
-|click |input          |right of|Option 3                            |
-|show  |take screenshot|1_and_3                                      |
-|enter |Tom            |as      |input|above|Enter your user id above|
-|enter |s3cr3t!        |as      |input|below|Password                |
-|show  |value of       |input   |below|Username                      |
-|show  |take screenshot|credentials                                  |
+|storyboard|browser test   |5                                                 |
+|open      |$url                                                              |
+|click     |css=input      |left of  |Option 1                                |
+|click     |css=input      |right of |Option 3                                |
+|show      |take screenshot|1_and_3                                           |
+|enter     |Tom            |as       |css=input|above|Enter your user id above|
+|enter     |s3cr3t!        |as       |css=input|below|Password                |
+|show      |value of       |css=input|below    |Username                      |
+|show      |take screenshot|credentials                                       |
 
 
 |script                     |

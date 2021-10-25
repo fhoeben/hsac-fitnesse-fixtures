@@ -29,11 +29,13 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.HasAuthentication;
 import org.openqa.selenium.InvalidElementStateException;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.UnhandledAlertException;
+import org.openqa.selenium.UsernameAndPassword;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
@@ -44,10 +46,12 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
@@ -81,6 +85,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     protected List<String> getCurrentSearchContextPath() {
         return currentSearchContextPath;
     }
+
     protected int minStaleContextRefreshCount = 5;
 
     @Override
@@ -155,6 +160,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     /**
      * Determines whether the current method might require waiting for angular given the currently open site,
      * and ensure it does if needed.
+     *
      * @param method
      */
     protected void waitForAngularIfNeeded(Method method) {
@@ -339,6 +345,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Called when an alert is either dismissed or accepted.
+     *
      * @param accepted true if the alert was accepted, false if dismissed.
      */
     protected void onAlertHandled(boolean accepted) {
@@ -462,6 +469,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Activates specified child frame of current iframe.
+     *
      * @param technicalSelector selector to find iframe.
      * @return true if iframe was found.
      */
@@ -501,6 +509,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Replaces content at place by value.
+     *
      * @param value value to set.
      * @param place element to set value on.
      * @return true, if element was found.
@@ -512,70 +521,75 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Replace content of given tag, found left of a reference element
-     * Usage: | enter | [value] | as | [tagName] | left of | [referencePlace] |
-     * @param value value to enter
-     * @param tagName tag to find (i.e. input)
-     * @param referencePlace the element to us as a reference to search from
+     * Usage: | enter | [value] | as | [technicalLocator] | left of | [referencePlace] |
+     *
+     * @param value            value to enter
+     * @param technicalLocator tag to find (i.e. input)
+     * @param referencePlace   the element to us as a reference to search from
      * @return true if the element was found and the value was sent
      */
     @WaitUntil
-    public boolean enterAsLeftOf(String value, String tagName, String referencePlace) {
-        return enterRelativeImp(value, tagName, cleanupValue(referencePlace), RelativeMethod.TO_LEFT_OF);
+    public boolean enterAsLeftOf(String value, String technicalLocator, String referencePlace) {
+        return enterRelativeImp(value, technicalLocator, cleanupValue(referencePlace), RelativeMethod.TO_LEFT_OF);
     }
 
     /**
      * Replace content of given tag, found right of a reference element
-     * Usage: | enter | [value] | as | [tagName] | right of | [referencePlace] |
-     * @param value value to enter
-     * @param tagName tag to find (i.e. input)
-     * @param referencePlace the element to us as a reference to search from
+     * Usage: | enter | [value] | as | [technicalLocator] | right of | [referencePlace] |
+     *
+     * @param value            value to enter
+     * @param technicalLocator tag to find (i.e. input)
+     * @param referencePlace   the element to us as a reference to search from
      * @return true if the element was found and the value was sent
      */
     @WaitUntil
-    public boolean enterAsRightOf(String value, String tagName, String referencePlace) {
-        return enterRelativeImp(value, tagName, cleanupValue(referencePlace), RelativeMethod.TO_RIGHT_OF);
+    public boolean enterAsRightOf(String value, String technicalLocator, String referencePlace) {
+        return enterRelativeImp(value, technicalLocator, cleanupValue(referencePlace), RelativeMethod.TO_RIGHT_OF);
     }
 
     /**
      * Replace content of given tag, found above a reference element
-     * @param value value to enter
-     * @param tagName tag to find (i.e. input)
-     * @param referencePlace the element to us as a reference to search from
+     *
+     * @param value            value to enter
+     * @param technicalLocator tag to find (i.e. input)
+     * @param referencePlace   the element to us as a reference to search from
      * @return true if the element was found and the value was sent
      */
     @WaitUntil
-    public boolean enterAsAbove(String value, String tagName, String referencePlace) {
-        return enterRelativeImp(value, tagName, cleanupValue(referencePlace), RelativeMethod.ABOVE);
+    public boolean enterAsAbove(String value, String technicalLocator, String referencePlace) {
+        return enterRelativeImp(value, technicalLocator, cleanupValue(referencePlace), RelativeMethod.ABOVE);
     }
 
     /**
      * Replace content of given tag, found below a reference element
-     * @param value value to enter
-     * @param tagName tag to find (i.e. input)
-     * @param referencePlace the element to us as a reference to search from
+     *
+     * @param value            value to enter
+     * @param technicalLocator tag to find (i.e. input)
+     * @param referencePlace   the element to us as a reference to search from
      * @return true if the element was found and the value was sent
      */
     @WaitUntil
-    public boolean enterAsBelow(String value, String tagName, String referencePlace) {
-        return enterRelativeImp(value, tagName, cleanupValue(referencePlace), RelativeMethod.BELOW);
+    public boolean enterAsBelow(String value, String technicalLocator, String referencePlace) {
+        return enterRelativeImp(value, technicalLocator, cleanupValue(referencePlace), RelativeMethod.BELOW);
     }
 
     /**
      * Replace content of given tag, found near (within 50px of) a reference element
-     * @param value value to enter
-     * @param tagName tag to find (i.e. input)
-     * @param referencePlace the element to us as a reference to search from
+     *
+     * @param value            value to enter
+     * @param technicalLocator tag to find (i.e. input)
+     * @param referencePlace   the element to us as a reference to search from
      * @return true if the element was found and the value was sent
      */
     @WaitUntil
-    public boolean enterAsNear(String value, String tagName, String referencePlace) {
-        return enterRelativeImp(value, tagName, cleanupValue(referencePlace), RelativeMethod.NEAR);
+    public boolean enterAsNear(String value, String technicalLocator, String referencePlace) {
+        return enterRelativeImp(value, technicalLocator, cleanupValue(referencePlace), RelativeMethod.NEAR);
     }
 
-    public boolean enterRelativeImp(String value, String tagName, String referencePlace, RelativeMethod relativeMethod) {
+    public boolean enterRelativeImp(String value, String technicalLocator, String referencePlace, RelativeMethod relativeMethod) {
         boolean result = false;
         try {
-            T elementToSendValue = getSeleniumHelper().getElementTagRelativeToReference(tagName, referencePlace, relativeMethod);
+            T elementToSendValue = getSeleniumHelper().getElementRelativeToReference(technicalLocator, referencePlace, relativeMethod);
             result = enter(elementToSendValue, value, true);
         } catch (IllegalArgumentException | InvalidElementStateException e) {
             // if referenceElement was not yet found, or the element found is not (yet) interactable hold back the exception so WaitUntil is not interrupted
@@ -589,8 +603,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Replaces content at place by value.
-     * @param value value to set.
-     * @param place element to set value on.
+     *
+     * @param value     value to set.
+     * @param place     element to set value on.
      * @param container element containing place.
      * @return true, if element was found.
      */
@@ -601,6 +616,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Adds content to place.
+     *
      * @param value value to add.
      * @param place element to add value to.
      * @return true, if element was found.
@@ -612,8 +628,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Adds content to place.
-     * @param value value to add.
-     * @param place element to add value to.
+     *
+     * @param value     value to add.
+     * @param place     element to add value to.
      * @param container element containing place.
      * @return true, if element was found.
      */
@@ -668,6 +685,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Simulates pressing the 'Tab' key.
+     *
      * @return true, if an element was active the key could be sent to.
      */
     public boolean pressTab() {
@@ -676,6 +694,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Simulates pressing the 'Enter' key.
+     *
      * @return true, if an element was active the key could be sent to.
      */
     public boolean pressEnter() {
@@ -684,6 +703,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Simulates pressing the 'Esc' key.
+     *
      * @return true, if an element was active the key could be sent to.
      */
     public boolean pressEsc() {
@@ -692,6 +712,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Simulates typing a text to the current active element.
+     *
      * @param text text to type.
      * @return true, if an element was active the text could be sent to.
      */
@@ -704,6 +725,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * Simulates pressing a key (or a combination of keys).
      * (Unfortunately not all combinations seem to be accepted by all drivers, e.g.
      * Chrome on OSX seems to ignore Command+A or Command+T; https://code.google.com/p/selenium/issues/detail?id=5919).
+     *
      * @param key key to press, can be a normal letter (e.g. 'M') or a special key (e.g. 'down').
      *            Combinations can be passed by separating the keys to send with '+' (e.g. Command + T).
      * @return true, if an element was active the key could be sent to.
@@ -740,6 +762,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Simulates pressing keys.
+     *
      * @param keys keys to press.
      * @return true, if an element was active the keys could be sent to.
      */
@@ -755,8 +778,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Sends Fitnesse cell content to element.
+     *
      * @param element element to call sendKeys() on.
-     * @param value cell content.
+     * @param value   cell content.
      */
     protected void sendValue(WebElement element, String value) {
         if (StringUtils.isNotEmpty(value)) {
@@ -874,13 +898,13 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         place = cleanupValue(place);
         try {
             WebElement element = getElementToClick(place);
-         if (dragPressDelay == null && dragDistance == null) {
-             getSeleniumHelper().dragAndDropToOffsetXY(element, xOffset, yOffset);
-        } else if (dragDistance != null) {
-             getSeleniumHelper().dragWithDistanceAndDropToOffsetXY(element, dragDistance, xOffset, yOffset);
-        } else {
-             getSeleniumHelper().dragWithDelayAndDropToOffsetXY(element, dragPressDelay, xOffset, yOffset);
-         }
+            if (dragPressDelay == null && dragDistance == null) {
+                getSeleniumHelper().dragAndDropToOffsetXY(element, xOffset, yOffset);
+            } else if (dragDistance != null) {
+                getSeleniumHelper().dragWithDistanceAndDropToOffsetXY(element, dragDistance, xOffset, yOffset);
+            } else {
+                getSeleniumHelper().dragWithDelayAndDropToOffsetXY(element, dragPressDelay, xOffset, yOffset);
+            }
         } catch (WebDriverException e) {
             if (!this.clickExceptionIsAboutHiddenByOtherElement(e)) {
                 throw e;
@@ -904,64 +928,69 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     /**
-     * Click an element found by it's tag name, below its reference place
-     * @param tag The tag to look for (i.e. input)
-     * @param referencePlace The element to use as a reference
+     * Click an element found by it's technicalLocator, below its reference place
+     *
+     * @param technicalLocator The technicalLocator to look for (i.e. css=input)
+     * @param referencePlace   The element to use as a reference
      * @return true if the element was found and clicked
      */
     @WaitUntil
-    public boolean clickBelow(String tag, String referencePlace) {
-        return relativeClickImp(tag, referencePlace, RelativeMethod.BELOW);
+    public boolean clickBelow(String technicalLocator, String referencePlace) {
+        return relativeClickImp(technicalLocator, referencePlace, RelativeMethod.BELOW);
     }
 
     /**
-     * Click an element found by it's tag name, above its reference place
-     * @param tag The tag to look for (i.e. input)
-     * @param referencePlace The element to use as a reference
+     * Click an element found by it's technicalLocator name, above its reference place
+     *
+     * @param technicalLocator The technicalLocator to look for (i.e. input)
+     * @param referencePlace   The element to use as a reference
      * @return true if the element was found and clicked
      */
     @WaitUntil
-    public boolean clickAbove(String tag, String referencePlace) {
-        return relativeClickImp(tag, referencePlace, RelativeMethod.ABOVE);
+    public boolean clickAbove(String technicalLocator, String referencePlace) {
+        return relativeClickImp(technicalLocator, referencePlace, RelativeMethod.ABOVE);
     }
 
     /**
-     * Click an element found by it's tag name, left of its reference place
-     * @param tag The tag to look for (i.e. input)
-     * @param referencePlace The element to use as a reference
+     * Click an element found by it's technicalLocator name, left of its reference place
+     *
+     * @param technicalLocator The technicalLocator to look for (i.e. input)
+     * @param referencePlace   The element to use as a reference
      * @return true if the element was found and clicked
      */
     @WaitUntil
-    public boolean clickRightOf(String tag, String referencePlace) {
-        return relativeClickImp(tag, referencePlace, RelativeMethod.TO_RIGHT_OF);
+    public boolean clickRightOf(String technicalLocator, String referencePlace) {
+        return relativeClickImp(technicalLocator, referencePlace, RelativeMethod.TO_RIGHT_OF);
     }
 
     /**
-     * Click an element found by it's tag name, right of its reference place
-     * @param tag The tag to look for (i.e. input)
-     * @param referencePlace The element to use as a reference
+     * Click an element found by it's technicalLocator name, right of its reference place
+     *
+     * @param technicalLocator The technicalLocator to look for (i.e. input)
+     * @param referencePlace   The element to use as a reference
      * @return true if the element was found and clicked
      */
     @WaitUntil
-    public boolean clickLeftOf(String tag, String referencePlace) {
-        return relativeClickImp(tag, referencePlace, RelativeMethod.TO_LEFT_OF);
+    public boolean clickLeftOf(String technicalLocator, String referencePlace) {
+        return relativeClickImp(technicalLocator, referencePlace, RelativeMethod.TO_LEFT_OF);
     }
 
     /**
-     * Click an element found by it's tag name, near (within 50px of) its reference place
-     * @param tag The tag to look for (i.e. input)
-     * @param referencePlace The element to use as a reference
+     * Click an element found by it's technicalLocator name, near (within 50px of) its reference place
+     *
+     * @param technicalLocator The technicalLocator to look for (i.e. input)
+     * @param referencePlace   The element to use as a reference
      * @return true if the element was found and clicked
      */
     @WaitUntil
-    public boolean clickNear(String tag, String referencePlace) {
-        return relativeClickImp(tag, referencePlace, RelativeMethod.NEAR);
+    public boolean clickNear(String technicalLocator, String referencePlace) {
+        return relativeClickImp(technicalLocator, referencePlace, RelativeMethod.NEAR);
     }
 
-    protected boolean relativeClickImp(String tag, String referencePlace, RelativeMethod relativeMethod) {
+    protected boolean relativeClickImp(String technicalLocator, String referencePlace, RelativeMethod relativeMethod) {
         boolean result = false;
         try {
-            T elementToClick = getSeleniumHelper().getElementTagRelativeToReference(tag, cleanupValue(referencePlace), relativeMethod);
+            T elementToClick = getSeleniumHelper().getElementRelativeToReference(technicalLocator, cleanupValue(referencePlace), relativeMethod);
             result = clickElement(elementToClick);
         } catch (IllegalArgumentException | WebDriverException e) {
             // if other element hides the element, or referenceElement was not yet found, hold back the exception so WaitUntil is not interrupted
@@ -987,7 +1016,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return result;
     }
 
-    protected boolean exceptionIsFromRelativeLocator (Exception e) {
+    protected boolean exceptionIsFromRelativeLocator(Exception e) {
         return e.getMessage().startsWith("Element to search") && e.getMessage().endsWith("must be set");
     }
 
@@ -995,11 +1024,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         String msg = e.getMessage();
         return msg != null
                 && (msg.contains(CHROME_HIDDEN_BY_OTHER_ELEMENT_ERROR)
-                            || msg.contains(EDGE_HIDDEN_BY_OTHER_ELEMENT_ERROR)
-                            || FIREFOX_HIDDEN_BY_OTHER_ELEMENT_ERROR_PATTERN.matcher(msg).find()
-                            // IE does not throw an exception, so no need to detect any
-                            // Safari does throw an exception, but not one specific to this event. Too bad :/
-                    );
+                || msg.contains(EDGE_HIDDEN_BY_OTHER_ELEMENT_ERROR)
+                || FIREFOX_HIDDEN_BY_OTHER_ELEMENT_ERROR_PATTERN.matcher(msg).find()
+                // IE does not throw an exception, so no need to detect any
+                // Safari does throw an exception, but not one specific to this event. Too bad :/
+        );
     }
 
     @WaitUntil
@@ -1077,9 +1106,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     protected Keys controlKey() {
         return sendCommandForControlOnMac ? getSeleniumHelper().getControlOrCommand() : Keys.CONTROL;
     }
+
     protected Long getDragPressDelay() {
         return dragPressDelay;
     }
+
     protected Integer getDragDistance() {
         return dragDistance;
     }
@@ -1148,8 +1179,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Convenience method to create custom heuristics in subclasses.
+     *
      * @param container container to use (use <code>null</code> for current container), can be a technical selector.
-     * @param place place to look for inside container, can be a technical selector.
+     * @param place     place to look for inside container, can be a technical selector.
      * @param suppliers suppliers that will be used in turn until an element is found, IF place is not a technical selector.
      * @return first hit of place, technical selector or result of first supplier that provided result.
      */
@@ -1357,31 +1389,71 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return valueFor(place);
     }
 
-    public String valueOfLeftOf(String tagName, String referencePlace) {
-        return valueOfRelativeImp(tagName, cleanupValue(referencePlace), RelativeMethod.TO_LEFT_OF);
+    /**
+     * Get the value of an element found by it's technicalLocator, to the left of its reference place
+     *
+     * @param technicalLocator The technicalLocator to look for (i.e. input)
+     * @param referencePlace   The element to use as a reference
+     * @return the value of the element if found
+     */
+    @WaitUntil(TimeoutPolicy.THROW)
+    public String valueOfLeftOf(String technicalLocator, String referencePlace) {
+        return valueOfRelativeImp(technicalLocator, cleanupValue(referencePlace), RelativeMethod.TO_LEFT_OF);
     }
 
-    public String valueOfRightOf(String tagName, String referencePlace) {
-        return valueOfRelativeImp(tagName, cleanupValue(referencePlace), RelativeMethod.TO_RIGHT_OF);
+    /**
+     * Get the value of an element found by it's technicalLocator, to the right of its reference place
+     *
+     * @param technicalLocator The technicalLocator to look for (i.e. input)
+     * @param referencePlace   The element to use as a reference
+     * @return the value of the element if found
+     */
+    @WaitUntil(TimeoutPolicy.THROW)
+    public String valueOfRightOf(String technicalLocator, String referencePlace) {
+        return valueOfRelativeImp(technicalLocator, cleanupValue(referencePlace), RelativeMethod.TO_RIGHT_OF);
     }
 
-    public String valueOfAbove(String tagName, String referencePlace) {
-        return valueOfRelativeImp(tagName, cleanupValue(referencePlace), RelativeMethod.ABOVE);
+    /**
+     * Get the value of an element found by it's technicalLocator, above its reference place
+     *
+     * @param technicalLocator The technicalLocator to look for (i.e. input)
+     * @param referencePlace   The element to use as a reference
+     * @return the value of the element if found
+     */
+    @WaitUntil(TimeoutPolicy.THROW)
+    public String valueOfAbove(String technicalLocator, String referencePlace) {
+        return valueOfRelativeImp(technicalLocator, cleanupValue(referencePlace), RelativeMethod.ABOVE);
     }
 
-    public String valueOfBelow(String tagName, String referencePlace) {
-        return valueOfRelativeImp(tagName, cleanupValue(referencePlace), RelativeMethod.BELOW);
+    /**
+     * Get the value of an element found by it's technicalLocator, below its reference place
+     *
+     * @param technicalLocator The technicalLocator to look for (i.e. input)
+     * @param referencePlace   The element to use as a reference
+     * @return the value of the element if found
+     */
+    @WaitUntil(TimeoutPolicy.THROW)
+    public String valueOfBelow(String technicalLocator, String referencePlace) {
+        return valueOfRelativeImp(technicalLocator, cleanupValue(referencePlace), RelativeMethod.BELOW);
     }
 
-    public String valueOfNear(String tagName, String referencePlace) {
-        return valueOfRelativeImp(tagName, cleanupValue(referencePlace), RelativeMethod.NEAR);
+    /**
+     * Get the value of an element found by it's technicalLocator, near (within 50px of) its reference place
+     *
+     * @param technicalLocator The technicalLocator to look for (i.e. input)
+     * @param referencePlace   The element to use as a reference
+     * @return the value of the element if found
+     */
+    @WaitUntil(TimeoutPolicy.THROW)
+    public String valueOfNear(String technicalLocator, String referencePlace) {
+        return valueOfRelativeImp(technicalLocator, cleanupValue(referencePlace), RelativeMethod.NEAR);
     }
 
 
-    protected String valueOfRelativeImp(String tag, String referencePlace, RelativeMethod relativeMethod) {
+    protected String valueOfRelativeImp(String technicalLocator, String referencePlace, RelativeMethod relativeMethod) {
         String result = null;
         try {
-            T elementToRetrieveValueFrom = getSeleniumHelper().getElementTagRelativeToReference(tag, referencePlace, relativeMethod);
+            T elementToRetrieveValueFrom = getSeleniumHelper().getElementRelativeToReference(technicalLocator, referencePlace, relativeMethod);
             result = valueFor(elementToRetrieveValueFrom);
         } catch (IllegalArgumentException | WebDriverException e) {
             // if referenceElement was not yet found, hold back the exception so WaitUntil is not interrupted
@@ -1745,7 +1817,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Downloads the target of a link in a grid's row.
-     * @param place which link to download.
+     *
+     * @param place     which link to download.
      * @param rowNumber (1-based) row number to retrieve link from.
      * @return downloaded file if any, null otherwise.
      */
@@ -1758,9 +1831,10 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Downloads the target of a link in a grid, finding the row based on one of the other columns' value.
-     * @param place which link to download.
+     *
+     * @param place          which link to download.
      * @param selectOnColumn column header of cell whose value must be selectOnValue.
-     * @param selectOnValue value to be present in selectOnColumn to find correct row.
+     * @param selectOnValue  value to be present in selectOnColumn to find correct row.
      * @return downloaded file if any, null otherwise.
      */
     @WaitUntil
@@ -1878,6 +1952,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Scrolls browser window so top of place becomes visible.
+     *
      * @param place element to scroll to.
      */
     @WaitUntil
@@ -1887,7 +1962,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Scrolls browser window so top of place becomes visible.
-     * @param place element to scroll to.
+     *
+     * @param place     element to scroll to.
      * @param container parent of place.
      */
     @WaitUntil
@@ -1907,6 +1983,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Scrolls browser window so top of element becomes visible.
+     *
      * @param element element to scroll to.
      */
     protected void scrollTo(WebElement element) {
@@ -1916,6 +1993,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Wait after the scroll if needed
+     *
      * @param msToWait amount of ms to wait after the scroll
      */
     protected void waitAfterScroll(int msToWait) {
@@ -1926,6 +2004,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Scrolls browser window if element is not currently visible so top of element becomes visible.
+     *
      * @param element element to scroll to.
      */
     protected void scrollIfNotOnScreen(WebElement element) {
@@ -1936,6 +2015,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Determines whether element is enabled (i.e. can be clicked).
+     *
      * @param place element to check.
      * @return true if element is enabled.
      */
@@ -1946,7 +2026,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Determines whether element is enabled (i.e. can be clicked).
-     * @param place element to check.
+     *
+     * @param place     element to check.
      * @param container parent of place.
      * @return true if element is enabled.
      */
@@ -1969,6 +2050,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Determines whether element is NOT enabled (i.e. can not be clicked).
+     *
      * @param place element to check.
      * @return true if element is disabled.
      */
@@ -1979,7 +2061,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Determines whether element is NOT enabled (i.e. can not be clicked).
-     * @param place element to check.
+     *
+     * @param place     element to check.
      * @param container parent of place.
      * @return true if element is disabled.
      */
@@ -1990,6 +2073,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Determines whether element can be see in browser's window.
+     *
      * @param place element to check.
      * @return true if element is displayed and in viewport.
      */
@@ -2000,7 +2084,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Determines whether element can be see in browser's window.
-     * @param place element to check.
+     *
+     * @param place     element to check.
      * @param container parent of place.
      * @return true if element is displayed and in viewport.
      */
@@ -2011,6 +2096,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Determines whether element is somewhere in browser's window.
+     *
      * @param place element to check.
      * @return true if element is displayed.
      */
@@ -2021,7 +2107,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Determines whether element is somewhere in browser's window.
-     * @param place element to check.
+     *
+     * @param place     element to check.
      * @param container parent of place.
      * @return true if element is displayed.
      */
@@ -2032,6 +2119,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Determines whether element is not visible (or disappears within the specified timeout)
+     *
      * @param place element to check
      * @return true if the element is not displayed (anymore)
      */
@@ -2042,7 +2130,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Determines whether element is not visible (or disappears within the specified timeout)
-     * @param place element to check.
+     *
+     * @param place     element to check.
      * @param container parent of place.
      * @return true if the element is not displayed (anymore)
      */
@@ -2053,6 +2142,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Determines whether element is not on the page (or disappears within the specified timeout)
+     *
      * @param place element to check.
      * @return true if element is not on the page (anymore).
      */
@@ -2063,7 +2153,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Determines whether element is not on the page (or disappears within the specified timeout)
-     * @param place element to check.
+     *
+     * @param place     element to check.
      * @param container parent of place.
      * @return true if the element is not on the page (anymore)
      */
@@ -2125,6 +2216,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Checks whether element is in browser's viewport.
+     *
      * @param element element to check
      * @return true if element is in browser's viewport.
      */
@@ -2242,6 +2334,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     /**
      * Saves current page's source to the wiki'f files section and returns a link to the
      * created file.
+     *
      * @return hyperlink to the file containing the page source.
      */
     public String savePageSource() {
@@ -2258,6 +2351,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Takes screenshot from current page
+     *
      * @param basename filename (below screenshot base directory).
      * @return location of screenshot.
      */
@@ -2284,8 +2378,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Take a screenshot and crop it to the provided element
+     *
      * @param basename filename (below screenshot base directory).
-     * @param place The element to crop the screenshot image to
+     * @param place    The element to crop the screenshot image to
      * @return location of the captured image
      */
     @WaitUntil
@@ -2295,8 +2390,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Take a screenshot and crop it to the provided element
-     * @param basename filename (below screenshot base directory).
-     * @param place The element to crop the screenshot image to.
+     *
+     * @param basename  filename (below screenshot base directory).
+     * @param place     The element to crop the screenshot image to.
      * @param container the elemnt to limit the search context to, when searching for place.
      * @return location of the captured image
      */
@@ -2359,10 +2455,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     /**
      * Waits until the condition evaluates to a value that is neither null nor
      * false. Because of this contract, the return type must not be Void.
-     * @param <T> the return type of the method, which must not be Void
+     *
+     * @param <T>       the return type of the method, which must not be Void
      * @param condition condition to evaluate to determine whether waiting can be stopped.
-     * @throws SlimFixtureException if condition was not met before secondsBeforeTimeout.
      * @return result of condition.
+     * @throws SlimFixtureException if condition was not met before secondsBeforeTimeout.
      */
     protected <T> T waitUntil(ExpectedCondition<T> condition) {
         try {
@@ -2377,10 +2474,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * Waits until the condition evaluates to a value that is neither null nor
      * false. If that does not occur the whole test is stopped.
      * Because of this contract, the return type must not be Void.
-     * @param <T> the return type of the method, which must not be Void
+     *
+     * @param <T>       the return type of the method, which must not be Void
      * @param condition condition to evaluate to determine whether waiting can be stopped.
-     * @throws TimeoutStopTestException if condition was not met before secondsBeforeTimeout.
      * @return result of condition.
+     * @throws TimeoutStopTestException if condition was not met before secondsBeforeTimeout.
      */
     protected <T> T waitUntilOrStop(ExpectedCondition<T> condition) {
         try {
@@ -2398,9 +2496,10 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * Tries the condition one last time before throwing an exception.
      * This to prevent exception messages in the wiki that show no problem, which could happen if the browser's
      * window content has changed between last (failing) try at condition and generation of the exception.
-     * @param <T> the return type of the method, which must not be Void
+     *
+     * @param <T>       the return type of the method, which must not be Void
      * @param condition condition that caused exception.
-     * @param e exception that will be thrown if condition does not return a result.
+     * @param e         exception that will be thrown if condition does not return a result.
      * @return last attempt results, if not null or false.
      * @throws SlimFixtureException throws e if last attempt returns null.
      */
@@ -2423,7 +2522,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * Waits until the condition evaluates to a value that is neither null nor
      * false. If that does not occur null is returned.
      * Because of this contract, the return type must not be Void.
-     * @param <T> the return type of the method, which must not be Void
+     *
+     * @param <T>       the return type of the method, which must not be Void
      * @param condition condition to evaluate to determine whether waiting can be stopped.
      * @return result of condition.
      */
@@ -2575,6 +2675,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Sets SeleniumHelper to use, for testing purposes.
+     *
      * @param helper helper to use.
      */
     protected void setSeleniumHelper(SeleniumHelper<T> helper) {
@@ -2619,6 +2720,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Downloads the target of the supplied link.
+     *
      * @param place link to follow.
      * @return downloaded file if any, null otherwise.
      */
@@ -2638,7 +2740,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Downloads the target of the supplied link.
-     * @param place link to follow.
+     *
+     * @param place     link to follow.
      * @param container part of screen containing link.
      * @return downloaded file if any, null otherwise.
      */
@@ -2661,6 +2764,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Downloads the target of the supplied link.
+     *
      * @param element link to follow.
      * @return downloaded file if any, null otherwise.
      */
@@ -2677,6 +2781,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Downloads binary content from specified url (using the browser's cookies).
+     *
      * @param urlOrLink url to download from
      * @return link to downloaded file
      */
@@ -2692,6 +2797,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Selects a file using the first file upload control.
+     *
      * @param fileName file to upload
      * @return true, if a file input was found and file existed.
      */
@@ -2702,8 +2808,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Selects a file using a file upload control.
+     *
      * @param fileName file to upload
-     * @param place file input to select the file for
+     * @param place    file input to select the file for
      * @return true, if place was a file input and file existed.
      */
     @WaitUntil
@@ -2713,8 +2820,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Selects a file using a file upload control.
-     * @param fileName file to upload
-     * @param place file input to select the file for
+     *
+     * @param fileName  file to upload
+     * @param place     file input to select the file for
      * @param container part of screen containing place
      * @return true, if place was a file input and file existed.
      */
@@ -2749,6 +2857,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Gets the value of the cookie with the supplied name.
+     *
      * @param cookieName name of cookie to get value from.
      * @return cookie's value if any.
      */
@@ -2770,13 +2879,14 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected RepeatCompletion getRefreshUntilValueIs(String place, String expectedValue) {
-        return new ConditionBasedRepeatUntil(false, d-> refresh(),
-                                            true, d -> checkValueIs(place, expectedValue));
+        return new ConditionBasedRepeatUntil(false, d -> refresh(),
+                true, d -> checkValueIs(place, expectedValue));
     }
 
     /**
      * Refreshes current page until 'place' is found somewhere on the page. Do not forget to set 'repeat at most times', or else the loop may run endlessly.
      * Usage: | refresh until | [place] | is visible on page |
+     *
      * @param place The place to find.
      * @return true if place is found while repeating
      */
@@ -2787,6 +2897,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     /**
      * Refreshes current page until 'place' is not found somewhere on the page. Do not forget to set 'repeat at most times', or else the loop may run endlessly.
      * Usage: | refresh until | [place] | is not visible on page |
+     *
      * @param place The place you would not like to find anymore.
      * @return true if place is not found while repeating
      */
@@ -2796,7 +2907,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     protected RepeatCompletion getRefreshUntilIsVisibleOnPage(String place) {
         return new ConditionBasedRepeatUntil(false, d -> refresh(),
-                                            true, d -> isVisibleOnPage(place));
+                true, d -> isVisibleOnPage(place));
     }
 
     public boolean clickUntilValueOfIs(String clickPlace, String checkPlace, String expectedValue) {
@@ -2818,9 +2929,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     protected RepeatCompletion getExecuteScriptUntilValueIs(String script, String place, String expectedValue) {
         return new ConditionBasedRepeatUntil(
                 false, d -> {
-                        Object r = executeScript(script);
-                        return r != null ? r : true;
-                    },
+            Object r = executeScript(script);
+            return r != null ? r : true;
+        },
                 true, d -> checkValueIs(place, expectedValue));
     }
 
@@ -2941,6 +3052,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Executes javascript in the browser.
+     *
      * @param script you want to execute
      * @return result from script
      */
@@ -2951,6 +3063,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Simulates 'select all' (e.g. Ctrl+A on Windows) on the active element.
+     *
      * @return whether an active element was found.
      */
     @WaitUntil
@@ -2960,6 +3073,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Simulates 'copy' (e.g. Ctrl+C on Windows) on the active element, copying the current selection to the clipboard.
+     *
      * @return whether an active element was found.
      */
     @WaitUntil
@@ -2970,6 +3084,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     /**
      * Simulates 'cut' (e.g. Ctrl+X on Windows) on the active element, copying the current selection to the clipboard
      * and removing that selection.
+     *
      * @return whether an active element was found.
      */
     @WaitUntil
@@ -2980,6 +3095,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     /**
      * Simulates 'paste' (e.g. Ctrl+V on Windows) on the active element, copying the current clipboard
      * content to the currently active element.
+     *
      * @return whether an active element was found.
      */
     @WaitUntil
@@ -3010,6 +3126,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Set the scroll into view behaviour to 'center of viewport' (true) or 'auto' (false)
+     *
      * @param scrollElementsToCenterOfViewport True to scroll to center, False to use automatic scroll behaviour
      */
     public void scrollElementsToCenterOfViewport(boolean scrollElementsToCenterOfViewport) {
@@ -3018,6 +3135,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Get the current scroll behaviour. True means 'center of viewport', False means 'auto'
+     *
      * @return the current boolean value of scrollElementToCenter
      */
     public boolean scrollElementsToCenterOfViewport() {
@@ -3026,9 +3144,26 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Configure browser test to expect wai aria style tables made up of divs and spans with roles like table/cell/row/etc.
+     *
      * @param waiAriaTables True to expect aria tables, false to expect classic &lt;table&gt; table tags.
      */
     public void useAriaTableStructure(boolean waiAriaTables) {
         this.waiAriaTables = waiAriaTables;
+    }
+
+    /**
+     * Automatically authenticate (using basic auth or digest) for a given host
+     *
+     * @param user     The username to authenticate with
+     * @param password The password to authenticate with
+     * @param host     The (partial) hostname to authenticate for (i.e. mywebsite.com or just mywebsite)
+     */
+    public void setUsernameAndPasswordForHostname(String user, String password, String host) {
+        if (driver() instanceof HasAuthentication) {
+            Predicate<URI> uriPredicate = uri -> uri.getHost().contains(host);
+            ((HasAuthentication) driver()).register(uriPredicate, UsernameAndPassword.of(user, password));
+        } else {
+            throw new SlimFixtureException("Your browser driver does not support Selenium 4 authentication!");
+        }
     }
 }

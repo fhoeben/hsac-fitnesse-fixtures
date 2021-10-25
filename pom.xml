@@ -43,7 +43,7 @@
 		<hsac-fitnesse-plugin.version>1.31.0</hsac-fitnesse-plugin.version>
 		<fitnesse.version>20211006</fitnesse.version>
 		<praegus-toolchain-fitnesse-plugin.version>2.0.14</praegus-toolchain-fitnesse-plugin.version>
-		<selenium.version>3.141.59</selenium.version>
+		<selenium.version>4.0.0</selenium.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<apache.http.version>4.5.13</apache.http.version>
 		<surefire.version>2.22.1</surefire.version>
@@ -197,6 +197,12 @@
             <artifactId>mockito-core</artifactId>
             <version>2.23.4</version>
             <scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.skyscreamer</groupId>
+			<artifactId>jsonassert</artifactId>
+			<version>1.5.0</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

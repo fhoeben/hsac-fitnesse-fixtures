@@ -1,7 +1,7 @@
 ---
 Test
 ---
-|script|browser test with dev tools     |
+|script|dev tools browser test          |
 |open  |https://orangebeard.io          |
 |show  |take full page screenshot|full  |
 |show  |take screenshot          |normal|

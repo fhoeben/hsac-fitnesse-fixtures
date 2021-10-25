@@ -1,7 +1,7 @@
 ---
 Test
 ---
-!|script         |browser test with dev tools            |
+!|script         |dev tools browser test                 |
 |start request logging                                   |
 |start performance metrics                               |
 |open            |https://aw3.automationintesting.online/|

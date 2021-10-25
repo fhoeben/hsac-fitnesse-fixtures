@@ -1,8 +1,0 @@
----
-Test
----
-|script                           |browser test with dev tools      |
-|override authentication with user|guest      |and password  |guest |
-|enable network overrides                                           |
-|open                             |https://jigsaw.w3.org/HTTP/Basic/|
-|ensure                           |is visible |Your browser made it!|

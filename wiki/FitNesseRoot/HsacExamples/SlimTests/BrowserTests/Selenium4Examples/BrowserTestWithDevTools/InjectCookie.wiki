@@ -1,10 +1,9 @@
 ---
 Test
 ---
-|script                                 |browser test with dev tools                                                             |
-|set continue if ready state interactive|true                                                                                    |
-|open                                   |https://orangebeard.io                                                                  |
-|ensure                                 |is visible|This website uses cookies to ensure you will get the best browser experience.|
+|script|dev tools browser test                                                                  |
+|open  |https://orangebeard.io                                                                  |
+|ensure|is visible|This website uses cookies to ensure you will get the best browser experience.|
 
 !|script                                                                                                                    |
 |set cookie            |cookie_notice_accepted|with value         |true         |for domain         |orangebeard.io         |

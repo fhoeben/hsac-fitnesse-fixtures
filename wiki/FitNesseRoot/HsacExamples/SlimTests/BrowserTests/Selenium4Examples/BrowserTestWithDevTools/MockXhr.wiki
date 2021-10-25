@@ -5,7 +5,7 @@ Test
 
 !define googleSuggest {!-)]}'[[["FitNesse",0,[362,308,154,357],{"zl":40009}],["Selenium",0,[362,308,154,357],{"zl":40009}],["Test Tools",0,[362,308,154,357],{"zl":40009}]],{"ag":{"a":{"40009":"This is fake!"}},"q":"Ss5WpxKv_61QDOecwAAhdoLT32M"}]-!}
 
-|script                   |browser test with dev tools            |
+|script                   |dev tools browser test                 |
 |override response for url|*/room*|of type|xhr|with|${xhrResponse}|
 |enable network overrides                                         |
 |start request logging                                            |
