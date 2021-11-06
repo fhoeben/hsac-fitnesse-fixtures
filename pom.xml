@@ -6,7 +6,7 @@
 
 	<groupId>nl.hsac</groupId>
 	<artifactId>hsac-fitnesse-fixtures</artifactId>
-	<version>4.29-SNAPSHOT</version>
+	<version>4.30-SNAPSHOT</version>
 	<url>https://github.com/fhoeben/hsac-fitnesse-fixtures</url>
 	<name>HSAC's FitNesse Fixtures</name>
 	<description>Fixtures to assist in testing via FitNesse</description>
@@ -41,7 +41,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<hsac-fitnesse-plugin.version>1.31.0</hsac-fitnesse-plugin.version>
-		<fitnesse.version>20211006</fitnesse.version>
+		<fitnesse.version>20211030</fitnesse.version>
 		<praegus-toolchain-fitnesse-plugin.version>2.0.14</praegus-toolchain-fitnesse-plugin.version>
 		<selenium.version>4.0.0</selenium.version>
 		<slf4j.version>1.7.25</slf4j.version>
@@ -50,9 +50,9 @@
 
 		<webdriver.download.skip>false</webdriver.download.skip>
 		<selenium.internetexplorerdriver.version>3.150.1</selenium.internetexplorerdriver.version>
-		<selenium.edgedriver.version>94.0.992.31</selenium.edgedriver.version>
-		<selenium.chromedriver.version>94.0.4606.41</selenium.chromedriver.version>
-		<selenium.geckodriver.version>0.29.1</selenium.geckodriver.version>
+		<selenium.edgedriver.version>95.0.1020.30</selenium.edgedriver.version>
+		<selenium.chromedriver.version>95.0.4638.17</selenium.chromedriver.version>
+		<selenium.geckodriver.version>0.30.0</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
