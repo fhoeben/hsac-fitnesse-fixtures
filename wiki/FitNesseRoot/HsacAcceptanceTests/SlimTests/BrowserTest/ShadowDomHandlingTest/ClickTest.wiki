@@ -1,0 +1,42 @@
+---
+Test
+---
+!define HTML { {{{
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Simple Shadow DOM example</title>
+    
+  </head>
+  <body>
+      <div id="1">
+      </div>
+      <div id="shadowhost"> 
+      </div>
+  <script> 	
+    let div = document.getElementById("1");
+    div.innerHTML = "<button> test </test>"; 	
+    let shadowhost  = document.getElementById('shadowhost');
+    let shadowroot = shadowhost.attachShadow({mode: 'open'});
+    let divShadow = document.createElement("div");
+    divShadow.innerHTML = "<button id=\"button\"> klick mich </button>";
+    shadowroot.appendChild(divShadow);
+    </script>    
+  </body>
+</html>
+
+}}} }
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script|browser test                                      |
+|open  |$url                                              |
+|click |test|
+|click | button#button|
+
+
+|script|mock xml server setup|
+|stop                        |
