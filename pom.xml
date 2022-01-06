@@ -6,7 +6,7 @@
 
 	<groupId>nl.hsac</groupId>
 	<artifactId>hsac-fitnesse-fixtures</artifactId>
-	<version>4.30-SNAPSHOT</version>
+	<version>4.31-SNAPSHOT</version>
 	<url>https://github.com/fhoeben/hsac-fitnesse-fixtures</url>
 	<name>HSAC's FitNesse Fixtures</name>
 	<description>Fixtures to assist in testing via FitNesse</description>
@@ -44,14 +44,14 @@
 		<fitnesse.version>20211030</fitnesse.version>
 		<praegus-toolchain-fitnesse-plugin.version>2.0.14</praegus-toolchain-fitnesse-plugin.version>
 		<selenium.version>3.141.59</selenium.version>
-		<slf4j.version>1.7.25</slf4j.version>
+		<slf4j.version>1.7.32</slf4j.version>
 		<apache.http.version>4.5.13</apache.http.version>
-		<surefire.version>2.22.1</surefire.version>
+		<surefire.version>2.22.2</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
 		<selenium.internetexplorerdriver.version>3.150.1</selenium.internetexplorerdriver.version>
-		<selenium.edgedriver.version>96.0.1054.29</selenium.edgedriver.version>
-		<selenium.chromedriver.version>96.0.4664.45</selenium.chromedriver.version>
+		<selenium.edgedriver.version>96.0.1054.62</selenium.edgedriver.version>
+		<selenium.chromedriver.version>97.0.4692.71</selenium.chromedriver.version>
 		<selenium.geckodriver.version>0.30.0</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
@@ -137,7 +137,7 @@
 		<dependency>
 			<groupId>com.codeborne</groupId>
 			<artifactId>phantomjsdriver</artifactId>
-			<version>1.4.4</version>
+			<version>1.5.0</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.seleniumhq.selenium</groupId>
@@ -197,7 +197,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.29</version>
+            <version>1.30</version>
         </dependency>
 		<dependency>
 			<groupId>commons-net</groupId>
