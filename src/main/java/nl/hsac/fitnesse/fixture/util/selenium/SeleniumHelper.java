@@ -2,6 +2,7 @@ package nl.hsac.fitnesse.fixture.util.selenium;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
+import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
 import nl.hsac.fitnesse.fixture.util.selenium.by.ConstantBy;
 import nl.hsac.fitnesse.fixture.util.selenium.by.CssBy;
@@ -30,6 +31,7 @@ import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
@@ -48,8 +50,13 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.SocketException;
 import java.net.URL;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -550,6 +557,88 @@ public class SeleniumHelper<T extends WebElement> {
     }
 
     /**
+     * Simulates placing the mouse at offset from the supplied element center.
+     * @param element element to place mouse over.
+     * @param xOffset horizontal integer offset from center.
+     * @param yOffset vertical integer offset from center.
+     */
+    public Actions moveToElement(WebElement element, Integer xOffset, Integer yOffset) {
+        return getActions().moveToElement(element, xOffset, yOffset);
+    }
+
+    /**
+     * Simulates clicking at offset from center place on the supplied element.
+     * @param element element to click on with ofset.
+     * @param xOffset horizontal integer offset from center.
+     * @param yOffset vertical integer offset from center.
+     */
+    public void clickAtOffsetXY(WebElement element, Integer xOffset, Integer yOffset) {
+        moveToElement(element, xOffset, yOffset).click().build().perform();
+    }
+
+    /**
+     * Simulates right clicking at offset from center place on the supplied element.
+     * @param element element to click on with ofset.
+     * @param xOffset horizontal integer offset from given element center.
+     * @param yOffset vertical integer offset from given element center.
+     */
+    public void rightClickAtOffsetXY(WebElement element, Integer xOffset, Integer yOffset) {
+        moveToElement(element, xOffset, yOffset).contextClick().build().perform();
+    }
+
+    /**
+     * Simulates double clicking at offset from center place on the supplied element.
+     * @param element element to click on with ofset.
+     * @param xOffset horizontal integer offset from given element center.
+     * @param yOffset vertical integer offset from given element center.
+     */
+    public void doubleClickAtOffsetXY(WebElement element, Integer xOffset, Integer yOffset) {
+        moveToElement(element, xOffset, yOffset).doubleClick().build().perform();
+    }
+
+    /**
+     * Simulates a drag of element to destination offsets calculated from element center.
+     * @param element element to drag and drop.
+     * @param xOffset horizontal integer offset destination for dropping (calculated from given element center).
+     * @param yOffset vertical integer offset destination for dropping (calculated from given element center).
+     */
+    public void dragAndDropToOffsetXY(WebElement element, Integer xOffset, Integer yOffset) {
+        getActions().dragAndDropBy(element, xOffset, yOffset).build().perform();
+    }
+
+    /**
+     * Simulates a drag of element to destination offsets calculated from element center.
+     * Performs a slight user defined diagonal movement of element to avoid limitations of "distance"
+     * More info: https://github.com/clauderic/react-sortable-hoc
+     * @param element element to drag and drop.
+     * @param distance integer horizontal and vertical offsets to move element (calculated from given element center).
+     * @param xOffset horizontal integer offset destination for dropping (calculated from given element center).
+     * @param yOffset vertical integer offset destination for dropping (calculated from given element center).
+     */
+    public void dragWithDistanceAndDropToOffsetXY(WebElement element, int distance, Integer xOffset, Integer yOffset) {
+        getActions().clickAndHold(element)
+                .moveByOffset(distance, distance)
+                .moveByOffset(xOffset - distance, yOffset - distance)
+                .release().perform();
+    }
+
+    /**
+     * Simulates a drag from source react element and drop to target element
+     * Performs a slight user defined delay before drag to avoid limitations of "pressDelay"
+     * More info: https://github.com/clauderic/react-sortable-hoc
+     * @param source element to start the drag
+     * @param delay long to define how much to delay in millis after clickAndHold
+     * @param xOffset horizontal integer offset destination for dropping (calculated from given element center).
+     * @param yOffset vertical integer offset destination for dropping (calculated from given element center).
+     */
+    public void dragWithDelayAndDropToOffsetXY(WebElement source, long delay, Integer xOffset, Integer yOffset) {
+        getActions().clickAndHold(source)
+                .pause(delay)
+                .moveByOffset(xOffset, yOffset)
+                .release().perform();
+    }
+
+    /**
      * Simulates double clicking on the supplied element
      * @param element element to double click on
      */
@@ -583,6 +672,35 @@ public class SeleniumHelper<T extends WebElement> {
         getActions().dragAndDrop(source, target).perform();
     }
 
+    /**
+     * Simulates a drag from source element and drop to target element
+     * Performs a slight user defined movement of element to avoid limitations of "distance"
+     * More info: https://github.com/clauderic/react-sortable-hoc
+     * @param source element to start the drag
+     * @param target element to end the drag
+     * @param distance integer offset for horizontal and vertical element move (calculated from given element center).
+     */
+    public void dragWithDistanceAndDrop(WebElement source, int distance, WebElement target) {
+        getActions().clickAndHold(source)
+                .moveByOffset(distance, distance)
+                .moveToElement(target)
+                .release().perform();
+    }
+
+    /**
+     * Simulates a drag from source element and drop to target element
+     * Performs a slight user defined delay before drag to avoid limitations of "pressDelay"
+     * More info: https://github.com/clauderic/react-sortable-hoc
+     * @param source element to start the drag
+     * @param delay long to define how much to delay in millis after clickAndHold
+     * @param target element to end the drag
+     */
+    public void dragWithDelayAndDrop(WebElement source, long delay, WebElement target) {
+        getActions().clickAndHold(source)
+                .pause(delay)
+                .moveToElement(target)
+                .release().perform();
+    }
     /**
      * Simulates a drag from source element and drop to target element. HTML5 draggable-compatible
      * Workaround for https://github.com/seleniumhq/selenium-google-code-issue-archive/issues/3604
@@ -884,6 +1002,22 @@ public class SeleniumHelper<T extends WebElement> {
     }
 
     /**
+     * return an augmented driver if it is not screenshot-capable (i.e. not a RemoteWebDriver)
+     * @return selenium web driver with screenshot capabilities
+     */
+    protected TakesScreenshot screenshotCapableDriver() {
+        WebDriver d = driver();
+
+        if (!(d instanceof TakesScreenshot)) {
+            d = new Augmenter().augment(d);
+        }
+        if (d instanceof TakesScreenshot) {
+            return (TakesScreenshot) d;
+        }
+        return null;
+    }
+
+    /**
      * Allows clients to wait until a certain condition is true.
      * @return wait using the driver in this helper.
      */
@@ -949,6 +1083,21 @@ public class SeleniumHelper<T extends WebElement> {
     }
 
     /**
+     * Check whether exception indicates connection with webdriver is lost.
+     * @param e exception caught
+     * @return true if exception indicated we can no longer communicate with webdriver.
+     */
+    public boolean exceptionIndicatesConnectionLost(WebDriverException e) {
+        boolean result = e.getCause() instanceof SocketException;
+        if (!result && e.getMessage() != null) {
+            result = e.getMessage().contains("java.net.SocketException")
+                    || e.getMessage().contains("java.net.ConnectException");
+        }
+        return result;
+    }
+
+
+    /**
      * Finds element matching the By supplied.
      * @param context context to find element in.
      * @param by criteria.
@@ -978,15 +1127,43 @@ public class SeleniumHelper<T extends WebElement> {
     public String takeScreenshot(String baseName) {
         String result = null;
 
-        WebDriver d = driver();
-
-        if (!(d instanceof TakesScreenshot)) {
-            d = new Augmenter().augment(d);
-        }
-        if (d instanceof TakesScreenshot) {
-            TakesScreenshot ts = (TakesScreenshot) d;
+        TakesScreenshot ts = screenshotCapableDriver();
+        if (ts != null) {
             byte[] png = ts.getScreenshotAs(OutputType.BYTES);
             result = writeScreenshot(baseName, png);
+        }
+        return result;
+    }
+
+    /**
+     * Takes screenshot of a specific element on the page (as .png).
+     * @param baseName name for file created (without extension),
+     *                 if a file already exists with the supplied name an
+     *                 '_index' will be added.
+     * @param element the webelement to crop the image to.
+     * @return absolute path of file created.
+     */
+    public String takeElementScreenshot(String baseName, WebElement element) {
+        String result = null;
+
+        TakesScreenshot ts = screenshotCapableDriver();
+        if (ts != null) {
+            File screenshot = ts.getScreenshotAs(OutputType.FILE);
+            try {
+                BufferedImage fullWindow = ImageIO.read(screenshot);
+
+                Point location = element.getLocation();
+                int w = element.getSize().getWidth();
+                int h = element.getSize().getHeight();
+
+                BufferedImage elementScreenshot = fullWindow.getSubimage(location.getX(), location.getY(), w, h);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ImageIO.write(elementScreenshot, "png", baos);
+
+                result = writeScreenshot(baseName, baos.toByteArray());
+            } catch (IOException e) {
+                throw new SlimFixtureException(true, "Unable to create element screenshot");
+            }
         }
         return result;
     }
@@ -1165,7 +1342,7 @@ public class SeleniumHelper<T extends WebElement> {
     }
 
     public <T> ExpectedCondition<T> conditionForAllFrames(ExpectedCondition<T> nested) {
-        return new TryAllFramesConditionDecorator(this, nested);
+        return new TryAllFramesConditionDecorator<>(this, nested);
     }
 
     /**

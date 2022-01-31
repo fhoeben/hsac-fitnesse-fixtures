@@ -1,10 +1,10 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import net.minidev.json.JSONObject;
 import nl.hsac.fitnesse.fixture.util.DataUrlHelper;
 import nl.hsac.fitnesse.fixture.util.JsonPathHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.entity.ContentType;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class JsonHttpTest extends HttpTest {
     }
 
     protected String jsonEncodeCurrentValues() {
-        return new JSONObject(getCurrentValues()).toString();
+         return JSONObject.toJSONString(getCurrentValues());
     }
 
     protected String getContentTypeForJson() {
@@ -88,7 +88,7 @@ public class JsonHttpTest extends HttpTest {
 
     public Object elementOfJsonPath(int index, String path) {
         List<Object> all = listJsonPathMatches(path);
-        return all.get(index);
+        return all.size() > index ? all.get(index) : null;
     }
 
     public int jsonPathCount(String path) {
@@ -100,7 +100,7 @@ public class JsonHttpTest extends HttpTest {
         String responseString = getResponseBody();
         String jsonPath = getPathExpr(path);
         List<Object> results = getPathHelper().getAllJsonPath(responseString, jsonPath);
-        return results instanceof ArrayList? (ArrayList<Object>) results : new ArrayList<>(results);
+        return results instanceof ArrayList ? (ArrayList<Object>) results : new ArrayList<>(results);
     }
 
     protected String getResponseBody() {
@@ -113,6 +113,7 @@ public class JsonHttpTest extends HttpTest {
 
     /**
      * Gets a HTML list with all matches to the supplied JsonPath.
+     *
      * @param expr expression to evaluate.
      * @return list containing all results of expression evaluation against last response received, null if there were no matches.
      * @throws RuntimeException if no valid response was available or Json Path could not be evaluated.
@@ -136,7 +137,8 @@ public class JsonHttpTest extends HttpTest {
 
     /**
      * Update a value in a the response by supplied jsonPath
-     * @param path the jsonPath to locate the key whose value needs changing
+     *
+     * @param path  the jsonPath to locate the key whose value needs changing
      * @param value the new value to set
      */
     public void setJsonPathTo(String path, String value) {
@@ -156,11 +158,12 @@ public class JsonHttpTest extends HttpTest {
                 }
             };
         } else {
+            Object cleanedExpected = cleanupValue(expectedValue);
             completion = new RepeatLastCall() {
                 @Override
                 public boolean isFinished() {
                     Object actual = jsonPath(jsonPath);
-                    return compareActualToExpected(expectedValue, actual);
+                    return compareActualToExpected(cleanedExpected, actual);
                 }
             };
         }

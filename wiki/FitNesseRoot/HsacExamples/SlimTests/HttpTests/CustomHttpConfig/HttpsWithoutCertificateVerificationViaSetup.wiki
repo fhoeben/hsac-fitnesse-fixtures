@@ -1,0 +1,22 @@
+---
+Test
+Help: Https GET without certificate verification
+---
+
+Performs HTTPS GET on domains that would normally throw an exception because of bad SSL certificates.
+
+'''''Use at your own risk, this makes https potentially as unsafe as http!'''''
+
+|script|http client setup|
+|disable SSL verification|
+|configure http test     |
+
+|script                                     |http test                         |
+|set throw exception on http request failure|false                             |
+|get from                                   |https://expired.badssl.com/       |
+|get from                                   |https://wrong.host.badssl.com/    |
+|get from                                   |https://self-signed.badssl.com/   |
+|get from                                   |https://untrusted-root.badssl.com/|
+
+Note that 'disable SSL verification' lasts for the rest of the test run, so we need to reset after test.
+This is achieved in this suite's TearDown.

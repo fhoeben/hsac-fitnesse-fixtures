@@ -16,6 +16,7 @@ This allows us to switch to another browser by just adding ''|note'' to one line
 
 Furthermore this configuration is prepared for both running the browser on the same (development) machine running Fitnesse (with ''start driver for''), as remotely on a node in a Selenium Grid (with ''connect to driver for'').
 The latter allows tests to be executed on different operating systems. This is also very useful to run tests as part of a continuous integration server (i.e. build server), when no browsers are installed on the server running the tests.
+This configuration can be overridden by using system properties. This allows different configurations on the build server to test with different browsers, without requiring different wiki content, but only requiring a different build configuration. More details can be found in OverridingSeleniumSetup.
 
 !define GRID_HUB {http://remote-selenium.local:4444/wd/hub}
 

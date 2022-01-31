@@ -40,7 +40,8 @@ last one!-!}
 |delete                 |$created2     |if exists                                                        |
 |note                   |directory to be used by the fixture can be set to system path                   |
 |set directory          |${DIR}                                                                          |
-|show                   |create        |bye.txt                       |containing |Bye Bye 3             |
+|$created3=             |create        |bye.txt                       |containing |Bye Bye 3             |
+|check                  |filename of   |$created3                     |bye.txt                           |
 |check                  |size of       |bye.txt                       |9                                 |
 |check                  |text in       |bye.txt                       |Bye Bye 3                         |
 |set value              |John          |for                           |name                              |
@@ -67,7 +68,7 @@ last one!-!}
 |append                 |second line   |to                            |$appended  |on new line           |
 |convert line endings of|$appended     |to unix                                                          |
 |check                  |text in       |$appended                                                        |!-first line
-second line-! |
+second line-!            |
 |convert line endings of|$appended|to windows  |
 |check                  |size of  |$appended|23|
 |convert line endings of|$appended|to unix     |
@@ -76,7 +77,11 @@ second line-! |
 
 Table below shows how we can work with zip files
 
-|script                                                                   |
+We ensure lists are rendered between brackets, and not numbered
+|script|list fixture   |
+|display lists standard|
+
+|script    |file fixture                                                  |
 |$created= |create                |bye1.txt          |containing|Bye Bye 5|
 |$zip=     |zip                   |$created          |as        |bye.zip  |
 |check     |number of files in zip|$zip              |1                   |
@@ -99,5 +104,8 @@ Table below shows how we can use a list of non-reusable data from a file:
 |check        |take first line from|list.txt  |last one!      |
 |show         |text in             |list.txt                  |
 
+Files-directory aliases (http://files/...) can be used to reference files in literal tables:
 
-
+!|script                                                                              |
+|append|NewContent|to                               |http://files/fileFixture/list.txt|
+|check |text in   |http://files/fileFixture/list.txt|NewContent                       |

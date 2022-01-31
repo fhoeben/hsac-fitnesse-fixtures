@@ -38,3 +38,4 @@ Some extra Wiki symbols that can be used:
 |random Dutch license plate (using default category and sidecode)                 |{{{!-!randomDutchLicensePlate-! }}}                                      |!randomDutchLicensePlate                                      |
 |random Dutch license plate (category f.e. M, V, B, D)                            |{{{!-!randomDutchLicensePlate (M)-! }}}                                  |!randomDutchLicensePlate (M)                                  |
 |random Dutch license plate (category) (sidecode 1 - 14)                          |{{{!-!randomDutchLicensePlate (V) (5)-! }}}                              |!randomDutchLicensePlate (V) (5)                              |
+|random universally unique identifier (UUID)                                      |{{{!-!randomUuid-! }}}                                                   |!randomUuid                                                   |

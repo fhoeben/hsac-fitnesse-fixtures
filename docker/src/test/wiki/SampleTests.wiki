@@ -1,0 +1,10 @@
+---
+Suite
+---
+!contents -R2 -g -p -f -h
+
+!*> Class path for these tests
+The location when working standalone:
+!path fixtures
+!path fixtures/*.jar
+*!

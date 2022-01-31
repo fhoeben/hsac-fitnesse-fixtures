@@ -39,7 +39,7 @@ json={"key":"value"}
 |check |json path            |size    |>0                           |
 |check |json path count      |$.*     |>=5                          |
 |show  |all json path matches|*                                     |
-|check |element              |1       |of json path   |$.*  |false  |
+|check |element              |4       |of json path   |$.*  |false  |
 
 
 Next another POST, posting of url-enoded values defined in the wiki.
@@ -49,17 +49,6 @@ Next another POST, posting of url-enoded values defined in the wiki.
 |post values to|http://validate.jsontest.com/  |
 |show          |response                       |
 |check         |json path        |validate|true|
-
-Next another POST, posting of url-enoded array of values defined in the wiki.
-!note We have to specify 'products\[]' as value name since the service requires a value called 'products[]' and the fixture interprets a value name ending on '[]' as an indicator the value is an array, and will normally not include that postfix in the name of the value sent to the service. By specifying '\[]' we indicate we ''don't'' want the brackets removed from the name.
-
-|script        |json http test                                                                                           |
-|set values    |televisie-start, internet-fiber-start|for                                               |products\[]     |
-|post values to|https://thuis.t-mobile.nl/api/shoppingcart                                                               |
-|show          |response                                                                                                 |
-|check         |json path                            |error                                             |0               |
-|check         |json path                            |$.fields.pricing_info.initial_onetime.pricing_info|Eenmalige kosten|
-|check         |json path                            |$.fields.pricing_info.initial_monthly.pricing_info|Maandelijks     |
 
 Next a PUT example
 !define PUT_BODY { {{{

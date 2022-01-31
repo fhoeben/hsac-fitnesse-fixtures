@@ -54,5 +54,18 @@ public class SlimFixtureWithMapHelper extends SlimFixture {
         public void setValueForIn(Object value, String name, Map<String, Object> map) {
             map.put(name, value);
         }
+
+        @Override
+        public boolean removeFrom(String key, Map<String, Object> map) {
+            boolean result = map.containsKey(key);
+            map.remove(key);
+            return result;
+        }
+
+        @Override
+        public Object getValue(Map<String, Object> map, String name) {
+            String cleanName = htmlCleaner.cleanupValue(name);
+            return map.get(cleanName);
+        }
     }
 }

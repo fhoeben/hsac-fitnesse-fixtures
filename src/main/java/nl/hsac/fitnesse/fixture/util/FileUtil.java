@@ -14,7 +14,15 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.channels.FileChannel;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Scanner;
+
+import static java.nio.file.StandardCopyOption.COPY_ATTRIBUTES;
 
 /**
  * File utilities.
@@ -324,5 +332,36 @@ public final class FileUtil {
         }
         f.delete();
         return !f.exists();
+    }
+
+    /**
+     * Copies source directory to target, recursively.
+     * @param source source directory
+     * @param target target, must not exist yet.
+     */
+    public static void copyTree(String source, String target) {
+        Path sourcePath = Paths.get(source);
+        Path targetPath = Paths.get(target);
+        try {
+            Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                    Files.createDirectories(resolveTarget(dir));
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Files.copy(file, resolveTarget(file), COPY_ATTRIBUTES);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                private Path resolveTarget(Path file) {
+                    return targetPath.resolve(sourcePath.relativize(file));
+                }
+            });
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to copy tree", e);
+        }
     }
 }

@@ -1,0 +1,6 @@
+---
+Test
+---
+
+|script|pdf fixture                                     |
+|check |number of pages in|http://files/freemarker.pdf|1|

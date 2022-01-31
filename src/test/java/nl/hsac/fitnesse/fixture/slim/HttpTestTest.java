@@ -2,12 +2,16 @@ package nl.hsac.fitnesse.fixture.slim;
 
 
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -189,6 +193,7 @@ public class HttpTestTest {
         assertEquals("GET", httpTest.getResponse().getMethod());
         assertEquals("GET", req1.getMethod());
         assertEquals("GET: /FitNesseMock", req1.getRequest());
+        checkHeadersSent(httpTest);
     }
 
     /**
@@ -201,6 +206,7 @@ public class HttpTestTest {
         assertEquals("HEAD", httpTest.getResponse().getMethod());
         assertEquals("HEAD", req1.getMethod());
         assertEquals("HEAD: /FitNesseMock", req1.getRequest());
+        checkHeadersSent(httpTest);
     }
 
     /**
@@ -213,6 +219,46 @@ public class HttpTestTest {
         assertEquals("POST", httpTest.getResponse().getMethod());
         assertEquals("POST", req1.getMethod());
         assertEquals("a", req1.getRequest());
+        checkHeadersSent(httpTest);
+    }
+
+    /**
+     * Test post with explicit headers.
+     */
+    @Test
+    public void testPostWithHeaders() {
+        HttpTest httpTest = new HttpTest();
+        httpTest.setValueForHeader("1", "a");
+        httpTest.setValueForHeader("2", "b[0]");
+        httpTest.setValueForHeader("3", "b[1]");
+        httpTest.setValueForHeader("4", "b[2]");
+        XmlHttpResponse req1 = checkCall(url -> httpTest.postTo("a", url));
+        assertEquals("POST", httpTest.getResponse().getMethod());
+        assertEquals("POST", req1.getMethod());
+        assertEquals("a", req1.getRequest());
+
+        Map<String, Object> headers = checkHeadersSent(httpTest);
+        assertEquals("1", headers.get("a"));
+        assertEquals(new ArrayList<>(asList("2", "3", "4")), headers.get("b"));
+        assertEquals("1", headers.get("Content-Length"));
+        assertEquals("application/x-www-form-urlencoded; charset=UTF-8", headers.get("Content-Type"));
+    }
+
+    /**
+     * Test post with explicit content type.
+     */
+    @Test
+    public void testPostWithContentType() {
+        HttpTest httpTest = new HttpTest();
+        httpTest.setContentType("application/text");
+        XmlHttpResponse req1 = checkCall(url -> httpTest.postTo("ca", url));
+        assertEquals("POST", httpTest.getResponse().getMethod());
+        assertEquals("POST", req1.getMethod());
+        assertEquals("ca", req1.getRequest());
+
+        Map<String, Object> headers = checkHeadersSent(httpTest);
+        assertEquals("2", headers.get("Content-Length"));
+        assertEquals("application/text", headers.get("Content-Type"));
     }
 
     /**
@@ -225,6 +271,7 @@ public class HttpTestTest {
         assertEquals("PUT", httpTest.getResponse().getMethod());
         assertEquals("PUT", req1.getMethod());
         assertEquals("b", req1.getRequest());
+        checkHeadersSent(httpTest);
     }
 
     /**
@@ -237,6 +284,7 @@ public class HttpTestTest {
         assertEquals("PATCH", httpTest.getResponse().getMethod());
         assertEquals("PATCH", req1.getMethod());
         assertEquals("b", req1.getRequest());
+        checkHeadersSent(httpTest);
     }
 
     /**
@@ -251,6 +299,7 @@ public class HttpTestTest {
         assertEquals("POST", httpTest.getResponse().getMethod());
         assertEquals("POST", req1.getMethod());
         assertEquals(expectedBody, req1.getRequest());
+        checkHeadersSent(httpTest);
     }
 
     /**
@@ -264,6 +313,7 @@ public class HttpTestTest {
         assertEquals("PUT", httpTest.getResponse().getMethod());
         assertEquals("PUT", req1.getMethod());
         assertEquals(expectedBody, req1.getRequest());
+        checkHeadersSent(httpTest);
     }
 
     private String setupValuesToEncodeInBody(HttpTest httpTest) {
@@ -286,6 +336,7 @@ public class HttpTestTest {
         assertEquals("DELETE", httpTest.getResponse().getMethod());
         assertEquals("DELETE", req1.getMethod());
         assertEquals("a=1", req1.getRequest());
+        checkHeadersSent(httpTest);
     }
 
     /**
@@ -298,6 +349,7 @@ public class HttpTestTest {
         assertEquals("DELETE", httpTest.getResponse().getMethod());
         assertEquals("DELETE", req1.getMethod());
         assertEquals("DELETE: /FitNesseMock", req1.getRequest());
+        checkHeadersSent(httpTest);
     }
 
     /**
@@ -310,6 +362,7 @@ public class HttpTestTest {
         XmlHttpResponse req1 = checkCall(url -> httpTest.postTemplateTo(url));
         assertEquals("POST", httpTest.getResponse().getMethod());
         checkTemplateRequestBody(httpTest.getResponse().getMethod(), req1);
+        checkHeadersSent(httpTest);
     }
 
     /**
@@ -322,6 +375,7 @@ public class HttpTestTest {
         XmlHttpResponse req1 = checkCall(url -> httpTest.putTemplateTo(url));
         assertEquals("PUT", httpTest.getResponse().getMethod());
         checkTemplateRequestBody(httpTest.getResponse().getMethod(), req1);
+        checkHeadersSent(httpTest);
     }
 
     /**
@@ -334,6 +388,7 @@ public class HttpTestTest {
         XmlHttpResponse req1 = checkCall(url -> httpTest.deleteWithTemplate(url));
         assertEquals("DELETE", httpTest.getResponse().getMethod());
         checkTemplateRequestBody(httpTest.getResponse().getMethod(), req1);
+        checkHeadersSent(httpTest);
     }
 
     /**
@@ -346,6 +401,14 @@ public class HttpTestTest {
         XmlHttpResponse req1 = checkCall(url -> httpTest.patchWithTemplate(url));
         assertEquals("PATCH", httpTest.getResponse().getMethod());
         checkTemplateRequestBody(httpTest.getResponse().getMethod(), req1);
+        checkHeadersSent(httpTest);
+    }
+
+    static Map<String, Object> checkHeadersSent(HttpTest httpTest) {
+        Map<String, Object> headersSent = httpTest.requestHeaders();
+        assertEquals("nl.hsac.fitnesse.fixture.util.HttpClient", headersSent.get("User-Agent"));
+        assertNotNull(headersSent.get("Host"));
+        return headersSent;
     }
 
     static XmlHttpResponse checkCall(Function<String, Boolean> call) {
@@ -462,6 +525,23 @@ public class HttpTestTest {
         assertEquals("PATCH", httpTest.getResponse().getMethod());
         assertEquals("PATCH", req1.getMethod());
         assertEquals("b", req1.getRequest());
+    }
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
+    @Test
+    public void testExceptionIsThrownWhenThisIsTurnedOn() {
+        HttpTest httpTest = new HttpTest();
+        httpTest.setThrowExceptionOnHttpRequestFailure(true);
+
+        MockXmlServerSetup mockXmlServerSetup = new MockXmlServerSetup();
+        mockXmlServerSetup.addResponseWithStatus("error1", 500);
+
+        String serverUrl = mockXmlServerSetup.getMockServerUrl();
+
+        expectedException.expect(SlimFixtureException.class);
+        checkCall(url -> httpTest.getFrom(serverUrl));
     }
 
     static XmlHttpResponse checkCallWithRetry(HttpTest httpTest, Function<String, Boolean> call) {

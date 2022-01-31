@@ -5,12 +5,14 @@ import fitnesse.ContextConfigurator;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.Template;
+import nl.hsac.fitnesse.fixture.slim.HttpClientSetup;
 import nl.hsac.fitnesse.fixture.util.DatesHelper;
 import nl.hsac.fitnesse.fixture.util.Formatter;
 import nl.hsac.fitnesse.fixture.util.FreeMarkerHelper;
 import nl.hsac.fitnesse.fixture.util.HtmlCleaner;
 import nl.hsac.fitnesse.fixture.util.HttpClient;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
+import nl.hsac.fitnesse.fixture.util.JsonFormatter;
 import nl.hsac.fitnesse.fixture.util.JsonHelper;
 import nl.hsac.fitnesse.fixture.util.JsonPathHelper;
 import nl.hsac.fitnesse.fixture.util.LineEndingHelper;
@@ -59,6 +61,7 @@ public class Environment {
     private TextFormatter textFormatter;
     private XMLFormatter xmlFormatter;
     private JsonPathHelper jsonPathHelper;
+    private JsonFormatter jsonFormatter;
     private JsonHelper jsonHelper;
     private HtmlCleaner htmlCleaner;
     private TimeoutHelper timeoutHelper = new TimeoutHelper();
@@ -81,7 +84,7 @@ public class Environment {
         builder.setExposeFields(true);
         cfg.setObjectWrapper(builder.build());
         freemarkerConfig = cfg;
-        
+
         fmHelper = new FreeMarkerHelper();
         templateCache = new ConcurrentHashMap<String, Template>();
 
@@ -95,6 +98,7 @@ public class Environment {
         xPathHelper = new XPathHelper();
 
         jsonPathHelper = new JsonPathHelper();
+        jsonFormatter = new JsonFormatter();
         jsonHelper = new JsonHelper();
 
         htmlCleaner = new HtmlCleaner();
@@ -293,10 +297,11 @@ public class Environment {
      * @param url url to post to.
      * @param result result containing request, its response will be filled.
      * @param headers headers to add.
+     * @param partName partName for file
      * @param file file containing binary data to post.
      */
-    public void doHttpFilePost(String url, HttpResponse result, Map<String, Object> headers, File file) {
-        httpClient.post(url, result, headers, file);
+    public void doHttpFilePost(String url, HttpResponse result, Map<String, Object> headers, String partName, File file) {
+        httpClient.post(url, result, headers, partName, file);
     }
 
     /**
@@ -304,12 +309,13 @@ public class Environment {
      * @param url url to post to.
      * @param result result containing request, its response will be filled.
      * @param headers headers to add.
+     * @param partName partName for file
      * @param file file containing binary data to post.
      */
-    public void doHttpFilePut(String url, HttpResponse result, Map<String, Object> headers, File file) {
-        httpClient.put(url, result, headers, file);
+    public void doHttpFilePut(String url, HttpResponse result, Map<String, Object> headers, String partName, File file) {
+        httpClient.put(url, result, headers, partName, file);
     }
-    
+
     /**
      * Performs PUT to supplied url of result of applying template with model.
      * @param url url to put to.
@@ -542,7 +548,7 @@ public class Environment {
      * @return HTML formatted version of jsonString
      */
     public String getHtmlForJson(String jsonString) {
-        return getHtml(jsonHelper, jsonString);
+        return getHtml(jsonFormatter, jsonString);
     }
 
     /**
@@ -704,8 +710,9 @@ public class Environment {
     public String getFilePathFromWikiUrl(String wikiUrl) {
         String url = getHtmlCleaner().getUrl(wikiUrl);
         File file;
-        if (url.startsWith("files/")) {
-            String relativeFile = url.substring("files".length());
+        if (url.startsWith("files/") || url.startsWith("http://files/")) {
+            String prefix = url.startsWith("files/") ? "files" : "http://files";
+            String relativeFile = url.substring(prefix.length());
             relativeFile = relativeFile.replace('/', File.separatorChar);
             String pathname = getFitNesseFilesSectionDir() + relativeFile;
             file = new File(pathname);
@@ -817,6 +824,7 @@ public class Environment {
 
     /**
      * Enables content compression support on this environment's HttpClient
+     * @deprecated use {@link HttpClientSetup} to configure http client
      */
     public void enableHttpClientCompression() {
         httpClient.enableCompression();
@@ -824,6 +832,7 @@ public class Environment {
 
     /**
      * Disables content compression support on this environment's HttpClient
+     * @deprecated use {@link HttpClientSetup} to configure http client
      */
     public void disableHttpClientCompression() {
         httpClient.disableCompression();
@@ -831,6 +840,7 @@ public class Environment {
 
     /**
      * Disables SSL certificate verification on this environment's HttpClient
+     * @deprecated use {@link HttpClientSetup} to configure http client
      */
     public void disableHttpClientSSLVerification() {
         httpClient.disableSSLVerification();
@@ -838,6 +848,7 @@ public class Environment {
 
     /**
      * Enables SSL certificate verification on this environment's HttpClient
+     * @deprecated use {@link HttpClientSetup} to configure http client
      */
     public void enableHttpClientSSLVerification() {
         httpClient.enableSSLVerification();

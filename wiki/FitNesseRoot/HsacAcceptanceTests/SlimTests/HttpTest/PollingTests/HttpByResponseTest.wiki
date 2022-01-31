@@ -14,41 +14,52 @@ We retry a call until the response is a certain value.
 |add response|8 response |with status|200|
 |add response|9 response |with status|300|
 |add response|10 response|with status|300|
+|add response|11 response|with status|300|
+|add response|12 response|with status|300|
+|add response|13 response|with status|300|
+|add response|14 response|with status|300|
 |$url=       |get mock server url        |
 
 *!
 
-|script                  |http test                            |
-|set repeat interval to  |50                      |milliseconds|
-|repeat at most          |2                       |times       |
-|post                    |0 request               |to   |$url  |
-|repeat until response is|0 response                           |
-|check                   |response                |0 response  |
-|check                   |response status         |200         |
-|check                   |repeat count            |0           |
-|post                    |1 request               |to   |$url  |
-|repeat until response is|2 response                           |
-|check                   |response status         |200         |
-|check                   |response                |2 response  |
-|check                   |repeat count            |1           |
-|get from                |$url                                 |
-|repeat until response is|5 response                           |
-|check                   |response status         |201         |
-|check                   |response                |5 response  |
-|check                   |repeat count            |2           |
-|put                     |6 request               |to   |$url  |
-|check                   |response status         |299         |
-|repeat until response is|8 response                           |
-|check                   |response status         |200         |
-|check                   |response                |8 response  |
-|check                   |repeat count            |2           |
-|repeat at most          |1                       |times       |
-|delete                  |$url                                 |
-|reject                  |repeat until response is|bla bla     |
-|check                   |response status         |300         |
-|check                   |response                |10 response |
-|check                   |repeat count            |1           |
-|check                   |time spent repeating    |>= 50       |
+|script                      |http test                            |
+|set repeat interval to      |50                      |milliseconds|
+|repeat at most              |2                       |times       |
+|post                        |0 request               |to   |$url  |
+|repeat until response is    |0 response                           |
+|check                       |response                |0 response  |
+|check                       |response status         |200         |
+|check                       |repeat count            |0           |
+|post                        |1 request               |to   |$url  |
+|repeat until response is    |2 response                           |
+|check                       |response status         |200         |
+|check                       |response                |2 response  |
+|check                       |repeat count            |1           |
+|get from                    |$url                                 |
+|repeat until response is    |5 response                           |
+|check                       |response status         |201         |
+|check                       |response                |5 response  |
+|check                       |repeat count            |2           |
+|put                         |6 request               |to   |$url  |
+|check                       |response status         |299         |
+|repeat until response is    |8 response                           |
+|check                       |response status         |200         |
+|check                       |response                |8 response  |
+|check                       |repeat count            |2           |
+|repeat at most              |1                       |times       |
+|delete                      |$url                                 |
+|reject                      |repeat until response is|bla bla     |
+|check                       |response status         |300         |
+|check                       |response                |10 response |
+|check                       |repeat count            |1           |
+|check                       |time spent repeating    |>= 50       |
+|get from                    |$url                                 |
+|repeat until response is not|11 response                          |
+|check                       |repeat count            |1           |
+|repeat at most              |5                       |times       |
+|repeat until response is    |=~/\d4 r.s.+/                        |
+|check                       |response                |14 response |
+|check                       |repeat count            |2           |
 
 
 !*> Stop Server

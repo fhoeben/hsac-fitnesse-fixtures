@@ -153,11 +153,12 @@ public class XmlHttpTest extends HttpTest {
                 }
             };
         } else {
+            String cleanedExpected = cleanupValue(expectedValue);
             completion = new RepeatLastCall() {
                 @Override
                 public boolean isFinished() {
                     Object actual = xPath(xPath);
-                    return compareActualToExpected(expectedValue, actual);
+                    return compareActualToExpected(cleanedExpected, actual);
                 }
             };
         }

@@ -14,6 +14,8 @@ We retry a call until a xPath path expression on the response is a certain value
 |add response|<body>8 response</body> |with status|200|
 |add response|<body>9 response</body> |with status|300|
 |add response|<body>10 response</body>|with status|300|
+|add response|<body>11 response</body>|with status|300|
+|add response|<body>12 response</body>|with status|300|
 |$url=       |get mock server url                     |
 
 *!
@@ -49,6 +51,9 @@ We retry a call until a xPath path expression on the response is a certain value
 |check                 |xPath               |/body|10 response       |
 |check                 |repeat count        |1                       |
 |check                 |time spent repeating|>= 50                   |
+|repeat at most        |3                   |times                   |
+|repeat until xPath    |/body               |is   |=~/\d2 .+/        |
+|check                 |xPath               |/body|12 response       |
 
 
 

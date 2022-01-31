@@ -7,7 +7,7 @@ import fitnesse.junit.DescriptionFactory;
 import fitnesse.junit.FitNesseRunner;
 import fitnesse.reporting.RerunSuiteFormatter;
 import fitnesse.testrunner.MultipleTestsRunner;
-import fitnesse.wiki.WikiPage;
+import fitnesse.testrunner.run.TestRun;
 import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.slim.web.LayoutTest;
 import nl.hsac.fitnesse.fixture.slim.web.SeleniumDriverSetup;
@@ -44,7 +44,7 @@ import java.util.List;
  * JUnit Runner to run a FitNesse suite or page as JUnit test.
  *
  * The suite/page to run must be specified either via the Java property
- * 'fitnesseSuiteToRun', or by adding a {@Link FitNesseRunner.Name} annotation to the test class.
+ * 'fitnesseSuiteToRun', or by adding a {@link FitNesseRunner.Suite} annotation to the test class.
  * If both are present the system property is used.
  *
  * The Selenium driver used for tests may be overridden (from what is configured in the wiki)
@@ -210,10 +210,10 @@ public class HsacFitNesseRunner extends FitNesseRunner {
     }
 
     @Override
-    protected void runPages(List<WikiPage> pages, RunNotifier notifier) {
+    protected void runPages(TestRun run, RunNotifier notifier) {
         boolean seleniumConfigOverridden = configureSeleniumIfNeeded();
         try {
-            super.runPages(pages, notifier);
+            super.runPages(run, notifier);
         } finally {
             if (seleniumConfigOverridden) {
                 try {

@@ -1,0 +1,50 @@
+---
+Test
+---
+This test ensures that we can double click at given element offset.
+
+We use a mock server running to serve the HTML defined in this page.
+
+
+!define HTML { {{{
+<html>
+<head>
+<style>
+div {
+    width: 200px;
+    height: 100px;
+    border: 1px solid black;
+}
+</style>
+</head>
+<body>
+
+<div id="area" ondblclick ="showCoords(event)"></div>
+<p id="demo"></p>
+
+<script>
+function showCoords(event) {
+    var x = event.clientX;
+    var y = event.clientY;
+    var coor = "X: " + x + ", Y: " + y;
+    document.getElementById("demo").innerHTML = coor;
+}
+</script>
+</body>
+</html>
+}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script                |browser test                       |
+|seconds before timeout|1                                  |
+|open                  |$url                               |
+|double click          |id=area |at offset X|10   |Y  |50  |
+|check                 |value of|id=demo    |X: 119, Y: 109|
+
+|script|mock xml server setup|
+|stop                        |
+

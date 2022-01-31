@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 
 import static org.junit.Assert.assertEquals;
@@ -103,13 +104,16 @@ public class ZipHelperTest {
         File zip = helper.createZip(TEST_ZIP_NAME, f1, f2, f3);
 
         List<ZipEntry> entries = helper.getEntries(zip.getAbsolutePath());
+        List<String> names = entries.stream()
+                .map(ZipEntry::getName)
+                .sorted().collect(Collectors.toList());
 
         assertEquals(5, entries.size());
-        assertEquals("GetWeatherSoapResponse.xml", entries.get(0).getName());
-        assertEquals("GetWeatherSoapResponseFormatted.xml", entries.get(1).getName());
-        assertEquals("line_endings/", entries.get(2).getName());
-        assertEquals("line_endings/unix-file.txt", entries.get(3).getName());
-        assertEquals("line_endings/windows-file.txt", entries.get(4).getName());
+        assertEquals("GetWeatherSoapResponse.xml", names.get(0));
+        assertEquals("GetWeatherSoapResponseFormatted.xml", names.get(1));
+        assertEquals("line_endings/", names.get(2));
+        assertEquals("line_endings/unix-file.txt", names.get(3));
+        assertEquals("line_endings/windows-file.txt", names.get(4));
 
         assertFalse(entries.get(0).isDirectory());
         assertFalse(entries.get(1).isDirectory());

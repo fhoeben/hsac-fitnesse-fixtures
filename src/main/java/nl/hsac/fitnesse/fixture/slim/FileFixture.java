@@ -237,14 +237,19 @@ public class FileFixture extends SlimFixtureWithMap {
         } else if (isFilesUrl(filename)){
             name = getFilePathFromWikiUrl(filename);
         } else {
-            name = directory + filename;
+            String url = getUrl(filename);
+            if (url.startsWith("file:")) {
+                name = url.substring(5);
+            } else {
+                name = directory + filename;
+            }
         }
         return cleanupPath(name);
     }
 
     private boolean isFilesUrl(String filename) {
         String url = getUrl(filename);
-        return !filename.equals(url) && url.startsWith("files/");
+        return (!filename.equals(url) && url.startsWith("files/")) || url.startsWith("http://files");
     }
 
     private String cleanupPath(String fullPath) {

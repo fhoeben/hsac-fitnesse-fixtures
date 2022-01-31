@@ -5,29 +5,27 @@ import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
-import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.methods.HttpPatch;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.NoConnectionReuseStrategy;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
-import org.apache.http.ssl.SSLContexts;
+import org.apache.http.protocol.HttpCoreContext;
 import org.apache.http.util.EntityUtils;
 
-import javax.net.ssl.SSLContext;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 /**
  * Helper to make Http calls and get response.
@@ -71,11 +69,12 @@ public class HttpClient {
      * @param response response pre-populated with request to send. Response content and
      *          statusCode will be filled.
      * @param headers http headers to add
+     * @param partName name for the part containing file
      * @param file file containing binary data to post.
      */
-    public void post(String url, HttpResponse response, Map<String, Object> headers, File file) {
+    public void post(String url, HttpResponse response, Map<String, Object> headers, String partName, File file) {
         HttpPost methodPost = new HttpPost(url);
-        HttpEntity multipart = buildBodyWithFile(file);
+        HttpEntity multipart = buildBodyWithFile(partName, file);
         methodPost.setEntity(multipart);
         getResponse(url, response, methodPost, headers);
     }
@@ -101,11 +100,12 @@ public class HttpClient {
      * @param response response pre-populated with request to send. Response content and
      *          statusCode will be filled.
      * @param headers http headers to add
+     * @param partName name for the part containing file
      * @param file file containing binary data to put.
      */
-    public void put(String url, HttpResponse response, Map<String, Object> headers, File file) {
+    public void put(String url, HttpResponse response, Map<String, Object> headers, String partName, File file) {
         HttpPut methodPut = new HttpPut(url);
-        HttpEntity multipart = buildBodyWithFile(file);
+        HttpEntity multipart = buildBodyWithFile(partName, file);
         methodPut.setEntity(multipart);
         getResponse(url, response, methodPut, headers);
     }
@@ -117,21 +117,21 @@ public class HttpClient {
      * @param headers http headers to add
      * @param type contentType for request.
      */
-    public void patch(String url, HttpResponse response, Map<String, Object> headers, String type){
+    public void patch(String url, HttpResponse response, Map<String, Object> headers, String type) {
         HttpPatch methodPatch = new HttpPatch(url);
         ContentType contentType = ContentType.parse(type);
         HttpEntity ent = new StringEntity(response.getRequest(), contentType);
         methodPatch.setEntity(ent);
-        getResponse(url,response,methodPatch, headers);
+        getResponse(url, response, methodPatch, headers);
     }
 
     /**
      * Builds request body with a given file
      * @param file file containing binary data.
      */
-    private HttpEntity buildBodyWithFile(File file) {
+    private HttpEntity buildBodyWithFile(String partName, File file) {
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        builder.addBinaryBody("file", file,
+        builder.addBinaryBody(partName, file,
                 ContentType.APPLICATION_OCTET_STREAM, file.getName());
         HttpEntity multipart = builder.build();
         return multipart;
@@ -190,6 +190,7 @@ public class HttpClient {
 
     /**
      * Ensures the apache HttpClient used supports content compression
+     * @deprecated use {@link HttpClientFactory} and {@link #setHttpClient(org.apache.http.client.HttpClient)}
      */
     public void enableCompression() {
         if (!this.contentCompression) {
@@ -200,6 +201,7 @@ public class HttpClient {
 
     /**
      * Ensures the apache HttpClient used does not support content compression
+     * @deprecated use {@link HttpClientFactory} and {@link #setHttpClient(org.apache.http.client.HttpClient)}
      */
     public void disableCompression() {
         if (this.contentCompression) {
@@ -210,6 +212,7 @@ public class HttpClient {
 
     /**
      * Ensures the apache HttpClient used does not verify SSL certificates
+     * @deprecated use {@link HttpClientFactory} and {@link #setHttpClient(org.apache.http.client.HttpClient)}
      */
     public void disableSSLVerification() {
         if (this.sslVerification) {
@@ -220,6 +223,7 @@ public class HttpClient {
 
     /**
      * Ensures the apache HttpClient used verifies SSL certificates
+     * @deprecated use {@link HttpClientFactory} and {@link #setHttpClient(org.apache.http.client.HttpClient)}
      */
     public void enableSSLVerification() {
         if (!this.sslVerification) {
@@ -230,6 +234,7 @@ public class HttpClient {
 
     /**
      * Sets the apache HttpClient to one matching the current contentCompression and sslVerification values
+     * @deprecated use {@link HttpClientFactory} and {@link #setHttpClient(org.apache.http.client.HttpClient)}
      */
     protected void updateHttpClient() {
         if (!contentCompression && sslVerification) {
@@ -245,37 +250,12 @@ public class HttpClient {
      * @return an apache HttpClient instance
      */
     protected static org.apache.http.client.HttpClient buildHttpClient(boolean contentCompression, boolean sslVerification) {
-        RequestConfig rc = RequestConfig.custom()
-                .setCookieSpec(CookieSpecs.STANDARD)
-                .build();
-
-        HttpClientBuilder builder = HttpClients.custom()
-                .useSystemProperties();
-
-        if (!contentCompression) {
-            builder.disableContentCompression();
-        }
-
+        HttpClientFactory factory = new HttpClientFactory();
+        factory.setContentCompression(contentCompression);
         if (!sslVerification) {
-            try {
-                builder.setSSLSocketFactory(generateAllTrustingSSLConnectionSocketFactory());
-            } catch (Exception e) {
-                throw new RuntimeException("Unable to create all-trusting SSLConnectionSocketFactory", e);
-            }
-
+            factory.disableSSLVerification();
         }
-
-        return builder.setConnectionReuseStrategy(NoConnectionReuseStrategy.INSTANCE)
-                .setUserAgent(HttpClient.class.getName())
-                .setDefaultRequestConfig(rc)
-                .build();
-    }
-
-    protected static SSLConnectionSocketFactory generateAllTrustingSSLConnectionSocketFactory() throws Exception {
-        SSLContext allTrustingSSLContext = SSLContexts.custom()
-                .loadTrustMaterial(null, (a, b) -> true)
-                .build();
-        return new SSLConnectionSocketFactory(allTrustingSSLContext, (a, b) -> true);
+        return factory.createClient();
     }
 
     protected void getResponse(String url, HttpResponse response, HttpRequestBase method, Map<String, Object> headers) {
@@ -294,6 +274,7 @@ public class HttpClient {
             resp = executeMethod(context, method);
             endTime = currentTimeMillis();
 
+            storeHeadersSent(response, context);
             storeResponse(response, resp);
         } catch (Exception e) {
             throw new RuntimeException("Unable to get response from: " + url, e);
@@ -312,13 +293,21 @@ public class HttpClient {
         for (String key : requestHeaders.keySet()) {
             Object value = requestHeaders.get(key);
             if (value != null) {
-                method.setHeader(key, value.toString());
+                if (value instanceof Iterable) {
+                    for (Object v : (Iterable<?>) value) {
+                        if (v != null) {
+                            method.addHeader(key, v.toString());
+                        }
+                    }
+                } else {
+                    method.addHeader(key, value.toString());
+                }
             }
         }
     }
 
     protected HttpContext createContext(HttpResponse response) {
-        HttpContext localContext = new BasicHttpContext();
+        HttpContext localContext = new HttpCoreContext();
         CookieStore store = response.getCookieStore();
         if (store != null) {
             localContext.setAttribute(HttpClientContext.COOKIE_STORE, store);
@@ -331,37 +320,29 @@ public class HttpClient {
         return httpClient.execute(method, context);
     }
 
-    protected void storeResponse(HttpResponse response, org.apache.http.HttpResponse resp) throws IOException {
-        int returnCode = resp.getStatusLine().getStatusCode();
-        response.setStatusCode(returnCode);
-
-        addHeadersFromResponse(response.getResponseHeaders(), resp.getAllHeaders());
-
-        copyResponseContent(response, resp);
-    }
-
-    protected void addHeadersFromResponse(Map<String, Object> responseHeaders, Header[] respHeaders) {
-        for (Header h : respHeaders) {
-            String headerName = h.getName();
-            String headerValue = h.getValue();
-            if (responseHeaders.containsKey(headerName)) {
-                handleRepeatedHeaderValue(responseHeaders, headerName, headerValue);
-            } else {
-                responseHeaders.put(headerName, headerValue);
+    protected void storeHeadersSent(HttpResponse response, HttpContext context) {
+        if (context instanceof HttpCoreContext) {
+            Header[] headersSent = ((HttpCoreContext) context).getRequest().getAllHeaders();
+            for (Header header : headersSent) {
+                response.addRequestHeader(header.getName(), header.getValue());
             }
         }
     }
 
-    protected void handleRepeatedHeaderValue(Map<String, Object> responseHeaders,
-                                             String headerName, String headerValue) {
-        Object previousHeaderValue = responseHeaders.get(headerName);
-        if (previousHeaderValue instanceof Collection) {
-            ((Collection) previousHeaderValue).add(headerValue);
-        } else {
-            List<Object> valueList = new ArrayList();
-            valueList.add(previousHeaderValue);
-            valueList.add(headerValue);
-            responseHeaders.put(headerName, valueList);
+    protected void storeResponse(HttpResponse response, org.apache.http.HttpResponse resp) throws IOException {
+        int returnCode = resp.getStatusLine().getStatusCode();
+        response.setStatusCode(returnCode);
+
+        addHeadersFromResponse(response, resp.getAllHeaders());
+
+        copyResponseContent(response, resp);
+    }
+
+    protected void addHeadersFromResponse(HttpResponse response, Header[] respHeaders) {
+        for (Header h : respHeaders) {
+            String headerName = h.getName();
+            String headerValue = h.getValue();
+            response.addResponseHeader(headerName, headerValue);
         }
     }
 
@@ -409,7 +390,7 @@ public class HttpClient {
         method.reset();
         if (response instanceof CloseableHttpResponse) {
             try {
-                ((CloseableHttpResponse)response).close();
+                ((CloseableHttpResponse) response).close();
             } catch (IOException e) {
                 throw new RuntimeException("Unable to close connection", e);
             }

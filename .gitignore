@@ -1,6 +1,6 @@
 wiki/fitnesse-standalone.jar
 wiki/plugins/hsac-fitnesse-plugin-*.jar
-wiki/plugins/maven-classpath-plugin-*.jar
+wiki/plugins/toolchain-fitnesse-plugin-*.jar
 wiki/FitNesseRoot/**/*.zip
 wiki/FitNesseRoot/files/screenshots
 wiki/FitNesseRoot/files/testResults
@@ -45,5 +45,5 @@ wiki/webdrivers
 /src/test/resources/htmlReports/*/images/*
 /src/test/resources/htmlReports/*/javascript/*
 wiki/FitNesseRoot/HsacExamples/SlimTests/UtilityFixtures/GeneratedSymbolicLinkSuite/*LocaleTests.wiki
-wiki/FitNesseRoot/ReRunLastFailures.wiki
+wiki/FitNesseRoot/ReRunLastFailures*.wiki
 /src/main/resources/META-INF/apidocs/

@@ -23,7 +23,7 @@ Then we check some entries.
 
 |album details               |
 |album       |year?|releases?|
-|Astral Weeks|1968 |13       |
-|Moondance   |1970 |25       |
+|Astral Weeks|1968 |14       |
+|Moondance   |1970 |>25      |
 
 

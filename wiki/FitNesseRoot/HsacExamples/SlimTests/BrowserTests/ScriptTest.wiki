@@ -8,24 +8,35 @@ This class allows us to specify what we want to do using a web browser, by the (
 
 The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
 
-|script                |browser test                                                      |
-|seconds before timeout|60                                                                |
-|open                  |https://www.allmusic.com                                          |
-|show                  |click if available|I accept                                       |
-|enter                 |Van Morrison      |as  |Search                                    |
-|press                 |enter                                                             |
-|click                 |Van Morrison                                                      |
-|show                  |take screenshot   |overview                                       |
-|click                 |Discography                                                       |
-|check                 |page title        |!-Van Morrison | Album Discography | AllMusic-!|
-|show                  |take screenshot   |discography                                    |
-|check                 |value of          |Year|in row where|Album|is|Astral Weeks|1968   |
-|click                 |Astral Weeks                                                      |
-|show                  |take screenshot   |album                                          |
-|click                 |click to embiggen                                                 |
-|                      |wait for cover to appear                                          |
-|wait                  |1                 |seconds                                        |
-|show                  |take screenshot   |cover                                          |
+|script                                 |browser test                                                          |
+|note                                   |all music loads a lot of slow ads, we don't want to wait on those     |
+|set continue if ready state interactive|true                                                                  |
+|open                                   |https://www.allmusic.com                                              |
+|show                                   |click if available|AGREE                                              |
+|show                                   |click if available|id=exco_sticky-x-button                            |
+|enter                                  |Van Morrison      |as         |Search                                 |
+|press                                  |enter                                                                 |
+|click                                  |Van Morrison                                                          |
+|note                                   |close popup, if shown                                                 |
+|show                                   |click if available|css=.registration-prompt-close                     |
+|show                                   |take screenshot   |overview                                           |
+|click                                  |Discography                                                           |
+|check                                  |page title        |!-Van Morrison | Album Discography | AllMusic-!    |
+|note                                   |close popup, if shown                                                 |
+|show                                   |click if available|css=.registration-prompt-close                     |
+|show                                   |take screenshot   |discography                                        |
+|check                                  |value of          |Year       |in row where|Album|is|Astral Weeks|1968|
+|note                                   |close popup, if shown                                                 |
+|show                                   |click if available|css=.registration-prompt-close                     |
+|note                                   |scroll top of discography on screen                                   |
+|scroll to                              |Filter Discography By                                                 |
+|click                                  |Astral Weeks                                                          |
+|show                                   |take screenshot   |album                                              |
+|show                                   |take screenshot   |cover_image|of          |click to embiggen         |
+|click                                  |click to embiggen                                                     |
+|                                       |wait for cover to appear                                              |
+|wait                                   |1                 |seconds                                            |
+|show                                   |take screenshot   |cover                                              |
 
 
 When multiple similar sequences of steps are needed a script can be generalized using a scenario, which is show in ScenarioTest.

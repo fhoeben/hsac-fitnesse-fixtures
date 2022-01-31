@@ -1,0 +1,11 @@
+---
+Help: Tests for Slim fixtures
+Suite
+---
+!contents -R2 -g -p -f -h
+
+Workaround for https://github.com/unclebob/fitnesse/issues/989
+!define slim.port {0}
+
+!define TEST_SYSTEM {slim}
+

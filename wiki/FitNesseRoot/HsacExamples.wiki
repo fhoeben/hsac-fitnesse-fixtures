@@ -12,12 +12,15 @@ The fixtures provided allow testing (SOAP) web services and web applications (us
 !2 Baseline installation features
 
 The baseline !-FitNesse-! installation offers the following features:
- 1. Ability to easily create a standalone (no JDK or Maven required) !-FitNesse-! environment.
- 2. Run !-FitNesse-! tests on a build server, reporting the results in both JUnit XML format and HTML.
- 3. !-FitNesse-! installation for test/fixture developers containing:
+ 1 Ability to easily create a standalone (no JDK or Maven required) !-FitNesse-! environment.
+ 2 Run !-FitNesse-! tests on a build server, reporting the results in both JUnit XML format and HTML.
+ 3 [[HSAC's fitnesse-plugin][https://github.com/fhoeben/hsac-fitnesse-plugin]] to add additional Wiki features (random values, calculating relative dates, Slim scenarios without need to specify all parameters, Slim scripts that take a screenshot after each step),
+ 4 [[Praegus' toolchain-plugin][https://github.com/praegus/toolchain-fitnesse-plugin]], improving the wiki's look and feel and page editing features, combining:
+   * [[Bootstrap-plus wiki theme][https://github.com/praegus/fitnesse-bootstrap-plus-theme]] ([[Website][https://praegus.github.io/fitnesse-bootstrap-plus-theme/]]),
+   * [[Autocomplete responder][https://github.com/praegus/fitnesse-autocomplete-responder]].
+ 5 !-FitNesse-! installation for test/fixture developers containing:
   * the fixture base classes (and Selenium drivers for Chrome, Internet Explorer, Edge and !-Firefox-!),
-  * HSAC's fitnesse-plugin to add additional Wiki features (random values, calculating relative dates, Slim scenarios without need to specify all parameters, Slim scripts that take a screenshot after each step),
-  * easy fixture debugging,
+  * easy fixture debugging.
 
 !3 To create your own test project
 When you want to use the project's baseline to create and maintain your own test suite, we recommend creating your own Maven project based on the project. This will allow you to run and maintain your test set, in version control, without the need to keep your own copies of dependencies (neither Selenium !-WebDrivers-! nor Java libraries).
@@ -56,6 +59,8 @@ The !-FitNesse-! suite to run can be specified by changing the value of the !sty
 or (preferably) by adding a system property, called !style_code[fitnesseSuiteToRun], specifying the suite to run to the build server's mvn execution.
 By using the !style_code[@SuiteFilter] and !style_code[@ExcludeSuiteFilter] annotations, or (preferably) by adding !style_code[suiteFilter] and/or !style_code[excludeSuiteFilter] system properties, one can provide tags to in- or exclude and further filter the tests to run within the specified suite. Provide multiple tags by comma-separating them.
 
+When multiple test runs are done (for instance in parallel to reduce total execution times) one should configure the the HTML output directory for each run to be a subdirectory of a common root (e.g. !style_code[target/fitnesse-results/run1] and !style_code[target/fitnesse-results/run2]) and then use !style_code[nl.hsac.fitnesse.junit.reportmerge.HtmlReportIndexGenerator] to generate a combined overview of all runs.
+
 The Selenium configuration (e.g. what browser on what platform) to use when testing websites can be overridden by using system properties. This allows different configurations on the build server to test with different browsers, without requiring different Wiki content, but only requiring a different build configuration. More details can be found in >SlimTests.BrowserTests.OverridingSeleniumSetup
 
 !4 Running using Docker
@@ -67,10 +72,15 @@ Two images are provided on Docker Hub to run tests (or to be used as base for cu
  * [[hsac/fitnesse-fixtures-test-jre8][https://hub.docker.com/r/hsac/fitnesse-fixtures-test-jre8/]] which contains a Java runtime and this project, which can be used to run tests that either do not need Selenium (i.e. do not test using !-BrowserTest-!) or use an existing/external Selenium Grid.
  * [[hsac/fitnesse-fixtures-test-jre8-chrome][https://hub.docker.com/r/hsac/fitnesse-fixtures-test-jre8-chrome/]] which adds this project to a Selenium standalone Chrome image and can be used to run tests with a Chrome browser (without the need to have/maintain a Selenium Grid).
 
+An additional image is provided to combine multiple test run's results: [[hsac/fitnesse-fixtures-combine][https://hub.docker.com/repository/docker/hsac/fitnesse-fixtures-combine]].
+
 Detailed instructions on how to use the images are provided in each image's description.
 
+The automated build process also generates docker images for each commit in [[!-GitLab's-! docker registry][https://gitlab.com/fhoeben/hsac-fitnesse-fixtures/container_registry]], so if you want the latest code snapshot in an image you can get that there.
+The master branch updates the 'latest' images, other branches have a tag based on their name. ''Please note:'' these images are temporary, and subject to periodic cleanup.
+
 !4 Example Reports
-Example reports for [[Windows using a Sauce Labs Selenium driver][https://fhoeben.github.io/hsac-fitnesse-fixtures-test-results/examples-results/]] and [[Linux with !-Chrome Headless-!][https://fhoeben.github.io/hsac-fitnesse-fixtures-test-results/acceptance-test-results/]] are generated in the automated build process of this project.
+The automated build process of this project generates some reports which can give an impression of the reports generated from test runs. The project's [[acceptance tests][https://gitlab.com/fhoeben/hsac-fitnesse-fixtures/-/jobs/artifacts/master/file/test-results/index.html?job=reports-combine]] and [[examples][https://gitlab.com/fhoeben/hsac-fitnesse-fixtures/-/jobs/artifacts/master/file/example-results/index.html?job=example-reports-combine]] both cover multiple runs in a single report. Clicking on a run's name in the 'Overview Pages' table takes you to a single run's test report.
 
 !3 3. Fixture developer installation
 Import this project in your favorite Java IDE (with Maven support).

@@ -1,0 +1,5 @@
+Since changing HTTP client setting last for the entire run we ensure http test's HTTP client is set back to default after each test.
+The original default setting is saved in the SuiteSetUp of this suite.
+
+|script                  |http client setup|
+|configure http test with|$originalClient  |

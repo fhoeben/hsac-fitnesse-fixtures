@@ -25,7 +25,6 @@ public class XPathBy extends LazyPatternBy {
      * considers a '&nbsp;' whitespace.
      * @param pattern basic XPATH, possibly with placeholders.
      * @param parameters values for placeholders.
-     * @return ByXPath.
      */
     public XPathBy(String pattern, String... parameters) {
         super(pattern, parameters);

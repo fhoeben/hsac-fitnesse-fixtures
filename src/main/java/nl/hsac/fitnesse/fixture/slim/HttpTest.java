@@ -1,8 +1,10 @@
 package nl.hsac.fitnesse.fixture.slim;
 
+import fit.exception.FitFailureException;
 import freemarker.template.Template;
 import nl.hsac.fitnesse.fixture.util.BinaryHttpResponse;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
+import nl.hsac.fitnesse.fixture.util.NonValidResponseReceivedException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
@@ -12,6 +14,7 @@ import org.apache.http.impl.cookie.BasicClientCookie;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -24,7 +27,9 @@ import java.util.regex.Pattern;
  * Fixture to make HTTP requests using Slim scripts and/or scenarios.
  */
 public class HttpTest extends SlimFixtureWithMap {
-    /** Default content type for posts and puts. */
+    /**
+     * Default content type for posts and puts.
+     */
     public final static String DEFAULT_POST_CONTENT_TYPE = "application/x-www-form-urlencoded; charset=UTF-8";
 
     private String downloadBase = new File(filesDir, "downloads").getPath() + "/";
@@ -37,9 +42,19 @@ public class HttpTest extends SlimFixtureWithMap {
     private String contentType = DEFAULT_POST_CONTENT_TYPE;
     private String lastUrl = null;
     private String lastMethod = null;
+    private boolean throwExceptionOnHttpRequestFailure = false;
+
+    public void setThrowExceptionOnHttpRequestFailure(boolean throwException) {
+        throwExceptionOnHttpRequestFailure = throwException;
+    }
+
+    public boolean getThrowExceptionOnHttpRequestFailure() {
+        return throwExceptionOnHttpRequestFailure;
+    }
 
     /**
      * Sets template to use.
+     *
      * @param aTemplate name of template file (relative to 'templates' directory on classpath)
      * @return true if template could be found.
      */
@@ -55,6 +70,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Enables content compression support in the current environment (i.e. for the entire test run)
+     * @deprecated use {@link HttpClientSetup} to configure http client
      */
     public void enableCompression() {
         getEnvironment().enableHttpClientCompression();
@@ -62,6 +78,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Disables content compression support in the current environment (i.e. for the entire test run)
+     * @deprecated use {@link HttpClientSetup} to configure http client
      */
     public void disableCompression() {
         getEnvironment().disableHttpClientCompression();
@@ -69,6 +86,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Disables SSL certificate verification in the current environment (i.e. for the entire test run)
+     * @deprecated use {@link HttpClientSetup} to configure http client
      */
     public void disableSSLVerification() {
         getEnvironment().disableHttpClientSSLVerification();
@@ -76,6 +94,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Enables SSL certificate verification in the current environment (i.e. for the entire test run)
+     * @deprecated use {@link HttpClientSetup} to configure http client
      */
     public void enableSSLVerification() {
         getEnvironment().enableHttpClientSSLVerification();
@@ -83,8 +102,9 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Stores value to be passed as headers.
+     *
      * @param value value to be passed.
-     * @param name name to use this value for.
+     * @param name  name to use this value for.
      */
     public void setValueForHeader(Object value, String name) {
         getMapHelper().setValueForIn(value, name, headerValues);
@@ -92,6 +112,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Clears a header value previously set.
+     *
      * @param name value to remove.
      * @return true if value was present.
      */
@@ -111,6 +132,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Adds all values in the supplied map to the current header values.
+     *
      * @param map to obtain values from.
      */
     public void copyHeaderValuesFrom(Map<String, Object> map) {
@@ -119,6 +141,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Allows subclasses access to the header values.
+     *
      * @return header values.
      */
     protected Map<String, Object> getHeaderValues() {
@@ -137,9 +160,11 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     private static final Pattern HEADER_KEY_PATTERN = Pattern.compile("header:\\s*(\\.+)");
+
     /**
      * Sets a value.
-     * @param key (possibly nested) key to set value for.
+     *
+     * @param key   (possibly nested) key to set value for.
      * @param value value to be stored.
      */
     public void set(String key, Object value) {
@@ -161,6 +186,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP POST template with current values to service endpoint.
+     *
      * @param serviceUrl service endpoint to send request to.
      * @return true if call could be made and response did not indicate error.
      */
@@ -170,7 +196,8 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP POST template with current values to service endpoint.
-     * @param serviceUrl service endpoint to send request to.
+     *
+     * @param serviceUrl   service endpoint to send request to.
      * @param aContentType content type to use for post.
      * @return true if call could be made and response did not indicate error.
      */
@@ -180,7 +207,8 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP POST body to service endpoint.
-     * @param body content to post
+     *
+     * @param body       content to post
      * @param serviceUrl service endpoint to send body to.
      * @return true if call could be made and response did not indicate error.
      */
@@ -191,7 +219,8 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP DELETE body to service endpoint.
-     * @param body content to delete
+     *
+     * @param body       content to delete
      * @param serviceUrl service endpoint to send body to.
      * @return true if call could be made and response did not indicate error.
      */
@@ -202,7 +231,8 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends a file by HTTP POST body to service endpoint.
-     * @param fileName fileName to post
+     *
+     * @param fileName   fileName to post
      * @param serviceUrl service endpoint to send body to.
      * @return true if call could be made and response did not indicate error.
      */
@@ -211,7 +241,20 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     /**
+     * Sends a file by HTTP POST body to service endpoint with specific partname.
+     *
+     * @param fileName   fileName to post
+     * @param partName   partName for file
+     * @param serviceUrl service endpoint to send body to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean postFileAsTo(String fileName, String partName, String serviceUrl) {
+        return postFileAsToImpl(partName, fileName, serviceUrl);
+    }
+
+    /**
      * Sends all values (url encoded) using post.
+     *
      * @param serviceUrl service endpoint to send values to.
      * @return true if call could be made and response did not indicate error.
      */
@@ -263,11 +306,16 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     protected boolean postFileToImpl(String fileName, String serviceUrl) {
-        return sendFileImpl(fileName, serviceUrl, "POST");
+        return postFileAsToImpl("file", fileName, serviceUrl);
+    }
+
+    protected boolean postFileAsToImpl(String partName, String fileName, String serviceUrl) {
+        return sendFileImpl(partName, fileName, serviceUrl, "POST");
     }
 
     /**
      * Sends HTTP PUT template with current values to service endpoint.
+     *
      * @param serviceUrl service endpoint to send request to.
      * @return true if call could be made and response did not indicate error.
      */
@@ -277,6 +325,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP DELETE template with current values to service endpoint.
+     *
      * @param serviceUrl service endpoint to send request to.
      * @return true if call could be made and response did not indicate error.
      */
@@ -286,6 +335,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP PATCH template with current values to service endpoint.
+     *
      * @param serviceUrl service endpoint to send request to.
      * @return true if call could be made and response did not indicate error.
      */
@@ -295,9 +345,10 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP method call template with current values to service endpoint.
-     * @param serviceUrl service endpoint to send request to.
+     *
+     * @param serviceUrl   service endpoint to send request to.
      * @param aContentType content type to use for post.
-     * @param method HTTP method to use
+     * @param method       HTTP method to use
      * @return true if call could be made and response did not indicate error.
      */
     public boolean sendTemplateTo(String serviceUrl, String aContentType, String method) {
@@ -335,7 +386,8 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP PUT body to service endpoint.
-     * @param body content to put
+     *
+     * @param body       content to put
      * @param serviceUrl service endpoint to send body to.
      * @return true if call could be made and response did not indicate error.
      */
@@ -351,6 +403,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends all values (url encoded) using put.
+     *
      * @param serviceUrl service endpoint to send values to.
      * @return true if call could be made and response did not indicate error.
      */
@@ -365,7 +418,8 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends a file by HTTP PUT body to service endpoint.
-     * @param fileName fileName to post
+     *
+     * @param fileName   fileName to post
      * @param serviceUrl service endpoint to send body to.
      * @return true if call could be made and response did not indicate error.
      */
@@ -373,12 +427,27 @@ public class HttpTest extends SlimFixtureWithMap {
         return putFileToImpl(fileName, serviceUrl);
     }
 
-
-    protected boolean putFileToImpl(String fileName, String serviceUrl) {
-        return sendFileImpl(fileName, serviceUrl, "PUT");
+    /**
+     * Sends a file by HTTP PUT body to service endpoint.
+     *
+     * @param fileName   fileName to post
+     * @param partName   partName for file
+     * @param serviceUrl service endpoint to send body to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean putFileAsTo(String fileName, String partName, String serviceUrl) {
+        return putFileAsToImpl(partName, fileName, serviceUrl);
     }
 
-    protected boolean sendFileImpl(String fileName, String serviceUrl, String method) {
+    protected boolean putFileToImpl(String fileName, String serviceUrl) {
+        return putFileAsToImpl("file", fileName, serviceUrl);
+    }
+
+    protected boolean putFileAsToImpl(String partName, String fileName, String serviceUrl) {
+        return sendFileImpl(partName, fileName, serviceUrl, "PUT");
+    }
+
+    protected boolean sendFileImpl(String partName, String fileName, String serviceUrl, String method) {
         boolean result;
         resetResponse();
         String url = getUrl(serviceUrl);
@@ -394,13 +463,12 @@ public class HttpTest extends SlimFixtureWithMap {
             storeLastCall(method + "_FILE", serviceUrl);
             switch (method) {
                 case "POST":
-                    getEnvironment().doHttpFilePost(url, response, headerValues, file);
+                    getEnvironment().doHttpFilePost(url, response, headerValues, partName, file);
                     break;
                 case "PUT":
-                    getEnvironment().doHttpFilePut(url, response, headerValues, file);
+                    getEnvironment().doHttpFilePut(url, response, headerValues, partName, file);
                     break;
             }
-
         } catch (Throwable t) {
             handleCallException("Unable to get response from " + method + " to: " + url, t);
         }
@@ -408,13 +476,13 @@ public class HttpTest extends SlimFixtureWithMap {
         return result;
     }
 
-
     protected String cleanupBody(String body) {
         return getEnvironment().getHtmlCleaner().cleanupPreFormatted(body);
     }
 
     /**
      * Sends HTTP GET to service endpoint to retrieve content.
+     *
      * @param serviceUrl service endpoint to get content from.
      * @return true if call could be made and response did not indicate error.
      */
@@ -424,6 +492,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP GET to service endpoint to retrieve content, not following a redirect if sent.
+     *
      * @param serviceUrl service endpoint to get content from.
      * @return true if call could be made and response did not indicate error.
      */
@@ -453,25 +522,49 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Downloads binary content from specified url.
+     *
      * @param serviceUrl url to download from
      * @return link to downloaded file
      */
     public String getFileFrom(String serviceUrl) {
         resetResponse();
-        String url = createUrlWithParams(serviceUrl);
 
-        BinaryHttpResponse resp = new BinaryHttpResponse();
-        resp.setCookieStore(response.getCookieStore());
+        BinaryHttpResponse resp = createBinaryResponse(response);
+        String url = createUrlWithParams(serviceUrl);
         getEnvironment().doGet(url, resp, headerValues);
+        return processBinaryResponse(resp);
+    }
+
+    /**
+     * Downloads binary content from specified url.
+     *
+     * @param serviceUrl url to download from
+     * @return link to downloaded file
+     */
+    public String postValuesAndGetFileFrom(String serviceUrl) {
+        resetResponse();
+        String body = urlEncodeCurrentValues();
+        response.setRequest(body);
+
+        BinaryHttpResponse resp = createBinaryResponse(response);
+        String url = getUrl(serviceUrl);
+        getEnvironment().doHttpPost(url, resp, headerValues, getContentType());
+        return processBinaryResponse(resp);
+    }
+
+    protected BinaryHttpResponse createBinaryResponse(HttpResponse aResponse) {
+        BinaryHttpResponse resp = new BinaryHttpResponse();
+        resp.setCookieStore(aResponse.getCookieStore());
+        resp.setRequest(aResponse.getRequest());
+        return resp;
+    }
+
+    protected String processBinaryResponse(BinaryHttpResponse resp) {
         response.cloneValues(resp);
 
         byte[] content = resp.getResponseContent();
         if (content == null) {
-            try {
-                content = resp.getResponse().getBytes("utf-8");
-            } catch (UnsupportedEncodingException e) {
-                // will not happen
-            }
+            content = resp.getResponse().getBytes(StandardCharsets.UTF_8);
         }
         String fileName = resp.getFileName();
         if (StringUtils.isEmpty(fileName)) {
@@ -482,6 +575,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP HEAD to service endpoint.
+     *
      * @param serviceUrl service endpoint to delete.
      * @return true if call could be made and response did not indicate error.
      */
@@ -501,6 +595,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Sends HTTP DELETE to service endpoint.
+     *
      * @param serviceUrl service endpoint to delete.
      * @return true if call could be made and response did not indicate error.
      */
@@ -607,6 +702,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Performs any post processing directly after retrieving response.
+     *
      * @return true if all is well, false otherwise.
      */
     protected boolean postProcessResponse() {
@@ -617,14 +713,16 @@ public class HttpTest extends SlimFixtureWithMap {
      * @return true if response does not indicate an error.
      */
     public boolean responseIsValid() {
-        boolean result;
         try {
             response.validResponse();
-            result = true;
-        } catch (RuntimeException e) {
-            result = false;
+        } catch (FitFailureException | NonValidResponseReceivedException e) {
+            if (throwExceptionOnHttpRequestFailure) {
+                throw new SlimFixtureException(false, e.getMessage());
+            } else {
+                return false;
+            }
         }
-        return result;
+        return true;
     }
 
     /**
@@ -632,6 +730,13 @@ public class HttpTest extends SlimFixtureWithMap {
      */
     public String request() {
         return safeFormatValue(response.getRequest());
+    }
+
+    /**
+     * @return actual headers sent (these will contain the headers explicitly set and some implicit).
+     */
+    public Map<String, Object> requestHeaders() {
+        return response.getRequestHeaders();
     }
 
     /**
@@ -643,6 +748,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Internal method to format a value, which will just return the 'raw' value if there is a problem formatting.
+     *
      * @param value value to format
      * @return formatted value
      */
@@ -659,6 +765,7 @@ public class HttpTest extends SlimFixtureWithMap {
     /**
      * Method that will take care of formatting a value, which may be overridden in subclasses.
      * This implementation just returns value.
+     *
      * @param value value to format
      * @return formatted value
      */
@@ -807,7 +914,7 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     /**
-     * @param cookieName name of cookie.
+     * @param cookieName    name of cookie.
      * @param attributeName name of attribute.
      * @return value of attribute for cookie.
      */
@@ -882,6 +989,14 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     public boolean repeatUntilResponseIs(final String expectedResponse) {
+        return repeatUntil(createResponseIsCompletion(expectedResponse));
+    }
+
+    public boolean repeatUntilResponseIsNot(final String expectedResponse) {
+        return repeatUntilNot(createResponseIsCompletion(expectedResponse));
+    }
+
+    protected RepeatCompletion createResponseIsCompletion(final String expectedResponse) {
         RepeatCompletion completion;
         if (expectedResponse == null) {
             completion = new RepeatLastCall() {
@@ -891,15 +1006,16 @@ public class HttpTest extends SlimFixtureWithMap {
                 }
             };
         } else {
+            String cleanedExpected = cleanupValue(expectedResponse);
             completion = new RepeatLastCall() {
                 @Override
                 public boolean isFinished() {
                     Object actual = response();
-                    return compareActualToExpected(expectedResponse, actual);
+                    return compareActualToExpected(cleanedExpected, actual);
                 }
             };
         }
-        return repeatUntil(completion);
+        return completion;
     }
 
     public boolean repeatUntilHeaderIs(final String header, final Object expectedValue) {
@@ -912,11 +1028,12 @@ public class HttpTest extends SlimFixtureWithMap {
                 }
             };
         } else {
+            Object cleanedExpected = cleanupValue(expectedValue);
             completion = new RepeatLastCall() {
                 @Override
                 public boolean isFinished() {
                     Object actual = responseHeader(header);
-                    return compareActualToExpected(expectedValue, actual);
+                    return compareActualToExpected(cleanedExpected, actual);
                 }
             };
         }
@@ -970,18 +1087,6 @@ public class HttpTest extends SlimFixtureWithMap {
     }
 
     protected abstract class RepeatLastCall implements RepeatCompletion {
-
-        protected boolean compareActualToExpected(Object expected, Object actual) {
-            boolean result;
-            if (actual == null) {
-                result = expected.equals("null");
-            } else {
-                result = expected.equals(actual)
-                        || expected.toString().equals(actual.toString());
-            }
-            return result;
-        }
-
         @Override
         public void repeat() {
             repeatLastCall();

@@ -6,7 +6,7 @@
 
 	<groupId>nl.hsac</groupId>
 	<artifactId>hsac-fitnesse-fixtures</artifactId>
-	<version>4.6-SNAPSHOT</version>
+	<version>4.31-SNAPSHOT</version>
 	<url>https://github.com/fhoeben/hsac-fitnesse-fixtures</url>
 	<name>HSAC's FitNesse Fixtures</name>
 	<description>Fixtures to assist in testing via FitNesse</description>
@@ -37,19 +37,22 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.build.outputTimestamp>2020-01-01T00:00:00Z</project.build.outputTimestamp>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<hsac-fitnesse-plugin.version>1.27</hsac-fitnesse-plugin.version>
-		<fitnesse.version>20190716</fitnesse.version>
+
+		<hsac-fitnesse-plugin.version>1.31.0</hsac-fitnesse-plugin.version>
+		<fitnesse.version>20211030</fitnesse.version>
+		<praegus-toolchain-fitnesse-plugin.version>2.0.14</praegus-toolchain-fitnesse-plugin.version>
 		<selenium.version>3.141.59</selenium.version>
-		<slf4j.version>1.7.25</slf4j.version>
-		<apache.http.version>4.5.10</apache.http.version>
-		<surefire.version>2.22.1</surefire.version>
+		<slf4j.version>1.7.32</slf4j.version>
+		<apache.http.version>4.5.13</apache.http.version>
+		<surefire.version>2.22.2</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
-		<selenium.internetexplorerdriver.version>3.141.5</selenium.internetexplorerdriver.version>
-		<selenium.edgedriver.version>6.17134</selenium.edgedriver.version>
-		<selenium.chromedriver.version>77.0.3865.40</selenium.chromedriver.version>
-		<selenium.geckodriver.version>0.25.0</selenium.geckodriver.version>
+		<selenium.internetexplorerdriver.version>3.150.1</selenium.internetexplorerdriver.version>
+		<selenium.edgedriver.version>97.0.1072.62</selenium.edgedriver.version>
+		<selenium.chromedriver.version>97.0.4692.71</selenium.chromedriver.version>
+		<selenium.geckodriver.version>0.30.0</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
@@ -89,14 +92,19 @@
 			<version>${apache.http.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient-win</artifactId>
+			<version>${apache.http.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
-			<version>2.3.29</version>
+			<version>2.3.31</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-text</artifactId>
-			<version>1.8</version>
+			<version>1.9</version>
 		</dependency>
 		<dependency>
 			<groupId>cglib</groupId>
@@ -129,7 +137,7 @@
 		<dependency>
 			<groupId>com.codeborne</groupId>
 			<artifactId>phantomjsdriver</artifactId>
-			<version>1.4.4</version>
+			<version>1.5.0</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.seleniumhq.selenium</groupId>
@@ -184,23 +192,23 @@
 		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>
-			<version>2.4.0</version>
+			<version>2.6.0</version>
 		</dependency>
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.25</version>
+            <version>1.30</version>
         </dependency>
 		<dependency>
 			<groupId>commons-net</groupId>
 			<artifactId>commons-net</artifactId>
-			<version>3.6</version>
+			<version>3.8.0</version>
 		</dependency>
 		<!-- Testing -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
+			<version>4.13.2</version>
 			<scope>provided</scope>
         </dependency>
         <dependency>
@@ -208,6 +216,12 @@
             <artifactId>mockito-core</artifactId>
             <version>2.23.4</version>
             <scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.skyscreamer</groupId>
+			<artifactId>jsonassert</artifactId>
+			<version>1.5.0</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -226,8 +240,18 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.1.0</version>
+			</plugin>
+			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.1.0</version>
 				<configuration>
 					<filesets>
 						<fileset>
@@ -279,13 +303,15 @@
 							<platform>windows</platform>
 							<bit>32</bit>
 							<version>${selenium.internetexplorerdriver.version}</version>
-							<url>http://selenium-release.storage.googleapis.com/3.141/IEDriverServer_Win32_${selenium.internetexplorerdriver.version}.zip</url>
+							<url>http://selenium-release.storage.googleapis.com/3.150/IEDriverServer_Win32_${selenium.internetexplorerdriver.version}.zip</url>
 						</driver>
 						<driver>
 							<name>edgedriver</name>
 							<platform>windows</platform>
 							<bit>64</bit>
 							<version>${selenium.edgedriver.version}</version>
+							<url>https://msedgedriver.azureedge.net/${selenium.edgedriver.version}/edgedriver_win64.zip</url>
+							<fileMatchInside>msedgedriver.exe</fileMatchInside>
 						</driver>
 						<driver>
 							<name>chromedriver</name>
@@ -329,33 +355,29 @@
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${surefire.version}</version>
-				<configuration>
-					<excludes>
-						<!-- this test actually runs fitnesse tests
-							 therefore it will only be executed for
-							 integration-test goal
-						-->
-						<exclude>**/FixtureDebugTest.java</exclude>
-					</excludes>
-				</configuration>
+				<executions>
+					<execution>
+						<id>default-test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<excludes>
+								<!-- this test actually runs fitnesse tests
+                                     therefore it will only be executed for
+                                     integration-test goal
+                                -->
+								<exclude>**/FixtureDebugTest.java</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>${surefire.version}</version>
 				<executions>
-					<execution>
-						<!-- Generates suites below HsacExamples.SlimTests.UtilityFixtures.GeneratedSymbolicLinkSuite -->
-						<id>generate-suite</id>
-						<phase>test-compile</phase>
-						<goals>
-							<goal>integration-test</goal>
-						</goals>
-						<configuration>
-							<systemPropertyVariables>
-								<fitnesseSuiteToRun>HsacExamples.SlimTests.UtilityFixtures.GeneratedSymbolicLinkSuite.SuiteGenerator</fitnesseSuiteToRun>
-							</systemPropertyVariables>
-						</configuration>
-					</execution>
 					<execution>
 						<id>run-fitnesse-tests</id>
 						<phase>integration-test</phase>
@@ -375,11 +397,13 @@
 						<seleniumDriverClass>${seleniumDriverClass}</seleniumDriverClass>
 						<seleniumCapabilities>${seleniumCapabilities}</seleniumCapabilities>
 						<seleniumJsonCapabilities>${seleniumJsonCapabilities}</seleniumJsonCapabilities>
+						<partitionCount>${partitionCount}</partitionCount>
+						<partitionIndex>${partitionIndex}</partitionIndex>
 					</systemPropertyVariables>
 					<properties>
 						<property>
 							<name>listener</name>
-							<value>nl.hsac.fitnesse.junit.JUnitXMLPerPageListener,nl.hsac.fitnesse.junit.ProgressLoggerListener${extraFailsafeListeners}</value>
+							<value>fitnesse.junit.JUnitXMLPerPageRunListener,nl.hsac.fitnesse.junit.ProgressLoggerListener${extraFailsafeListeners}</value>
 						</property>
 					</properties>
 					<!-- Our listener will create XML failsafe should not, or all tests are reported twice -->
@@ -431,7 +455,7 @@
 					 dependencies are available to Fitnesse without need to have Maven to run tests.
 				-->
 				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.1.1</version>
 				<configuration>
 					<includes>**/*</includes>
 					<excludes>META-INF,META-INF/**</excludes>
@@ -473,6 +497,13 @@
 									<version>${hsac-fitnesse-plugin.version}</version>
 									<overWrite>true</overWrite>
 								</artifactItem>
+								<artifactItem>
+									<groupId>nl.praegus</groupId>
+									<artifactId>toolchain-fitnesse-plugin</artifactId>
+									<version>${praegus-toolchain-fitnesse-plugin.version}</version>
+									<classifier>jar-with-dependencies</classifier>
+									<overWrite>true</overWrite>
+								</artifactItem>
 							</artifactItems>
 							<outputDirectory>${project.basedir}/wiki/plugins</outputDirectory>
 						</configuration>
@@ -488,7 +519,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.2.0</version>
 				<configuration>
 					<descriptors>
 						<descriptor>src/assembly/standalone.xml</descriptor>
@@ -520,7 +551,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.1.0</version>
+				<version>3.1.1</version>
 				<extensions>true</extensions>
 				<executions>
 					<execution>
@@ -568,7 +599,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>3.0.1</version>
+						<version>3.2.1</version>
 						<executions>
 							<execution>
 								<id>attach-sources</id>
@@ -581,7 +612,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.1.0</version>
+						<version>3.2.0</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>

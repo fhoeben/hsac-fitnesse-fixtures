@@ -1,0 +1,77 @@
+---
+Test
+---
+
+!define HTML { {{{
+<!DOCTYPE html>
+<html>
+<body>
+<label>Empty option
+	<select id="1">
+		<option></option>
+		<option>2</option>
+		<option>3</option>
+		<option>4</option>
+	</select>
+</label>
+
+<label>Whitespace option
+	<select id="2">
+		<option> </option>
+		<option>2</option>
+		<option>3</option>
+		<option>4</option>
+	</select>
+</label>
+
+<label>Nested empty option
+	<select id="3">
+		<option><span></span></option>
+		<option>2</option>
+		<option>3</option>
+		<option>4</option>
+	</select>
+</label>
+
+<label>Nested whitespace option
+	<select id="4">
+		<option><span> </span></option>
+		<option>2</option>
+		<option>3</option>
+		<option>4</option>
+	</select>
+</label>
+
+<label>Multiple nested whitespace options
+	<select id="5">
+		<option><span> <span> <span> </span></option>
+		<option>2</option>
+		<option>3</option>
+		<option>4</option>
+	</select>
+</label>
+</body>
+</html>}}} }
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|scenario|check select|selector   |with empty option|
+|check   |value of    |@{selector}|=~/^$/           |
+|select  |3           |for        |@{selector}      |
+|check   |value of    |@{selector}|3                |
+|select  |            |for        |@{selector}      |
+|check   |value of    |@{selector}|=~/^$/           |
+
+
+|script      |browser test          |
+|open        |$url                  |
+|check select|id=1|with empty option|
+|check select|id=2|with empty option|
+|check select|id=3|with empty option|
+|check select|id=4|with empty option|
+|check select|id=5|with empty option|
+
+|script|mock xml server setup|
+|stop                        |

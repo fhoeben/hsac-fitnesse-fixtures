@@ -8,6 +8,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -22,7 +23,7 @@ public class HtmlReportIndexGeneratorTest {
     public void testBadParent() throws IOException {
         String path = "htmlReports";
         try {
-            String result = generator.createFrom(path);
+            String result = generator.createFrom(path, null);
             fail("Expected exception, got: " + result);
         } catch (IllegalArgumentException e) {
             assertTrue("Bad message: " + e.getMessage(), e.getMessage().endsWith("htmlReports is not an existing directory"));
@@ -33,12 +34,28 @@ public class HtmlReportIndexGeneratorTest {
     public void testCreateFrom() throws Exception {
         String path = getTestReportsPath();
 
-        String resultFile = generator.createFrom(path);
+        File report = checkCreateFrom(path, null);
+
+        assertEquals(new File(path).getAbsolutePath(), report.getParentFile().getAbsolutePath());
+    }
+
+    @Test
+    public void testCreateFromWithTarget() throws Exception {
+        String path = getTestReportsPath();
+        File tempDir = Files.createTempDirectory("report-gen-parent").toFile();
+        String targetDir = tempDir.getAbsolutePath();
+
+        File report = checkCreateFrom(path, targetDir);
+
+        assertEquals(targetDir, report.getParentFile().getAbsolutePath());
+    }
+
+    private File checkCreateFrom(String path, String target) throws IOException {
+        String resultFile = generator.createFrom(path, target);
         assertNotNull(resultFile);
 
         File report = new File(resultFile);
         assertEquals("index.html", FilenameUtils.getName(resultFile));
-        assertEquals(new File(path).getAbsolutePath(), report.getParentFile().getAbsolutePath());
         assertTrue(report.getAbsolutePath() + " does not exist", report.exists());
 
         try (FileInputStream s = new FileInputStream(report)) {
@@ -73,6 +90,7 @@ public class HtmlReportIndexGeneratorTest {
                 assertEquals("Unexpected number of fields in: " + line, 6, fields.length);
             }
         }
+        return report;
     }
 
     static String getTestReportsPath() {

@@ -1,0 +1,5 @@
+*.iml
+/test/wiki/**/*
+target/
+/src/main/wiki/ReRunLastFailures.wiki
+

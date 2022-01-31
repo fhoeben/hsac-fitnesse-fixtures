@@ -144,9 +144,10 @@ public class FileFixtureTest {
     public void testDelete() {
         try {
             fixture.setDirectory(testResourcesDir);
+            fixture.copyTo(txtFilename, copyFilename);
             fixture.delete(copyFilename);
-        } catch (SlimFixtureException sfe) {
-            fail("Should not happen: " + sfe.getMessage());
+        } catch (Exception ex) {
+            fail("Should not happen: " + ex.getMessage());
         }
     }
 }

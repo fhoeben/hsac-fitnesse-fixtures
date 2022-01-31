@@ -1,0 +1,48 @@
+!1 Iteraction with maps using !-BrowserTest-!
+Sample test on [[Google Maps][https://www.google.com/maps]].
+
+!note '''Note:''' More about getting offsets in canvas maps [[here.][https://developers.google.com/maps/documentation/javascript/reference/overlay-view#MapCanvasProjection]]
+
+!*> definitions
+!define mapUrl {!-https://www.google.com/maps/@51.7147561,11.342505,5.16z-!}
+!define urlAfterZooming {!-https://www.google.com/maps/@51.7147561,11.342505,5.16z-!}
+!define minimap {css=.widget-minimap-shim.widget-minimap-shim-button}
+!define locationBottomPopup {css=div.widget-reveal-card-container}
+!define pegman {css=[aria-label="Show Street View coverage"]}
+!define streetviewTitleCard {css=[id="titlecard"]}
+*!
+!*> scenarios
+|scenario           |open url          |url            |
+|set browser size to|1024              |by|800         |
+|open               |@url                              |
+|wait for visible   |${minimap}                        |
+|show               |click if available|Remind me later|
+
+|scenario    |double zooming by double click at offset X|horizontalOffset|Y                |verticalOffset|should change url to|urlAfterZooming|
+|double click|Map                                       |at offset X     |@horizontalOffset|Y             |@verticalOffset                     |
+|double click|Map                                       |at offset X     |@horizontalOffset|Y             |@verticalOffset                     |
+|wait        |500                                       |milliseconds                                                                          |
+|check       |location                                  |@{urlAfterZooming}                                                                    |
+
+|scenario        |"Whats' here?" after right click at offset X|horizontalOffset|Y                |verticalOffset|should return city|city|
+|right click     |Map                                         |at offset X     |@horizontalOffset|Y             |@verticalOffset        |
+|click           |What's here?                                                                                                          |
+|wait for visible|@city                                       |in              |${locationBottomPopup}                                  |
+
+|scenario        |click at offset X|horizontalOffset|Y                |verticalOffset|should return city|city|
+|click           |Map              |at offset X     |@horizontalOffset|Y             |@verticalOffset        |
+|wait            |200              |milliseconds                                                             |
+|click           |Map              |at offset X     |@horizontalOffset|Y             |@verticalOffset        |
+|wait for visible|@city            |in              |${locationBottomPopup}                                  |
+
+|scenario        |dragging and dropping pegman to offset X|horizontalOffset|Y                |verticalOffset|should open streetview of|title|
+|drag and drop   |${pegman}                               |to offset X     |@horizontalOffset|Y             |@verticalOffset                |
+|wait for visible|@title                                  |in              |${streetviewTitleCard}                                          |
+*!
+
+|script                                      |browser test                                           |
+|open url                                    |${mapUrl}                                              |
+|double zooming by double click at offset X  |294|Y|-200|should change url to     |${urlAfterZooming}|
+|"Whats' here?" after right click at offset X|279|Y|73  |should return city       |Vilnius           |
+|click at offset X                           |150|Y|43  |should return city       |Kaunas            |
+|dragging and dropping pegman to offset X    |-80|Y|-250|should open streetview of|Vilnius University|
