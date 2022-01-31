@@ -125,6 +125,10 @@ public class ExecuteProgramTest extends SlimFixtureWithMap {
         return response.getStdErr();
     }
 
+    public boolean standardOutContains(String input) {
+        return standardOut().contains(input);
+    }
+
     /**
      * Formats output of program for display in wiki.
      * @param output output of program.
