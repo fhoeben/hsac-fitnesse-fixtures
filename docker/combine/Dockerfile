@@ -1,11 +1,10 @@
 ARG  BASE_IMAGE=hsac/fitnesse-fixtures-test-jre8:base-latest
-ARG  GRAALVM_IMAGE=ghcr.io/graalvm/graalvm-ce:latest
+ARG  GRAALVM_IMAGE=ghcr.io/graalvm/native-image:latest
 ARG  BUSYBOX_IMAGE=busybox:latest
 
 FROM ${BASE_IMAGE} as base
 
 FROM ${GRAALVM_IMAGE} as graal
-RUN gu install native-image
 RUN mkdir -p /fitnesse/target
 
 WORKDIR /fitnesse
