@@ -44,7 +44,7 @@
 		<fitnesse.version>20211030</fitnesse.version>
 		<praegus-toolchain-fitnesse-plugin.version>2.0.14</praegus-toolchain-fitnesse-plugin.version>
 		<selenium.version>4.1.2</selenium.version>
-		<slf4j.version>1.7.25</slf4j.version>
+		<slf4j.version>1.7.35</slf4j.version>
 		<apache.http.version>4.5.13</apache.http.version>
 		<surefire.version>2.22.2</surefire.version>
 
