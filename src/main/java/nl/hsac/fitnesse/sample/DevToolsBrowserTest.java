@@ -1,32 +1,32 @@
-package nl.hsac.fitnesse.fixture.slim.web;
+package nl.hsac.fitnesse.sample;
 
 import fitnesse.util.Base64;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
+import nl.hsac.fitnesse.fixture.slim.web.BrowserTest;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.HasDevTools;
-import org.openqa.selenium.devtools.idealized.log.model.LogEntry;
-import org.openqa.selenium.devtools.v94.emulation.Emulation;
-import org.openqa.selenium.devtools.v94.fetch.Fetch;
-import org.openqa.selenium.devtools.v94.fetch.model.RequestPattern;
-import org.openqa.selenium.devtools.v94.fetch.model.RequestStage;
-import org.openqa.selenium.devtools.v94.log.Log;
-import org.openqa.selenium.devtools.v94.network.Network;
-import org.openqa.selenium.devtools.v94.network.model.Cookie;
-import org.openqa.selenium.devtools.v94.network.model.CookiePriority;
-import org.openqa.selenium.devtools.v94.network.model.CookieSameSite;
-import org.openqa.selenium.devtools.v94.network.model.Headers;
-import org.openqa.selenium.devtools.v94.network.model.RequestId;
-import org.openqa.selenium.devtools.v94.network.model.RequestWillBeSent;
-import org.openqa.selenium.devtools.v94.network.model.ResourceType;
-import org.openqa.selenium.devtools.v94.network.model.ResponseReceived;
-import org.openqa.selenium.devtools.v94.network.model.TimeSinceEpoch;
-import org.openqa.selenium.devtools.v94.page.Page;
-import org.openqa.selenium.devtools.v94.performance.Performance;
-import org.openqa.selenium.devtools.v94.performance.model.Metric;
-import org.openqa.selenium.devtools.v94.runtime.Runtime;
-import org.openqa.selenium.devtools.v94.security.Security;
+import org.openqa.selenium.devtools.v97.emulation.Emulation;
+import org.openqa.selenium.devtools.v97.fetch.Fetch;
+import org.openqa.selenium.devtools.v97.fetch.model.RequestPattern;
+import org.openqa.selenium.devtools.v97.fetch.model.RequestStage;
+import org.openqa.selenium.devtools.v97.log.Log;
+import org.openqa.selenium.devtools.v97.network.Network;
+import org.openqa.selenium.devtools.v97.network.model.Cookie;
+import org.openqa.selenium.devtools.v97.network.model.CookiePriority;
+import org.openqa.selenium.devtools.v97.network.model.CookieSameSite;
+import org.openqa.selenium.devtools.v97.network.model.Headers;
+import org.openqa.selenium.devtools.v97.network.model.RequestId;
+import org.openqa.selenium.devtools.v97.network.model.RequestWillBeSent;
+import org.openqa.selenium.devtools.v97.network.model.ResourceType;
+import org.openqa.selenium.devtools.v97.network.model.ResponseReceived;
+import org.openqa.selenium.devtools.v97.network.model.TimeSinceEpoch;
+import org.openqa.selenium.devtools.v97.page.Page;
+import org.openqa.selenium.devtools.v97.performance.Performance;
+import org.openqa.selenium.devtools.v97.performance.model.Metric;
+import org.openqa.selenium.devtools.v97.runtime.Runtime;
+import org.openqa.selenium.devtools.v97.security.Security;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -35,13 +35,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 
-
+/**
+ * Examples
+ * @param <T>
+ */
 public class DevToolsBrowserTest<T extends WebElement> extends BrowserTest<T> {
     private DevTools devTools;
     private final List<String> logEntries = new ArrayList<>();
@@ -51,8 +53,9 @@ public class DevToolsBrowserTest<T extends WebElement> extends BrowserTest<T> {
 
     /**
      * Experimental class leveraging selenium 4's devTools api's. Use with devTools enabled browser
-     * Current api: v94
+     * Current api: v97
      */
+
     public DevToolsBrowserTest() {
         super();
         ensureDevToolsEnabledDriver();

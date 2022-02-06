@@ -1,5 +1,5 @@
 ---
-Test
+Static
 ---
 |script|dev tools browser test          |
 |open  |https://orangebeard.io          |

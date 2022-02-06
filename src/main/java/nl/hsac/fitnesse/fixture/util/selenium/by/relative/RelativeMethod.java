@@ -26,6 +26,7 @@ public enum RelativeMethod {
                         new SlimFixtureException("Given value " + s + " is not found within RelativeMethod. Valid options: " + RelativeMethod.values()));
     }
 
+    @Override
     public String toString() {
         return value;
     }

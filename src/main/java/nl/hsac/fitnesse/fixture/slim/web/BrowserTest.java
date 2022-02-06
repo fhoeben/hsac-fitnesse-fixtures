@@ -67,6 +67,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     private boolean continueIfReadyStateInteractive = false;
     private boolean scrollElementToCenter = false;
     private boolean waiAriaTables = false;
+    private boolean containersAsShadowRoot = false;
     private int secondsBeforeTimeout;
     private int secondsBeforePageLoadTimeout;
     private int waitAfterScroll = 150;
@@ -520,17 +521,32 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     /**
-     * Replace content of given tag, found left of a reference element
+     * Replace content of given (technical) locator, found left of a reference element
      * Usage: | enter | [value] | as | [technicalLocator] | left of | [referencePlace] |
      *
      * @param value            value to enter
-     * @param technicalLocator tag to find (i.e. input)
+     * @param technicalLocator element to find to find (i.e. css=input)
      * @param referencePlace   the element to us as a reference to search from
      * @return true if the element was found and the value was sent
      */
     @WaitUntil
     public boolean enterAsLeftOf(String value, String technicalLocator, String referencePlace) {
-        return enterRelativeImp(value, technicalLocator, cleanupValue(referencePlace), RelativeMethod.TO_LEFT_OF);
+        return enterAsLeftOfIn(value, technicalLocator, referencePlace, null);
+    }
+
+    /**
+     * Replace content of given (technical) locator, found left of a reference element
+     * Usage: | enter | [value] | as | [technicalLocator] | left of | [referencePlace] | in | [container] |
+     *
+     * @param value            value to enter
+     * @param technicalLocator element to find to find (i.e. css=input)
+     * @param referencePlace   the element to us as a reference to search from
+     * @param container        the container to search in
+     * @return true if the element was found and the value was sent
+     */
+    @WaitUntil
+    public boolean enterAsLeftOfIn(String value, String technicalLocator, String referencePlace, String container) {
+        return enterRelativeImp(value, technicalLocator, referencePlace, RelativeMethod.TO_LEFT_OF, container);
     }
 
     /**
@@ -544,7 +560,22 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      */
     @WaitUntil
     public boolean enterAsRightOf(String value, String technicalLocator, String referencePlace) {
-        return enterRelativeImp(value, technicalLocator, cleanupValue(referencePlace), RelativeMethod.TO_RIGHT_OF);
+        return enterAsRightOfIn(value, technicalLocator, referencePlace, null);
+    }
+
+    /**
+     * Replace content of given tag, found right of a reference element
+     * Usage: | enter | [value] | as | [technicalLocator] | right of | [referencePlace] | in | [container] |
+     *
+     * @param value            value to enter
+     * @param technicalLocator tag to find (i.e. input)
+     * @param referencePlace   the element to us as a reference to search from
+     * @param container        the container to search in
+     * @return true if the element was found and the value was sent
+     */
+    @WaitUntil
+    public boolean enterAsRightOfIn(String value, String technicalLocator, String referencePlace, String container) {
+        return enterRelativeImp(value, technicalLocator, referencePlace, RelativeMethod.TO_RIGHT_OF, container);
     }
 
     /**
@@ -557,7 +588,21 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      */
     @WaitUntil
     public boolean enterAsAbove(String value, String technicalLocator, String referencePlace) {
-        return enterRelativeImp(value, technicalLocator, cleanupValue(referencePlace), RelativeMethod.ABOVE);
+        return enterAsAboveIn(value, technicalLocator, referencePlace, null);
+    }
+
+    /**
+     * Replace content of given tag, found above a reference element, in a container
+     *
+     * @param value            value to enter
+     * @param technicalLocator tag to find (i.e. input)
+     * @param referencePlace   the element to us as a reference to search from
+     * @param container        the container to search in
+     * @return true if the element was found and the value was sent
+     */
+    @WaitUntil
+    public boolean enterAsAboveIn(String value, String technicalLocator, String referencePlace, String container) {
+        return enterRelativeImp(value, technicalLocator, referencePlace, RelativeMethod.ABOVE, container);
     }
 
     /**
@@ -570,7 +615,21 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      */
     @WaitUntil
     public boolean enterAsBelow(String value, String technicalLocator, String referencePlace) {
-        return enterRelativeImp(value, technicalLocator, cleanupValue(referencePlace), RelativeMethod.BELOW);
+        return enterAsBelowIn(value, technicalLocator, referencePlace, null);
+    }
+
+    /**
+     * Replace content of given tag, found below a reference element, in a container
+     *
+     * @param value            value to enter
+     * @param technicalLocator tag to find (i.e. input)
+     * @param referencePlace   the element to us as a reference to search from
+     * @param container        the container to search in
+     * @return true if the element was found and the value was sent
+     */
+    @WaitUntil
+    public boolean enterAsBelowIn(String value, String technicalLocator, String referencePlace, String container) {
+        return enterRelativeImp(value, technicalLocator, referencePlace, RelativeMethod.BELOW, container);
     }
 
     /**
@@ -583,13 +642,27 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      */
     @WaitUntil
     public boolean enterAsNear(String value, String technicalLocator, String referencePlace) {
-        return enterRelativeImp(value, technicalLocator, cleanupValue(referencePlace), RelativeMethod.NEAR);
+        return enterAsNearIn(value, technicalLocator, referencePlace, null);
     }
 
-    public boolean enterRelativeImp(String value, String technicalLocator, String referencePlace, RelativeMethod relativeMethod) {
+    /**
+     * Replace content of given tag, found near (within 50px of) a reference element, in a container
+     *
+     * @param value            value to enter
+     * @param technicalLocator tag to find (i.e. input)
+     * @param referencePlace   the element to us as a reference to search from
+     * @param container        the container to search in
+     * @return true if the element was found and the value was sent
+     */
+    @WaitUntil
+    public boolean enterAsNearIn(String value, String technicalLocator, String referencePlace, String container) {
+        return enterRelativeImp(value, technicalLocator, referencePlace, RelativeMethod.NEAR, container);
+    }
+
+    public boolean enterRelativeImp(String value, String technicalLocator, String referencePlace, RelativeMethod relativeMethod, String container) {
         boolean result = false;
         try {
-            T elementToSendValue = getSeleniumHelper().getElementRelativeToReference(technicalLocator, referencePlace, relativeMethod);
+            T elementToSendValue = doInContainer(container, () -> getSeleniumHelper().getElementRelativeToReference(technicalLocator, cleanupValue(referencePlace), relativeMethod));
             result = enter(elementToSendValue, value, true);
         } catch (IllegalArgumentException | InvalidElementStateException e) {
             // if referenceElement was not yet found, or the element found is not (yet) interactable hold back the exception so WaitUntil is not interrupted
@@ -936,7 +1009,20 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      */
     @WaitUntil
     public boolean clickBelow(String technicalLocator, String referencePlace) {
-        return relativeClickImp(technicalLocator, referencePlace, RelativeMethod.BELOW);
+        return clickBelowIn(technicalLocator, referencePlace, null);
+    }
+
+    /**
+     * Click an element found by it's technicalLocator, below its reference place, in a container
+     *
+     * @param technicalLocator The technicalLocator to look for (i.e. css=input)
+     * @param referencePlace   The element to use as a reference
+     * @param container        A reference to the container to search in
+     * @return true if the element was found and clicked
+     */
+    @WaitUntil
+    public boolean clickBelowIn(String technicalLocator, String referencePlace, String container) {
+        return relativeClickImp(technicalLocator, referencePlace, RelativeMethod.BELOW, container);
     }
 
     /**
@@ -948,11 +1034,25 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      */
     @WaitUntil
     public boolean clickAbove(String technicalLocator, String referencePlace) {
-        return relativeClickImp(technicalLocator, referencePlace, RelativeMethod.ABOVE);
+        return clickAboveIn(technicalLocator, referencePlace, null);
+    }
+
+    /**
+     * Click an element found by it's technicalLocator name, above its reference place, in a container
+     *
+     * @param technicalLocator The technicalLocator to look for (i.e. css=input)
+     * @param referencePlace   The element to use as a reference
+     * @param container        A reference to the container to search in
+     * @return true if the element was found and clicked
+     */
+    @WaitUntil
+    public boolean clickAboveIn(String technicalLocator, String referencePlace, String container) {
+        return relativeClickImp(technicalLocator, referencePlace, RelativeMethod.ABOVE, container);
     }
 
     /**
      * Click an element found by it's technicalLocator name, left of its reference place
+     * Usage: | click | [technicalLocator] | right of | [referencePlace] |
      *
      * @param technicalLocator The technicalLocator to look for (i.e. input)
      * @param referencePlace   The element to use as a reference
@@ -960,37 +1060,80 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      */
     @WaitUntil
     public boolean clickRightOf(String technicalLocator, String referencePlace) {
-        return relativeClickImp(technicalLocator, referencePlace, RelativeMethod.TO_RIGHT_OF);
+        return clickRightOfIn(technicalLocator, referencePlace, null);
+    }
+
+    /**
+     * Click an element found by it's technicalLocator name, left of its reference place, in a container
+     * Usage: | click | [technicalLocator] | right of | [referencePlace] | in | [container] |
+     *
+     * @param technicalLocator The technicalLocator to look for (i.e. css= input)
+     * @param referencePlace   The element to use as a reference
+     * @param container        A reference to the container to search in
+     * @return true if the element was found and clicked
+     */
+    @WaitUntil
+    public boolean clickRightOfIn(String technicalLocator, String referencePlace, String container) {
+        return relativeClickImp(technicalLocator, referencePlace, RelativeMethod.TO_RIGHT_OF, container);
     }
 
     /**
      * Click an element found by it's technicalLocator name, right of its reference place
+     * Usage: | click | [technicalLocator] | left of | [referencePlace] |
      *
-     * @param technicalLocator The technicalLocator to look for (i.e. input)
+     * @param technicalLocator The technicalLocator to look for (i.e. css=input)
      * @param referencePlace   The element to use as a reference
      * @return true if the element was found and clicked
      */
     @WaitUntil
     public boolean clickLeftOf(String technicalLocator, String referencePlace) {
-        return relativeClickImp(technicalLocator, referencePlace, RelativeMethod.TO_LEFT_OF);
+        return clickLeftOfIn(technicalLocator, referencePlace, null);
+    }
+
+    /**
+     * Click an element found by it's technicalLocator name, right of its reference place, in a container
+     * Usage: | click | [technicalLocator] | left of | [referencePlace] | in | [container] |
+     *
+     * @param technicalLocator The technicalLocator to look for (i.e. css=input)
+     * @param referencePlace   The element to use as a reference
+     * @param container        A reference to the container to search in
+     * @return true if the element was found and clicked
+     */
+    @WaitUntil
+    public boolean clickLeftOfIn(String technicalLocator, String referencePlace, String container) {
+        return relativeClickImp(technicalLocator, referencePlace, RelativeMethod.TO_LEFT_OF, container);
     }
 
     /**
      * Click an element found by it's technicalLocator name, near (within 50px of) its reference place
      *
-     * @param technicalLocator The technicalLocator to look for (i.e. input)
+     * @param technicalLocator The technicalLocator to look for (i.e. css=input)
      * @param referencePlace   The element to use as a reference
      * @return true if the element was found and clicked
      */
     @WaitUntil
     public boolean clickNear(String technicalLocator, String referencePlace) {
-        return relativeClickImp(technicalLocator, referencePlace, RelativeMethod.NEAR);
+        return clickNearIn(technicalLocator, referencePlace, null);
     }
 
-    protected boolean relativeClickImp(String technicalLocator, String referencePlace, RelativeMethod relativeMethod) {
+    /**
+     * Click an element found by it's technicalLocator name, near (within 50px of) its reference place, in a container
+     *
+     * @param technicalLocator The technicalLocator to look for (i.e. input)
+     * @param referencePlace   The element to use as a reference
+     * @param container        A reference to the container to search in
+     * @return true if the element was found and clicked
+     */
+    @WaitUntil
+    public boolean clickNearIn(String technicalLocator, String referencePlace, String container) {
+        return relativeClickImp(technicalLocator, referencePlace, RelativeMethod.NEAR, container);
+    }
+
+    protected boolean relativeClickImp(String technicalLocator, String referencePlace, RelativeMethod relativeMethod, String container) {
         boolean result = false;
         try {
-            T elementToClick = getSeleniumHelper().getElementRelativeToReference(technicalLocator, cleanupValue(referencePlace), relativeMethod);
+            T elementToClick = doInContainer(container,
+                    () -> getSeleniumHelper().getElementRelativeToReference(technicalLocator, cleanupValue(referencePlace), relativeMethod));
             result = clickElement(elementToClick);
         } catch (IllegalArgumentException | WebDriverException e) {
             // if other element hides the element, or referenceElement was not yet found, hold back the exception so WaitUntil is not interrupted
@@ -1222,7 +1365,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     }
 
     protected <R> R doInContainer(T container, Supplier<R> action) {
-        return getSeleniumHelper().doInContext(container, action);
+        SearchContext containerContext = container;
+        if (containersAsShadowRoot && container.getShadowRoot() != null) {
+            containerContext = container.getShadowRoot();
+        }
+        return getSeleniumHelper().doInContext(containerContext, action);
     }
 
     @WaitUntil
@@ -1232,7 +1379,11 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         boolean result = false;
         if (containerElement != null) {
             getCurrentSearchContextPath().add(container);
-            setSearchContextTo(containerElement);
+            if (containersAsShadowRoot && containerElement.getShadowRoot() != null) {
+                setSearchContextTo(containerElement.getShadowRoot());
+            } else {
+                setSearchContextTo(containerElement);
+            }
             result = true;
         }
         return result;
@@ -1391,26 +1542,55 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
 
     /**
      * Get the value of an element found by it's technicalLocator, to the left of its reference place
-     *
+     * Usage: | value of | [technicalLocator] | left of | [referencePlace] |
      * @param technicalLocator The technicalLocator to look for (i.e. input)
      * @param referencePlace   The element to use as a reference
      * @return the value of the element if found
      */
-    @WaitUntil(TimeoutPolicy.THROW)
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOfLeftOf(String technicalLocator, String referencePlace) {
-        return valueOfRelativeImp(technicalLocator, cleanupValue(referencePlace), RelativeMethod.TO_LEFT_OF);
+        return valueOfLeftOfIn(technicalLocator, referencePlace, null);
+    }
+
+    /**
+     * Get the value of an element found by it's technicalLocator, to the left of its reference place, in a container
+     * Usage: | value of | [technicalLocator] | left of | [referencePlace] | in | [container] |
+     *
+     * @param technicalLocator The technicalLocator to look for (i.e. input)
+     * @param referencePlace   The element to use as a reference
+     * @param container        The container to search inside of
+     * @return the value of the element if found
+     */
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public String valueOfLeftOfIn(String technicalLocator, String referencePlace, String container) {
+        return valueOfRelativeImp(technicalLocator, referencePlace, RelativeMethod.TO_LEFT_OF, container);
     }
 
     /**
      * Get the value of an element found by it's technicalLocator, to the right of its reference place
+     * Usage: | value of | [technicalLocator] | right of | [referencePlace] |
      *
      * @param technicalLocator The technicalLocator to look for (i.e. input)
      * @param referencePlace   The element to use as a reference
      * @return the value of the element if found
      */
-    @WaitUntil(TimeoutPolicy.THROW)
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOfRightOf(String technicalLocator, String referencePlace) {
-        return valueOfRelativeImp(technicalLocator, cleanupValue(referencePlace), RelativeMethod.TO_RIGHT_OF);
+        return valueOfRightOfIn(technicalLocator, referencePlace, null);
+    }
+
+    /**
+     * Get the value of an element found by it's technicalLocator, to the right of its reference place, in a container
+     * Usage: | value of | [technicalLocator] | right of | [referencePlace] | in | [container] |
+     *
+     * @param technicalLocator The technicalLocator to look for (i.e. input)
+     * @param referencePlace   The element to use as a reference
+     * @param container        The container to search inside of
+     * @return the value of the element if found
+     */
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public String valueOfRightOfIn(String technicalLocator, String referencePlace, String container) {
+        return valueOfRelativeImp(technicalLocator, referencePlace, RelativeMethod.TO_RIGHT_OF, container);
     }
 
     /**
@@ -1420,9 +1600,22 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * @param referencePlace   The element to use as a reference
      * @return the value of the element if found
      */
-    @WaitUntil(TimeoutPolicy.THROW)
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOfAbove(String technicalLocator, String referencePlace) {
-        return valueOfRelativeImp(technicalLocator, cleanupValue(referencePlace), RelativeMethod.ABOVE);
+        return valueOfAboveIn(technicalLocator, referencePlace, null);
+    }
+
+    /**
+     * Get the value of an element found by it's technicalLocator, above its reference place, in a container
+     *
+     * @param technicalLocator The technicalLocator to look for (i.e. input)
+     * @param referencePlace   The element to use as a reference
+     * @param container        The container to search in
+     * @return the value of the element if found
+     */
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public String valueOfAboveIn(String technicalLocator, String referencePlace, String container) {
+        return valueOfRelativeImp(technicalLocator, referencePlace, RelativeMethod.ABOVE, container);
     }
 
     /**
@@ -1432,9 +1625,22 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * @param referencePlace   The element to use as a reference
      * @return the value of the element if found
      */
-    @WaitUntil(TimeoutPolicy.THROW)
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOfBelow(String technicalLocator, String referencePlace) {
-        return valueOfRelativeImp(technicalLocator, cleanupValue(referencePlace), RelativeMethod.BELOW);
+        return valueOfBelowIn(technicalLocator, referencePlace, null);
+    }
+
+    /**
+     * Get the value of an element found by it's technicalLocator, below its reference place, in a container
+     *
+     * @param technicalLocator The technicalLocator to look for (i.e. input)
+     * @param referencePlace   The element to use as a reference
+     * @param container        The container to search inside of
+     * @return the value of the element if found
+     */
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public String valueOfBelowIn(String technicalLocator, String referencePlace, String container) {
+        return valueOfRelativeImp(technicalLocator, referencePlace, RelativeMethod.BELOW, container);
     }
 
     /**
@@ -1444,16 +1650,30 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * @param referencePlace   The element to use as a reference
      * @return the value of the element if found
      */
-    @WaitUntil(TimeoutPolicy.THROW)
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String valueOfNear(String technicalLocator, String referencePlace) {
-        return valueOfRelativeImp(technicalLocator, cleanupValue(referencePlace), RelativeMethod.NEAR);
+        return valueOfNearIn(technicalLocator, referencePlace, null);
+    }
+
+    /**
+     * Get the value of an element found by it's technicalLocator, near (within 50px of) its reference place, in a container
+     *
+     * @param technicalLocator The technicalLocator to look for (i.e. input)
+     * @param referencePlace   The element to use as a reference
+     * @param container        The container to search inside of
+     * @return the value of the element if found
+     */
+    @WaitUntil(TimeoutPolicy.RETURN_NULL)
+    public String valueOfNearIn(String technicalLocator, String referencePlace, String container) {
+        return valueOfRelativeImp(technicalLocator, referencePlace, RelativeMethod.NEAR, container);
     }
 
 
-    protected String valueOfRelativeImp(String technicalLocator, String referencePlace, RelativeMethod relativeMethod) {
+    protected String valueOfRelativeImp(String technicalLocator, String referencePlace, RelativeMethod relativeMethod, String container) {
         String result = null;
         try {
-            T elementToRetrieveValueFrom = getSeleniumHelper().getElementRelativeToReference(technicalLocator, referencePlace, relativeMethod);
+            T elementToRetrieveValueFrom = doInContainer(container,
+                    () -> getSeleniumHelper().getElementRelativeToReference(technicalLocator, cleanupValue(referencePlace), relativeMethod));
             result = valueFor(elementToRetrieveValueFrom);
         } catch (IllegalArgumentException | WebDriverException e) {
             // if referenceElement was not yet found, hold back the exception so WaitUntil is not interrupted
@@ -3050,6 +3270,10 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         this.continueIfReadyStateInteractive = continueIfReadyStateInteractive;
     }
 
+    public void enableShadowrootContainers(boolean enableShadowrootContainers) {
+        this.containersAsShadowRoot = enableShadowrootContainers;
+    }
+
     /**
      * Executes javascript in the browser.
      *
@@ -3157,6 +3381,8 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
      * @param user     The username to authenticate with
      * @param password The password to authenticate with
      * @param host     The (partial) hostname to authenticate for (i.e. mywebsite.com or just mywebsite)
+     *                 <p>
+     *                 Usage: | set username | [user] | and password | [password] | for hostname | [host] |
      */
     public void setUsernameAndPasswordForHostname(String user, String password, String host) {
         if (driver() instanceof HasAuthentication) {

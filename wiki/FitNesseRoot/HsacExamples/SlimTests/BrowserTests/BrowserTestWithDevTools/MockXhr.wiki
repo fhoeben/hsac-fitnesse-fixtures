@@ -1,5 +1,5 @@
 ---
-Test
+Static
 ---
 !define xhrResponse {!-{"rooms":[{"roomid":1,"roomNumber":101,"type":"Fitnesse Room","accessible":true,"image":"https://www.mwtestconsultancy.co.uk/img/testim/room2.jpg","description":"This stuff is mocked","features":["Fake","Data","Rules"],"roomPrice":1337}]}-!}
 
