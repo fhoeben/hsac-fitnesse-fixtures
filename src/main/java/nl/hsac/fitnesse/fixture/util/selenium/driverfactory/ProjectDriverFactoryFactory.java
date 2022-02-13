@@ -90,7 +90,12 @@ public class ProjectDriverFactoryFactory {
         if (os.contains("win")) {
             name = basename + "-windows-%dbit.exe";
         } else if (os.contains("mac")) {
-            name = basename + "-mac-%dbit";
+            String arch = System.getProperty("os.arch");
+            if ("aarch64".equalsIgnoreCase(arch)) {
+                name = basename + "-mac_m1-%dbit";
+            } else {
+                name = basename + "-mac-%dbit";
+            }
         } else if (os.contains("linux")) {
             name = basename + "-linux-%dbit";
         }

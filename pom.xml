@@ -310,6 +310,13 @@
 						</driver>
 						<driver>
 							<name>chromedriver</name>
+							<platform>mac_m1</platform>
+							<bit>64</bit>
+							<version>${selenium.chromedriver.version}</version>
+							<url>http://chromedriver.storage.googleapis.com/${selenium.chromedriver.version}/chromedriver_mac64_m1.zip</url>
+						</driver>
+						<driver>
+							<name>chromedriver</name>
 							<platform>linux</platform>
 							<bit>64</bit>
 							<version>${selenium.chromedriver.version}</version>
@@ -328,6 +335,13 @@
 							<bit>64</bit>
 							<version>${selenium.geckodriver.version}</version>
 							<url>https://github.com/mozilla/geckodriver/releases/download/v${selenium.geckodriver.version}/geckodriver-v${selenium.geckodriver.version}-macos.tar.gz</url>
+						</driver>
+						<driver>
+							<name>geckodriver</name>
+							<platform>mac_m1</platform>
+							<bit>64</bit>
+							<version>${selenium.geckodriver.version}</version>
+							<url>https://github.com/mozilla/geckodriver/releases/download/v${selenium.geckodriver.version}/geckodriver-v${selenium.geckodriver.version}-macos-aarch64.tar.gz</url>
 						</driver>
 					</drivers>
 					<skip>${webdriver.download.skip}</skip>
