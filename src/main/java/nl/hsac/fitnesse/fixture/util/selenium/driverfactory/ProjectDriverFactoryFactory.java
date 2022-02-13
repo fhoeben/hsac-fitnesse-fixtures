@@ -4,7 +4,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
 import java.io.File;
@@ -50,12 +49,6 @@ public class ProjectDriverFactoryFactory {
                 String driverPath = getExecutable("internetexplorerdriver");
                 setPropertyValue("webdriver.ie.driver", driverPath);
                 driverClass = InternetExplorerDriver.class.getName();
-                break;
-            }
-            case "phantomjs": {
-                String driverPath = getExecutable("phantomjs");
-                setPropertyValue("phantomjs.binary.path", driverPath);
-                driverClass = PhantomJSDriver.class.getName();
                 break;
             }
             default:

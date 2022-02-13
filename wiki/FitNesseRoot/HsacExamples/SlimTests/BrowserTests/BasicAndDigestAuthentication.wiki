@@ -1,0 +1,9 @@
+---
+Test
+---
+|script      |browser test                                            |
+|set username|guest     |and password|guest|for hostname|jigsaw.w3.org|
+|open        |https://jigsaw.w3.org/HTTP/Basic/                       |
+|ensure      |is visible|Your browser made it!                        |
+|open        |https://jigsaw.w3.org/HTTP/Digest/                      |
+|ensure      |is visible|Your browser made it!                        |

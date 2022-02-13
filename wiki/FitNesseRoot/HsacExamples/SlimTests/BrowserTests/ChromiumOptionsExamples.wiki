@@ -1,0 +1,64 @@
+---
+Static
+Suite: no
+---
+Chrome and Edge use the same ChromiumOptions object type we can configure by passing a hashmap to the driver factory.
+Some examples on how to configure these browsers. Note that all of these can be combined in a single map.
+
+!*> Mobile Emulation
+!|script                               |map fixture                                  |
+|expand periods in names to nested maps|true                                         |
+|set value                             |iPhone X|for|prefs.mobileEmulation.deviceName|
+|$iphoneX=                             |copy map                                     |
+
+!|script                               |map fixture                                                                                                       |
+|expand periods in names to nested maps|true                                                                                                              |
+|set int value                         |360                                                            |for|prefs.mobileEmulation.deviceMetrics.width     |
+|set int value                         |640                                                            |for|prefs.mobileEmulation.deviceMetrics.height    |
+|set double value                      |3.0                                                            |for|prefs.mobileEmulation.deviceMetrics.pixelRatio|
+|set value                             |Mozilla/5.0 (Linux; Android 4.2.1; en-us; Nexus 5 Build/JOP40D)|for|prefs.mobileEmulation.userAgent               |
+|$customMobile=                        |copy map                                                                                                          |
+*!
+
+!*> Start maximized
+!|script    |map fixture                |
+|set value  |start-maximized|for|args[0]|
+|$maximized=|copy map                   |
+*!
+
+!*> Headless chromium
+!|script         |map fixture                        |
+|set value       |--headless             |for|args[0]|
+|set value       |--disable-gpu          |for|args[1]|
+|set value       |--window-size=1920,1080|for|args[2]|
+|$headlessFullHD=|copy map                           |
+*!
+
+!*> Proxy configuration options
+|comment                                                                           |
+|Option            |Values                                                         |
+|proxyType         |The proxy type. One of: Direct, Manual, Pac, Autodetect, System|
+|httpProxy         |Http proxy URL                                                 |
+|ftpProxy          |Ftp Proxy URL                                                  |
+|noProxy           |Url or list of Urls that should bypass any proxy               |
+|sslProxy          |SSL Proxy URL                                                  |
+|socksProxy        |Socks Proxy server                                             |
+|socksVersion      |Socks version number                                           |
+|socksUsername     |Socks proxy user                                               |
+|socksPassword     |Socks proxy password                                           |
+|proxyAutoconfigUrl|Autoconfiguration script URL                                   |
+|autodetect        |Boolean to let the browser autodetect                          |
+
+Example map:
+!|script      |map fixture                       |
+|set value    |127.0.0.1:8888|for|proxy.httpProxy|
+|set value    |127.0.0.1:8787|for|proxy.sslProxy |
+|$proxyConfig=|copy map                          |
+*!
+
+!*> Custom browser binary
+!|script   |map fixture                       |
+|set value |/path/to/binary        |for|binary|
+|#set value|D:\\BROWSER\\Chrome.exe|for|binary|
+|$binary=  |copy map                          |
+*!

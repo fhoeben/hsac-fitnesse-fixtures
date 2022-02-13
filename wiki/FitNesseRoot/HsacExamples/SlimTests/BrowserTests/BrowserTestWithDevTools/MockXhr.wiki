@@ -1,0 +1,27 @@
+---
+Static
+---
+!define xhrResponse {!-{"rooms":[{"roomid":1,"roomNumber":101,"type":"Fitnesse Room","accessible":true,"image":"https://www.mwtestconsultancy.co.uk/img/testim/room2.jpg","description":"This stuff is mocked","features":["Fake","Data","Rules"],"roomPrice":1337}]}-!}
+
+!define googleSuggest {!-)]}'[[["FitNesse",0,[362,308,154,357],{"zl":40009}],["Selenium",0,[362,308,154,357],{"zl":40009}],["Test Tools",0,[362,308,154,357],{"zl":40009}]],{"ag":{"a":{"40009":"This is fake!"}},"q":"Ss5WpxKv_61QDOecwAAhdoLT32M"}]-!}
+
+|script                   |dev tools browser test                 |
+|override response for url|*/room*|of type|xhr|with|${xhrResponse}|
+|enable network overrides                                         |
+|start request logging                                            |
+
+|script                                                    |
+|open              |https://aw3.automationintesting.online/|
+|is visible on page|Fitnesse Room                          |
+|show              |take full page screenshot    |mocked   |
+|show              |response body of request to  |*/room*  |
+|clear network overrides                                   |
+
+!|script                                                                                          |
+|override response for url|*/search*      |of type   |xhr             |with      |${googleSuggest}|
+|enable network overrides                                                                         |
+|set cookie               |CONSENT        |with value|YES+NL.nl+V11+BX|for domain|.google.nl      |
+|open                     |https://www.google.nl                                                  |
+|click                    |name=q                                                                 |
+|ensure                   |is visible     |FitNesse                                               |
+|show                     |take screenshot|fake_suggestions                                       |

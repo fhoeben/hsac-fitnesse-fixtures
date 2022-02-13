@@ -1,0 +1,61 @@
+This test ensures we can access shadowroot of a container element. Chromium based browsers v96+ only!
+Note that when searchin shadow DOM, only css= selectors can be used.
+
+!define HTML { {{{
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Shadow DOM</title>
+  </head>
+  <body>
+    <div id="non_host"></div>
+    <div id="shadow_host"></div>
+    <script>
+      let shadowRoot = document.getElementById('shadow_host').attachShadow({mode: 'open'});
+      shadowRoot.innerHTML = `
+              <span class="wrapper" id="shadow_content"><span class="info">some text</span></span>
+              <input type="text" placeholder="shadow input"/>
+              <input type="checkbox" />
+            `;
+    </script>
+  </body>
+</html>}}} }
+
+Selenium 4.1+ has the ability to access the shadow DOM as a search context in chromium based browsers (v96+)
+We can tell browser test that containers should be considered shadow-root if they have a shadow dom. This way we can immediately access the shadowroot as normal DOM.
+
+Example:
+
+|script|browser test|
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script                      |browser test                                                                                        |
+|enable shadowroot containers|true                                                                                                |
+|open                        |$url                                                                                                |
+|check                       |value of                |css=#shadow_content     |in                  |id=shadow_host|some text     |
+|click                       |css=input[type=checkbox]|in                      |id=shadow_host                                    |
+|check                       |value of                |css=input[type=checkbox]|in                  |id=shadow_host|true          |
+|enter                       |my input                |as                      |css=input[type=text]|in            |id=shadow_host|
+|check                       |value of                |css=input[type=text]    |in                  |id=shadow_host|my input      |
+
+We can also set the search context to the shadow root once. Remember to clear afterwards
+
+|script                                                                       |
+|set search context to|id=shadow_host                                         |
+|check                |value of |css=#shadow_content     |some text           |
+|click                |css=input[type=checkbox]                               |
+|check                |value of |css=input[type=checkbox]|false               |
+|enter                |new input|as                      |css=input[type=text]|
+|check                |value of |css=input[type=text]    |new input           |
+|clear search context                                                         |
+
+
+
+
+|script|mock xml server setup|
+|stop                        |

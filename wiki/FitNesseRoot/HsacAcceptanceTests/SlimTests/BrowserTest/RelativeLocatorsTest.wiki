@@ -1,0 +1,47 @@
+This test ensures that we can click on, enter values in and extract values from elements found by relative locators.
+Valid relative locators are:
+ * left of
+ * right of
+ * above
+ * below
+ * near (<=50px is seen as 'near')
+
+
+!define HTML { {{{<html>
+<body>
+<span>Username:</span><br/>
+<input id="user" type="text"/><i>Extra info</i><br/>&nbsp;<br/>
+<span>Enter your user id above</span>
+<br/>&nbsp;<br/>&nbsp;<br/>&nbsp;<br/>&nbsp;<br/>
+<span>Password:</span><br/>
+<input type="password"/><br/>
+<br/>&nbsp;</br/>&nbsp;</br/>&nbsp;</br/>&nbsp;</br/>&nbsp;</br/>
+<input aria-label="box" type="checkbox"><span id="first">Option 1</span><br/>
+<input type="checkbox"><span id="2">Option 2</span><br/>
+<span id="3">Option 3</span><input aria-label="box" type="checkbox"><br/>
+<i>bottom</i>
+</body>
+</html>}}} }
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script|browser test   |5                                                                    |
+|open  |$url                                                                                 |
+|click |css=input      |left of  |Option 1                                                   |
+|click |css=input      |right of |Option 3                                                   |
+|check |value of       |css=input|left of  |Option 1                |true                    |
+|check |value of       |css=input|right of |Option 3                |true                    |
+|enter |Tom            |as       |css=input|above                   |Enter your user id above|
+|enter |s3cr3t!        |as       |css=input|below                   |Password                |
+|check |value of       |css=input|below    |Username                |Tom                     |
+|check |value of       |css=input|below    |Password                |s3cr3t!                 |
+|check |value of       |css=i    |near     |Enter your user id above|Extra info              |
+|check |value of       |css=i    |near     |Option 3                |bottom                  |
+
+|script                     |
+|push fixture               |
+|start|mock xml server setup|
+|stop                       |
+|pop fixture                |

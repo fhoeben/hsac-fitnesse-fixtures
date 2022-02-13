@@ -1,0 +1,13 @@
+---
+Static
+---
+!|script         |dev tools browser test                 |
+|start request logging                                   |
+|start performance metrics                               |
+|open            |https://aw3.automationintesting.online/|
+|wait for visible|Let me hack!                           |
+|show            |response status of request to |*/room* |
+|show            |response body of request to   |*/room* |
+|show            |request log                            |
+|show            |performance metrics                    |
+|stop performance metrics                                |

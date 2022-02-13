@@ -1,0 +1,13 @@
+---
+Suite
+---
+#2 Selenium 4 and DevTools
+
+Selenium 4 provides access to Chrome DevTools Protocol (CDT) on Chromium based browsers (Chromium, Chrome, Edge).
+The necessary bindings are version-specific and thus need to be implemented correctly for the browser you use.
+
+In order to use these functions, you can create your own extension on Browser Test  and implement what you need. For convenience, sample implementations are provided (against CDP v97) in !style_code[nl.hsac.fitnesse.sample.DevToolsBrowserTest]
+
+Using that class, the examples in this folder can be tried out and serve as a reference to roll yur own project specific devtools enabled browser test fixture.
+
+!contents -R2 -g -p -f -h
