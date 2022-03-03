@@ -4,7 +4,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
 import java.io.File;
@@ -52,12 +51,6 @@ public class ProjectDriverFactoryFactory {
                 driverClass = InternetExplorerDriver.class.getName();
                 break;
             }
-            case "phantomjs": {
-                String driverPath = getExecutable("phantomjs");
-                setPropertyValue("phantomjs.binary.path", driverPath);
-                driverClass = PhantomJSDriver.class.getName();
-                break;
-            }
             default:
                 throw new IllegalArgumentException("No defaults known for: " + browser);
         }
@@ -97,7 +90,12 @@ public class ProjectDriverFactoryFactory {
         if (os.contains("win")) {
             name = basename + "-windows-%dbit.exe";
         } else if (os.contains("mac")) {
-            name = basename + "-mac-%dbit";
+            String arch = System.getProperty("os.arch");
+            if ("aarch64".equalsIgnoreCase(arch)) {
+                name = basename + "-mac_m1-%dbit";
+            } else {
+                name = basename + "-mac-%dbit";
+            }
         } else if (os.contains("linux")) {
             name = basename + "-linux-%dbit";
         }

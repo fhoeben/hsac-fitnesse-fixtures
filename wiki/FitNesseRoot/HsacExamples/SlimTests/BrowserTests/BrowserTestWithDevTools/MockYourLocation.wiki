@@ -1,0 +1,10 @@
+---
+Static
+---
+!|script             |dev tools browser test                                                      |
+|set cookie          |CONSENT                  |with value|YES+NL.nl+V11+BX|for domain|.google.com|
+|set geo location lat|33.3238633               |lon       |-111.6135707    |accuracy  |17         |
+|open                |https://google.com/maps                                                     |
+|click               |css=[id$=mylocation]                                                        |
+|wait                |1                        |seconds                                           |
+|show                |take full page screenshot|selenium                                          |
