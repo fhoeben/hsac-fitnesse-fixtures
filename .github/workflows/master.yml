@@ -63,11 +63,11 @@ jobs:
           java-version: 11
       - name: Configure git
         run: |
-          git config --global user.email "fitnesse@hsac.nl"
-          git config --global user.name "fhoeben"
+          git config --global user.email "fhoeben-github@hsac.nl"
+          git config --global user.name "GitHub Action"
       - name: Update version
         run: |
           mvn -B release:update-versions -DautoVersionSubmodules=true
           git add pom.xml
-          git commit -m "Update version"
+          git commit -m "Update version by GitHub action"
           git push origin master
