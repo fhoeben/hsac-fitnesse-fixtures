@@ -21,7 +21,9 @@ jobs:
         run:  mvn versions:set -DremoveSnapshot
 
       - id: get-version
-        uses: JActions/maven-version@v1.0.0
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "::set-output name=version::$VERSION"
 
       - name: Release Maven package
         uses: samuelmeuli/action-maven-publish@v1
