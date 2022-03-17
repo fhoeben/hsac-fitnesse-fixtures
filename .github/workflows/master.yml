@@ -1,0 +1,83 @@
+name: release
+
+on:
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  maven-release:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Install Java and Maven
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+
+      - name: Unsnapshot version
+        run:  mvn versions:set -DremoveSnapshot
+
+      - id: get-version
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "::set-output name=version::$VERSION"
+          FITNESSE_VERSION=$(mvn help:evaluate -Dexpression=fitnesse.version -q -DforceStdout)
+          echo "::set-output name=fitnesse-version::$FITNESSE_VERSION"
+          SELENIUM_VERSION=$(mvn help:evaluate -Dexpression=selenium.version -q -DforceStdout)
+          echo "::set-output name=selenium-version::$SELENIUM_VERSION"
+
+      - name: Release Maven package
+        uses: samuelmeuli/action-maven-publish@v1
+        with:
+          maven_profiles: release
+          gpg_private_key: ${{ secrets.gpg_private_key }}
+          gpg_passphrase: ${{ secrets.gpg_passphrase }}
+          nexus_username: ${{ secrets.MAVEN_USERNAME }}
+          nexus_password: ${{ secrets.MAVEN_PASSWORD }}
+
+      - name: Replace changelog placeholders
+        uses: franzbischoff/replace_envs@v1
+        env:
+          VERSION: ${{ steps.get-version.outputs.version }}
+          FITNESSE_VERSION: ${{ steps.get-version.outputs.fitnesse-version }}
+          SELENIUM_VERSION: ${{ steps.get-version.outputs.selenium-version }}
+        with:
+          from_file: './changelog.md'
+          to_file: './changelog.md'
+          commit: 'false'
+
+      - name: Create Release
+        id: createRelease
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.get-version.outputs.version }}
+          body_path: './changelog.md'
+          draft: false
+          prerelease: false
+          files: |
+            target/hsac-fitnesse-fixtures-*.jar
+            target/hsac-fitnesse-fixtures-*.zip
+
+  update-version:
+    needs: [maven-release]
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Install Java and Maven
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Configure git
+        run: |
+          git config --global user.email "fhoeben-github@hsac.nl"
+          git config --global user.name "GitHub Action"
+      - name: Update version
+        run: |
+          mvn -B release:update-versions -DautoVersionSubmodules=true
+          git add pom.xml
+          git commit -m "Update version by GitHub action"
+          git push origin master
