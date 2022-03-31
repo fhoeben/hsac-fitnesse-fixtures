@@ -4,7 +4,7 @@
 
 	<groupId>nl.hsac</groupId>
 	<artifactId>hsac-fitnesse-fixtures</artifactId>
-	<version>5.2.1-SNAPSHOT</version>
+	<version>5.2.1</version>
 	<url>https://github.com/fhoeben/hsac-fitnesse-fixtures</url>
 	<name>HSAC's FitNesse Fixtures</name>
 	<description>Fixtures to assist in testing via FitNesse</description>
@@ -35,7 +35,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.build.outputTimestamp>2020-01-01T00:00:00Z</project.build.outputTimestamp>
+		<project.build.outputTimestamp>2022-03-31T16:31:21Z</project.build.outputTimestamp>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<hsac-fitnesse-plugin.version>1.32.2</hsac-fitnesse-plugin.version>
