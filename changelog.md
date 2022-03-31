@@ -22,7 +22,10 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 
 New in ${VERSION}
 
-New in 5.2.2
+New in 5.2.3
+- Nothing. Fix to release pipeline to ensure packages are attached to the release page on GitHub.
+
+- New in 5.2.2
 - Chromedriver 100.0.4896.60
 
 New in 5.2.1
