@@ -8,6 +8,10 @@ on:
 jobs:
   maven-release:
     runs-on: ubuntu-18.04
+    outputs:
+      version: ${{ steps.get-version.outputs.version }}
+      fitnesse-version: ${{ steps.get-version.outputs.fitnesse-version }}
+      selenium-version: ${{ steps.get-version.outputs.selenium-version }}
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
@@ -17,9 +21,26 @@ jobs:
         with:
           java-version: '8'
           distribution: 'zulu'
+          cache: 'maven'
 
       - name: Unsnapshot version
         run:  mvn versions:set -DremoveSnapshot
+
+      - id: get-version
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "::set-output name=version::$VERSION"
+          FITNESSE_VERSION=$(mvn help:evaluate -Dexpression=fitnesse.version -q -DforceStdout)
+          echo "::set-output name=fitnesse-version::$FITNESSE_VERSION"
+          SELENIUM_VERSION=$(mvn help:evaluate -Dexpression=selenium.version -q -DforceStdout)
+          echo "::set-output name=selenium-version::$SELENIUM_VERSION"
+
+      - name: upload release pom
+        uses: actions/upload-artifact@v3
+        with:
+          name: pom
+          path: pom.xml
+          if-no-files-found: error
 
       - name: Release Maven package
         uses: samuelmeuli/action-maven-publish@v1
@@ -45,11 +66,10 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v2
 
-      - name: Install Java and Maven
-        uses: actions/setup-java@v2
+      - name: download pom
+        uses: actions/download-artifact@v3
         with:
-          java-version: '8'
-          distribution: 'zulu'
+          name: pom
 
       - name: download packages
         uses: actions/download-artifact@v3
@@ -57,24 +77,12 @@ jobs:
           name: target
           path: target
 
-      - name: Unsnapshot version
-        run:  mvn versions:set -DremoveSnapshot
-
-      - id: get-version
-        run: |
-          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "::set-output name=version::$VERSION"
-          FITNESSE_VERSION=$(mvn help:evaluate -Dexpression=fitnesse.version -q -DforceStdout)
-          echo "::set-output name=fitnesse-version::$FITNESSE_VERSION"
-          SELENIUM_VERSION=$(mvn help:evaluate -Dexpression=selenium.version -q -DforceStdout)
-          echo "::set-output name=selenium-version::$SELENIUM_VERSION"
-
       - name: Replace changelog placeholders
         uses: franzbischoff/replace_envs@v1
         env:
-          VERSION: ${{ steps.get-version.outputs.version }}
-          FITNESSE_VERSION: ${{ steps.get-version.outputs.fitnesse-version }}
-          SELENIUM_VERSION: ${{ steps.get-version.outputs.selenium-version }}
+          VERSION: ${{ needs.maven-release.outputs.version }}
+          FITNESSE_VERSION: ${{ needs.maven-release.outputs.fitnesse-version }}
+          SELENIUM_VERSION: ${{ needs.maven-release.outputs.selenium-version }}
         with:
           from_file: './changelog.md'
           to_file: './changelog.md'
@@ -95,7 +103,7 @@ jobs:
         id: createRelease
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ steps.get-version.outputs.version }}
+          tag_name: ${{ needs.maven-release.outputs.version }}
           body_path: './changelog.md'
           draft: false
           prerelease: false
@@ -115,6 +123,7 @@ jobs:
         with:
           java-version: '8'
           distribution: 'zulu'
+          cache: 'maven'
 
       - name: Configure git
         run: |

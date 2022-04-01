@@ -21,6 +21,7 @@ An example of Maven based project using this baseline can be found at: https://g
 When upgrading from an older version, ensure all Selenium webdrivers are stopped and delete the 'wiki/plugins' and 'wiki/webdrivers' folders to remove old versions of the packaged plugins/webdrivers. When using the sample project: follow the instructions at https://github.com/fhoeben/sample-fitnesse-project#upgrading.
 
 New in ${VERSION}
+- Nothing. Various optimizations to release GitHub actions.
 
 New in 5.2.3
 - Nothing. Fix to release pipeline to ensure packages are attached to the release page on GitHub.
