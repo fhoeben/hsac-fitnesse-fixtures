@@ -48,7 +48,7 @@
 
 		<webdriver.download.skip>false</webdriver.download.skip>
 		<selenium.internetexplorerdriver.version>3.150.1</selenium.internetexplorerdriver.version>
-		<selenium.edgedriver.version>99.0.1150.30</selenium.edgedriver.version>
+		<selenium.edgedriver.version>100.0.1185.29</selenium.edgedriver.version>
 		<selenium.chromedriver.version>100.0.4896.60</selenium.chromedriver.version>
 		<selenium.geckodriver.version>0.30.0</selenium.geckodriver.version>
 
