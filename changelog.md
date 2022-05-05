@@ -22,8 +22,12 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 
 New in ${VERSION}
 - Updated dependencies and shell scripts in docker container to remove vulnerabilities.
+- Geckodriver 0.31.0
+- EdgeDriver 101.0.1210.32
+- ChromeDriver 101.0.4951.41
+- IEDriver 4.0.0
 
-New in 5.2.5
+New in 5.2.6
 - Selenium 4.1.3
 
 New in 5.2.5

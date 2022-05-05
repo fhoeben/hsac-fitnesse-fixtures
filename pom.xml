@@ -47,10 +47,10 @@
 		<surefire.version>2.22.2</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
-		<selenium.internetexplorerdriver.version>3.150.1</selenium.internetexplorerdriver.version>
-		<selenium.edgedriver.version>100.0.1185.29</selenium.edgedriver.version>
-		<selenium.chromedriver.version>100.0.4896.60</selenium.chromedriver.version>
-		<selenium.geckodriver.version>0.30.0</selenium.geckodriver.version>
+		<selenium.internetexplorerdriver.version>4.0.0</selenium.internetexplorerdriver.version>
+		<selenium.edgedriver.version>101.0.1210.32</selenium.edgedriver.version>
+		<selenium.chromedriver.version>101.0.4951.41</selenium.chromedriver.version>
+		<selenium.geckodriver.version>0.31.0</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
@@ -312,7 +312,7 @@
 							<platform>windows</platform>
 							<bit>32</bit>
 							<version>${selenium.internetexplorerdriver.version}</version>
-							<url>http://selenium-release.storage.googleapis.com/3.150/IEDriverServer_Win32_${selenium.internetexplorerdriver.version}.zip</url>
+							<url>https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.0.0/IEDriverServer_Win32_${selenium.internetexplorerdriver.version}.zip</url>
 						</driver>
 						<driver>
 							<name>edgedriver</name>
