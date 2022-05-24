@@ -176,6 +176,7 @@ public class LocalDriverFactory implements DriverFactory {
                     } else {
                         throw new IllegalArgumentException("Proxy object is expected to be a map");
                     }
+                    break;
                 default:
                     options.setExperimentalOption(profileEntry.getKey(), profileEntry.getValue());
             }
