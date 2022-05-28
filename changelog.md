@@ -22,6 +22,9 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 
 New in ${VERSION}
 
+New in 5.2.8
+- Fix: Chromedriver proxy configuration [#414](https://github.com/fhoeben/hsac-fitnesse-fixtures/pull/414)
+
 New in 5.2.7
 - Updated dependencies and shell scripts in docker container to remove vulnerabilities.
 - Geckodriver 0.31.0
