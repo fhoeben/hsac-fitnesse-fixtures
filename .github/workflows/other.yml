@@ -1,0 +1,51 @@
+name: test
+
+on:
+  push:
+    branches:
+      - '*'
+      - '!master'
+    paths-ignore:
+      - '.gitlab-ci.yml'
+      - '*.md'
+  pull_request:
+    branches:
+      - 'master'
+    paths-ignore:
+      - '.gitlab-ci.yml'
+      - '*.md'
+
+jobs:
+  maven-test:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: setup chromedriver
+        uses: nanasess/setup-chromedriver@v1
+
+      - name: Install Java and Maven
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'zulu'
+          cache: maven
+
+      - name: Test with Maven
+        run: mvn --batch-mode --update-snapshots -DfitnesseSuiteToRun=HsacAcceptanceTests -DseleniumBrowser=chrome "-DseleniumJsonProfile={'args':['headless', 'disable-gpu']}" verify
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: target
+          path: |
+            target
+            !target/generated-sources
+            !target/generated-test-sources
+            !target/classes
+            !target/test-classes
+            !target/javadoc-bundle-options
+            !target/maven-*
+            !target/test.zip
+            !target/unzipTest

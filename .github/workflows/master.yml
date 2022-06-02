@@ -4,18 +4,27 @@ on:
   push:
     branches:
       - 'master'
+    paths-ignore:
+      - '.gitlab-ci.yml'
+      - '*.md'
 
 jobs:
   maven-release:
     runs-on: ubuntu-18.04
+    outputs:
+      version: ${{ steps.get-version.outputs.version }}
+      fitnesse-version: ${{ steps.get-version.outputs.fitnesse-version }}
+      selenium-version: ${{ steps.get-version.outputs.selenium-version }}
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
 
       - name: Install Java and Maven
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v2
         with:
-          java-version: 8
+          java-version: '8'
+          distribution: 'zulu'
+          cache: 'maven'
 
       - name: Unsnapshot version
         run:  mvn versions:set -DremoveSnapshot
@@ -29,6 +38,13 @@ jobs:
           SELENIUM_VERSION=$(mvn help:evaluate -Dexpression=selenium.version -q -DforceStdout)
           echo "::set-output name=selenium-version::$SELENIUM_VERSION"
 
+      - name: upload release pom
+        uses: actions/upload-artifact@v3
+        with:
+          name: pom
+          path: pom.xml
+          if-no-files-found: error
+
       - name: Release Maven package
         uses: samuelmeuli/action-maven-publish@v1
         with:
@@ -38,22 +54,59 @@ jobs:
           nexus_username: ${{ secrets.MAVEN_USERNAME }}
           nexus_password: ${{ secrets.MAVEN_PASSWORD }}
 
+      - name: upload packages
+        uses: actions/upload-artifact@v3
+        with:
+          name: target
+          path: |
+            target/hsac-fitnesse-fixtures-*.jar
+            target/hsac-fitnesse-fixtures-*.zip
+
+  github-release:
+    needs: [maven-release]
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: download pom
+        uses: actions/download-artifact@v3
+        with:
+          name: pom
+
+      - name: download packages
+        uses: actions/download-artifact@v3
+        with:
+          name: target
+          path: target
+
       - name: Replace changelog placeholders
         uses: franzbischoff/replace_envs@v1
         env:
-          VERSION: ${{ steps.get-version.outputs.version }}
-          FITNESSE_VERSION: ${{ steps.get-version.outputs.fitnesse-version }}
-          SELENIUM_VERSION: ${{ steps.get-version.outputs.selenium-version }}
+          VERSION: ${{ needs.maven-release.outputs.version }}
+          FITNESSE_VERSION: ${{ needs.maven-release.outputs.fitnesse-version }}
+          SELENIUM_VERSION: ${{ needs.maven-release.outputs.selenium-version }}
         with:
           from_file: './changelog.md'
           to_file: './changelog.md'
           commit: 'false'
 
+      - name: Configure git
+        run: |
+          git config --global user.email "fhoeben-github@hsac.nl"
+          git config --global user.name "GitHub Action"
+
+      - name: Commit pom.xml without -SNAPSHOT
+        run: |
+          git add pom.xml
+          git commit -m "Prepare for release"
+          git push origin master
+
       - name: Create Release
         id: createRelease
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ steps.get-version.outputs.version }}
+          tag_name: ${{ needs.maven-release.outputs.version }}
           body_path: './changelog.md'
           draft: false
           prerelease: false
@@ -62,22 +115,34 @@ jobs:
             target/hsac-fitnesse-fixtures-*.zip
 
   update-version:
-    needs: [maven-release]
+    needs: [github-release]
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
       - name: Install Java and Maven
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v2
         with:
-          java-version: 11
+          java-version: '8'
+          distribution: 'zulu'
+          cache: 'maven'
+
       - name: Configure git
         run: |
           git config --global user.email "fhoeben-github@hsac.nl"
           git config --global user.name "GitHub Action"
+
+      - name: Pull changes from github-release job
+        run: |
+          git pull origin
+
       - name: Update version
         run: |
           mvn -B release:update-versions -DautoVersionSubmodules=true
+
+      - name: Push pom.xml with next -SNAPSHOT version to repository
+        run: |
           git add pom.xml
-          git commit -m "Update version by GitHub action"
+          git commit -m "Prepare for next developments"
           git push origin master

@@ -22,6 +22,41 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 
 New in ${VERSION}
 
+New in 5.2.9
+- ChromeDriver 102.0.5005.61
+
+New in 5.2.8
+- Fix: Chromedriver proxy configuration [#414](https://github.com/fhoeben/hsac-fitnesse-fixtures/pull/414)
+
+New in 5.2.7
+- Updated dependencies and shell scripts in docker container to remove vulnerabilities.
+- Geckodriver 0.31.0
+- EdgeDriver 101.0.1210.32
+- ChromeDriver 101.0.4951.41
+- IEDriver 4.0.0
+
+New in 5.2.6
+- Selenium 4.1.3
+
+New in 5.2.5
+- Edge WebDriver 100.0.1185.29
+
+New in 5.2.4
+- Nothing. Various optimizations to release GitHub actions.
+
+New in 5.2.3
+- Nothing. Fix to release pipeline to ensure packages are attached to the release page on GitHub.
+
+- New in 5.2.2
+- Chromedriver 100.0.4896.60
+
+New in 5.2.1
+- Nothing. This was a test release of a new automation step to ensure the Git tag would contain the correct version number
+
+New in 5.2.0
+- Update to FitNesse 20220319
+- Update to hsac-fitnesse-plugin 1.32.2
+
 New in 5.1.2
 - Generate release description using `changelog.md`.  
 
