@@ -48,7 +48,7 @@
 
 		<webdriver.download.skip>false</webdriver.download.skip>
 		<selenium.internetexplorerdriver.version>4.0.0</selenium.internetexplorerdriver.version>
-		<selenium.edgedriver.version>101.0.1210.32</selenium.edgedriver.version>
+		<selenium.edgedriver.version>102.0.1245.30</selenium.edgedriver.version>
 		<selenium.chromedriver.version>102.0.5005.61</selenium.chromedriver.version>
 		<selenium.geckodriver.version>0.31.0</selenium.geckodriver.version>
 
@@ -296,7 +296,7 @@
 			<plugin>
 				<groupId>com.github.webdriverextensions</groupId>
 				<artifactId>webdriverextensions-maven-plugin</artifactId>
-				<version>3.1.2</version>
+				<version>3.3.0</version>
 				<executions>
 					<execution>
 						<goals>
