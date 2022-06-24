@@ -22,6 +22,10 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 
 New in ${VERSION}
 
+New in 5.2.11
+- ChromeDriver 103.0.5060.53
+- EdgeDriver 103.0.1264.37
+  
 New in 5.2.10
 - EdgeDriver 102.0.1245.30
 - update webdriverextensions-maven-plugin
