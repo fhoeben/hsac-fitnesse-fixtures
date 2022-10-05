@@ -48,8 +48,8 @@
 
 		<webdriver.download.skip>false</webdriver.download.skip>
 		<selenium.internetexplorerdriver.version>4.0.0</selenium.internetexplorerdriver.version>
-		<selenium.edgedriver.version>105.0.1343.25</selenium.edgedriver.version>
-		<selenium.chromedriver.version>105.0.5195.52</selenium.chromedriver.version>
+		<selenium.edgedriver.version>106.0.1370.34</selenium.edgedriver.version>
+		<selenium.chromedriver.version>106.0.5249.61</selenium.chromedriver.version>
 		<selenium.geckodriver.version>0.31.0</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
@@ -341,7 +341,7 @@
 							<platform>mac_m1</platform>
 							<bit>64</bit>
 							<version>${selenium.chromedriver.version}</version>
-							<url>http://chromedriver.storage.googleapis.com/${selenium.chromedriver.version}/chromedriver_mac64_m1.zip</url>
+							<url>http://chromedriver.storage.googleapis.com/${selenium.chromedriver.version}/chromedriver_mac_arm64.zip</url>
 						</driver>
 						<driver>
 							<name>chromedriver</name>
