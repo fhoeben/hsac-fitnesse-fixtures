@@ -331,7 +331,8 @@
 						</driver>
 						<driver>
 							<name>chromedriver</name>
-							<platform>mac</platform>
+							<platform>
+							</platform>
 							<bit>64</bit>
 							<version>${selenium.chromedriver.version}</version>
 							<url>http://chromedriver.storage.googleapis.com/${selenium.chromedriver.version}/chromedriver_mac64.zip</url>
@@ -341,7 +342,7 @@
 							<platform>mac_m1</platform>
 							<bit>64</bit>
 							<version>${selenium.chromedriver.version}</version>
-							<url>http://chromedriver.storage.googleapis.com/${selenium.chromedriver.version}/chromedriver_mac64_m1.zip</url>
+							<url>http://chromedriver.storage.googleapis.com/${selenium.chromedriver.version}/chromedriver_mac_arm64.zip</url>
 						</driver>
 						<driver>
 							<name>chromedriver</name>
