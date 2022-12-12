@@ -17,15 +17,15 @@ We use a mock server running to serve the HTML defined in this page.
 <label for="g4">Hello4</label><input id="g4" value="Hallo">
                             <div class="layout layout--6col layout--centered">
                                 <div class="radio">
-                                    <label class="radio_label"><input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" 
-                                           style="display: block;    position: absolute;    top: 0;    bottom: 0;    right: 0;    left: 0;    opacity: 0;    z-index: 500;"
+                                    <label class="radio_label"><input type="radio" name="optionsRadios" id="optionsRadios1" value="option1"
+                                           style="display: block;    position: absolute;    top: 0;    bottom: 0;    right: 0;    left: 0;    opacity: 0;    z-index: 500; width: 12px; height: 12px;"
                                     > <span></span> Ja, ik heb producten</label>
                                 </div>
                             </div>
                             <div class="layout layout--6col layout--centered">
                                 <div class="radio">
                                     <label class="radio_label"><input type="radio" name="optionsRadios" id="optionsRadios2" value="option2"
-                                           style="display: block;    position: absolute;    top: 0;    bottom: 0;    right: 0;    left: 0;    opacity: 0;    z-index: 500;"
+                                           style="display: block;    position: absolute;    top: 0;    bottom: 0;    right: 0;    left: 0;    opacity: 0;    z-index: 500; width: 12px; height: 12px;"
                                     > <span></span> Nee, ik heb geen producten</label>
                                 </div>
                             </div>
