@@ -2,9 +2,7 @@ package nl.hsac.fitnesse.fixture.util;
 
 import nl.hsac.fitnesse.fixture.fit.SoapCallMapColumnFixture;
 import org.apache.http.HttpStatus;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -13,6 +11,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
 
 /**
  * Tests XmlHttpResponse.
@@ -21,13 +20,6 @@ public class XmlHttpResponseTest {
     final static String OK_RESP = "<?xml version='1.0' encoding='UTF-8'?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Body><ns2:yarOpportunityResponse xmlns:ns2=\"http://www.openuri.org/\" xmlns=\"http://www.leanapps.com/life/wslife\"><opportunityReturn><errorStatus>OK</errorStatus><calculatedResult>13.44</calculatedResult><amountPremiumYear>158.86</amountPremiumYear></opportunityReturn></ns2:yarOpportunityResponse></soapenv:Body></soapenv:Envelope>";
     final static String MULTIPLY_NODES_RESP = "<?xml version='1.0' encoding='UTF-8'?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Body><ns2:yarOpportunityResponse xmlns:ns2=\"http://www.openuri.org/\" xmlns=\"http://www.leanapps.com/life/wslife\"><opportunityReturns><errorStatus>OK</errorStatus><opportunityReturn><calculatedResult>125.14</calculatedResult><amountPremiumYear>125.14</amountPremiumYear></opportunityReturn><opportunityReturn><calculatedResult>13.44</calculatedResult><amountPremiumYear>158.86</amountPremiumYear></opportunityReturn><opportunityReturn><calculatedResult>19.37</calculatedResult><amountPremiumYear>139.24</amountPremiumYear></opportunityReturn></opportunityReturns></ns2:yarOpportunityResponse></soapenv:Body></soapenv:Envelope>";
 
-
-    @Rule
-    public ExpectedException expect = ExpectedException.none();
-
-    /**
-     * Checks validResponse when statusCode is good.
-     */
     @Test
     public void testValidResponse() {
         HttpResponse resp = new XmlHttpResponse();
@@ -40,10 +32,9 @@ public class XmlHttpResponseTest {
      */
     @Test
     public void testValidResponseWrongStatus() {
-        expect.expect(RuntimeException.class);
         HttpResponse resp = new XmlHttpResponse();
         resp.setStatusCode(HttpStatus.SC_NOT_IMPLEMENTED);
-        resp.validResponse();
+        assertThrows(RuntimeException.class, () -> resp.validResponse());
     }
 
     /**
@@ -51,11 +42,10 @@ public class XmlHttpResponseTest {
      */
     @Test
     public void testGetXPathWrongStatus() {
-        expect.expect(RuntimeException.class);
         XmlHttpResponse resp = new XmlHttpResponse();
         resp.setStatusCode(HttpStatus.SC_NOT_IMPLEMENTED);
 
-        resp.getXPath("/");
+        assertThrows(RuntimeException.class, () ->  resp.getXPath("/"));
     }
 
     /**

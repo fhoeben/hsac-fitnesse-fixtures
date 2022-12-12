@@ -2,16 +2,14 @@ package nl.hsac.fitnesse.fixture.util;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.function.ThrowingRunnable;
 
 import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThrows;
 
 
 /**
@@ -22,9 +20,6 @@ public class CalendarUtilFailTest {
      * CalendarUtil.
      */
     private CalendarUtil calendarUtil;
-
-    @Rule
-    public ExpectedException expected = ExpectedException.none();
 
     private static final String EXPECTED_MESSAGE = "Incorrect configuration, unable to get DatatypeFactory instance";
 
@@ -53,12 +48,8 @@ public class CalendarUtilFailTest {
      */
     @Test
     public void testBuildXMLGregorianCalendarWithDateException() {
-        forceDatatypeFactoryException();
         Calendar today = Calendar.getInstance();
-        XMLGregorianCalendar cal = calendarUtil.buildXMLGregorianCalendarDate(today.getTime());
-        assertTrue(cal.getYear() == today.get(Calendar.YEAR));
-        assertTrue(cal.getMonth() == today.get(Calendar.MONTH) + 1);
-        assertTrue(cal.getDay() == today.get(Calendar.DAY_OF_MONTH));
+        forceDatatypeFactoryException(() -> calendarUtil.buildXMLGregorianCalendarDate(today.getTime()));
     }
 
     /**
@@ -66,9 +57,8 @@ public class CalendarUtilFailTest {
      */
     @Test
     public void testBuildXMLGregorianCalendarDateTimeException() {
-        forceDatatypeFactoryException();
         GregorianCalendar today = new GregorianCalendar();
-        calendarUtil.buildXMLGregorianCalendarDateTime(today);
+        forceDatatypeFactoryException(() -> calendarUtil.buildXMLGregorianCalendarDateTime(today));
     }
 
     /**
@@ -76,8 +66,7 @@ public class CalendarUtilFailTest {
      */
     @Test
     public void testFailBuildXMLGregorianCalendar() {
-        forceDatatypeFactoryException();
-        calendarUtil.buildXMLGregorianCalendar();
+        forceDatatypeFactoryException(() -> calendarUtil.buildXMLGregorianCalendar());
     }
 
     /**
@@ -85,14 +74,12 @@ public class CalendarUtilFailTest {
      */
     @Test
     public void testFailAddMonths() {
-        forceDatatypeFactoryException();
-        calendarUtil.addMonths(2);
+        forceDatatypeFactoryException(() -> calendarUtil.addMonths(2));
     }
 
-    private void forceDatatypeFactoryException() {
+    private void forceDatatypeFactoryException(ThrowingRunnable runnable) {
         System.setProperty(DATATYPE_FACTORY_PROPERTY, NON_EXISTENT_CLASS);
 
-        expected.expect(IllegalStateException.class);
-        expected.expectMessage(EXPECTED_MESSAGE);
+        assertThrows(EXPECTED_MESSAGE, IllegalStateException.class, runnable);
     }
 }
