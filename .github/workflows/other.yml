@@ -33,7 +33,7 @@ jobs:
           cache: maven
 
       - name: Test with Maven
-        run: mvn --batch-mode --update-snapshots -DfitnesseSuiteToRun=HsacAcceptanceTests -DseleniumBrowser=chrome "-DseleniumJsonProfile={'args':['headless', 'disable-gpu']}" verify
+        run: mvn --batch-mode --update-snapshots -DfitnesseSuiteToRun=HsacAcceptanceTests -DseleniumBrowser=chrome "-DseleniumJsonProfile={'args':['headless', 'disable-gpu']}" verify failsafe:verify
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
