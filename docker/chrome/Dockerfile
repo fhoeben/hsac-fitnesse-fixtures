@@ -1,5 +1,5 @@
 ARG  TEST_IMAGE=hsac/fitnesse-fixtures-test-jre8:latest
-ARG  SELENIUM_VERSION=4.1.2
+ARG  SELENIUM_VERSION=4.7.1
 FROM ${TEST_IMAGE} as hsac-fixtures
 
 FROM selenium/standalone-chrome:${SELENIUM_VERSION}
