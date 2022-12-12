@@ -21,6 +21,11 @@ An example of Maven based project using this baseline can be found at: https://g
 When upgrading from an older version, ensure all Selenium webdrivers are stopped and delete the 'wiki/plugins' and 'wiki/webdrivers' folders to remove old versions of the packaged plugins/webdrivers. When using the sample project: follow the instructions at https://github.com/fhoeben/sample-fitnesse-project#upgrading.
 
 New in ${VERSION}
+- Fix acceptance test: HsacAcceptanceTests.SlimTests.BrowserTest.ClickByLabelOrButton
+- Fix GitHub 'other' workflow to actually fail on test errors
+- Replace Selenium deprecated `UNEXPECTED_ALERT_BEHAVIOUR` by `UNHANDLED_PROMPT_BEHAVIOUR`
+
+New in 5.2.22
 - Updated GitHub release process
 
 New in 5.2.21
