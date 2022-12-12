@@ -1,14 +1,13 @@
 package nl.hsac.fitnesse.fixture.util;
 
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.io.File;
 import java.nio.file.Paths;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -68,16 +67,11 @@ public class XMLValidatorTest {
         assertTrue(validator.validateAgainst(xml, schemaFile));
     }
 
-    @Rule
-    public final ExpectedException expectedEx = ExpectedException.none();
-
     @Test
     public void invalidXmlValidationReturnsDescriptiveException() {
-        expectedEx.expect(SlimFixtureException.class);
-        expectedEx.expectMessage("Attribute 'orderid' must appear on element 'shiporder'");
-
         String xml = FileUtil.loadFile("invalid_shiporder.xml");
         String schema = FileUtil.loadFile("shiporder_schema.xsd");
-        validator.validateAgainst(xml, schema);
+        assertThrows("Attribute 'orderid' must appear on element 'shiporder'", SlimFixtureException.class,
+                () -> validator.validateAgainst(xml, schema));
     }
 }
