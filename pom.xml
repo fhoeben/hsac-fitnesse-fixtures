@@ -38,12 +38,12 @@
 		<project.build.outputTimestamp>2022-12-12T12:04:25Z</project.build.outputTimestamp>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<hsac-fitnesse-plugin.version>1.32.2</hsac-fitnesse-plugin.version>
-		<fitnesse.version>20221102</fitnesse.version>
+		<hsac-fitnesse-plugin.version>1.32.10</hsac-fitnesse-plugin.version>
+		<fitnesse.version>20221219</fitnesse.version>
 		<praegus-toolchain-fitnesse-plugin.version>2.0.14</praegus-toolchain-fitnesse-plugin.version>
-		<selenium.version>4.7.1</selenium.version>
+		<selenium.version>4.7.2</selenium.version>
 		<slf4j.version>1.7.35</slf4j.version>
-		<apache.http.version>4.5.13</apache.http.version>
+		<apache.http.version>4.5.14</apache.http.version>
 		<surefire.version>2.22.2</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
@@ -142,7 +142,7 @@
 			<!-- Added to override galen's old version -->
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.13.4.1</version>
+			<version>2.14.1</version>
 		</dependency>
 		<dependency>
 			<!-- Added to override galen's old version -->
@@ -154,7 +154,7 @@
 			<!-- Added to override galen's old version -->
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>2.9.0</version>
+			<version>2.10</version>
 		</dependency>
 		<dependency>
 			<!-- Added to override galen's old version -->
@@ -206,7 +206,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.32</version>
+            <version>1.33</version>
         </dependency>
 		<dependency>
 			<groupId>commons-net</groupId>
@@ -229,7 +229,7 @@
 		<dependency>
 			<groupId>org.skyscreamer</groupId>
 			<artifactId>jsonassert</artifactId>
-			<version>1.5.0</version>
+			<version>1.5.1</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

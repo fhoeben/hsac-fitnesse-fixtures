@@ -12,7 +12,7 @@ import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.RemoteDriverFactory;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -159,9 +159,9 @@ public class SeleniumDriverSetup extends SlimFixture {
     public boolean connectToFirefoxDriverAtWithProfile(String url, Map<String, Object> profile)
             throws MalformedURLException {
         FirefoxProfile fxProfile = getFirefoxProfile(profile);
-        DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
+        FirefoxOptions desiredCapabilities = new FirefoxOptions();
         desiredCapabilities.setCapability("browserName", "firefox");
-        desiredCapabilities.setCapability(FirefoxDriver.Capability.PROFILE, fxProfile);
+        desiredCapabilities.setProfile(fxProfile);
         return createAndSetRemoteDriver(url, desiredCapabilities);
     }
 
@@ -250,14 +250,14 @@ public class SeleniumDriverSetup extends SlimFixture {
         return result;
     }
 
-    protected boolean createAndSetRemoteDriver(String url, final DesiredCapabilities desiredCapabilities)
+    protected boolean createAndSetRemoteDriver(String url, final Capabilities desiredCapabilities)
             throws MalformedURLException {
         return createAndSetRemoteWebDriver(RemoteWebDriver::new, url, desiredCapabilities);
     }
 
     protected boolean createAndSetRemoteWebDriver(BiFunction<URL, Capabilities, ? extends RemoteWebDriver> constr,
                                                   String url,
-                                                  DesiredCapabilities desiredCapabilities)
+                                                  Capabilities desiredCapabilities)
             throws MalformedURLException {
         if (OVERRIDE_ACTIVE) {
             return true;
