@@ -21,8 +21,7 @@ public class JsonFormatter implements Formatter {
     public String format(String json) {
         String result = null;
         if (json != null && (json.startsWith("{") || json.startsWith("["))) {
-            JsonParser jsonParser = new JsonParser();
-            result = toJson(jsonParser.parse(json));
+            result = toJson(JsonParser.parseString(json));
         }
         return result;
     }
