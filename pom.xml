@@ -52,7 +52,7 @@
 		<selenium.chromedriver.version>108.0.5359.71</selenium.chromedriver.version>
 		<selenium.geckodriver.version>0.32.0</selenium.geckodriver.version>
 
-		<!-- classpath that Fitnesse uses when not starting from IDE/maven -->
+		<!-- classpath that Fitnesse uses when not starting from IDE/maven  -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
 		<fitnesse.port>9090</fitnesse.port>
 		<extraFailsafeListeners />
