@@ -1,8 +1,8 @@
 ARG  TEST_IMAGE=hsac/fitnesse-fixtures-test-jre8:latest
-ARG  SELENIUM_VERSION=4.7.2
+ARG  SELENIUM_IMAGE=seleniarm/standalone-chromium:latest
 FROM ${TEST_IMAGE} as hsac-fixtures
 
-FROM selenium/standalone-chrome:${SELENIUM_VERSION}
+FROM ${SELENIUM_IMAGE}
 RUN sudo mv /etc/supervisor/conf.d/selenium.conf /etc/supervisor/conf.d/selenium.conf.bak && \
     sudo mkdir -p /fitnesse/target && \
     sudo mkdir -p /fitnesse/wiki/webdrivers && \

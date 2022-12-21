@@ -77,7 +77,7 @@ build-test-images:
       --context $CI_PROJECT_DIR/docker/chrome
       --dockerfile $CI_PROJECT_DIR/docker/chrome/Dockerfile
       --destination ${CHROME_IMAGE}
-      --build-arg SELENIUM_VERSION=${SELENIUM_VERSION}
+      --build-arg SELENIUM_IMAGE=seleniarm/standalone-chromium:${SELENIUM_VERSION}
       --build-arg TEST_IMAGE=${TEST_IMAGE}
 
 build-combine-image:
