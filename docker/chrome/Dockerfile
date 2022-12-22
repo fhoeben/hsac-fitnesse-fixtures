@@ -1,8 +1,8 @@
 ARG  TEST_IMAGE=hsac/fitnesse-fixtures-test-jre8:latest
-ARG  SELENIUM_VERSION=4.7.2
+ARG  SELENIUM_IMAGE=seleniarm/standalone-chromium:latest
 FROM ${TEST_IMAGE} as hsac-fixtures
 
-FROM selenium/standalone-chrome:${SELENIUM_VERSION}
+FROM ${SELENIUM_IMAGE}
 RUN sudo mv /etc/supervisor/conf.d/selenium.conf /etc/supervisor/conf.d/selenium.conf.bak && \
     sudo mkdir -p /fitnesse/target && \
     sudo mkdir -p /fitnesse/wiki/webdrivers && \
@@ -18,7 +18,7 @@ VOLUME /fitnesse/wiki/FitNesseRoot
 
 ENV FITNESSE_OPTS -Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true \
     -DseleniumBrowser=chrome \
-    -DseleniumJsonProfile="{'args':['--disable-dev-shm-usage']}"
+    -DseleniumJsonProfile="{'args':['disable-dev-shm-usage']}"
 
 ENTRYPOINT ["/fitnesse/startGridAndRunTests.sh"]
 CMD []

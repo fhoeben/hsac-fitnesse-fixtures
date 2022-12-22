@@ -25,7 +25,7 @@ before_script:
   - CHROME_PDF_IMAGE=${CI_REGISTRY_IMAGE}/fitnesse-fixtures-test-jre8-chrome-with-pdf:temp-${CI_PIPELINE_ID}
 
 .mvn: &mvn
-  image: maven:3.6-amazoncorretto-8
+  image: maven:3.8-amazoncorretto-8
   cache:
     paths:
       - .m2/repository
@@ -77,7 +77,7 @@ build-test-images:
       --context $CI_PROJECT_DIR/docker/chrome
       --dockerfile $CI_PROJECT_DIR/docker/chrome/Dockerfile
       --destination ${CHROME_IMAGE}
-      --build-arg SELENIUM_VERSION=${SELENIUM_VERSION}
+      --build-arg SELENIUM_IMAGE=seleniarm/standalone-chromium:${SELENIUM_VERSION}
       --build-arg TEST_IMAGE=${TEST_IMAGE}
 
 build-combine-image:

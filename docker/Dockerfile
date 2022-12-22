@@ -1,4 +1,4 @@
-ARG  MAVEN_VERSION=3.6-amazoncorretto-8
+ARG  MAVEN_VERSION=3.8-amazoncorretto-8
 FROM maven:${MAVEN_VERSION} as build
 RUN mkdir -p /usr/src
 WORKDIR /usr/src
