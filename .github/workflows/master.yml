@@ -144,5 +144,5 @@ jobs:
       - name: Push pom.xml with next -SNAPSHOT version to repository
         run: |
           git add pom.xml
-          git commit -m "Prepare for next developments"
+          git commit -m "Prepare for next developments" -m "[ci skip]"
           git push origin master
