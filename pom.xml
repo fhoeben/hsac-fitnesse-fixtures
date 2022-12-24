@@ -443,7 +443,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.5.0</version>
+				<version>3.1.0</version>
 				<executions>
 					<execution>
 						<id>default-cli</id>
@@ -453,12 +453,7 @@
 						<configuration>
 							<executable>java</executable>
 							<workingDirectory>wiki</workingDirectory>
-							<arguments>
-								<argument>-jar</argument>
-								<argument>fitnesse-standalone.jar</argument>
-								<argument>-p</argument>
-								<argument>${fitnesse.port}</argument>
-							</arguments>
+							<commandlineArgs>-jar fitnesse-standalone.jar -p ${fitnesse.port}</commandlineArgs>
 						</configuration>
 					</execution>
 					<execution>
