@@ -537,7 +537,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>3.4.2</version>
 				<configuration>
 					<descriptors>
 						<descriptor>src/assembly/standalone.xml</descriptor>
