@@ -328,6 +328,7 @@
 							<bit>32</bit>
 							<version>${selenium.chromedriver.version}</version>
 							<url>http://chromedriver.storage.googleapis.com/${selenium.chromedriver.version}/chromedriver_win32.zip</url>
+							<fileMatchInside>chromedriver.exe</fileMatchInside>
 						</driver>
 						<driver>
 							<name>chromedriver</name>
