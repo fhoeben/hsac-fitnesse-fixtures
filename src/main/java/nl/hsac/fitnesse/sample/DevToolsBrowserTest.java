@@ -4,6 +4,7 @@ import fitnesse.util.Base64;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.slim.web.BrowserTest;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.HasDevTools;
@@ -27,6 +28,7 @@ import org.openqa.selenium.devtools.v109.performance.Performance;
 import org.openqa.selenium.devtools.v109.performance.model.Metric;
 import org.openqa.selenium.devtools.v109.runtime.Runtime;
 import org.openqa.selenium.devtools.v109.security.Security;
+import org.openqa.selenium.remote.Augmenter;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -42,6 +44,7 @@ import static java.util.Optional.empty;
 
 /**
  * Examples
+ *
  * @param <T>
  */
 public class DevToolsBrowserTest<T extends WebElement> extends BrowserTest<T> {
@@ -75,10 +78,11 @@ public class DevToolsBrowserTest<T extends WebElement> extends BrowserTest<T> {
     }
 
     private void ensureDevToolsEnabledDriver() {
-        if (!(getSeleniumHelper().driver() instanceof HasDevTools)) {
+        WebDriver driver = new Augmenter().augment(getSeleniumHelper().driver());
+        if (!(driver instanceof HasDevTools)) {
             throw new StopTestException(false, "DevTools enabled Browser Test can only be used with a chromium based browser (Chrome/Edge)");
         }
-        devTools = ((HasDevTools) getSeleniumHelper().driver()).getDevTools();
+        devTools = ((HasDevTools) driver).getDevTools();
         devTools.createSessionIfThereIsNotOne();
         devTools.send(Network.enable(Optional.of(100000), Optional.of(100000), Optional.of(100000)));
     }
