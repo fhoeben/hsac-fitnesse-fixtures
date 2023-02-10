@@ -27,7 +27,7 @@ New in ${VERSION}
 New in 5.2.29
 - Selenium 4.8.0
 
-New in 5.2.29
+New in 5.2.28
 - Praegus toolchain plugin 2.0.16
 
 New in 5.2.27
