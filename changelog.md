@@ -23,6 +23,7 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 New in ${VERSION}
 - ChromeDriver 110.0.5481.77
 - Edgedriver 110.0.1587.41
+- Update snakeyaml to 2.0, #475
 
 New in 5.2.31
 - Selenium 4.8.1
