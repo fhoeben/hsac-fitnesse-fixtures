@@ -48,8 +48,8 @@
 
 		<webdriver.download.skip>false</webdriver.download.skip>
 		<selenium.internetexplorerdriver.version>4.0.0</selenium.internetexplorerdriver.version>
-		<selenium.edgedriver.version>109.0.1518.55</selenium.edgedriver.version>
-		<selenium.chromedriver.version>109.0.5414.74</selenium.chromedriver.version>
+		<selenium.edgedriver.version>110.0.1587.41</selenium.edgedriver.version>
+		<selenium.chromedriver.version>110.0.5481.77</selenium.chromedriver.version>
 		<selenium.geckodriver.version>0.32.0</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven  -->
