@@ -1147,6 +1147,7 @@ public class SeleniumHelper<T extends WebElement> {
                 result = msg.contains("Element does not exist in cache") // Safari stale element
                         || msg.contains("unknown error: unhandled inspector error: {\"code\":-32000,\"message\":\"Cannot find context with specified id\"}") // chrome error
                         || msg.contains("Error: element is not attached to the page document") // Alternate Chrome stale element
+                        || msg.contains("uniqueContextId not found") // Chrome error
                         || msg.contains("can't access dead object"); // Firefox stale element
             }
         }

@@ -4,7 +4,7 @@
 
 	<groupId>nl.hsac</groupId>
 	<artifactId>hsac-fitnesse-fixtures</artifactId>
-	<version>5.2.31-SNAPSHOT</version>
+	<version>5.2.32-SNAPSHOT</version>
 	<url>https://github.com/fhoeben/hsac-fitnesse-fixtures</url>
 	<name>HSAC's FitNesse Fixtures</name>
 	<description>Fixtures to assist in testing via FitNesse</description>
@@ -35,13 +35,13 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.build.outputTimestamp>2023-02-08T17:43:59Z</project.build.outputTimestamp>
+		<project.build.outputTimestamp>2023-02-20T19:36:37Z</project.build.outputTimestamp>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<hsac-fitnesse-plugin.version>1.32.10</hsac-fitnesse-plugin.version>
 		<fitnesse.version>20221219</fitnesse.version>
 		<praegus-toolchain-fitnesse-plugin.version>2.0.16</praegus-toolchain-fitnesse-plugin.version>
-		<selenium.version>4.8.0</selenium.version>
+		<selenium.version>4.8.1</selenium.version>
 		<slf4j.version>2.0.6</slf4j.version>
 		<apache.http.version>4.5.14</apache.http.version>
 		<surefire.version>2.22.2</surefire.version>
@@ -240,7 +240,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.10.1</version>
+				<version>3.11.0</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
@@ -541,7 +541,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>3.4.2</version>
+				<version>3.5.0</version>
 				<configuration>
 					<descriptors>
 						<descriptor>src/assembly/standalone.xml</descriptor>

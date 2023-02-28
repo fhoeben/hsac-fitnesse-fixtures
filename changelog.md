@@ -24,8 +24,16 @@ New in ${VERSION}
 - ChromeDriver 110.0.5481.77
 - Edgedriver 110.0.1587.41
 
-New in 5.2.29
+New in 5.2.31
+- Selenium 4.8.1
+- Fix Chrome error "invalid argument: uniqueContextId not found" #471
+
+New in 5.2.30
 - Selenium 4.8.0
+- Wrap devtools driver to Augmenter for RemoteWebDriver capability (#468)
+
+New in 5.2.29
+- Minor dependency updates
 
 New in 5.2.28
 - Praegus toolchain plugin 2.0.16
