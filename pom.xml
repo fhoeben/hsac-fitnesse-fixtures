@@ -48,8 +48,8 @@
 
 		<webdriver.download.skip>false</webdriver.download.skip>
 		<selenium.internetexplorerdriver.version>4.0.0</selenium.internetexplorerdriver.version>
-		<selenium.edgedriver.version>110.0.1587.41</selenium.edgedriver.version>
-		<selenium.chromedriver.version>110.0.5481.77</selenium.chromedriver.version>
+		<selenium.edgedriver.version>111.0.1661.41</selenium.edgedriver.version>
+		<selenium.chromedriver.version>111.0.5563.64</selenium.chromedriver.version>
 		<selenium.geckodriver.version>0.32.0</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven  -->
@@ -203,11 +203,11 @@
 			<artifactId>json-path</artifactId>
 			<version>2.7.0</version>
 		</dependency>
-        <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>2.0</version>
-        </dependency>
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>2.0</version>
+		</dependency>
 		<dependency>
 			<groupId>commons-net</groupId>
 			<artifactId>commons-net</artifactId>
@@ -219,12 +219,12 @@
 			<artifactId>junit</artifactId>
 			<version>4.13.2</version>
 			<scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>2.28.2</version>
-            <scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>2.28.2</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.skyscreamer</groupId>
