@@ -18,7 +18,7 @@ VOLUME /fitnesse/wiki/FitNesseRoot
 
 ENV FITNESSE_OPTS -Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true \
     -DseleniumBrowser=chrome \
-    -DseleniumJsonProfile="{'args':['disable-dev-shm-usage']}"
+    -DseleniumJsonProfile="{'args':['disable-dev-shm-usage', '--remote-allow-origins=*']}"
 
 ENTRYPOINT ["/fitnesse/startGridAndRunTests.sh"]
 CMD []
