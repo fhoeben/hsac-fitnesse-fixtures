@@ -22,6 +22,8 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 
 New in ${VERSION}
 - Selenium 4.8.3
+- ChromeDriver 112.0.5615.49
+- Edgedriver 112.0.1722.34
 
 New in 5.2.34
 - Fix options passed to chrome in chrome based docker images
