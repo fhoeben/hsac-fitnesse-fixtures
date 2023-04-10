@@ -40,6 +40,22 @@ public class FileFixtureTest {
     }
 
     @Test
+    public void testSetAndGetDirectoryHttpFilesTest() {
+        String defaultFilesDir = Environment.getInstance().getFitNesseFilesSectionDir();
+        fixture.setDirectory("http://files/test");
+        String expected = new File(defaultsFilesDir, "test").getAbsolutePath() + File.separator;
+        assertEquals(expected, fixture.getDirectory());
+    }
+
+    @Test
+    public void testSetAndGetDirectoryHttpFilesTestAnchor() {
+        String defaultFilesDir = Environment.getInstance().getFitNesseFilesSectionDir();
+        fixture.setDirectory("<a href="files/test">http://files/test</a>");
+        String expected = new File(defaultsFilesDir, "test").getAbsolutePath() + File.separator;
+        assertEquals(expected, fixture.getDirectory());
+    }
+
+    @Test
     public void testExists() {
         fixture.setDirectory(testResourcesDir);
         assertTrue(fixture.exists(txtFilename));
