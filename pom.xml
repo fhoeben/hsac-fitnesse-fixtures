@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>nl.hsac</groupId>
@@ -41,16 +43,16 @@
 		<hsac-fitnesse-plugin.version>1.32.10</hsac-fitnesse-plugin.version>
 		<fitnesse.version>20221219</fitnesse.version>
 		<praegus-toolchain-fitnesse-plugin.version>2.0.16</praegus-toolchain-fitnesse-plugin.version>
-		<selenium.version>4.8.3</selenium.version>
+		<selenium.version>4.9.0</selenium.version>
 		<slf4j.version>2.0.7</slf4j.version>
 		<apache.http.version>4.5.14</apache.http.version>
 		<surefire.version>2.22.2</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
-		<selenium.internetexplorerdriver.version>4.0.0</selenium.internetexplorerdriver.version>
-		<selenium.edgedriver.version>112.0.1722.34</selenium.edgedriver.version>
+		<selenium.internetexplorerdriver.version>4.8.1</selenium.internetexplorerdriver.version>
+		<selenium.edgedriver.version>112.0.1722.39</selenium.edgedriver.version>
 		<selenium.chromedriver.version>112.0.5615.49</selenium.chromedriver.version>
-		<selenium.geckodriver.version>0.32.0</selenium.geckodriver.version>
+		<selenium.geckodriver.version>0.33.0</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven  -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
@@ -145,6 +147,11 @@
 			<version>2.14.2</version>
 		</dependency>
 		<dependency>
+			<groupId>net.minidev</groupId>
+			<artifactId>json-smart</artifactId>
+			<version>2.4.10</version>
+		</dependency>
+		<dependency>
 			<!-- Added to override galen's old version -->
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
@@ -201,7 +208,7 @@
 		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>
-			<version>2.7.0</version>
+			<version>2.8.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.yaml</groupId>
@@ -256,7 +263,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.3.0</version>
+				<version>3.3.1</version>
 			</plugin>
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
@@ -264,7 +271,8 @@
 				<configuration>
 					<filesets>
 						<fileset>
-							<!-- On clean throw away old screenshots, pagesources and downloads stored by BrowserTest -->
+							<!-- On clean throw away old screenshots, pagesources and downloads
+							stored by BrowserTest -->
 							<!-- and reports created by GalenTest -->
 							<directory>wiki/FitNesseRoot/files/</directory>
 							<followSymlinks>false</followSymlinks>
@@ -276,12 +284,14 @@
 							</includes>
 						</fileset>
 						<fileset>
-							<!-- On clean throw away plugins to prevent multiple version being present after update -->
+							<!-- On clean throw away plugins to prevent multiple version being
+							present after update -->
 							<directory>wiki/plugins</directory>
 							<followSymlinks>false</followSymlinks>
 						</fileset>
 						<fileset>
-							<!-- On clean throw away web drivers to prevent multiple version being present after update -->
+							<!-- On clean throw away web drivers to prevent multiple version being
+							present after update -->
 							<directory>wiki/webdrivers</directory>
 							<followSymlinks>false</followSymlinks>
 						</fileset>
@@ -312,14 +322,16 @@
 							<platform>windows</platform>
 							<bit>32</bit>
 							<version>${selenium.internetexplorerdriver.version}</version>
-							<url>https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.0.0/IEDriverServer_Win32_${selenium.internetexplorerdriver.version}.zip</url>
+							<url>
+								https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.8.0/IEDriverServer_Win32_${selenium.internetexplorerdriver.version}.zip</url>
 						</driver>
 						<driver>
 							<name>edgedriver</name>
 							<platform>windows</platform>
 							<bit>64</bit>
 							<version>${selenium.edgedriver.version}</version>
-							<url>https://msedgedriver.azureedge.net/${selenium.edgedriver.version}/edgedriver_win64.zip</url>
+							<url>
+								https://msedgedriver.azureedge.net/${selenium.edgedriver.version}/edgedriver_win64.zip</url>
 							<fileMatchInside>msedgedriver.exe</fileMatchInside>
 						</driver>
 						<driver>
@@ -327,7 +339,8 @@
 							<platform>windows</platform>
 							<bit>32</bit>
 							<version>${selenium.chromedriver.version}</version>
-							<url>http://chromedriver.storage.googleapis.com/${selenium.chromedriver.version}/chromedriver_win32.zip</url>
+							<url>
+								http://chromedriver.storage.googleapis.com/${selenium.chromedriver.version}/chromedriver_win32.zip</url>
 							<fileMatchInside>chromedriver.exe</fileMatchInside>
 						</driver>
 						<driver>
@@ -335,7 +348,8 @@
 							<platform>mac</platform>
 							<bit>64</bit>
 							<version>${selenium.chromedriver.version}</version>
-							<url>http://chromedriver.storage.googleapis.com/${selenium.chromedriver.version}/chromedriver_mac64.zip</url>
+							<url>
+								http://chromedriver.storage.googleapis.com/${selenium.chromedriver.version}/chromedriver_mac64.zip</url>
 							<fileMatchInside>chromedriver</fileMatchInside>
 						</driver>
 						<driver>
@@ -343,7 +357,8 @@
 							<platform>mac_m1</platform>
 							<bit>64</bit>
 							<version>${selenium.chromedriver.version}</version>
-							<url>http://chromedriver.storage.googleapis.com/${selenium.chromedriver.version}/chromedriver_mac_arm64.zip</url>
+							<url>
+								http://chromedriver.storage.googleapis.com/${selenium.chromedriver.version}/chromedriver_mac_arm64.zip</url>
 							<fileMatchInside>chromedriver</fileMatchInside>
 						</driver>
 						<driver>
@@ -351,7 +366,8 @@
 							<platform>linux</platform>
 							<bit>64</bit>
 							<version>${selenium.chromedriver.version}</version>
-							<url>http://chromedriver.storage.googleapis.com/${selenium.chromedriver.version}/chromedriver_linux64.zip</url>
+							<url>
+								http://chromedriver.storage.googleapis.com/${selenium.chromedriver.version}/chromedriver_linux64.zip</url>
 							<fileMatchInside>chromedriver</fileMatchInside>
 						</driver>
 						<driver>
@@ -359,21 +375,24 @@
 							<platform>windows</platform>
 							<bit>64</bit>
 							<version>${selenium.geckodriver.version}</version>
-							<url>https://github.com/mozilla/geckodriver/releases/download/v${selenium.geckodriver.version}/geckodriver-v${selenium.geckodriver.version}-win64.zip</url>
+							<url>
+								https://github.com/mozilla/geckodriver/releases/download/v${selenium.geckodriver.version}/geckodriver-v${selenium.geckodriver.version}-win64.zip</url>
 						</driver>
 						<driver>
 							<name>geckodriver</name>
 							<platform>mac</platform>
 							<bit>64</bit>
 							<version>${selenium.geckodriver.version}</version>
-							<url>https://github.com/mozilla/geckodriver/releases/download/v${selenium.geckodriver.version}/geckodriver-v${selenium.geckodriver.version}-macos.tar.gz</url>
+							<url>
+								https://github.com/mozilla/geckodriver/releases/download/v${selenium.geckodriver.version}/geckodriver-v${selenium.geckodriver.version}-macos.tar.gz</url>
 						</driver>
 						<driver>
 							<name>geckodriver</name>
 							<platform>mac_m1</platform>
 							<bit>64</bit>
 							<version>${selenium.geckodriver.version}</version>
-							<url>https://github.com/mozilla/geckodriver/releases/download/v${selenium.geckodriver.version}/geckodriver-v${selenium.geckodriver.version}-macos-aarch64.tar.gz</url>
+							<url>
+								https://github.com/mozilla/geckodriver/releases/download/v${selenium.geckodriver.version}/geckodriver-v${selenium.geckodriver.version}-macos-aarch64.tar.gz</url>
 						</driver>
 					</drivers>
 					<skip>${webdriver.download.skip}</skip>
@@ -430,10 +449,12 @@
 					<properties>
 						<property>
 							<name>listener</name>
-							<value>fitnesse.junit.JUnitXMLPerPageRunListener,nl.hsac.fitnesse.junit.ProgressLoggerListener${extraFailsafeListeners}</value>
+							<value>
+								fitnesse.junit.JUnitXMLPerPageRunListener,nl.hsac.fitnesse.junit.ProgressLoggerListener${extraFailsafeListeners}</value>
 						</property>
 					</properties>
-					<!-- Our listener will create XML failsafe should not, or all tests are reported twice -->
+					<!-- Our listener will create XML failsafe should not, or all tests are reported
+					twice -->
 					<disableXmlReport>true</disableXmlReport>
 				</configuration>
 				<dependencies>
@@ -472,7 +493,8 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<!-- Use dependency:copy-dependencies to copy all jar from dependencies to ${standalone.classpath},
+				<!-- Use dependency:copy-dependencies to copy all jar from dependencies to
+				${standalone.classpath},
 					 where classes from this project end up also, so that all fixtures and
 					 dependencies are available to Fitnesse without need to have Maven to run tests.
 				-->
