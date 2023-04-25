@@ -60,6 +60,18 @@
 		<extraFailsafeListeners />
 	</properties>
 
+	<dependencyManagement>
+		<dependencies>
+			<!-- com.jayway.jsonpath changed json-smart dependency scope to runtime, override to use
+			it with JsonHelper -->
+			<dependency>
+				<groupId>net.minidev</groupId>
+				<artifactId>json-smart</artifactId>
+				<scope>compile</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.fitnesse</groupId>
@@ -145,11 +157,6 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>2.14.2</version>
-		</dependency>
-		<dependency>
-			<groupId>net.minidev</groupId>
-			<artifactId>json-smart</artifactId>
-			<version>2.4.10</version>
 		</dependency>
 		<dependency>
 			<!-- Added to override galen's old version -->
