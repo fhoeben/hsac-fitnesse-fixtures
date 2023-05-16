@@ -165,7 +165,7 @@ build-test-pdf-images:
       -DfitnesseSuiteToRun=${SUITE}
       -DpartitionIndex=${INDEX} -DpartitionCount=${COUNT}
       -DseleniumBrowser=chrome
-      -DseleniumJsonProfile="{'args':['disable-dev-shm-usage','--remote-allow-origins=*']}"
+      -DseleniumJsonProfile="{'args':['disable-dev-shm-usage']}"
 
   after_script:
     - NAME=${CI_JOB_NAME}
