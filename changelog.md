@@ -23,6 +23,7 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 New in ${VERSION}
 - Update Edgedriver 114.0.1823.18
 - Update Chromedriver 114.0.5735.90
+- Selenium 4.10.0
 
 New in 5.2.39
 - Remove workaround remote-allow-origins
