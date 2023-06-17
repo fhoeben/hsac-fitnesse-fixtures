@@ -21,6 +21,11 @@ An example of Maven based project using this baseline can be found at: https://g
 When upgrading from an older version, ensure all Selenium webdrivers are stopped and delete the 'wiki/plugins' and 'wiki/webdrivers' folders to remove old versions of the packaged plugins/webdrivers. When using the sample project: follow the instructions at https://github.com/fhoeben/sample-fitnesse-project#upgrading.
 
 New in ${VERSION}
+- Update Edgedriver 114.0.1823.18
+- Update Chromedriver 114.0.5735.90
+- Selenium 4.10.0
+
+New in 5.2.39
 - Remove workaround remote-allow-origins
 - Update Edgedriver 113.0.1774.9
 - Update Chromedriver 113.0.5672.24
