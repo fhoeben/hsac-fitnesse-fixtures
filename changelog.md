@@ -21,6 +21,11 @@ An example of Maven based project using this baseline can be found at: https://g
 When upgrading from an older version, ensure all Selenium webdrivers are stopped and delete the 'wiki/plugins' and 'wiki/webdrivers' folders to remove old versions of the packaged plugins/webdrivers. When using the sample project: follow the instructions at https://github.com/fhoeben/sample-fitnesse-project#upgrading.
 
 New in ${VERSION}
+- Update Edgedriver 115.0.1901.183
+- Update Chromedriver 115.0.5790.102
+- Switch to 64bit chromedriver
+
+New in 5.2.40
 - Update Edgedriver 114.0.1823.18
 - Update Chromedriver 114.0.5735.90
 - Selenium 4.10.0
