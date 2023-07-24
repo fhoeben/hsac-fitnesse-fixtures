@@ -346,7 +346,7 @@
 							<version>${selenium.chromedriver.version}</version>
 							<url>
 								https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${selenium.chromedriver.version}/win64/chromedriver-win64.zip</url>
-							<fileMatchInside>chromedriver.exe</fileMatchInside>
+							<fileMatchInside>chromedriver-win64/chromedriver.exe</fileMatchInside>
 						</driver>
 						<driver>
 							<name>chromedriver</name>
@@ -355,7 +355,7 @@
 							<version>${selenium.chromedriver.version}</version>
 							<url>
 								https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${selenium.chromedriver.version}/mac-x64/chromedriver-mac-x64.zip</url>
-							<fileMatchInside>chromedriver</fileMatchInside>
+							<fileMatchInside>chromedriver-mac-x64/chromedriver</fileMatchInside>
 						</driver>
 						<driver>
 							<name>chromedriver</name>
@@ -364,7 +364,7 @@
 							<version>${selenium.chromedriver.version}</version>
 							<url>
 								https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${selenium.chromedriver.version}/mac-arm64/chromedriver-mac-arm64.zip</url>
-							<fileMatchInside>chromedriver</fileMatchInside>
+							<fileMatchInside>chromedriver-mac-arm64/chromedriver</fileMatchInside>
 						</driver>
 						<driver>
 							<name>chromedriver</name>
@@ -373,7 +373,7 @@
 							<version>${selenium.chromedriver.version}</version>
 							<url>
 								https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${selenium.chromedriver.version}/linux64/chromedriver-linux64.zip</url>
-							<fileMatchInside>chromedriver</fileMatchInside>
+							<fileMatchInside>chromedriver-linux64/chromedriver</fileMatchInside>
 						</driver>
 						<driver>
 							<name>geckodriver</name>
