@@ -345,7 +345,7 @@
 							<bit>64</bit>
 							<version>${selenium.chromedriver.version}</version>
 							<url>
-								https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${selenium.chromedriver.version}/win64/chrome-win64.zip</url>
+								https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${selenium.chromedriver.version}/win64/chromedriver-win64.zip</url>
 							<fileMatchInside>chromedriver.exe</fileMatchInside>
 						</driver>
 						<driver>
