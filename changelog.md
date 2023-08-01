@@ -24,6 +24,7 @@ New in ${VERSION}
 - Update Edgedriver 115.0.1901.183
 - Update Chromedriver 115.0.5790.102
 - Switch to 64bit chromedriver
+- Selenium 4.11.0
 
 New in 5.2.40
 - Update Edgedriver 114.0.1823.18
