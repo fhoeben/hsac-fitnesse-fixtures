@@ -22,7 +22,7 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 
 New in ${VERSION}
 - Update Edgedriver 115.0.1901.183
-- Update Chromedriver 115.0.5790.110
+- Update Chromedriver 115.0.5790.170
 - Switch to 64bit chromedriver
 - Selenium 4.11.0
 
