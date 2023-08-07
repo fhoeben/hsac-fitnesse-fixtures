@@ -25,6 +25,7 @@ New in ${VERSION}
 - Update Chromedriver 115.0.5790.170
 - Switch to 64bit chromedriver
 - Selenium 4.11.0
+- SnakeYAML 2.1
 
 New in 5.2.40
 - Update Edgedriver 114.0.1823.18
