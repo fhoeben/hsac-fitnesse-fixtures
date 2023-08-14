@@ -342,11 +342,11 @@
 						<driver>
 							<name>chromedriver</name>
 							<platform>windows</platform>
-							<bit>32</bit>
+							<bit>64</bit>
 							<version>${selenium.chromedriver.version}</version>
 							<url>
-								https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${selenium.chromedriver.version}/win32/chromedriver-win32.zip</url>
-							<fileMatchInside>chromedriver-win32/chromedriver.exe</fileMatchInside>
+								https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${selenium.chromedriver.version}/win64/chromedriver-win64.zip</url>
+							<fileMatchInside>chromedriver-win64/chromedriver.exe</fileMatchInside>
 						</driver>
 						<driver>
 							<name>chromedriver</name>
