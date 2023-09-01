@@ -13,7 +13,7 @@ variables:
   # when running from the command line.
   # `installAtEnd` and `deployAtEnd` are only effective with recent version of the corresponding plugins.
   MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
-  SELENIUM_VERSION: "4.7.2"
+  SELENIUM_VERSION: "4.10"
   KANIKO_CACHE: "true"
 
 before_script:
