@@ -23,6 +23,7 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 New in ${VERSION}
 - ChromeDriver 116.0.5845.96
 - EdgeDriver 116.0.1938.62
+- Selenium 4.12.0
 
 New in 5.2.42
 - Actually included 64bit Windows Chromedriver
