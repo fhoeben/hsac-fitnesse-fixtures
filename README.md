@@ -14,7 +14,7 @@ The baseline FitNesse installation offers the following features:
     - [Bootstrap-plus wiki theme](https://github.com/praegus/fitnesse-bootstrap-plus-theme) (Website: https://praegus.github.io/fitnesse-bootstrap-plus-theme/)
     - [Autocomplete responder](https://github.com/praegus/fitnesse-autocomplete-responder)
 * FitNesse installation for test/fixture developers containing:
-    - the fixture base classes (and Selenium drivers for _Chrome_, _Internet Explorer_, _Edge_ and _Firefox_),
+    - the fixture base classes (and Selenium drivers for _Chrome_, _Edge_ and _Firefox_),
     - easy fixture debugging.
 
 The fastest way to get started: just download the 'standalone.zip' from the 
