@@ -47,7 +47,6 @@
 		<surefire.version>3.1.2</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
-		<selenium.internetexplorerdriver.version>4.8.1</selenium.internetexplorerdriver.version>
 		<selenium.edgedriver.version>116.0.1938.62</selenium.edgedriver.version>
 		<selenium.chromedriver.version>116.0.5845.96</selenium.chromedriver.version>
 		<selenium.geckodriver.version>0.33.0</selenium.geckodriver.version>
@@ -322,14 +321,6 @@
 				<configuration>
 					<installationDirectory>${basedir}/wiki/webdrivers</installationDirectory>
 					<drivers>
-						<driver>
-							<name>internetexplorerdriver</name>
-							<platform>windows</platform>
-							<bit>32</bit>
-							<version>${selenium.internetexplorerdriver.version}</version>
-							<url>
-								https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.8.0/IEDriverServer_Win32_${selenium.internetexplorerdriver.version}.zip</url>
-						</driver>
 						<driver>
 							<name>edgedriver</name>
 							<platform>windows</platform>
