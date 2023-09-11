@@ -17,7 +17,7 @@ jobs:
       selenium-version: ${{ steps.get-version.outputs.selenium-version }}
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Java and Maven
         uses: actions/setup-java@v3
@@ -67,7 +67,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: download pom
         uses: actions/download-artifact@v3
@@ -119,7 +119,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Java and Maven
         uses: actions/setup-java@v3
