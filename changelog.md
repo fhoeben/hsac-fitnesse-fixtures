@@ -23,6 +23,8 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 New in ${VERSION}
 - Selenium 4.13.0
 - The project no longer includes the Selenium webdriver for Internet Explorer
+- EdgeDriver 117.0.2045.40
+- ChromeDriver 117.0.5938.92
 
 New in 5.2.44
 - Selenium 4.12.0
