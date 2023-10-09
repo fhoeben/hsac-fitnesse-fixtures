@@ -331,6 +331,33 @@
 							<fileMatchInside>msedgedriver.exe</fileMatchInside>
 						</driver>
 						<driver>
+							<name>edgedriver</name>
+							<platform>linux</platform>
+							<bit>64</bit>
+							<version>${selenium.edgedriver.version}</version>
+							<url>
+								https://msedgedriver.azureedge.net/${selenium.edgedriver.version}/edgedriver_linux64.zip</url>
+							<fileMatchInside>msedgedriver</fileMatchInside>
+						</driver>
+						<driver>
+							<name>edgedriver</name>
+							<platform>mac_m1</platform>
+							<bit>64</bit>
+							<version>${selenium.edgedriver.version}</version>
+							<url>
+								https://msedgedriver.azureedge.net/${selenium.edgedriver.version}/edgedriver_mac64_m1.zip</url>
+							<fileMatchInside>msedgedriver</fileMatchInside>
+						</driver>
+						<driver>
+							<name>edgedriver</name>
+							<platform>mac</platform>
+							<bit>64</bit>
+							<version>${selenium.edgedriver.version}</version>
+							<url>
+								https://msedgedriver.azureedge.net/${selenium.edgedriver.version}/edgedriver_mac64.zip</url>
+							<fileMatchInside>msedgedriver</fileMatchInside>
+						</driver>
+						<driver>
 							<name>chromedriver</name>
 							<platform>windows</platform>
 							<bit>64</bit>
