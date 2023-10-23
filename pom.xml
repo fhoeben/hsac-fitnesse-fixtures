@@ -47,8 +47,8 @@
 		<surefire.version>3.1.2</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
-		<selenium.edgedriver.version>117.0.2045.55</selenium.edgedriver.version>
-		<selenium.chromedriver.version>117.0.5938.149</selenium.chromedriver.version>
+		<selenium.edgedriver.version>118.0.2088.61</selenium.edgedriver.version>
+		<selenium.chromedriver.version>118.0.5993.70</selenium.chromedriver.version>
 		<selenium.geckodriver.version>0.33.0</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven  -->
@@ -329,15 +329,6 @@
 							<url>
 								https://msedgedriver.azureedge.net/${selenium.edgedriver.version}/edgedriver_win64.zip</url>
 							<fileMatchInside>msedgedriver.exe</fileMatchInside>
-						</driver>
-						<driver>
-							<name>edgedriver</name>
-							<platform>linux</platform>
-							<bit>64</bit>
-							<version>${selenium.edgedriver.version}</version>
-							<url>
-								https://msedgedriver.azureedge.net/${selenium.edgedriver.version}/edgedriver_linux64.zip</url>
-							<fileMatchInside>msedgedriver</fileMatchInside>
 						</driver>
 						<driver>
 							<name>edgedriver</name>

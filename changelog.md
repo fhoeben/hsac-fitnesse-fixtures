@@ -21,9 +21,9 @@ An example of Maven based project using this baseline can be found at: https://g
 When upgrading from an older version, ensure all Selenium webdrivers are stopped and delete the 'wiki/plugins' and 'wiki/webdrivers' folders to remove old versions of the packaged plugins/webdrivers. When using the sample project: follow the instructions at https://github.com/fhoeben/sample-fitnesse-project#upgrading.
 
 New in ${VERSION}
-- EdgeDriver for Mac M1, Mac64, Linux
-- EdgeDriver 117.0.2045.55
-- ChromeDriver 117.0.5938.149
+- EdgeDriver for Mac M1, Mac64
+- EdgeDriver 118.0.2088.61
+- ChromeDriver 118.0.5993.70
 
 New in 5.2.45
 - Selenium 4.13.0
