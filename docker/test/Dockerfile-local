@@ -1,4 +1,4 @@
-ARG  JRE_IMAGE=eclipse-temurin:8-jre
+ARG  JRE_IMAGE=eclipse-temurin:11-jre
 
 FROM ${JRE_IMAGE}
 RUN mkdir -p /fitnesse/wiki/fixtures/nl/hsac/fitnesse

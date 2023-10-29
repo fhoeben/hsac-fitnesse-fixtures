@@ -1,7 +1,7 @@
 package nl.hsac.fitnesse.fixture.util;
 
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
+import org.openjdk.nashorn.api.scripting.ScriptObjectMirror;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -23,7 +23,7 @@ jobs:
       - name: Install Java and Maven
         uses: actions/setup-java@v3
         with:
-          java-version: '8'
+          java-version: '11'
           distribution: 'zulu'
           cache: 'maven'
 
@@ -49,7 +49,7 @@ jobs:
       - name: Set up Apache Maven Central
         uses: actions/setup-java@v3
         with: # running setup-java again overwrites the settings.xml
-          java-version: '8'
+          java-version: '11'
           distribution: 'zulu'
           cache: 'maven'
           server-id: ossrh
@@ -136,7 +136,7 @@ jobs:
       - name: Install Java and Maven
         uses: actions/setup-java@v3
         with:
-          java-version: '8'
+          java-version: '11'
           distribution: 'zulu'
           cache: 'maven'
 

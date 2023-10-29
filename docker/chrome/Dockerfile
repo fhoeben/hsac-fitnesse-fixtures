@@ -1,4 +1,4 @@
-ARG  TEST_IMAGE=hsac/fitnesse-fixtures-test-jre8:latest
+ARG  TEST_IMAGE=hsac/fitnesse-fixtures-test-jre11:latest
 ARG  SELENIUM_IMAGE=seleniarm/standalone-chromium:latest
 FROM ${TEST_IMAGE} as hsac-fixtures
 

@@ -1,4 +1,4 @@
-ARG  BASE_IMAGE=hsac/fitnesse-fixtures-test-jre8:base-latest
+ARG  BASE_IMAGE=hsac/fitnesse-fixtures-test-jre11:base-latest
 ARG  GRAALVM_IMAGE=ghcr.io/graalvm/native-image:latest
 ARG  BUSYBOX_IMAGE=busybox:latest
 

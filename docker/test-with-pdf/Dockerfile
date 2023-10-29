@@ -1,5 +1,5 @@
-ARG  BASE_IMAGE=hsac/fitnesse-fixtures-test-jre8:base-latest
-ARG  TEST_IMAGE=hsac/fitnesse-fixtures-test-jre8:latest
+ARG  BASE_IMAGE=hsac/fitnesse-fixtures-test-jre11:base-latest
+ARG  TEST_IMAGE=hsac/fitnesse-fixtures-test-jre11:latest
 
 FROM ${BASE_IMAGE} as base
 RUN mvn compile -P withPdf

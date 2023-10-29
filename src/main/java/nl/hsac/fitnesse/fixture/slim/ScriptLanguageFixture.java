@@ -1,6 +1,6 @@
 package nl.hsac.fitnesse.fixture.slim;
 
-import jdk.nashorn.internal.runtime.ECMAException;
+import org.openjdk.nashorn.internal.runtime.ECMAException;
 
 import javax.script.Invocable;
 import javax.script.ScriptContext;

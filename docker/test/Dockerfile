@@ -1,5 +1,5 @@
-ARG  BASE_IMAGE=hsac/fitnesse-fixtures-test-jre8:base-latest
-ARG  JRE_IMAGE=eclipse-temurin:8-jre
+ARG  BASE_IMAGE=hsac/fitnesse-fixtures-test-jre11:base-latest
+ARG  JRE_IMAGE=eclipse-temurin:11-jre
 
 FROM ${BASE_IMAGE} as base
 

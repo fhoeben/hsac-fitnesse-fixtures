@@ -6,9 +6,9 @@ The tests to be run are expected to be supplied by a volume mounted to `/fitness
 Test results will be written to `/fitnesse/target`, in surefire xml format (in `/fitnesse/target/failsafe-reports`) and in HTML (in `/fitnesse/target/fitnesse-results`).
 By mounting a volume the host running the container can access these results after the test run is completed.
 
-There is a base image: hsac/fitnesse-fixtures-test-jre8, which just contains a JRE, FitNesse and hsac fixtures.
+There is a base image: hsac/fitnesse-fixtures-test-jre11, which just contains a JRE, FitNesse and hsac fixtures.
 
-And there is an image, based on Selenium's standalone chrome one: hsac/fitnesse-fixtures-test-jre8-chrome, which also contains a local Chrome browser and is configured to have BrowserTest use that.
+And there is an image, based on Selenium's standalone chrome one: hsac/fitnesse-fixtures-test-jre11-chrome, which also contains a local Chrome browser and is configured to have BrowserTest use that.
 The image which contains Chrome also exposes its Selenium log (in `/fitnesse/target/selenium-log`).
 
 Both images are preconfigured to start a FitNesse run immediately when started and you are expected to supply a suite to run using a system property value for 'fitnesseSuiteToRun'
