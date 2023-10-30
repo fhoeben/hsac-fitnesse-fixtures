@@ -44,7 +44,7 @@
 		<selenium.version>4.13.0</selenium.version>
 		<slf4j.version>2.0.9</slf4j.version>
 		<apache.http.version>4.5.14</apache.http.version>
-		<surefire.version>3.1.2</surefire.version>
+		<surefire.version>3.2.1</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
 		<selenium.edgedriver.version>117.0.2045.40</selenium.edgedriver.version>
