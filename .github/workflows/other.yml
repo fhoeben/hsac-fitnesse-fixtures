@@ -33,6 +33,7 @@ jobs:
         run: mvn --batch-mode --update-snapshots -DfitnesseSuiteToRun=HsacAcceptanceTests -DseleniumBrowser=chrome "-DseleniumJsonProfile={'args':['headless', 'disable-gpu']}" verify failsafe:verify
 
       - name: Upload artifacts
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: target

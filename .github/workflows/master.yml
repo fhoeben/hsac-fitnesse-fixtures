@@ -65,6 +65,7 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.gpg_passphrase }}
 
       - name: upload packages
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: target
