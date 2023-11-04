@@ -1,9 +1,10 @@
-name: release
+name: release-java8
 
 on:
   push:
     branches:
       - 'master'
+      - 'java8'
     paths-ignore:
       - '.gitlab-ci.yml'
       - '*.md'
@@ -111,7 +112,7 @@ jobs:
         run: |
           git add pom.xml
           git commit -m "Prepare for release"
-          git push origin master
+          git push origin java8
 
       - name: Create Release
         id: createRelease
@@ -156,4 +157,4 @@ jobs:
         run: |
           git add pom.xml
           git commit -m "Prepare for next developments" -m "[ci skip]"
-          git push origin master
+          git push origin java8
