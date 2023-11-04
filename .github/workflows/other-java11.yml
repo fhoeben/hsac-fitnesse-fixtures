@@ -1,9 +1,9 @@
-name: test-java8
+name: test-java11
 
 on:
   push:
     branches:
-      - 'java8_*'
+      - '*'
       - '!java8'
       - '!master'
       - '!main'
@@ -12,8 +12,7 @@ on:
       - '*.md'
   pull_request:
     branches:
-      - 'master'
-      - 'java8'
+      - 'main'
     paths-ignore:
       - '.gitlab-ci.yml'
       - '*.md'
