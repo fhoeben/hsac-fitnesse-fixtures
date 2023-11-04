@@ -3,7 +3,6 @@ name: release-java8
 on:
   push:
     branches:
-      - 'master'
       - 'java8'
     paths-ignore:
       - '.gitlab-ci.yml'
