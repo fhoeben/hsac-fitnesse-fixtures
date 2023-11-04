@@ -22,6 +22,7 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 
 New in ${VERSION}
 - Dropped support of Java 8, Java 11 is now required
+- FitNesse 20231029
 
 New in 5.2.46
 - EdgeDriver 118.0.2088.88
