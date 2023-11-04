@@ -5,6 +5,8 @@ import java.lang.invoke.LambdaMetafactory;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -15,6 +17,17 @@ import static java.lang.invoke.MethodType.methodType;
  * Helper to create Functions based on reflection types.
  */
 public class LambdaMetaHelper {
+    private final static Map<Class<?>, Class<?>> PRIMITIVE_TYPES = new HashMap<>();
+    static {
+        PRIMITIVE_TYPES.put(boolean.class, Boolean.class);
+        PRIMITIVE_TYPES.put(byte.class, Byte.class);
+        PRIMITIVE_TYPES.put(short.class, Short.class);
+        PRIMITIVE_TYPES.put(char.class, Character.class);
+        PRIMITIVE_TYPES.put(int.class, Integer.class);
+        PRIMITIVE_TYPES.put(long.class, Long.class);
+        PRIMITIVE_TYPES.put(float.class, Float.class);
+        PRIMITIVE_TYPES.put(double.class, Double.class);
+    }
 
     /**
      * Gets no-arg constructor as Supplier.
@@ -54,7 +67,17 @@ public class LambdaMetaHelper {
 
     protected <T, R> T getConstructorAs(Class<T> targetClass, String methodName, Class<? extends R> clazz, Class<?>... args) {
         try {
-            MethodType methodType = methodType(clazz, args);
+            Class<?>[] lambdaArgs = new Class<?>[args.length];
+            for (int i = 0; i < args.length; i++) {
+                Class<?> arg = args[i];
+                if (arg.isPrimitive()) {
+                    lambdaArgs[i] = PRIMITIVE_TYPES.get(arg);
+                } else {
+                    lambdaArgs[i] = arg;
+                }
+            }
+
+            MethodType methodType = methodType(clazz, lambdaArgs);
             MethodHandles.Lookup lookup = MethodHandles.lookup();
             MethodHandle handle = lookup.findConstructor(clazz, methodType(void.class, args));
             MethodType targetType = methodType(targetClass);
