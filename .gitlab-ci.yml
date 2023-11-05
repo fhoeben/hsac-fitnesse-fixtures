@@ -310,7 +310,7 @@ tag_images:
   <<: *tag_definition
   <<: *after_all_tests
   script:
-    - if [ "${CI_COMMIT_REF_SLUG}" == "master" ]; then TAG="latest"; else TAG=${CI_COMMIT_REF_SLUG}; fi
+    - if [ "${CI_COMMIT_REF_SLUG}" == "main" ]; then TAG="latest"; else TAG=${CI_COMMIT_REF_SLUG}; fi
     - crane auth login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - crane cp ${TEST_IMAGE} ${CI_REGISTRY_IMAGE}/fitnesse-fixtures-test-jre11:${TAG}
     - crane cp ${CHROME_IMAGE} ${CI_REGISTRY_IMAGE}/fitnesse-fixtures-test-jre11-chrome:${TAG}
@@ -321,9 +321,9 @@ push_images_to_docker_hub:
   <<: *after_all_tests
   only:
     - tags
-    - master
+    - main
   script:
-    - if [ "${CI_COMMIT_REF_SLUG}" == "master" ]; then TAG="latest"; else TAG=${CI_COMMIT_TAG}; fi
+    - if [ "${CI_COMMIT_REF_SLUG}" == "main" ]; then TAG="latest"; else TAG=${CI_COMMIT_TAG}; fi
     - crane auth login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - crane auth login -u $DOCKER_HUB_USER -p $DOCKER_PUSH_TOKEN docker.io
     - crane cp ${TEST_IMAGE} ${DOCKER_HUB_REGISTRY}/fitnesse-fixtures-test-jre11:${TAG}
@@ -398,7 +398,7 @@ tag_pdf_images:
     - pdf-acceptance-test
     - tag_images
   script:
-    - if [ "${CI_COMMIT_REF_SLUG}" == "master" ]; then TAG="latest"; else TAG=${CI_COMMIT_REF_SLUG}; fi
+    - if [ "${CI_COMMIT_REF_SLUG}" == "main" ]; then TAG="latest"; else TAG=${CI_COMMIT_REF_SLUG}; fi
     - crane auth login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - crane cp ${TEST_PDF_IMAGE} ${CI_REGISTRY_IMAGE}/fitnesse-fixtures-test-jre11-with-pdf:${TAG}
     - crane cp ${CHROME_PDF_IMAGE} ${CI_REGISTRY_IMAGE}/fitnesse-fixtures-test-jre11-chrome-with-pdf:${TAG}
@@ -411,9 +411,9 @@ push_pdf_images_to_docker_hub:
     - tag_images
   only:
     - tags
-    - master
+    - main
   script:
-    - if [ "${CI_COMMIT_REF_SLUG}" == "master" ]; then TAG="latest"; else TAG=${CI_COMMIT_TAG}; fi
+    - if [ "${CI_COMMIT_REF_SLUG}" == "main" ]; then TAG="latest"; else TAG=${CI_COMMIT_TAG}; fi
     - crane auth login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - crane auth login -u $DOCKER_HUB_USER -p $DOCKER_PUSH_TOKEN docker.io
     - crane cp ${TEST_PDF_IMAGE} ${DOCKER_HUB_REGISTRY}/fitnesse-fixtures-test-jre11-with-pdf:${TAG}
