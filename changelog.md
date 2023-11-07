@@ -21,6 +21,10 @@ An example of Maven based project using this baseline can be found at: https://g
 When upgrading from an older version, ensure all Selenium webdrivers are stopped and delete the 'wiki/plugins' and 'wiki/webdrivers' folders to remove old versions of the packaged plugins/webdrivers. When using the sample project: follow the instructions at https://github.com/fhoeben/sample-fitnesse-project#upgrading.
 
 New in ${VERSION}
+- Selenium 4.15.0
+- EdgeDriver 119.0.2151.42
+- ChromeDriver 119.0.6045.105
+- Praegus toolchain plugin 2.0.17
 
 New in 5.3.0
 - **Dropped support of Java 8, Java 11 is now required**
