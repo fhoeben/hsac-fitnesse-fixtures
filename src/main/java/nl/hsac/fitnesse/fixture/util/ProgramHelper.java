@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeoutException;
 
+import static java.lang.String.format;
+
 /**
  * Helper to invoke (external) programs.
  */
@@ -64,8 +66,7 @@ public class ProgramHelper {
             stdErrConsumer = new StreamConsumer(process.getErrorStream())
                                     .start();
         } catch (IOException e) {
-            throw new RuntimeException(
-                        "Unable to start: " + response.getCommand(), e);
+            throw new RuntimeException(format("Unable to start: %s. Reason: %s" + response.getCommand(), e.getMessage(), e));
         }
 
         try {
