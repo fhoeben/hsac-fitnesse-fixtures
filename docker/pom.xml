@@ -17,6 +17,7 @@
         <hsac.pdf.version>0.0.5</hsac.pdf.version>
         <hsac.email.version>0.5.0</hsac.email.version>
         <standalone.classpath>test/wiki/fixtures</standalone.classpath>
+        <skipCombineShade>false</skipCombineShade>
     </properties>
 
     <dependencies>
@@ -185,7 +186,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.2</version>
+                <version>3.5.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -193,6 +194,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <skip>${skipCombineShade}</skip>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>nl.hsac.fitnesse.junit.reportmerge.HtmlReportIndexGenerator</mainClass>
