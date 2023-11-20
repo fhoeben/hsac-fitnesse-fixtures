@@ -11,6 +11,16 @@ updates:
       - dependency-name: "org.mockito:mockito-core"
         update-types: ["version-update:semver-major"]
 
+  - package-ecosystem: "maven"
+    directory: "docker"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "docker"
+    directory: "docker"
+    schedule:
+      interval: "weekly"
+
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
