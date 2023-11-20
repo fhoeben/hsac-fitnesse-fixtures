@@ -8,6 +8,7 @@ on:
       - '!master'
       - '!main'
     paths-ignore:
+      - '.github/dependabot.yml'
       - '.gitlab-ci.yml'
       - '*.md'
   pull_request:
@@ -15,6 +16,7 @@ on:
       - 'master'
       - 'java8'
     paths-ignore:
+      - '.github/dependabot.yml'
       - '.gitlab-ci.yml'
       - '*.md'
 

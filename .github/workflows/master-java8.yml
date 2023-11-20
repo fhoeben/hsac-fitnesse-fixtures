@@ -5,6 +5,7 @@ on:
     branches:
       - 'java8'
     paths-ignore:
+      - '.github/dependabot.yml'
       - '.gitlab-ci.yml'
       - '*.md'
 
