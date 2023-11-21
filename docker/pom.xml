@@ -13,7 +13,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.outputTimestamp>2020-01-01T00:00:00Z</project.build.outputTimestamp>
-
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <hsac.pdf.version>0.0.5</hsac.pdf.version>
         <hsac.email.version>0.5.0</hsac.email.version>
         <standalone.classpath>test/wiki/fixtures</standalone.classpath>
@@ -114,7 +114,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>3.3.2</version>
                 <configuration>
                     <filesets>
                         <fileset>
@@ -132,7 +132,7 @@
                      dependencies are available to Fitnesse without need to have Maven to run tests.
                 -->
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.6.1</version>
                 <executions>
                     <execution>
                         <id>copy-dependencies-to-wiki-fixtures</id>
