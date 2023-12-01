@@ -1,0 +1,11 @@
+|script                |vue3 test                                             |
+|seconds before timeout|3                                                     |
+|open                  |https://vuetifyjs.com/en/components/text-fields/#misc |
+|ensure                |is visible|City                                       |
+|click                 |City                                                  |
+|type                  |hello                                                 |
+|check                 |value of  |City                 |hello                |
+|ensure                |is visible|State/Province/Region                      |
+|enter                 |TEST      |as                   |State/Province/Region|
+|check                 |value of  |State/Province/Region|TEST                 |
+
