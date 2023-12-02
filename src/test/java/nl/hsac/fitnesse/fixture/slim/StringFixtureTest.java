@@ -21,9 +21,69 @@ public class StringFixtureTest {
     }
 
     @Test
+    public void testIsEmpty() {
+        assertTrue("null", fixture.isEmpty(null));
+        assertTrue("", fixture.isEmpty(""));
+        assertFalse(" ", fixture.isEmpty(" "));
+        assertFalse("hello", fixture.isEmpty("hello"));
+        assertFalse(" hello ", fixture.isEmpty(" hello "));
+    }
+
+    @Test
+    public void testIsNotEmpty() {
+        assertFalse("null", fixture.isNotEmpty(null));
+        assertFalse("", fixture.isNotEmpty(""));
+        assertTrue(" ", fixture.isNotEmpty(" "));
+        assertTrue("hello", fixture.isNotEmpty("hello"));
+        assertTrue(" hello ", fixture.isNotEmpty(" hello "));
+    }
+
+    @Test
+    public void testIsUndefined() {
+        assertTrue("$x", fixture.isUndefined("$x"));
+        assertTrue("$Y", fixture.isUndefined("$Y"));
+        assertTrue("$z_", fixture.isUndefined("$z_"));
+        assertTrue("$xY_z", fixture.isUndefined("$xY_z"));
+        assertFalse("x$", fixture.isUndefined("x$"));
+        assertFalse("$1", fixture.isUndefined("$1"));
+        assertFalse("$_", fixture.isUndefined("$_"));
+        assertFalse("$$", fixture.isUndefined("$$"));
+        assertFalse("$x-", fixture.isUndefined("$x-"));
+        assertFalse("$x.", fixture.isUndefined("$x."));
+        assertFalse("$x(y)", fixture.isUndefined("$x(y)"));
+        assertFalse("$1.00-", fixture.isUndefined("$1.00-"));
+    }
+
+    @Test
+    public void testIsEmptyOrUndefined() {
+        assertTrue("null", fixture.isEmptyOrUndefined(null));
+        assertTrue("", fixture.isEmptyOrUndefined(""));
+        assertTrue("$x", fixture.isEmptyOrUndefined("$x"));
+        assertTrue("$Y", fixture.isEmptyOrUndefined("$Y"));
+        assertTrue("$z_", fixture.isEmptyOrUndefined("$z_"));
+        assertTrue("$xY_z", fixture.isEmptyOrUndefined("$xY_z"));
+        assertFalse(" ", fixture.isEmptyOrUndefined(" "));
+        assertFalse("hello", fixture.isEmptyOrUndefined("hello"));
+        assertFalse(" hello ", fixture.isEmptyOrUndefined(" hello "));
+        assertFalse("x$", fixture.isEmptyOrUndefined("x$"));
+        assertFalse("$1", fixture.isEmptyOrUndefined("$1"));
+        assertFalse("$_", fixture.isEmptyOrUndefined("$_"));
+        assertFalse("$$", fixture.isEmptyOrUndefined("$$"));
+        assertFalse("$x-", fixture.isEmptyOrUndefined("$x-"));
+        assertFalse("$x.", fixture.isEmptyOrUndefined("$x."));
+        assertFalse("$x(y)", fixture.isEmptyOrUndefined("$x(y)"));
+        assertFalse("$1.00-", fixture.isEmptyOrUndefined("$1.00-"));
+    }
+    @Test
     public void testValue() {
-        assertEquals("null", null, fixture.valueOf(null));
+        assertNull("null", fixture.valueOf(null));
         assertEquals("hello", "hello", fixture.valueOf("hello"));
+    }
+
+    @Test
+    public void testGetValueOf() {
+        assertNull("null", fixture.getValueOf(null));
+        assertEquals("hello", "hello", fixture.getValueOf("hello"));
     }
 
     @Test
@@ -99,5 +159,11 @@ public class StringFixtureTest {
     public void testConvertToLowerCase() {
         assertNull("null", fixture.convertToLowerCase(null));
         assertEquals("abC1", "abc1", fixture.convertToLowerCase("abC1"));
+    }
+
+    @Test
+    public void testCapitalise() {
+        assertNull("null", fixture.capitalise(null));
+        assertEquals("abc1", "Abc1", fixture.capitalise("abc1"));
     }
 }
