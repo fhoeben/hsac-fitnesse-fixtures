@@ -1,0 +1,18 @@
+!include -c .SampleTests.SlimTests.SuiteSetUp
+
+|Import                           |
+|nl.hsac.fitnesse.fixture.slim.web|
+
+
+
+|script                 |map fixture            |
+|set value              |headless   |for|args[0]|
+|set value              |disable-gpu|for|args[1]|
+|$chromeHeadlessProfile=|copy map               |
+
+
+|script          |selenium driver setup                     |
+|start driver for|chrome|with profile|$chromeHeadlessProfile|
+|show            |driver description                        |
+
+

@@ -1,0 +1,40 @@
+This test ensures we can find elements based on their aria-labelledby or aria-label attribute. We use a mock server running to serve the HTML defined in this page.
+!note The mock server serves the content as ''text/xml'', but the browser does not seem to mind.
+
+
+!define HTML { {{{
+<html>
+<body>
+<div id="a1">A</div>
+<div id="a2">
+    <div>A<span>KH<span>asdas<div>sadasd<p>jhsdhf</p> <strong>B </strong></div>dad</span>FGH</span></div>
+    asdasudia
+</div>
+<div id="a3">And some&nbsp;more</div>
+<button aria-labelledby="a1">Button 1</button>
+<input name="f" aria-labelledby="a2" value="Piet">
+<div aria-labelledby="a3" value="Jan">
+<input name="f2" aria-label="The button" value="Add">
+<div name="f3" aria-label="The red button">Remove</div>
+</body>
+</html>}}} }
+
+
+|script      |mock xml server setup|
+|add response|${HTML}              |
+|$url=       |get mock server url  |
+
+|script|browser test                     |
+|open  |$url                             |
+|note  |exact match of aria-labelledby   |
+|check |value of  |B             |Piet   |
+|check |value of  |And some more |Jan    |
+|note  |contains match of aria-labelledby|
+|check |value of  |more          |Jan    |
+|note  |exact match of aria-label        |
+|check |value of  |The button    |Add    |
+|note  |contains match of aria-label     |
+|check |value of  |red button    |Remove |
+
+|script|mock xml server setup|
+|stop                        |

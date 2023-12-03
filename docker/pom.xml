@@ -10,11 +10,37 @@
 
     <description>Sets up Java code to run FitNesse tests using hsac-fitnesse-fixtures in a docker container</description>
 
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Fried Hoeben</name>
+            <email>fitnesse@hsac.nl</email>
+            <organization>Hoeben Software Architecture Consulting B.V.</organization>
+            <organizationUrl>https://nl.linkedin.com/in/friedhoeben</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/fhoeben/hsac-fitnesse-docker.git</connection>
+        <url>https://github.com/fhoeben/hsac-fitnesse-docker.git</url>
+        <developerConnection>scm:git:git://github.com/fhoeben/hsac-fitnesse-docker.git</developerConnection>
+    </scm>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.outputTimestamp>2020-01-01T00:00:00Z</project.build.outputTimestamp>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <hsac.pdf.version>0.0.5</hsac.pdf.version>
+        <fitnesse.version>20231029</fitnesse.version>
+        <hsac.fixtures.version>5.3.0</hsac.fixtures.version>
+        <hsac.pdf.version>0.1.3</hsac.pdf.version>
         <hsac.email.version>0.5.0</hsac.email.version>
         <standalone.classpath>test/wiki/fixtures</standalone.classpath>
         <skipCombineShade>false</skipCombineShade>
@@ -50,9 +76,6 @@
     <profiles>
         <profile>
             <id>withPdf</id>
-            <properties>
-                <standalone.classpath>test-with-pdf/wiki/fixtures</standalone.classpath>
-            </properties>
             <dependencies>
                 <dependency>
                     <groupId>nl.hsac</groupId>

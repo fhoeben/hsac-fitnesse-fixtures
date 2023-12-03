@@ -1,139 +1,12 @@
-name: release-java11
+name: tags-java11
 
 on:
   push:
-    branches:
-      - 'main'
-    paths-ignore:
-      - '.github/dependabot.yml'
-      - '.gitlab-ci.yml'
-      - '*.md'
+    tags:
+      - '*'
 
 jobs:
-  maven-release:
-    runs-on: ubuntu-22.04
-    outputs:
-      version: ${{ steps.get-version.outputs.version }}
-      fitnesse-version: ${{ steps.get-version.outputs.fitnesse-version }}
-      selenium-version: ${{ steps.get-version.outputs.selenium-version }}
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v4
-
-      - name: Install Java and Maven
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'zulu'
-          cache: 'maven'
-
-      - name: Update browser
-        run: |
-          wget -q -O /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-          && sudo apt install -y /tmp/chrome.deb \
-          && rm /tmp/chrome.deb
-
-      - name: Unsnapshot version
-        run:  mvn versions:set -DremoveSnapshot
-
-      - id: get-version
-        run: |
-          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          FITNESSE_VERSION=$(mvn help:evaluate -Dexpression=fitnesse.version -q -DforceStdout)
-          echo "fitnesse-version=$FITNESSE_VERSION" >> $GITHUB_OUTPUT
-          SELENIUM_VERSION=$(mvn help:evaluate -Dexpression=selenium.version -q -DforceStdout)
-          echo "selenium-version=$SELENIUM_VERSION" >> $GITHUB_OUTPUT
-
-      - name: upload release pom
-        uses: actions/upload-artifact@v3
-        with:
-          name: pom
-          path: pom.xml
-          if-no-files-found: error
-
-      - name: Set up Apache Maven Central
-        uses: actions/setup-java@v3
-        with: # running setup-java again overwrites the settings.xml
-          java-version: '11'
-          distribution: 'zulu'
-          cache: 'maven'
-          server-id: ossrh
-          server-username: MAVEN_USERNAME # env variable for username in deploy
-          server-password: MAVEN_CENTRAL_TOKEN # env variable for token in deploy
-          gpg-private-key: ${{ secrets.gpg_private_key }}
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
-
-      - name: Publish to Apache Maven Central
-        run: mvn clean deploy -P release
-        env:
-          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.gpg_passphrase }}
-
-      - name: upload packages
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: target
-          path: |
-            target/hsac-fitnesse-fixtures-*.jar
-            target/hsac-fitnesse-fixtures-*.zip
-
-  github-release:
-    needs: [maven-release]
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v4
-
-      - name: download pom
-        uses: actions/download-artifact@v3
-        with:
-          name: pom
-
-      - name: download packages
-        uses: actions/download-artifact@v3
-        with:
-          name: target
-          path: target
-
-      - name: Replace changelog placeholders
-        uses: franzbischoff/replace_envs@v1
-        env:
-          VERSION: ${{ needs.maven-release.outputs.version }}
-          FITNESSE_VERSION: ${{ needs.maven-release.outputs.fitnesse-version }}
-          SELENIUM_VERSION: ${{ needs.maven-release.outputs.selenium-version }}
-        with:
-          from_file: './changelog.md'
-          to_file: './changelog.md'
-          commit: 'false'
-
-      - name: Configure git
-        run: |
-          git config --global user.email "fhoeben-github@hsac.nl"
-          git config --global user.name "GitHub Action"
-
-      - name: Commit pom.xml without -SNAPSHOT
-        run: |
-          git add pom.xml
-          git commit -m "Prepare for release"
-          git push origin main
-
-      - name: Create Release
-        id: createRelease
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ needs.maven-release.outputs.version }}
-          body_path: './changelog.md'
-          draft: false
-          prerelease: false
-          files: |
-            target/hsac-fitnesse-fixtures-*.jar
-            target/hsac-fitnesse-fixtures-*.zip
-
   generate-docker-content:
-    needs: [maven-release]
     runs-on: ubuntu-22.04
     steps:
       - name: Check out Git repository
@@ -146,10 +19,19 @@ jobs:
           distribution: 'zulu'
           cache: maven
 
+      - id: get-version
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          FITNESSE_VERSION=$(mvn help:evaluate -Dexpression=fitnesse.version -q -DforceStdout)
+          echo "fitnesse-version=$FITNESSE_VERSION" >> $GITHUB_OUTPUT
+          SELENIUM_VERSION=$(mvn help:evaluate -Dexpression=selenium.version -q -DforceStdout)
+          echo "selenium-version=$SELENIUM_VERSION" >> $GITHUB_OUTPUT
+
       - name: Create docker content
         run: |
           cd docker
-          mvn --batch-mode clean package -Dfitnesse.version=${{ needs.maven-release.outputs.fitnesse-version }} -Dhsac.fixtures.version=${{ needs.maven-release.outputs.version }}
+          mvn --batch-mode clean package -Dfitnesse.version=${{ steps.get-version.outputs.fitnesse-version }} -Dhsac.fixtures.version=${{ steps.get-version.outputs.version }}
 
       - name: Upload docker image content
         uses: actions/upload-artifact@v3
@@ -162,7 +44,7 @@ jobs:
       - name: Create with-pdf docker content
         run: |
           cd docker
-          mvn --batch-mode -P withPdf package -DskipCombineShade=true -Dfitnesse.version=${{ needs.maven-release.outputs.fitnesse-version }} -Dhsac.fixtures.version=${{ needs.maven-release.outputs.version }}
+          mvn --batch-mode -P withPdf package -DskipCombineShade=true -Dfitnesse.version=${{ steps.get-version.outputs.fitnesse-version }} -Dhsac.fixtures.version=${{ steps.get-version.outputs.version }}
 
       - name: Upload with-pdf docker image content
         uses: actions/upload-artifact@v3
@@ -192,6 +74,9 @@ jobs:
             hsac/fitnesse-fixtures-test-jre11-chrome
             hsac/fitnesse-fixtures-test-jre11-with-pdf
             hsac/fitnesse-fixtures-test-jre11-chrome-with-pdf
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
 
       - name: Rename meta bake definition file
         run: |
@@ -516,36 +401,3 @@ jobs:
       - name: Inspect image
         run: |
           docker buildx imagetools inspect ${{ matrix.image }}:$(jq -r '.target."docker-metadata-action".args.DOCKER_META_VERSION' /tmp/bake-meta.json)          
-
-  update-version:
-    needs: [github-release]
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install Java and Maven
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'zulu'
-          cache: 'maven'
-
-      - name: Configure git
-        run: |
-          git config --global user.email "fhoeben-github@hsac.nl"
-          git config --global user.name "GitHub Action"
-
-      - name: Pull changes from github-release job
-        run: |
-          git pull origin
-
-      - name: Update version
-        run: |
-          mvn -B release:update-versions -DautoVersionSubmodules=true
-
-      - name: Push pom.xml with next -SNAPSHOT version to repository
-        run: |
-          git add pom.xml
-          git commit -m "Prepare for next developments" -m "[ci skip]"
-          git push origin main

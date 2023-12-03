@@ -22,6 +22,10 @@ on:
 jobs:
   maven-test:
     runs-on: ubuntu-22.04
+    outputs:
+      version: ${{ steps.get-version.outputs.version }}
+      fitnesse-version: ${{ steps.get-version.outputs.fitnesse-version }}
+      selenium-version: ${{ steps.get-version.outputs.selenium-version }}
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
@@ -40,7 +44,16 @@ jobs:
           && rm /tmp/chrome.deb
 
       - name: Test with Maven
-        run: mvn --batch-mode --update-snapshots -DfitnesseSuiteToRun=HsacAcceptanceTests -DseleniumBrowser=chrome "-DseleniumJsonProfile={'args':['headless', 'disable-gpu']}" verify failsafe:verify
+        run: mvn --batch-mode --update-snapshots -DfitnesseSuiteToRun=HsacAcceptanceTests -DseleniumBrowser=chrome "-DseleniumJsonProfile={'args':['headless', 'disable-gpu']}" verify failsafe:verify install
+
+      - id: get-version
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          FITNESSE_VERSION=$(mvn help:evaluate -Dexpression=fitnesse.version -q -DforceStdout)
+          echo "fitnesse-version=$FITNESSE_VERSION" >> $GITHUB_OUTPUT
+          SELENIUM_VERSION=$(mvn help:evaluate -Dexpression=selenium.version -q -DforceStdout)
+          echo "selenium-version=$SELENIUM_VERSION" >> $GITHUB_OUTPUT
 
       - name: Upload artifacts
         if: always()
@@ -57,3 +70,338 @@ jobs:
             !target/maven-*
             !target/test.zip
             !target/unzipTest
+
+  generate-docker-content:
+    needs: [maven-test]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Install Java and Maven
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'zulu'
+          cache: maven
+
+      - name: Create docker content
+        run: |
+          cd docker
+          mvn --batch-mode clean package -Dfitnesse.version=${{ needs.maven-test.outputs.fitnesse-version }} -Dhsac.fixtures.version=${{ needs.maven-test.outputs.version }}
+
+      - name: Upload docker image content
+        uses: actions/upload-artifact@v3
+        with:
+          name: docker-content
+          path: |
+            docker/test/wiki
+            docker/combine/target
+
+      - name: Create with-pdf docker content
+        run: |
+          cd docker
+          mvn --batch-mode -P withPdf package -DskipCombineShade=true -Dfitnesse.version=${{ needs.maven-test.outputs.fitnesse-version }} -Dhsac.fixtures.version=${{ needs.maven-test.outputs.version }}
+
+      - name: Upload with-pdf docker image content
+        uses: actions/upload-artifact@v3
+        with:
+          name: docker-content-with-pdf
+          path: |
+            docker/test/wiki
+
+  build-docker-images:
+    needs: [generate-docker-content]
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: true
+      matrix:
+        platform: [linux/amd64]
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            hsac/fitnesse-fixtures-test-jre11
+            hsac/fitnesse-fixtures-combine
+            hsac/fitnesse-fixtures-test-jre11-chrome
+            hsac/fitnesse-fixtures-test-jre11-with-pdf
+            hsac/fitnesse-fixtures-test-jre11-chrome-with-pdf
+
+      - name: Rename meta bake definition file
+        run: |
+          mv "${{ steps.meta.outputs.bake-file }}" "/tmp/bake-meta.json"
+
+      - name: Upload meta bake definition
+        uses: actions/upload-artifact@v3
+        with:
+          name: bake-meta
+          path: /tmp/bake-meta.json
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: download docker content
+        uses: actions/download-artifact@v3
+        with:
+          name: docker-content
+          path: docker
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build
+        id: bake
+        uses: docker/bake-action@v4
+        with:
+          workdir: docker
+          files: |
+            docker-bake.hcl
+            /tmp/bake-meta.json
+          targets: |
+            test
+            chrome
+            combine
+          set: |
+            *.tags=
+            *.platform=${{ matrix.platform }}
+            *.contexts.base=.
+            *.args.BASE_WORKDIR=.
+            test.output=type=image,"name=hsac/fitnesse-fixtures-test-jre11",push-by-digest=true,name-canonical=true,push=true
+            combine.output=type=image,"name=hsac/fitnesse-fixtures-combine",push-by-digest=true,name-canonical=true,push=true
+            chrome.output=type=image,"name=hsac/fitnesse-fixtures-test-jre11-chrome",push-by-digest=true,name-canonical=true,push=true
+
+      - name: Export digests
+        id: digests
+        run: |
+          mkdir -p /tmp/images/${{ matrix.platform }}
+          mkdir -p /tmp/digests/test
+          test_digest="${{ fromJSON(steps.bake.outputs.metadata)['test']['containerimage.digest'] }}"
+          touch "/tmp/digests/test/${test_digest#sha256:}"
+          echo "hsac/fitnesse-fixtures-test-jre11@${test_digest}" > /tmp/images/${{ matrix.platform }}/test
+          echo "test-image=hsac/fitnesse-fixtures-test-jre11@${test_digest}" >> $GITHUB_OUTPUT
+          mkdir -p /tmp/digests/combine
+          combine_digest="${{ fromJSON(steps.bake.outputs.metadata)['combine']['containerimage.digest'] }}"
+          touch "/tmp/digests/combine/${combine_digest#sha256:}"
+          echo "hsac/fitnesse-fixtures-combine@${combine_digest}" > /tmp/images/${{ matrix.platform }}/combine
+          echo "combine-image=hsac/fitnesse-fixtures-combine@${combine_digest}" >> $GITHUB_OUTPUT
+          mkdir -p /tmp/digests/chrome
+          chrome_digest="${{ fromJSON(steps.bake.outputs.metadata)['chrome']['containerimage.digest'] }}"
+          touch "/tmp/digests/chrome/${chrome_digest#sha256:}"
+          echo "hsac/fitnesse-fixtures-test-jre11-chrome@${chrome_digest}" > /tmp/images/${{ matrix.platform }}/chrome
+          echo "chrome-image=hsac/fitnesse-fixtures-test-jre11-chrome@${chrome_digest}" >> $GITHUB_OUTPUT
+
+      - name: Upload digest
+        uses: actions/upload-artifact@v3
+        with:
+          name: digests
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Upload image names
+        uses: actions/upload-artifact@v3
+        with:
+          name: images
+          path: /tmp/images/*
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Test test image
+        if: matrix.platform == 'linux/amd64'
+        run: |
+          cd docker
+          mkdir -p target/failsafe-reports
+          mkdir -p target/fitnesse-results/test
+          mkdir -p target/fitnesse-results/test-rerun
+          docker run --rm \
+            -v "$(pwd)"/target/failsafe-reports:/fitnesse/target/failsafe-reports \
+            -v "$(pwd)"/target/fitnesse-results/test:/fitnesse/target/fitnesse-results \
+            -v "$(pwd)"/target/fitnesse-results/test-rerun:/fitnesse/target/fitnesse-rerun-results \
+            -v "$(pwd)"/src/test/wiki:/fitnesse/wiki/FitNesseRoot \
+            -e RE_RUN_FAILED=true \
+            ${{ steps.digests.outputs.test-image }} \
+            -DfitnesseSuiteToRun=SampleTests.SlimTests.UtilityFixtures
+
+      - name: Test chrome image
+        if: matrix.platform == 'linux/amd64'
+        run: |
+          cd docker
+          mkdir -p target/failsafe-reports
+          mkdir -p target/fitnesse-results/chrome
+          mkdir -p target/fitnesse-results/chrome-rerun
+          mkdir -p target/selenium-log
+          docker run --rm \
+            -v "$(pwd)"/target/failsafe-reports:/fitnesse/target/failsafe-reports \
+            -v "$(pwd)"/target/fitnesse-results/chrome:/fitnesse/target/fitnesse-results \
+            -v "$(pwd)"/target/fitnesse-results/chrome-rerun:/fitnesse/target/fitnesse-rerun-results \
+            -v "$(pwd)"/target/selenium-log:/fitnesse/target/selenium-log \
+            -v "$(pwd)"/src/test/wiki:/fitnesse/wiki/FitNesseRoot \
+            -e CHANGE_FITNESSE_DIRECTOY_OWNER=true \
+            -e RE_RUN_FAILED=true \
+            ${{ steps.digests.outputs.chrome-image }} \
+            -DfitnesseSuiteToRun=SampleTests.SlimTests.BrowserTest
+
+      - name: Test combine image
+        if: matrix.platform == 'linux/amd64'
+        run: |
+          cd docker
+          docker run --rm \
+            -v "$(pwd)"/target/fitnesse-results:/fitnesse/target/fitnesse-results \
+            ${{ steps.digests.outputs.combine-image }}
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: docker-tests-results
+          path: docker/target
+
+  build-docker-images-with-pdf:
+    needs: [build-docker-images]
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: true
+      matrix:
+        platform: [linux/amd64]
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            hsac/fitnesse-fixtures-test-jre11-with-pdf
+            hsac/fitnesse-fixtures-test-jre11-chrome-with-pdf
+
+      - name: Rename meta bake definition file
+        run: |
+          mv "${{ steps.meta.outputs.bake-file }}" "/tmp/bake-meta.json"
+
+      - name: Upload meta bake definition
+        uses: actions/upload-artifact@v3
+        with:
+          name: bake-meta-with-pdf
+          path: /tmp/bake-meta.json
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Download image names
+        uses: actions/download-artifact@v3
+        with:
+          name: images
+          path: /tmp/images
+
+      - id: image-names
+        run: |
+          TEST_IMAGE=$(cat /tmp/images/${{ matrix.platform }}/test)
+          echo "test-image=$TEST_IMAGE" >> $GITHUB_OUTPUT
+          CHROME_IMAGE=$(cat /tmp/images/${{ matrix.platform }}/chrome)
+          echo "chrome-image=$CHROME_IMAGE" >> $GITHUB_OUTPUT
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: download docker content
+        uses: actions/download-artifact@v3
+        with:
+          name: docker-content-with-pdf
+          path: docker/test/wiki
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build
+        id: bake
+        uses: docker/bake-action@v4
+        with:
+          workdir: docker
+          files: |
+            docker-bake.hcl
+            /tmp/bake-meta.json
+          targets: |
+            test-with-pdf
+            chrome-with-pdf
+          set: |
+            *.tags=
+            *.platform=${{ matrix.platform }}
+            *.contexts.base-with-pdf=.
+            *.contexts.hsac-fixtures=docker-image://${{ steps.image-names.outputs.test-image }}
+            *.contexts.hsac-chrome=docker-image://${{ steps.image-names.outputs.chrome-image }}
+            *.args.BASE_WORKDIR=.
+            test-with-pdf.output=type=image,"name=hsac/fitnesse-fixtures-test-jre11-with-pdf",push-by-digest=true,name-canonical=true,push=true
+            chrome-with-pdf.output=type=image,"name=hsac/fitnesse-fixtures-test-jre11-chrome-with-pdf",push-by-digest=true,name-canonical=true,push=true
+
+      - name: Export digests
+        id: digests
+        run: |
+          mkdir -p /tmp/images/${{ matrix.platform }}
+          mkdir -p /tmp/digests/test-with-pdf
+          test_with_pdf_digest="${{ fromJSON(steps.bake.outputs.metadata)['test-with-pdf']['containerimage.digest'] }}"
+          touch "/tmp/digests/test-with-pdf/${test_with_pdf_digest#sha256:}"
+          echo "hsac/fitnesse-fixtures-test-jre11-with-pdf@${test_with_pdf_digest}" >> /tmp/images/${{ matrix.platform }}/test-with-pdf
+          echo "test-with-pdf-image=hsac/fitnesse-fixtures-test-jre11-with-pdf@${test_with_pdf_digest}" >> $GITHUB_OUTPUT
+          mkdir -p /tmp/digests/chrome-with-pdf
+          chrome_with_pdf_digest="${{ fromJSON(steps.bake.outputs.metadata)['chrome-with-pdf']['containerimage.digest'] }}"
+          touch "/tmp/digests/chrome-with-pdf/${chrome_with_pdf_digest#sha256:}"
+          echo "hsac/fitnesse-fixtures-test-jre11-chrome-with-pdf@${chrome_with_pdf_digest}" >> /tmp/images/${{ matrix.platform }}/chrome-with-pdf
+          echo "chrome-with-pdf-image=hsac/fitnesse-fixtures-test-jre11-chrome-with-pdf@${chrome_with_pdf_digest}" >> $GITHUB_OUTPUT
+
+      - name: Upload digest
+        uses: actions/upload-artifact@v3
+        with:
+          name: digests-with-pdf
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Upload image names
+        uses: actions/upload-artifact@v3
+        with:
+          name: images
+          path: /tmp/images/*
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Test pdf image
+        if: matrix.platform == 'linux/amd64'
+        run: |
+          cd docker
+          mkdir -p target/failsafe-reports
+          mkdir -p target/fitnesse-results/test-with-pdf
+          mkdir -p target/fitnesse-results/test-with-pdf-rerun
+          docker run --rm \
+            -v "$(pwd)"/target/failsafe-reports:/fitnesse/target/failsafe-reports \
+            -v "$(pwd)"/target/fitnesse-results/test-with-pdf:/fitnesse/target/fitnesse-results \
+            -v "$(pwd)"/target/fitnesse-results/test-with-pdf-rerun:/fitnesse/target/fitnesse-rerun-results \
+            -v "$(pwd)"/src/test/wiki:/fitnesse/wiki/FitNesseRoot \
+            -e RE_RUN_FAILED=true \
+            ${{ steps.digests.outputs.test-with-pdf-image }} \
+            -DfitnesseSuiteToRun=SampleTests.SlimTests.PdfTest
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: docker-with-pdf-tests-results
+          path: docker/target
