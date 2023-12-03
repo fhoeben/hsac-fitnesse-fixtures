@@ -498,6 +498,12 @@ jobs:
           name: digests
           path: /tmp/digests
 
+      - name: Download digests with pdf
+        uses: actions/download-artifact@v3
+        with:
+          name: digests-with-pdf
+          path: /tmp/digests
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
