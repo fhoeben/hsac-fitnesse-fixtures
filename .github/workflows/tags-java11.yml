@@ -1,6 +1,7 @@
 name: tags-java11
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - '*'
