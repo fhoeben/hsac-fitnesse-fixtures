@@ -135,6 +135,9 @@ jobs:
   generate-docker-content:
     needs: [maven-release]
     runs-on: ubuntu-22.04
+    outputs:
+      version: ${{ needs.maven-release.outputs.version }}
+      fitnesse-version: ${{ needs.maven-release.outputs.fitnesse-version }}
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
@@ -192,6 +195,11 @@ jobs:
             hsac/fitnesse-fixtures-test-jre11-chrome
             hsac/fitnesse-fixtures-test-jre11-with-pdf
             hsac/fitnesse-fixtures-test-jre11-chrome-with-pdf
+          tags: |
+            type=ref,event=branch
+            type=raw,value=${{ needs.generate-docker-content.outputs.version }}
+            # set latest tag for default branch
+            type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Rename meta bake definition file
         run: |
