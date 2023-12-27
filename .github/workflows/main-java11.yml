@@ -88,12 +88,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: download pom
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: pom
 
       - name: download packages
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: target
           path: target
@@ -220,7 +220,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: download docker content
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: docker-content
           path: docker
@@ -370,7 +370,7 @@ jobs:
           retention-days: 1
 
       - name: Download image names
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: images
           path: /tmp/images
@@ -389,7 +389,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: download docker content
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: docker-content-with-pdf
           path: docker/test/wiki
@@ -495,19 +495,19 @@ jobs:
             image: hsac/fitnesse-fixtures-test-jre11-chrome-with-pdf
     steps:
       - name: Download meta bake definition
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: bake-meta
           path: /tmp
 
       - name: Download digests
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: digests
           path: /tmp/digests
 
       - name: Download digests with pdf
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: digests-with-pdf
           path: /tmp/digests
