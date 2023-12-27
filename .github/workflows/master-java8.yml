@@ -40,7 +40,7 @@ jobs:
           echo "selenium-version=$SELENIUM_VERSION" >> $GITHUB_OUTPUT
 
       - name: upload release pom
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: pom
           path: pom.xml
@@ -67,7 +67,7 @@ jobs:
 
       - name: upload packages
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: target
           path: |
