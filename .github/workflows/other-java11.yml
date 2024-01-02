@@ -117,6 +117,9 @@ jobs:
       fail-fast: true
       matrix:
         platform: [linux/amd64]
+        include:
+          - platform: linux/amd64
+            arch: amd64
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
@@ -139,7 +142,7 @@ jobs:
       - name: Upload meta bake definition
         uses: actions/upload-artifact@v4
         with:
-          name: bake-meta
+          name: bake-meta-${{ matrix.arch }}
           path: /tmp/bake-meta.json
           if-no-files-found: error
           retention-days: 1
@@ -206,7 +209,7 @@ jobs:
       - name: Upload digest
         uses: actions/upload-artifact@v4
         with:
-          name: digests
+          name: digests-${{ matrix.arch }}
           path: /tmp/digests/*
           if-no-files-found: error
           retention-days: 1
@@ -214,7 +217,7 @@ jobs:
       - name: Upload image names
         uses: actions/upload-artifact@v4
         with:
-          name: images
+          name: images-${{ matrix.arch }}
           path: /tmp/images/*
           if-no-files-found: error
           retention-days: 1
@@ -266,7 +269,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: docker-tests-results
+          name: docker-tests-results-${{ matrix.arch }}
           path: docker/target
 
   build-docker-images-with-pdf:
@@ -276,6 +279,9 @@ jobs:
       fail-fast: true
       matrix:
         platform: [linux/amd64]
+        include:
+          - platform: linux/amd64
+            arch: amd64
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
@@ -295,7 +301,7 @@ jobs:
       - name: Upload meta bake definition
         uses: actions/upload-artifact@v4
         with:
-          name: bake-meta-with-pdf
+          name: bake-meta-${{ matrix.arch }}-with-pdf
           path: /tmp/bake-meta.json
           if-no-files-found: error
           retention-days: 1
@@ -303,7 +309,7 @@ jobs:
       - name: Download image names
         uses: actions/download-artifact@v4
         with:
-          name: images
+          name: images-${{ matrix.arch }}
           path: /tmp/images
 
       - id: image-names
@@ -370,7 +376,7 @@ jobs:
       - name: Upload digest
         uses: actions/upload-artifact@v4
         with:
-          name: digests-with-pdf
+          name: digests-${{ matrix.arch }}-with-pdf
           path: /tmp/digests/*
           if-no-files-found: error
           retention-days: 1
@@ -378,7 +384,7 @@ jobs:
       - name: Upload image names
         uses: actions/upload-artifact@v4
         with:
-          name: images
+          name: images-${{ matrix.arch }}-with-pdf
           path: /tmp/images/*
           if-no-files-found: error
           retention-days: 1
@@ -403,5 +409,5 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: docker-with-pdf-tests-results
+          name: docker-tests-results-${{ matrix.arch }}-with-pdf
           path: docker/target

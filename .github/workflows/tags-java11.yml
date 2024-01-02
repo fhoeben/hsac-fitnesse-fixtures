@@ -328,7 +328,7 @@ jobs:
       - name: Upload image names
         uses: actions/upload-artifact@v4
         with:
-          name: images
+          name: images-with-pdf
           path: /tmp/images/*
           if-no-files-found: error
           retention-days: 1
