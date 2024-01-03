@@ -32,6 +32,7 @@ import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
@@ -1339,6 +1340,13 @@ public class SeleniumHelper<T extends WebElement> {
 
     public void setWindowSizeToMaximum() {
         getWindow().maximize();
+    }
+
+    public void setBrowserPositionXY(int xPos, int yPos) {
+		String currentWindowHandle = driver().getWindowHandle();
+		getTargetLocator().window(currentWindowHandle);
+		Point p = new Point(xPos, yPos);
+		getWindow().setPosition(p);
     }
 
     /**

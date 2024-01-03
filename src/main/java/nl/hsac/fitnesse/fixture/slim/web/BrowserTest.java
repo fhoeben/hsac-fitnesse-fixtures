@@ -2938,6 +2938,14 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         getSeleniumHelper().setWindowSizeToMaximum();
     }
 
+    public void setBrowserPositionXY(int xPos, int yPos) {
+		getSeleniumHelper().setBrowserPositionXY(xPos, yPos);
+	}
+
+    public void setBrowserPositionToHome() {
+		setBrowserPositionXY(0, 0);
+	}
+
     /**
      * Downloads the target of the supplied link.
      *
