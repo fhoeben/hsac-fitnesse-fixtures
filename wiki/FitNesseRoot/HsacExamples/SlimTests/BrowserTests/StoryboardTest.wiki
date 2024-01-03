@@ -1,22 +1,33 @@
 !1 Website testing using !-BrowserTest-! with Storyboard
 
-On this page we compare the year of release of an album on two websites. We use a special version of Slim's !-ScriptTable-!, a storyboard, which will automatically take a screenshot after each action.
+On this page we order some products. We use a special version of Slim's !-ScriptTable-!, a storyboard, which will automatically take a screenshot after each action.
 
 The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
 
-|storyboard                             |browser test                                                    |
-|open                                   |https://musicbrainz.org/set-language/en                         |
-|enter                                  |Van Morrison      |as  |Search                                  |
-|press                                  |enter                                                           |
-|click                                  |Van Morrison                                                    |
-|check not                              |value of          |Year|in row where|Title|is|Astral Weeks|null |
-|$year=                                 |value of          |Year|in row where|Title|is|Astral Weeks      |
-|set continue if ready state interactive|true                                                            |
-|open                                   |https://www.allmusic.com                                        |
-|show                                   |click if available|AGREE                                        |
-|show                                   |click if available|id=exco_sticky-x-button                      |
-|enter                                  |Van Morrison      |as  |Search                                  |
-|press                                  |enter                                                           |
-|click                                  |Van Morrison                                                    |
-|click                                  |Discography                                                     |
-|check                                  |value of          |Year|in row where|Album|is|Astral Weeks|$year|
+|storyboard      |browser test                                                            |
+|open            |https://v4.practicesoftwaretesting.com                                  |
+|enter           |Pliers                              |as|Search                          |
+|press           |enter                                                                   |
+|wait for visible|css=[data-test='search_completed']                                      |
+|click           |Combination Pliers                                                      |
+|click           |Add to cart                                                             |
+|click           |css=[data-test='nav-cart']                                              |
+|click           |Proceed to checkout                                                     |
+|enter           |customer@practicesoftwaretesting.com|as|Your Email                      |
+|enter           |welcome01                           |as|Your Password                   |
+|click           |Login                                                                   |
+|wait for visible|Hello Jane Doe                                                          |
+|click           |Proceed to checkout                                                     |
+|enter           |Some State                          |as|Your State                      |
+|enter           |12345AA                             |as|Your Postcode                   |
+|click           |Proceed to checkout                                                     |
+|select          |Credit Card                         |as|css=[data-test='payment-method']|
+|enter           |John Doe                            |as|Your Account name               |
+|enter           |1111-2222-3333-4444                 |as|Your Account number             |
+|click           |Confirm                                                                 |
+|wait for visible|Payment was successful                                                  |
+|click           |Confirm                                                                 |
+|wait for visible|id=invoice-number                                                       |
+|$invoice_number=|value of                            |id=invoice-number                  |
+
+

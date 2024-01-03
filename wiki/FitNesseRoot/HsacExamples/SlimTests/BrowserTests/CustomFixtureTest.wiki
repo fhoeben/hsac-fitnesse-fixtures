@@ -1,9 +1,9 @@
 !1 Website testing using custom subclass of !-BrowserTest-!
 
-On this page we test whether the birth date of Van Morrisson is listed correctly on [[!-AllMusic-!][https://www.allmusic.com]].
+On this page we test whether the City of Jane Doe is listed correctly on [[!-Practice Software Testing-!][https://v4.practicesoftwaretesting.com]].
 We start by navigating to the artist's overview page on !-AllMusic-! and then perform the same check in different ways:
  * First with ''plain !-BrowserTest-!'',
- * then with a ''custom subclass, !-nl.hsac.fitnesse.sample.AllMusicTest-!'', and
+ * then with a ''custom subclass, !-nl.hsac.fitnesse.sample.PracticeSoftwareTestingTest-!'', and
  * finally with a [[Slim scenario][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScenarioTable]].
 The latter two approaches both make the test (i.e. the script table containing the test) more descriptive, and less fragile to HTML changes.
 
@@ -16,36 +16,34 @@ There are some things a Java method can do that a scenario cannot: for instance 
 !2 Navigate to right page
 Navigating to the right page is done only once (all subsequent test approaches use the same browser window, which will be at the correct location already).
 
-|script                                 |browser test                              |
-|set continue if ready state interactive|true                                      |
-|open                                   |https://www.allmusic.com                  |
-|show                                   |click if available|AGREE                  |
-|show                                   |click if available|id=exco_sticky-x-button|
-|enter                                  |Van Morrison      |as|Search              |
-|press                                  |enter                                     |
-|click                                  |Van Morrison                              |
-|wait for visible                       |Album Highlights                          |
+|script|browser test                                                      |
+|open  |https://v4.practicesoftwaretesting.com                            |
+|click |css=[data-test='nav-sign-in']                                     |
+|enter |customer@practicesoftwaretesting.com|as|css=[data-test='email']   |
+|enter |welcome01                           |as|css=[data-test='password']|
+|click |css=[data-test='login-submit']                                    |
+|click |Profile                                                           |
 
 !2 Using !-BrowserTest-!
 
-|script|browser test                                                                                      |
-|check |value of|xpath=//div[h4[contains(text(),'Born')]]/div|August 31, 1945 in Belfast, Northern Ireland|
+|script|browser test                                     |
+|check |value of|xpath=//input[@data-test= 'city']|Vienna|
 
 Using a custom subclass, makes the check look like...
 
-!2 Using !-AllMusicTest-!
+!2 Using !-PracticeSoftwareTestingTest-!
 
 
 We need to indicate in which package our custom class can be found.
 |import                 |
 |nl.hsac.fitnesse.sample|
 
-|script|all music test                                                       |
-|note  |Use custom method to birth date                                      |
-|check |birth data|August 31, 1945 in Belfast, Northern Ireland              |
-|note  |Using a customized heuristic, we can also retrieve similar fields    |
-|check |value of  |Born         |August 31, 1945 in Belfast, Northern Ireland|
-|check |value of  |Also Known As|George Ivan Morrison                        |
+|script|practice software testing test                                   |
+|note  |Use custom method to birth date                                  |
+|check |city                  |Vienna                                    |
+|note  |Using a customized heuristic, we can also retrieve similar fields|
+|check |value of              |city                 |Vienna              |
+|check |value of              |country              |Austria             |
 
 And using a scenario
 
@@ -54,9 +52,9 @@ And using a scenario
 The scenario 'hides' the xpath from the test script, but its definition can be found (and updated) in the wiki. And the test report/result will show what was done (unlike for the custom fixture).
 No Java knowledge or development environment is needed to create and maintain a scenario, which may also be an advantage.
 
-|scenario|check basic info value _ is _|key, expected                                             |
-|check   |value of                     |xpath=//div[h4[contains(text(),'@{key}')]]/div|@{expected}|
+|scenario|check basic info value _ is _|key, expected                                   |
+|check   |value of                     |xpath=//input[@data-test = '@{key}']|@{expected}|
 
-|script                |browser test                                                 |
-|check basic info value|Born         |is|August 31, 1945 in Belfast, Northern Ireland|
-|check basic info value|Also Known As|is|George Ivan Morrison                        |
+|script                |browser test      |
+|check basic info value|city   |is|Vienna |
+|check basic info value|country|is|Austria|
