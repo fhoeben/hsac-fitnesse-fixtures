@@ -10,12 +10,11 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |script          |browser test                                                            |
 |open            |https://v4.practicesoftwaretesting.com                                  |
-|enter           |Pliers                              |as|Search                          |
+|enter           |Drill                               |as|Search                          |
 |press           |enter                                                                   |
-|wait for visible|css=[data-test='search_completed']                                      |
-|click           |Combination Pliers                                                      |
+|click           |Cordless Drill 12V                                                      |
 |click           |Add to cart                                                             |
-|click           |css=[data-test='nav-cart']                                              |
+|click           |cart                                                                    |
 |click           |Proceed to checkout                                                     |
 |enter           |customer@practicesoftwaretesting.com|as|Your Email                      |
 |enter           |welcome01                           |as|Your Password                   |

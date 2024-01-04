@@ -1,13 +1,13 @@
 !1 Website testing using custom subclass of !-BrowserTest-!
 
 On this page we test whether the City of Jane Doe is listed correctly on [[!-Practice Software Testing-!][https://v4.practicesoftwaretesting.com]].
-We start by navigating to the artist's overview page on !-AllMusic-! and then perform the same check in different ways:
+We start by navigating to the profile page on !-PracticeSoftwareTesting-! and then perform the same check in different ways:
  * First with ''plain !-BrowserTest-!'',
  * then with a ''custom subclass, !-nl.hsac.fitnesse.sample.PracticeSoftwareTestingTest-!'', and
  * finally with a [[Slim scenario][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScenarioTable]].
 The latter two approaches both make the test (i.e. the script table containing the test) more descriptive, and less fragile to HTML changes.
 
-Doing this in Java 'hides' the exact way the birth date is determined from the test (and its result). While a scenario would have made this part of the 'test domain'.
+Doing this in Java 'hides' the exact way the City is determined from the test (and its result). While a scenario would have made this part of the 'test domain'.
 Hiding details can either be a good (e.g. more focus on what is relevant to test, smaller test report), or bad (e.g. 'what was done exactly in this method?') thing.
 Which approach is more suitable depends on your tests' context (and the complexity of what is to be done)...
 
@@ -16,13 +16,14 @@ There are some things a Java method can do that a scenario cannot: for instance 
 !2 Navigate to right page
 Navigating to the right page is done only once (all subsequent test approaches use the same browser window, which will be at the correct location already).
 
-|script|browser test                                                      |
-|open  |https://v4.practicesoftwaretesting.com                            |
-|click |css=[data-test='nav-sign-in']                                     |
-|enter |customer@practicesoftwaretesting.com|as|css=[data-test='email']   |
-|enter |welcome01                           |as|css=[data-test='password']|
-|click |css=[data-test='login-submit']                                    |
-|click |Profile                                                           |
+|script          |browser test                                                      |
+|open            |https://v4.practicesoftwaretesting.com                            |
+|click |Sign in                                              |
+|enter |customer@practicesoftwaretesting.com|as|Your E-mail  |
+|enter |welcome01                           |as|Your Password|
+|click |Login                                                |
+|click           |Profile                                                           |
+|wait for visible|Update Profile                                                    |
 
 !2 Using !-BrowserTest-!
 
@@ -39,7 +40,7 @@ We need to indicate in which package our custom class can be found.
 |nl.hsac.fitnesse.sample|
 
 |script|practice software testing test                                   |
-|note  |Use custom method to birth date                                  |
+|note  |Use custom method to city                                        |
 |check |city                  |Vienna                                    |
 |note  |Using a customized heuristic, we can also retrieve similar fields|
 |check |value of              |city                 |Vienna              |
