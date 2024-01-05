@@ -18,6 +18,7 @@ Navigating to the right page is done only once (all subsequent test approaches u
 
 |script          |browser test                                         |
 |open            |https://v4.practicesoftwaretesting.com               |
+|clear session storage                                                 |
 |click           |Sign in                                              |
 |enter           |customer@practicesoftwaretesting.com|as|Your E-mail  |
 |enter           |welcome01                           |as|Your Password|

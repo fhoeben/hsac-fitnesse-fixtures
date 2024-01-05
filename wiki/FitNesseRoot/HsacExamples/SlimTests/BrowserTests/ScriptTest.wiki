@@ -10,6 +10,7 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |script          |browser test                                                            |
 |open            |https://v4.practicesoftwaretesting.com                                  |
+|clear session storage                                                                    |
 |enter           |Drill                               |as|Search                          |
 |press           |enter                                                                   |
 |click           |Cordless Drill 12V                                                      |

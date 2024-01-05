@@ -6,6 +6,7 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |storyboard      |browser test                                                            |
 |open            |https://v4.practicesoftwaretesting.com                                  |
+|clear session storage                                                                    |
 |enter           |Drill                               |as|Search                          |
 |press           |enter                                                                   |
 |wait for visible|css=[data-test='search_completed']                                      |
