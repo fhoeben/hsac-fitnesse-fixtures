@@ -18,17 +18,17 @@ First we go to the Discography page for Van Morrison.
 
 Then we check the related products.
 
-|table template|related products     |
-|click     |@{product}                                   |
-|check|value of          |unit-price                |@{price}|
-|check|value of          |brand                  |@{brand}|
+|table template|related products            |
+|click         |@{product}                  |
+|check         |value of|unit-price|@{price}|
+|check         |value of|brand     |@{brand}|
 
 
-|related products |
-|product          |price|brand|
-|Pliers           |12.01 |Brand name 1   |
-|Bolt Cutters     |48.41 |Brand name 2   |
-|Long Nose Pliers |14.24 |Brand name 1   |
-|Slip Joint Pliers|9.17  |Brand name 2   |
+|related products                    |
+|product          |price|brand       |
+|Pliers           |12.01|Brand name 1|
+|Bolt Cutters     |48.41|Brand name 2|
+|Long Nose Pliers |14.24|Brand name 1|
+|Slip Joint Pliers|9.17 |Brand name 2|
 
 To make test more readable, maintainable and powerful we can also create custom subclasses of !-BrowserTest-!. This is shown in CustomFixtureTest.

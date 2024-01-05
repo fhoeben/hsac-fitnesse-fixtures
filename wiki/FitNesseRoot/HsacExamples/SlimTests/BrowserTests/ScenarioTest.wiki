@@ -20,18 +20,18 @@ First we go to the product details of Combination Pliers.
 
 Then we check the related products.
 
-|scenario  |related products _|product, price?, brand?|
-|click     |@{product}                                   |
-|$price=   |value of          |unit-price                |
-|$brand=|value of          |brand                  |
+|scenario|related products _|product, price?, brand?|
+|click   |@{product}                                |
+|$price= |value of          |unit-price             |
+|$brand= |value of          |brand                  |
 
 
-|related products                  |
-|product          |price?|brand?|
-|Pliers           |12.01 |Brand name 1   |
-|Bolt Cutters     |48.41 |Brand name 2   |
-|Long Nose Pliers |14.24 |Brand name 1   |
-|Slip Joint Pliers|9.17  |Brand name 2  |
+|related products                     |
+|product          |price?|brand?      |
+|Pliers           |12.01 |Brand name 1|
+|Bolt Cutters     |48.41 |Brand name 2|
+|Long Nose Pliers |14.24 |Brand name 1|
+|Slip Joint Pliers|9.17  |Brand name 2|
 
 Writing the scenario like this can become a bit cumbersome when many parameters are needed. They are repeated in: the scenario's first row, the scenario rows where they are used and the table headers where the scenario is invoked.
 Repeating the parameters in the first row of the scenario definition can be omitted using a custom extension to Slim. This is shown in TableTemplateTest.

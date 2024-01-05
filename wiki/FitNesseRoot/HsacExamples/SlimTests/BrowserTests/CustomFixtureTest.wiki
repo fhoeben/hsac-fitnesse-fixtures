@@ -16,14 +16,14 @@ There are some things a Java method can do that a scenario cannot: for instance 
 !2 Navigate to right page
 Navigating to the right page is done only once (all subsequent test approaches use the same browser window, which will be at the correct location already).
 
-|script          |browser test                                                      |
-|open            |https://v4.practicesoftwaretesting.com                            |
-|click |Sign in                                              |
-|enter |customer@practicesoftwaretesting.com|as|Your E-mail  |
-|enter |welcome01                           |as|Your Password|
-|click |Login                                                |
-|click           |Profile                                                           |
-|wait for visible|Update Profile                                                    |
+|script          |browser test                                         |
+|open            |https://v4.practicesoftwaretesting.com               |
+|click           |Sign in                                              |
+|enter           |customer@practicesoftwaretesting.com|as|Your E-mail  |
+|enter           |welcome01                           |as|Your Password|
+|click           |Login                                                |
+|click           |Profile                                              |
+|wait for visible|Update Profile                                       |
 
 !2 Using !-BrowserTest-!
 
