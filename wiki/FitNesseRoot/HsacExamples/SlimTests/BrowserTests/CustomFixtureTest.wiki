@@ -2,7 +2,7 @@
 
 On this page we test whether the City of Jane Doe is listed correctly on [[!-Practice Software Testing-!][https://v4.practicesoftwaretesting.com]].
 We start by navigating to the profile page on !-PracticeSoftwareTesting-! and then perform the same check in different ways:
- * First with ''plain !-BrowserTest-!'',
+ * First with ''plain !-BrowserTest-!'' and a technical (xpath) selector,
  * then with a ''custom subclass, !-nl.hsac.fitnesse.sample.PracticeSoftwareTestingTest-!'', and
  * finally with a [[Slim scenario][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScenarioTable]].
 The latter two approaches both make the test (i.e. the script table containing the test) more descriptive, and less fragile to HTML changes.
@@ -16,15 +16,20 @@ There are some things a Java method can do that a scenario cannot: for instance 
 !2 Navigate to right page
 Navigating to the right page is done only once (all subsequent test approaches use the same browser window, which will be at the correct location already).
 
-|script          |browser test                                         |
-|open            |https://v4.practicesoftwaretesting.com               |
-|clear session storage                                                 |
-|click           |Sign in                                              |
-|enter           |customer@practicesoftwaretesting.com|as|Your E-mail  |
-|enter           |welcome01                           |as|Your Password|
-|click           |Login                                                |
-|click           |Profile                                              |
-|wait for visible|Update Profile                                       |
+!note We actually use a out-of-the-box custom subclass of !-BrowserTest-! to navigate to the correct page, since the web site uses Angular and we want to ensure the page is fully rendered before we start checking values.
+
+|script|ng2 browser test                                       |
+|open  |https://v4.practicesoftwaretesting.com                 |
+|clear session storage                                         |
+|click |Sign in                                                |
+|enter |customer@practicesoftwaretesting.com|as  |Your E-mail  |
+|enter |welcome01                           |as  |Your Password|
+|click |Login                                                  |
+|click |Profile                                                |
+|check |value of                            |City|Vienna       |
+
+The last row of the previous table shows there actually is no need to use a technical selector, nor a custom fixture, as the standard 'value of' method of !-BrowserTest-! is able to retrieve the value based on its label.
+For the purpose of this example we shall retrieve the value using an xpath technical selector based on the !style_code(data-test) attribute of the inputs (notice the lower case 'city').
 
 !2 Using !-BrowserTest-!
 
@@ -41,11 +46,11 @@ We need to indicate in which package our custom class can be found.
 |nl.hsac.fitnesse.sample|
 
 |script|practice software testing test                                   |
-|note  |Use custom method to city                                        |
-|check |city                  |Vienna                                    |
+|note  |Use custom method to retrieve current user's city                |
+|check |city    |Vienna                                                  |
 |note  |Using a customized heuristic, we can also retrieve similar fields|
-|check |value of              |city                 |Vienna              |
-|check |value of              |country              |Austria             |
+|check |value of|city   |Vienna                                          |
+|check |value of|country|Austria                                         |
 
 And using a scenario
 

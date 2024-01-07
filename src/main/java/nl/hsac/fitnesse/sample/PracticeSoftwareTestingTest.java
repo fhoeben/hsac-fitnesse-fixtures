@@ -1,14 +1,14 @@
 package nl.hsac.fitnesse.sample;
 
-import nl.hsac.fitnesse.fixture.slim.web.BrowserTest;
+import nl.hsac.fitnesse.fixture.slim.web.Ng2BrowserTest;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.TimeoutPolicy;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.WaitUntil;
 import org.openqa.selenium.WebElement;
 
 /**
- * Fixture class customized to test allmusic.com.
+ * Fixture class customized to test practicesoftwaretesting.com.
  */
-public class PracticeSoftwareTestingTest extends BrowserTest {
+public class PracticeSoftwareTestingTest extends Ng2BrowserTest {
     // This method is very similar to what could be achieved using a scenario table
     @WaitUntil(TimeoutPolicy.RETURN_NULL)
     public String city() {
@@ -22,12 +22,11 @@ public class PracticeSoftwareTestingTest extends BrowserTest {
                 () -> findByXPath("//*[@data-test= '%s']", place),
                 () -> super.getElementToRetrieveValue(place, null));
     }
-    
+
     @Override
     protected WebElement getElementToSendValue(String place, String container) {
         return findFirstInContainer(container, place,
                 () -> findByXPath("//*[@data-test= '%s']", place),
                 () -> super.getElementToRetrieveValue(place, null));
     }
-    
 }
