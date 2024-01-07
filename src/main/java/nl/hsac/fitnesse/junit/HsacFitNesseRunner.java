@@ -20,9 +20,7 @@ import nl.hsac.fitnesse.junit.selenium.SeleniumGridDriverFactoryFactory;
 import nl.hsac.fitnesse.junit.selenium.SeleniumJsonGridDriverFactoryFactory;
 import nl.hsac.fitnesse.junit.selenium.SimpleSeleniumGridDriverFactoryFactory;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
-import org.apache.commons.io.filefilter.OrFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.runner.notification.RunNotifier;
@@ -133,9 +131,7 @@ public class HsacFitNesseRunner extends FitNesseRunner {
 
     protected FileFilter getFileSectionCopyFilter(Class<?> suiteClass) {
         List<String> excludes = getFileSectionCopyExcludes(suiteClass);
-        List<IOFileFilter> excludeFilters = new ArrayList<>(excludes.size());
-        excludes.forEach(x -> excludeFilters.add(new WildcardFileFilter(x)));
-        return new NotFileFilter(new OrFileFilter(excludeFilters));
+        return new NotFileFilter(new WildcardFileFilter.Builder().setWildcards(excludes).get());
     }
 
     protected List<String> getFileSectionCopyExcludes(Class<?> suiteClass) {

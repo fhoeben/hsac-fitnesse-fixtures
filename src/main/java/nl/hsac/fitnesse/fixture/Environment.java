@@ -135,7 +135,7 @@ public class Environment {
      */
     public <T> T createInstance(Class<T> clazz) {
         try {
-            return clazz.newInstance();
+            return clazz.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new RuntimeException("Unable to create instance of: " + clazz.getName(), e);
         }
@@ -826,6 +826,7 @@ public class Environment {
      * Enables content compression support on this environment's HttpClient
      * @deprecated use {@link HttpClientSetup} to configure http client
      */
+    @Deprecated
     public void enableHttpClientCompression() {
         httpClient.enableCompression();
     }
@@ -834,6 +835,7 @@ public class Environment {
      * Disables content compression support on this environment's HttpClient
      * @deprecated use {@link HttpClientSetup} to configure http client
      */
+    @Deprecated
     public void disableHttpClientCompression() {
         httpClient.disableCompression();
     }
@@ -842,6 +844,7 @@ public class Environment {
      * Disables SSL certificate verification on this environment's HttpClient
      * @deprecated use {@link HttpClientSetup} to configure http client
      */
+    @Deprecated
     public void disableHttpClientSSLVerification() {
         httpClient.disableSSLVerification();
     }
@@ -850,6 +853,7 @@ public class Environment {
      * Enables SSL certificate verification on this environment's HttpClient
      * @deprecated use {@link HttpClientSetup} to configure http client
      */
+    @Deprecated
     public void enableHttpClientSSLVerification() {
         httpClient.enableSSLVerification();
     }

@@ -21,6 +21,7 @@ import java.io.Writer;
  * The page names are used as test names, the Java class executing them is ignored.
  * @deprecated use fitnesse.junit.JUnitXMLPerPageRunListener
  */
+@Deprecated
 public class JUnitXMLPerPageListener extends RunListener {
     // default directory for maven-failsafe-plugin
     private final static String OUTPUT_PATH = "target/failsafe-reports/";

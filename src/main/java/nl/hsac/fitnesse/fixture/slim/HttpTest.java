@@ -72,6 +72,7 @@ public class HttpTest extends SlimFixtureWithMap {
      * Enables content compression support in the current environment (i.e. for the entire test run)
      * @deprecated use {@link HttpClientSetup} to configure http client
      */
+    @Deprecated
     public void enableCompression() {
         getEnvironment().enableHttpClientCompression();
     }
@@ -80,6 +81,7 @@ public class HttpTest extends SlimFixtureWithMap {
      * Disables content compression support in the current environment (i.e. for the entire test run)
      * @deprecated use {@link HttpClientSetup} to configure http client
      */
+    @Deprecated
     public void disableCompression() {
         getEnvironment().disableHttpClientCompression();
     }
@@ -88,6 +90,7 @@ public class HttpTest extends SlimFixtureWithMap {
      * Disables SSL certificate verification in the current environment (i.e. for the entire test run)
      * @deprecated use {@link HttpClientSetup} to configure http client
      */
+    @Deprecated
     public void disableSSLVerification() {
         getEnvironment().disableHttpClientSSLVerification();
     }
@@ -96,6 +99,7 @@ public class HttpTest extends SlimFixtureWithMap {
      * Enables SSL certificate verification in the current environment (i.e. for the entire test run)
      * @deprecated use {@link HttpClientSetup} to configure http client
      */
+    @Deprecated
     public void enableSSLVerification() {
         getEnvironment().enableHttpClientSSLVerification();
     }

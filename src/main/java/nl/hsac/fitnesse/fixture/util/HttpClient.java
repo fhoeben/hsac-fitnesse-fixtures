@@ -192,6 +192,7 @@ public class HttpClient {
      * Ensures the apache HttpClient used supports content compression
      * @deprecated use {@link HttpClientFactory} and {@link #setHttpClient(org.apache.http.client.HttpClient)}
      */
+    @Deprecated
     public void enableCompression() {
         if (!this.contentCompression) {
             this.contentCompression = true;
@@ -203,6 +204,7 @@ public class HttpClient {
      * Ensures the apache HttpClient used does not support content compression
      * @deprecated use {@link HttpClientFactory} and {@link #setHttpClient(org.apache.http.client.HttpClient)}
      */
+    @Deprecated
     public void disableCompression() {
         if (this.contentCompression) {
             this.contentCompression = false;
@@ -214,6 +216,7 @@ public class HttpClient {
      * Ensures the apache HttpClient used does not verify SSL certificates
      * @deprecated use {@link HttpClientFactory} and {@link #setHttpClient(org.apache.http.client.HttpClient)}
      */
+    @Deprecated
     public void disableSSLVerification() {
         if (this.sslVerification) {
             this.sslVerification = false;
@@ -225,6 +228,7 @@ public class HttpClient {
      * Ensures the apache HttpClient used verifies SSL certificates
      * @deprecated use {@link HttpClientFactory} and {@link #setHttpClient(org.apache.http.client.HttpClient)}
      */
+    @Deprecated
     public void enableSSLVerification() {
         if (!this.sslVerification) {
             this.sslVerification = true;
@@ -236,6 +240,7 @@ public class HttpClient {
      * Sets the apache HttpClient to one matching the current contentCompression and sslVerification values
      * @deprecated use {@link HttpClientFactory} and {@link #setHttpClient(org.apache.http.client.HttpClient)}
      */
+    @Deprecated
     protected void updateHttpClient() {
         if (!contentCompression && sslVerification) {
             this.httpClient = DEFAULT_HTTP_CLIENT;

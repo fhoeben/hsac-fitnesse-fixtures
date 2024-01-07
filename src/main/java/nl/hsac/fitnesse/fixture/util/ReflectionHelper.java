@@ -97,7 +97,7 @@ public class ReflectionHelper {
         if (field == null) {
             throw new IllegalArgumentException(o.getClass() + " does not have a field " + fieldName);
         } else {
-            if (!field.isAccessible()) {
+            if (!field.canAccess(o)) {
                 field.setAccessible(true);
             }
             try {
@@ -123,7 +123,7 @@ public class ReflectionHelper {
         if (field == null) {
             throw new IllegalArgumentException(o.getClass() + " does not have a field " + fieldName);
         } else {
-            if (!field.isAccessible()) {
+            if (!field.canAccess(o)) {
                 field.setAccessible(true);
             }
             try {

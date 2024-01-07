@@ -60,7 +60,7 @@ public class LocalDriverFactory implements DriverFactory {
                 DriverFactory.addDefaultCapabilities(edgeOptions);
                 driver = new EdgeDriver(edgeOptions);
             } else {
-                driver = driverClass.newInstance();
+                driver = driverClass.getDeclaredConstructor().newInstance();
             }
 
             return (WebDriver) driver;
