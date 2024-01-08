@@ -1,37 +1,37 @@
 !1 Website testing using ''scenario'' and !-BrowserTest-!
 
 
-On this page we test retrieving record details using [[!-AllMusic-!][https://www.allmusic.com]].
+On this page we test retrieving record details using [[!-Practice Software Testing-!][https://v4.practicesoftwaretesting.com]].
 It uses a [[Slim scenario][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScenarioTable]] to define a parameterized script.
 This is then invoked multiple times from a [[Decision table][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.DecisionTable]], once for each row.
 
 
 The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
 
-First we go to the Discography page for Van Morrison.
+First we go to the product details of Combination Pliers.
 
-|script                                 |browser test                              |
-|set continue if ready state interactive|true                                      |
-|open                                   |https://www.allmusic.com                  |
-|show                                   |click if available|AGREE                  |
-|show                                   |click if available|id=exco_sticky-x-button|
-|enter                                  |Van Morrison      |as|Search              |
-|press                                  |enter                                     |
-|click                                  |Van Morrison                              |
-|click                                  |Discography                               |
+|script                                 |browser test                          |
+|set continue if ready state interactive|true                                  |
+|open                                   |https://v4.practicesoftwaretesting.com|
+|enter                                  |Pliers        |as       |Search       |
+|press                                  |enter                                 |
+|wait for visible                       |css=[data-test='search_completed']    |
+|click                                  |Combination Pliers                    |
 
-Then we check some entries.
+Then we check the related products.
 
-|scenario |album details _|album, year?, label?                |
-|scroll to|@{album}                                            |
-|$year=   |value of       |Year |in row where|Album|is|@{album}|
-|$label=  |value of       |Label|in row where|Album|is|@{album}|
+|scenario|related products _|product, price?, brand?|
+|click   |@{product}                                |
+|$price= |value of          |unit-price             |
+|$brand= |value of          |brand                  |
 
 
-|album details                          |
-|album       |year?|label?              |
-|Astral Weeks|1968 |Warner Bros.        |
-|Moondance   |1970 |Rhino / Warner Bros.|
+|related products                     |
+|product          |price?|brand?      |
+|Pliers           |12.01 |Brand name 1|
+|Bolt Cutters     |48.41 |Brand name 2|
+|Long Nose Pliers |14.24 |Brand name 1|
+|Slip Joint Pliers|9.17  |Brand name 2|
 
 Writing the scenario like this can become a bit cumbersome when many parameters are needed. They are repeated in: the scenario's first row, the scenario rows where they are used and the table headers where the scenario is invoked.
 Repeating the parameters in the first row of the scenario definition can be omitted using a custom extension to Slim. This is shown in TableTemplateTest.

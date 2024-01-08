@@ -1,19 +1,19 @@
 This test shows some manipulation of the browser window.
 
-|storyboard         |browser test                      |
-|$width1=           |current browser width             |
-|$height1=          |current browser height            |
-|open               |http://stackoverflow.com          |
-|scroll to          |Contact Us                        |
-|set browser width  |510                               |
-|check              |current browser width |510        |
-|check              |current browser height|$height1   |
-|set browser height |600                               |
-|check              |current browser width |510        |
-|check              |current browser height|600        |
-|set browser size to|$width1               |by|$height1|
-|check              |current browser width |$width1    |
-|check              |current browser height|$height1   |
-|set browser size to maximum                           |
-|show               |current browser width             |
-|show               |current browser height            |
+|storyboard         |browser test                          |
+|$width1=           |current browser width                 |
+|$height1=          |current browser height                |
+|open               |https://v4.practicesoftwaretesting.com|
+|scroll to          |!-GitHub repo-!                       |
+|set browser width  |510                                   |
+|check              |current browser width   |510          |
+|check              |current browser height  |$height1     |
+|set browser height |600                                   |
+|check              |current browser width   |510          |
+|check              |current browser height  |600          |
+|set browser size to|$width1                 |by |$height1 |
+|check              |current browser width   |$width1      |
+|check              |current browser height  |$height1     |
+|set browser size to maximum                               |
+|show               |current browser width                 |
+|show               |current browser height                |

@@ -1,34 +1,33 @@
 !1 Website testing using ''table template'' and !-BrowserTest-!
 
 
-On this page we test retrieving record details using [[!-AllMusic-!][https://www.allmusic.com]].
+On this page we test retrieving record details using [[!-Practice Software Testing-!][https://v4.practicesoftwaretesting.com]].
 This test continues where ScenarioTest left of. It uses 'table template', a custom extension of [[Slim's scenario][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.ScenarioTable]], to define a parameterized script. This is then invoked multiple times from a [[Decision table][.FitNesse.UserGuide.WritingAcceptanceTests.SliM.DecisionTable]], once for each row. The advantage of this custom extension is that the scenario's parameters do not have to be listed in its first row (but only in the rows where they are used and in the decision table). This is, of course, especially convenient when there are many parameters. 'Table template' supports both input and output parameters, just like regular scenarios. Output parameters are indicated in the decision table by the fact that their column header ends with '?'.
 
 The configuration of Selenium (i.e. which browser to use) and starting the browser session is done in the SuiteSetup. Which allows this configuration to be shared between tests. Closing the browser is done in SuiteTearDown, which happens after all tests are completed.
 
 First we go to the Discography page for Van Morrison.
 
-|script                                 |browser test                              |
-|set continue if ready state interactive|true                                      |
-|open                                   |https://www.allmusic.com                  |
-|show                                   |click if available|AGREE                  |
-|show                                   |click if available|id=exco_sticky-x-button|
-|enter                                  |Van Morrison      |as|Search              |
-|press                                  |enter                                     |
-|click                                  |Van Morrison                              |
-|click                                  |Discography                               |
+|script                                 |browser test                          |
+|set continue if ready state interactive|true                                  |
+|open                                   |https://v4.practicesoftwaretesting.com|
+|enter                                  |Pliers        |as       |Search       |
+|press                                  |enter                                 |
+|wait for visible                       |css=[data-test='search_completed']    |
+|click                                  |Combination Pliers                    |
 
-Then we check some entries.
+Then we check the related products.
 
-|table template|album details                                |
-|scroll to     |@{album}                                     |
-|$year=        |value of|Year |in row where|Album|is|@{album}|
-|$label=       |value of|Label|in row where|Album|is|@{album}|
+|table template|related products   |
+|click         |@{product}         |
+|$price=       |value of|unit-price|
+|$brand=       |value of|brand     |
 
-
-|album details                          |
-|album       |year?|label?              |
-|Astral Weeks|1968 |Warner Bros.        |
-|Moondance   |1970 |Rhino / Warner Bros.|
+|related products                     |
+|product          |price?|brand?      |
+|Pliers           |12.01 |Brand name 1|
+|Bolt Cutters     |48.41 |Brand name 2|
+|Long Nose Pliers |14.24 |Brand name 1|
+|Slip Joint Pliers|9.17  |Brand name 2|
 
 To make test more readable, maintainable and powerful we can also create custom subclasses of !-BrowserTest-!. This is shown in CustomFixtureTest.
