@@ -22,6 +22,7 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 
 New in ${VERSION}
 - Updated BrowserTest examples to use practicesoftwaretesting.com instead of allmusic.com
+- Geckodriver 0.34
 
 New in 5.3.6
 - Selenium 4.16.1
