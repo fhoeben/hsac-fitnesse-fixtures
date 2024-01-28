@@ -21,6 +21,10 @@ An example of Maven based project using this baseline can be found at: https://g
 When upgrading from an older version, ensure all Selenium webdrivers are stopped and delete the 'wiki/plugins' and 'wiki/webdrivers' folders to remove old versions of the packaged plugins/webdrivers. When using the sample project: follow the instructions at https://github.com/fhoeben/sample-fitnesse-project#upgrading.
 
 New in ${VERSION}
+- ChromeDriver 121.0.6167.85
+- EdgeDriver 121.0.2277.83
+
+New in 5.3.7
 - Updated BrowserTest examples to use practicesoftwaretesting.com instead of allmusic.com
 - Geckodriver 0.34
 - Updated fixture-doc-generator to 2.0
