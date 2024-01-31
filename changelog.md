@@ -22,6 +22,7 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 
 New in ${VERSION}
 - Selenium 4.17.0
+- Fixed wait for startup in docker chrome image
 
 New in 5.3.8
 - ChromeDriver 121.0.6167.85

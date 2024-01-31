@@ -11,6 +11,6 @@ if [ "${CHANGE_FITNESSE_DIRECTOY_OWNER}" = "true" ]; then
 fi
 
 /opt/bin/entry_point.sh &
-while [ ! -e /tmp/.X11-unix/X99 ]; do sleep 0.1; done
+while [ ! -e /tmp/.X99-lock ]; do sleep 0.1; done
 
 ./runTests.sh "$@"
