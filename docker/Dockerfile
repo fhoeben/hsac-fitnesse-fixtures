@@ -3,7 +3,7 @@ ARG JRE_IMAGE=eclipse-temurin:11-jre
 ARG SELENIUM_IMAGE=seleniarm/standalone-chromium:latest
 ARG GRAALVM_IMAGE=ghcr.io/graalvm/native-image:latest
 ARG BUSYBOX_IMAGE=busybox:latest
-ARG VERSION=5.3.0
+ARG VERSION=5.3.8
 ARG BASE_WORKDIR=/usr/src
 
 # ========== BASE ===========
