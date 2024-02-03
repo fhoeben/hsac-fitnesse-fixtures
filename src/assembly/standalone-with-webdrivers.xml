@@ -25,6 +25,8 @@
             <excludes>
                 <exclude>webdrivers/*.version</exclude>
                 <exclude>webdrivers/*.exe</exclude>
+                <!-- linux webdriver is only included so we can test whether we can find local driver in CI run, we don't expect standalone.zip user to run linux -->
+                <exclude>webdrivers/*-linux-*</exclude>
             </excludes>
             <fileMode>0755</fileMode>
         </fileSet>
@@ -33,6 +35,8 @@
             <useDefaultExcludes>true</useDefaultExcludes>
             <outputDirectory></outputDirectory>
             <excludes>
+                <!-- linux webdriver is only included so we can test whether we can find local driver in CI run, we don't expect standalone.zip user to run linux -->
+                <exclude>webdrivers/*-linux-*</exclude>
                 <exclude>target/**</exclude>
                 <exclude>copy/**</exclude>
                 <exclude>files/**</exclude>

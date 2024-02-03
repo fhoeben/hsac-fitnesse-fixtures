@@ -375,6 +375,15 @@
 							<fileMatchInside>chromedriver-mac-arm64/chromedriver</fileMatchInside>
 						</driver>
 						<driver>
+							<name>chromedriver</name>
+							<platform>linux</platform>
+							<bit>64</bit>
+							<version>${selenium.chromedriver.version}</version>
+							<url>
+								https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${selenium.chromedriver.version}/linux64/chromedriver-linux64.zip</url>
+							<fileMatchInside>chromedriver-linux64/chromedriver</fileMatchInside>
+						</driver>
+						<driver>
 							<name>geckodriver</name>
 							<platform>windows</platform>
 							<bit>64</bit>
