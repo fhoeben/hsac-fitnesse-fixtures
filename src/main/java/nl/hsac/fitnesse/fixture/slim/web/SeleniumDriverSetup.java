@@ -4,6 +4,7 @@ import nl.hsac.fitnesse.fixture.Environment;
 import nl.hsac.fitnesse.fixture.slim.SlimFixture;
 import nl.hsac.fitnesse.fixture.util.selenium.SauceLabsHelper;
 import nl.hsac.fitnesse.fixture.util.selenium.SeleniumHelper;
+import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverClassNames;
 import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverFactory;
 import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.DriverManager;
 import nl.hsac.fitnesse.fixture.util.selenium.driverfactory.LocalDriverFactory;
@@ -79,6 +80,15 @@ public class SeleniumDriverSetup extends SlimFixture {
      */
     public boolean startDriver(String driverClassName) throws Exception {
         return startDriver(driverClassName, null);
+    }
+
+    public boolean startManagedDriverForWithProfile(String browserName, final Map<String, Object> profile) throws Exception {
+        String driverName = DriverClassNames.getClassNameFor(browserName);
+        return startDriver(driverName, profile);
+    }
+
+    public boolean startManagedDriverFor(String browserName) throws Exception {
+        return startManagedDriverForWithProfile(browserName, null);
     }
 
     /**
