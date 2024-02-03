@@ -330,6 +330,24 @@
 							<fileMatchInside>msedgedriver.exe</fileMatchInside>
 						</driver>
 						<driver>
+							<name>edgedriver</name>
+							<platform>mac_m1</platform>
+							<bit>64</bit>
+							<version>${selenium.edgedriver.version}</version>
+							<url>
+								https://msedgedriver.azureedge.net/${selenium.edgedriver.version}/edgedriver_mac64_m1.zip</url>
+							<fileMatchInside>msedgedriver</fileMatchInside>
+						</driver>
+						<driver>
+							<name>edgedriver</name>
+							<platform>mac</platform>
+							<bit>64</bit>
+							<version>${selenium.edgedriver.version}</version>
+							<url>
+								https://msedgedriver.azureedge.net/${selenium.edgedriver.version}/edgedriver_mac64.zip</url>
+							<fileMatchInside>msedgedriver</fileMatchInside>
+						</driver>
+						<driver>
 							<name>chromedriver</name>
 							<platform>windows</platform>
 							<bit>64</bit>
@@ -355,15 +373,6 @@
 							<url>
 								https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${selenium.chromedriver.version}/mac-arm64/chromedriver-mac-arm64.zip</url>
 							<fileMatchInside>chromedriver-mac-arm64/chromedriver</fileMatchInside>
-						</driver>
-						<driver>
-							<name>chromedriver</name>
-							<platform>linux</platform>
-							<bit>64</bit>
-							<version>${selenium.chromedriver.version}</version>
-							<url>
-								https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${selenium.chromedriver.version}/linux64/chromedriver-linux64.zip</url>
-							<fileMatchInside>chromedriver-linux64/chromedriver</fileMatchInside>
 						</driver>
 						<driver>
 							<name>geckodriver</name>

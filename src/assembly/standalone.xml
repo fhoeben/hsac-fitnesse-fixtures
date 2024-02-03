@@ -20,7 +20,6 @@
             <useDefaultExcludes>true</useDefaultExcludes>
             <outputDirectory></outputDirectory>
             <excludes>
-                <!-- linux webdriver is only included for use by Travis-ci, we don't expect standalone.zip user to run linux -->
                 <exclude>webdrivers/**</exclude>
                 <exclude>target/**</exclude>
                 <exclude>copy/**</exclude>
