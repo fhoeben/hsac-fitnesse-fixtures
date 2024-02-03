@@ -559,11 +559,6 @@
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>3.6.0</version>
-				<configuration>
-					<descriptors>
-						<descriptor>src/assembly/standalone.xml</descriptor>
-					</descriptors>
-				</configuration>
 				<executions>
 					<execution>
 						<id>create-standalone-zip</id>
@@ -571,6 +566,23 @@
 						<goals>
 							<goal>single</goal>
 						</goals>
+						<configuration>
+							<descriptors>
+								<descriptor>src/assembly/standalone.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+					<execution>
+						<id>create-standalone-with-webdrivers-zip</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptors>
+								<descriptor>src/assembly/standalone-with-webdrivers.xml</descriptor>
+							</descriptors>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
