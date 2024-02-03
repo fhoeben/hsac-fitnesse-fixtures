@@ -1,7 +1,7 @@
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
-    <id>standalone</id>
+    <id>standalone-with-webdrivers</id>
     <formats>
         <format>zip</format>
     </formats>
@@ -19,8 +19,24 @@
             <directory>${project.basedir}/wiki</directory>
             <useDefaultExcludes>true</useDefaultExcludes>
             <outputDirectory></outputDirectory>
+            <includes>
+                <include>webdrivers/*</include>
+            </includes>
             <excludes>
-                <exclude>webdrivers/**</exclude>
+                <exclude>webdrivers/*.version</exclude>
+                <exclude>webdrivers/*.exe</exclude>
+                <!-- linux webdriver is only included so we can test whether we can find local driver in CI run, we don't expect standalone.zip user to run linux -->
+                <exclude>webdrivers/*-linux-*</exclude>
+            </excludes>
+            <fileMode>0755</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/wiki</directory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+            <outputDirectory></outputDirectory>
+            <excludes>
+                <!-- linux webdriver is only included so we can test whether we can find local driver in CI run, we don't expect standalone.zip user to run linux -->
+                <exclude>webdrivers/*-linux-*</exclude>
                 <exclude>target/**</exclude>
                 <exclude>copy/**</exclude>
                 <exclude>files/**</exclude>

@@ -22,6 +22,7 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 
 New in ${VERSION}
 - Support for dynamic on-demand download of Selenium web drivers in 'selenium driver setup', by using `start managed driver for <chrome|edge|firefox|safari>`
+- The '-standalone.zip' artifact of this project no longer includes Selenium web drivers, assuming those will be downloaded by using the managed one. There is a separate package '-standalone-with-webdrivers.zip' that does include Chrome, Edge and Firefox webdrivers for Windows and Mac.
 
 New in 5.3.9
 - Selenium 4.17.0

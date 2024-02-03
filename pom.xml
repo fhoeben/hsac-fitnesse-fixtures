@@ -330,6 +330,24 @@
 							<fileMatchInside>msedgedriver.exe</fileMatchInside>
 						</driver>
 						<driver>
+							<name>edgedriver</name>
+							<platform>mac_m1</platform>
+							<bit>64</bit>
+							<version>${selenium.edgedriver.version}</version>
+							<url>
+								https://msedgedriver.azureedge.net/${selenium.edgedriver.version}/edgedriver_mac64_m1.zip</url>
+							<fileMatchInside>msedgedriver</fileMatchInside>
+						</driver>
+						<driver>
+							<name>edgedriver</name>
+							<platform>mac</platform>
+							<bit>64</bit>
+							<version>${selenium.edgedriver.version}</version>
+							<url>
+								https://msedgedriver.azureedge.net/${selenium.edgedriver.version}/edgedriver_mac64.zip</url>
+							<fileMatchInside>msedgedriver</fileMatchInside>
+						</driver>
+						<driver>
 							<name>chromedriver</name>
 							<platform>windows</platform>
 							<bit>64</bit>
@@ -559,11 +577,6 @@
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>3.6.0</version>
-				<configuration>
-					<descriptors>
-						<descriptor>src/assembly/standalone.xml</descriptor>
-					</descriptors>
-				</configuration>
 				<executions>
 					<execution>
 						<id>create-standalone-zip</id>
@@ -571,6 +584,23 @@
 						<goals>
 							<goal>single</goal>
 						</goals>
+						<configuration>
+							<descriptors>
+								<descriptor>src/assembly/standalone.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+					<execution>
+						<id>create-standalone-with-webdrivers-zip</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptors>
+								<descriptor>src/assembly/standalone-with-webdrivers.xml</descriptor>
+							</descriptors>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
