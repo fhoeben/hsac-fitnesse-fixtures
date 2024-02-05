@@ -1,6 +1,5 @@
 ---
 Help: Test support for RichFaces Ajax
-Prune
 ---
 Unfortunately we can't check with local server (since we don't want to set up all javascript dependencies).
 We ensure we can properly wait for richfaces ajax to render elements.
