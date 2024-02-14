@@ -93,7 +93,7 @@ jobs:
           path: target
 
       - name: Replace changelog placeholders
-        uses: franzbischoff/replace_envs@v1
+        uses: franzbischoff/replace_envs@v2
         env:
           VERSION: ${{ needs.maven-release.outputs.version }}
           FITNESSE_VERSION: ${{ needs.maven-release.outputs.fitnesse-version }}
