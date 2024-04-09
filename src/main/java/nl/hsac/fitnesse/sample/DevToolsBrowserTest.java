@@ -214,7 +214,7 @@ public class DevToolsBrowserTest<T extends WebElement> extends BrowserTest<T> {
         devTools.send(Emulation.setDeviceMetricsOverride(
                 layoutMetrics.getContentSize().getWidth().intValue(),
                 layoutMetrics.getContentSize().getHeight().intValue(), 1, false,
-                empty(), empty(), empty(), empty(), empty(), empty(), empty(), empty(), empty(), java.util.Optional.empty()));
+                empty(), empty(), empty(), empty(), empty(), empty(), empty(), empty(), empty(), empty()));
 
         String result = takeScreenshot(baseName);
 
