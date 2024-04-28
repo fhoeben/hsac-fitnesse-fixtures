@@ -41,14 +41,14 @@
 		<hsac-fitnesse-plugin.version>1.32.10</hsac-fitnesse-plugin.version>
 		<fitnesse.version>20240219</fitnesse.version>
 		<praegus-toolchain-fitnesse-plugin.version>2.0.17</praegus-toolchain-fitnesse-plugin.version>
-		<selenium.version>4.17.0</selenium.version>
+		<selenium.version>4.20.0</selenium.version>
 		<slf4j.version>2.0.12</slf4j.version>
 		<apache.http.version>4.5.14</apache.http.version>
 		<surefire.version>3.2.5</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
-		<selenium.edgedriver.version>121.0.2277.83</selenium.edgedriver.version>
-		<selenium.chromedriver.version>121.0.6167.85</selenium.chromedriver.version>
+		<selenium.edgedriver.version>124.0.2476.0</selenium.edgedriver.version>
+		<selenium.chromedriver.version>124.0.6367.91</selenium.chromedriver.version>
 		<selenium.geckodriver.version>0.34.0</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven  -->
@@ -251,7 +251,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.12.1</version>
+				<version>3.13.0</version>
 				<configuration>
 					<release>11</release>
 					<encoding>${project.build.sourceEncoding}</encoding>
@@ -325,8 +325,7 @@
 							<platform>windows</platform>
 							<bit>64</bit>
 							<version>${selenium.edgedriver.version}</version>
-							<url>
-								https://msedgedriver.azureedge.net/${selenium.edgedriver.version}/edgedriver_win64.zip</url>
+							<url>https://msedgedriver.azureedge.net/${selenium.edgedriver.version}/edgedriver_win64.zip</url>
 							<fileMatchInside>msedgedriver.exe</fileMatchInside>
 						</driver>
 						<driver>
@@ -334,8 +333,7 @@
 							<platform>mac_m1</platform>
 							<bit>64</bit>
 							<version>${selenium.edgedriver.version}</version>
-							<url>
-								https://msedgedriver.azureedge.net/${selenium.edgedriver.version}/edgedriver_mac64_m1.zip</url>
+							<url>https://msedgedriver.azureedge.net/${selenium.edgedriver.version}/edgedriver_mac64_m1.zip</url>
 							<fileMatchInside>msedgedriver</fileMatchInside>
 						</driver>
 						<driver>
@@ -343,8 +341,7 @@
 							<platform>mac</platform>
 							<bit>64</bit>
 							<version>${selenium.edgedriver.version}</version>
-							<url>
-								https://msedgedriver.azureedge.net/${selenium.edgedriver.version}/edgedriver_mac64.zip</url>
+							<url>https://msedgedriver.azureedge.net/${selenium.edgedriver.version}/edgedriver_mac64.zip</url>
 							<fileMatchInside>msedgedriver</fileMatchInside>
 						</driver>
 						<driver>
@@ -352,8 +349,7 @@
 							<platform>windows</platform>
 							<bit>64</bit>
 							<version>${selenium.chromedriver.version}</version>
-							<url>
-								https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${selenium.chromedriver.version}/win64/chromedriver-win64.zip</url>
+							<url>https://storage.googleapis.com/chrome-for-testing-public/${selenium.chromedriver.version}/win64/chromedriver-win64.zip</url>
 							<fileMatchInside>chromedriver-win64/chromedriver.exe</fileMatchInside>
 						</driver>
 						<driver>
@@ -361,8 +357,7 @@
 							<platform>mac</platform>
 							<bit>64</bit>
 							<version>${selenium.chromedriver.version}</version>
-							<url>
-								https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${selenium.chromedriver.version}/mac-x64/chromedriver-mac-x64.zip</url>
+							<url>https://storage.googleapis.com/chrome-for-testing-public/${selenium.chromedriver.version}/mac-x64/chromedriver-mac-x64.zip</url>
 							<fileMatchInside>chromedriver-mac-x64/chromedriver</fileMatchInside>
 						</driver>
 						<driver>
@@ -370,8 +365,7 @@
 							<platform>mac_m1</platform>
 							<bit>64</bit>
 							<version>${selenium.chromedriver.version}</version>
-							<url>
-								https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${selenium.chromedriver.version}/mac-arm64/chromedriver-mac-arm64.zip</url>
+							<url>https://storage.googleapis.com/chrome-for-testing-public/${selenium.chromedriver.version}/mac-arm64/chromedriver-mac-arm64.zip</url>
 							<fileMatchInside>chromedriver-mac-arm64/chromedriver</fileMatchInside>
 						</driver>
 						<driver>
@@ -379,8 +373,7 @@
 							<platform>linux</platform>
 							<bit>64</bit>
 							<version>${selenium.chromedriver.version}</version>
-							<url>
-								https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${selenium.chromedriver.version}/linux64/chromedriver-linux64.zip</url>
+							<url>https://storage.googleapis.com/chrome-for-testing-public/${selenium.chromedriver.version}/linux64/chromedriver-linux64.zip</url>
 							<fileMatchInside>chromedriver-linux64/chromedriver</fileMatchInside>
 						</driver>
 						<driver>
@@ -388,24 +381,21 @@
 							<platform>windows</platform>
 							<bit>64</bit>
 							<version>${selenium.geckodriver.version}</version>
-							<url>
-								https://github.com/mozilla/geckodriver/releases/download/v${selenium.geckodriver.version}/geckodriver-v${selenium.geckodriver.version}-win64.zip</url>
+							<url>https://github.com/mozilla/geckodriver/releases/download/v${selenium.geckodriver.version}/geckodriver-v${selenium.geckodriver.version}-win64.zip</url>
 						</driver>
 						<driver>
 							<name>geckodriver</name>
 							<platform>mac</platform>
 							<bit>64</bit>
 							<version>${selenium.geckodriver.version}</version>
-							<url>
-								https://github.com/mozilla/geckodriver/releases/download/v${selenium.geckodriver.version}/geckodriver-v${selenium.geckodriver.version}-macos.tar.gz</url>
+							<url>https://github.com/mozilla/geckodriver/releases/download/v${selenium.geckodriver.version}/geckodriver-v${selenium.geckodriver.version}-macos.tar.gz</url>
 						</driver>
 						<driver>
 							<name>geckodriver</name>
 							<platform>mac_m1</platform>
 							<bit>64</bit>
 							<version>${selenium.geckodriver.version}</version>
-							<url>
-								https://github.com/mozilla/geckodriver/releases/download/v${selenium.geckodriver.version}/geckodriver-v${selenium.geckodriver.version}-macos-aarch64.tar.gz</url>
+							<url>https://github.com/mozilla/geckodriver/releases/download/v${selenium.geckodriver.version}/geckodriver-v${selenium.geckodriver.version}-macos-aarch64.tar.gz</url>
 						</driver>
 					</drivers>
 					<skip>${webdriver.download.skip}</skip>

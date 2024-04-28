@@ -8,26 +8,26 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.HasDevTools;
-import org.openqa.selenium.devtools.v119.emulation.Emulation;
-import org.openqa.selenium.devtools.v119.fetch.Fetch;
-import org.openqa.selenium.devtools.v119.fetch.model.RequestPattern;
-import org.openqa.selenium.devtools.v119.fetch.model.RequestStage;
-import org.openqa.selenium.devtools.v119.log.Log;
-import org.openqa.selenium.devtools.v119.network.Network;
-import org.openqa.selenium.devtools.v119.network.model.Cookie;
-import org.openqa.selenium.devtools.v119.network.model.CookiePriority;
-import org.openqa.selenium.devtools.v119.network.model.CookieSameSite;
-import org.openqa.selenium.devtools.v119.network.model.Headers;
-import org.openqa.selenium.devtools.v119.network.model.RequestId;
-import org.openqa.selenium.devtools.v119.network.model.RequestWillBeSent;
-import org.openqa.selenium.devtools.v119.network.model.ResourceType;
-import org.openqa.selenium.devtools.v119.network.model.ResponseReceived;
-import org.openqa.selenium.devtools.v119.network.model.TimeSinceEpoch;
-import org.openqa.selenium.devtools.v119.page.Page;
-import org.openqa.selenium.devtools.v119.performance.Performance;
-import org.openqa.selenium.devtools.v119.performance.model.Metric;
-import org.openqa.selenium.devtools.v119.runtime.Runtime;
-import org.openqa.selenium.devtools.v119.security.Security;
+import org.openqa.selenium.devtools.v123.emulation.Emulation;
+import org.openqa.selenium.devtools.v123.fetch.Fetch;
+import org.openqa.selenium.devtools.v123.fetch.model.RequestPattern;
+import org.openqa.selenium.devtools.v123.fetch.model.RequestStage;
+import org.openqa.selenium.devtools.v123.log.Log;
+import org.openqa.selenium.devtools.v123.network.Network;
+import org.openqa.selenium.devtools.v123.network.model.Cookie;
+import org.openqa.selenium.devtools.v123.network.model.CookiePriority;
+import org.openqa.selenium.devtools.v123.network.model.CookieSameSite;
+import org.openqa.selenium.devtools.v123.network.model.Headers;
+import org.openqa.selenium.devtools.v123.network.model.RequestId;
+import org.openqa.selenium.devtools.v123.network.model.RequestWillBeSent;
+import org.openqa.selenium.devtools.v123.network.model.ResourceType;
+import org.openqa.selenium.devtools.v123.network.model.ResponseReceived;
+import org.openqa.selenium.devtools.v123.network.model.TimeSinceEpoch;
+import org.openqa.selenium.devtools.v123.page.Page;
+import org.openqa.selenium.devtools.v123.performance.Performance;
+import org.openqa.selenium.devtools.v123.performance.model.Metric;
+import org.openqa.selenium.devtools.v123.runtime.Runtime;
+import org.openqa.selenium.devtools.v123.security.Security;
 import org.openqa.selenium.remote.Augmenter;
 
 import java.math.BigInteger;
@@ -214,7 +214,7 @@ public class DevToolsBrowserTest<T extends WebElement> extends BrowserTest<T> {
         devTools.send(Emulation.setDeviceMetricsOverride(
                 layoutMetrics.getContentSize().getWidth().intValue(),
                 layoutMetrics.getContentSize().getHeight().intValue(), 1, false,
-                empty(), empty(), empty(), empty(), empty(), empty(), empty(), empty(), empty()));
+                empty(), empty(), empty(), empty(), empty(), empty(), empty(), empty(), empty(), empty()));
 
         String result = takeScreenshot(baseName);
 
