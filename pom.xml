@@ -39,7 +39,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<hsac-fitnesse-plugin.version>1.32.11</hsac-fitnesse-plugin.version>
-		<fitnesse.version>20240219</fitnesse.version>
+		<fitnesse.version>20240707</fitnesse.version>
 		<praegus-toolchain-fitnesse-plugin.version>2.0.18</praegus-toolchain-fitnesse-plugin.version>
 		<selenium.version>4.20.0</selenium.version>
 		<slf4j.version>2.0.13</slf4j.version>
