@@ -7,14 +7,14 @@ ARG VERSION=5.3.8
 ARG BASE_WORKDIR=/usr/src
 
 # ========== BASE ===========
-FROM maven:${MAVEN_VERSION} as base
+FROM maven:${MAVEN_VERSION} AS base
 ARG VERSION
 ARG BASE_WORKDIR
 
 RUN mkdir -p ${BASE_WORKDIR}
 WORKDIR ${BASE_WORKDIR}
 
-COPY --link pom.xml .
+COPY --link pom.xml ./
 
 RUN mvn compile -Dhsac.fixtures.version=${VERSION}
 
@@ -24,7 +24,7 @@ RUN mvn package -Dhsac.fixtures.version=${VERSION}
 
 
 # ========== TEST ===========
-FROM ${JRE_IMAGE} as hsac-fixtures
+FROM ${JRE_IMAGE} AS hsac-fixtures
 ARG BASE_WORKDIR
 RUN mkdir -p /fitnesse/wiki/fixtures/nl/hsac/fitnesse
 
@@ -37,9 +37,9 @@ RUN mkdir wiki/FitNesseRoot
 VOLUME /fitnesse/wiki/FitNesseRoot
 
 ENV FITNESSE_OPTS -Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true
-COPY --link test/runTests.sh .
-COPY --link test/rerunFailedTests.sh .
-COPY --link test/htmlReportIndexGenerator.sh .
+COPY --link test/runTests.sh ./
+COPY --link test/rerunFailedTests.sh ./
+COPY --link test/htmlReportIndexGenerator.sh ./
 
 ENTRYPOINT ["/fitnesse/runTests.sh"]
 CMD []
@@ -48,17 +48,17 @@ COPY --link --from=base ${BASE_WORKDIR}/test/wiki wiki/
 
 
 # ========== TEST-WITH-PDF ===========
-FROM base as base-with-pdf
+FROM base AS base-with-pdf
 ARG VERSION
 RUN mvn compile -P withPdf -Dhsac.fixtures.version=${VERSION}
 
-FROM hsac-fixtures as hsac-fixtures-with-pdf
+FROM hsac-fixtures AS hsac-fixtures-with-pdf
 ARG BASE_WORKDIR
 COPY --link --from=base-with-pdf ${BASE_WORKDIR}/test/wiki/fixtures wiki/fixtures
 
 
 # ========== CHROME ===========
-FROM ${SELENIUM_IMAGE} as hsac-chrome
+FROM ${SELENIUM_IMAGE} AS hsac-chrome
 RUN sudo mv /etc/supervisor/conf.d/selenium.conf /etc/supervisor/conf.d/selenium.conf.bak && \
     sudo mkdir -p /fitnesse/target && \
     sudo mkdir -p /fitnesse/wiki/webdrivers && \
@@ -66,7 +66,7 @@ RUN sudo mv /etc/supervisor/conf.d/selenium.conf /etc/supervisor/conf.d/selenium
     sudo chown -R 1200:1201 /fitnesse/
 
 WORKDIR /fitnesse
-COPY --link chrome/startGridAndRunTests.sh .
+COPY --link chrome/startGridAndRunTests.sh ./
 COPY --link chrome/fitnesse-hsac.conf /etc/supervisor/conf.d/
 
 VOLUME /fitnesse/target
@@ -83,12 +83,12 @@ COPY --link --from=hsac-fixtures --chown=1200:1201 /fitnesse /fitnesse
 
 
 # ========== CHROME-WITH-PDF ===========
-FROM hsac-chrome as hsac-chrome-with-pdf
+FROM hsac-chrome AS hsac-chrome-with-pdf
 COPY --link --from=hsac-fixtures-with-pdf /fitnesse/wiki/fixtures /fitnesse/wiki/fixtures
 
 
 # ========== COMBINE ===========
-FROM ${GRAALVM_IMAGE} as graal-fitnesse
+FROM ${GRAALVM_IMAGE} AS graal-fitnesse
 ARG BASE_WORKDIR
 RUN mkdir -p /fitnesse/target
 
@@ -98,11 +98,11 @@ COPY --link --from=base ${BASE_WORKDIR}/combine/target/hsac-html-report-generato
 ENV JAVA_TOOL_OPTIONS="-Djdk.lang.Process.launchMechanism=vfork"
 RUN native-image -jar target/hsac-html-report-generator.jar --static
 
-FROM ${BUSYBOX_IMAGE} as combine
+FROM ${BUSYBOX_IMAGE} AS combine
 WORKDIR /fitnesse
 VOLUME /fitnesse/target
 
 ENTRYPOINT ["/fitnesse/hsac-html-report-generator"]
 CMD []
 
-COPY --link --from=graal-fitnesse /fitnesse/hsac-html-report-generator .
+COPY --link --from=graal-fitnesse /fitnesse/hsac-html-report-generator ./
