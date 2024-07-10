@@ -47,8 +47,8 @@
 		<surefire.version>3.2.5</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
-		<selenium.edgedriver.version>124.0.2476.0</selenium.edgedriver.version>
-		<selenium.chromedriver.version>124.0.6367.91</selenium.chromedriver.version>
+		<selenium.edgedriver.version>126.0.2592.87</selenium.edgedriver.version>
+		<selenium.chromedriver.version>126.0.6478.126</selenium.chromedriver.version>
 		<selenium.geckodriver.version>0.34.0</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven  -->
