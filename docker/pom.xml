@@ -155,7 +155,7 @@
                      dependencies are available to Fitnesse without need to have Maven to run tests.
                 -->
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.7.1</version>
+                <version>3.8.0</version>
                 <executions>
                     <execution>
                         <id>copy-dependencies-to-wiki-fixtures</id>
