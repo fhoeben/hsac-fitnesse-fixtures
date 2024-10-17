@@ -5,10 +5,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Helper to allow some map's values to be hidden in test reports.
  */
 public class SecretMasker {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SecretMasker.class);
     public Map<String, Object> replaceSecrets(Collection<String> keysToMask, Map<String, ?> originalMap) {
         boolean replaced = false;
         Map<String, Object> newMap = null;
@@ -19,7 +23,7 @@ public class SecretMasker {
                 replaced = true;
             }
         } catch (RuntimeException e) {
-            System.err.println("Unable to remove secrets from: " + originalMap);
+            LOGGER.error("Unable to remove secrets from: " + originalMap);
         }
         return replaced ? newMap : (Map<String, Object>) originalMap;
     }

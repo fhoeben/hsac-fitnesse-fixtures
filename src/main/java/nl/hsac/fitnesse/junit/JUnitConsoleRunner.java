@@ -4,6 +4,8 @@ import fitnesse.junit.JUnitXMLPerPageRunListener;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.RunListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +15,8 @@ import java.util.List;
  * Runs JUnit tests from the command line, with RunListeners attached.
  */
 public class JUnitConsoleRunner {
+    private static final Logger LOGGER = LoggerFactory.getLogger(JUnitConsoleRunner.class);
+
     protected List<RunListener> getListeners() {
         return Arrays.asList(new JUnitXMLPerPageRunListener(), new ProgressLoggerListener());
     }
@@ -40,7 +44,7 @@ public class JUnitConsoleRunner {
 
     public static void main(String[] args) {
         if (args.length == 0) {
-            System.err.println("No test class names provided as argument.");
+            LOGGER.error("No test class names provided as argument.");
             System.exit(-1);
         }
         Result r = new JUnitConsoleRunner().runTests(args);
