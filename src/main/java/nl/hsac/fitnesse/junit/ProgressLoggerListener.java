@@ -4,23 +4,27 @@ import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.io.PrintStream;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * JUnit RunListener so that build log is updated with progress info while tests run.
  */
 public class ProgressLoggerListener extends RunListener {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProgressLoggerListener.class);
+    private final PrintStream out;
     private String currentTestClassName = null;
     private SimpleDateFormat formatter;
     private int totalChildCount;
     private int currentChild;
 
-
     public ProgressLoggerListener() {
+        this(System.out);
+    }
+
+    public ProgressLoggerListener(final PrintStream out) {
+        this.out = out;
         this.currentTestClassName = null;
         this.formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS ");
         this.totalChildCount = 0;
@@ -32,7 +36,7 @@ public class ProgressLoggerListener extends RunListener {
         super.testRunStarted(description);
         totalChildCount = totalChildCount(description);
         currentChild = 0;
-        LOGGER.info("testRun Started ('{}' tests)", totalChildCount);
+        report("testRun Started ('%s' tests)", totalChildCount);
     }
 
     private int totalChildCount(Description description) {
@@ -50,39 +54,48 @@ public class ProgressLoggerListener extends RunListener {
 
         if (currentTestClassName == null || !currentTestClassName.equals(testClassName)) {
             testRunFinished(null);
-            LOGGER.info("testSuite Started '{}'", testClassName);
+            report("testSuite Started '%s'", testClassName);
             currentTestClassName = testClassName;
         }
         currentChild++;
-        LOGGER.info("test Started '{}}' ({} / {})", testName, currentChild, totalChildCount);
+        report("test Started '%s' (%s / %s)", testName, currentChild, totalChildCount);
     }
 
     @Override
     public void testFinished(Description description) throws Exception {
         final String testName = getTestName(description);
 
-        LOGGER.info("test Finished '{}'", testName);
+        report("test Finished '%s'\n", testName);
     }
 
     @Override
     public void testFailure(Failure failure) throws Exception {
-        LOGGER.error(String.format("test Failed '%s' message='%s' details='%s'",
+        String trace = "";
+        if (failure.getTrace() != null && !failure.getTrace().isEmpty()) {
+            trace = failure.getTrace();
+        }
+        report("test Failed '%s' message='%s' details='%s'",
                 getTestName(failure.getDescription()),
-                "failed"),
-                failure.getException());
+                "failed",
+                trace);
         testFinished(failure.getDescription());
     }
 
     @Override
     public void testIgnored(Description description) throws Exception {
-        LOGGER.info("test Ignored '{}'", getTestName(description));
+        report("test Ignored '%s'", getTestName(description));
     }
 
     @Override
     public void testRunFinished(Result result) throws Exception {
         if (currentTestClassName != null) {
-            LOGGER.info("testSuite Finished '{}'", currentTestClassName);
+            report("testSuite Finished '%s'\n\n", currentTestClassName);
         }
+    }
+
+    protected void report(String pattern, Object... parameters) {
+        out.print(formatter.format(new Date()));
+        out.println(String.format(pattern, parameters));
     }
 
     /**

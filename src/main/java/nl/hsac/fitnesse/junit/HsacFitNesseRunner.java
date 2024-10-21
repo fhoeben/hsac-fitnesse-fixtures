@@ -37,8 +37,6 @@ import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * JUnit Runner to run a FitNesse suite or page as JUnit test.
@@ -56,8 +54,6 @@ import org.slf4j.LoggerFactory;
  * or in the location configured using the {@link FitNesseRunner.OutputDir} annotation, or in target/fitnesse-results.
  */
 public class HsacFitNesseRunner extends FitNesseRunner {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(HsacFitNesseRunner.class);
     /**
      * The <code>FilesSectionCopy</code> annotation specifies which directories in the FitNesseRoot files
      * section to exclude from tests output (which makes them available in tests and in the generated test reports).
@@ -220,7 +216,8 @@ public class HsacFitNesseRunner extends FitNesseRunner {
                     shutdownSelenium();
                 }
                 catch (Exception e) {
-                    LOGGER.error("Error shutting down selenium", e);
+                    System.err.println("Error shutting down selenium");
+                    e.printStackTrace();
                 }
             }
 
@@ -239,7 +236,8 @@ public class HsacFitNesseRunner extends FitNesseRunner {
                     }
                 }
             } catch (Exception e) {
-                LOGGER.error("Unable to create index.html for top level suite", e);
+                System.err.println("Unable to create index.html for top level suite");
+                e.printStackTrace();
             }
         }
 
@@ -253,7 +251,7 @@ public class HsacFitNesseRunner extends FitNesseRunner {
             String fitNesseRootDir = getReRunSuiteLocation(suiteClass);
             testRunner.addTestSystemListener(new RerunSuiteFormatter(new File(fitNesseRootDir, "ReRunLastFailures.wiki")));
         } catch (Exception e) {
-            LOGGER.error("Unable to create re-run suite generator:", e);
+            System.err.println("Unable to create re-run suite generator: " + e);
         }
     }
 
