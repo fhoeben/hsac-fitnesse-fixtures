@@ -5,6 +5,8 @@ import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import org.openqa.selenium.JavascriptException;
 import org.openqa.selenium.ScriptTimeoutException;
 import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.List;
  * Version of {@link BrowserTest} with added functionality to deal with RichFaces, JSF pages.
  */
 public class RichFacesTest extends BrowserTest<WebElement> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RichFacesTest.class);
     protected static final String RICH_FACES_AJAX_CALL = "RichFaces.ajax(";
     private final List<String> eventsThatMayRequireWaiting = new ArrayList<>(Arrays.asList("onchange", "onclick"));
     private boolean ajaxStartWithOnly = false;
@@ -53,9 +56,9 @@ public class RichFacesTest extends BrowserTest<WebElement> {
             } catch (ScriptTimeoutException e) {
                 if (ignoreImplicitAjaxWaitTimeouts) {
                     // log message but do not throw
-                    System.err.println("Timeout while waiting for ajax call after: " + method.getName() + " with arguments: " + Arrays.toString(arguments));
+                    LOGGER.error("Timeout while waiting for ajax call after: " + method.getName() + " with arguments: " + Arrays.toString(arguments));
                     String msg = createAjaxTimeoutMessage(e);
-                    System.err.println("Exception not forwarded to wiki: " + msg);
+                    LOGGER.error("Exception not forwarded to wiki: " + msg);
                 } else {
                     throw createAjaxTimeout(e);
                 }

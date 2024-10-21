@@ -7,6 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -22,6 +24,7 @@ import java.util.regex.Pattern;
  * Saves page source to disk.
  */
 public class PageSourceSaver {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PageSourceSaver.class);
     private static final Pattern BASE_TAG_EXPR = Pattern.compile("<base\\s+href=.+?>", Pattern.CASE_INSENSITIVE);
     private static final String FAKE_SRC_ATTR = "data-fake_src";
     private final String pageSourceBase;
@@ -84,8 +87,7 @@ public class PageSourceSaver {
                 }
             }
         } catch (Exception e) {
-            System.err.println("Error saving sources of nested (i)frame: " + frame);
-            e.printStackTrace();
+            LOGGER.error("Error saving sources of nested (i)frame: " + frame, e);
             return null;
         }
     }

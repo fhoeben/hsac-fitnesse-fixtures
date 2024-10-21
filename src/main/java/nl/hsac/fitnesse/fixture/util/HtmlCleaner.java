@@ -3,6 +3,8 @@ package nl.hsac.fitnesse.fixture.util;
 import fitnesse.slim.Converter;
 import fitnesse.slim.converters.ConverterRegistry;
 import org.apache.commons.text.StringEscapeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -15,7 +17,7 @@ public class HtmlCleaner {
     private static final Pattern LINKPATTERN = Pattern.compile("<a(\\s+.*?)?\\s+href=\"(.*?)\".*?>(.*?)</a>(.*)", Pattern.CASE_INSENSITIVE);
     private static final Pattern IMAGEPATTERN = Pattern.compile("<img(\\s+.*?)?\\s+src=\"(.*?)\".*?/>", Pattern.CASE_INSENSITIVE);
     private static final Pattern PRE_FORMATTED_PATTERN = Pattern.compile("<pre>\\s*(.*?)\\s*</pre>", Pattern.DOTALL);
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(HtmlCleaner.class);
     /**
      * Gets a URL from a wiki page value.
      * @param htmlLink link as present on wiki page.
@@ -96,8 +98,7 @@ public class HtmlCleaner {
                 result = converter.fromString(value);
             }
         } catch (Throwable t) {
-            System.err.println("Unable to parse value: " + value);
-            t.printStackTrace();
+            LOGGER.error("Unable to parse value: " + value, t);
         }
         return result;
     }

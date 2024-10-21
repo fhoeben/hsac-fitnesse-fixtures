@@ -51,6 +51,8 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -72,6 +74,7 @@ import static org.openqa.selenium.support.locators.RelativeLocator.with;
  * Helper to work with Selenium.
  */
 public class SeleniumHelper<T extends WebElement> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SeleniumHelper.class);
     private static final String ELEMENT_ON_SCREEN_JS =
             "if (arguments[0].getBoundingClientRect) {\n" +
                     "var rect = arguments[0].getBoundingClientRect();\n" +
@@ -555,7 +558,7 @@ public class SeleniumHelper<T extends WebElement> {
             driver().manage().timeouts().implicitlyWait(Duration.ofMillis(implicitWait));
         } catch (Exception e) {
             // https://code.google.com/p/selenium/issues/detail?id=6015
-            System.err.println("Unable to set implicit timeout (known issue for Safari): " + e.getMessage());
+            LOGGER.error("Unable to set implicit timeout (known issue for Safari): " + e.getMessage());
         }
     }
 
@@ -569,7 +572,7 @@ public class SeleniumHelper<T extends WebElement> {
             driver().manage().timeouts().scriptTimeout(Duration.ofMillis(scriptTimeout));
         } catch (Exception e) {
             // https://code.google.com/p/selenium/issues/detail?id=6015
-            System.err.println("Unable to set script timeout (known issue for Safari): " + e.getMessage());
+            LOGGER.error("Unable to set script timeout (known issue for Safari): " + e.getMessage());
         }
     }
 
@@ -583,7 +586,7 @@ public class SeleniumHelper<T extends WebElement> {
             driver().manage().timeouts().pageLoadTimeout(Duration.ofMillis(pageLoadWait));
         } catch (Exception e) {
             // https://code.google.com/p/selenium/issues/detail?id=6015
-            System.err.println("Unable to set page load timeout (known issue for Safari): " + e.getMessage());
+            LOGGER.error("Unable to set page load timeout (known issue for Safari): " + e.getMessage());
         }
     }
 

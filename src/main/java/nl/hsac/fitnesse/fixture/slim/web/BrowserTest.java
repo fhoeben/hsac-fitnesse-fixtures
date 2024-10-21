@@ -42,6 +42,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -82,6 +84,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             EDGE_HIDDEN_BY_OTHER_ELEMENT_ERROR = "Element is obscured";
     private static final Pattern FIREFOX_HIDDEN_BY_OTHER_ELEMENT_ERROR_PATTERN =
             Pattern.compile("Element.+is not clickable.+because another element.+obscures it");
+    private static final Logger LOGGER = LoggerFactory.getLogger(BrowserTest.class);
 
     protected List<String> getCurrentSearchContextPath() {
         return currentSearchContextPath;
@@ -176,16 +179,14 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
                         ngBrowserTest.waitForAngularRequestsToFinish();
                     } catch (Exception e) {
                         // if something goes wrong, just use normal behavior: continue to invoke()
-                        System.err.print("Found Angular, but encountered an error while waiting for it to be ready. ");
-                        e.printStackTrace();
+                        LOGGER.error("Found Angular, but encountered an error while waiting for it to be ready. ", e);
                     }
                 }
             } catch (UnhandledAlertException e) {
-                System.err.println("Cannot determine whether Angular is present while alert is active.");
+                LOGGER.error("Cannot determine whether Angular is present while alert is active.");
             } catch (Exception e) {
                 // if something goes wrong, just use normal behavior: continue to invoke()
-                System.err.print("Error while determining whether Angular is present. ");
-                e.printStackTrace();
+                LOGGER.error("Error while determining whether Angular is present. ", e);
             }
         }
     }
@@ -253,8 +254,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             // IE 7 is reported to return "loaded"
             boolean done = "complete".equalsIgnoreCase(readyState) || "loaded".equalsIgnoreCase(readyState);
             if (!done) {
-                System.err.printf("Open of %s returned while document.readyState was %s", url, readyState);
-                System.err.println();
+                LOGGER.error("Open of {} returned while document.readyState was {}", url, readyState);
                 if (isContinueIfReadyStateInteractive() && "interactive".equals(readyState)) {
                     done = true;
                 }
@@ -2844,10 +2844,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             screenshotTag = getScreenshotLink(screenShotFile);
         } catch (UnhandledAlertException e) {
             // https://code.google.com/p/selenium/issues/detail?id=4412
-            System.err.println("Unable to take screenshot while alert is present for exception: " + messageBase);
+            LOGGER.error("Unable to take screenshot while alert is present for exception: {}", messageBase);
         } catch (Exception sse) {
-            System.err.println("Unable to take screenshot for exception: " + messageBase);
-            sse.printStackTrace();
+            LOGGER.error("Unable to take screenshot for exception: " + messageBase, sse);
         }
         return screenshotTag;
     }
@@ -2866,10 +2865,9 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
             label = savePageSource(fileName, label);
         } catch (UnhandledAlertException e) {
             // https://code.google.com/p/selenium/issues/detail?id=4412
-            System.err.println("Unable to capture page source while alert is present for exception: " + messageBase);
+            LOGGER.error("Unable to capture page source while alert is present for exception: {}", messageBase);
         } catch (Exception e) {
-            System.err.println("Unable to capture page source for exception: " + messageBase);
-            e.printStackTrace();
+            LOGGER.error("Unable to capture page source for exception: " + messageBase, e);
         }
         return label;
     }
