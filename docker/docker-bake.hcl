@@ -1,5 +1,5 @@
 variable "VERSION" {
-  default = "5.3.1"
+  default = "5.3.17"
 }
 variable "SELENIUM_VERSION" {
   default = "latest"
