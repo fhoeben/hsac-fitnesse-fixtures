@@ -22,6 +22,7 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 
 New in ${VERSION}
 - FitNesse 20241026
+- Selenium 4.26.0
 
 New in 5.3.16
 - Selenium 4.25.0
