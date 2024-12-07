@@ -24,6 +24,7 @@ New in ${VERSION}
 - hsac-fitnesse-pdf 0.1.6 in docker images
 - Log info and errors via slf4j when running test via jUnit runner (for CI server)
 - FitNesse 20241207
+- Selenium 4.27.0
 
 New in 5.3.17
 - FitNesse 20241026
