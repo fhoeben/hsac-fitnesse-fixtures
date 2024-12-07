@@ -21,7 +21,7 @@ An example of Maven based project using this baseline can be found at: https://g
 When upgrading from an older version, ensure all Selenium webdrivers are stopped and delete the 'wiki/plugins' and 'wiki/webdrivers' folders to remove old versions of the packaged plugins/webdrivers. When using the sample project: follow the instructions at https://github.com/fhoeben/sample-fitnesse-project#upgrading.
 
 New in ${VERSION}
-- hsac-fitnesse-pdf 0.1.6
+- hsac-fitnesse-pdf 0.1.6 in docker images
 - Log info and errors via slf4j when running test via jUnit runner (for CI server)
 
 New in 5.3.17
