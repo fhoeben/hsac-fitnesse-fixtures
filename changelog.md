@@ -21,10 +21,12 @@ An example of Maven based project using this baseline can be found at: https://g
 When upgrading from an older version, ensure all Selenium webdrivers are stopped and delete the 'wiki/plugins' and 'wiki/webdrivers' folders to remove old versions of the packaged plugins/webdrivers. When using the sample project: follow the instructions at https://github.com/fhoeben/sample-fitnesse-project#upgrading.
 
 New in ${VERSION}
-- hsac-fitnesse-pdf 0.1.6 in docker images
+- Edgedriver 131.0.2903.86 (on Mac 131.0.2903.87)
+- Chromedriver 131.0.6778.87
 - Log info and errors via slf4j when running test via jUnit runner (for CI server)
 - FitNesse 20241207
 - Selenium 4.27.0
+- hsac-fitnesse-pdf 0.1.6 in docker images
 
 New in 5.3.17
 - FitNesse 20241026
