@@ -37,8 +37,15 @@ jobs:
           distribution: 'zulu'
           cache: maven
 
+      - name: Install chrome
+        id: setup-chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: 128
+          install-chromedriver: true
+
       - name: Test with Maven
-        run: mvn --batch-mode --update-snapshots -DfitnesseSuiteToRun=HsacAcceptanceTests -DseleniumDriverClass=org.openqa.selenium.chrome.ChromeDriver "-DseleniumJsonProfile={'args':['headless', 'disable-gpu']}" verify failsafe:verify install
+        run: mvn --batch-mode --update-snapshots -DseleniumDriver=${{ steps.setup-chrome.outputs.chromedriver-path }} -DfitnesseSuiteToRun=HsacAcceptanceTests -DseleniumDriverClass=org.openqa.selenium.chrome.ChromeDriver "-DseleniumJsonProfile={'args':['headless', 'disable-gpu'], 'binary':'${{ steps.setup-chrome.outputs.chrome-path }}'}" verify failsafe:verify install
 
       - id: get-version
         run: |

@@ -440,6 +440,7 @@
 					<!-- this test actually runs fitnesse tests-->
 					<test>FixtureDebugTest</test>
 					<systemPropertyVariables>
+						<webdriver.chrome.driver>${seleniumDriver}</webdriver.chrome.driver>
 						<fitnesseSuiteToRun>${fitnesseSuiteToRun}</fitnesseSuiteToRun>
 						<seleniumDefaultTimeout>${seleniumDefaultTimeout}</seleniumDefaultTimeout>
 						<seleniumGridUrl>${seleniumGridUrl}</seleniumGridUrl>
