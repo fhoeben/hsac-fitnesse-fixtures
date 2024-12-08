@@ -36,7 +36,7 @@ VOLUME /fitnesse/target
 RUN mkdir wiki/FitNesseRoot
 VOLUME /fitnesse/wiki/FitNesseRoot
 
-ENV FITNESSE_OPTS -Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true
+ENV FITNESSE_OPTS="-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true"
 COPY --link test/runTests.sh ./
 COPY --link test/rerunFailedTests.sh ./
 COPY --link test/htmlReportIndexGenerator.sh ./
@@ -72,9 +72,9 @@ COPY --link chrome/fitnesse-hsac.conf /etc/supervisor/conf.d/
 VOLUME /fitnesse/target
 VOLUME /fitnesse/wiki/FitNesseRoot
 
-ENV FITNESSE_OPTS -Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true \
+ENV FITNESSE_OPTS="-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true \
     -DseleniumBrowser=chrome \
-    -DseleniumJsonProfile="{'args':['disable-dev-shm-usage','--remote-allow-origins=*']}"
+    -DseleniumJsonProfile=\"{'args':['disable-dev-shm-usage','--remote-allow-origins=*']}\""
 
 ENTRYPOINT ["/fitnesse/startGridAndRunTests.sh"]
 CMD []
