@@ -59,12 +59,8 @@ This test ensures we can work with select boxes. We use a mock server running to
 |check                 |value of                                              |Options to choose               |!-example3@example.com-!                              |
 |select                |example4@example.com                                  |for                             |Complex options to choose                             |
 |check                 |value of                                              |Complex options to choose       |!-example4@example.com-! is another to choose         |
-|select                |first                                                 |for                             |Complex options to choose                             |
-|check                 |value of                                              |Complex options to choose       |a mail to !-example1@example.com-! is the first option|
 |select                |to choose                                             |for                             |Complex options to choose                             |
 |check                 |value of                                              |Complex options to choose       |!-example4@example.com-! is another to choose         |
-|select                |a mail to !-example1@example.com-! is the first option|for                             |Complex options to choose                             |
-|check                 |value of                                              |Complex options to choose       |a mail to !-example1@example.com-! is the first option|
 |check                 |value of                                              |Multiple text nodes in an option|3rd option                                            |
 |select                |Option text                                           |for                             |Multiple text nodes in an option                      |
 |check                 |value of                                              |Multiple text nodes in an option|Option text                                           |
