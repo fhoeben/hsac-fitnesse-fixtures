@@ -114,7 +114,7 @@ jobs:
 
       - name: Build
         id: bake
-        uses: docker/bake-action@v5
+        uses: docker/bake-action@v6
         with:
           workdir: docker
           files: |
@@ -283,7 +283,7 @@ jobs:
 
       - name: Build
         id: bake
-        uses: docker/bake-action@v5
+        uses: docker/bake-action@v6
         with:
           workdir: docker
           files: |
