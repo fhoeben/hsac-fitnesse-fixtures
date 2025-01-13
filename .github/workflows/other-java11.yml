@@ -161,8 +161,9 @@ jobs:
 
       - name: Build
         id: bake
-        uses: docker/bake-action@v5
+        uses: docker/bake-action@v6
         with:
+          source: .
           workdir: docker
           files: |
             docker-bake.hcl
@@ -333,8 +334,9 @@ jobs:
 
       - name: Build
         id: bake
-        uses: docker/bake-action@v5
+        uses: docker/bake-action@v6
         with:
+          source: .
           workdir: docker
           files: |
             docker-bake.hcl
