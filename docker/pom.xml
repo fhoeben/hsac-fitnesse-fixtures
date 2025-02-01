@@ -198,6 +198,11 @@
                 </executions>
                 <dependencies>
                     <dependency>
+                        <groupId>org.codehaus.plexus</groupId>
+                        <artifactId>plexus-utils</artifactId>
+                        <version>4.0.2</version>
+                    </dependency>
+                    <dependency>
                         <groupId>nl.hsac</groupId>
                         <artifactId>hsac-fitnesse-fixtures</artifactId>
                         <version>${hsac.fixtures.version}</version>
