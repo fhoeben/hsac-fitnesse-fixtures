@@ -21,6 +21,8 @@ An example of Maven based project using this baseline can be found at: https://g
 When upgrading from an older version, ensure all Selenium webdrivers are stopped and delete the 'wiki/plugins' and 'wiki/webdrivers' folders to remove old versions of the packaged plugins/webdrivers. When using the sample project: follow the instructions at https://github.com/fhoeben/sample-fitnesse-project#upgrading.
 
 New in ${VERSION}
+- Chromedriver 132.0.6834.159
+- Edgedriver 132.0.2957.140
 - Selenium 4.28.1
 - hsac-fitnesse-plugin 1.33.1
 - Updated docker build (bake action version) and base image for chrome images
