@@ -6,9 +6,9 @@ We ensure we can properly wait for richfaces ajax to render elements.
 
 |script                |rich faces test                                   |
 |open                  |https://www.triodos.nl/sparen/kinder-toekomst-plan|
-|show                  |click if available|Akkoord                        |
+|show                  |click if available     |Accepteren                |
 |click                 |Direct openen                                     |
 |seconds before timeout|2                                                 |
-|enter                 |fitnesse          |as     |Je naam                |
-|check                 |value of          |Je naam|fitnesse               |
-|show                  |take screenshot   |rf                             |
+|enter                 |fitnesse               |as          |Je naam      |
+|check                 |value of               |Je naam     |fitnesse     |
+|show                  |take screenshot        |rf                        |
