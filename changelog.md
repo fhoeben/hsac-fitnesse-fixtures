@@ -23,7 +23,8 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 New in ${VERSION}
 - Selenium 4.28.1
 - hsac-fitnesse-plugin 1.33.1
-
+- Updated docker build (bake action version) and base image for chrome images
+- Misc dependency updates
 
 New in 5.3.18
 - Edgedriver 131.0.2903.86 (on Mac 131.0.2903.87)
