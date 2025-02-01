@@ -1,6 +1,6 @@
 ARG MAVEN_VERSION=3.9-amazoncorretto-11
 ARG JRE_IMAGE=eclipse-temurin:11-jre
-ARG SELENIUM_IMAGE=seleniarm/standalone-chromium:latest
+ARG SELENIUM_IMAGE=selenium/standalone-chromium:latest
 ARG GRAALVM_IMAGE=ghcr.io/graalvm/native-image:latest
 ARG BUSYBOX_IMAGE=busybox:latest
 ARG VERSION=5.3.18

@@ -49,7 +49,7 @@ target "chrome" {
   inherits = ["_hsac-base-target"]
   pull = true
   args = {
-    SELENIUM_IMAGE = "seleniarm/standalone-chromium:${SELENIUM_VERSION}"
+    SELENIUM_IMAGE = "selenium/standalone-chromium:${SELENIUM_VERSION}"
   }
   target = "hsac-chrome"
   tags = ["hsac/fitnesse-fixtures-test-jre11-chrome:${TAG}"]
