@@ -38,7 +38,7 @@
 		<project.build.outputTimestamp>2025-02-01T23:16:48Z</project.build.outputTimestamp>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<hsac-fitnesse-plugin.version>1.33.1</hsac-fitnesse-plugin.version>
+		<hsac-fitnesse-plugin.version>1.33.2</hsac-fitnesse-plugin.version>
 		<fitnesse.version>20241207</fitnesse.version>
 		<praegus-toolchain-fitnesse-plugin.version>2.0.18</praegus-toolchain-fitnesse-plugin.version>
 		<selenium.version>4.28.1</selenium.version>
