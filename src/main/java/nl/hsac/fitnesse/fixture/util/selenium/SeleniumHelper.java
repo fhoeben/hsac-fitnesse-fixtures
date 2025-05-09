@@ -1,6 +1,5 @@
 package nl.hsac.fitnesse.fixture.util.selenium;
 
-import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
@@ -59,6 +58,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -769,7 +769,7 @@ public class SeleniumHelper<T extends WebElement> {
      */
     public void html5DragAndDrop(WebElement source, WebElement target) throws IOException {
         URL url = Resources.getResource(DRAG_AND_DROP_SIM_JS_RESOURCE);
-        String js = Resources.toString(url, Charsets.UTF_8);
+        String js = Resources.toString(url,  StandardCharsets.UTF_8);
         executeJavascript(js + " DndSimulator.simulate(arguments[0], arguments[1]);", source, target);
     }
 
