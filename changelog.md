@@ -22,6 +22,9 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 
 New in ${VERSION}
 - Selenium 4.32.0
+- Chromedriver 136.0.7103.92
+- Edgedriver 136.0.3240.64
+- Geckodriver 0.36.0
 
 New in 5.3.20
 - Chromedriver 133.0.6943.126
