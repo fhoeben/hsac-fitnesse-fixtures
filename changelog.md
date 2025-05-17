@@ -22,6 +22,7 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 
 New in ${VERSION}
 - Praegus toolchain plugin 2.0.24
+- HSAC plugin 1.33.3
 
 New in 5.3.21
 - Selenium 4.32.0
