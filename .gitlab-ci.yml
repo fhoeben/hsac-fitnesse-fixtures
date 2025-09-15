@@ -1,0 +1,437 @@
+stages:
+  - compile
+  - build-images
+  - acceptance-test
+  - post-test
+  - post-examples
+
+variables:
+  # This will suppress any download for dependencies and plugins or upload messages which would clutter the console log.
+  # `showDateTime` will show the passed time in milliseconds. You need to specify `--batch-mode` to make this work.
+  MAVEN_OPTS: "-Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
+  # As of Maven 3.3.0 instead of this you may define these options in `.mvn/maven.config` so the same config is used
+  # when running from the command line.
+  # `installAtEnd` and `deployAtEnd` are only effective with recent version of the corresponding plugins.
+  #
+  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
+  SELENIUM_VERSION: "4.10"
+  KANIKO_CACHE: "true"
+
+before_script:
+  - DOCKER_HUB_REGISTRY=index.docker.io/hsac
+  - TEST_IMAGE=${CI_REGISTRY_IMAGE}/fitnesse-fixtures-test-jre8:temp-${CI_PIPELINE_ID}
+  - CHROME_IMAGE=${CI_REGISTRY_IMAGE}/fitnesse-fixtures-test-jre8-chrome:temp-${CI_PIPELINE_ID}
+  - COMBINE_IMAGE=${CI_REGISTRY_IMAGE}/fitnesse-fixtures-combine:temp-${CI_PIPELINE_ID}
+  - TEST_PDF_IMAGE=${CI_REGISTRY_IMAGE}/fitnesse-fixtures-test-jre8-with-pdf:temp-${CI_PIPELINE_ID}
+  - CHROME_PDF_IMAGE=${CI_REGISTRY_IMAGE}/fitnesse-fixtures-test-jre8-chrome-with-pdf:temp-${CI_PIPELINE_ID}
+
+.mvn: &mvn
+  image: maven:3.8-amazoncorretto-8
+  cache:
+    paths:
+      - .m2/repository
+
+compile-and-verify-project:
+  <<: *mvn
+  stage: compile
+  script:
+    - export VERSION=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout`
+    - export FITNESSE_VERSION=`mvn help:evaluate -Dexpression=fitnesse.version -q -DforceStdout`
+
+    - mvn ${MAVEN_CLI_OPTS} clean install -DskipTests=true
+    - mvn ${MAVEN_CLI_OPTS} test
+
+    - cd docker
+    - echo ${VERSION}
+    - echo ${FITNESSE_VERSION}
+    - mvn ${MAVEN_CLI_OPTS} clean package -Dfitnesse.version=${FITNESSE_VERSION} -Dhsac.fixtures.version=${VERSION}
+  artifacts:
+    when: always
+    expire_in: 1 week
+    paths:
+      - target
+      - docker/test/wiki
+      - docker/combine/target
+    reports:
+      junit: target/surefire-reports/*.xml
+
+.docker-build: &docker_build_definition
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  stage: build-images
+
+build-test-images:
+  <<: *docker_build_definition
+  script:
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"},\"https://index.docker.io/v1/\":{\"auth\":\"$DOCKER_AUTH\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --cache=${KANIKO_CACHE}
+      --single-snapshot
+      --context $CI_PROJECT_DIR/docker/test
+      --dockerfile $CI_PROJECT_DIR/docker/test/Dockerfile-local
+      --destination ${TEST_IMAGE}
+
+    - /kaniko/executor
+      --cache=${KANIKO_CACHE}
+      --single-snapshot
+      --context $CI_PROJECT_DIR/docker/chrome
+      --dockerfile $CI_PROJECT_DIR/docker/chrome/Dockerfile
+      --destination ${CHROME_IMAGE}
+      --build-arg SELENIUM_IMAGE=seleniarm/standalone-chromium:${SELENIUM_VERSION}
+      --build-arg TEST_IMAGE=${TEST_IMAGE}
+
+build-combine-image:
+  <<: *docker_build_definition
+  script:
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --cache=${KANIKO_CACHE}
+      --single-snapshot
+      --context $CI_PROJECT_DIR/docker/combine
+      --dockerfile $CI_PROJECT_DIR/docker/combine/Dockerfile-local
+      --destination ${COMBINE_IMAGE}
+
+compile-pdf:
+  <<: *mvn
+  stage: build-images
+  script:
+    - export VERSION=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout`
+    - export FITNESSE_VERSION=`mvn help:evaluate -Dexpression=fitnesse.version -q -DforceStdout`
+
+    - mvn ${MAVEN_CLI_OPTS} clean compile
+
+    - cd docker
+    - echo ${VERSION}
+    - echo ${FITNESSE_VERSION}
+    - mvn ${MAVEN_CLI_OPTS} clean package -P withPdf -Dfitnesse.version=${FITNESSE_VERSION} -Dhsac.fixtures.version=${VERSION}
+  artifacts:
+    when: always
+    expire_in: 1 week
+    paths:
+      - docker/test-with-pdf/wiki
+
+build-test-pdf-images:
+  <<: *docker_build_definition
+  stage: acceptance-test
+  script:
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --cache=${KANIKO_CACHE}
+      --single-snapshot
+      --context $CI_PROJECT_DIR/docker/test-with-pdf
+      --dockerfile $CI_PROJECT_DIR/docker/test-with-pdf/Dockerfile-local
+      --destination ${TEST_PDF_IMAGE}
+      --build-arg TEST_IMAGE=${TEST_IMAGE}
+
+    - /kaniko/executor
+      --cache=${KANIKO_CACHE}
+      --single-snapshot
+      --context $CI_PROJECT_DIR/docker/chrome-with-pdf
+      --dockerfile $CI_PROJECT_DIR/docker/chrome-with-pdf/Dockerfile
+      --destination ${CHROME_PDF_IMAGE}
+      --build-arg TEST_CHROME_IMAGE=${CHROME_IMAGE}
+      --build-arg TEST_IMAGE=${TEST_PDF_IMAGE}
+
+.test: &test_definition
+  image:
+    name: ${CI_REGISTRY_IMAGE}/fitnesse-fixtures-test-jre8-chrome:temp-${CI_PIPELINE_ID}
+    entrypoint: [""]
+  dependencies: []
+  needs:
+    - build-test-images
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-timing
+    paths:
+      - full-results/test-results.csv
+    policy: pull
+  script:
+    # copy wiki content to expected location
+    - mkdir -p /fitnesse/target
+    - cd /fitnesse
+    - cp -r ${CI_PROJECT_DIR}/wiki/FitNesseRoot/. /fitnesse/wiki/FitNesseRoot
+    - cp ${CI_PROJECT_DIR}/full-results/test-results.csv /fitnesse/wiki/FitNesseRoot/files || true
+
+    # needed for the acceptance and example tests, normally ignored
+    - mkdir -p /fitnesse/target/fitnesse-results/files/galenExamples
+    - cp -r ${CI_PROJECT_DIR}/wiki/FitNesseRoot/files/galenExamples/. /fitnesse/target/fitnesse-results/files/galenExamples
+    - mkdir -p /fitnesse/target/fitnesse-results/files/httpPostExamples
+    - cp -r ${CI_PROJECT_DIR}/wiki/FitNesseRoot/files/httpPostExamples/. /fitnesse/target/fitnesse-results/files/httpPostExamples
+
+    # run tests, but don't stop job if they fail
+    - export JAVA_OPTS="-Xmx96m -Xms96m"
+    - export FITNESSE_OPTS="-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Xmx128m"
+    - if [ ! -z "${PRE_SUITE}" ]; then /fitnesse/runTests.sh -DfitnesseSuiteToRun=${PRE_SUITE}; fi
+    - . /fitnesse/startGridAndRunTests.sh
+      -DfitnesseSuiteToRun=${SUITE}
+      -DpartitionIndex=${INDEX} -DpartitionCount=${COUNT}
+      -DseleniumBrowser=chrome
+      -DseleniumJsonProfile="{'args':['disable-dev-shm-usage']}"
+
+  after_script:
+    - NAME=${CI_JOB_NAME}
+    - mkdir -p ${CI_PROJECT_DIR}/target
+    - cp -r /fitnesse/target/. target
+    - mv target/fitnesse-results target/fitnesse-results-${NAME}
+    - mkdir target/fitnesse-results
+    - mv target/fitnesse-results-${NAME} target/fitnesse-results/${NAME}
+  artifacts:
+    when: always
+    expire_in: 1 week
+    paths:
+      - target
+    reports:
+      junit: target/failsafe-reports/*.xml
+
+.acceptance-test: &acceptance_test_definition
+  <<: *test_definition
+  stage: acceptance-test
+  before_script:
+    - PRE_SUITE=HsacExamples.SlimTests.UtilityFixtures.GeneratedSymbolicLinkSuite.SuiteGenerator
+    - SUITE=HsacAcceptanceTests
+    - COUNT=8
+
+acceptance-test-1:
+  <<: *acceptance_test_definition
+  variables:
+    INDEX: 0
+
+acceptance-test-2:
+  <<: *acceptance_test_definition
+  variables:
+    INDEX: 1
+
+acceptance-test-3:
+  <<: *acceptance_test_definition
+  variables:
+    INDEX: 2
+
+acceptance-test-4:
+  <<: *acceptance_test_definition
+  variables:
+    INDEX: 3
+
+acceptance-test-5:
+  <<: *acceptance_test_definition
+  variables:
+    INDEX: 4
+
+acceptance-test-6:
+  <<: *acceptance_test_definition
+  variables:
+    INDEX: 5
+
+acceptance-test-7:
+  <<: *acceptance_test_definition
+  variables:
+    INDEX: 6
+
+acceptance-test-8:
+  <<: *acceptance_test_definition
+  variables:
+    INDEX: 7
+
+.needs-all-tests: &after_all_tests
+  stage: post-test
+  needs: &all_tests
+    - acceptance-test-1
+    - acceptance-test-2
+    - acceptance-test-3
+    - acceptance-test-4
+    - acceptance-test-5
+    - acceptance-test-6
+    - acceptance-test-7
+    - acceptance-test-8
+    - build-combine-image
+
+.combine: &combine_definition
+  when: always
+  image:
+    name: ${CI_REGISTRY_IMAGE}/fitnesse-fixtures-combine:temp-${CI_PIPELINE_ID}
+    entrypoint: [""]
+  variables:
+    GIT_STRATEGY: none
+
+reports-combine:
+  <<: *after_all_tests
+  <<: *combine_definition
+  dependencies: *all_tests
+  script:
+    - /fitnesse/hsac-html-report-generator target/fitnesse-results test-results
+  artifacts:
+    when: always
+    expire_in: 1 week
+    paths:
+      - test-results
+
+pdf-acceptance-test:
+  image:
+    name: ${CI_REGISTRY_IMAGE}/fitnesse-fixtures-test-jre8-with-pdf:temp-${CI_PIPELINE_ID}
+    entrypoint: [""]
+  stage: post-test
+  dependencies: []
+  needs:
+    - build-test-pdf-images
+  script:
+    # copy wiki content to expected location
+    - mkdir -p /fitnesse/target
+    - cd /fitnesse
+    - cp -r ${CI_PROJECT_DIR}/docker/src/test/wiki/. /fitnesse/wiki/FitNesseRoot
+
+    # run tests, but don't stop job if they fail
+    - export FITNESSE_OPTS="-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Xmx128m"
+    - . /fitnesse/runTests.sh
+      -DfitnesseSuiteToRun=SampleTests
+
+  after_script:
+    - NAME=${CI_JOB_NAME}
+    - mkdir -p ${CI_PROJECT_DIR}/target
+    - cp -r /fitnesse/target/. target
+    - mv target/fitnesse-results target/fitnesse-results-${NAME}
+    - mkdir target/fitnesse-results
+    - mv target/fitnesse-results-${NAME} target/fitnesse-results/${NAME}
+  artifacts:
+    when: always
+    expire_in: 1 week
+    paths:
+      - target
+    reports:
+      junit: target/failsafe-reports/*.xml
+
+.tag: &tag_definition
+  image:
+    name: gcr.io/go-containerregistry/crane:debug
+    entrypoint: [""]
+  stage: post-test
+  dependencies: []
+  variables:
+    GIT_STRATEGY: none
+
+tag_images:
+  <<: *tag_definition
+  <<: *after_all_tests
+  script:
+    - if [ "${CI_COMMIT_REF_SLUG}" == "master" ]; then TAG="latest"; else TAG=${CI_COMMIT_REF_SLUG}; fi
+    - crane auth login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - crane cp ${TEST_IMAGE} ${CI_REGISTRY_IMAGE}/fitnesse-fixtures-test-jre8:${TAG}
+    - crane cp ${CHROME_IMAGE} ${CI_REGISTRY_IMAGE}/fitnesse-fixtures-test-jre8-chrome:${TAG}
+    - crane cp ${COMBINE_IMAGE} ${CI_REGISTRY_IMAGE}/fitnesse-fixtures-combine:${TAG}
+
+push_images_to_docker_hub:
+  <<: *tag_definition
+  <<: *after_all_tests
+  only:
+    - tags
+    - master
+  script:
+    - if [ "${CI_COMMIT_REF_SLUG}" == "master" ]; then TAG="latest"; else TAG=${CI_COMMIT_TAG}; fi
+    - crane auth login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - crane auth login -u $DOCKER_HUB_USER -p $DOCKER_PUSH_TOKEN docker.io
+    - crane cp ${TEST_IMAGE} ${DOCKER_HUB_REGISTRY}/fitnesse-fixtures-test-jre8:${TAG}
+    - crane cp ${CHROME_IMAGE} ${DOCKER_HUB_REGISTRY}/fitnesse-fixtures-test-jre8-chrome:${TAG}
+    - crane cp ${COMBINE_IMAGE} ${DOCKER_HUB_REGISTRY}/fitnesse-fixtures-combine:${TAG}
+
+.example-test: &example_test_definition
+  <<: *test_definition
+  stage: post-test
+  before_script:
+    - SUITE=HsacExamples
+    - COUNT=6
+  allow_failure: true
+
+example-test-1:
+  <<: *example_test_definition
+  variables:
+    INDEX: 0
+
+example-test-2:
+  <<: *example_test_definition
+  variables:
+    INDEX: 1
+
+example-test-3:
+  <<: *example_test_definition
+  variables:
+    INDEX: 2
+
+example-test-4:
+  <<: *example_test_definition
+  variables:
+    INDEX: 3
+
+example-test-5:
+  <<: *example_test_definition
+  variables:
+    INDEX: 4
+
+example-test-6:
+  <<: *example_test_definition
+  variables:
+    INDEX: 5
+
+.needs-all-examples: &after_all_examples
+  stage: post-examples
+  needs: &all_examples
+    - example-test-1
+    - example-test-2
+    - example-test-3
+    - example-test-4
+    - example-test-5
+    - example-test-6
+    - build-combine-image
+
+example-reports-combine:
+  <<: *after_all_examples
+  <<: *combine_definition
+  dependencies: *all_examples
+  script:
+    - /fitnesse/hsac-html-report-generator target/fitnesse-results example-results
+  artifacts:
+    when: always
+    expire_in: 1 week
+    paths:
+      - example-results
+
+tag_pdf_images:
+  <<: *tag_definition
+  stage: post-examples
+  needs:
+    - pdf-acceptance-test
+    - tag_images
+  script:
+    - if [ "${CI_COMMIT_REF_SLUG}" == "master" ]; then TAG="latest"; else TAG=${CI_COMMIT_REF_SLUG}; fi
+    - crane auth login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - crane cp ${TEST_PDF_IMAGE} ${CI_REGISTRY_IMAGE}/fitnesse-fixtures-test-jre8-with-pdf:${TAG}
+    - crane cp ${CHROME_PDF_IMAGE} ${CI_REGISTRY_IMAGE}/fitnesse-fixtures-test-jre8-chrome-with-pdf:${TAG}
+
+push_pdf_images_to_docker_hub:
+  <<: *tag_definition
+  stage: post-examples
+  needs:
+    - pdf-acceptance-test
+    - tag_images
+  only:
+    - tags
+    - master
+  script:
+    - if [ "${CI_COMMIT_REF_SLUG}" == "master" ]; then TAG="latest"; else TAG=${CI_COMMIT_TAG}; fi
+    - crane auth login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - crane auth login -u $DOCKER_HUB_USER -p $DOCKER_PUSH_TOKEN docker.io
+    - crane cp ${TEST_PDF_IMAGE} ${DOCKER_HUB_REGISTRY}/fitnesse-fixtures-test-jre8-with-pdf:${TAG}
+    - crane cp ${CHROME_PDF_IMAGE} ${DOCKER_HUB_REGISTRY}/fitnesse-fixtures-test-jre8-chrome-with-pdf:${TAG}
+
+all-reports-combine:
+  <<: *combine_definition
+  stage: post-examples
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-timing
+    paths:
+      - full-results/test-results.csv
+    policy: push
+  script:
+    - /fitnesse/hsac-html-report-generator target/fitnesse-results full-results
+  artifacts:
+    when: always
+    expire_in: 1 week
+    paths:
+      - full-results
