@@ -1236,25 +1236,6 @@ public class SeleniumHelper<T extends WebElement> {
     }
 
     /**
-     * Finds screenshot embedded in throwable, if any.
-     *
-     * @param t exception to search in.
-     * @return content of screenshot (if any is present), null otherwise.
-     */
-    public byte[] findScreenshot(Throwable t) {
-        byte[] result = null;
-        if (t != null) {
-            if (t instanceof ScreenshotException) {
-                String encodedScreenshot = ((ScreenshotException) t).getBase64EncodedScreenshot();
-                result = Base64.getDecoder().decode(encodedScreenshot);
-            } else {
-                result = findScreenshot(t.getCause());
-            }
-        }
-        return result;
-    }
-
-    /**
      * Saves screenshot (as .png).
      *
      * @param baseName name for file created (without extension),
