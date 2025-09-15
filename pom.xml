@@ -58,18 +58,6 @@
 		<extraFailsafeListeners />
 	</properties>
 
-	<dependencyManagement>
-		<dependencies>
-			<!-- com.jayway.jsonpath changed json-smart dependency scope to runtime, override to use
-			it with JsonHelper -->
-			<dependency>
-				<groupId>net.minidev</groupId>
-				<artifactId>json-smart</artifactId>
-				<scope>compile</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.fitnesse</groupId>
@@ -224,6 +212,11 @@
 			<groupId>commons-net</groupId>
 			<artifactId>commons-net</artifactId>
 			<version>3.11.1</version>
+		</dependency>
+		<dependency>
+			<groupId>net.minidev</groupId>
+			<artifactId>json-smart</artifactId>
+			<version>2.6.0</version>
 		</dependency>
 		<!-- Testing -->
 		<dependency>
