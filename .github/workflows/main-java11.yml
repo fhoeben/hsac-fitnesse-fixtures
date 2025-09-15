@@ -52,17 +52,17 @@ jobs:
           java-version: '11'
           distribution: 'zulu'
           cache: 'maven'
-          server-id: ossrh
-          server-username: MAVEN_USERNAME # env variable for username in deploy
-          server-password: MAVEN_CENTRAL_TOKEN # env variable for token in deploy
+          server-id: central
+          server-username: CENTRAL_USERNAME # env variable for username in deploy
+          server-password: CENTRAL_PASSWORD # env variable for token in deploy
           gpg-private-key: ${{ secrets.gpg_private_key }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
 
       - name: Publish to Apache Maven Central
         run: mvn clean deploy -P release
         env:
-          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_PASSWORD }}
+          CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
+          CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.gpg_passphrase }}
 
       - name: upload packages
@@ -232,8 +232,9 @@ jobs:
 
       - name: Build
         id: bake
-        uses: docker/bake-action@v5
+        uses: docker/bake-action@v6
         with:
+          source: .
           workdir: docker
           files: |
             docker-bake.hcl
@@ -406,8 +407,9 @@ jobs:
 
       - name: Build
         id: bake
-        uses: docker/bake-action@v5
+        uses: docker/bake-action@v6
         with:
+          source: .
           workdir: docker
           files: |
             docker-bake.hcl
@@ -418,6 +420,7 @@ jobs:
           set: |
             *.tags=
             *.platform=${{ matrix.platform }}
+            *.contexts.base=.
             *.contexts.base-with-pdf=.
             *.contexts.hsac-fixtures=docker-image://${{ steps.image-names.outputs.test-image }}
             *.contexts.hsac-chrome=docker-image://${{ steps.image-names.outputs.chrome-image }}

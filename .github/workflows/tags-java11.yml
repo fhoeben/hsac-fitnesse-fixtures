@@ -114,8 +114,9 @@ jobs:
 
       - name: Build
         id: bake
-        uses: docker/bake-action@v5
+        uses: docker/bake-action@v6
         with:
+          source: .
           workdir: docker
           files: |
             docker-bake.hcl
@@ -283,8 +284,9 @@ jobs:
 
       - name: Build
         id: bake
-        uses: docker/bake-action@v5
+        uses: docker/bake-action@v6
         with:
+          source: .
           workdir: docker
           files: |
             docker-bake.hcl
@@ -295,6 +297,7 @@ jobs:
           set: |
             *.tags=
             *.platform=${{ matrix.platform }}
+            *.contexts.base=.
             *.contexts.base-with-pdf=.
             *.contexts.hsac-fixtures=docker-image://${{ steps.image-names.outputs.test-image }}
             *.contexts.hsac-chrome=docker-image://${{ steps.image-names.outputs.chrome-image }}

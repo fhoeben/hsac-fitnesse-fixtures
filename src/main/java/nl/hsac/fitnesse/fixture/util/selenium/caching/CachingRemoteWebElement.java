@@ -18,6 +18,8 @@ public class CachingRemoteWebElement extends RemoteWebElement {
     private ObjectCache<Dimension> sizeCache;
     private ObjectCache<Rectangle> rectCache;
 
+    private ObjectCacheMap<String, String> domAttributesCache;
+    private ObjectCacheMap<String, String> domPropertiesCache;
     private ObjectCacheMap<String, String> attributesCache;
     private ObjectCacheMap<String, String> cssValuesCache;
 
@@ -88,6 +90,23 @@ public class CachingRemoteWebElement extends RemoteWebElement {
         return rectCache.getValue();
     }
 
+    @Override
+    public String getDomProperty(String name) {
+        if (domPropertiesCache == null) {
+            domPropertiesCache = new ObjectCacheMap<>(super::getDomProperty);
+        }
+        return domPropertiesCache.getValue(name);
+    }
+
+    @Override
+    public String getDomAttribute(String name) {
+        if (domAttributesCache == null) {
+            domAttributesCache = new ObjectCacheMap<>(super::getDomAttribute);
+        }
+        return domAttributesCache.getValue(name);
+    }
+
+    @Deprecated
     @Override
     public String getAttribute(String name) {
         if (attributesCache == null) {

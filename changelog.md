@@ -22,6 +22,49 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 
 New in ${VERSION}
 
+New in 5.3.21
+- Selenium 4.32.0
+- Chromedriver 136.0.7103.92
+- Edgedriver 136.0.3240.64
+- Geckodriver 0.36.0
+- Praegus toolchain plugin 2.0.24
+- HSAC plugin 1.33.3
+
+New in 5.3.20
+- Chromedriver 133.0.6943.126
+- Edgedriver 133.0.3065.82
+- FitNesse 20250223
+- Selenium 4.29.0
+- hsac-fitnesse-plugin 1.33.2
+- Misc dependency updates
+
+New in 5.3.19
+- Chromedriver 132.0.6834.159
+- Edgedriver 132.0.2957.140
+- Selenium 4.28.1
+- hsac-fitnesse-plugin 1.33.1
+- Updated docker build (bake action version) and base image for chrome images
+- Misc dependency updates
+
+New in 5.3.18
+- Edgedriver 131.0.2903.86 (on Mac 131.0.2903.87)
+- Chromedriver 131.0.6778.87
+- Log info and errors via slf4j when running test via jUnit runner (for CI server)
+- FitNesse 20241207
+- Selenium 4.27.0
+- On Linux chrome no longer supports finding `option`s with nested `span` elements as `select` values (see [#692](https://github.com/fhoeben/hsac-fitnesse-fixtures/pull/692))
+- hsac-fitnesse-pdf 0.1.6 in docker images
+
+New in 5.3.17
+- FitNesse 20241026
+- Selenium 4.26.0
+
+New in 5.3.16
+- Selenium 4.25.0
+- Edgedriver 130.0.2849.46 (on Mac 130.0.2849.50)
+- Chromedriver 130.0.6723.58
+- Geckodriver 0.35.0
+
 New in 5.3.15
 - FitNesse 20240707
 - Selenium 4.22.0

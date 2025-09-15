@@ -4,6 +4,8 @@ import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.slim.web.annotation.NoNgWait;
 import nl.hsac.fitnesse.slim.interaction.ReflectionHelper;
 import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.Set;
  * Base class for fixtures testing sites using AngularJs.
  */
 public abstract class NgBrowserTestBase extends BrowserTest<WebElement> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(NgBrowserTestBase.class);
     private final static Set<String> METHODS_NO_WAIT;
 
     private final String waitForAngularScript;
@@ -144,21 +147,20 @@ public abstract class NgBrowserTestBase extends BrowserTest<WebElement> {
         try {
             roots = findAllByCss(rootSelector);
         } catch (RuntimeException ex) {
-            System.err.print("Problem using rootSelector: " + rootSelector);
-            ex.printStackTrace();
+            LOGGER.error("Problem using rootSelector: " + rootSelector, ex);
             throw e;
         }
 
         if (roots.isEmpty()) {
-            System.err.println("Unable to locate Angular root element. Please configure it explicitly using setAngularRoot(selector)");
+            LOGGER.error("Unable to locate Angular root element. Please configure it explicitly using setAngularRoot(selector)");
         } else if (roots.size() == 1) {
-            System.err.println("Found Angular. Single root element found, but error while waiting for requests to finish.");
+            LOGGER.error("Found Angular. Single root element found, but error while waiting for requests to finish.");
         } else {
-            System.err.println("Found Angular. Multiple root elements seem to be present: "
+            LOGGER.error("Found Angular. Multiple root elements seem to be present: "
                     + roots.size()
                     + " using root selector: " + rootSelector);
         }
-        System.err.println("Retrying once");
+        LOGGER.error("Retrying once");
         waitForAngularRequestsToFinish(rootSelector);
     }
 

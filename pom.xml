@@ -4,7 +4,7 @@
 
 	<groupId>nl.hsac</groupId>
 	<artifactId>hsac-fitnesse-fixtures</artifactId>
-	<version>5.3.16-SNAPSHOT</version>
+	<version>5.3.22-SNAPSHOT</version>
 	<url>https://github.com/fhoeben/hsac-fitnesse-fixtures</url>
 	<name>HSAC's FitNesse Fixtures</name>
 	<description>Fixtures to assist in testing via FitNesse</description>
@@ -35,21 +35,22 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.build.outputTimestamp>2024-07-13T14:32:13Z</project.build.outputTimestamp>
+		<project.build.outputTimestamp>2025-05-17T20:32:02Z</project.build.outputTimestamp>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<hsac-fitnesse-plugin.version>1.32.11</hsac-fitnesse-plugin.version>
-		<fitnesse.version>20240707</fitnesse.version>
-		<praegus-toolchain-fitnesse-plugin.version>2.0.18</praegus-toolchain-fitnesse-plugin.version>
-		<selenium.version>4.22.0</selenium.version>
-		<slf4j.version>2.0.13</slf4j.version>
+		<hsac-fitnesse-plugin.version>1.33.3</hsac-fitnesse-plugin.version>
+		<fitnesse.version>20250223</fitnesse.version>
+		<praegus-toolchain-fitnesse-plugin.version>2.0.24</praegus-toolchain-fitnesse-plugin.version>
+		<selenium.version>4.32.0</selenium.version>
+		<slf4j.version>2.0.16</slf4j.version>
 		<apache.http.version>4.5.14</apache.http.version>
-		<surefire.version>3.2.5</surefire.version>
+		<surefire.version>3.5.3</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
-		<selenium.edgedriver.version>126.0.2592.87</selenium.edgedriver.version>
-		<selenium.chromedriver.version>126.0.6478.126</selenium.chromedriver.version>
-		<selenium.geckodriver.version>0.34.0</selenium.geckodriver.version>
+		<selenium.edgedriver.version>136.0.3240.64</selenium.edgedriver.version>
+		<selenium.edgedriver.mac.version>136.0.3240.64</selenium.edgedriver.mac.version>
+		<selenium.chromedriver.version>136.0.7103.92</selenium.chromedriver.version>
+		<selenium.geckodriver.version>0.36.0</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven  -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>
@@ -88,7 +89,7 @@
 			<!-- Added to override httpclient(-win) and httpmime usage -->
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.17.0</version>
+			<version>1.18.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -114,12 +115,12 @@
 		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
-			<version>2.3.32</version>
+			<version>2.3.34</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-text</artifactId>
-			<version>1.12.0</version>
+			<version>1.13.1</version>
 		</dependency>
 		<dependency>
 			<groupId>cglib</groupId>
@@ -153,25 +154,25 @@
 			<!-- Added to override galen's old version -->
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.17.1</version>
+			<version>2.18.2</version>
 		</dependency>
 		<dependency>
 			<!-- Added to override galen's old version -->
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.16.1</version>
+			<version>2.19.0</version>
 		</dependency>
 		<dependency>
 			<!-- Added to override galen's old version -->
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>2.11.0</version>
+			<version>2.13.1</version>
 		</dependency>
 		<dependency>
 			<!-- Added to override galen's old version -->
 			<groupId>org.mozilla</groupId>
 			<artifactId>rhino</artifactId>
-			<version>1.7.15</version>
+			<version>1.8.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.galenframework</groupId>
@@ -217,12 +218,12 @@
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
-			<version>2.2</version>
+			<version>2.4</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-net</groupId>
 			<artifactId>commons-net</artifactId>
-			<version>3.10.0</version>
+			<version>3.11.1</version>
 		</dependency>
 		<!-- Testing -->
 		<dependency>
@@ -240,7 +241,7 @@
 		<dependency>
 			<groupId>org.skyscreamer</groupId>
 			<artifactId>jsonassert</artifactId>
-			<version>1.5.1</version>
+			<version>1.5.3</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -261,7 +262,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.4.1</version>
+				<version>3.4.2</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -270,7 +271,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
-				<version>3.3.2</version>
+				<version>3.4.1</version>
 				<configuration>
 					<filesets>
 						<fileset>
@@ -332,16 +333,16 @@
 							<name>edgedriver</name>
 							<platform>mac_m1</platform>
 							<bit>64</bit>
-							<version>${selenium.edgedriver.version}</version>
-							<url>https://msedgedriver.azureedge.net/${selenium.edgedriver.version}/edgedriver_mac64_m1.zip</url>
+							<version>${selenium.edgedriver.mac.version}</version>
+							<url>https://msedgedriver.azureedge.net/${selenium.edgedriver.mac.version}/edgedriver_mac64_m1.zip</url>
 							<fileMatchInside>msedgedriver</fileMatchInside>
 						</driver>
 						<driver>
 							<name>edgedriver</name>
 							<platform>mac</platform>
 							<bit>64</bit>
-							<version>${selenium.edgedriver.version}</version>
-							<url>https://msedgedriver.azureedge.net/${selenium.edgedriver.version}/edgedriver_mac64.zip</url>
+							<version>${selenium.edgedriver.mac.version}</version>
+							<url>https://msedgedriver.azureedge.net/${selenium.edgedriver.mac.version}/edgedriver_mac64.zip</url>
 							<fileMatchInside>msedgedriver</fileMatchInside>
 						</driver>
 						<driver>
@@ -471,7 +472,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
-				<version>3.3.0</version>
+				<version>3.5.0</version>
 				<executions>
 					<execution>
 						<id>default-cli</id>
@@ -502,7 +503,7 @@
 					 dependencies are available to Fitnesse without need to have Maven to run tests.
 				-->
 				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.6.1</version>
+				<version>3.8.1</version>
 				<configuration>
 					<includes>**/*</includes>
 					<excludes>META-INF,META-INF/**</excludes>
@@ -597,7 +598,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>3.0.1</version>
+				<version>3.1.1</version>
 				<configuration>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
 					<useReleaseProfile>false</useReleaseProfile>
@@ -611,7 +612,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.7.0</version>
+				<version>3.11.2</version>
 				<extensions>true</extensions>
 				<executions>
 					<execution>
@@ -635,7 +636,7 @@
 								nl.hsac.fitnesse.fixture.slim.web.annotation:
 								nl.hsac.fitnesse.fixture
 							</excludePackageNames>
-							<reportOutputDirectory>${project.basedir}/src/main/resources/META-INF/</reportOutputDirectory>
+							<outputDirectory>${project.basedir}/src/main/resources/META-INF/</outputDirectory>
 							<useStandardDocletOptions>false</useStandardDocletOptions>
 						</configuration>
 					</execution>
@@ -657,18 +658,16 @@
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>org.sonatype.plugins</groupId>
-						<artifactId>nexus-staging-maven-plugin</artifactId>
-						<version>1.7.0</version>
+						<groupId>org.sonatype.central</groupId>
+						<artifactId>central-publishing-maven-plugin</artifactId>
+						<version>0.7.0</version>
 						<extensions>true</extensions>
 						<configuration>
-							<serverId>ossrh</serverId>
-							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+							<publishingServerId>central</publishingServerId>
+							<autoPublish>true</autoPublish>
+							<waitUntil>published</waitUntil>
+							<waitMaxTime>3600</waitMaxTime>
 						</configuration>
-						<goals>
-							<goal>deploy</goal>
-						</goals>
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
@@ -686,7 +685,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.7.0</version>
+						<version>3.11.2</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -703,7 +702,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>3.2.4</version>
+						<version>3.2.7</version>
 						<configuration>
 							<useAgent>true</useAgent>
 							<gpgArguments>

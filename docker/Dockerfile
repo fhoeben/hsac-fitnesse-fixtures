@@ -1,9 +1,9 @@
-ARG MAVEN_VERSION=3.8-amazoncorretto-11
+ARG MAVEN_VERSION=3.9-amazoncorretto-11
 ARG JRE_IMAGE=eclipse-temurin:11-jre
-ARG SELENIUM_IMAGE=seleniarm/standalone-chromium:latest
+ARG SELENIUM_IMAGE=selenium/standalone-chromium:latest
 ARG GRAALVM_IMAGE=ghcr.io/graalvm/native-image:latest
 ARG BUSYBOX_IMAGE=busybox:latest
-ARG VERSION=5.3.8
+ARG VERSION=5.3.18
 ARG BASE_WORKDIR=/usr/src
 
 # ========== BASE ===========
@@ -36,7 +36,7 @@ VOLUME /fitnesse/target
 RUN mkdir wiki/FitNesseRoot
 VOLUME /fitnesse/wiki/FitNesseRoot
 
-ENV FITNESSE_OPTS -Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true
+ENV FITNESSE_OPTS="-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true"
 COPY --link test/runTests.sh ./
 COPY --link test/rerunFailedTests.sh ./
 COPY --link test/htmlReportIndexGenerator.sh ./
@@ -72,9 +72,9 @@ COPY --link chrome/fitnesse-hsac.conf /etc/supervisor/conf.d/
 VOLUME /fitnesse/target
 VOLUME /fitnesse/wiki/FitNesseRoot
 
-ENV FITNESSE_OPTS -Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true \
+ENV FITNESSE_OPTS="-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true \
     -DseleniumBrowser=chrome \
-    -DseleniumJsonProfile="{'args':['disable-dev-shm-usage','--remote-allow-origins=*']}"
+    -DseleniumJsonProfile=\"{'args':['disable-dev-shm-usage','--remote-allow-origins=*']}\""
 
 ENTRYPOINT ["/fitnesse/startGridAndRunTests.sh"]
 CMD []

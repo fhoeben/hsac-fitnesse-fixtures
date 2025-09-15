@@ -10,3 +10,4 @@
 
 |script          |selenium driver setup                     |
 |start driver for|chrome|with profile|$chromeHeadlessProfile|
+|show            |driver description                        |

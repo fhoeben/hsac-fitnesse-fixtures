@@ -38,9 +38,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.outputTimestamp>2020-01-01T00:00:00Z</project.build.outputTimestamp>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <fitnesse.version>20240707</fitnesse.version>
-        <hsac.fixtures.version>5.3.15</hsac.fixtures.version>
-        <hsac.pdf.version>0.1.4</hsac.pdf.version>
+        <fitnesse.version>20250223</fitnesse.version>
+        <hsac.fixtures.version>5.3.20</hsac.fixtures.version>
+        <hsac.pdf.version>0.1.6</hsac.pdf.version>
         <hsac.email.version>0.5.0</hsac.email.version>
         <standalone.classpath>test/wiki/fixtures</standalone.classpath>
         <skipCombineShade>false</skipCombineShade>
@@ -123,7 +123,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+                <version>3.14.0</version>
                 <configuration>
                     <release>11</release>
                     <encoding>${project.build.sourceEncoding}</encoding>
@@ -137,7 +137,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>3.4.0</version>
+                <version>3.4.1</version>
                 <configuration>
                     <filesets>
                         <fileset>
@@ -155,7 +155,7 @@
                      dependencies are available to Fitnesse without need to have Maven to run tests.
                 -->
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.7.1</version>
+                <version>3.8.1</version>
                 <executions>
                     <execution>
                         <id>copy-dependencies-to-wiki-fixtures</id>
@@ -197,6 +197,11 @@
                     </execution>
                 </executions>
                 <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.plexus</groupId>
+                        <artifactId>plexus-utils</artifactId>
+                        <version>4.0.2</version>
+                    </dependency>
                     <dependency>
                         <groupId>nl.hsac</groupId>
                         <artifactId>hsac-fitnesse-fixtures</artifactId>

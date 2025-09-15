@@ -1,6 +1,5 @@
 package nl.hsac.fitnesse.fixture.util.selenium;
 
-import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import nl.hsac.fitnesse.fixture.slim.SlimFixtureException;
 import nl.hsac.fitnesse.fixture.util.FileUtil;
@@ -51,12 +50,15 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -72,6 +74,7 @@ import static org.openqa.selenium.support.locators.RelativeLocator.with;
  * Helper to work with Selenium.
  */
 public class SeleniumHelper<T extends WebElement> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SeleniumHelper.class);
     private static final String ELEMENT_ON_SCREEN_JS =
             "if (arguments[0].getBoundingClientRect) {\n" +
                     "var rect = arguments[0].getBoundingClientRect();\n" +
@@ -555,7 +558,7 @@ public class SeleniumHelper<T extends WebElement> {
             driver().manage().timeouts().implicitlyWait(Duration.ofMillis(implicitWait));
         } catch (Exception e) {
             // https://code.google.com/p/selenium/issues/detail?id=6015
-            System.err.println("Unable to set implicit timeout (known issue for Safari): " + e.getMessage());
+            LOGGER.error("Unable to set implicit timeout (known issue for Safari): " + e.getMessage());
         }
     }
 
@@ -569,7 +572,7 @@ public class SeleniumHelper<T extends WebElement> {
             driver().manage().timeouts().scriptTimeout(Duration.ofMillis(scriptTimeout));
         } catch (Exception e) {
             // https://code.google.com/p/selenium/issues/detail?id=6015
-            System.err.println("Unable to set script timeout (known issue for Safari): " + e.getMessage());
+            LOGGER.error("Unable to set script timeout (known issue for Safari): " + e.getMessage());
         }
     }
 
@@ -583,7 +586,7 @@ public class SeleniumHelper<T extends WebElement> {
             driver().manage().timeouts().pageLoadTimeout(Duration.ofMillis(pageLoadWait));
         } catch (Exception e) {
             // https://code.google.com/p/selenium/issues/detail?id=6015
-            System.err.println("Unable to set page load timeout (known issue for Safari): " + e.getMessage());
+            LOGGER.error("Unable to set page load timeout (known issue for Safari): " + e.getMessage());
         }
     }
 
@@ -766,7 +769,7 @@ public class SeleniumHelper<T extends WebElement> {
      */
     public void html5DragAndDrop(WebElement source, WebElement target) throws IOException {
         URL url = Resources.getResource(DRAG_AND_DROP_SIM_JS_RESOURCE);
-        String js = Resources.toString(url, Charsets.UTF_8);
+        String js = Resources.toString(url,  StandardCharsets.UTF_8);
         executeJavascript(js + " DndSimulator.simulate(arguments[0], arguments[1]);", source, target);
     }
 
