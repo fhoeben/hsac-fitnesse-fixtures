@@ -28,7 +28,7 @@ jobs:
       selenium-version: ${{ steps.get-version.outputs.selenium-version }}
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Java and Maven
         uses: actions/setup-java@v4
@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Java and Maven
         uses: actions/setup-java@v4
@@ -116,7 +116,7 @@ jobs:
             arch: amd64
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Docker meta
         id: meta
@@ -279,7 +279,7 @@ jobs:
             arch: amd64
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Docker meta
         id: meta

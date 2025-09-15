@@ -18,7 +18,7 @@ jobs:
       selenium-version: ${{ steps.get-version.outputs.selenium-version }}
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Java and Maven
         uses: actions/setup-java@v4
@@ -79,7 +79,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: download pom
         uses: actions/download-artifact@v4
@@ -134,7 +134,7 @@ jobs:
       fitnesse-version: ${{ needs.maven-release.outputs.fitnesse-version }}
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Java and Maven
         uses: actions/setup-java@v4
@@ -182,7 +182,7 @@ jobs:
             arch: arm64
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Docker meta
         id: meta
@@ -352,7 +352,7 @@ jobs:
             arch: arm64
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Docker meta
         id: meta
@@ -555,7 +555,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Java and Maven
         uses: actions/setup-java@v4
