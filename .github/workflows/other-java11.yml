@@ -51,7 +51,7 @@ jobs:
 
       - name: Upload artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: target
           path: |
@@ -85,7 +85,7 @@ jobs:
           mvn --batch-mode clean package -Dfitnesse.version=${{ needs.maven-test.outputs.fitnesse-version }} -Dhsac.fixtures.version=${{ needs.maven-test.outputs.version }}
 
       - name: Upload docker image content
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: docker-content
           path: |
@@ -98,7 +98,7 @@ jobs:
           mvn --batch-mode -P withPdf package -DskipCombineShade=true -Dfitnesse.version=${{ needs.maven-test.outputs.fitnesse-version }} -Dhsac.fixtures.version=${{ needs.maven-test.outputs.version }}
 
       - name: Upload with-pdf docker image content
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: docker-content-with-pdf
           path: |
@@ -134,7 +134,7 @@ jobs:
           mv "${{ steps.meta.outputs.bake-file }}" "/tmp/bake-meta.json"
 
       - name: Upload meta bake definition
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: bake-meta-${{ matrix.arch }}
           path: /tmp/bake-meta.json
@@ -202,7 +202,7 @@ jobs:
           echo "chrome-image=hsac/fitnesse-fixtures-test-jre11-chrome@${chrome_digest}" >> $GITHUB_OUTPUT
 
       - name: Upload digest
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: digests-${{ matrix.arch }}
           path: /tmp/digests/*
@@ -210,7 +210,7 @@ jobs:
           retention-days: 1
 
       - name: Upload image names
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: images-${{ matrix.arch }}
           path: /tmp/images/*
@@ -262,7 +262,7 @@ jobs:
 
       - name: Upload test artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: docker-tests-results-${{ matrix.arch }}
           path: docker/target
@@ -294,7 +294,7 @@ jobs:
           mv "${{ steps.meta.outputs.bake-file }}" "/tmp/bake-meta.json"
 
       - name: Upload meta bake definition
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: bake-meta-${{ matrix.arch }}-with-pdf
           path: /tmp/bake-meta.json
@@ -371,7 +371,7 @@ jobs:
           echo "chrome-with-pdf-image=hsac/fitnesse-fixtures-test-jre11-chrome-with-pdf@${chrome_with_pdf_digest}" >> $GITHUB_OUTPUT
 
       - name: Upload digest
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: digests-${{ matrix.arch }}-with-pdf
           path: /tmp/digests/*
@@ -379,7 +379,7 @@ jobs:
           retention-days: 1
 
       - name: Upload image names
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: images-${{ matrix.arch }}-with-pdf
           path: /tmp/images/*
@@ -404,7 +404,7 @@ jobs:
 
       - name: Upload test artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: docker-tests-results-${{ matrix.arch }}-with-pdf
           path: docker/target
