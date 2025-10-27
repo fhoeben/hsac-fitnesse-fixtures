@@ -22,6 +22,9 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 
 New in ${VERSION}
 - FitNesse v20260313
+- Selenium 4.39.0
+- Edgedriver 145.0.3800.97 and 146.0.3856.59
+- Chromedriver 146.0.7680.76
 
 New in 5.3.2
 - Selenium 4.35.0
