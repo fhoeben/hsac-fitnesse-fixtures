@@ -8,26 +8,26 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.HasDevTools;
-import org.openqa.selenium.devtools.v136.emulation.Emulation;
-import org.openqa.selenium.devtools.v136.fetch.Fetch;
-import org.openqa.selenium.devtools.v136.fetch.model.RequestPattern;
-import org.openqa.selenium.devtools.v136.fetch.model.RequestStage;
-import org.openqa.selenium.devtools.v136.log.Log;
-import org.openqa.selenium.devtools.v136.network.Network;
-import org.openqa.selenium.devtools.v136.network.model.Cookie;
-import org.openqa.selenium.devtools.v136.network.model.CookiePriority;
-import org.openqa.selenium.devtools.v136.network.model.CookieSameSite;
-import org.openqa.selenium.devtools.v136.network.model.Headers;
-import org.openqa.selenium.devtools.v136.network.model.RequestId;
-import org.openqa.selenium.devtools.v136.network.model.RequestWillBeSent;
-import org.openqa.selenium.devtools.v136.network.model.ResourceType;
-import org.openqa.selenium.devtools.v136.network.model.ResponseReceived;
-import org.openqa.selenium.devtools.v136.network.model.TimeSinceEpoch;
-import org.openqa.selenium.devtools.v136.page.Page;
-import org.openqa.selenium.devtools.v136.performance.Performance;
-import org.openqa.selenium.devtools.v136.performance.model.Metric;
-import org.openqa.selenium.devtools.v136.runtime.Runtime;
-import org.openqa.selenium.devtools.v136.security.Security;
+import org.openqa.selenium.devtools.v139.emulation.Emulation;
+import org.openqa.selenium.devtools.v139.fetch.Fetch;
+import org.openqa.selenium.devtools.v139.fetch.model.RequestPattern;
+import org.openqa.selenium.devtools.v139.fetch.model.RequestStage;
+import org.openqa.selenium.devtools.v139.log.Log;
+import org.openqa.selenium.devtools.v139.network.Network;
+import org.openqa.selenium.devtools.v139.network.model.Cookie;
+import org.openqa.selenium.devtools.v139.network.model.CookiePriority;
+import org.openqa.selenium.devtools.v139.network.model.CookieSameSite;
+import org.openqa.selenium.devtools.v139.network.model.Headers;
+import org.openqa.selenium.devtools.v139.network.model.RequestId;
+import org.openqa.selenium.devtools.v139.network.model.RequestWillBeSent;
+import org.openqa.selenium.devtools.v139.network.model.ResourceType;
+import org.openqa.selenium.devtools.v139.network.model.ResponseReceived;
+import org.openqa.selenium.devtools.v139.network.model.TimeSinceEpoch;
+import org.openqa.selenium.devtools.v139.page.Page;
+import org.openqa.selenium.devtools.v139.performance.Performance;
+import org.openqa.selenium.devtools.v139.performance.model.Metric;
+import org.openqa.selenium.devtools.v139.runtime.Runtime;
+import org.openqa.selenium.devtools.v139.security.Security;
 import org.openqa.selenium.remote.Augmenter;
 
 import java.math.BigInteger;
@@ -84,7 +84,7 @@ public class DevToolsBrowserTest<T extends WebElement> extends BrowserTest<T> {
         }
         devTools = ((HasDevTools) driver).getDevTools();
         devTools.createSessionIfThereIsNotOne();
-        devTools.send(Network.enable(Optional.of(100000), Optional.of(100000), Optional.of(100000)));
+        devTools.send(Network.enable(Optional.of(100000), Optional.of(100000), Optional.of(100000), empty()));
     }
 
     /**
@@ -122,7 +122,7 @@ public class DevToolsBrowserTest<T extends WebElement> extends BrowserTest<T> {
         for (Cookie c : cookies) {
             result.put(c.getName(), c.getValue());
         }
-        return result.size() > 0 ? result : null;
+        return !result.isEmpty() ? result : null;
     }
 
     /**
@@ -180,7 +180,30 @@ public class DevToolsBrowserTest<T extends WebElement> extends BrowserTest<T> {
      * @param accuracy Accuracy
      */
     public void setGeoLocationLatLonAccuracy(String lat, String lon, String accuracy) {
-        devTools.send(Emulation.setGeolocationOverride(Optional.of(Double.valueOf(lat)), Optional.of(Double.valueOf(lon)), Optional.of(Integer.valueOf(accuracy))));
+        devTools.send(Emulation.setGeolocationOverride(
+                Optional.of(Double.valueOf(lat)),
+                Optional.of(Double.valueOf(lon)),
+                Optional.of(Integer.valueOf(accuracy)),
+                empty(),
+                empty(),
+                empty(),
+                empty()));
+    }
+
+    /**
+     * Mock geo location and accuracy
+     *
+     * @param lat      Latitude
+     * @param lon      Longitude
+     * @param accuracy Accuracy
+     * @param altitude Altitude
+     * @param altitudeAccuracy Altitude accuracy
+     * @param heading Heading
+     * @param speed Speed
+     */
+    public void setGeoLocationLatLonAccuracy(String lat, String lon, String accuracy, int altitude, int altitudeAccuracy, int heading, int speed) {
+        devTools.send(Emulation.setGeolocationOverride(
+                Optional.of(Double.valueOf(lat)), Optional.of(Double.valueOf(lon)), Optional.of(Integer.valueOf(accuracy)), Optional.of(altitude), Optional.of(altitudeAccuracy), Optional.of(heading), Optional.of(speed)));
     }
 
     /**
@@ -243,8 +266,7 @@ public class DevToolsBrowserTest<T extends WebElement> extends BrowserTest<T> {
 
     private String formattedConsoleLog(List<String> logEntryList) {
         devTools.send(Log.enable());
-        String logView = logEntryList.stream().map(entry -> entry + "\r\n").collect(Collectors.joining());
-        return logView;
+        return logEntryList.stream().map(entry -> entry + "\r\n").collect(Collectors.joining());
     }
 
     /**
@@ -327,15 +349,15 @@ public class DevToolsBrowserTest<T extends WebElement> extends BrowserTest<T> {
         devTools.send(Log.enable());
         devTools.addListener(Runtime.consoleAPICalled(), call -> {
             String entry = call.getType().toString() + "; " +
-                    new Timestamp(System.currentTimeMillis()).getTime() + "; " +
-                    call.getArgs().stream().map(Object::toString).collect(Collectors.joining());
+                           new Timestamp(System.currentTimeMillis()).getTime() + "; " +
+                           call.getArgs().stream().map(Object::toString).collect(Collectors.joining());
 
             logEntries.add(entry);
         });
         devTools.addListener(Log.entryAdded(), logEntry -> {
             String entry = logEntry.getLevel().name() + "; " +
-                    logEntry.getTimestamp().toString() + "; " +
-                    logEntry.getText();
+                           logEntry.getTimestamp().toString() + "; " +
+                           logEntry.getText();
             logEntries.add(entry);
         });
 
@@ -444,7 +466,7 @@ public class DevToolsBrowserTest<T extends WebElement> extends BrowserTest<T> {
         return "\\Q" + wildcardPattern
                 .replace("?", "\\E.\\Q")
                 .replace("*", "\\E.*\\Q") +
-                "\\E";
+               "\\E";
     }
 
 }

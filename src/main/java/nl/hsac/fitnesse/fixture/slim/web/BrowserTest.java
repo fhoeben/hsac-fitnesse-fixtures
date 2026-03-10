@@ -2656,18 +2656,6 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
         return getSeleniumHelper().takeScreenshot(name);
     }
 
-    private String createScreenshot(String basename, Throwable t) {
-        String screenshotFile;
-        byte[] screenshotInException = getSeleniumHelper().findScreenshot(t);
-        if (screenshotInException == null || screenshotInException.length == 0) {
-            screenshotFile = createScreenshot(basename);
-        } else {
-            String name = getScreenshotBasename(basename);
-            screenshotFile = getSeleniumHelper().writeScreenshot(name, screenshotInException);
-        }
-        return screenshotFile;
-    }
-
     protected String getScreenshotBasename(String basename) {
         return screenshotBase + basename;
     }
@@ -2840,7 +2828,7 @@ public class BrowserTest<T extends WebElement> extends SlimFixture {
     protected String getExceptionScreenshotTag(String screenshotBaseName, String messageBase, Throwable t) {
         String screenshotTag = "(Screenshot not available)";
         try {
-            String screenShotFile = createScreenshot(screenshotBaseName, t);
+            String screenShotFile = createScreenshot(screenshotBaseName);
             screenshotTag = getScreenshotLink(screenShotFile);
         } catch (UnhandledAlertException e) {
             // https://code.google.com/p/selenium/issues/detail?id=4412
