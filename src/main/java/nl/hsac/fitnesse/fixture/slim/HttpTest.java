@@ -4,6 +4,7 @@ import fit.exception.FitFailureException;
 import freemarker.template.Template;
 import nl.hsac.fitnesse.fixture.util.BinaryHttpResponse;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
+import nl.hsac.fitnesse.fixture.util.MultipartPart;
 import nl.hsac.fitnesse.fixture.util.NonValidResponseReceivedException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.CookieStore;
@@ -155,6 +156,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Stores value to be passed as multipart POST.
+     * Usage: | set value | [value] | for multipart | [name] |
      *
      * @param value value to be passed.
      * @param name  name to use this value for.
@@ -165,6 +167,8 @@ public class HttpTest extends SlimFixtureWithMap {
 
     /**
      * Stores file to be passed as multipart POST.
+     * Usage: | set file | [file] | for multipart | [name] |
+     *
      * @param filename file to be passed.
      * @param name name to use this value for.
      */
@@ -175,6 +179,36 @@ public class HttpTest extends SlimFixtureWithMap {
             throw new StopTestException(false, "File " + filePath + " not found.");
         }
         setValueForMultipart(file, name);
+    }
+
+    /**
+     * Stores value to be passed as multipart POST with a specific content type.
+     * Usage: | set multipart value | [value] | as | [partName] | with content type | [contentType] |
+     *
+     * @param value value to be passed.
+     * @param name name to use this value for.
+     * @param contentType content type of the part.
+     */
+    public void setMultipartValueAsWithContentType(Object value, String name, String contentType) {
+        MultipartPart part = new MultipartPart(value, contentType);
+        setValueForMultipart(part, name);
+    }
+
+    /**
+     * Stores file to be passed as multipart POST with a specific content type.
+     * Usage: | set multipart file | [file] | as | [partName] | with content type | [contentType] |
+     *
+     * @param filename file to be passed.
+     * @param name name to use this value for.
+     * @param contentType content type of the part.
+     */
+    public void setMultipartFileAsWithContentType(String filename, String name, String contentType) {
+        String filePath = getFilePathFromWikiUrl(filename);
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new StopTestException(false, "File " + filePath + " not found.");
+        }
+        setMultipartValueAsWithContentType(file, name, contentType);
     }
 
     /**

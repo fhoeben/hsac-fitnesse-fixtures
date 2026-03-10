@@ -18,10 +18,10 @@ jobs:
       selenium-version: ${{ steps.get-version.outputs.selenium-version }}
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install Java and Maven
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: '11'
           distribution: 'zulu'
@@ -40,14 +40,14 @@ jobs:
           echo "selenium-version=$SELENIUM_VERSION" >> $GITHUB_OUTPUT
 
       - name: upload release pom
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: pom
           path: pom.xml
           if-no-files-found: error
 
       - name: Set up Apache Maven Central
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with: # running setup-java again overwrites the settings.xml
           java-version: '11'
           distribution: 'zulu'
@@ -67,7 +67,7 @@ jobs:
 
       - name: upload packages
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: target
           path: |
@@ -79,15 +79,15 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: download pom
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: pom
 
       - name: download packages
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: target
           path: target
@@ -134,10 +134,10 @@ jobs:
       fitnesse-version: ${{ needs.maven-release.outputs.fitnesse-version }}
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install Java and Maven
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: '11'
           distribution: 'zulu'
@@ -149,7 +149,7 @@ jobs:
           mvn --batch-mode clean package -Dfitnesse.version=${{ needs.maven-release.outputs.fitnesse-version }} -Dhsac.fixtures.version=${{ needs.maven-release.outputs.version }}
 
       - name: Upload docker image content
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: docker-content
           path: |
@@ -162,7 +162,7 @@ jobs:
           mvn --batch-mode -P withPdf package -DskipCombineShade=true -Dfitnesse.version=${{ needs.maven-release.outputs.fitnesse-version }} -Dhsac.fixtures.version=${{ needs.maven-release.outputs.version }}
 
       - name: Upload with-pdf docker image content
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: docker-content-with-pdf
           path: |
@@ -182,7 +182,7 @@ jobs:
             arch: arm64
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Docker meta
         id: meta
@@ -205,7 +205,7 @@ jobs:
           mv "${{ steps.meta.outputs.bake-file }}" "/tmp/bake-meta.json"
 
       - name: Upload meta bake definition
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: bake-meta-${{ matrix.arch }}
           path: /tmp/bake-meta.json
@@ -219,7 +219,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: download docker content
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: docker-content
           path: docker
@@ -273,7 +273,7 @@ jobs:
           echo "chrome-image=hsac/fitnesse-fixtures-test-jre11-chrome@${chrome_digest}" >> $GITHUB_OUTPUT
 
       - name: Upload digest
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: digests-${{ matrix.arch }}
           path: /tmp/digests/*
@@ -281,7 +281,7 @@ jobs:
           retention-days: 1
 
       - name: Upload image names
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: images-${{ matrix.arch }}
           path: /tmp/images/*
@@ -333,7 +333,7 @@ jobs:
 
       - name: Upload test artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: docker-tests-results-${{ matrix.arch }}
           path: docker/target
@@ -352,7 +352,7 @@ jobs:
             arch: arm64
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Docker meta
         id: meta
@@ -367,7 +367,7 @@ jobs:
           mv "${{ steps.meta.outputs.bake-file }}" "/tmp/bake-meta.json"
 
       - name: Upload meta bake definition
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: bake-meta-${{ matrix.arch }}-with-pdf
           path: /tmp/bake-meta.json
@@ -375,7 +375,7 @@ jobs:
           retention-days: 1
 
       - name: Download image names
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: images-${{ matrix.arch }}
           path: /tmp/images
@@ -394,7 +394,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: download docker content
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: docker-content-with-pdf
           path: docker/test/wiki
@@ -444,7 +444,7 @@ jobs:
           echo "chrome-with-pdf-image=hsac/fitnesse-fixtures-test-jre11-chrome-with-pdf@${chrome_with_pdf_digest}" >> $GITHUB_OUTPUT
 
       - name: Upload digest
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: digests-${{ matrix.arch }}-with-pdf
           path: /tmp/digests/*
@@ -452,7 +452,7 @@ jobs:
           retention-days: 1
 
       - name: Upload image names
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: images-${{ matrix.arch }}-with-pdf
           path: /tmp/images/*
@@ -477,7 +477,7 @@ jobs:
 
       - name: Upload test artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: docker-tests-results-${{ matrix.arch }}-with-pdf
           path: docker/target
@@ -502,31 +502,31 @@ jobs:
             image: hsac/fitnesse-fixtures-test-jre11-chrome-with-pdf
     steps:
       - name: Download meta bake definition
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: bake-meta-amd64
           path: /tmp
 
       - name: Download amd64 digests
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: digests-amd64
           path: /tmp/digests
 
       - name: Download arm64 digests
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: digests-arm64
           path: /tmp/digests
 
       - name: Download digests amd64 with pdf
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: digests-amd64-with-pdf
           path: /tmp/digests
 
       - name: Download digests arm64 with pdf
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: digests-arm64-with-pdf
           path: /tmp/digests
@@ -555,10 +555,10 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install Java and Maven
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: '11'
           distribution: 'zulu'

@@ -190,6 +190,16 @@ public class HttpClient {
             if (value instanceof File) {
                 File file = (File) value;
                 builder.addBinaryBody(key, file, ContentType.APPLICATION_OCTET_STREAM, file.getName());
+            } else if (value instanceof MultipartPart) {
+                MultipartPart part = (MultipartPart) value;
+                Object partData = part.getData();
+                ContentType partContentType = ContentType.parse(part.getContentType());
+                if (partData instanceof File) {
+                    File file = (File) partData;
+                    builder.addBinaryBody(key, file, partContentType, file.getName());
+                } else {
+                    builder.addTextBody(key, String.valueOf(partData), partContentType);
+                }
             } else {
                 builder.addTextBody(key, String.valueOf(value));
             }
