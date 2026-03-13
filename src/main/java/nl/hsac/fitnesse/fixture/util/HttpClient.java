@@ -80,6 +80,21 @@ public class HttpClient {
     }
 
     /**
+     * Posts multipart-form data.
+     * @param url URL of service
+     * @param response response pre-populated with request to send. Response content and
+     *          statusCode will be filled.
+     * @param headers http headers to add
+     * @param multipartValues values to post.
+     */
+    public void post(String url, HttpResponse response, Map<String, Object> headers, Map<String, Object> multipartValues) {
+        HttpPost methodPost = new HttpPost(url);
+        HttpEntity multipart = buildMultipartBody(multipartValues);
+        methodPost.setEntity(multipart);
+        getResponse(url, response, methodPost, headers);
+    }
+
+    /**
      * @param url URL of service
      * @param response response pre-populated with request to send. Response content and
      *          statusCode will be filled.
@@ -111,6 +126,21 @@ public class HttpClient {
     }
 
     /**
+     * Puts multipart-form data.
+     * @param url URL of service
+     * @param response response pre-populated with request to send. Response content and
+     *          statusCode will be filled.
+     * @param headers http headers to add
+     * @param multipartValues values to put.
+     */
+    public void put(String url, HttpResponse response, Map<String, Object> headers, Map<String, Object> multipartValues) {
+        HttpPut methodPut = new HttpPut(url);
+        HttpEntity multipart = buildMultipartBody(multipartValues);
+        methodPut.setEntity(multipart);
+        getResponse(url, response, methodPut, headers);
+    }
+
+    /**
      * @param url URL of service
      * @param response response pre-populated with request to send. Response content and
      *          statusCode will be filled.
@@ -126,6 +156,21 @@ public class HttpClient {
     }
 
     /**
+     * Patches multipart-form data.
+     * @param url URL of service
+     * @param response response pre-populated with request to send. Response content and
+     *          statusCode will be filled.
+     * @param headers http headers to add
+     * @param multipartValues values to patch.
+     */
+    public void patch(String url, HttpResponse response, Map<String, Object> headers, Map<String, Object> multipartValues) {
+        HttpPatch methodPatch = new HttpPatch(url);
+        HttpEntity multipart = buildMultipartBody(multipartValues);
+        methodPatch.setEntity(multipart);
+        getResponse(url, response, methodPatch, headers);
+    }
+
+    /**
      * Builds request body with a given file
      * @param file file containing binary data.
      */
@@ -135,6 +180,21 @@ public class HttpClient {
                 ContentType.APPLICATION_OCTET_STREAM, file.getName());
         HttpEntity multipart = builder.build();
         return multipart;
+    }
+
+    private HttpEntity buildMultipartBody(Map<String, Object> multipartValues) {
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        for (Map.Entry<String, Object> entry : multipartValues.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            if (value instanceof File) {
+                File file = (File) value;
+                builder.addBinaryBody(key, file, ContentType.APPLICATION_OCTET_STREAM, file.getName());
+            } else {
+                builder.addTextBody(key, String.valueOf(value));
+            }
+        }
+        return builder.build();
     }
 
     /**
