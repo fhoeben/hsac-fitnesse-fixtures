@@ -21,6 +21,8 @@ An example of Maven based project using this baseline can be found at: https://g
 When upgrading from an older version, ensure all Selenium webdrivers are stopped and delete the 'wiki/plugins' and 'wiki/webdrivers' folders to remove old versions of the packaged plugins/webdrivers. When using the sample project: follow the instructions at https://github.com/fhoeben/sample-fitnesse-project#upgrading.
 
 New in ${VERSION}
+
+New in 5.3.24
 - FitNesse v20260313
 - Selenium 4.39.0
 - Edgedriver 145.0.3800.97 and 146.0.3856.59
