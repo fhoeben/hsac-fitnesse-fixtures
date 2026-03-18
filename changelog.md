@@ -22,6 +22,9 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 
 New in ${VERSION}
 
+New in 5.3.25
+- Support for multipart POST/PUT/PATCH in HttpTest
+
 New in 5.3.24
 - FitNesse v20260313
 - Selenium 4.39.0
