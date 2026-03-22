@@ -1,0 +1,29 @@
+|script      |mock xml server setup    |
+|add response|{{{<status>OK</status>}}}|
+|add response|{{{<status>OK</status>}}}|
+|add response|{{{<status>OK</status>}}}|
+|$mockUrl=   |get mock server url      |
+
+|script       |file fixture                                                           |
+|$createdFile=|create|upload.txt|containing|This is a file to test the file upload    |
+|$xmlFile=    |create|test.xml  |containing|!-<?xml version="1.0" encoding="UTF-8"?>-!|
+
+|script                   |http test                                                             |
+|set multipart value      |{"key": "value"}|as           |json|with content type|application/json|
+|set multipart file       |$xmlFile        |as           |xml |with content type|application/xml |
+|set value                |Some String data|for multipart|secondpart                             |
+|set file                 |$createdFile    |for multipart|file                                   |
+|post multipart values to |$mockUrl                                                              |
+|show                     |request                                                               |
+|show                     |response                                                              |
+|put multipart values to  |$mockUrl                                                              |
+|show                     |request                                                               |
+|show                     |response                                                              |
+|patch multipart values to|$mockUrl                                                              |
+|show                     |request                                                               |
+|show                     |response                                                              |
+
+|table: Mock Server Message Report|
+
+|script|mock xml server setup|
+|stop                        |

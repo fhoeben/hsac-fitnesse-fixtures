@@ -305,6 +305,17 @@ public class Environment {
     }
 
     /**
+     * Performs multipart POST.
+     * @param url url to post to.
+     * @param result result containing request, its response will be filled.
+     * @param headers headers to add.
+     * @param multipartValues values to post.
+     */
+    public void doHttpMultipartPost(String url, HttpResponse result, Map<String, Object> headers, Map<String, Object> multipartValues) {
+        httpClient.post(url, result, headers, multipartValues);
+    }
+
+    /**
      * Performs PUT to supplied url of a file as binary data.
      * @param url url to post to.
      * @param result result containing request, its response will be filled.
@@ -314,6 +325,17 @@ public class Environment {
      */
     public void doHttpFilePut(String url, HttpResponse result, Map<String, Object> headers, String partName, File file) {
         httpClient.put(url, result, headers, partName, file);
+    }
+
+    /**
+     * Performs multipart PUT.
+     * @param url url to put to.
+     * @param result result containing request, its response will be filled.
+     * @param headers headers to add.
+     * @param multipartValues values to put.
+     */
+    public void doHttpMultipartPut(String url, HttpResponse result, Map<String, Object> headers, Map<String, Object> multipartValues) {
+        httpClient.put(url, result, headers, multipartValues);
     }
 
     /**
@@ -487,6 +509,17 @@ public class Environment {
      */
     public void doHttpPatch(String url, HttpResponse result, Map<String, Object> headers, String contentType) {
         httpClient.patch(url, result, headers, contentType);
+    }
+
+    /**
+     * Performs multipart PATCH.
+     * @param url url to patch to.
+     * @param result result containing request, its response will be filled.
+     * @param headers headers to add.
+     * @param multipartValues values to patch.
+     */
+    public void doHttpMultipartPatch(String url, HttpResponse result, Map<String, Object> headers, Map<String, Object> multipartValues) {
+        httpClient.patch(url, result, headers, multipartValues);
     }
 
     /**
