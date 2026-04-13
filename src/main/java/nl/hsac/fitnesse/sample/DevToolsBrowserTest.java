@@ -8,26 +8,26 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.HasDevTools;
-import org.openqa.selenium.devtools.v143.emulation.Emulation;
-import org.openqa.selenium.devtools.v143.fetch.Fetch;
-import org.openqa.selenium.devtools.v143.fetch.model.RequestPattern;
-import org.openqa.selenium.devtools.v143.fetch.model.RequestStage;
-import org.openqa.selenium.devtools.v143.log.Log;
-import org.openqa.selenium.devtools.v143.network.Network;
-import org.openqa.selenium.devtools.v143.network.model.Cookie;
-import org.openqa.selenium.devtools.v143.network.model.CookiePriority;
-import org.openqa.selenium.devtools.v143.network.model.CookieSameSite;
-import org.openqa.selenium.devtools.v143.network.model.Headers;
-import org.openqa.selenium.devtools.v143.network.model.RequestId;
-import org.openqa.selenium.devtools.v143.network.model.RequestWillBeSent;
-import org.openqa.selenium.devtools.v143.network.model.ResourceType;
-import org.openqa.selenium.devtools.v143.network.model.ResponseReceived;
-import org.openqa.selenium.devtools.v143.network.model.TimeSinceEpoch;
-import org.openqa.selenium.devtools.v143.page.Page;
-import org.openqa.selenium.devtools.v143.performance.Performance;
-import org.openqa.selenium.devtools.v143.performance.model.Metric;
-import org.openqa.selenium.devtools.v143.runtime.Runtime;
-import org.openqa.selenium.devtools.v143.security.Security;
+import org.openqa.selenium.devtools.v146.emulation.Emulation;
+import org.openqa.selenium.devtools.v146.fetch.Fetch;
+import org.openqa.selenium.devtools.v146.fetch.model.RequestPattern;
+import org.openqa.selenium.devtools.v146.fetch.model.RequestStage;
+import org.openqa.selenium.devtools.v146.log.Log;
+import org.openqa.selenium.devtools.v146.network.Network;
+import org.openqa.selenium.devtools.v146.network.model.Cookie;
+import org.openqa.selenium.devtools.v146.network.model.CookiePriority;
+import org.openqa.selenium.devtools.v146.network.model.CookieSameSite;
+import org.openqa.selenium.devtools.v146.network.model.Headers;
+import org.openqa.selenium.devtools.v146.network.model.RequestId;
+import org.openqa.selenium.devtools.v146.network.model.RequestWillBeSent;
+import org.openqa.selenium.devtools.v146.network.model.ResourceType;
+import org.openqa.selenium.devtools.v146.network.model.ResponseReceived;
+import org.openqa.selenium.devtools.v146.network.model.TimeSinceEpoch;
+import org.openqa.selenium.devtools.v146.page.Page;
+import org.openqa.selenium.devtools.v146.performance.Performance;
+import org.openqa.selenium.devtools.v146.performance.model.Metric;
+import org.openqa.selenium.devtools.v146.runtime.Runtime;
+import org.openqa.selenium.devtools.v146.security.Security;
 import org.openqa.selenium.remote.Augmenter;
 
 import java.math.BigInteger;
@@ -136,7 +136,7 @@ public class DevToolsBrowserTest<T extends WebElement> extends BrowserTest<T> {
     public void setCookieWithValueForDomain(String name, String value, String domain) {
         devTools.send(Network.setCookie(name, value, empty(), Optional.of(domain),
                 empty(), empty(), empty(), empty(), empty(), empty(),
-                empty(), empty(), empty(), empty()));
+                empty(), empty(), empty()));
     }
 
     /**
@@ -157,7 +157,6 @@ public class DevToolsBrowserTest<T extends WebElement> extends BrowserTest<T> {
                 Optional.of(CookieSameSite.fromString(String.valueOf(cookieData.get("sameSite")))),
                 Optional.of(new TimeSinceEpoch(new BigInteger(String.valueOf(cookieData.get("expires"))))),
                 Optional.of(CookiePriority.fromString(String.valueOf(cookieData.get("priority")))),
-                empty(),
                 empty(),
                 empty(),
                 empty()
