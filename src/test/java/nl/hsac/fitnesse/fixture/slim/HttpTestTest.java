@@ -1,9 +1,11 @@
 package nl.hsac.fitnesse.fixture.slim;
 
 
+import nl.hsac.fitnesse.fixture.util.MultipartPart;
 import nl.hsac.fitnesse.fixture.util.XmlHttpResponse;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -401,6 +403,32 @@ public class HttpTestTest {
         assertEquals("PATCH", httpTest.getResponse().getMethod());
         checkTemplateRequestBody(httpTest.getResponse().getMethod(), req1);
         checkHeadersSent(httpTest);
+    }
+
+    @Test
+    public void testSetMultipartValueAsWithContentType() {
+        HttpTest httpTest = new HttpTest();
+        httpTest.setMultipartValueAsWithContentType("value", "name", "application/json");
+        Map<String, Object> multipartValues = httpTest.getMultipartValues();
+        assertEquals(1, multipartValues.size());
+        Object value = multipartValues.get("name");
+        assertTrue(value instanceof MultipartPart);
+        MultipartPart part = (MultipartPart) value;
+        assertEquals("value", part.getData());
+        assertEquals("application/json", part.getContentType());
+    }
+
+    @Test
+    public void testSetMultipartFileAsWithContentType() {
+        HttpTest httpTest = new HttpTest();
+        httpTest.setMultipartFileAsWithContentType("pom.xml", "file", "application/xml");
+        Map<String, Object> multipartValues = httpTest.getMultipartValues();
+        assertEquals(1, multipartValues.size());
+        Object value = multipartValues.get("file");
+        assertTrue(value instanceof MultipartPart);
+        MultipartPart part = (MultipartPart) value;
+        assertTrue(part.getData() instanceof File);
+        assertEquals("application/xml", part.getContentType());
     }
 
     static Map<String, Object> checkHeadersSent(HttpTest httpTest) {

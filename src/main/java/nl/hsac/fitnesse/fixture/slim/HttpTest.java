@@ -4,6 +4,7 @@ import fit.exception.FitFailureException;
 import freemarker.template.Template;
 import nl.hsac.fitnesse.fixture.util.BinaryHttpResponse;
 import nl.hsac.fitnesse.fixture.util.HttpResponse;
+import nl.hsac.fitnesse.fixture.util.MultipartPart;
 import nl.hsac.fitnesse.fixture.util.NonValidResponseReceivedException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.CookieStore;
@@ -34,6 +35,7 @@ public class HttpTest extends SlimFixtureWithMap {
 
     private String downloadBase = new File(filesDir, "downloads").getPath() + "/";
     private final Map<String, Object> headerValues = new LinkedHashMap<>();
+    private final Map<String, Object> multipartValues = new LinkedHashMap<>();
     private boolean stopTestOnException = true;
     private boolean storeCookies = false;
     private HttpResponse response = createResponse();
@@ -152,6 +154,101 @@ public class HttpTest extends SlimFixtureWithMap {
         return headerValues;
     }
 
+    /**
+     * Stores value to be passed as multipart POST.
+     * Usage: | set value | [value] | for multipart | [name] |
+     *
+     * @param value value to be passed.
+     * @param name  name to use this value for.
+     */
+    public void setValueForMultipart(Object value, String name) {
+        getMapHelper().setValueForIn(value, name, multipartValues);
+    }
+
+    /**
+     * Stores file to be passed as multipart POST.
+     * Usage: | set file | [file] | for multipart | [name] |
+     *
+     * @param filename file to be passed.
+     * @param name name to use this value for.
+     */
+    public void setFileForMultipart(String filename, String name) {
+        String filePath = getFilePathFromWikiUrl(filename);
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new StopTestException(false, "File " + filePath + " not found.");
+        }
+        setValueForMultipart(file, name);
+    }
+
+    /**
+     * Stores value to be passed as multipart POST with a specific content type.
+     * Usage: | set multipart value | [value] | as | [partName] | with content type | [contentType] |
+     *
+     * @param value value to be passed.
+     * @param name name to use this value for.
+     * @param contentType content type of the part.
+     */
+    public void setMultipartValueAsWithContentType(Object value, String name, String contentType) {
+        MultipartPart part = new MultipartPart(value, contentType);
+        setValueForMultipart(part, name);
+    }
+
+    /**
+     * Stores file to be passed as multipart POST with a specific content type.
+     * Usage: | set multipart file | [file] | as | [partName] | with content type | [contentType] |
+     *
+     * @param filename file to be passed.
+     * @param name name to use this value for.
+     * @param contentType content type of the part.
+     */
+    public void setMultipartFileAsWithContentType(String filename, String name, String contentType) {
+        String filePath = getFilePathFromWikiUrl(filename);
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new StopTestException(false, "File " + filePath + " not found.");
+        }
+        setMultipartValueAsWithContentType(file, name, contentType);
+    }
+
+    /**
+     * Clears a multipart value previously set.
+     *
+     * @param name value to remove.
+     * @return true if value was present.
+     */
+    public boolean clearMultipartValue(String name) {
+        String cleanName = cleanupValue(name);
+        boolean result = multipartValues.containsKey(cleanName);
+        multipartValues.remove(cleanName);
+        return result;
+    }
+
+    /**
+     * Clears all multipart values previously set.
+     */
+    public void clearMultipartValues() {
+        multipartValues.clear();
+    }
+
+    /**
+     * Adds all values in the supplied map to the current multipart values.
+     *
+     * @param map to obtain values from.
+     */
+    public void copyMultipartValuesFrom(Map<String, Object> map) {
+        getMapHelper().copyValuesFromTo(map, multipartValues);
+    }
+
+    /**
+     * Allows subclasses access to the multipart values.
+     *
+     * @return multipart values.
+     */
+    protected Map<String, Object> getMultipartValues() {
+        return multipartValues;
+    }
+
     //// methods to support usage in dynamic decision tables
 
     /**
@@ -161,9 +258,11 @@ public class HttpTest extends SlimFixtureWithMap {
     public void reset() {
         clearValues();
         clearHeaderValues();
+        clearMultipartValues();
     }
 
     private static final Pattern HEADER_KEY_PATTERN = Pattern.compile("header:\\s*(\\.+)");
+    private static final Pattern MULTIPART_KEY_PATTERN = Pattern.compile("multipart:\\s*(\\.+)");
 
     /**
      * Sets a value.
@@ -171,13 +270,20 @@ public class HttpTest extends SlimFixtureWithMap {
      * @param key   (possibly nested) key to set value for.
      * @param value value to be stored.
      */
+    @Override
     public void set(String key, Object value) {
         Matcher m = HEADER_KEY_PATTERN.matcher(key);
         if (m.matches()) {
             String headerKey = m.group(1);
             setValueForHeader(value, headerKey);
         } else {
-            super.set(key, value);
+            m = MULTIPART_KEY_PATTERN.matcher(key);
+            if (m.matches()) {
+                String multipartKey = m.group(1);
+                setValueForMultipart(value, multipartKey);
+            } else {
+                super.set(key, value);
+            }
         }
     }
 
@@ -265,6 +371,16 @@ public class HttpTest extends SlimFixtureWithMap {
     public boolean postValuesTo(String serviceUrl) {
         String body = urlEncodeCurrentValues();
         return postToImpl(body, serviceUrl);
+    }
+
+    /**
+     * Sends all multipart values using post.
+     *
+     * @param serviceUrl service endpoint to send values to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean postMultipartValuesTo(String serviceUrl) {
+        return sendMultipartValuesImpl(serviceUrl, "POST");
     }
 
     protected boolean postToImpl(String body, String serviceUrl) {
@@ -416,6 +532,26 @@ public class HttpTest extends SlimFixtureWithMap {
         return putToImpl(body, serviceUrl);
     }
 
+    /**
+     * Sends all multipart values using put.
+     *
+     * @param serviceUrl service endpoint to send values to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean putMultipartValuesTo(String serviceUrl) {
+        return sendMultipartValuesImpl(serviceUrl, "PUT");
+    }
+
+    /**
+     * Sends all multipart values using patch.
+     *
+     * @param serviceUrl service endpoint to send values to.
+     * @return true if call could be made and response did not indicate error.
+     */
+    public boolean patchMultipartValuesTo(String serviceUrl) {
+        return sendMultipartValuesImpl(serviceUrl, "PATCH");
+    }
+
     protected boolean putToImpl(String body, String serviceUrl) {
         return sendToImpl(body, serviceUrl, getContentType(), "PUT");
     }
@@ -472,6 +608,33 @@ public class HttpTest extends SlimFixtureWithMap {
                 case "PUT":
                     getEnvironment().doHttpFilePut(url, response, headerValues, partName, file);
                     break;
+            }
+        } catch (Throwable t) {
+            handleCallException("Unable to get response from " + method + " to: " + url, t);
+        }
+        result = postProcessResponse();
+        return result;
+    }
+
+    protected boolean sendMultipartValuesImpl(String serviceUrl, String method) {
+        boolean result;
+        resetResponse();
+        response.setRequest(getMultipartValues().toString());
+        String url = getUrl(serviceUrl);
+        try {
+            storeLastCall(method, serviceUrl);
+            switch (method) {
+                case "POST":
+                    getEnvironment().doHttpMultipartPost(url, response, headerValues, getMultipartValues());
+                    break;
+                case "PUT":
+                    getEnvironment().doHttpMultipartPut(url, response, headerValues, getMultipartValues());
+                    break;
+                case "PATCH":
+                    getEnvironment().doHttpMultipartPatch(url, response, headerValues, getMultipartValues());
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported method: " + method);
             }
         } catch (Throwable t) {
             handleCallException("Unable to get response from " + method + " to: " + url, t);

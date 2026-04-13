@@ -14,10 +14,10 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install Java and Maven
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: '11'
           distribution: 'zulu'
@@ -38,7 +38,7 @@ jobs:
           mvn --batch-mode clean package -Dfitnesse.version=${{ steps.get-version.outputs.fitnesse-version }} -Dhsac.fixtures.version=${{ steps.get-version.outputs.version }}
 
       - name: Upload docker image content
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: docker-content
           path: |
@@ -51,7 +51,7 @@ jobs:
           mvn --batch-mode -P withPdf package -DskipCombineShade=true -Dfitnesse.version=${{ steps.get-version.outputs.fitnesse-version }} -Dhsac.fixtures.version=${{ steps.get-version.outputs.version }}
 
       - name: Upload with-pdf docker image content
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: docker-content-with-pdf
           path: |
@@ -66,11 +66,11 @@ jobs:
         platform: [linux/amd64, linux/arm64]
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: |
             hsac/fitnesse-fixtures-test-jre11
@@ -87,7 +87,7 @@ jobs:
           mv "${{ steps.meta.outputs.bake-file }}" "/tmp/bake-meta.json"
 
       - name: Upload meta bake definition
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: bake-meta
           path: /tmp/bake-meta.json
@@ -98,16 +98,16 @@ jobs:
         uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: download docker content
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: docker-content
           path: docker
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -155,7 +155,7 @@ jobs:
           echo "chrome-image=hsac/fitnesse-fixtures-test-jre11-chrome@${chrome_digest}" >> $GITHUB_OUTPUT
 
       - name: Upload digest
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: digests
           path: /tmp/digests/*
@@ -163,7 +163,7 @@ jobs:
           retention-days: 1
 
       - name: Upload image names
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: images
           path: /tmp/images/*
@@ -215,7 +215,7 @@ jobs:
 
       - name: Upload test artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: docker-tests-results
           path: docker/target
@@ -229,11 +229,11 @@ jobs:
         platform: [linux/amd64, linux/arm64]
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: |
             hsac/fitnesse-fixtures-test-jre11-with-pdf
@@ -244,7 +244,7 @@ jobs:
           mv "${{ steps.meta.outputs.bake-file }}" "/tmp/bake-meta.json"
 
       - name: Upload meta bake definition
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: bake-meta-with-pdf
           path: /tmp/bake-meta.json
@@ -252,7 +252,7 @@ jobs:
           retention-days: 1
 
       - name: Download image names
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: images
           path: /tmp/images
@@ -268,16 +268,16 @@ jobs:
         uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: download docker content
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: docker-content-with-pdf
           path: docker/test/wiki
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -321,7 +321,7 @@ jobs:
           echo "chrome-with-pdf-image=hsac/fitnesse-fixtures-test-jre11-chrome-with-pdf@${chrome_with_pdf_digest}" >> $GITHUB_OUTPUT
 
       - name: Upload digest
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: digests-with-pdf
           path: /tmp/digests/*
@@ -329,7 +329,7 @@ jobs:
           retention-days: 1
 
       - name: Upload image names
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: images-with-pdf
           path: /tmp/images/*
@@ -354,7 +354,7 @@ jobs:
 
       - name: Upload test artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: docker-with-pdf-tests-results
           path: docker/target
@@ -379,28 +379,28 @@ jobs:
             image: hsac/fitnesse-fixtures-test-jre11-chrome-with-pdf
     steps:
       - name: Download meta bake definition
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: bake-meta
           path: /tmp
 
       - name: Download digests
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: digests
           path: /tmp/digests
 
       - name: Download digests with pdf
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: digests-with-pdf
           path: /tmp/digests
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Login to DockerHub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
