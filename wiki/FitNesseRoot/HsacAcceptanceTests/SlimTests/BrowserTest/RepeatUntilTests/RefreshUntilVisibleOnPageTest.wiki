@@ -6,7 +6,7 @@ We use a mock server running to serve the HTML defined in this page.
 !define HTML { {{{
 <html>
 <body>
-<div class="start">
+<div class="start">&nbsp;</div>
 </body>
 </html>}}} }
 
@@ -14,14 +14,14 @@ We use a mock server running to serve the HTML defined in this page.
 !define HTML2 { {{{
 <html>
 <body>
-<div class="start">
+<div class="start">&nbsp;</div>
 </body>
 </html>}}} }
 
 !define HTML3 { {{{
 <html>
 <body>
-<div class="finish">
+<div class="finish">&nbsp;</div>
 </body>
 </html>}}} }
 
