@@ -4,7 +4,7 @@
 
 	<groupId>nl.hsac</groupId>
 	<artifactId>hsac-fitnesse-fixtures</artifactId>
-	<version>5.3.26-SNAPSHOT</version>
+	<version>5.3.27-SNAPSHOT</version>
 	<url>https://github.com/fhoeben/hsac-fitnesse-fixtures</url>
 	<name>HSAC's FitNesse Fixtures</name>
 	<description>Fixtures to assist in testing via FitNesse</description>
@@ -35,13 +35,13 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.build.outputTimestamp>2026-03-22T19:38:17Z</project.build.outputTimestamp>
+		<project.build.outputTimestamp>2026-04-16T06:46:36Z</project.build.outputTimestamp>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<hsac-fitnesse-plugin.version>1.33.3</hsac-fitnesse-plugin.version>
 		<fitnesse.version>20260313</fitnesse.version>
 		<praegus-toolchain-fitnesse-plugin.version>2.0.24</praegus-toolchain-fitnesse-plugin.version>
-		<selenium.version>4.39.0</selenium.version>
+		<selenium.version>4.43.0</selenium.version>
 		<slf4j.version>2.0.16</slf4j.version>
 		<apache.http.version>4.5.14</apache.http.version>
 		<surefire.version>3.5.3</surefire.version>
