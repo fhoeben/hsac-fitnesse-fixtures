@@ -47,10 +47,10 @@
 		<surefire.version>3.5.3</surefire.version>
 
 		<webdriver.download.skip>false</webdriver.download.skip>
-		<selenium.edgedriver.version>145.0.3800.97</selenium.edgedriver.version>
-		<selenium.edgedriver.mac.version>146.0.3856.59</selenium.edgedriver.mac.version>
-		<selenium.chromedriver.version>146.0.7680.76</selenium.chromedriver.version>
-		<selenium.geckodriver.version>0.36.0</selenium.geckodriver.version>
+		<selenium.edgedriver.version>151.0.4129.101</selenium.edgedriver.version>
+		<selenium.edgedriver.mac.version>151.0.4129.101</selenium.edgedriver.mac.version>
+		<selenium.chromedriver.version>151.0.7922.174</selenium.chromedriver.version>
+		<selenium.geckodriver.version>0.37.1</selenium.geckodriver.version>
 
 		<!-- classpath that Fitnesse uses when not starting from IDE/maven  -->
 		<standalone.classpath>wiki/fixtures</standalone.classpath>

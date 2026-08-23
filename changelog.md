@@ -22,6 +22,7 @@ When upgrading from an older version, ensure all Selenium webdrivers are stopped
 
 New in ${VERSION}
 - Updates to build/release setup
+- Latest Edge (151.0.4129.101), Chrome (151.0.7922.174) and Gecko (0.37.1) webdrivers
 
 New in 5.3.27
 - Dependency update to fix security issue (com.fasterxml.jackson.core:jackson-databind from 2.21.1 to 2.21.5)
