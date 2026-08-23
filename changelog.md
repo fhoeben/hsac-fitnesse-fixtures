@@ -21,8 +21,10 @@ An example of Maven based project using this baseline can be found at: https://g
 When upgrading from an older version, ensure all Selenium webdrivers are stopped and delete the 'wiki/plugins' and 'wiki/webdrivers' folders to remove old versions of the packaged plugins/webdrivers. When using the sample project: follow the instructions at https://github.com/fhoeben/sample-fitnesse-project#upgrading.
 
 New in ${VERSION}
-- Dependency update to fix security issue (com.fasterxml.jackson.core:jackson-databind from 2.21.1 to 2.21.5)
 - Updates to build/release setup
+
+New in 5.3.27
+- Dependency update to fix security issue (com.fasterxml.jackson.core:jackson-databind from 2.21.1 to 2.21.5)
 
 New in 5.3.26
 - Selenium version 4.43.0
