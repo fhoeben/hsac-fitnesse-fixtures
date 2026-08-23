@@ -163,8 +163,7 @@ jobs:
         id: bake
         uses: docker/bake-action@v7
         with:
-          source: .
-          workdir: docker
+          source: docker
           files: |
             docker-bake.hcl
             /tmp/bake-meta.json
@@ -336,8 +335,7 @@ jobs:
         id: bake
         uses: docker/bake-action@v7
         with:
-          source: .
-          workdir: docker
+          source: docker
           files: |
             docker-bake.hcl
             /tmp/bake-meta.json
