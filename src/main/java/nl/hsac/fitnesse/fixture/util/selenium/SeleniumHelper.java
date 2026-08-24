@@ -283,9 +283,8 @@ public class SeleniumHelper<T extends WebElement> {
                     if (item.isDisplayed()) {
                         num++;
                         String val = item.getAttribute("value");
-                        int valNum = toInt(val, num);
-                        if (valNum != 0) {
-                            num = valNum + 1;
+                        if (val != null) {
+                            num = toInt(val, num) + 1;
                         }
                     }
                 }
